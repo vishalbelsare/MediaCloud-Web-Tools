@@ -1,9 +1,9 @@
 import React from 'react';
 import AppBar from 'material-ui/lib/app-bar';
 import RaisedButton from 'material-ui/lib/raised-button';
-
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
-import MediaMeterTheme from './theme';
+
+import MediaMeterTheme from '../theme';
 
 const MediaMeterAppComponent = React.createClass({
 
