@@ -4,3 +4,5 @@ venv
 build/*.css
 build/*.js
 build/*.json
+server.config
+logs/*.log
