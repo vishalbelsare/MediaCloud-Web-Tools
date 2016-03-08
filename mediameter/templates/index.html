@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1, minimum-scale=1"
+  >
+  <title>Flask, Webpack and React</title>
+
+  {{ stylesheet_tag('app_css') | safe }}
+</head>
+
+<body>
+
+  <div id='root'></div>
+
+  {{ javascript_tag('app_js') | safe }}
+
+</body>
+
+</html>
