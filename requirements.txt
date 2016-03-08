@@ -3,3 +3,4 @@ flask-login
 flask-webpack
 requests[security]
 gunicorn
+mediacloud
