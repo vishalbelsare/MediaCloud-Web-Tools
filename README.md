@@ -14,6 +14,11 @@ Python 2.7:
 NPM:
  * `npm install`
 
+Configuration
+-------------
+
+Copy `server.config.template` to `server.config` and fill in the required info there.
+
 Running
 -------
 
