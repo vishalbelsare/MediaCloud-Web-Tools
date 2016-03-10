@@ -34,8 +34,7 @@ const AppLeftNav = React.createClass({
   componentDidMount: function() {
   },
 
-  handleTouchTapHeader() {
-    console.log('AppLeftNav.handleTouchTapHeader');
+  onHeaderTouchTap() {
     this.context.router.push('/');
     this.props.onRequestChangeLeftNav(false);
   },
@@ -71,7 +70,7 @@ const AppLeftNav = React.createClass({
         onRequestChange={onRequestChangeLeftNav}
         containerStyle={{zIndex: zIndex.leftNav - 100}}
       >
-        <div style={this.styles.logo} onTouchTap={this.handleTouchTapHeader}>
+        <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
           Options
         </div>
 
