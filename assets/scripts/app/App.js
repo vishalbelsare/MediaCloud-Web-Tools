@@ -67,7 +67,6 @@ const App = React.createClass({
   },
 
   handleTouchTapLeftIconButton() {
-    console.log("clicked!")
     this.setState({
       leftNavOpen: !this.state.leftNavOpen,
     });
@@ -80,7 +79,6 @@ const App = React.createClass({
   },
 
   handleRequestChangeList(event, value) {
-    console.log("handleRequestChangeList");
     this.context.router.push(value);
     this.setState({
       leftNavOpen: false,
