@@ -4,19 +4,24 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import thunk from 'redux-thunk';
+import createLogger from 'redux-logger';
 
-import App from './app/App';
+import App from './app/App'
 import About from './app/About'
+import leftNavVisibility from './app/reducers'
 
 var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
 // Add the reducer to your store on the `routing` key
+const logger = createLogger();
 const store = createStore(
   combineReducers({
-    /*...reducers,*/
+    leftNavVisibility,
     routing: routerReducer
-  })
+  }),
+  applyMiddleware(thunk, logger)
 )
 
 // Create an enhanced history that syncs navigation events with the store
