@@ -17,7 +17,8 @@ import leftNavVisibility from './actions'
 const App = React.createClass({
 
   propTypes: {
-    handleTouchTapLeftIconButton: React.PropTypes.func
+    handleTouchTapLeftIconButton: React.PropTypes.func,
+    handleRequestChangeList: React.PropTypes.func
   },
 
   //the key passed through context must be called "muiTheme"
@@ -66,16 +67,12 @@ const App = React.createClass({
     return styles;
   },
 
-  handleRequestChangeList(event, value) {
+  handleRequestChangeListProxy(event, value) {
     this.context.router.push(value);
-    this.context.store.dispatch(leftNavVisibility(false));
-    /*this.setState({
-      leftNavOpen: false,
-    });*/
+    this.props.handleRequestChangeList();
   },
 
   render() {
-    console.log("RENDER");
     const {
       location,
       children,
@@ -84,7 +81,6 @@ const App = React.createClass({
     const router = this.context.router;
     const styles = this.getStyles();
     const title = "MediaMeter";
-    console.log(this.context.store.getState());
     const leftNavOpen = this.context.store.getState().leftNavVisibility;
 
     return (
@@ -101,7 +97,7 @@ const App = React.createClass({
           style={styles.leftNav}
           location={location}
           docked={false}
-          onRequestChangeList={this.handleRequestChangeList}
+          onRequestChangeList={this.handleRequestChangeListProxy}
         />
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}>
@@ -133,6 +129,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleTouchTapLeftIconButton: (open) => {
       dispatch(leftNavVisibility(true))
+    },
+    handleRequestChangeList: () => {
+      dispatch(leftNavVisibility(false));
     }
   }
 }
