@@ -11,6 +11,7 @@ import MediaMeterTheme from '../theme';
 
 import AppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
+import leftNavVisibility from './actions'
 
 const App = React.createClass({
 
@@ -21,6 +22,7 @@ const App = React.createClass({
 
   contextTypes: {
     router: React.PropTypes.object.isRequired,
+    store: React.PropTypes.object.isRequired
   },
 
   getInitialState() {
@@ -67,6 +69,7 @@ const App = React.createClass({
   },
 
   handleTouchTapLeftIconButton() {
+    //this.context.store.dispatch(leftNavVisibility(true));
     this.setState({
       leftNavOpen: !this.state.leftNavOpen,
     });
