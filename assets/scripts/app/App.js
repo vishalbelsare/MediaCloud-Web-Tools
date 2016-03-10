@@ -5,15 +5,20 @@ import AppBar from 'material-ui/lib/app-bar';
 import RaisedButton from 'material-ui/lib/raised-button';
 import {Spacing} from 'material-ui/lib/styles';
 import {darkWhite, grey200, grey400} from 'material-ui/lib/styles/colors';
+import { connect } from 'react-redux'
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import MediaMeterTheme from '../theme';
 
-import AppLeftNav from './AppLeftNav';
+import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
 import leftNavVisibility from './actions'
 
 const App = React.createClass({
+
+  propTypes: {
+    handleTouchTapLeftIconButton: React.PropTypes.func
+  },
 
   //the key passed through context must be called "muiTheme"
   childContextTypes : {
@@ -23,13 +28,6 @@ const App = React.createClass({
   contextTypes: {
     router: React.PropTypes.object.isRequired,
     store: React.PropTypes.object.isRequired
-  },
-
-  getInitialState() {
-    return {
-      leftNavOpen: false,
-      leftNavDocked: false
-    };
   },
 
   getChildContext() {
@@ -68,57 +66,42 @@ const App = React.createClass({
     return styles;
   },
 
-  handleTouchTapLeftIconButton() {
-    //this.context.store.dispatch(leftNavVisibility(true));
-    this.setState({
-      leftNavOpen: !this.state.leftNavOpen,
-    });
-  },
-
-  handleChangeRequestLeftNav(open) {
-    this.setState({
-      leftNavOpen: open,
-    });
-  },
-
   handleRequestChangeList(event, value) {
     this.context.router.push(value);
-    this.setState({
+    this.context.store.dispatch(leftNavVisibility(false));
+    /*this.setState({
       leftNavOpen: false,
-    });
+    });*/
   },
 
   render() {
+    console.log("RENDER");
     const {
       location,
       children,
     } = this.props;
 
-    let {
-      leftNavOpen, leftNavDocked
-    } = this.state;
-
     const router = this.context.router;
     const styles = this.getStyles();
     const title = "MediaMeter";
+    console.log(this.context.store.getState());
+    const leftNavOpen = this.context.store.getState().leftNavVisibility;
 
     return (
       <div>
         <DocumentTitle title={title}>
         </DocumentTitle>
         <AppBar
-          onLeftIconButtonTouchTap={this.handleTouchTapLeftIconButton}
+          onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
           title={title}
           zDepth={0}
           style={styles.appBar}
         />
-        <AppLeftNav
+        <ControllableAppLeftNav
           style={styles.leftNav}
           location={location}
-          docked={leftNavDocked}
-          onRequestChangeLeftNav={this.handleChangeRequestLeftNav}
+          docked={false}
           onRequestChangeList={this.handleRequestChangeList}
-          open={leftNavOpen}
         />
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}>
@@ -141,4 +124,22 @@ const App = React.createClass({
 
 });
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleTouchTapLeftIconButton: (open) => {
+      dispatch(leftNavVisibility(true))
+    }
+  }
+}
+
+const ControllableApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)
+
+export default ControllableApp;

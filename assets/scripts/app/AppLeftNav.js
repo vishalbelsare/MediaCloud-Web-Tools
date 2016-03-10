@@ -2,6 +2,7 @@ import React from 'react';
 import LeftNav from 'material-ui/lib/left-nav';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
+import { connect } from 'react-redux'
 //import Divider from 'material-ui/lib/divider';
 import {SelectableContainerEnhance} from 'material-ui/lib/hoc/selectable-enhance';
 import {
@@ -10,6 +11,7 @@ import {
 } from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
 import {purple500} from 'material-ui/lib/styles/colors';
+import leftNavVisibility from './actions'
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -18,9 +20,9 @@ const AppLeftNav = React.createClass({
   propTypes: {
     location: React.PropTypes.object.isRequired,
     docked: React.PropTypes.bool.isRequired,
-    onRequestChangeLeftNav: React.PropTypes.func.isRequired,
+    onRequestChangeLeftNav: React.PropTypes.func,
     onRequestChangeList: React.PropTypes.func.isRequired,
-    open: React.PropTypes.bool.isRequired,
+    open: React.PropTypes.bool,
     style: React.PropTypes.object
   },
 
@@ -84,4 +86,23 @@ const AppLeftNav = React.createClass({
   },
 });
 
-export default AppLeftNav;
+const mapStateToProps = (state) => {
+  return {
+    open: state.leftNavVisibility
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onRequestChangeLeftNav: (open) => {
+      dispatch(leftNavVisibility(open))
+    }
+  }
+}
+
+const ControllableAppLeftNav = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppLeftNav)
+
+export default ControllableAppLeftNav;
