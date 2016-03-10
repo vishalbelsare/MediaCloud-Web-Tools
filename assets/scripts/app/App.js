@@ -12,7 +12,7 @@ import MediaMeterTheme from '../theme';
 import AppLeftNav from './AppLeftNav';
 import FullWidthSection from './FullWidthSection';
 
-const MediaMeterAppComponent = React.createClass({
+const App = React.createClass({
 
   //the key passed through context must be called "muiTheme"
   childContextTypes : {
@@ -140,4 +140,4 @@ const MediaMeterAppComponent = React.createClass({
 
 });
 
-export default MediaMeterAppComponent;
+export default App;
