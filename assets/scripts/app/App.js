@@ -10,7 +10,7 @@ import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import MediaMeterTheme from '../theme';
 
 import AppLeftNav from './AppLeftNav';
-import FullWidthSection from './FullWidthSection';
+import FullWidthSection from '../components/FullWidthSection';
 
 const App = React.createClass({
 
