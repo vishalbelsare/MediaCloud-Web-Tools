@@ -94,7 +94,7 @@ const AppLeftNav = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    open: state.leftNavVisibility,
+    open: state.app.isLeftNavOpen,
     user: state.user
   };
 };
