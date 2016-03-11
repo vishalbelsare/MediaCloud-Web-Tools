@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { routerReducer as routing } from 'react-router-redux';
 import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk';
 
@@ -15,7 +15,7 @@ export default function configureStore(initialState = {}) {
       app,
       user,
       form,
-      routing: routerReducer
+      routing
     }),
     applyMiddleware(thunkMiddleware, loggerMiddleware),
     window.devToolsExtension ? window.devToolsExtension() : f => f
