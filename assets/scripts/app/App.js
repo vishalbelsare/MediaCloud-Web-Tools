@@ -5,25 +5,21 @@ import AppBar from 'material-ui/lib/app-bar';
 import RaisedButton from 'material-ui/lib/raised-button';
 import {Spacing} from 'material-ui/lib/styles';
 import {darkWhite, grey200, grey400} from 'material-ui/lib/styles/colors';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import MediaMeterTheme from '../theme';
 
 import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
-import leftNavVisibility from './actions'
+import leftNavVisibility from './actions';
 
 const App = React.createClass({
 
   propTypes: {
+    location: React.PropTypes.object.isRequired,
     handleTouchTapLeftIconButton: React.PropTypes.func,
     handleRequestChangeList: React.PropTypes.func
-  },
-
-  //the key passed through context must be called "muiTheme"
-  childContextTypes : {
-    muiTheme: React.PropTypes.object,
   },
 
   contextTypes: {
@@ -31,9 +27,14 @@ const App = React.createClass({
     store: React.PropTypes.object.isRequired
   },
 
+  //the key passed through context must be called "muiTheme"
+  childContextTypes : {
+    muiTheme: React.PropTypes.object
+  },
+
   getChildContext() {
     return {
-      muiTheme: ThemeManager.getMuiTheme(MediaMeterTheme),
+      muiTheme: ThemeManager.getMuiTheme(MediaMeterTheme)
     };
   },
 
@@ -41,27 +42,27 @@ const App = React.createClass({
     const styles = {
       root: {
         paddingTop: Spacing.desktopKeylineIncrement,
-        minHeight: 400,
+        minHeight: 400
       },
       content: {
-        margin: Spacing.desktopGutter,
+        margin: Spacing.desktopGutter
       },
       footer: {
         backgroundColor: grey200,
         textAlign: 'center'
       },
       a: {
-        color: grey400,
+        color: grey400
       },
       p: {
         margin: '0 auto',
         padding: 0,
         text: grey400,
-        maxWidth: 356,
+        maxWidth: 356
       },
       iconButton: {
-        color: darkWhite,
-      },
+        color: darkWhite
+      }
     };
 
     return styles;
@@ -75,7 +76,7 @@ const App = React.createClass({
   render() {
     const {
       location,
-      children,
+      children
     } = this.props;
 
     const router = this.context.router;
@@ -85,8 +86,7 @@ const App = React.createClass({
 
     return (
       <div>
-        <DocumentTitle title={title}>
-        </DocumentTitle>
+        <DocumentTitle title={title} />
         <AppBar
           onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
           title={title}
@@ -122,23 +122,23 @@ const App = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     handleTouchTapLeftIconButton: (open) => {
-      dispatch(leftNavVisibility(true))
+      dispatch(leftNavVisibility(true));
     },
     handleRequestChangeList: () => {
       dispatch(leftNavVisibility(false));
     }
-  }
-}
+  };
+};
 
 const ControllableApp = connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(App);
 
 export default ControllableApp;

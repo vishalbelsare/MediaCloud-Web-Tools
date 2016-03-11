@@ -2,16 +2,13 @@ import React from 'react';
 import LeftNav from 'material-ui/lib/left-nav';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux';
 //import Divider from 'material-ui/lib/divider';
 import {SelectableContainerEnhance} from 'material-ui/lib/hoc/selectable-enhance';
-import {
-  Spacing,
-  Typography,
-} from 'material-ui/lib/styles';
+import {Spacing, Typography} from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
 import {purple500} from 'material-ui/lib/styles/colors';
-import leftNavVisibility from './actions'
+import leftNavVisibility from './actions';
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -28,7 +25,7 @@ const AppLeftNav = React.createClass({
 
   contextTypes: {
     muiTheme: React.PropTypes.object.isRequired,
-    router: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   },
 
   componentDidMount: function() {
@@ -48,7 +45,7 @@ const AppLeftNav = React.createClass({
       fontWeight: Typography.fontWeightLight,
       backgroundColor: purple500,
       paddingLeft: Spacing.desktopGutter,
-      marginBottom: 8,
+      marginBottom: 8
     }
   },
 
@@ -59,7 +56,7 @@ const AppLeftNav = React.createClass({
       onRequestChangeLeftNav,
       onRequestChangeList,
       open,
-      style,
+      style
     } = this.props;
 
     return (
@@ -82,26 +79,26 @@ const AppLeftNav = React.createClass({
         </SelectableList>
       </LeftNav>
     );
-  },
+  }
 });
 
 const mapStateToProps = (state) => {
   return {
     open: state.leftNavVisibility
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onRequestChangeLeftNav: (open) => {
-      dispatch(leftNavVisibility(open))
+      dispatch(leftNavVisibility(open));
     }
-  }
-}
+  };
+};
 
 const ControllableAppLeftNav = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppLeftNav)
+)(AppLeftNav);
 
 export default ControllableAppLeftNav;
