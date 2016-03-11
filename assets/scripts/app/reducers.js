@@ -1,15 +1,11 @@
 import { LEFT_NAV_VISIBILITY } from './actions';
+import { handleActions } from 'redux-actions';
 
-function app(state = {isLeftNavOpen:false}, action) {
-  switch (action.type) {
-  case LEFT_NAV_VISIBILITY:
-    return {
-    	...state,
-    	isLeftNavOpen: action.visible
-    };
-  default:
-    return state;
-  }
-}
+const app = handleActions({
+  'LEFT_NAV_VISIBILITY': (state, action) => ({
+    ...state,
+    isLeftNavOpen: action.payload
+  })
+}, { isLeftNavOpen: false });
 
 export default app;

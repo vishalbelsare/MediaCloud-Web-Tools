@@ -1,11 +1,7 @@
+import { createAction } from 'redux-actions';
 
 export const LEFT_NAV_VISIBILITY = 'LEFT_NAV_VISIBILITY';
 
-function leftNavVisibility(visible) {
-  return {
-    type: LEFT_NAV_VISIBILITY,
-    visible
-  };
-}
+let leftNavVisibility = createAction(LEFT_NAV_VISIBILITY);
 
 export default leftNavVisibility;
