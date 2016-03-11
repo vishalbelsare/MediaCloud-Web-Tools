@@ -17,6 +17,7 @@ import leftNavVisibility from './actions';
 const App = React.createClass({
 
   propTypes: {
+    children: React.PropTypes.node,
     location: React.PropTypes.object.isRequired,
     handleTouchTapLeftIconButton: React.PropTypes.func,
     handleRequestChangeList: React.PropTypes.func
@@ -41,7 +42,6 @@ const App = React.createClass({
   getStyles() {
     const styles = {
       root: {
-        paddingTop: Spacing.desktopKeylineIncrement,
         minHeight: 400
       },
       content: {
@@ -93,6 +93,11 @@ const App = React.createClass({
           zDepth={0}
           style={styles.appBar}
         />
+        <div style={styles.root}>
+          <div style={styles.content}>
+            {children}
+          </div>
+        </div>
         <ControllableAppLeftNav
           style={styles.leftNav}
           location={location}
