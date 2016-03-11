@@ -1,7 +1,14 @@
 import React from 'react';
- 
+import LoginForm from './LoginForm';
+import FullWidthSection from '../components/FullWidthSection';
+
 function Login() {
-  return <h1>Login</h1>;
+  return (
+    <div>
+      <h2>Login</h2>
+      <LoginForm />
+    </div>
+  );
 }
  
 export default Login;

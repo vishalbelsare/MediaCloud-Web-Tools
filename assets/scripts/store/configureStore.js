@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import createLogger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk';
 
+import {reducer as form} from 'redux-form';
 import leftNavVisibility from '../app/reducers'
 import user from '../user/reducers'
 
@@ -13,6 +14,7 @@ export default function configureStore(initialState = {}) {
     combineReducers({
       leftNavVisibility,
       user,
+      form,
       routing: routerReducer
     }),
     applyMiddleware(thunkMiddleware, loggerMiddleware),
