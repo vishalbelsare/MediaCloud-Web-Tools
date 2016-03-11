@@ -14,6 +14,8 @@ Python 2.7:
 NPM:
  * `npm install`
 
+For better debugging, make sure to install the [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd.
+
 Configuration
 -------------
 
@@ -31,4 +33,6 @@ To check your javascript code for errors run: `npm run-script lint`
 Release
 -------
 
-Note to future self: `npm run-script build`
+TBD:
+ * This doesn't have a dev vs. production setup yet.
+ * Note to future self: try out `npm run-script build`

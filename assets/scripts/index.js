@@ -21,7 +21,8 @@ const store = createStore(
     leftNavVisibility,
     routing: routerReducer
   }),
-  applyMiddleware(thunk, logger)
+  applyMiddleware(thunk, logger),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
 );
 
 // Create an enhanced history that syncs navigation events with the store
