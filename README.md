@@ -26,6 +26,8 @@ You need to open two terminal windows and run one thing in each (so the hot-relo
  * `npm start`
  * `python run.py`
 
+To check your javascript code for errors run: `npm run-script lint`
+
 Release
 -------
 
