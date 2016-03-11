@@ -16,6 +16,7 @@ const AppLeftNav = React.createClass({
 
   propTypes: {
     location: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired,
     docked: React.PropTypes.bool.isRequired,
     onRequestChangeLeftNav: React.PropTypes.func,
     onRequestChangeList: React.PropTypes.func.isRequired,
@@ -56,8 +57,16 @@ const AppLeftNav = React.createClass({
       onRequestChangeLeftNav,
       onRequestChangeList,
       open,
-      style
+      style,
+      user
     } = this.props;
+
+    let loginControl = null;
+    if(user.isLoggedIn){
+      loginControl = <ListItem primaryText="Logout" value="/logout" />;
+    } else {
+      loginControl = <ListItem primaryText="Login" value="/login" />;
+    }
 
     return (
       <LeftNav
@@ -74,7 +83,8 @@ const AppLeftNav = React.createClass({
         <SelectableList 
           valueLink={{value: location.pathname, requestChange: onRequestChangeList}}
           subheader="Meta"
-        >
+        >          
+          {loginControl}
           <ListItem primaryText="About" value="/about" />
         </SelectableList>
       </LeftNav>
@@ -84,7 +94,8 @@ const AppLeftNav = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    open: state.leftNavVisibility
+    open: state.leftNavVisibility,
+    user: state.user
   };
 };
 

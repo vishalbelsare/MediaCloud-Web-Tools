@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline",
     "build": "node_modules/.bin/webpack --progress --profile --colors",
-    "lint": "eslint webpack.config.js assets/scripts/*.js assets/scripts/app/*.js"
+    "lint": "eslint webpack.config.js assets/scripts/*.js assets/scripts/app/*.js assets/scripts/user/*.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.6.1",
