@@ -1,14 +1,14 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
 // Third party plugins.
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 
 // Development asset host, asset location and build output path.
-var publicHost = 'http://localhost:2992';
-var rootAssetPath = './assets';
-var buildOutputPath = './build/public';
+const publicHost = 'http://localhost:2992';
+const rootAssetPath = './assets';
+const buildOutputPath = './build/public';
 
 module.exports = {
     entry: {
