@@ -19,6 +19,6 @@ export default {
     canvasColor: Colors.white,
     borderColor: Colors.grey300,
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
-    pickerHeaderColor: Colors.blue500,
+    pickerHeaderColor: Colors.blue500
   }
 };
