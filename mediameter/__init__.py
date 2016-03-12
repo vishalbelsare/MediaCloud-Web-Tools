@@ -1,5 +1,5 @@
 import os, logging, ConfigParser
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_webpack import Webpack
 
 import mediacloud
@@ -43,3 +43,8 @@ app = create_app()
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/login')
+def api_login():
+    return jsonify(key='USE_THIS')
+

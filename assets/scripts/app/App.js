@@ -12,7 +12,7 @@ import MediaMeterTheme from '../theme';
 
 import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
-import leftNavVisibility from './actions';
+import leftNavVisibility from './appActions';
 
 const App = React.createClass({
 

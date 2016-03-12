@@ -8,19 +8,19 @@
   "env": {
     "es6": true,
     "browser": true,
-    "node": true,
-    "jquery": true,
   },
   "ecmaFeatures": {
     "jsx": true,
     "modules": true
   },
   "rules": {
+    "block-spacing": [2, always],
     "quotes": 0,
     "no-console": 1,
     "no-debugger": 1,
     "no-var": 1,
     "semi": [1, "always"],
+    "strict": 0,
     "no-trailing-spaces": 0,
     "eol-last": 0,
     "no-unused-vars": 0,

@@ -1,4 +1,4 @@
-import { LEFT_NAV_VISIBILITY } from './actions';
+import { LEFT_NAV_VISIBILITY } from './appActions';
 import { handleActions } from 'redux-actions';
 
 const app = handleActions({

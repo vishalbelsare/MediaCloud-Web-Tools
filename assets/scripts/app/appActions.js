@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import {createAction} from 'redux-actions';
 
 export const LEFT_NAV_VISIBILITY = 'LEFT_NAV_VISIBILITY';
 

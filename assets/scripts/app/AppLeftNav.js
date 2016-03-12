@@ -8,7 +8,7 @@ import {SelectableContainerEnhance} from 'material-ui/lib/hoc/selectable-enhance
 import {Spacing, Typography} from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
 import {purple500} from 'material-ui/lib/styles/colors';
-import leftNavVisibility from './actions';
+import leftNavVisibility from './appActions';
 
 const SelectableList = SelectableContainerEnhance(List);
 
