@@ -9,20 +9,16 @@ class LoginFormComponent extends Component {
     const {fields: {email, password}, handleSubmit, onSubmitLoginForm, submitting} = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
-        <div className="form-error">
-          {email.touched ? email.error : ''}
-        </div>
         <TextField
           floatingLabelText="Email"
+          errorText={email.touched ? email.error : ''}
           {...email}
         />
         <br />
-        <div className="form-error">
-          {password.touched ? password.error : ''}
-        </div>
         <TextField
           floatingLabelText="Password"
           type="password"
+          errorText={password.touched ? password.error : ''}
           {...password}
         />
         <br />
@@ -50,6 +46,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+// in-browser validation callback
 function validate(values){
   const errors = {};
   if (!values.email || values.email.trim() === '') {
