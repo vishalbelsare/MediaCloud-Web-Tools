@@ -16,7 +16,6 @@ export default function user(state = INITIAL_STATE, action) {
       ...action.payload
     });
   case resolve(LOGIN):
-    console.log(action);
     return Object.assign({}, state, {
       isFetching: false,
       ...action.payload,

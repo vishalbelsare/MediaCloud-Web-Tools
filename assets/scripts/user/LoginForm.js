@@ -6,7 +6,7 @@ import login from './userActions';
 
 class LoginFormComponent extends Component {
   render() {
-    const {fields: {email, password}, handleSubmit, onSubmitLoginForm, submitting} = this.props;
+    const {fields: {email, password}, handleSubmit, onSubmitLoginForm, isSubmitting} = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
         <TextField
@@ -22,7 +22,7 @@ class LoginFormComponent extends Component {
           {...password}
         />
         <br />
-        <RaisedButton type="submit" label="Login" primary={true} disabled={submitting}/>
+        <RaisedButton type="submit" label="Login" primary={true} disabled={isSubmitting}/>
       </form>
     );
   }
@@ -30,11 +30,12 @@ class LoginFormComponent extends Component {
 LoginFormComponent.propTypes = {
   fields: React.PropTypes.object.isRequired,
   onSubmitLoginForm: React.PropTypes.func.isRequired,
-  submitting: React.PropTypes.bool.isRequired
+  isSubmitting: React.PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
+    isSubmitting: state.user.isFetching
   };
 };
 

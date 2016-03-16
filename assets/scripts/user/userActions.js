@@ -1,21 +1,13 @@
 import {createAction} from 'redux-actions';
+import { browserHistory } from 'react-router'
+import { promiseToLogin } from '../lib/auth'
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 
-export const logout = createAction(LOGOUT);
-
-function promiseToLogin(email,password){
-  let formData = new FormData();
-  formData.append('email', email);
-  formData.append('password', password);
-  return fetch("/api/login", {
-    method: 'post',
-    body: formData
-  }).then(
-    response => response.json()
-  );
-}
+export const logout = createAction(LOGOUT, function(router){
+  router.push("/login");
+});
 
 export default function login(email,password) {
   return {

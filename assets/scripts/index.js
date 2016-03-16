@@ -6,6 +6,7 @@ import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import App from './app/App';
+import Home from './user/Home';
 import About from './app/About';
 import Login from './user/Login';
 import Logout from './user/Logout';
@@ -27,6 +28,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
       <Route path="/" component={App}>
+        <Route path="/home" component={Home}/>
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
         <Route path="/logout" component={Logout}/>
