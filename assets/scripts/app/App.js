@@ -3,6 +3,10 @@ import DocumentTitle from 'react-document-title';
 
 import AppBar from 'material-ui/lib/app-bar';
 import RaisedButton from 'material-ui/lib/raised-button';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import IconButton from 'material-ui/lib/icon-button';
+import PersonIcon from 'material-ui/lib/svg-icons/social/person';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import {Spacing} from 'material-ui/lib/styles';
 import {darkWhite, grey200, grey400} from 'material-ui/lib/styles/colors';
 import { connect } from 'react-redux';
@@ -92,6 +96,18 @@ const App = React.createClass({
           title={title}
           zDepth={0}
           style={styles.appBar}
+          iconElementRight={
+            <IconMenu
+              iconButtonElement={
+                <IconButton><PersonIcon /></IconButton>
+              }
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+              valueLink={{value: location.pathname, requestChange: this.handleRequestChangeListProxy}}
+            >
+              <MenuItem primaryText="Logout" value="/logout"/>
+            </IconMenu>
+          }
         />
         <div style={styles.root}>
           <div style={styles.content}>
