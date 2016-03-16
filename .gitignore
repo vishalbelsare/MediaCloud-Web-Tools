@@ -6,3 +6,4 @@ build/*.js
 build/*.json
 server.config
 logs/*.log
+*.log

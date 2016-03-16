@@ -8,7 +8,7 @@ const INITIAL_STATE = {
   key: null
 };
 
-function user(state = INITIAL_STATE, action) {
+export default function user(state = INITIAL_STATE, action) {
   switch(action.type){
   case LOGIN:
     return Object.assign({},state, {
