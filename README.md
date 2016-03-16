@@ -14,6 +14,8 @@ Python 2.7:
 NPM:
  * `npm install`
 
+And install MongoDb too.
+
 For better debugging, make sure to install the [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd.
 
 Configuration
