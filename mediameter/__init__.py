@@ -1,8 +1,7 @@
 import os, logging, ConfigParser
-from flask import Flask, render_template, jsonify
+from flask import Flask
 from flask_webpack import Webpack
-
-import mediacloud
+import pymongo, flask_login, mediacloud
 
 webpack = Webpack()
 
@@ -11,10 +10,10 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 logging.basicConfig(filename=os.path.join(base_dir,'logs','server.log'),level=logging.DEBUG)
 log = logging.getLogger(__name__)
 log.info("---------------------------------------------------------------------------")
-requests_logger = logging.getLogger('requests')
-requests_logger.setLevel(logging.WARN)
-mediacloud_logger = logging.getLogger('mediacloud')
-mediacloud_logger.setLevel(logging.DEBUG)
+#requests_logger = logging.getLogger('requests')
+#requests_logger.setLevel(logging.WARN)
+#mediacloud_logger = logging.getLogger('mediacloud')
+#mediacloud_logger.setLevel(logging.DEBUG)
 
 # load the shared settings file
 server_config_file_path = os.path.join(base_dir,'server.config')
@@ -23,7 +22,13 @@ settings.read(server_config_file_path)
 
 # Connect to MediaCloud
 mc = mediacloud.api.AdminMediaCloud(settings.get('mediacloud','api_key'))
-log.info("Connection to mediacloud")
+log.info("Connected to mediacloud")
+
+# Connect to the app's mongo DB
+db_host = settings.get('database', 'host')
+db_name = settings.get('database', 'name')
+db = pymongo.MongoClient(db_host)[db_name]
+log.info("Connected to DB: %s@%s" % (db_name,db_host))
 
 def create_app():
     '''
@@ -39,12 +44,10 @@ def create_app():
     return app
 
 app = create_app()
+app.secret_key = '543C16E84BB98FDF132BE8E3B733F'
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Create user login manager
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
-@app.route('/api/login')
-def api_login():
-    return jsonify(key='USE_THIS')
-
+import views
