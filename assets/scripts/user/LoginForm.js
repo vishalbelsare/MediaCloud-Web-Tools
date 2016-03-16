@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {reduxForm} from 'redux-form';
 import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
-import attemptLogin from './userActions';
+import login from './userActions';
 
 class LoginFormComponent extends Component {
   render() {
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSubmitLoginForm: (values) => {
-      dispatch(attemptLogin(values.email,values.password));
+      dispatch(login(values.email,values.password));
     }
   };
 };

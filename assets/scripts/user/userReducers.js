@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, REQUEST_LOGIN, ATTEMPT_LOGIN, RECEIVE_LOGIN } from './userActions';
+import { LOGIN_PENDING, LOGIN_SUCCEEDED, LOGIN_FAILED, LOGOUT} from './userActions';
 import { handleActions } from 'redux-actions';
 
 function user(state = {
@@ -10,21 +10,23 @@ function user(state = {
       return Object.assign({}, state, {
         isLoggedIn: false
       });
-    case REQUEST_LOGIN:
+    case LOGIN_PENDING:
       return Object.assign({}, state, {
         isFetching: true,
+        ...action.payload
       });
-    case ATTEMPT_LOGIN:
-      return Object.assign({}, state, {
-        isFetching: true,
-      });
-    case RECEIVE_LOGIN:
+    case LOGIN_SUCCEEDED:
       return Object.assign({}, state, {
         isFetching: false,
         lastUpdated: action.receivedAt,
         ...action.payload,
         isLoggedIn: true
-      })
+      });
+    case LOGIN_FAILED:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isLoggedIn: false
+      });
     default:
       return state;
   }
