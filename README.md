@@ -19,7 +19,7 @@ And install MongoDb too.
 For better debugging, make sure to install the [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd.
 
 Configuration
--------------
+------------- 
 
 Copy `server.config.template` to `server.config` and fill in the required info there.
 
