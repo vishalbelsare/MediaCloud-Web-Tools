@@ -80,6 +80,13 @@ const AppLeftNav = React.createClass({
           Options
         </div>
 
+
+        <SelectableList 
+          valueLink={{value: location.pathname, requestChange: onRequestChangeList}}
+        >    
+          <ListItem primaryText="Home" value="/home" />
+        </SelectableList>
+
         <SelectableList 
           valueLink={{value: location.pathname, requestChange: onRequestChangeList}}
           subheader="Meta"

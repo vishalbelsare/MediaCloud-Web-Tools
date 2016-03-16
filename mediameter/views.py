@@ -27,5 +27,5 @@ def api_login():
     logger.debug("  login succeeded")
     flask_login.login_user(user)
     user.create_in_db_if_needed()
-    response = {'key': user.get_id()}
+    response = {'email':username,'key': user.get_id()}
     return jsonify(response)

@@ -4,20 +4,31 @@ import {connect} from 'react-redux';
 import LoginForm from './LoginForm';
 import FullWidthSection from '../components/FullWidthSection';
 
-function LoginContainer({}) {
-  return (
-    <div>
-      <h2>Login</h2>
-      <LoginForm/>
-    </div>
-  );
-}
-
-LoginContainer.propTypes = {
-}
+const LoginContainer = React.createClass({
+  propTypes: {
+    isLoggedIn: React.PropTypes.bool.isRequired
+  },
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
+  componentDidMount() {
+    if(this.props.isLoggedIn){
+      this.context.router.push("/home");
+    }
+  },
+  render() {
+    return (
+      <div>
+        <h2>Login</h2>
+        <LoginForm/>
+      </div>
+    );
+  }
+});
 
 const mapStateToProps = (state) => {
   return {
+    isLoggedIn: state.user.isLoggedIn
   };
 };
 
