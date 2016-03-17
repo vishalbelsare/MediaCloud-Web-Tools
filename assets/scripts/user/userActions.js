@@ -20,12 +20,13 @@ export function loginWithKey(email,key) {
   };
 }
 
-export function loginWithPassword(email,password) {
+export function loginWithPassword(email,password,destination) {
   return {
     type: LOGIN_WITH_PASSWORD,
     payload: {
       promise: promiseToLoginWithPassword(email,password),
-      email
+      email,
+      destination
     }
   };
 }

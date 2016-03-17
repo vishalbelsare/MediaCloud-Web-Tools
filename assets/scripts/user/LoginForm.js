@@ -6,7 +6,7 @@ import { loginWithPassword } from './userActions';
 
 class LoginFormComponent extends Component {
   render() {
-    const {fields: {email, password}, handleSubmit, onSubmitLoginForm, isSubmitting} = this.props;
+    const {fields: {email, password, destination}, handleSubmit, onSubmitLoginForm, isSubmitting, location} = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
         <TextField
@@ -21,6 +21,8 @@ class LoginFormComponent extends Component {
           errorText={password.touched ? password.error : ''}
           {...password}
         />
+        <input type="hidden" name="destination" 
+          value={ (location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''} />
         <br />
         <RaisedButton type="submit" label="Login" primary={true} disabled={isSubmitting}/>
       </form>
@@ -30,7 +32,8 @@ class LoginFormComponent extends Component {
 LoginFormComponent.propTypes = {
   fields: React.PropTypes.object.isRequired,
   onSubmitLoginForm: React.PropTypes.func.isRequired,
-  isSubmitting: React.PropTypes.bool.isRequired
+  isSubmitting: React.PropTypes.bool.isRequired,
+  location: React.PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -42,7 +45,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onSubmitLoginForm: (values) => {
-      dispatch(loginWithPassword(values.email,values.password));
+      dispatch(loginWithPassword(values.email,values.password,values.destination));
     }
   };
 };
@@ -61,7 +64,7 @@ function validate(values){
 
 const reduxFormConfig = {
   form: 'login',
-  fields: ['email', 'password'],
+  fields: ['email', 'password', 'destination'],
   validate
 }
 

@@ -1,11 +1,26 @@
-import { LEFT_NAV_VISIBILITY } from './appActions';
+import { OPEN_LEFT_NAV, DOCK_LEFT_NAV } from './appActions';
 import { handleActions } from 'redux-actions';
 
+const INITIAL_STATE = {
+  leftNav: {
+    open: false,
+    docked: false
+  }
+}
+
 const app = handleActions({
-  LEFT_NAV_VISIBILITY: (state, action) => ({
-    ...state,
-    isLeftNavOpen: action.payload
+  OPEN_LEFT_NAV: (state, action) => ({
+    leftNav: {
+      open: action.payload,
+      docked: state.leftNav.docked
+    }
+  }),
+  DOCK_LEFT_NAV: (state, action) => ({
+    leftNav: {
+      open: state.leftNav.open,
+      docked: action.payload
+    }
   })
-}, { isLeftNavOpen: false });
+}, INITIAL_STATE);
 
 export default app;

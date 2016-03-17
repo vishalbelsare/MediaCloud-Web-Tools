@@ -1,8 +1,8 @@
 import {createAction} from 'redux-actions';
 
-export const LEFT_NAV_VISIBILITY = 'LEFT_NAV_VISIBILITY';
+export const OPEN_LEFT_NAV = 'OPEN_LEFT_NAV';
+export const DOCK_LEFT_NAV = 'DOCK_LEFT_NAV';
 
-// takes a boolean argument indicating if it is open or not
-let leftNavVisibility = createAction(LEFT_NAV_VISIBILITY);
+export const openLeftNav = createAction(OPEN_LEFT_NAV);
 
-export default leftNavVisibility;
+export const dockLeftNav = createAction(DOCK_LEFT_NAV);

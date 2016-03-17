@@ -7,8 +7,8 @@ import {connect} from 'react-redux';
 import {SelectableContainerEnhance} from 'material-ui/lib/hoc/selectable-enhance';
 import {Spacing, Typography} from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
-import {purple500} from 'material-ui/lib/styles/colors';
-import leftNavVisibility from './appActions';
+import {purple400} from 'material-ui/lib/styles/colors';
+import {openLeftNav} from './appActions';
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -17,10 +17,10 @@ const AppLeftNav = React.createClass({
   propTypes: {
     location: React.PropTypes.object.isRequired,
     user: React.PropTypes.object.isRequired,
-    docked: React.PropTypes.bool.isRequired,
     onRequestChangeLeftNav: React.PropTypes.func,
     onRequestChangeList: React.PropTypes.func.isRequired,
-    open: React.PropTypes.bool,
+    open: React.PropTypes.bool.isRequired,
+    docked: React.PropTypes.bool.isRequired,
     style: React.PropTypes.object
   },
 
@@ -44,7 +44,7 @@ const AppLeftNav = React.createClass({
       color: Typography.textFullWhite,
       lineHeight: `${Spacing.desktopKeylineIncrement}px`,
       fontWeight: Typography.fontWeightLight,
-      backgroundColor: purple500,
+      backgroundColor: purple400,
       paddingLeft: Spacing.desktopGutter,
       marginBottom: 8
     }
@@ -77,7 +77,7 @@ const AppLeftNav = React.createClass({
         containerStyle={{zIndex: zIndex.leftNav - 100}}
       >
         <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
-          Options
+          MediaMeter
         </div>
 
 
@@ -101,7 +101,8 @@ const AppLeftNav = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    open: state.app.isLeftNavOpen,
+    open: state.app.leftNav.open,
+    docked: state.app.leftNav.docked,
     user: state.user
   };
 };
@@ -109,7 +110,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onRequestChangeLeftNav: (open) => {
-      dispatch(leftNavVisibility(open));
+      dispatch(openLeftNav(open));
     }
   };
 };

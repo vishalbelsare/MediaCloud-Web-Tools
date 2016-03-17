@@ -20,7 +20,7 @@ const LoginContainer = React.createClass({
     return (
       <div>
         <h2>Login</h2>
-        <LoginForm/>
+        <LoginForm location={this.props.location}/>
       </div>
     );
   }

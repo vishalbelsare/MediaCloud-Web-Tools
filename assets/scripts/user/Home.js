@@ -1,14 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-function HomeContainer(email) {
-  return (
-  	<div>
-  	<h1>Home</h1>
-  	<p>You are logged in as {email}</p>
-  	</div>
-  );
-}
+const HomeContainer = React.createClass({
+  render() {
+    return (
+      <div>
+        <h1>Home</h1>
+        <p>You are logged in as {this.props.email}</p>
+      </div>
+    );
+  }
+});
+
 
 const mapStateToProps = (state) => {
   return {

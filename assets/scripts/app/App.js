@@ -10,13 +10,14 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import {Spacing} from 'material-ui/lib/styles';
 import {darkWhite, grey200, grey400} from 'material-ui/lib/styles/colors';
 import { connect } from 'react-redux';
+import {StyleResizable} from 'material-ui/lib/mixins';
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import MediaMeterTheme from '../theme';
 
 import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
-import leftNavVisibility from './appActions';
+import { openLeftNav } from './appActions';
 
 const App = React.createClass({
 
@@ -26,6 +27,10 @@ const App = React.createClass({
     handleTouchTapLeftIconButton: React.PropTypes.func,
     handleRequestChangeList: React.PropTypes.func
   },
+
+  mixins: [
+    StyleResizable
+  ],
 
   contextTypes: {
     router: React.PropTypes.object.isRequired,
@@ -72,6 +77,14 @@ const App = React.createClass({
     return styles;
   },
 
+  componentDidMount(){
+    if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
+        this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)){
+      this.context.state.dispatch(openLeftNav(true));
+      this.context.state.dispatch(dockLeftNav(true));
+    }
+  },
+
   handleRequestChangeListProxy(event, value) {
     this.context.router.push(value);
     this.props.handleRequestChangeList();
@@ -86,7 +99,6 @@ const App = React.createClass({
     const router = this.context.router;
     const styles = this.getStyles();
     const title = "MediaMeter";
-    const leftNavOpen = this.context.store.getState().leftNavVisibility;
 
     return (
       <div>
@@ -117,7 +129,6 @@ const App = React.createClass({
         <ControllableAppLeftNav
           style={styles.leftNav}
           location={location}
-          docked={false}
           onRequestChangeList={this.handleRequestChangeListProxy}
         />
         <FullWidthSection style={styles.footer}>
@@ -149,10 +160,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleTouchTapLeftIconButton: (open) => {
-      dispatch(leftNavVisibility(true));
+      dispatch(openLeftNav(true));
     },
     handleRequestChangeList: () => {
-      dispatch(leftNavVisibility(false));
+      dispatch(openLeftNav(false));
     }
   };
 };

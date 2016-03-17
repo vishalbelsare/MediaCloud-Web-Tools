@@ -21,7 +21,6 @@ injectTapEventPlugin();
 
 // Add the reducer to your store on the `routing` key
 const store = configureStore();
-console.log(store.getState());
 
 // load any cookies correctly
 if(hasCookies()){
@@ -35,7 +34,12 @@ const history = syncHistoryWithStore(hashHistory, store);
 //TODO: history.listen(location => analyticsService.track(location.pathname))
 
 function requireAuth(nextState, replace){
-  console.log(nextState);
+  if (!hasCookies()) {
+    replace({
+      pathname: '/login',
+      state: { nextPathname: nextState.location.pathname }
+    })
+  }
 }
 
 ReactDOM.render(
