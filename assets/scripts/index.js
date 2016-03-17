@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import cookie from 'react-cookie';
-import { COOKIE_USERNAME, COOKIE_KEY } from './lib/auth'
-import { loginFromCookie } from './user/userActions'
+import { hasCookies, getCookies } from './lib/auth'
+import { loginFromEmailAndKey } from './user/userActions'
 
 import App from './app/App';
 import Home from './user/Home';
@@ -23,11 +23,9 @@ injectTapEventPlugin();
 const store = configureStore();
 console.log(store.getState());
 
-// set any cookies correctly
-let email = cookie.load(COOKIE_USERNAME);
-let key = cookie.load(COOKIE_KEY);
-if(!!email && !!key){
-  store.dispatch(loginFromCookie({email,key}));
+// load any cookies correctly
+if(hasCookies()){
+  store.dispatch(loginFromEmailAndKey(getCookies()));
 }
 
 // Create an enhanced history that syncs navigation events with the store

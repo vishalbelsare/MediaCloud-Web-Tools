@@ -1,8 +1,7 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { LOGIN, LOGOUT, LOGIN_FROM_COOKIE} from './userActions';
+import { LOGIN, LOGOUT, LOGIN_FROM_EMAIL_AND_KEY} from './userActions';
 import { handleActions } from 'redux-actions';
-import cookie from 'react-cookie';
-import { COOKIE_USERNAME, COOKIE_KEY } from '../lib/auth'
+import { saveCookies, deleteCookies } from '../lib/auth'
 
 const INITIAL_STATE = {
   isFetching: false,
@@ -18,9 +17,8 @@ export default function user(state = INITIAL_STATE, action) {
       ...action.payload
     });
   case resolve(LOGIN):
-    cookie.save(COOKIE_KEY,action.payload.key);
-    cookie.save(COOKIE_USERNAME,action.payload.email);
-  case LOGIN_FROM_COOKIE:
+    saveCookies(action.payload.email, action.payload.key);
+  case LOGIN_FROM_EMAIL_AND_KEY:
     return Object.assign({}, state, {
       isFetching: false,
       isLoggedIn: true,
@@ -32,8 +30,7 @@ export default function user(state = INITIAL_STATE, action) {
       isLoggedIn: false
     });
   case LOGOUT:
-    cookie.remove(COOKIE_KEY);
-    cookie.remove(COOKIE_USERNAME);
+    deleteCookies();
     return Object.assign({}, state, {
       isFetching: false,
       isLoggedIn: false,

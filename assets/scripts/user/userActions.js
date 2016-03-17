@@ -4,13 +4,13 @@ import { promiseToLogin } from '../lib/auth'
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
-export const LOGIN_FROM_COOKIE = 'LOGIN_FROM_COOKIE';
+export const LOGIN_FROM_EMAIL_AND_KEY = 'LOGIN_FROM_EMAIL_AND_KEY';
 
 export const logout = createAction(LOGOUT, function(router){
   router.push("/login");
 });
 
-export const loginFromCookie = createAction(LOGIN_FROM_COOKIE)
+export const loginFromEmailAndKey = createAction(LOGIN_FROM_EMAIL_AND_KEY)
 
 export function login(email,password) {
   return {

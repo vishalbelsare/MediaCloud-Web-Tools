@@ -1,6 +1,7 @@
+import cookie from 'react-cookie';
 
-export const COOKIE_USERNAME = 'mediameter_user_username';
-export const COOKIE_KEY = 'mediameter_user_key';
+const COOKIE_USERNAME = 'mediameter_user_username';
+const COOKIE_KEY = 'mediameter_user_key';
 
 export function promiseToLogin(email,password){
   let formData = new FormData();
@@ -12,4 +13,25 @@ export function promiseToLogin(email,password){
   }).then(
     response => response.json()
   );
+}
+
+export function saveCookies(email, key){
+  cookie.save(COOKIE_USERNAME,email);
+  cookie.save(COOKIE_KEY,key);
+}
+
+export function deleteCookies(){
+  cookie.remove(COOKIE_USERNAME);
+  cookie.remove(COOKIE_KEY);
+}
+
+export function hasCookies(){
+  return (cookie.load(COOKIE_KEY)!=undefined) && (cookie.load(COOKIE_USERNAME)!=undefined);
+}
+
+export function getCookies(){
+  return {
+    email: cookie.load(COOKIE_USERNAME),
+    key: cookie.load(COOKIE_KEY)
+  }
 }
