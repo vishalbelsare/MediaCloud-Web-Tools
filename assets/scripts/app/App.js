@@ -1,5 +1,5 @@
 import React from 'react';
-import DocumentTitle from 'react-document-title';
+import Title from 'react-title-component';
 
 import AppBar from 'material-ui/lib/app-bar';
 import RaisedButton from 'material-ui/lib/raised-button';
@@ -98,11 +98,11 @@ const App = React.createClass({
 
     const router = this.context.router;
     const styles = this.getStyles();
-    const title = "MediaMeter";
+    let title = "MediaMeter";
 
     return (
       <div>
-        <DocumentTitle title={title} />
+        <Title render={title}/>
         <AppBar
           onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
           title={title}

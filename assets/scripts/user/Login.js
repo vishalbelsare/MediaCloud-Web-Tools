@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import Title from 'react-title-component';
 
 import LoginForm from './LoginForm';
 import FullWidthSection from '../components/FullWidthSection';
@@ -19,6 +20,7 @@ const LoginContainer = React.createClass({
   render() {
     return (
       <div>
+        <Title render={parentTitle => `Login | ${parentTitle}`}/>
         <h2>Login</h2>
         <LoginForm location={this.props.location}/>
       </div>
