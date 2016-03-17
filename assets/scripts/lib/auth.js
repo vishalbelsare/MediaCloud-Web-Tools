@@ -3,11 +3,23 @@ import cookie from 'react-cookie';
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';
 
-export function promiseToLogin(email,password){
+export function promiseToLoginWithPassword(email,password){
   let formData = new FormData();
   formData.append('email', email);
   formData.append('password', password);
   return fetch("/api/login", {
+    method: 'post',
+    body: formData
+  }).then(
+    response => response.json()
+  );
+}
+
+export function promiseToLoginWithKey(email,key){
+  let formData = new FormData();
+  formData.append('email', email);
+  formData.append('key', key);
+  return fetch("/api/login-with-key", {
     method: 'post',
     body: formData
   }).then(

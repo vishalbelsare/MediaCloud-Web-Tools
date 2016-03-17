@@ -6,7 +6,7 @@ import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import cookie from 'react-cookie';
 import { hasCookies, getCookies } from './lib/auth'
-import { loginFromEmailAndKey } from './user/userActions'
+import { loginWithKey } from './user/userActions'
 
 import App from './app/App';
 import Home from './user/Home';
@@ -25,7 +25,8 @@ console.log(store.getState());
 
 // load any cookies correctly
 if(hasCookies()){
-  store.dispatch(loginFromEmailAndKey(getCookies()));
+  let cookies = getCookies();
+  store.dispatch(loginWithKey(cookies.email,cookies.key));
 }
 
 // Create an enhanced history that syncs navigation events with the store
@@ -33,11 +34,15 @@ const history = syncHistoryWithStore(hashHistory, store);
 
 //TODO: history.listen(location => analyticsService.track(location.pathname))
 
+function requireAuth(nextState, replace){
+  console.log(nextState);
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
       <Route path="/" component={App}>
-        <Route path="/home" component={Home}/>
+        <Route path="/home" component={Home} onEnter={requireAuth}/>
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
         <Route path="/logout" component={Logout}/>
