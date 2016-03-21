@@ -1,47 +1,41 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
+import { connect } from 'react-redux';
 import Title from 'react-title-component';
 
 import LoginForm from './LoginForm';
-import FullWidthSection from '../components/FullWidthSection';
 
 const LoginContainer = React.createClass({
   propTypes: {
-    isLoggedIn: React.PropTypes.bool.isRequired
+    isLoggedIn: React.PropTypes.bool.isRequired,
+    location: React.PropTypes.object.isRequired
   },
   contextTypes: {
     router: React.PropTypes.object.isRequired
   },
   componentDidMount() {
-    if(this.props.isLoggedIn){
-      this.context.router.push("/home");
+    if (this.props.isLoggedIn) {
+      this.context.router.push('/home');
     }
   },
   render() {
+    const titleHandler = parentTitle => `Login | ${parentTitle}`;
     return (
       <div>
-        <Title render={parentTitle => `Login | ${parentTitle}`}/>
+        <Title render={titleHandler} />
         <h2>Login</h2>
-        <LoginForm location={this.props.location}/>
+        <LoginForm location={this.props.location} />
       </div>
     );
   }
 });
 
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.user.isLoggedIn
-  };
-};
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.user.isLoggedIn
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  };
-};
-
-let Login = connect(
+const Login = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(LoginContainer);
 
 export default Login;

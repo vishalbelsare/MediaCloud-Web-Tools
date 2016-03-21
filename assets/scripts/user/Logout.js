@@ -1,5 +1,5 @@
 import React from 'react';
-import {logout} from './userActions'
+import { logout } from './userActions';
 
 const Logout = React.createClass({
   contextTypes: {

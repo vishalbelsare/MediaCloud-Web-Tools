@@ -2,22 +2,21 @@ import React from 'react';
 import Title from 'react-title-component';
 
 import AppBar from 'material-ui/lib/app-bar';
-import RaisedButton from 'material-ui/lib/raised-button';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
 import PersonIcon from 'material-ui/lib/svg-icons/social/person';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import {Spacing} from 'material-ui/lib/styles';
-import {darkWhite, grey200, grey400} from 'material-ui/lib/styles/colors';
+import { Spacing } from 'material-ui/lib/styles';
+import { darkWhite, grey200, grey400 } from 'material-ui/lib/styles/colors';
 import { connect } from 'react-redux';
-import {StyleResizable} from 'material-ui/lib/mixins';
+import { StyleResizable } from 'material-ui/lib/mixins';
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import MediaMeterTheme from '../theme';
 
 import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
-import { openLeftNav } from './appActions';
+import { openLeftNav, dockLeftNav } from './appActions';
 
 const App = React.createClass({
 
@@ -38,7 +37,7 @@ const App = React.createClass({
   },
 
   //the key passed through context must be called "muiTheme"
-  childContextTypes : {
+  childContextTypes: {
     muiTheme: React.PropTypes.object
   },
 
@@ -77,9 +76,9 @@ const App = React.createClass({
     return styles;
   },
 
-  componentDidMount(){
+  componentDidMount() {
     if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
-        this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)){
+        this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
       this.context.state.dispatch(openLeftNav(true));
       this.context.state.dispatch(dockLeftNav(true));
     }
@@ -96,13 +95,12 @@ const App = React.createClass({
       children
     } = this.props;
 
-    const router = this.context.router;
     const styles = this.getStyles();
-    let title = "MediaMeter";
+    const title = 'MediaMeter';
 
     return (
       <div>
-        <Title render={title}/>
+        <Title render={title} />
         <AppBar
           onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
           title={title}
@@ -113,11 +111,11 @@ const App = React.createClass({
               iconButtonElement={
                 <IconButton><PersonIcon /></IconButton>
               }
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-              valueLink={{value: location.pathname, requestChange: this.handleRequestChangeListProxy}}
+              targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+              anchorOrigin={ { horizontal: 'right', vertical: 'top' } }
+              valueLink= { { value: location.pathname, requestChange: this.handleRequestChangeListProxy } }
             >
-              <MenuItem primaryText="Logout" value="/logout"/>
+              <MenuItem primaryText='Logout' value='/logout' />
             </IconMenu>
           }
         />
@@ -134,13 +132,13 @@ const App = React.createClass({
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}>
             {'Created by '}
-            <a style={styles.a} href="https://civic.mit.edu/">
+            <a style={styles.a} href='https://civic.mit.edu/'>
               MIT Center for Civic Media
             </a>
             {' and '}
             <a
               style={styles.a}
-              href="https://cyber.law.harvard.edu"
+              href='https://cyber.law.harvard.edu'
             >
               Berkman Center for Internet and Society at Harvard University
             </a>.
@@ -148,18 +146,13 @@ const App = React.createClass({
         </FullWidthSection>
       </div>
     );
-  }  
+  }
 
 });
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = function (dispatch) {
   return {
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    handleTouchTapLeftIconButton: (open) => {
+    handleTouchTapLeftIconButton: () => {
       dispatch(openLeftNav(true));
     },
     handleRequestChangeList: () => {
@@ -169,7 +162,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const ControllableApp = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(App);
 

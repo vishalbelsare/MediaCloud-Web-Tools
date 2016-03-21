@@ -2,13 +2,13 @@ import React from 'react';
 import LeftNav from 'material-ui/lib/left-nav';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 //import Divider from 'material-ui/lib/divider';
-import {SelectableContainerEnhance} from 'material-ui/lib/hoc/selectable-enhance';
-import {Spacing, Typography} from 'material-ui/lib/styles';
+import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
+import { Spacing, Typography } from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
-import {purple400} from 'material-ui/lib/styles/colors';
-import {openLeftNav} from './appActions';
+import { purple400 } from 'material-ui/lib/styles/colors';
+import { openLeftNav } from './appActions';
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -29,7 +29,7 @@ const AppLeftNav = React.createClass({
     router: React.PropTypes.object.isRequired
   },
 
-  componentDidMount: function() {
+  componentDidMount: function () {
   },
 
   onHeaderTouchTap() {
@@ -62,10 +62,10 @@ const AppLeftNav = React.createClass({
     } = this.props;
 
     let loginControl = null;
-    if(user.isLoggedIn){
-      loginControl = <ListItem primaryText="Logout" value="/logout" />;
+    if (user.isLoggedIn) {
+      loginControl = <ListItem primaryText='Logout' value='/logout' />;
     } else {
-      loginControl = <ListItem primaryText="Login" value="/login" />;
+      loginControl = <ListItem primaryText='Login' value='/login' />;
     }
 
     return (
@@ -74,46 +74,42 @@ const AppLeftNav = React.createClass({
         docked={docked}
         open={open}
         onRequestChange={onRequestChangeLeftNav}
-        containerStyle={{zIndex: zIndex.leftNav - 100}}
+        containerStyle={{ zIndex: zIndex.leftNav - 100 }}
       >
         <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
           MediaMeter
         </div>
 
 
-        <SelectableList 
-          valueLink={{value: location.pathname, requestChange: onRequestChangeList}}
-        >    
-          <ListItem primaryText="Home" value="/home" />
+        <SelectableList
+          valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
+        >
+          <ListItem primaryText='Home' value='/home' />
         </SelectableList>
 
-        <SelectableList 
-          valueLink={{value: location.pathname, requestChange: onRequestChangeList}}
-          subheader="Meta"
-        >          
+        <SelectableList
+          valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
+          subheader='Meta'
+        >
           {loginControl}
-          <ListItem primaryText="About" value="/about" />
+          <ListItem primaryText='About' value='/about' />
         </SelectableList>
       </LeftNav>
     );
   }
 });
 
-const mapStateToProps = (state) => {
-  return {
-    open: state.app.leftNav.open,
-    docked: state.app.leftNav.docked,
-    user: state.user
-  };
-};
+const mapStateToProps = (state) => ({
+  open: state.app.leftNav.open,
+  docked: state.app.leftNav.docked,
+  user: state.user
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onRequestChangeLeftNav: (open) => {
-      dispatch(openLeftNav(open));
-    }
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  onRequestChangeLeftNav: (open) => {
+    dispatch(openLeftNav(open));
+  }
+});
 
 const ControllableAppLeftNav = connect(
   mapStateToProps,

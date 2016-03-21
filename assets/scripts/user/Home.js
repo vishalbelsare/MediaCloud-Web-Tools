@@ -1,35 +1,30 @@
 import React from 'react';
 import Title from 'react-title-component';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-const HomeContainer = React.createClass({
-  render() {
-    return (
-      <div>
-        <Title render={parentTitle => `Home | ${parentTitle}`}/>
-        <h1>Home</h1>
-        <p>You are logged in as {this.props.email}</p>
-      </div>
-    );
-  }
+const HomeContainer = (props) => {
+  const titleHandler = parentTitle => `Home | ${parentTitle}`;
+  return (
+    <div>
+      <Title render={titleHandler} />
+      <h1>Home</h1>
+      <p>You are logged in as {props.email}</p>
+    </div>
+  );
+};
+
+HomeContainer.propTypes = {
+  email: React.PropTypes.string.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  email: state.user.email
 });
 
-
-const mapStateToProps = (state) => {
-  return {
-    email: state.user.email
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  };
-};
-
-let Home = connect(
+const Home = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(HomeContainer);
 
 export default Home;

@@ -6,7 +6,7 @@ const INITIAL_STATE = {
     open: false,
     docked: false
   }
-}
+};
 
 const app = handleActions({
   OPEN_LEFT_NAV: (state, action) => ({

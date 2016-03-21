@@ -1,4 +1,4 @@
-import {createAction} from 'redux-actions';
+import { createAction } from 'redux-actions';
 
 export const OPEN_LEFT_NAV = 'OPEN_LEFT_NAV';
 export const DOCK_LEFT_NAV = 'DOCK_LEFT_NAV';
