@@ -1,9 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Title from 'react-title-component';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import LoginForm from './LoginForm';
+
+const messages = {
+  loginTitle: { id:"login.title", defaultMessage:"login" }
+};
 
 class LoginContainer extends React.Component {
   componentDidMount() {
@@ -12,11 +16,12 @@ class LoginContainer extends React.Component {
     }
   }
   render() {
-    const titleHandler = parentTitle => `Login | ${parentTitle}`;
+    const {formatMessage} = this.props.intl;
+    const titleHandler = parentTitle => `${formatMessage(messages.loginTitle)} | ${parentTitle}`;
     return (
       <div>
         <Title render={titleHandler} />
-        <h2><FormattedMessage id="login.title" defaultMessage="Login"/></h2>
+        <h2><FormattedMessage {...messages.loginTitle}/></h2>
         <LoginForm location={this.props.location} />
       </div>
     );
@@ -36,9 +41,7 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn
 });
 
-const Login = connect(
+export default injectIntl( connect(
   mapStateToProps,
   null
-)(LoginContainer);
-
-export default Login;
+)(LoginContainer) );

@@ -9,7 +9,16 @@ import { Spacing, Typography } from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
 import { purple400 } from 'material-ui/lib/styles/colors';
 import { openLeftNav } from './appActions';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+
+const messages = {
+  menuHome: { id:"menu.home", defaultMessage:"Home" },
+  menuMeta: { id:"menu.meta", defaultMessage:"Meta" },
+  menuAbout: { id:"menu.about", defaultMessage:"About" },
+  appTitle: { id:"app.title", defaultMessage:"MediaMeter" },
+  appLogin: { id:"app.login", defaultMessage:"Login" },
+  appLogout: { id:"app.logout", defaultMessage:"Logout" }
+};
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -61,12 +70,13 @@ const AppLeftNav = React.createClass({
       style,
       user
     } = this.props;
+    const {formatMessage} = this.props.intl;
 
     let loginControl = null;
     if (user.isLoggedIn) {
-      loginControl = <ListItem primaryText='Logout' value='/logout' />;
+      loginControl = <ListItem primaryText={formatMessage(messages.appLogout)} value='/logout' />;
     } else {
-      loginControl = <ListItem primaryText='Login' value='/login' />;
+      loginControl = <ListItem primaryText={formatMessage(messages.appLogin)} value='/login' />;
     }
 
     return (
@@ -78,22 +88,22 @@ const AppLeftNav = React.createClass({
         containerStyle={{ zIndex: zIndex.leftNav - 100 }}
       >
         <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
-          <FormattedMessage id="app.title" defaultMessage="MediaMeter"/>
+          <FormattedMessage {...messages.appTitle}/>
         </div>
 
 
         <SelectableList
           valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
         >
-          <ListItem primaryText='Home' value='/home' />
+          <ListItem primaryText={formatMessage(messages.menuHome)} value='/home' />
         </SelectableList>
 
         <SelectableList
           valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
-          subheader='Meta'
+          subheader={formatMessage(messages.menuMeta)}
         >
           {loginControl}
-          <ListItem primaryText='About' value='/about' />
+          <ListItem primaryText={formatMessage(messages.menuAbout)} value='/about' />
         </SelectableList>
       </LeftNav>
     );
@@ -112,9 +122,7 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-const ControllableAppLeftNav = connect(
+export default injectIntl( connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppLeftNav);
-
-export default ControllableAppLeftNav;
+)(AppLeftNav) );

@@ -1,7 +1,7 @@
 import React from 'react';
 import Title from 'react-title-component';
 
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import AppBar from 'material-ui/lib/app-bar';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
@@ -18,6 +18,13 @@ import MediaMeterTheme from '../theme';
 import ControllableAppLeftNav from './AppLeftNav';
 import FullWidthSection from '../components/FullWidthSection';
 import { openLeftNav, dockLeftNav } from './appActions';
+
+const messages = {
+  footerC4CM: { id:"footer.c4cm.name", defaultMessage:"MIT Center for Civic Media" },
+  footerBerkman: { id:"footer.berkman.name", defaultMessage:"Berkman Center for Internet and Society at Harvard University"},
+  appTitle: { id:"app.title", defaultMessage:"MediaMeter" },
+  appLogout: { id:"app.logout", defaultMessage:"Logout" }
+};
 
 const App = React.createClass({
 
@@ -93,18 +100,17 @@ const App = React.createClass({
   render() {
     const {
       location,
-      children
+      children,
     } = this.props;
-
+    const {formatMessage} = this.props.intl;
     const styles = this.getStyles();
-    const title = 'MediaMeter';
 
     return (
       <div>
-        <Title render={title} />
+        <Title render={formatMessage(messages.appTitle)} />
         <AppBar
           onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
-          title={title}
+          title={formatMessage(messages.appTitle)}
           zDepth={0}
           style={styles.appBar}
           iconElementRight={
@@ -116,7 +122,7 @@ const App = React.createClass({
               anchorOrigin={ { horizontal: 'right', vertical: 'top' } }
               valueLink= { { value: location.pathname, requestChange: this.handleRequestChangeListProxy } }
             >
-              <MenuItem primaryText='Logout' value='/logout' />
+              <MenuItem primaryText={formatMessage(messages.appLogout)} value='/logout' />
             </IconMenu>
           }
         />
@@ -134,14 +140,14 @@ const App = React.createClass({
           <p style={styles.p}>
             {'Created by '}
             <a style={styles.a} href='https://civic.mit.edu/'>
-              <FormattedMessage id="footer.c4cm.name" defaultMessage="MIT Center for Civic Media"/>
+              <FormattedMessage {...messages.footerC4CM}/>
             </a>
             {' and '}
             <a
               style={styles.a}
               href='https://cyber.law.harvard.edu'
             >
-              <FormattedMessage id="footer.berkman.name" defaultMessage="Berkman Center for Internet and Society at Harvard University"/>
+              <FormattedMessage {...messages.footerBerkman}/>
             </a>.
           </p>
         </FullWidthSection>
@@ -162,9 +168,4 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-const ControllableApp = connect(
-  null,
-  mapDispatchToProps
-)(App);
-
-export default ControllableApp;
+export default injectIntl( connect(null, mapDispatchToProps)(App) );
