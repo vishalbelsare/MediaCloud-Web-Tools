@@ -1,7 +1,7 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT} from './userActions';
+import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT } from './userActions';
 import { handleActions } from 'redux-actions';
-import { saveCookies, deleteCookies } from '../lib/auth'
+import { saveCookies, deleteCookies } from '../lib/auth';
 
 const INITIAL_STATE = {
   isFetching: false,
@@ -10,10 +10,10 @@ const INITIAL_STATE = {
 };
 
 export default function user(state = INITIAL_STATE, action) {
-  switch(action.type){
+  switch (action.type) {
 
   case LOGIN_WITH_PASSWORD:
-    return Object.assign({},state, {
+    return Object.assign({}, state, {
       isFetching: true,
       isLoggedIn: false,
       ...action.payload
@@ -32,17 +32,17 @@ export default function user(state = INITIAL_STATE, action) {
     });
 
   case LOGIN_WITH_KEY:
-    return Object.assign({},state, {
+    return Object.assign({}, state, {
       isFetching: true,
       isLoggedIn: false,
       ...action.payload
-    });    
+    });
   case resolve(LOGIN_WITH_KEY):
     return Object.assign({}, state, {
       isFetching: false,
       isLoggedIn: true,
       ...action.payload
-    });    
+    });
   case reject(LOGIN_WITH_KEY):
 
   case LOGOUT:

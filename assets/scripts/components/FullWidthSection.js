@@ -1,6 +1,6 @@
 import React from 'react';
-import {ClearFix, Mixins, Styles} from 'material-ui';
-const {StyleResizable} = Mixins;
+import { ClearFix, Mixins, Styles } from 'material-ui';
+const { StyleResizable } = Mixins;
 const desktopGutter = Styles.Spacing.desktopGutter;
 
 const FullWidthSection = React.createClass({
@@ -10,17 +10,17 @@ const FullWidthSection = React.createClass({
     contentStyle: React.PropTypes.object,
     contentType: React.PropTypes.string,
     style: React.PropTypes.object,
-    useContent: React.PropTypes.bool,
+    useContent: React.PropTypes.bool
   },
 
   mixins: [
-    StyleResizable,
+    StyleResizable
   ],
 
   getDefaultProps() {
     return {
       useContent: false,
-      contentType: 'div',
+      contentType: 'div'
     };
   },
 
@@ -28,20 +28,20 @@ const FullWidthSection = React.createClass({
     return {
       root: {
         padding: desktopGutter,
-        boxSizing: 'border-box',
+        boxSizing: 'border-box'
       },
       content: {
         maxWidth: 1200,
-        margin: '0 auto',
+        margin: '0 auto'
       },
       rootWhenSmall: {
         paddingTop: desktopGutter * 2,
-        paddingBottom: desktopGutter * 2,
+        paddingBottom: desktopGutter * 2
       },
       rootWhenLarge: {
         paddingTop: desktopGutter * 3,
-        paddingBottom: desktopGutter * 3,
-      },
+        paddingBottom: desktopGutter * 3
+      }
     };
   },
 
@@ -61,7 +61,7 @@ const FullWidthSection = React.createClass({
       content =
         React.createElement(
           contentType,
-          {style: Object.assign(styles.content, contentStyle)},
+          { style: Object.assign(styles.content, contentStyle) },
           this.props.children
         );
     } else {
@@ -80,7 +80,7 @@ const FullWidthSection = React.createClass({
         {content}
       </ClearFix>
     );
-  },
+  }
 });
 
 export default FullWidthSection;

@@ -11,6 +11,12 @@
     "chai": true,
     "sinon": true
   },
+  "parserOptions":{
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    }
+  },
   "rules": {
     "prefer-template": 0,
     "spaced-comment": 0,
