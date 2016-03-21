@@ -7,3 +7,5 @@ build/*.json
 server.config
 logs/*.log
 *.log
+build/messages/*.*
+build/messages/assets
