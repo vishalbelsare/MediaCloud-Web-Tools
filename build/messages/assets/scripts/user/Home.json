@@ -1,0 +1,10 @@
+[
+  {
+    "id": "home.title",
+    "defaultMessage": "Home"
+  },
+  {
+    "id": "login.success",
+    "defaultMessage": "You are logged in as {email}"
+  }
+]

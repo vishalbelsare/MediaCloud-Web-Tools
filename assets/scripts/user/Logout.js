@@ -1,5 +1,6 @@
 import React from 'react';
 import { logout } from './userActions';
+import {FormattedMessage} from 'react-intl';
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -7,7 +8,9 @@ class Logout extends React.Component {
   }
   render() {
     return (
-      <p>You have been logged out, you will be redirected shortly to login...</p>
+      <p><FormattedMessage id="logout.success" 
+          defaultMessage="You have been logged out, you will be redirected shortly to login..."/>
+      </p>
     );
   }
 }

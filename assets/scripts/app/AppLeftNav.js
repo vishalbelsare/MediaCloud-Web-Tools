@@ -9,6 +9,7 @@ import { Spacing, Typography } from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
 import { purple400 } from 'material-ui/lib/styles/colors';
 import { openLeftNav } from './appActions';
+import {FormattedMessage} from 'react-intl';
 
 const SelectableList = SelectableContainerEnhance(List);
 
@@ -77,7 +78,7 @@ const AppLeftNav = React.createClass({
         containerStyle={{ zIndex: zIndex.leftNav - 100 }}
       >
         <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
-          MediaMeter
+          <FormattedMessage id="app.title" defaultMessage="MediaMeter"/>
         </div>
 
 

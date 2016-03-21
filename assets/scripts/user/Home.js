@@ -1,5 +1,6 @@
 import React from 'react';
 import Title from 'react-title-component';
+import {FormattedMessage} from 'react-intl';
 
 import { connect } from 'react-redux';
 
@@ -8,8 +9,11 @@ const HomeContainer = (props) => {
   return (
     <div>
       <Title render={titleHandler} />
-      <h1>Home</h1>
-      <p>You are logged in as {props.email}</p>
+      <h1><FormattedMessage id="home.title" defaultMessage="Home"/></h1>
+      <p><FormattedMessage id="login.success" 
+          defaultMessage={`You are logged in as {email}`} 
+          values={{email: props.email}}/>
+      </p>
     </div>
   );
 };

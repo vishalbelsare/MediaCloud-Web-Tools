@@ -1,6 +1,7 @@
 import React from 'react';
 import Title from 'react-title-component';
 
+import {FormattedMessage} from 'react-intl';
 import AppBar from 'material-ui/lib/app-bar';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
@@ -133,14 +134,14 @@ const App = React.createClass({
           <p style={styles.p}>
             {'Created by '}
             <a style={styles.a} href='https://civic.mit.edu/'>
-              MIT Center for Civic Media
+              <FormattedMessage id="footer.c4cm.name" defaultMessage="MIT Center for Civic Media"/>
             </a>
             {' and '}
             <a
               style={styles.a}
               href='https://cyber.law.harvard.edu'
             >
-              Berkman Center for Internet and Society at Harvard University
+              <FormattedMessage id="footer.berkman.name" defaultMessage="Berkman Center for Internet and Society at Harvard University"/>
             </a>.
           </p>
         </FullWidthSection>

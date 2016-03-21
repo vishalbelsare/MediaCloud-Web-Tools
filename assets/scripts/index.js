@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -43,14 +44,16 @@ function requireAuth(nextState, replace) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path='/' component={App}>
-        <Route path='/home' component={Home} onEnter={requireAuth} />
-        <Route path='/about' component={About} />
-        <Route path='/login' component={Login} />
-        <Route path='/logout' component={Logout} />
-      </Route>
-    </Router>
+    <IntlProvider locale="en">
+      <Router history={history}>
+        <Route path='/' component={App}>
+          <Route path='/home' component={Home} onEnter={requireAuth} />
+          <Route path='/about' component={About} />
+          <Route path='/login' component={Login} />
+          <Route path='/logout' component={Logout} />
+        </Route>
+      </Router>
+    </IntlProvider>
   </Provider>,
   document.getElementById('app')
 );

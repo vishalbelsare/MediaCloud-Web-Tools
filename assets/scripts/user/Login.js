@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Title from 'react-title-component';
+import {FormattedMessage} from 'react-intl';
 
 import LoginForm from './LoginForm';
 
@@ -15,7 +16,7 @@ class LoginContainer extends React.Component {
     return (
       <div>
         <Title render={titleHandler} />
-        <h2>Login</h2>
+        <h2><FormattedMessage id="login.title" defaultMessage="Login"/></h2>
         <LoginForm location={this.props.location} />
       </div>
     );
