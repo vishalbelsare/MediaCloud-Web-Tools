@@ -1,6 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
 import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT } from './userActions';
-import { handleActions } from 'redux-actions';
 import { saveCookies, deleteCookies } from '../lib/auth';
 
 const INITIAL_STATE = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Title from 'react-title-component';
 
-function About() {
+const About = () => {
   const titleHandler = parentTitle => `About | ${parentTitle}`;
   return (
     <div>
@@ -9,6 +9,6 @@ function About() {
       <h1>About</h1>
     </div>
   );
-}
+};
 
 export default About;

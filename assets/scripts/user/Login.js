@@ -4,19 +4,12 @@ import Title from 'react-title-component';
 
 import LoginForm from './LoginForm';
 
-const LoginContainer = React.createClass({
-  propTypes: {
-    isLoggedIn: React.PropTypes.bool.isRequired,
-    location: React.PropTypes.object.isRequired
-  },
-  contextTypes: {
-    router: React.PropTypes.object.isRequired
-  },
+class LoginContainer extends React.Component {
   componentDidMount() {
     if (this.props.isLoggedIn) {
       this.context.router.push('/home');
     }
-  },
+  }
   render() {
     const titleHandler = parentTitle => `Login | ${parentTitle}`;
     return (
@@ -27,7 +20,16 @@ const LoginContainer = React.createClass({
       </div>
     );
   }
-});
+}
+
+LoginContainer.propTypes = {
+  isLoggedIn: React.PropTypes.bool.isRequired,
+  location: React.PropTypes.object.isRequired
+};
+
+LoginContainer.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn
