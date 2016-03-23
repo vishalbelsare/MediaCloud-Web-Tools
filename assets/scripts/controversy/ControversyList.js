@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import Table from 'material-ui/lib/table/table';
 import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
@@ -11,13 +10,13 @@ class ControversyListItem extends React.Component {
   getStyles() {
     const styles = {
       nameColumn: {
-        width: "20%"
+        width: '20%'
       }
     };
     return styles;
   }
-  render(){
-    const {controversy} = this.props;
+  render() {
+    const { controversy } = this.props;
     const styles = this.getStyles();
     return (
       <TableRow>
@@ -26,11 +25,13 @@ class ControversyListItem extends React.Component {
       </TableRow>
     );
   }
+}
+
+ControversyListItem.propTypes = {
+  controversy: React.PropTypes.object.isRequired
 };
 
 class ControversyList extends React.Component {
-  renderItem(c) {
-  }
   render() {
     return (
       <Table>
@@ -41,13 +42,13 @@ class ControversyList extends React.Component {
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-          {this.props.controversies.map( (controversy) => {
-            return <ControversyListItem key={controversy.controversies_id} controversy={controversy} />
+          {this.props.controversies.map((controversy) => {
+            return <ControversyListItem key={controversy.controversies_id} controversy={controversy} />;
           })}
         </TableBody>
       </Table>);
   }
-};
+}
 
 ControversyList.propTypes = {
   controversies: React.PropTypes.array.isRequired

@@ -1,22 +1,22 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
 
 import ErrorTryAgain from '../components/ErrorTryAgain';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ControversiesList from './ControversiesList';
+import ControversyList from './ControversyList';
 import { listControversies } from './controversyActions';
-import { FETCH_NONE, FETCH_ONGOING, FETCH_SUCCEEDED, FETCH_FAILED } from './controversyReducers';
+import { FETCH_SUCCEEDED, FETCH_FAILED } from './controversyReducers';
 
 const messages = {
   controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Controversies' },
   controversiesListSubTitle: { id: 'controversies.list.subtitle', defaultMessage: 'The first 20 public controversies' }
 };
 
-class ControversiesContainer extends React.Component {
+class ControversyListContainer extends React.Component {
   componentWillMount() {
     this.context.store.dispatch(listControversies());
   }
@@ -36,7 +36,7 @@ class ControversiesContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchState) {
     case FETCH_SUCCEEDED:
-      content = <ControversiesList controversies={controversies} />;
+      content = <ControversyList controversies={controversies} />;
       break;
     case FETCH_FAILED:
       content = <ErrorTryAgain onTryAgain={onTryAgain} />;
@@ -48,7 +48,7 @@ class ControversiesContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <Card>
-          <CardHeader title={title} subtitle={formatMessage(messages.controversiesListSubTitle)}/>
+          <CardHeader title={title} subtitle={formatMessage(messages.controversiesListSubTitle)} />
             { content }
         </Card>
       </div>
@@ -56,14 +56,14 @@ class ControversiesContainer extends React.Component {
   }
 }
 
-ControversiesContainer.propTypes = {
+ControversyListContainer.propTypes = {
   fetchState: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired
 };
 
-ControversiesContainer.contextTypes = {
+ControversyListContainer.contextTypes = {
   store: React.PropTypes.object.isRequired
 };
 
@@ -83,4 +83,4 @@ const mapDispatchToProps = function (dispatch) {
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ControversiesContainer));
+)(ControversyListContainer));

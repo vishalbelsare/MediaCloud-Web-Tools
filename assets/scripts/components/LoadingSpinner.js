@@ -20,6 +20,6 @@ class LoadingSpinner extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default LoadingSpinner;
