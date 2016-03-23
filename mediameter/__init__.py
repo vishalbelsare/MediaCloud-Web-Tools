@@ -10,6 +10,8 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 logging.basicConfig(filename=os.path.join(base_dir,'logs','server.log'),level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logger.info("---------------------------------------------------------------------------")
+flask_login_logger = logging.getLogger('flask_login')
+flask_login_logger.setLevel(logging.DEBUG)
 #requests_logger = logging.getLogger('requests')
 #requests_logger.setLevel(logging.WARN)
 #mediacloud_logger = logging.getLogger('mediacloud')
@@ -44,7 +46,7 @@ def create_app():
     return app
 
 app = create_app()
-app.secret_key = '543C16E84BB98FDF132BE8E3B733F'
+app.secret_key = settings.get('server','secret_key')
 
 # Create user login manager
 login_manager = flask_login.LoginManager()

@@ -10,8 +10,8 @@ const messages = {
 };
 
 class LoginContainer extends React.Component {
-  componentDidMount() {
-    if (this.props.isLoggedIn) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isLoggedIn) {
       this.context.router.push('/home');
     }
   }

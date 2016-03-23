@@ -5,7 +5,7 @@ export const LOGIN_WITH_PASSWORD = 'LOGIN_WITH_PASSWORD';
 export const LOGIN_WITH_KEY = 'LOGIN_FROM_KEY';
 export const LOGOUT = 'LOGOUT';
 
-export const logout = createAction(LOGOUT, (router) => { router.push('/login'); });
+export const logout = createAction(LOGOUT);
 
 export function loginWithKey(email, key) {
   return {

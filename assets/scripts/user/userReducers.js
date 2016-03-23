@@ -51,6 +51,7 @@ export default function user(state = INITIAL_STATE, action) {
       isLoggedIn: false,
       key: null
     });
+
   default:
     return state;
   }

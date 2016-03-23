@@ -45,7 +45,7 @@ function requireAuth(nextState, replace) {
 // CB that fires on Logout click to lot you out immediately
 function onEnterLogout(nextState, replaceState) {
   store.dispatch(logout());
-  replaceState({}, '/login');
+  replaceState('/login');
 }
 
 ReactDOM.render(

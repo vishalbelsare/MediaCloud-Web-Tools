@@ -113,7 +113,6 @@ const App = React.createClass({
           onLeftIconButtonTouchTap={this.props.handleTouchTapLeftIconButton}
           title={formatMessage(messages.appTitle)}
           zDepth={0}
-          style={styles.appBar}
           iconElementRight={
             <IconMenu
               iconButtonElement={

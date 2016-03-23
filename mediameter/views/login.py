@@ -17,9 +17,7 @@ def api_login_with_password():
     if user.is_anonymous():   # login failed
         logger.debug("  login failed")
         return abort(401)
-    logger.debug("  login succeeded")
-    flask_login.login_user(user)
-    user.create_in_db_if_needed()
+    auth.login_user(user)
     response = {'email':username,'key': user.get_id()}
     return jsonify(response)
 
@@ -34,8 +32,6 @@ def api_login_with_key():
     if user.is_anonymous():   # login failed
         logger.debug("  login failed")
         return abort(401)
-    logger.debug("  login succeeded")
-    flask_login.login_user(user)
-    user.create_in_db_if_needed()
+    auth.login_user(user)
     response = {'email':username,'key': user.get_id()}
     return jsonify(response)
