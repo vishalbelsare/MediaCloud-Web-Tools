@@ -8,7 +8,7 @@ import IconButton from 'material-ui/lib/icon-button';
 import PersonIcon from 'material-ui/lib/svg-icons/social/person';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { Spacing } from 'material-ui/lib/styles';
-import { darkWhite, grey200, grey400 } from 'material-ui/lib/styles/colors';
+import { darkWhite, grey200, grey800 } from 'material-ui/lib/styles/colors';
 import { connect } from 'react-redux';
 import { StyleResizable } from 'material-ui/lib/mixins';
 
@@ -69,12 +69,12 @@ const App = React.createClass({
         textAlign: 'center'
       },
       a: {
-        color: grey400
+        color: grey800
       },
       p: {
         margin: '0 auto',
         padding: 0,
-        text: grey400,
+        text: grey800,
         maxWidth: 356
       },
       iconButton: {

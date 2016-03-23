@@ -1,4 +1,5 @@
 import cookie from 'react-cookie';
+import fetch from 'isomorphic-fetch';
 
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';

@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'intl';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
@@ -12,7 +13,7 @@ import App from './app/App';
 import Home from './user/Home';
 import About from './app/About';
 import Login from './user/Login';
-import ControversyList from './controversy/ControversyList';
+import ControversiesContainer from './controversy/ControversiesContainer';
 import configureStore from './store/configureStore';
 
 // necessary lines for Material-UI library to work
@@ -54,7 +55,7 @@ ReactDOM.render(
       <Router history={history}>
         <Route path='/' component={App}>
           <Route path='/home' component={Home} onEnter={requireAuth} />
-          <Route path='/controversies' component={ControversyList} onEnter={requireAuth} />
+          <Route path='/controversies' component={ControversiesContainer} onEnter={requireAuth} />
           <Route path='/about' component={About} />
           <Route path='/login' component={Login} />
           <Route path='/logout' onEnter={onEnterLogout} />

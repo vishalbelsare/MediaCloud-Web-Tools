@@ -2,12 +2,24 @@ import React from 'react';
 
 import CircularProgress from 'material-ui/lib/circular-progress';
 
-const LoadingSpinner = (props) => {
-  return (
-    <div>
-      <CircularProgress />
-    </div>
-  );
+class LoadingSpinner extends React.Component {
+  getStyles() {
+    const styles = {
+      root: {
+        textAlign: 'center',
+        padding: 10
+      }
+    };
+    return styles;
+  }
+  render() {
+    const styles = this.getStyles();
+    return (
+      <div style={styles.root}>
+        <CircularProgress />
+      </div>
+    );
+  }
 };
 
 export default LoadingSpinner;

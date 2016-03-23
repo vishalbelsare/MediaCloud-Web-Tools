@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-fetch';
 
 export function promiseToListControversies() {
   return fetch('/api/controversy-list', {

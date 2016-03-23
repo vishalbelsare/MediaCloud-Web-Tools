@@ -12,6 +12,7 @@
   "dependencies": {
     "babel-polyfill": "^6.6.1",
     "if-env": "^1.0.0",
+    "intl": "^1.1.0",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "^0.14.4",
     "react": "^0.14.7",
@@ -28,7 +29,8 @@
     "redux-form": "^4.2.2",
     "redux-logger": "^2.6.1",
     "redux-simple-promise": "^2.0.2",
-    "redux-thunk": "^2.0.1"
+    "redux-thunk": "^2.0.1",
+    "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
     "babel-core": "^6.6.5",

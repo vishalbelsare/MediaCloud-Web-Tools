@@ -10,5 +10,4 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 def api_controversy_list():
     controversy_list = mc.controversyList()
-    logger.debug(controversy_list)
     return jsonify({'results':controversy_list})

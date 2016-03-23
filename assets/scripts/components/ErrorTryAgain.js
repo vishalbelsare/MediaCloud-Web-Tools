@@ -1,10 +1,9 @@
 import React from 'react';
-import { grey200 } from 'material-ui/lib/styles/colors';
+import { grey200, grey400 } from 'material-ui/lib/styles/colors';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/lib/flat-button';
 
 const messages = {
-  controversyListTitle: { id: 'controversy.list.title', defaultMessage: 'Controversies' },
   errorCantLoad: { id: 'error.cantLoad', defaultMessage: "Can't load the data" },
   errorTryAgain: { id: 'error.tryAgain', defaultMessage: 'Try Again' }
 };
@@ -16,6 +15,9 @@ class ErrorTryAgain extends React.Component {
         backgroundColor: grey200,
         textAlign: 'center',
         padding: 10
+      },
+      p: {
+        color: grey400
       }
     };
     return styles;
@@ -27,13 +29,12 @@ class ErrorTryAgain extends React.Component {
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
-        <FormattedMessage {...messages.errorCantLoad}/>
-        <br />
-        <FlatButton label={tryAgainMsg} primary={true} onClick={onTryAgain}/>
+        <p style={styles.p}><FormattedMessage {...messages.errorCantLoad} /></p>
+        <FlatButton label={tryAgainMsg} primary onClick={onTryAgain} />
       </div>
     );
   }
-};
+}
 
 ErrorTryAgain.propTypes = {
   intl: React.PropTypes.object.isRequired,
