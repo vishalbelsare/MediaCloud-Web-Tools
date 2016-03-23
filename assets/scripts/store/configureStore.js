@@ -7,7 +7,6 @@ import { reducer as form } from 'redux-form';
 import app from '../app/appReducers';
 import user from '../user/userReducers';
 import controversies from '../controversy/controversyReducers';
-import actionWithKeyMiddleware from './actionWithKeyMiddleware';
 
 const rootReducer = combineReducers({
   app,
@@ -17,7 +16,6 @@ const rootReducer = combineReducers({
   routing
 });
 const createStoreWithMiddleware = applyMiddleware(
-  actionWithKeyMiddleware,
   promiseMiddleware(),
   thunkMiddleware
 )(createStore);
