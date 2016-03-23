@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import LoginForm from './LoginForm';
 
 const messages = {
-  loginTitle: { id:"login.title", defaultMessage:"login" }
+  loginTitle: { id: 'login.title', defaultMessage: 'login' }
 };
 
 class LoginContainer extends React.Component {
@@ -16,12 +16,12 @@ class LoginContainer extends React.Component {
     }
   }
   render() {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(messages.loginTitle)} | ${parentTitle}`;
     return (
       <div>
         <Title render={titleHandler} />
-        <h2><FormattedMessage {...messages.loginTitle}/></h2>
+        <h2><FormattedMessage {...messages.loginTitle} /></h2>
         <LoginForm location={this.props.location} />
       </div>
     );
@@ -30,7 +30,8 @@ class LoginContainer extends React.Component {
 
 LoginContainer.propTypes = {
   isLoggedIn: React.PropTypes.bool.isRequired,
-  location: React.PropTypes.object.isRequired
+  location: React.PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired
 };
 
 LoginContainer.contextTypes = {
@@ -41,7 +42,7 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn
 });
 
-export default injectIntl( connect(
+export default injectIntl(connect(
   mapStateToProps,
   null
-)(LoginContainer) );
+)(LoginContainer));

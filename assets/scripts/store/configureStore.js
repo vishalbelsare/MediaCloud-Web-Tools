@@ -6,14 +6,21 @@ import promiseMiddleware from 'redux-simple-promise';
 import { reducer as form } from 'redux-form';
 import app from '../app/appReducers';
 import user from '../user/userReducers';
+import controversies from '../controversy/controversyReducers';
+import actionWithKeyMiddleware from './actionWithKeyMiddleware';
 
 const rootReducer = combineReducers({
   app,
   user,
+  controversies,
   form,
   routing
 });
-const createStoreWithMiddleware = applyMiddleware(promiseMiddleware(), thunkMiddleware)(createStore);
+const createStoreWithMiddleware = applyMiddleware(
+  actionWithKeyMiddleware,
+  promiseMiddleware(),
+  thunkMiddleware
+)(createStore);
 
 export default function configureStore() {
   return createStoreWithMiddleware(rootReducer,

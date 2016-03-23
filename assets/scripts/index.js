@@ -6,13 +6,13 @@ import { Provider } from 'react-redux';
 import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { hasCookies, getCookies } from './lib/auth';
-import { loginWithKey } from './user/userActions';
+import { loginWithKey, logout } from './user/userActions';
 
 import App from './app/App';
 import Home from './user/Home';
 import About from './app/About';
 import Login from './user/Login';
-import Logout from './user/Logout';
+import ControversyList from './controversy/ControversyList';
 import configureStore from './store/configureStore';
 
 // necessary lines for Material-UI library to work
@@ -42,15 +42,22 @@ function requireAuth(nextState, replace) {
   }
 }
 
+// CB that fires on Logout click to lot you out immediately
+function onEnterLogout(nextState, replaceState) {
+  store.dispatch(logout());
+  replaceState({}, '/login');
+}
+
 ReactDOM.render(
   <Provider store={store}>
-    <IntlProvider locale="en">
+    <IntlProvider locale='en'>
       <Router history={history}>
         <Route path='/' component={App}>
           <Route path='/home' component={Home} onEnter={requireAuth} />
+          <Route path='/controversies' component={ControversyList} onEnter={requireAuth} />
           <Route path='/about' component={About} />
           <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
+          <Route path='/logout' onEnter={onEnterLogout} />
         </Route>
       </Router>
     </IntlProvider>

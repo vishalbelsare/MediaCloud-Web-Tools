@@ -1,7 +1,7 @@
 import React from 'react';
 import Title from 'react-title-component';
 
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/lib/app-bar';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
@@ -20,10 +20,10 @@ import FullWidthSection from '../components/FullWidthSection';
 import { openLeftNav, dockLeftNav } from './appActions';
 
 const messages = {
-  footerC4CM: { id:"footer.c4cm.name", defaultMessage:"MIT Center for Civic Media" },
-  footerBerkman: { id:"footer.berkman.name", defaultMessage:"Berkman Center for Internet and Society at Harvard University"},
-  appTitle: { id:"app.title", defaultMessage:"MediaMeter" },
-  appLogout: { id:"app.logout", defaultMessage:"Logout" }
+  footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
+  footerBerkman: { id: 'footer.berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
+  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
+  appLogout: { id: 'app.logout', defaultMessage: 'Logout' }
 };
 
 const App = React.createClass({
@@ -32,7 +32,8 @@ const App = React.createClass({
     children: React.PropTypes.node,
     location: React.PropTypes.object.isRequired,
     handleTouchTapLeftIconButton: React.PropTypes.func,
-    handleRequestChangeList: React.PropTypes.func
+    handleRequestChangeList: React.PropTypes.func,
+    intl: React.PropTypes.object.isRequired
   },
 
   mixins: [
@@ -87,8 +88,8 @@ const App = React.createClass({
   componentDidMount() {
     if (this.isDeviceSize(StyleResizable.statics.Sizes.MEDIUM) ||
         this.isDeviceSize(StyleResizable.statics.Sizes.LARGE)) {
-      this.context.state.dispatch(openLeftNav(true));
-      this.context.state.dispatch(dockLeftNav(true));
+      this.context.store.dispatch(openLeftNav(true));
+      this.context.store.dispatch(dockLeftNav(true));
     }
   },
 
@@ -100,9 +101,9 @@ const App = React.createClass({
   render() {
     const {
       location,
-      children,
+      children
     } = this.props;
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
 
     return (
@@ -140,14 +141,14 @@ const App = React.createClass({
           <p style={styles.p}>
             {'Created by '}
             <a style={styles.a} href='https://civic.mit.edu/'>
-              <FormattedMessage {...messages.footerC4CM}/>
+              <FormattedMessage {...messages.footerC4CM} />
             </a>
             {' and '}
             <a
               style={styles.a}
               href='https://cyber.law.harvard.edu'
             >
-              <FormattedMessage {...messages.footerBerkman}/>
+              <FormattedMessage {...messages.footerBerkman} />
             </a>.
           </p>
         </FullWidthSection>
@@ -168,4 +169,4 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-export default injectIntl( connect(null, mapDispatchToProps)(App) );
+export default injectIntl(connect(null, mapDispatchToProps)(App));

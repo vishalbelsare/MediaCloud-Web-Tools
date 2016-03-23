@@ -2,15 +2,9 @@ import logging
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
-from mediameter import app
-import auth
+from mediameter import app, auth
 
 logger = logging.getLogger(__name__)
-
-@app.route('/')
-def index():
-    logger.debug("homepage request")
-    return render_template('index.html')
 
 @app.route('/api/login', methods=['POST'])
 def api_login_with_password():

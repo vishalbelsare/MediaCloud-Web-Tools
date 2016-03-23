@@ -3,10 +3,14 @@
     "es2015", 
     "react"
   ],
-  "plugins": [
-    ["transform-object-rest-spread"],
-    ["react-intl", {
-      "messagesDir": "./build/messages/"
-    }]
-  ]
+  "env": {
+    "development": {
+      "plugins": [
+        ["transform-object-rest-spread"],
+        ["react-intl", {
+          "messagesDir": "./build/messages/"
+        }]
+      ]    
+    }
+  }
 }

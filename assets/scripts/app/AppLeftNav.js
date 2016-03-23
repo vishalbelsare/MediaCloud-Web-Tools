@@ -12,12 +12,13 @@ import { openLeftNav } from './appActions';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const messages = {
-  menuHome: { id:"menu.home", defaultMessage:"Home" },
-  menuMeta: { id:"menu.meta", defaultMessage:"Meta" },
-  menuAbout: { id:"menu.about", defaultMessage:"About" },
-  appTitle: { id:"app.title", defaultMessage:"MediaMeter" },
-  appLogin: { id:"app.login", defaultMessage:"Login" },
-  appLogout: { id:"app.logout", defaultMessage:"Logout" }
+  menuHome: { id: 'menu.home', defaultMessage: 'Home' },
+  menuMeta: { id: 'menu.meta', defaultMessage: 'Meta' },
+  menuAbout: { id: 'menu.about', defaultMessage: 'About' },
+  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
+  appLogin: { id: 'app.login', defaultMessage: 'Login' },
+  appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
+  menuControversies: { id: 'menu.controversies', defaultMessage: 'Controversies' }
 };
 
 const SelectableList = SelectableContainerEnhance(List);
@@ -31,7 +32,8 @@ const AppLeftNav = React.createClass({
     onRequestChangeList: React.PropTypes.func.isRequired,
     open: React.PropTypes.bool.isRequired,
     docked: React.PropTypes.bool.isRequired,
-    style: React.PropTypes.object
+    style: React.PropTypes.object,
+    intl: React.PropTypes.object.isRequired
   },
 
   contextTypes: {
@@ -70,7 +72,7 @@ const AppLeftNav = React.createClass({
       style,
       user
     } = this.props;
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
 
     let loginControl = null;
     if (user.isLoggedIn) {
@@ -88,7 +90,7 @@ const AppLeftNav = React.createClass({
         containerStyle={{ zIndex: zIndex.leftNav - 100 }}
       >
         <div style={this.styles.logo} onTouchTap={this.onHeaderTouchTap}>
-          <FormattedMessage {...messages.appTitle}/>
+          <FormattedMessage {...messages.appTitle} />
         </div>
 
 
@@ -96,6 +98,7 @@ const AppLeftNav = React.createClass({
           valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
         >
           <ListItem primaryText={formatMessage(messages.menuHome)} value='/home' />
+          <ListItem primaryText={formatMessage(messages.menuControversies)} value='controversies' />
         </SelectableList>
 
         <SelectableList
@@ -122,7 +125,7 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-export default injectIntl( connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppLeftNav) );
+)(AppLeftNav));
