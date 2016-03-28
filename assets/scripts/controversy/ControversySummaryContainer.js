@@ -2,23 +2,21 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Card from 'material-ui/lib/card/card';
-import CardHeader from 'material-ui/lib/card/card-header';
 
 import ErrorTryAgain from '../components/ErrorTryAgain';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ControversyList from './ControversyList';
-import { fetchControversyList } from './controversyActions';
-import { FETCH_CONTROVERSY_LIST_SUCCEEDED, FETCH_CONTROVERSY_LIST_FAILED } from './controversyReducers';
+import ControversySummary from './controversySummary';
+import { fetchControversySummary } from './controversyActions';
+import { FETCH_CONTROVERSY_SUMMARY_SUCCEEDED, FETCH_CONTROVERSY_SUMMARY_FAILED } from './controversyReducers';
 
 const messages = {
-  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Controversies' },
-  controversiesListSubTitle: { id: 'controversies.list.subtitle', defaultMessage: 'The first 20 public controversies' }
+  defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' }
 };
 
-class ControversyListContainer extends React.Component {
+class ControversySummaryContainer extends React.Component {
   componentWillMount() {
-    this.context.store.dispatch(fetchControversyList());
+    const controversyId = this.props.params.controversyId;
+    this.context.store.dispatch(fetchControversySummary(controversyId));
   }
   getStyles() {
     const styles = {
@@ -29,16 +27,18 @@ class ControversyListContainer extends React.Component {
   }
   render() {
     const { controversies, fetchState, onTryAgain } = this.props;
+    const controversyId = this.props.params.controversyId;
+    const controversy = controversies[controversyId];
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.controversiesListTitle);
+    const title = formatMessage(messages.defaultTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let content = fetchState;
     const styles = this.getStyles();
     switch (fetchState) {
-    case FETCH_CONTROVERSY_LIST_SUCCEEDED:
-      content = <ControversyList controversies={controversies} />;
+    case FETCH_CONTROVERSY_SUMMARY_SUCCEEDED:
+      content = <ControversySummary controversy={controversy} />;
       break;
-    case FETCH_CONTROVERSY_LIST_FAILED:
+    case FETCH_CONTROVERSY_SUMMARY_FAILED:
       content = <ErrorTryAgain onTryAgain={onTryAgain} />;
       break;
     default:
@@ -47,35 +47,32 @@ class ControversyListContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-        <Card>
-          <CardHeader title={title} subtitle={formatMessage(messages.controversiesListSubTitle)} />
-            { content }
-        </Card>
+        {content}
       </div>
     );
   }
 }
 
-ControversyListContainer.propTypes = {
+ControversySummaryContainer.propTypes = {
   fetchState: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired
 };
 
-ControversyListContainer.contextTypes = {
+ControversySummaryContainer.contextTypes = {
   store: React.PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  fetchState: state.controversies.meta.fetchListState,
+  fetchState: state.controversies.meta.fetchSummaryState,
   controversies: state.controversies.all
 });
 
 const mapDispatchToProps = function (dispatch) {
   return {
     onTryAgain: () => {
-      dispatch(fetchControversyList());
+      dispatch(fetchControversySummary());  // TODO: how to get the id in here?
     }
   };
 };
@@ -83,4 +80,4 @@ const mapDispatchToProps = function (dispatch) {
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ControversyListContainer));
+)(ControversySummaryContainer));

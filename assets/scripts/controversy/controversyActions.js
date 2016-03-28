@@ -1,12 +1,22 @@
-import { promiseToListControversies } from '../lib/controversy';
+import { promiseToFetchControversyList, promiseToFetchControversySummary } from '../lib/controversy';
 
-export const LIST_CONTROVERSIES = 'LIST_CONTROVERSIES';
+export const FETCH_CONTROVERSY_LIST = 'FETCH_CONTROVERSY_LIST';
+export const FETCH_CONTROVERSY_SUMMARY = 'FETCH_CONTROVERSY_SUMMARY';
 
-export function listControversies() {
+export function fetchControversyList() {
   return {
-    type: LIST_CONTROVERSIES,
+    type: FETCH_CONTROVERSY_LIST,
     payload: {
-      promise: promiseToListControversies()
+      promise: promiseToFetchControversyList()
+    }
+  };
+}
+
+export function fetchControversySummary(id) {
+  return {
+    type: FETCH_CONTROVERSY_SUMMARY,
+    payload: {
+      promise: promiseToFetchControversySummary(id)
     }
   };
 }

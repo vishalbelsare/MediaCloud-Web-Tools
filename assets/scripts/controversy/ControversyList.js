@@ -6,6 +6,7 @@ import TableHeader from 'material-ui/lib/table/table-header';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Link } from 'react-router'
 
 const messages = {
   colHeadName: { id: 'controversies.table.name', defaultMessage: 'name' },
@@ -26,7 +27,8 @@ class ControversyListItem extends React.Component {
     const styles = this.getStyles();
     return (
       <TableRow>
-        <TableRowColumn styles={styles.nameColumn}>{controversy.name}</TableRowColumn>
+        <TableRowColumn styles={styles.nameColumn}>
+          <Link to={`/controversy/${controversy.controversies_id}`}>{controversy.name}</Link></TableRowColumn>
         <TableRowColumn>{controversy.description}</TableRowColumn>
       </TableRow>
     );
@@ -38,6 +40,11 @@ ControversyListItem.propTypes = {
 };
 
 const ControversyList = (props) => {
+  const { controversies } = props;
+  let controversiesArray = [];
+  for(var idx in controversies){
+    controversiesArray.push(controversies[idx]);
+  }
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(messages.homeTitle)} | ${parentTitle}`;
   return (
@@ -49,7 +56,7 @@ const ControversyList = (props) => {
         </TableRow>
       </TableHeader>
       <TableBody displayRowCheckbox={false}>
-        {props.controversies.map((controversy) => {
+        {controversiesArray.map((controversy) => {
           return <ControversyListItem key={controversy.controversies_id} controversy={controversy} />;
         })}
       </TableBody>
@@ -57,7 +64,7 @@ const ControversyList = (props) => {
 };
 
 ControversyList.propTypes = {
-  controversies: React.PropTypes.array.isRequired,
+  controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired
 };
 

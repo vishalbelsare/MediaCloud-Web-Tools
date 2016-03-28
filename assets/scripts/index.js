@@ -14,6 +14,7 @@ import Home from './user/Home';
 import About from './app/About';
 import Login from './user/Login';
 import ControversyListContainer from './controversy/ControversyListContainer';
+import ControversySummaryContainer from './controversy/ControversySummaryContainer';
 import configureStore from './store/configureStore';
 
 // necessary lines for Material-UI library to work
@@ -56,6 +57,7 @@ ReactDOM.render(
         <Route path='/' component={App}>
           <Route path='/home' component={Home} onEnter={requireAuth} />
           <Route path='/controversies' component={ControversyListContainer} onEnter={requireAuth} />
+          <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
           <Route path='/about' component={About} />
           <Route path='/login' component={Login} />
           <Route path='/logout' onEnter={onEnterLogout} />
