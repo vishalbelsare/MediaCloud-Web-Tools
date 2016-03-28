@@ -5,6 +5,12 @@ import TableRow from 'material-ui/lib/table/table-row';
 import TableHeader from 'material-ui/lib/table/table-header';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import TableBody from 'material-ui/lib/table/table-body';
+import { FormattedMessage, injectIntl } from 'react-intl';
+
+const messages = {
+  colHeadName: { id: 'controversies.table.name', defaultMessage: 'name' },
+  colHeadDescription: { id: 'controversies.table.description', defaultMessage: 'Description' }
+};
 
 class ControversyListItem extends React.Component {
   getStyles() {
@@ -31,27 +37,28 @@ ControversyListItem.propTypes = {
   controversy: React.PropTypes.object.isRequired
 };
 
-class ControversyList extends React.Component {
-  render() {
-    return (
-      <Table>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-          <TableRow>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Description</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>
-          {this.props.controversies.map((controversy) => {
-            return <ControversyListItem key={controversy.controversies_id} controversy={controversy} />;
-          })}
-        </TableBody>
-      </Table>);
-  }
-}
-
-ControversyList.propTypes = {
-  controversies: React.PropTypes.array.isRequired
+const ControversyList = (props) => {
+  const { formatMessage } = props.intl;
+  const titleHandler = parentTitle => `${formatMessage(messages.homeTitle)} | ${parentTitle}`;
+  return (
+    <Table>
+      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+        <TableRow>
+          <TableHeaderColumn>Name</TableHeaderColumn>
+          <TableHeaderColumn>Description</TableHeaderColumn>
+        </TableRow>
+      </TableHeader>
+      <TableBody displayRowCheckbox={false}>
+        {props.controversies.map((controversy) => {
+          return <ControversyListItem key={controversy.controversies_id} controversy={controversy} />;
+        })}
+      </TableBody>
+    </Table>);
 };
 
-export default ControversyList;
+ControversyList.propTypes = {
+  controversies: React.PropTypes.array.isRequired,
+  intl: React.PropTypes.object.isRequired
+};
+
+export default injectIntl(ControversyList);
