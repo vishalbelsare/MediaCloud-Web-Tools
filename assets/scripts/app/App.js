@@ -137,7 +137,7 @@ const App = React.createClass({
           onRequestChangeList={this.handleRequestChangeListProxy}
         />
         <FullWidthSection style={styles.footer}>
-          <p style={styles.p}>
+          <p style={styles.p}><small>
             {'Created by '}
             <a style={styles.a} href='https://civic.mit.edu/'>
               <FormattedMessage {...messages.footerC4CM} />
@@ -149,6 +149,7 @@ const App = React.createClass({
             >
               <FormattedMessage {...messages.footerBerkman} />
             </a>.
+          </small>
           </p>
         </FullWidthSection>
       </div>
