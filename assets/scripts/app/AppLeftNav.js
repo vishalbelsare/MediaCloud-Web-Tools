@@ -12,13 +12,9 @@ import { openLeftNav } from './appActions';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const messages = {
-  menuHome: { id: 'menu.home', defaultMessage: 'Home' },
   menuMeta: { id: 'menu.meta', defaultMessage: 'Meta' },
-  menuAbout: { id: 'menu.about', defaultMessage: 'About' },
   appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
-  appLogin: { id: 'app.login', defaultMessage: 'Login' },
-  appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
-  menuControversies: { id: 'menu.controversies', defaultMessage: 'Controversies' }
+  menuControversies: { id: 'menu.controversies', defaultMessage: 'All Controversies' }
 };
 
 const SelectableList = SelectableContainerEnhance(List);
@@ -74,13 +70,6 @@ const AppLeftNav = React.createClass({
     } = this.props;
     const { formatMessage } = this.props.intl;
 
-    let loginControl = null;
-    if (user.isLoggedIn) {
-      loginControl = <ListItem primaryText={formatMessage(messages.appLogout)} value='/logout' />;
-    } else {
-      loginControl = <ListItem primaryText={formatMessage(messages.appLogin)} value='/login' />;
-    }
-
     return (
       <LeftNav
         style={style}
@@ -93,20 +82,11 @@ const AppLeftNav = React.createClass({
           <FormattedMessage {...messages.appTitle} />
         </div>
 
-
-        <SelectableList
-          valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
-        >
-          <ListItem primaryText={formatMessage(messages.menuHome)} value='/home' />
-          <ListItem primaryText={formatMessage(messages.menuControversies)} value='controversies' />
-        </SelectableList>
-
         <SelectableList
           valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
           subheader={formatMessage(messages.menuMeta)}
         >
-          {loginControl}
-          <ListItem primaryText={formatMessage(messages.menuAbout)} value='/about' />
+          <ListItem primaryText={formatMessage(messages.menuControversies)} value='controversies' />
         </SelectableList>
       </LeftNav>
     );

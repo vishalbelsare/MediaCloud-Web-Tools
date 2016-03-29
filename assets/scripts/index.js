@@ -10,7 +10,6 @@ import { hasCookies, getCookies } from './lib/auth';
 import { loginWithKey, logout } from './user/userActions';
 
 import App from './app/App';
-import Home from './user/Home';
 import About from './app/About';
 import Login from './user/Login';
 import ControversyListContainer from './controversy/ControversyListContainer';
@@ -55,7 +54,6 @@ ReactDOM.render(
     <IntlProvider locale='en'>
       <Router history={history}>
         <Route path='/' component={App}>
-          <Route path='/home' component={Home} onEnter={requireAuth} />
           <Route path='/controversies' component={ControversyListContainer} onEnter={requireAuth} />
           <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
           <Route path='/about' component={About} />

@@ -16,6 +16,7 @@ class ControversySummary extends React.Component {
           <li>{controversy.description}</li>
           <li>Iterations: {controversy.num_iterations}</li>
           <li>process_with_bitly: {controversy.process_with_bitly}</li>
+          <li>Dumps: {controversy.dumps.length}</li>
         </ul>
       </div>
     );

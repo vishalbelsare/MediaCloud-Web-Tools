@@ -5,6 +5,9 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/lib/app-bar';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
+import FlatButton from 'material-ui/lib/flat-button';
+import InfoOutlineIcon from 'material-ui/lib/svg-icons/action/info-outline';
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 import PersonIcon from 'material-ui/lib/svg-icons/social/person';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { Spacing } from 'material-ui/lib/styles';
@@ -23,6 +26,8 @@ const messages = {
   footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   footerBerkman: { id: 'footer.berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
   appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
+  appLogin: { id: 'app.login', defaultMessage: 'Login' },
+  appAbout: { id: 'app.about', defaultMessage: 'About' },
   appLogout: { id: 'app.logout', defaultMessage: 'Logout' }
 };
 
@@ -99,13 +104,15 @@ const App = React.createClass({
   },
 
   render() {
-    const {
-      location,
-      children
-    } = this.props;
+    const { location, children, user } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
-
+    let loginLogoutMenuItem = null;
+    if(user.isLoggedIn) {
+      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogout)} value='/logout' leftIcon={<PersonIcon />}/>;
+    } else {
+      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogin)} value='/login' leftIcon={<PersonIcon />}/>;
+    }
     return (
       <div>
         <Title render={formatMessage(messages.appTitle)} />
@@ -114,16 +121,17 @@ const App = React.createClass({
           title={formatMessage(messages.appTitle)}
           zDepth={0}
           iconElementRight={
+            <div>
             <IconMenu
-              iconButtonElement={
-                <IconButton><PersonIcon /></IconButton>
-              }
+              iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
               targetOrigin={ { horizontal: 'right', vertical: 'top' } }
               anchorOrigin={ { horizontal: 'right', vertical: 'top' } }
               valueLink= { { value: location.pathname, requestChange: this.handleRequestChangeListProxy } }
             >
-              <MenuItem primaryText={formatMessage(messages.appLogout)} value='/logout' />
+              { loginLogoutMenuItem }
+              <MenuItem primaryText={formatMessage(messages.appAbout)} value='/about' leftIcon={<InfoOutlineIcon />}/>
             </IconMenu>
+            </div>
           }
         />
         <div style={styles.root}>
@@ -158,6 +166,10 @@ const App = React.createClass({
 
 });
 
+const mapStateToProps = (state) => ({
+  user: state.user
+});
+
 const mapDispatchToProps = function (dispatch) {
   return {
     handleTouchTapLeftIconButton: () => {
@@ -169,4 +181,4 @@ const mapDispatchToProps = function (dispatch) {
   };
 };
 
-export default injectIntl(connect(null, mapDispatchToProps)(App));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(App));
