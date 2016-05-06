@@ -10,7 +10,7 @@ export function promiseToLoginWithPassword(email, password) {
   formData.append('password', password);
   return fetch('/api/login', {
     method: 'post',
-    body: formData
+    body: formData,
   }).then(
     response => response.json()
   );
@@ -22,7 +22,7 @@ export function promiseToLoginWithKey(email, key) {
   formData.append('key', key);
   return fetch('/api/login-with-key', {
     method: 'post',
-    body: formData
+    body: formData,
   }).then(
     response => response.json()
   );
@@ -45,6 +45,6 @@ export function hasCookies() {
 export function getCookies() {
   return {
     email: cookie.load(COOKIE_USERNAME),
-    key: cookie.load(COOKIE_KEY)
+    key: cookie.load(COOKIE_KEY),
   };
 }

@@ -10,7 +10,7 @@ import { fetchControversySummary } from './controversyActions';
 import { FETCH_CONTROVERSY_SUMMARY_SUCCEEDED, FETCH_CONTROVERSY_SUMMARY_FAILED } from './controversyReducers';
 
 const messages = {
-  defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' }
+  defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' },
 };
 
 class ControversySummaryContainer extends React.Component {
@@ -21,7 +21,7 @@ class ControversySummaryContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
-      }
+      },
     };
     return styles;
   }
@@ -35,14 +35,14 @@ class ControversySummaryContainer extends React.Component {
     let content = fetchState;
     const styles = this.getStyles();
     switch (fetchState) {
-    case FETCH_CONTROVERSY_SUMMARY_SUCCEEDED:
-      content = <ControversySummary controversy={controversy} />;
-      break;
-    case FETCH_CONTROVERSY_SUMMARY_FAILED:
-      content = <ErrorTryAgain onTryAgain={onTryAgain} />;
-      break;
-    default:
-      content = <LoadingSpinner />;
+      case FETCH_CONTROVERSY_SUMMARY_SUCCEEDED:
+        content = <ControversySummary controversy={controversy} />;
+        break;
+      case FETCH_CONTROVERSY_SUMMARY_FAILED:
+        content = <ErrorTryAgain onTryAgain={onTryAgain} />;
+        break;
+      default:
+        content = <LoadingSpinner />;
     }
     return (
       <div style={styles.root}>
@@ -57,25 +57,24 @@ ControversySummaryContainer.propTypes = {
   fetchState: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired
+  onTryAgain: React.PropTypes.func.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
 };
 
 ControversySummaryContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired
+  store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchState: state.controversies.meta.fetchSummaryState,
-  controversies: state.controversies.all
+  controversies: state.controversies.all,
 });
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    onTryAgain: () => {
-      dispatch(fetchControversySummary());  // TODO: how to get the id in here?
-    }
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  onTryAgain: () => {
+    dispatch(fetchControversySummary());  // TODO: how to get the id in here?
+  },
+});
 
 export default injectIntl(connect(
   mapStateToProps,

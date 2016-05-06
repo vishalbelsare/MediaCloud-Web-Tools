@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   user,
   controversies,
   form,
-  routing
+  routing,
 });
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware(),

@@ -12,8 +12,8 @@ import { fetchControversyList } from './controversyActions';
 import { FETCH_CONTROVERSY_LIST_SUCCEEDED, FETCH_CONTROVERSY_LIST_FAILED } from './controversyReducers';
 
 const messages = {
-  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Controversies' },
-  controversiesListSubTitle: { id: 'controversies.list.subtitle', defaultMessage: 'The first 20 public controversies' }
+  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Topics' },
+  controversiesListSubTitle: { id: 'controversies.list.subtitle', defaultMessage: 'The first 20 public topics' },
 };
 
 class ControversyListContainer extends React.Component {
@@ -23,7 +23,7 @@ class ControversyListContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
-      }
+      },
     };
     return styles;
   }
@@ -35,14 +35,14 @@ class ControversyListContainer extends React.Component {
     let content = fetchState;
     const styles = this.getStyles();
     switch (fetchState) {
-    case FETCH_CONTROVERSY_LIST_SUCCEEDED:
-      content = <ControversyList controversies={controversies} />;
-      break;
-    case FETCH_CONTROVERSY_LIST_FAILED:
-      content = <ErrorTryAgain onTryAgain={onTryAgain} />;
-      break;
-    default:
-      content = <LoadingSpinner />;
+      case FETCH_CONTROVERSY_LIST_SUCCEEDED:
+        content = <ControversyList controversies={controversies} />;
+        break;
+      case FETCH_CONTROVERSY_LIST_FAILED:
+        content = <ErrorTryAgain onTryAgain={onTryAgain} />;
+        break;
+      default:
+        content = <LoadingSpinner />;
     }
     return (
       <div style={styles.root}>
@@ -60,25 +60,23 @@ ControversyListContainer.propTypes = {
   fetchState: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired
+  onTryAgain: React.PropTypes.func.isRequired,
 };
 
 ControversyListContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired
+  store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchState: state.controversies.meta.fetchListState,
-  controversies: state.controversies.all
+  controversies: state.controversies.all,
 });
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    onTryAgain: () => {
-      dispatch(fetchControversyList());
-    }
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  onTryAgain: () => {
+    dispatch(fetchControversyList());
+  },
+});
 
 export default injectIntl(connect(
   mapStateToProps,

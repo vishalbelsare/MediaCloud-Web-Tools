@@ -9,22 +9,22 @@ const LoginFormComponent = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
       <TextField
-        floatingLabelText='Email'
+        floatingLabelText="Email"
         errorText={email.touched ? email.error : ''}
         {...email}
       />
       <br />
       <TextField
-        floatingLabelText='Password'
-        type='password'
+        floatingLabelText="Password"
+        type="password"
         errorText={password.touched ? password.error : ''}
         {...password}
       />
-      <input type='hidden' name='destination'
+      <input type="hidden" name="destination"
         value={ (location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
       />
       <br />
-      <RaisedButton type='submit' label='Login' primary disabled={isSubmitting} />
+      <RaisedButton type="submit" label="Login" primary disabled={isSubmitting} />
     </form>
   );
 };
@@ -34,17 +34,17 @@ LoginFormComponent.propTypes = {
   onSubmitLoginForm: React.PropTypes.func.isRequired,
   isSubmitting: React.PropTypes.bool.isRequired,
   location: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired
+  handleSubmit: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isSubmitting: state.user.isFetching
+  isSubmitting: state.user.isFetching,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onSubmitLoginForm: (values) => {
     dispatch(loginWithPassword(values.email, values.password, values.destination));
-  }
+  },
 });
 
 // in-browser validation callback
@@ -62,7 +62,7 @@ function validate(values) {
 const reduxFormConfig = {
   form: 'login',
   fields: ['email', 'password', 'destination'],
-  validate
+  validate,
 };
 
 const LoginForm = reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(LoginFormComponent);

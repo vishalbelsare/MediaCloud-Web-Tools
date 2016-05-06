@@ -7,8 +7,8 @@ export function fetchControversyList() {
   return {
     type: FETCH_CONTROVERSY_LIST,
     payload: {
-      promise: promiseToFetchControversyList()
-    }
+      promise: promiseToFetchControversyList(),
+    },
   };
 }
 
@@ -16,7 +16,7 @@ export function fetchControversySummary(id) {
   return {
     type: FETCH_CONTROVERSY_SUMMARY,
     payload: {
-      promise: promiseToFetchControversySummary(id)
-    }
+      promise: promiseToFetchControversySummary(id),
+    },
   };
 }

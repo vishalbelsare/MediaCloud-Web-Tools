@@ -6,13 +6,13 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import LoginForm from './LoginForm';
 
 const messages = {
-  loginTitle: { id: 'login.title', defaultMessage: 'login' }
+  loginTitle: { id: 'login.title', defaultMessage: 'login' },
 };
 
 class LoginContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLoggedIn) {
-      this.context.router.push('/home');
+      this.context.router.push('/controversies');
     }
   }
   render() {
@@ -31,15 +31,15 @@ class LoginContainer extends React.Component {
 LoginContainer.propTypes = {
   isLoggedIn: React.PropTypes.bool.isRequired,
   location: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired
+  intl: React.PropTypes.object.isRequired,
 };
 
 LoginContainer.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.user.isLoggedIn
+  isLoggedIn: state.user.isLoggedIn,
 });
 
 export default injectIntl(connect(

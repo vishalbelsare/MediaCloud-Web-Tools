@@ -3,7 +3,7 @@ import LeftNav from 'material-ui/lib/left-nav';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import { connect } from 'react-redux';
-//import Divider from 'material-ui/lib/divider';
+// import Divider from 'material-ui/lib/divider';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 import { Spacing, Typography } from 'material-ui/lib/styles';
 import zIndex from 'material-ui/lib/styles/zIndex';
@@ -14,7 +14,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 const messages = {
   menuMeta: { id: 'menu.meta', defaultMessage: 'Meta' },
   appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
-  menuControversies: { id: 'menu.controversies', defaultMessage: 'All Controversies' }
+  menuControversies: { id: 'menu.controversies', defaultMessage: 'All Topics' },
 };
 
 const SelectableList = SelectableContainerEnhance(List);
@@ -29,15 +29,12 @@ const AppLeftNav = React.createClass({
     open: React.PropTypes.bool.isRequired,
     docked: React.PropTypes.bool.isRequired,
     style: React.PropTypes.object,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
   },
 
   contextTypes: {
     muiTheme: React.PropTypes.object.isRequired,
-    router: React.PropTypes.object.isRequired
-  },
-
-  componentDidMount: function () {
+    router: React.PropTypes.object.isRequired,
   },
 
   onHeaderTouchTap() {
@@ -54,8 +51,8 @@ const AppLeftNav = React.createClass({
       fontWeight: Typography.fontWeightLight,
       backgroundColor: purple400,
       paddingLeft: Spacing.desktopGutter,
-      marginBottom: 8
-    }
+      marginBottom: 8,
+    },
   },
 
   render() {
@@ -66,7 +63,6 @@ const AppLeftNav = React.createClass({
       onRequestChangeList,
       open,
       style,
-      user
     } = this.props;
     const { formatMessage } = this.props.intl;
 
@@ -86,23 +82,23 @@ const AppLeftNav = React.createClass({
           valueLink={{ value: location.pathname, requestChange: onRequestChangeList }}
           subheader={formatMessage(messages.menuMeta)}
         >
-          <ListItem primaryText={formatMessage(messages.menuControversies)} value='controversies' />
+          <ListItem primaryText={formatMessage(messages.menuControversies)} value="controversies" />
         </SelectableList>
       </LeftNav>
     );
-  }
+  },
 });
 
 const mapStateToProps = (state) => ({
   open: state.app.leftNav.open,
   docked: state.app.leftNav.docked,
-  user: state.user
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onRequestChangeLeftNav: (open) => {
     dispatch(openLeftNav(open));
-  }
+  },
 });
 
 export default injectIntl(connect(

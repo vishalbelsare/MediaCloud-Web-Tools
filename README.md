@@ -23,14 +23,19 @@ Configuration
 
 Copy `server.config.template` to `server.config` and fill in the required info there.
 
+Developing
+----------
+
+Setup your environment with SublimeText and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
+
+You can run linting by hand too : `npm run lint`.
+
 Running
 -------
 
 You need to open two terminal windows and run one thing in each (so the hot-reloading can work):
  * `npm start`
  * `python run.py`
-
-To check your javascript code for errors run: `npm run-script lint`
 
 Release
 -------

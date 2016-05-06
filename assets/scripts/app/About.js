@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { injectIntl } from 'react-intl';
 
 const messages = {
-  aboutTitle: { id: 'about.title', defaultMessage: 'About' }
+  aboutTitle: { id: 'about.title', defaultMessage: 'About' },
 };
 
 const About = (props) => {
@@ -19,7 +19,7 @@ const About = (props) => {
 };
 
 About.propTypes = {
-  intl: React.PropTypes.object.isRequired
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(About);

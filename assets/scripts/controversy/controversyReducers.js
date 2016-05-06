@@ -15,53 +15,53 @@ const INITIAL_STATE = {
   meta: { fetchListState: FETCH_CONTROVERSY_LIST_INVALID,
           fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_INVALID },
   selected: null,
-  all: {}
+  all: {},
 };
+
+// TODO: replace this with normalizr? https://github.com/gaearon/normalizr
+function arrayToDict(arr, keyPropertyName) {
+  const dict = {};
+  arr.forEach((item) => {
+    dict[item[keyPropertyName]] = item;
+  });
+  return dict;
+}
 
 export default function controversies(state = INITIAL_STATE, action) {
   switch (action.type) {
 
-  case FETCH_CONTROVERSY_LIST:
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_ONGOING }
-    });
-  case resolve(FETCH_CONTROVERSY_LIST):
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_SUCCEEDED },
-      all: arrayToDict(action.payload.results,'controversies_id')
-    });
-  case reject(FETCH_CONTROVERSY_LIST):
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_FAILED }
-    });
+    case FETCH_CONTROVERSY_LIST:
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_ONGOING },
+      });
+    case resolve(FETCH_CONTROVERSY_LIST):
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_SUCCEEDED },
+        all: arrayToDict(action.payload.results, 'controversies_id'),
+      });
+    case reject(FETCH_CONTROVERSY_LIST):
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchListState: FETCH_CONTROVERSY_LIST_FAILED },
+      });
 
-  case FETCH_CONTROVERSY_SUMMARY:
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_ONGOING }
-    });
-  case resolve(FETCH_CONTROVERSY_SUMMARY):
-    const newInfo = {};
-    newInfo[action.payload.results['controversies_id']] = action.payload.results;
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_SUCCEEDED },
-      selected: action.payload.results['controversies_id'],
-      all: { ...state.all, ...newInfo }
-    });
-  case reject(FETCH_CONTROVERSY_SUMMARY):
-    return Object.assign({}, state, {
-      meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_FAILED }
-    });
+    case FETCH_CONTROVERSY_SUMMARY:
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_ONGOING },
+      });
+    case resolve(FETCH_CONTROVERSY_SUMMARY):
+      const newInfo = {};
+      newInfo[action.payload.results.controversies_id] = action.payload.results;
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_SUCCEEDED },
+        selected: action.payload.results.controversies_id,
+        all: { ...state.all, ...newInfo },
+      });
+    case reject(FETCH_CONTROVERSY_SUMMARY):
+      return Object.assign({}, state, {
+        meta: { ...state.meta, fetchSummaryState: FETCH_CONTROVERSY_SUMMARY_FAILED },
+      });
 
-  default:
-    return state;
+    default:
+      return state;
   }
-}
-
-// TODO: replace this with normalizr? https://github.com/gaearon/normalizr
-function arrayToDict(arr,keyPropertyName){
-  let dict = {};
-  arr.forEach( (item) => {
-    dict[item[keyPropertyName]] = item;
-  });
-  return dict;
 }

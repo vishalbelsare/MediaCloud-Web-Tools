@@ -5,7 +5,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/lib/app-bar';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
-import FlatButton from 'material-ui/lib/flat-button';
 import InfoOutlineIcon from 'material-ui/lib/svg-icons/action/info-outline';
 import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 import PersonIcon from 'material-ui/lib/svg-icons/social/person';
@@ -28,7 +27,7 @@ const messages = {
   appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
   appLogin: { id: 'app.login', defaultMessage: 'Login' },
   appAbout: { id: 'app.about', defaultMessage: 'About' },
-  appLogout: { id: 'app.logout', defaultMessage: 'Logout' }
+  appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
 };
 
 const App = React.createClass({
@@ -38,56 +37,28 @@ const App = React.createClass({
     location: React.PropTypes.object.isRequired,
     handleTouchTapLeftIconButton: React.PropTypes.func,
     handleRequestChangeList: React.PropTypes.func,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired,
   },
-
-  mixins: [
-    StyleResizable
-  ],
 
   contextTypes: {
     router: React.PropTypes.object.isRequired,
-    store: React.PropTypes.object.isRequired
+    store: React.PropTypes.object.isRequired,
   },
 
-  //the key passed through context must be called "muiTheme"
+  // the key passed through context must be called "muiTheme"
   childContextTypes: {
-    muiTheme: React.PropTypes.object
+    muiTheme: React.PropTypes.object,
   },
+
+  mixins: [
+    StyleResizable,
+  ],
 
   getChildContext() {
     return {
-      muiTheme: ThemeManager.getMuiTheme(MediaMeterTheme)
+      muiTheme: ThemeManager.getMuiTheme(MediaMeterTheme),
     };
-  },
-
-  getStyles() {
-    const styles = {
-      root: {
-        minHeight: 400
-      },
-      content: {
-        margin: Spacing.desktopGutter
-      },
-      footer: {
-        backgroundColor: grey200,
-        textAlign: 'center'
-      },
-      a: {
-        color: grey800
-      },
-      p: {
-        margin: '0 auto',
-        padding: 0,
-        text: grey800,
-        maxWidth: 356
-      },
-      iconButton: {
-        color: darkWhite
-      }
-    };
-
-    return styles;
   },
 
   componentDidMount() {
@@ -96,6 +67,35 @@ const App = React.createClass({
       this.context.store.dispatch(openLeftNav(true));
       this.context.store.dispatch(dockLeftNav(true));
     }
+  },
+
+  getStyles() {
+    const styles = {
+      root: {
+        minHeight: 400,
+      },
+      content: {
+        margin: Spacing.desktopGutter,
+      },
+      footer: {
+        backgroundColor: grey200,
+        textAlign: 'center',
+      },
+      a: {
+        color: grey800,
+      },
+      p: {
+        margin: '0 auto',
+        padding: 0,
+        text: grey800,
+        maxWidth: 356,
+      },
+      iconButton: {
+        color: darkWhite,
+      },
+    };
+
+    return styles;
   },
 
   handleRequestChangeListProxy(event, value) {
@@ -108,10 +108,10 @@ const App = React.createClass({
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     let loginLogoutMenuItem = null;
-    if(user.isLoggedIn) {
-      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogout)} value='/logout' leftIcon={<PersonIcon />}/>;
+    if (user.isLoggedIn) {
+      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogout)} value="/logout" leftIcon={<PersonIcon />} />;
     } else {
-      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogin)} value='/login' leftIcon={<PersonIcon />}/>;
+      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogin)} value="/login" leftIcon={<PersonIcon />} />;
     }
     return (
       <div>
@@ -129,7 +129,7 @@ const App = React.createClass({
               valueLink= { { value: location.pathname, requestChange: this.handleRequestChangeListProxy } }
             >
               { loginLogoutMenuItem }
-              <MenuItem primaryText={formatMessage(messages.appAbout)} value='/about' leftIcon={<InfoOutlineIcon />}/>
+              <MenuItem primaryText={formatMessage(messages.appAbout)} value="/about" leftIcon={<InfoOutlineIcon />} />
             </IconMenu>
             </div>
           }
@@ -147,13 +147,13 @@ const App = React.createClass({
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}><small>
             {'Created by '}
-            <a style={styles.a} href='https://civic.mit.edu/'>
+            <a style={styles.a} href="https://civic.mit.edu/">
               <FormattedMessage {...messages.footerC4CM} />
             </a>
             {' and '}
             <a
               style={styles.a}
-              href='https://cyber.law.harvard.edu'
+              href="https://cyber.law.harvard.edu"
             >
               <FormattedMessage {...messages.footerBerkman} />
             </a>.
@@ -162,23 +162,21 @@ const App = React.createClass({
         </FullWidthSection>
       </div>
     );
-  }
+  },
 
 });
 
 const mapStateToProps = (state) => ({
-  user: state.user
+  user: state.user,
 });
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    handleTouchTapLeftIconButton: () => {
-      dispatch(openLeftNav(true));
-    },
-    handleRequestChangeList: () => {
-      dispatch(openLeftNav(false));
-    }
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  handleTouchTapLeftIconButton: () => {
+    dispatch(openLeftNav(true));
+  },
+  handleRequestChangeList: () => {
+    dispatch(openLeftNav(false));
+  },
+});
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(App));

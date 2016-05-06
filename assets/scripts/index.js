@@ -32,13 +32,13 @@ if (hasCookies()) {
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(hashHistory, store);
 
-//TODO: history.listen(location => analyticsService.track(location.pathname))
+// TODO: history.listen(location => analyticsService.track(location.pathname))
 
 function requireAuth(nextState, replace) {
   if (!hasCookies()) {
     replace({
       pathname: '/login',
-      state: { nextPathname: nextState.location.pathname }
+      state: { nextPathname: nextState.location.pathname },
     });
   }
 }
@@ -51,14 +51,14 @@ function onEnterLogout(nextState, replaceState) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <IntlProvider locale='en'>
+    <IntlProvider locale="en">
       <Router history={history}>
-        <Route path='/' component={App}>
-          <Route path='/controversies' component={ControversyListContainer} onEnter={requireAuth} />
+        <Route path="/" component={App}>
+          <Route path="/controversies" component={ControversyListContainer} onEnter={requireAuth} />
           <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
-          <Route path='/about' component={About} />
-          <Route path='/login' component={Login} />
-          <Route path='/logout' onEnter={onEnterLogout} />
+          <Route path="/about" component={About} />
+          <Route path="/login" component={Login} />
+          <Route path="/logout" onEnter={onEnterLogout} />
         </Route>
       </Router>
     </IntlProvider>

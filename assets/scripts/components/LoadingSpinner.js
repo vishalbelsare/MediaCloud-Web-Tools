@@ -7,8 +7,8 @@ class LoadingSpinner extends React.Component {
     const styles = {
       root: {
         textAlign: 'center',
-        padding: 10
-      }
+        padding: 10,
+      },
     };
     return styles;
   }

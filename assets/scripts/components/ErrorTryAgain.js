@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/lib/flat-button';
 
 const messages = {
   errorCantLoad: { id: 'error.cantLoad', defaultMessage: "Can't load the data" },
-  errorTryAgain: { id: 'error.tryAgain', defaultMessage: 'Try Again' }
+  errorTryAgain: { id: 'error.tryAgain', defaultMessage: 'Try Again' },
 };
 
 class ErrorTryAgain extends React.Component {
@@ -14,11 +14,11 @@ class ErrorTryAgain extends React.Component {
       root: {
         backgroundColor: grey200,
         textAlign: 'center',
-        padding: 10
+        padding: 10,
       },
       p: {
-        color: grey400
-      }
+        color: grey400,
+      },
     };
     return styles;
   }
@@ -38,7 +38,7 @@ class ErrorTryAgain extends React.Component {
 
 ErrorTryAgain.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired
+  onTryAgain: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(ErrorTryAgain);

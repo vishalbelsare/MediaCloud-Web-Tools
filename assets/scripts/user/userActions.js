@@ -12,8 +12,8 @@ export function loginWithKey(email, key) {
     type: LOGIN_WITH_KEY,
     payload: {
       promise: promiseToLoginWithKey(email, key),
-      email
-    }
+      email,
+    },
   };
 }
 
@@ -23,8 +23,8 @@ export function loginWithPassword(email, password, destination) {
     payload: {
       promise: promiseToLoginWithPassword(email, password),
       email,
-      destination
-    }
+      destination,
+    },
   };
 }
 

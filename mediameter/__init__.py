@@ -2,6 +2,7 @@ import os, logging, ConfigParser
 from flask import Flask, render_template
 from flask_webpack import Webpack
 import pymongo, flask_login, mediacloud
+from flask.ext.cors import CORS
 
 webpack = Webpack()
 
@@ -47,6 +48,12 @@ def create_app():
 
 app = create_app()
 app.secret_key = settings.get('server','secret_key')
+
+CORS(app,
+    resources=r'/*',
+    supports_credentials=True,
+    allow_headers='Content-Type'
+)
 
 # Create user login manager
 login_manager = flask_login.LoginManager()
