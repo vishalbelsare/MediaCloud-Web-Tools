@@ -1,7 +1,7 @@
 import React from 'react';
-import { grey200, grey400 } from 'material-ui/lib/styles/colors';
+import FlatButton from 'material-ui/FlatButton';
+import { grey200, grey400 } from 'material-ui/styles/colors';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import FlatButton from 'material-ui/lib/flat-button';
 
 const messages = {
   errorCantLoad: { id: 'error.cantLoad', defaultMessage: "Can't load the data" },

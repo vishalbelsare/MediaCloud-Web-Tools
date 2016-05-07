@@ -2,8 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Card from 'material-ui/lib/card/card';
-import CardHeader from 'material-ui/lib/card/card-header';
+import { Card, CardHeader } from 'material-ui/Card';
 
 import ErrorTryAgain from '../components/ErrorTryAgain';
 import LoadingSpinner from '../components/LoadingSpinner';

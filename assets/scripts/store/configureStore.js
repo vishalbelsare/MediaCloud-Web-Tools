@@ -4,12 +4,10 @@ import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
 
 import { reducer as form } from 'redux-form';
-import app from '../app/appReducers';
 import user from '../user/userReducers';
 import controversies from '../controversy/controversyReducers';
 
 const rootReducer = combineReducers({
-  app,
   user,
   controversies,
   form,
