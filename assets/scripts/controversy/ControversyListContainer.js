@@ -2,7 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Card, CardHeader } from 'material-ui/Card';
+import { Row, Col } from 'react-flexbox-grid/lib';
 
 import ErrorTryAgain from '../components/ErrorTryAgain';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -11,8 +11,7 @@ import { fetchControversyList } from './controversyActions';
 import { FETCH_CONTROVERSY_LIST_SUCCEEDED, FETCH_CONTROVERSY_LIST_FAILED } from './controversyReducers';
 
 const messages = {
-  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Topics' },
-  controversiesListSubTitle: { id: 'controversies.list.subtitle', defaultMessage: 'The first 20 public topics' },
+  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Recent Topics' },
 };
 
 class ControversyListContainer extends React.Component {
@@ -46,10 +45,12 @@ class ControversyListContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-        <Card>
-          <CardHeader title={title} subtitle={formatMessage(messages.controversiesListSubTitle)} />
-            { content }
-        </Card>
+        <Row>
+          <Col lg={12}>
+          <h2>{title}</h2>
+          {content}
+          </Col>
+        </Row>
       </div>
     );
   }

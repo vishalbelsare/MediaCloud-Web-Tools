@@ -2,12 +2,14 @@ import 'babel-polyfill';
 import 'intl';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { hasCookies, getCookies } from './lib/auth';
 import { loginWithKey, logout } from './user/userActions';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import App from './app/App';
 import About from './app/About';
@@ -46,22 +48,25 @@ function requireAuth(nextState, replace) {
 // CB that fires on Logout click to lot you out immediately
 function onEnterLogout(nextState, replaceState) {
   store.dispatch(logout());
-  replaceState('/login');
+  
+  //replaceState('/login');
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <IntlProvider locale="en">
-      <Router history={history}>
-        <Route path="/" component={App}>
-          <Route path="/controversies" component={ControversyListContainer} onEnter={requireAuth} />
-          <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
-          <Route path="/about" component={About} />
-          <Route path="/login" component={Login} />
-          <Route path="/logout" onEnter={onEnterLogout} />
-        </Route>
-      </Router>
-    </IntlProvider>
-  </Provider>,
+  <MuiThemeProvider muiTheme={getMuiTheme()}>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+          <Router history={history}>
+            <Route path="/" component={App}>
+              <Route path="/controversies" component={ControversyListContainer} onEnter={requireAuth} />
+              <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
+              <Route path="/about" component={About} />
+              <Route path="/login" component={Login} />
+              <Route path="/logout" onEnter={onEnterLogout} />
+            </Route>
+          </Router>
+      </IntlProvider>
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('app')
 );

@@ -3,35 +3,37 @@ import Title from 'react-title-component';
 
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/AppBar';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton/IconButton';
-import InfoOutlineIcon from 'material-ui/svg-icons/action/info-outline';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import PersonIcon from 'material-ui/svg-icons/social/person';
-import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
+import spacing from 'material-ui/styles/spacing';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import FullWidthSection from '../components/FullWidthSection';
 
 const messages = {
   footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   footerBerkman: { id: 'footer.berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
-  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter' },
+  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter Topic Mapper' },
   appLogin: { id: 'app.login', defaultMessage: 'Login' },
-  appAbout: { id: 'app.about', defaultMessage: 'About' },
   appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
 };
 
 class App extends React.Component {
 
+  onLoginLogout = () => {
+    if (this.props.user.isLogginIn) {
+      this.context.router.push('/logout');
+    } else {
+      this.context.router.push('/login');
+    }
+  }
+
   getStyles() {
     const styles = {
       root: {
         minHeight: 400,
-      },
-      content: {
-        margin: 20,
+        marginBottom: 20,
       },
       footer: {
         backgroundColor: grey200,
@@ -54,20 +56,15 @@ class App extends React.Component {
     return styles;
   }
 
-  handleRequestChangeListProxy(event, value) {
-    this.context.router.push(value);
-    this.props.handleRequestChangeList();
-  }
-
   render() {
-    const { location, children, user } = this.props;
+    const { children, user } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
-    let loginLogoutMenuItem = null;
+    let loginLogoutText = null;
     if (user.isLoggedIn) {
-      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogout)} value="/logout" leftIcon={<PersonIcon />} />;
+      loginLogoutText = formatMessage(messages.appLogout);
     } else {
-      loginLogoutMenuItem = <MenuItem primaryText={formatMessage(messages.appLogin)} value="/login" leftIcon={<PersonIcon />} />;
+      loginLogoutText = formatMessage(messages.appLogin);
     }
     return (
       <div>
@@ -75,24 +72,17 @@ class App extends React.Component {
         <AppBar
           title={formatMessage(messages.appTitle)}
           zDepth={0}
-          iconElementRight={
-            <div>
-            <IconMenu
-              iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
-              targetOrigin={ { horizontal: 'right', vertical: 'top' } }
-              anchorOrigin={ { horizontal: 'right', vertical: 'top' } }
-              valueLink= { { value: location.pathname, requestChange: this.handleRequestChangeListProxy } }
-            >
-              { loginLogoutMenuItem }
-              <MenuItem primaryText={formatMessage(messages.appAbout)} value="/about" leftIcon={<InfoOutlineIcon />} />
-            </IconMenu>
-            </div>
-          }
+          iconELementLeft={<div></div>}
+          iconElementRight={<FlatButton label={loginLogoutText} onTouchTap={this.onLoginLogout} />}
         />
         <div style={styles.root}>
-          <div style={styles.content}>
-            {children}
-          </div>
+          <Grid>
+            <Row>
+              <Col lg={12}>
+                {children}
+              </Col>
+            </Row>
+          </Grid>
         </div>
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}><small>
@@ -118,9 +108,7 @@ class App extends React.Component {
 
 App.propTypes = {
   children: React.PropTypes.node,
-  location: React.PropTypes.object.isRequired,
   handleTouchTapLeftIconButton: React.PropTypes.func,
-  handleRequestChangeList: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
   user: React.PropTypes.object.isRequired,
 };

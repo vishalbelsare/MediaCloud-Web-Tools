@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-
-// Third party plugins.
+const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 
@@ -46,11 +45,13 @@ module.exports = {
       },
       {
         test: /\.scss$/i,
-        loader: ExtractTextPlugin.extract('css!sass'),
+        // loader: ExtractTextPlugin.extract('style','css!sass'),
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap'),
       },
       {
         test: /\.css$/i,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+        loader: 'style!css?modules',
+        include: /flexboxgrid/,
       },
       {
         test: /\.(jpe?g|png|gif|svg([\?]?.*))$/i,
@@ -61,6 +62,7 @@ module.exports = {
       },
     ],
   },
+  postcss: [autoprefixer],
   plugins: [
     // Stop modules with syntax errors from being emitted.
     new webpack.NoErrorsPlugin(),

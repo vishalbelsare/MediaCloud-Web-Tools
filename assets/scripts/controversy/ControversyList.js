@@ -1,13 +1,23 @@
 import React from 'react';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
 import { injectIntl } from 'react-intl';
 import { Link } from 'react-router';
+import { Row, Col } from 'react-flexbox-grid/lib';
 
 class ControversyListItem extends React.Component {
   getStyles() {
     const styles = {
-      nameColumn: {
-        width: '20%',
+      paper: {
+        padding: 8,
+        minHeight: 200,
+        marginTop: 20,
+      },
+      name: {
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+      },
+      description: {
+        fontSize: '0.8em',
       },
     };
     return styles;
@@ -16,11 +26,12 @@ class ControversyListItem extends React.Component {
     const { controversy } = this.props;
     const styles = this.getStyles();
     return (
-      <TableRow>
-        <TableRowColumn styles={styles.nameColumn}>
-          <Link to={`/controversy/${controversy.controversies_id}`}>{controversy.name}</Link></TableRowColumn>
-        <TableRowColumn>{controversy.description}</TableRowColumn>
-      </TableRow>
+      <Col xs={12} sm={6} md={3} lg={3}>
+        <Paper zDepth={1} rounded={false} style={styles.paper}>
+          <Link to={`/controversy/${controversy.controversies_id}`} style={styles.name}>{controversy.name}</Link>
+          <p style={styles.description}>{controversy.description}</p>
+        </Paper>
+      </Col>
     );
   }
 }
@@ -33,19 +44,12 @@ const ControversyList = (props) => {
   const { controversies } = props;
   const controversiesArray = Object.keys(controversies).map((idx) => controversies[idx]);
   return (
-    <Table>
-      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-        <TableRow>
-          <TableHeaderColumn>Name</TableHeaderColumn>
-          <TableHeaderColumn>Description</TableHeaderColumn>
-        </TableRow>
-      </TableHeader>
-      <TableBody displayRowCheckbox={false}>
-        {controversiesArray.map(controversy =>
-          <ControversyListItem key={controversy.controversies_id} controversy={controversy} />
-        )}
-      </TableBody>
-    </Table>);
+    <Row>
+    {controversiesArray.map(controversy =>
+      <ControversyListItem key={controversy.controversies_id} controversy={controversy} />
+    )}
+    </Row>
+  );
 };
 
 ControversyList.propTypes = {

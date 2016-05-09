@@ -1,22 +1,11 @@
-import React from 'react';
-import { ClearFix, Styles } from 'material-ui';
+import React, { Component, PropTypes } from 'react';
+import ClearFix from 'material-ui/internal/ClearFix';
+import spacing from 'material-ui/styles/spacing';
+import withWidth, { SMALL, LARGE } from 'material-ui/utils/withWidth';
 
-const FullWidthSection = React.createClass({
+const desktopGutter = spacing.desktopGutter;
 
-  propTypes: {
-    children: React.PropTypes.node,
-    contentStyle: React.PropTypes.object,
-    contentType: React.PropTypes.string,
-    style: React.PropTypes.object,
-    useContent: React.PropTypes.bool,
-  },
-
-  getDefaultProps() {
-    return {
-      useContent: false,
-      contentType: 'div',
-    };
-  },
+class FullWidthSection extends Component {
 
   getStyles() {
     return {
@@ -37,7 +26,7 @@ const FullWidthSection = React.createClass({
         paddingBottom: desktopGutter * 3,
       },
     };
-  },
+  }
 
   render() {
     const {
@@ -45,6 +34,7 @@ const FullWidthSection = React.createClass({
       useContent,
       contentType,
       contentStyle,
+      width,
       ...other,
     } = this.props;
 
@@ -67,12 +57,28 @@ const FullWidthSection = React.createClass({
         {...other}
         style={Object.assign(
           styles.root,
-          style)}
+          style,
+          width === SMALL && styles.rootWhenSmall,
+          width === LARGE && styles.rootWhenLarge)}
       >
         {content}
       </ClearFix>
     );
-  },
-});
+  }
+}
 
-export default FullWidthSection;
+FullWidthSection.propTypes = {
+  children: PropTypes.node,
+  contentStyle: PropTypes.object,
+  contentType: PropTypes.string,
+  style: PropTypes.object,
+  useContent: PropTypes.bool,
+  width: PropTypes.number.isRequired,
+};
+
+FullWidthSection.defaultProps = {
+  useContent: false,
+  contentType: 'div',
+};
+
+export default withWidth()(FullWidthSection);
