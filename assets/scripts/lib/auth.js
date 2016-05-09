@@ -34,7 +34,6 @@ export function saveCookies(email, key) {
 }
 
 export function deleteCookies() {
-  console.log("remove cookies!");
   cookie.remove(COOKIE_USERNAME);
   cookie.remove(COOKIE_KEY);
 }

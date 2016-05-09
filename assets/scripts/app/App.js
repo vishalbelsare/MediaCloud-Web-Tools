@@ -4,7 +4,6 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
-import spacing from 'material-ui/styles/spacing';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -21,12 +20,12 @@ const messages = {
 
 class App extends React.Component {
 
-  onLoginLogout = () => {
-    if (this.props.user.isLogginIn) {
-      this.context.router.push('/logout');
-    } else {
-      this.context.router.push('/login');
-    }
+  onRouteToLogout = () => {
+    this.context.router.push('/logout');
+  }
+
+  onRouteToLogin = () => {
+    this.context.router.push('/logout');
   }
 
   getStyles() {
@@ -60,11 +59,11 @@ class App extends React.Component {
     const { children, user } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
-    let loginLogoutText = null;
+    let loginLogoutButton = null;
     if (user.isLoggedIn) {
-      loginLogoutText = formatMessage(messages.appLogout);
+      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogout)} onTouchTap={this.onRouteToLogout} />;
     } else {
-      loginLogoutText = formatMessage(messages.appLogin);
+      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogin)} onTouchTap={this.onRouteToLogin} />;
     }
     return (
       <div>
@@ -73,7 +72,7 @@ class App extends React.Component {
           title={formatMessage(messages.appTitle)}
           zDepth={0}
           iconELementLeft={<div></div>}
-          iconElementRight={<FlatButton label={loginLogoutText} onTouchTap={this.onLoginLogout} />}
+          iconElementRight={loginLogoutButton}
         />
         <div style={styles.root}>
           <Grid>
