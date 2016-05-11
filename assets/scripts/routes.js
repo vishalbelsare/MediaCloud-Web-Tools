@@ -2,7 +2,7 @@ import React from 'react';
 import App from './components/App';
 import LoginFormContainer from './components/user/LoginFormContainer';
 import ControversyListContainer from './components/controversy/ControversyListContainer';
-import ControversySummaryContainer from './components/controversy/ControversySummaryContainer';
+import ControversySummaryContainer from './components/controversy/summary/ControversySummaryContainer';
 import { hasCookies } from './lib/auth';
 import { logout } from './actions/userActions';
 import store from './store';

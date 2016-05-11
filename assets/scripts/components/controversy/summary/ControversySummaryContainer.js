@@ -2,12 +2,12 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-
-import ErrorTryAgain from '../util/ErrorTryAgain';
-import LoadingSpinner from '../util/LoadingSpinner';
-import ControversySummary from './controversySummary';
-import { fetchControversySummary } from '../../actions/controversyActions';
-import * as fetchConstants from '../../lib/fetchConstants.js';
+import ErrorTryAgain from '../../util/ErrorTryAgain';
+import LoadingSpinner from '../../util/LoadingSpinner';
+import ControversySummary from './ControversySummary';
+import { fetchControversySummary } from '../../../actions/controversyActions';
+import * as fetchConstants from '../../../lib/fetchConstants.js';
+import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
 
 const messages = {
   defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' },
@@ -15,8 +15,8 @@ const messages = {
 
 class ControversySummaryContainer extends React.Component {
   componentWillMount() {
-    const controversyId = this.props.params.controversyId;
-    this.context.store.dispatch(fetchControversySummary(controversyId));
+    const { params, onTryAgain } = this.props;
+    onTryAgain(params.controversyId);
   }
   getStyles() {
     const styles = {
@@ -34,10 +34,15 @@ class ControversySummaryContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <ControversySummary controversy={info} />;
+        content = (
+          <div>
+          <ControversySummary controversy={info} />
+          <ControversyTopStoriesContainer controversyId={info.controversies_id} />
+          </div>
+        );
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain} />;
+        content = <ErrorTryAgain onTryAgain={onTryAgain(info.controversies_id)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -69,8 +74,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: () => {
-    dispatch(fetchControversySummary());  // TODO: how to get the id in here?
+  onTryAgain: (controversyId) => {
+    dispatch(fetchControversySummary(controversyId));
   },
 });
 

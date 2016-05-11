@@ -15,7 +15,7 @@ function topStories(state = INITIAL_STATE, action) {
     case resolve(FETCH_CONTROVERSY_TOP_STORIES):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        ...action.payload.results,
+        stories: action.payload.results,
       });
     case reject(FETCH_CONTROVERSY_TOP_STORIES):
       return Object.assign({}, state, {
