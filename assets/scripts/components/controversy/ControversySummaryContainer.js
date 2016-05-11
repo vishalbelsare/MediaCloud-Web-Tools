@@ -3,11 +3,11 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import ErrorTryAgain from '../components/ErrorTryAgain';
-import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorTryAgain from '../util/ErrorTryAgain';
+import LoadingSpinner from '../util/LoadingSpinner';
 import ControversySummary from './controversySummary';
-import { fetchControversySummary } from './controversyActions';
-import { FETCH_CONTROVERSY_SUMMARY_SUCCEEDED, FETCH_CONTROVERSY_SUMMARY_FAILED } from './controversyReducers';
+import { fetchControversySummary } from '../../actions/controversyActions';
+import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const messages = {
   defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' },
@@ -26,19 +26,17 @@ class ControversySummaryContainer extends React.Component {
     return styles;
   }
   render() {
-    const { controversies, fetchState, onTryAgain } = this.props;
-    const controversyId = this.props.params.controversyId;
-    const controversy = controversies[controversyId];
+    const { info, fetchStatus, onTryAgain } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.defaultTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-    let content = fetchState;
+    let content = fetchStatus;
     const styles = this.getStyles();
-    switch (fetchState) {
-      case FETCH_CONTROVERSY_SUMMARY_SUCCEEDED:
-        content = <ControversySummary controversy={controversy} />;
+    switch (fetchStatus) {
+      case fetchConstants.FETCH_SUCCEEDED:
+        content = <ControversySummary controversy={info} />;
         break;
-      case FETCH_CONTROVERSY_SUMMARY_FAILED:
+      case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={onTryAgain} />;
         break;
       default:
@@ -54,8 +52,8 @@ class ControversySummaryContainer extends React.Component {
 }
 
 ControversySummaryContainer.propTypes = {
-  fetchState: React.PropTypes.string.isRequired,
-  controversies: React.PropTypes.object.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  info: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
@@ -66,8 +64,8 @@ ControversySummaryContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchState: state.controversies.meta.fetchSummaryState,
-  controversies: state.controversies.all,
+  fetchStatus: state.controversies.selected.summary.fetchStatus,
+  info: state.controversies.selected.summary,
 });
 
 const mapDispatchToProps = (dispatch) => ({

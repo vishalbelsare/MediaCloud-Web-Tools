@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-
 import LoginForm from './LoginForm';
 
 const messages = {

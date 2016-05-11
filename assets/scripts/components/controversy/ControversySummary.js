@@ -8,14 +8,12 @@ const ControversySummary = (props) => {
     <Row>
       <Col lg={12}>
         <h1>{controversy.name}</h1>
-        <p>
         <ul>
           <li>{controversy.description}</li>
           <li>Iterations: {controversy.num_iterations}</li>
           <li>process_with_bitly: {controversy.process_with_bitly}</li>
           <li>Dumps: {controversy.dumps.length}</li>
         </ul>
-        </p>
       </Col>
     </Row>
   );

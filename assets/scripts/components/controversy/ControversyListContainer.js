@@ -4,11 +4,11 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
-import ErrorTryAgain from '../components/ErrorTryAgain';
-import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorTryAgain from '../util/ErrorTryAgain';
+import LoadingSpinner from '../util/LoadingSpinner';
 import ControversyList from './ControversyList';
-import { fetchControversyList } from './controversyActions';
-import { FETCH_CONTROVERSY_LIST_SUCCEEDED, FETCH_CONTROVERSY_LIST_FAILED } from './controversyReducers';
+import { fetchControversiesList } from '../../actions/controversyActions';
+import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const messages = {
   controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Recent Topics' },
@@ -16,7 +16,7 @@ const messages = {
 
 class ControversyListContainer extends React.Component {
   componentWillMount() {
-    this.context.store.dispatch(fetchControversyList());
+    this.context.store.dispatch(fetchControversiesList());
   }
   getStyles() {
     const styles = {
@@ -26,17 +26,17 @@ class ControversyListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { controversies, fetchState, onTryAgain } = this.props;
+    const { controversies, fetchStatus, onTryAgain } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.controversiesListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-    let content = fetchState;
+    let content = fetchStatus;
     const styles = this.getStyles();
-    switch (fetchState) {
-      case FETCH_CONTROVERSY_LIST_SUCCEEDED:
+    switch (fetchStatus) {
+      case fetchConstants.FETCH_SUCCEEDED:
         content = <ControversyList controversies={controversies} />;
         break;
-      case FETCH_CONTROVERSY_LIST_FAILED:
+      case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={onTryAgain} />;
         break;
       default:
@@ -47,8 +47,8 @@ class ControversyListContainer extends React.Component {
         <Title render={titleHandler} />
         <Row>
           <Col lg={12}>
-          <h2>{title}</h2>
-          {content}
+            <h2>{title}</h2>
+            {content}
           </Col>
         </Row>
       </div>
@@ -57,7 +57,7 @@ class ControversyListContainer extends React.Component {
 }
 
 ControversyListContainer.propTypes = {
-  fetchState: React.PropTypes.string.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
@@ -68,13 +68,13 @@ ControversyListContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchState: state.controversies.meta.fetchListState,
-  controversies: state.controversies.all,
+  fetchStatus: state.controversies.all.fetchStatus,
+  controversies: state.controversies.all.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onTryAgain: () => {
-    dispatch(fetchControversyList());
+    dispatch(fetchControversiesList());
   },
 });
 

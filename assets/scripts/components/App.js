@@ -8,7 +8,7 @@ import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
-import FullWidthSection from '../components/FullWidthSection';
+import FullWidthSection from '../components/util/FullWidthSection';
 
 const messages = {
   footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },

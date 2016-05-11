@@ -1,0 +1,40 @@
+
+{
+
+	user: {
+		isFetching: bool,
+    isLoggedIn: bool,
+    key: string,
+    email: string
+	},
+
+  controversies: {
+    all: {
+      fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+      list: {
+        // controversy_id => summary dict
+      },
+    },
+    selected: {
+      summary: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        // all the fields the API returns about a single controversy
+      },
+      topStories: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        list: {
+          // list of JSON story objects
+        },
+      },
+    },
+  }
+
+  form: {
+    //managed by form helper library
+  },
+
+  routing: {
+    // managed by react-router
+  }
+
+}

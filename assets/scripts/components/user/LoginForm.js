@@ -2,7 +2,7 @@ import React from 'react';
 import { reduxForm } from 'redux-form';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { loginWithPassword } from './userActions';
+import { loginWithPassword } from '../../actions/userActions';
 
 const LoginFormComponent = (props) => {
   const { fields: { email, password }, handleSubmit, onSubmitLoginForm, isSubmitting, location } = props;
