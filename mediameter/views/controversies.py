@@ -24,6 +24,9 @@ def api_controversy_summary(controversy_id):
 @app.route('/api/controversy/<controversy_id>/top-stories', methods=['GET'])
 #@flask_login.login_required
 def api_controversy_top_stories(controversy_id):
-    query = "{{~ controversy:{0} }}".format(controversy_id)
-    stories = mc.storyList(query)
+    sort = request.args.get('sort')
+    valid_sorts = ['social','inlink']
+    if (sort is None) or (sort not in valid_sorts):
+        sort = valid_sorts[0]
+    stories = mc.topicStoryList(controversy_id,limit=25,sort=sort)
     return jsonify({'results':stories})

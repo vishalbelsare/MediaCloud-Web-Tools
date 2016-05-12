@@ -19,7 +19,7 @@ export function controversySummary(id) {
 }
 
 export function controversyTopStories(id, sort) {
-  return fetch(`/api/controversy/${id}/top-stories`, {
+  return fetch(`/api/controversy/${id}/top-stories?sort=${sort}`, {
     method: 'get',
     credentials: 'include',
   }).then(

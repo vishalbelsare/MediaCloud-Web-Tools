@@ -15,6 +15,10 @@ class ControversyTopStoriesContainer extends React.Component {
   componentWillMount() {
     this.fetchData();
   }
+  onChangeSort = (newSort) => {
+    const { controversyId, onTryAgain } = this.props;
+    onTryAgain(controversyId, newSort);
+  };
   getStyles() {
     const styles = {
       root: {
@@ -23,16 +27,16 @@ class ControversyTopStoriesContainer extends React.Component {
     return styles;
   }
   fetchData() {
-    const { controversyId, onTryAgain } = this.props;
-    onTryAgain(controversyId);
+    const { controversyId, onTryAgain, sort } = this.props;
+    onTryAgain(controversyId, sort);
   }
   render() {
-    const { controversyId, fetchStatus, onTryAgain, stories } = this.props;
+    const { controversyId, fetchStatus, onTryAgain, stories, sort } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <ControversyTopStories stories={stories} />;
+        content = <ControversyTopStories stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={onTryAgain(controversyId)} />;
@@ -51,6 +55,7 @@ class ControversyTopStoriesContainer extends React.Component {
 
 ControversyTopStoriesContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
+  sort: React.PropTypes.string.isRequired,
   stories: React.PropTypes.array,
   controversyId: React.PropTypes.number.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
@@ -63,12 +68,13 @@ ControversyTopStoriesContainer.contextTypes = {
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.controversies.selected.topStories.fetchStatus,
+  sort: state.controversies.selected.topStories.sort,
   stories: state.controversies.selected.topStories.stories,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (controversyId) => {
-    dispatch(fetchControversyTopStories(controversyId));
+  onTryAgain: (controversyId, sort) => {
+    dispatch(fetchControversyTopStories(controversyId, sort));
   },
 });
 

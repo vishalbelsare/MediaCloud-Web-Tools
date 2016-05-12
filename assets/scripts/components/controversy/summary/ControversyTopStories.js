@@ -3,42 +3,60 @@ import { injectIntl } from 'react-intl';
 import Paper from 'material-ui/Paper';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
-const ControversyTopStories = (props) => {
-  const { stories } = props;
-  return (
-    <Paper>
-      <Table selectable={false}>
-        <TableHeader adjustForCheckbox={false}>
-          <TableRow>
-            <TableHeaderColumn>Title</TableHeaderColumn>
-            <TableHeaderColumn>Media Source</TableHeaderColumn>
-            <TableHeaderColumn>Date</TableHeaderColumn>
-            <TableHeaderColumn>Inlinks</TableHeaderColumn>
-            <TableHeaderColumn>Outlinks</TableHeaderColumn>
-            <TableHeaderColumn>Clicks</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {stories.map(story =>
-            (<TableRow key={story.stories_id}>
-              <TableRowColumn><a href={story.url}>{story.title}</a></TableRowColumn>
-              // TODO: link this to the media source page with all selected filters applied
-              <TableRowColumn><a href={story.media_url}>{story.media_name}</a></TableRowColumn>
-              <TableRowColumn>{story.publish_date}</TableRowColumn>
-              <TableRowColumn>{story.inlinks}</TableRowColumn>
-              <TableRowColumn>{story.outlinks}</TableRowColumn>
-              <TableRowColumn>{story.bitly_click_count}</TableRowColumn>
-            </TableRow>)
-          )}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
-};
+class ControversyTopStories extends React.Component {
+
+  sortBySocial = (event) => {
+    const { onChangeSort } = this.props;
+    onChangeSort('social');
+    event.preventDefault();
+  }
+
+  sortByInlinks = (event) => {
+    const { onChangeSort } = this.props;
+    onChangeSort('inlink');
+    event.preventDefault();
+  }
+
+  render() {
+    const { stories } = this.props;
+    return (
+      <Paper>
+        <Table selectable={false}>
+          <TableHeader adjustForCheckbox={false}>
+            <TableRow>
+              <TableHeaderColumn>Title</TableHeaderColumn>
+              <TableHeaderColumn>Media Source</TableHeaderColumn>
+              <TableHeaderColumn>Date</TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={this.sortByInlinks}>Inlinks</a></TableHeaderColumn>
+              <TableHeaderColumn>Outlinks</TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={this.sortBySocial}>Clicks</a></TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {stories.map(story =>
+              (<TableRow key={story.stories_id}>
+                <TableRowColumn><a href={story.url}>{story.title}</a></TableRowColumn>
+                // TODO: link this to the media source page with all selected filters applied
+                <TableRowColumn><a href={story.media_url}>{story.media_name}</a></TableRowColumn>
+                <TableRowColumn>{story.publish_date}</TableRowColumn>
+                <TableRowColumn>{story.inlink_count}</TableRowColumn>
+                <TableRowColumn>{story.outlink_count}</TableRowColumn>
+                <TableRowColumn>{story.bitly_click_count}</TableRowColumn>
+              </TableRow>)
+            )}
+          </TableBody>
+        </Table>
+      </Paper>
+    );
+  }
+
+}
 
 ControversyTopStories.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
+  onChangeSort: React.PropTypes.func.isRequired,
+  sortedBy: React.PropTypes.string.isRequired,
 };
 
 export default injectIntl(ControversyTopStories);
