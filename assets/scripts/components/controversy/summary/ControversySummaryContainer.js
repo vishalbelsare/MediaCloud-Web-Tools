@@ -8,10 +8,7 @@ import ControversySummary from './ControversySummary';
 import { fetchControversySummary } from '../../../actions/controversyActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
-
-const messages = {
-  defaultTitle: { id: 'controversy.title.default', defaultMessage: 'Controversy' },
-};
+import messages from '../../../resources/messages';
 
 class ControversySummaryContainer extends React.Component {
   componentWillMount() {
@@ -28,7 +25,7 @@ class ControversySummaryContainer extends React.Component {
   render() {
     const { info, fetchStatus, onTryAgain } = this.props;
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.defaultTitle);
+    const title = formatMessage(messages.topicName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let content = fetchStatus;
     const styles = this.getStyles();

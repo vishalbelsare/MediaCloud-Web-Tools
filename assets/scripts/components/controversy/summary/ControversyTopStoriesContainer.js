@@ -7,7 +7,7 @@ import ControversyTopStories from './ControversyTopStories';
 import { fetchControversyTopStories } from '../../../actions/controversyActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
-const messages = {
+const localMessages = {
   title: { id: 'controversy.summary.topStories.title', defaultMessage: 'Top Stories' },
 };
 
@@ -46,7 +46,7 @@ class ControversyTopStoriesContainer extends React.Component {
     }
     return (
       <div style={styles.root}>
-        <h2><FormattedMessage {...messages.title} /></h2>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
         {content}
       </div>
     );

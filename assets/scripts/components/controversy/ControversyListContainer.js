@@ -10,7 +10,7 @@ import ControversyList from './ControversyList';
 import { fetchControversiesList } from '../../actions/controversyActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
-const messages = {
+const localMessages = {
   controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Recent Topics' },
 };
 
@@ -28,7 +28,7 @@ class ControversyListContainer extends React.Component {
   render() {
     const { controversies, fetchStatus, onTryAgain } = this.props;
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.controversiesListTitle);
+    const title = formatMessage(localMessages.controversiesListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let content = fetchStatus;
     const styles = this.getStyles();

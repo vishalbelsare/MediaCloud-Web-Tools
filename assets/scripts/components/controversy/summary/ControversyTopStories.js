@@ -1,7 +1,8 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Paper from 'material-ui/Paper';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import messages from '../../../resources/messages';
 
 class ControversyTopStories extends React.Component {
 
@@ -24,12 +25,12 @@ class ControversyTopStories extends React.Component {
         <Table selectable={false}>
           <TableHeader adjustForCheckbox={false}>
             <TableRow>
-              <TableHeaderColumn>Title</TableHeaderColumn>
-              <TableHeaderColumn>Media Source</TableHeaderColumn>
-              <TableHeaderColumn>Date</TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={this.sortByInlinks}>Inlinks</a></TableHeaderColumn>
-              <TableHeaderColumn>Outlinks</TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={this.sortBySocial}>Clicks</a></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.storyTableTitleCol} /></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.storyTableMediaSourceCol} /></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.storyTableDateCol} /></TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={this.sortByInlinks}><FormattedMessage {...messages.storyTableInlinksCol} /></a></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.storyTableOutlinksCol} /></TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={this.sortBySocial}><FormattedMessage {...messages.storyTableClicksCol} /></a></TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>

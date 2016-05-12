@@ -4,7 +4,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import LoginForm from './LoginForm';
 
-const messages = {
+const localMessages = {
   loginTitle: { id: 'login.title', defaultMessage: 'login' },
 };
 
@@ -16,11 +16,11 @@ class LoginContainer extends React.Component {
   }
   render() {
     const { formatMessage } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(messages.loginTitle)} | ${parentTitle}`;
+    const titleHandler = parentTitle => `${formatMessage(localMessages.loginTitle)} | ${parentTitle}`;
     return (
       <div>
         <Title render={titleHandler} />
-        <h2><FormattedMessage {...messages.loginTitle} /></h2>
+        <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
         <LoginForm location={this.props.location} />
       </div>
     );
