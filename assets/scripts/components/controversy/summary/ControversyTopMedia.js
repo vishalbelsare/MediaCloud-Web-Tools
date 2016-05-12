@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import messages from '../../../resources/messages';
 
-class ControversyTopStories extends React.Component {
+class ControversyTopMedia extends React.Component {
 
   sortBySocial = (event) => {
     const { onChangeSort } = this.props;
@@ -19,30 +19,29 @@ class ControversyTopStories extends React.Component {
   }
 
   render() {
-    const { stories } = this.props;
+    const { media } = this.props;
     return (
       <Paper>
         <Table selectable={false}>
           <TableHeader adjustForCheckbox={false}>
             <TableRow>
-              <TableHeaderColumn><FormattedMessage {...messages.storyTitle} /></TableHeaderColumn>
-              <TableHeaderColumn><FormattedMessage {...messages.media} /></TableHeaderColumn>
-              <TableHeaderColumn><FormattedMessage {...messages.storyDate} /></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.mediaName} /></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.mediaType} /></TableHeaderColumn>
+              <TableHeaderColumn><FormattedMessage {...messages.storyPlural} /></TableHeaderColumn>
               <TableHeaderColumn><a href="#" onClick={this.sortByInlinks}><FormattedMessage {...messages.inlinks} /></a></TableHeaderColumn>
               <TableHeaderColumn><FormattedMessage {...messages.outlinks} /></TableHeaderColumn>
               <TableHeaderColumn><a href="#" onClick={this.sortBySocial}><FormattedMessage {...messages.clicks} /></a></TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {stories.map(story =>
-              (<TableRow key={story.stories_id}>
-                <TableRowColumn><a href={story.url}>{story.title}</a></TableRowColumn>
-                // TODO: link this to the media source page with all selected filters applied
-                <TableRowColumn><a href={story.media_url}>{story.media_name}</a></TableRowColumn>
-                <TableRowColumn>{story.publish_date}</TableRowColumn>
-                <TableRowColumn>{story.inlink_count}</TableRowColumn>
-                <TableRowColumn>{story.outlink_count}</TableRowColumn>
-                <TableRowColumn>{story.bitly_click_count}</TableRowColumn>
+            {media.map(m =>
+              (<TableRow key={m.media_id}>
+                <TableRowColumn><a href={m.url}>{m.name}</a></TableRowColumn>
+                <TableRowColumn>{m.type}</TableRowColumn>
+                <TableRowColumn>{m.story_count}</TableRowColumn>
+                <TableRowColumn>{m.inlink_count}</TableRowColumn>
+                <TableRowColumn>{m.outlink_count}</TableRowColumn>
+                <TableRowColumn>{m.bitly_click_count}</TableRowColumn>
               </TableRow>)
             )}
           </TableBody>
@@ -53,11 +52,11 @@ class ControversyTopStories extends React.Component {
 
 }
 
-ControversyTopStories.propTypes = {
-  stories: React.PropTypes.array.isRequired,
+ControversyTopMedia.propTypes = {
+  media: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
 };
 
-export default injectIntl(ControversyTopStories);
+export default injectIntl(ControversyTopMedia);

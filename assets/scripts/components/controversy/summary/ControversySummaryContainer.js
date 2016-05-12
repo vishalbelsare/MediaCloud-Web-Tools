@@ -8,6 +8,7 @@ import ControversySummary from './ControversySummary';
 import { fetchControversySummary } from '../../../actions/controversyActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
+import ControversyTopMediaContainer from './ControversyTopMediaContainer';
 import messages from '../../../resources/messages';
 
 class ControversySummaryContainer extends React.Component {
@@ -33,8 +34,9 @@ class ControversySummaryContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         content = (
           <div>
-          <ControversySummary controversy={info} />
+          <ControversySummary key="summary" controversy={info} />
           <ControversyTopStoriesContainer controversyId={info.controversies_id} />
+          <ControversyTopMediaContainer controversyId={info.controversies_id} />
           </div>
         );
         break;

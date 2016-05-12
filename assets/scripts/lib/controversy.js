@@ -26,3 +26,12 @@ export function controversyTopStories(id, sort) {
     response => response.json()
   );
 }
+
+export function controversyTopMedia(id, sort) {
+  return fetch(`/api/controversy/${id}/top-media?sort=${sort}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}

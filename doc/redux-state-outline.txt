@@ -23,7 +23,14 @@
       topStories: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         sort: [ social | inlink ]
-        list: {
+        stories: {
+          // list of JSON story objects
+        },
+      },
+      topMedia: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        sort: [ social | inlink ]
+        media: {
           // list of JSON story objects
         },
       },

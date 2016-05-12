@@ -30,3 +30,13 @@ def api_controversy_top_stories(controversy_id):
         sort = valid_sorts[0]
     stories = mc.topicStoryList(controversy_id,limit=25,sort=sort)
     return jsonify({'results':stories})
+
+@app.route('/api/controversy/<controversy_id>/top-media', methods=['GET'])
+#@flask_login.login_required
+def api_controversy_top_media(controversy_id):
+    sort = request.args.get('sort')
+    valid_sorts = ['social','inlink']
+    if (sort is None) or (sort not in valid_sorts):
+        sort = valid_sorts[0]
+    media = mc.topicMediaList(controversy_id,sort=sort)[:25]
+    return jsonify({'results':media})

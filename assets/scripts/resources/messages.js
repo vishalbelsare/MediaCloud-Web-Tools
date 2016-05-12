@@ -3,12 +3,20 @@ const messages = {
 
   topicName: { id: 'controversy.title.default', defaultMessage: 'Topic' },
 
-  storyTableTitleCol: { id: 'stories.col.title', defaultMessage: 'Title' },
-  storyTableMediaSourceCol: { id: 'stories.col.title', defaultMessage: 'Media Source' },
-  storyTableDateCol: { id: 'stories.col.title', defaultMessage: 'Publish Date' },
-  storyTableInlinksCol: { id: 'stories.col.title', defaultMessage: 'Inlinks' },
-  storyTableOutlinksCol: { id: 'stories.col.title', defaultMessage: 'Outlinks' },
-  storyTableClicksCol: { id: 'stories.col.title', defaultMessage: 'Clicks' },
+  inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
+  outlinks: { id: 'common.outlinks', defaultMessage: 'Inlinks' },
+  clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
+  publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
+
+  media: { id: 'media', defaultMessage: 'Media Source' },
+  mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
+  mediaName: { id: 'media.name', defaultMessage: 'Name' },
+  mediaType: { id: 'media.type', defaultMessage: 'Media Type' },
+
+  story: { id: 'story', defaultMessage: 'Story' },
+  storyPlural: { id: 'stories', defaultMessage: 'Stories' },
+  storyTitle: { id: 'story.title', defaultMessage: 'Title' },
+  storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
 
 };
 
