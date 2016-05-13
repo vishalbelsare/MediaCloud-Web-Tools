@@ -6,11 +6,13 @@
     "start": "if-env ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback",
     "start:prod": "webpack",
-    "build": "node_modules/.bin/webpack --progress --profile --colors",
+    "release": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "lint": "eslint webpack.config.js assets/scripts --fix --ext .jsx,.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.6.1",
+    "d3": "^3.5.17",
+    "d3-cloud": "^1.2.1",
     "flexboxgrid": "^6.3.0",
     "if-env": "^1.0.0",
     "intl": "^1.1.0",
@@ -19,6 +21,7 @@
     "react": "~15.0.2",
     "react-cookie": "~0.4.5",
     "react-dom": "~15.0.2",
+    "react-faux-dom": "^2.5.0",
     "react-intl": "~2.1.2",
     "react-redux": "~4.4.5",
     "react-router": "~2.4.0",
