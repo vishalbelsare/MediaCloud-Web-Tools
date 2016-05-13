@@ -35,3 +35,12 @@ export function controversyTopMedia(id, sort) {
     response => response.json()
   );
 }
+
+export function controversyTopWords(id) {
+  return fetch(`/api/controversy/${id}/top-words`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}

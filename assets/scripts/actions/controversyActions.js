@@ -4,6 +4,7 @@ export const FETCH_CONTROVERSY_LIST = 'FETCH_CONTROVERSY_LIST';
 export const FETCH_CONTROVERSY_SUMMARY = 'FETCH_CONTROVERSY_SUMMARY';
 export const FETCH_CONTROVERSY_TOP_STORIES = 'FETCH_CONTROVERSY_TOP_STORIES';
 export const FETCH_CONTROVERSY_TOP_MEDIA = 'FETCH_CONTROVERSY_TOP_MEDIA';
+export const FETCH_CONTROVERSY_TOP_WORDS = 'FETCH_CONTROVERSY_TOP_WORDS';
 
 export function fetchControversiesList() {
   return {
@@ -37,6 +38,15 @@ export function fetchControversyTopMedia(id, sort) {
     type: FETCH_CONTROVERSY_TOP_MEDIA,
     payload: {
       promise: api.controversyTopMedia(id, sort),
+    },
+  };
+}
+
+export function fetchControversyTopWords(id, sort) {
+  return {
+    type: FETCH_CONTROVERSY_TOP_WORDS,
+    payload: {
+      promise: api.controversyTopWords(id, sort),
     },
   };
 }

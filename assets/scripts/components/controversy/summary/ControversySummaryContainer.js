@@ -9,6 +9,7 @@ import { fetchControversySummary } from '../../../actions/controversyActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
 import ControversyTopMediaContainer from './ControversyTopMediaContainer';
+import ControversyTopWordsContainer from './ControversyTopWordsContainer';
 import messages from '../../../resources/messages';
 
 class ControversySummaryContainer extends React.Component {
@@ -37,6 +38,7 @@ class ControversySummaryContainer extends React.Component {
           <ControversySummary key="summary" controversy={info} />
           <ControversyTopStoriesContainer controversyId={info.controversies_id} />
           <ControversyTopMediaContainer controversyId={info.controversies_id} />
+          <ControversyTopWordsContainer controversyId={info.controversies_id} />
           </div>
         );
         break;

@@ -31,9 +31,15 @@
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         sort: [ social | inlink ]
         media: {
-          // list of JSON story objects
+          // list of JSON media objects
         },
       },
+      topWords: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        words: {
+          // list of JSON word objects
+        },
+      }
     },
   }
 

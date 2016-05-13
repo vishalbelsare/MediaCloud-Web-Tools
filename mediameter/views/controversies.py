@@ -40,3 +40,9 @@ def api_controversy_top_media(controversy_id):
         sort = valid_sorts[0]
     media = mc.topicMediaList(controversy_id,sort=sort)[:25]
     return jsonify({'results':media})
+
+@app.route('/api/controversy/<controversy_id>/top-words', methods=['GET'])
+#@flask_login.login_required
+def api_controversy_top_words(controversy_id):
+    media = mc.topicWordCount(controversy_id)[:100]
+    return jsonify({'results':media})
