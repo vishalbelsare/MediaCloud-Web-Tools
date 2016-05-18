@@ -15,7 +15,9 @@ const SnapshotSelector = (props) => {
       <FormattedMessage {...messages.topicSnapshot} />
       <select defaultValue={idToPreSelect} onChange={onSnapshotSelected}>
         {snapshots.map(snapshot =>
-          <option key={snapshot.controversy_dumps_id} value={snapshot.controversy_dumps_id}>{snapshot.dump_date}</option>
+          <option key={snapshot.controversy_dumps_id} value={snapshot.controversy_dumps_id}>
+            {snapshot.dump_date.substr(0,16)}
+          </option>
         )}
       </select>
     </div>

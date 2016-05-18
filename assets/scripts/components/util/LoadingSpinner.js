@@ -1,5 +1,5 @@
 import React from 'react';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class LoadingSpinner extends React.Component {
   getStyles() {
@@ -8,10 +8,6 @@ class LoadingSpinner extends React.Component {
         textAlign: 'center',
         padding: 10,
       },
-      refresh: {
-        display: 'inline-block',
-        position: 'relative',
-      },
     };
     return styles;
   }
@@ -19,13 +15,7 @@ class LoadingSpinner extends React.Component {
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
-        <RefreshIndicator
-          size={40}
-          left={10}
-          top={0}
-          status="loading"
-          style={styles.refresh}
-        />
+        <CircularProgress size={0.5} />
       </div>
     );
   }

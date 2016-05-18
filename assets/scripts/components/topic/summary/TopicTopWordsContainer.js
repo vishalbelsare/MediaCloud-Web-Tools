@@ -14,15 +14,15 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, topicId, snapshotId, fetchData } = this.props;
+    const { fetchStatus, topicId, filters, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, snapshotId);
+      fetchData(topicId, filters.snapshotId);
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.snapshotId !== this.props.snapshotId) {
+    if (nextProps.filters !== this.props.filters) {
       const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.snapshotId);
+      fetchData(topicId, nextProps.filters.snapshotId);
     }
   }
   getStyles() {
@@ -66,13 +66,13 @@ TopicTopStoriesContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  snapshotId: React.PropTypes.number,
+  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
   words: state.topics.selected.summary.topWords.list,
-  snapshotId: state.topics.selected.filters.snapshotId,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({

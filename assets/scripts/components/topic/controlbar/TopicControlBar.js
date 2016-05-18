@@ -26,10 +26,12 @@ class TopicControlBar extends React.Component {
         <Grid>
           <Row style={styles.controlBar}>
             <Col lg={3}>
-              {title}
+              <b>{title}</b>
             </Col>
             <Col lg={3}>
               <SnapshotSelectorContainer />
+            </Col>
+            <Col lg={3}>
               <TimespanSelectorContainer />
             </Col>
           </Row>

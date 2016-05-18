@@ -14,16 +14,16 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, topicId, snapshotId, fetchData, sort } = this.props;
+    const { fetchStatus, topicId, filters, fetchData, sort } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, snapshotId, sort);
+      fetchData(topicId, filters.snapshotId, sort);
     }
   }
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.snapshotId !== this.props.snapshotId) ||
+    if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
       const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.snapshotId, nextProps.sort);
+      fetchData(topicId, nextProps.filters.snapshotId, nextProps.sort);
     }
   }
   onChangeSort = (newSort) => {
@@ -73,14 +73,14 @@ TopicTopStoriesContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  snapshotId: React.PropTypes.number,
+  filters: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.list,
-  snapshotId: state.topics.selected.filters.snapshotId,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
