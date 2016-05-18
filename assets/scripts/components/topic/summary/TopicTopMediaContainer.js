@@ -16,14 +16,14 @@ class TopicTopMediaContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus, topicId, filters, fetchData, sort } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId, sort);
+      fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
     }
   }
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
       const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.sort);
+      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
     }
   }
   onChangeSort = (newSort) => {
@@ -80,12 +80,13 @@ const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.topMedia.fetchStatus,
   sort: state.topics.selected.summary.topMedia.sort,
   media: state.topics.selected.summary.topMedia.list,
-  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId, sort) => {
-    dispatch(fetchTopicTopMedia(topicId, snapshotId, sort));
+  fetchData: (topicId, snapshotId, timespanId, sort) => {
+    if ((snapshotId !== null) && (timespanId !== null)) {
+      dispatch(fetchTopicTopMedia(topicId, snapshotId, timespanId, sort));
+    }
   },
   sortData: (sort) => {
     dispatch(sortTopicTopMedia(sort));

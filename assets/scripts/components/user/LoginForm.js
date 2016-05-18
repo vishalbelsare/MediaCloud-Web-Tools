@@ -3,9 +3,10 @@ import { reduxForm } from 'redux-form';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { loginWithPassword } from '../../actions/userActions';
+import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const LoginFormComponent = (props) => {
-  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, isSubmitting, location } = props;
+  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, location } = props;
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
       <TextField
@@ -24,7 +25,7 @@ const LoginFormComponent = (props) => {
         value={ (location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
       />
       <br />
-      <RaisedButton type="submit" label="Login" primary disabled={isSubmitting} />
+      <RaisedButton type="submit" label="Login" primary disabled={fetchStatus==fetchConstants.FETCH_ONGOING} />
     </form>
   );
 };
@@ -32,13 +33,13 @@ const LoginFormComponent = (props) => {
 LoginFormComponent.propTypes = {
   fields: React.PropTypes.object.isRequired,
   onSubmitLoginForm: React.PropTypes.func.isRequired,
-  isSubmitting: React.PropTypes.bool.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
   location: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isSubmitting: state.user.isFetching,
+  fetchStatus: state.user.fetchStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({

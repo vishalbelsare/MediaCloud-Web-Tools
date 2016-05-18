@@ -16,14 +16,14 @@ class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus, topicId, filters, fetchData, sort } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId, sort);
+      fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
     }
   }
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
       const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.sort);
+      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
     }
   }
   onChangeSort = (newSort) => {
@@ -73,19 +73,20 @@ TopicTopStoriesContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.number,
+  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.list,
-  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId, sort) => {
-    dispatch(fetchTopicTopStories(topicId, snapshotId, sort));
+  fetchData: (topicId, snapshotId, timespanId, sort) => {
+    if ((snapshotId !== null) && (timespanId !== null)) {
+      dispatch(fetchTopicTopStories(topicId, snapshotId, timespanId, sort));
+    }
   },
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));

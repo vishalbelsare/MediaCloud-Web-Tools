@@ -18,10 +18,13 @@ export function topicSummary(topicId) {
   );
 }
 
-export function topicTopStories(topicId, snapshotId, sort) {
+export function topicTopStories(topicId, snapshotId, timespanId, sort) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
+  }
+  if (timespanId !== null) {
+    params.timespan = timespanId;
   }
   if (sort !== null) {
     params.sort = sort;
@@ -35,10 +38,13 @@ export function topicTopStories(topicId, snapshotId, sort) {
   );
 }
 
-export function topicTopMedia(topicId, snapshotId, sort) {
+export function topicTopMedia(topicId, snapshotId, timespanId, sort) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
+  }
+  if (timespanId !== null) {
+    params.timespan = timespanId;
   }
   if (sort !== null) {
     params.sort = sort;
@@ -52,10 +58,13 @@ export function topicTopMedia(topicId, snapshotId, sort) {
   );
 }
 
-export function topicTopWords(topicId, snapshotId) {
+export function topicTopWords(topicId, snapshotId, timespanId) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
+  }
+  if (timespanId !== null) {
+    params.timespan = timespanId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/top-words?${paramStr}`, {

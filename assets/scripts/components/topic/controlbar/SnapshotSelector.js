@@ -4,19 +4,13 @@ import messages from '../../../resources/messages';
 
 const SnapshotSelector = (props) => {
   const { snapshots, selectedId, onSnapshotSelected } = props;
-  let idToPreSelect = selectedId;
-  if (idToPreSelect == null) {
-    if (snapshots.length > 0) {
-      idToPreSelect = snapshots[0].controversy_dumps_id;
-    }
-  }
   return (
     <div>
       <FormattedMessage {...messages.topicSnapshot} />
-      <select defaultValue={idToPreSelect} onChange={onSnapshotSelected}>
+      <select defaultValue={selectedId} onChange={ (event) => onSnapshotSelected(event.target.value) }>
         {snapshots.map(snapshot =>
           <option key={snapshot.controversy_dumps_id} value={snapshot.controversy_dumps_id}>
-            {snapshot.dump_date.substr(0,16)}
+            {snapshot.dump_date.substr(0, 16)}
           </option>
         )}
       </select>

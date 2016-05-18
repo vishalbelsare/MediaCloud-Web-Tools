@@ -4,20 +4,22 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import TimespanSelector from './TimespanSelector';
-import { fetchTopicSnapshotTimeslicesList, filterByTimespan } from '../../../actions/topicActions';
+import { fetchTopicSnapshotTimespansList, filterByTimespan } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class TimespanSelectorContainer extends React.Component {
   componentDidMount() {
-    const { fetchData, topicId, snapshotId } = this.props;
-    if (snapshotId !== null) {
-      fetchData(topicId, snapshotId);
+    const { fetchData, topicId, snapshotId, timespanId } = this.props;
+    if ((topicId !== null) && (snapshotId !== null)) {
+      fetchData(topicId, snapshotId, timespanId);
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.snapshotId !== this.props.snapshotId) {
-      const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.snapshotId);
+    if (((nextProps.topicId !== this.props.topicId) ||
+        (nextProps.snapshotId !== this.props.snapshotId)) &&
+        (nextProps.topicId !== null) && (nextProps.snapshotId !== null)) {
+      const { fetchData } = this.props;
+      fetchData(nextProps.topicId, nextProps.snapshotId, nextProps.timespanId);
     }
   }
   getStyles() {
@@ -54,7 +56,7 @@ TimespanSelectorContainer.propTypes = {
   timespans: React.PropTypes.array.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   onTimespanSelected: React.PropTypes.func.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number,
   snapshotId: React.PropTypes.number,
   timespanId: React.PropTypes.number,
 };
@@ -68,8 +70,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId) => {
-    dispatch(fetchTopicSnapshotTimeslicesList(topicId, snapshotId));
+  fetchData: (topicId, snapshotId, timespanId) => {
+    dispatch(fetchTopicSnapshotTimespansList(topicId, snapshotId))
+      .then((response) => {
+        if (timespanId === null) {
+          dispatch(filterByTimespan(response.results[0].controversy_dump_time_slices_id));
+        }
+      });
   },
   onTimespanSelected: (event) => {
     dispatch(filterByTimespan(event.target.value));

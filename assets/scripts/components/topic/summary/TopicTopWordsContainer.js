@@ -16,13 +16,13 @@ class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus, topicId, filters, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId);
+      fetchData(topicId, filters.snapshotId, filters.timespanId);
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.filters !== this.props.filters) {
       const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId);
+      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
     }
   }
   getStyles() {
@@ -76,8 +76,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId) => {
-    dispatch(fetchTopicTopWords(topicId, snapshotId));
+  fetchData: (topicId, snapshotId, timespanId) => {
+    if ((snapshotId !== null) && (timespanId !== null)) {
+      dispatch(fetchTopicTopWords(topicId, snapshotId, timespanId));
+    }
   },
 });
 

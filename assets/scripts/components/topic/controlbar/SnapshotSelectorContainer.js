@@ -9,8 +9,16 @@ import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class SnapshotSelectorContainer extends React.Component {
   componentDidMount() {
-    const { fetchData, topicId } = this.props;
-    fetchData(topicId);
+    const { fetchData, snapshotId, topicId } = this.props;
+    if (topicId !== null) {
+      fetchData(topicId, snapshotId);
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.topicId !== this.props.topicId) {
+      const { fetchData } = this.props;
+      fetchData(nextProps.topicId, nextProps.snapshotId);
+    }
   }
   getStyles() {
     const styles = {
@@ -20,12 +28,12 @@ class SnapshotSelectorContainer extends React.Component {
     return styles;
   }
   render() {
-    const { snapshots, fetchStatus, fetchData, onSnapshotSelected } = this.props;
+    const { snapshots, fetchStatus, fetchData, onSnapshotSelected, snapshotId } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SnapshotSelector snapshots={snapshots} onSnapshotSelected={onSnapshotSelected} />;
+        content = <SnapshotSelector selectedId={snapshotId} snapshots={snapshots} onSnapshotSelected={onSnapshotSelected} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={fetchData} />;
@@ -46,21 +54,28 @@ SnapshotSelectorContainer.propTypes = {
   snapshots: React.PropTypes.array.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   onSnapshotSelected: React.PropTypes.func.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number,
+  snapshotId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.snapshots.fetchStatus,
   snapshots: state.topics.selected.snapshots.list,
+  snapshotId: state.topics.selected.filters.snapshotId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId) => {
-    dispatch(fetchTopicSnapshotsList(topicId));
+  fetchData: (topicId, snapshotId) => {
+    dispatch(fetchTopicSnapshotsList(topicId))
+      .then((response) => {
+        if (snapshotId === null) {
+          dispatch(filterBySnapshot(response.results[0].controversy_dumps_id));
+        }
+      });
   },
-  onSnapshotSelected: (event) => {
-    dispatch(filterBySnapshot(event.target.value));
+  onSnapshotSelected: (snapshotId) => {
+    dispatch(filterBySnapshot(snapshotId));
   },
 });
 

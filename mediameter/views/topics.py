@@ -39,7 +39,8 @@ def api_topics_top_stories(topic_id):
     if (sort is None) or (sort not in valid_sorts):
         sort = valid_sorts[0]
     snapshot_id = request.args.get('snapshot')
-    stories = mc.topicStoryList(topic_id,snapshot_id=snapshot_id,limit=25,sort=sort)
+    timespan_id = request.args.get('timespan')
+    stories = mc.topicStoryList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,limit=25,sort=sort)
     return jsonify({'results':stories})
 
 @app.route('/api/topics/<topic_id>/top-media', methods=['GET'])
@@ -50,12 +51,14 @@ def api_topics_top_media(topic_id):
     if (sort is None) or (sort not in valid_sorts):
         sort = valid_sorts[0]
     snapshot_id = request.args.get('snapshot')
-    media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,sort=sort)[:25]
+    timespan_id = request.args.get('timespan')
+    media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort)[:25]
     return jsonify({'results':media})
 
 @app.route('/api/topics/<topic_id>/top-words', methods=['GET'])
 #@flask_login.login_required
 def api_topics_top_words(topic_id):
     snapshot_id = request.args.get('snapshot')
-    media = mc.topicWordCount(topic_id,snapshot_id=snapshot_id)[:100]
+    timespan_id = request.args.get('timespan')
+    media = mc.topicWordCount(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id)[:100]
     return jsonify({'results':media})

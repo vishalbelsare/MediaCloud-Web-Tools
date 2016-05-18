@@ -2,7 +2,7 @@
 {
 
 	user: {
-		isFetching: bool,
+		fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
     isLoggedIn: bool,
     key: string,
     email: string

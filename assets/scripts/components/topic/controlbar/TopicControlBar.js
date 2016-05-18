@@ -43,7 +43,7 @@ class TopicControlBar extends React.Component {
 
 TopicControlBar.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  title: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string,
 };
 
 export default injectIntl(TopicControlBar);

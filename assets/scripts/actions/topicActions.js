@@ -52,11 +52,11 @@ export function fetchTopicSummary(id) {
   };
 }
 
-export function fetchTopicTopStories(topicId, snapshotId, sort) {
+export function fetchTopicTopStories(topicId, snapshotId, timespanId, sort) {
   return {
     type: FETCH_TOPIC_TOP_STORIES,
     payload: {
-      promise: api.topicTopStories(topicId, snapshotId, sort),
+      promise: api.topicTopStories(topicId, snapshotId, timespanId, sort),
     },
   };
 }
@@ -68,11 +68,11 @@ export function sortTopicTopStories(sort) {
   };
 }
 
-export function fetchTopicTopMedia(topicId, snapshotId, sort) {
+export function fetchTopicTopMedia(topicId, snapshotId, timespanId, sort) {
   return {
     type: FETCH_TOPIC_TOP_MEDIA,
     payload: {
-      promise: api.topicTopMedia(topicId, snapshotId, sort),
+      promise: api.topicTopMedia(topicId, snapshotId, timespanId, sort),
     },
   };
 }
@@ -84,11 +84,11 @@ export function sortTopicTopMedia(sort) {
   };
 }
 
-export function fetchTopicTopWords(topicId, snapshotId, sort) {
+export function fetchTopicTopWords(topicId, snapshotId, timespanId, sort) {
   return {
     type: FETCH_TOPIC_TOP_WORDS,
     payload: {
-      promise: api.topicTopWords(topicId, snapshotId, sort),
+      promise: api.topicTopWords(topicId, snapshotId, timespanId, sort),
     },
   };
 }
@@ -103,7 +103,7 @@ export function fetchTopicSnapshotsList(id) {
 }
 
 
-export function fetchTopicSnapshotTimeslicesList(topicId, snapshotId) {
+export function fetchTopicSnapshotTimespansList(topicId, snapshotId) {
   return {
     type: FETCH_TOPIC_TIMESPANS_LIST,
     payload: {

@@ -4,16 +4,10 @@ import messages from '../../../resources/messages';
 
 const TimespanSelector = (props) => {
   const { timespans, selectedId, onTimespanSelected } = props;
-  let idToPreSelect = selectedId;
-  if (idToPreSelect == null) {
-    if (timespans.length > 0) {
-      idToPreSelect = timespans[0].controversy_dump_time_slices_id;
-    }
-  }
   return (
     <div>
       <FormattedMessage {...messages.topicTimespan} />
-      <select defaultValue={idToPreSelect} onChange={onTimespanSelected}>
+      <select defaultValue={selectedId} onChange={onTimespanSelected}>
         {timespans.map(timespan =>
           <option key={timespan.controversy_dump_time_slices_id}
             value={timespan.controversy_dump_time_slices_id}
