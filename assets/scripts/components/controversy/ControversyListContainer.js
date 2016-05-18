@@ -15,8 +15,9 @@ const localMessages = {
 };
 
 class ControversyListContainer extends React.Component {
-  componentWillMount() {
-    this.context.store.dispatch(fetchControversiesList());
+  componentDidMount() {
+    const { fetchData } = this.props;
+    fetchData();
   }
   getStyles() {
     const styles = {
@@ -26,7 +27,7 @@ class ControversyListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { controversies, fetchStatus, onTryAgain } = this.props;
+    const { controversies, fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.controversiesListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -37,7 +38,7 @@ class ControversyListContainer extends React.Component {
         content = <ControversyList controversies={controversies} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain} />;
+        content = <ErrorTryAgain onTryAgain={fetchData} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -60,7 +61,7 @@ ControversyListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   controversies: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
 };
 
 ControversyListContainer.contextTypes = {
@@ -73,7 +74,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: () => {
+  fetchData: () => {
     dispatch(fetchControversiesList());
   },
 });

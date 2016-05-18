@@ -14,10 +14,10 @@ import TopicControlBar from '../controlbar/TopicControlBar';
 import messages from '../../../resources/messages';
 
 class ControversySummaryContainer extends React.Component {
-  componentWillMount() {
-    const { params, onTryAgain, onWillMount } = this.props;
+  componentDidMount() {
+    const { params, fetchData, onWillMount } = this.props;
     onWillMount(params.controversyId);
-    onTryAgain(params.controversyId);
+    fetchData(params.controversyId);
   }
   getStyles() {
     const styles = {
@@ -27,7 +27,7 @@ class ControversySummaryContainer extends React.Component {
     return styles;
   }
   render() {
-    const { info, fetchStatus, onTryAgain } = this.props;
+    const { info, fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.topicName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -46,7 +46,7 @@ class ControversySummaryContainer extends React.Component {
         );
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain(info.controversies_id)} />;
+        content = <ErrorTryAgain onTryAgain={fetchData(info.controversies_id)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -64,7 +64,7 @@ ControversySummaryContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   info: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   onWillMount: React.PropTypes.func.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
 };
@@ -75,7 +75,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (controversyId) => {
+  fetchData: (controversyId) => {
     dispatch(fetchControversySummary(controversyId));
   },
   onWillMount: (controversyId) => {

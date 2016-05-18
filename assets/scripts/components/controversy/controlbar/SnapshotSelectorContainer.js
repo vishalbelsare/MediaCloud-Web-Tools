@@ -8,9 +8,9 @@ import { fetchControversySnapshotsList, filterBySnapshot } from '../../../action
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class SnapshotSelectorContainer extends React.Component {
-  componentWillMount() {
-    const { onTryAgain, topicId } = this.props;
-    onTryAgain(topicId);
+  componentDidMount() {
+    const { fetchData, topicId } = this.props;
+    fetchData(topicId);
   }
   getStyles() {
     const styles = {
@@ -20,7 +20,7 @@ class SnapshotSelectorContainer extends React.Component {
     return styles;
   }
   render() {
-    const { snapshots, fetchStatus, onTryAgain, onSnapshotSelected } = this.props;
+    const { snapshots, fetchStatus, fetchData, onSnapshotSelected } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -28,7 +28,7 @@ class SnapshotSelectorContainer extends React.Component {
         content = <SnapshotSelector snapshots={snapshots} onSnapshotSelected={onSnapshotSelected} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain} />;
+        content = <ErrorTryAgain onTryAgain={fetchData} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -44,7 +44,7 @@ class SnapshotSelectorContainer extends React.Component {
 SnapshotSelectorContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   snapshots: React.PropTypes.array.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   onSnapshotSelected: React.PropTypes.func.isRequired,
   topicId: React.PropTypes.number.isRequired,
 };
@@ -56,7 +56,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (topicId) => {
+  fetchData: (topicId) => {
     dispatch(fetchControversySnapshotsList(topicId));
   },
   onSnapshotSelected: (event) => {
