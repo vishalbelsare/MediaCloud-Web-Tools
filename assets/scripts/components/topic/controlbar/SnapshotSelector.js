@@ -5,14 +5,14 @@ const SnapshotSelector = (props) => {
   const { snapshots, selectedId, onSnapshotSelected } = props;
   let idToPreSelect = selectedId;
   if (idToPreSelect == null) {
-    idToPreSelect = snapshots[0].topic_dumps_id;
+    idToPreSelect = snapshots[0].controversy_dumps_id;
   }
   return (
     <div>
       Snapshot
       <select defaultValue={idToPreSelect} onChange={onSnapshotSelected}>
         {snapshots.map(snapshot =>
-          <option key={snapshot.topic_dumps_id} value={snapshot.topic_dumps_id}>{snapshot.dump_date}</option>
+          <option key={snapshot.controversy_dumps_id} value={snapshot.controversy_dumps_id}>{snapshot.dump_date}</option>
         )}
       </select>
     </div>

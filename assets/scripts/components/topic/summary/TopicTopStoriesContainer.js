@@ -6,7 +6,7 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import TopicTopStories from './TopicTopStories';
 import { fetchTopicTopStories } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import Paper from 'material-ui/Paper';
 
 const localMessages = {
   title: { id: 'topic.summary.topStories.title', defaultMessage: 'Top Stories' },
@@ -14,8 +14,10 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { topicId, snapshotId, fetchData, sort } = this.props;
-    fetchData(topicId, snapshotId, sort);
+    const { fetchStatus, topicId, snapshotId, fetchData, sort } = this.props;
+    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
+      fetchData(topicId, snapshotId, sort);
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.snapshotId !== this.props.snapshotId) {
@@ -29,7 +31,8 @@ class TopicTopStoriesContainer extends React.Component {
   };
   getStyles() {
     const styles = {
-      root: {
+      contentWrapper: {
+        padding: 10,
       },
     };
     return styles;
@@ -50,12 +53,12 @@ class TopicTopStoriesContainer extends React.Component {
     }
     return (
       <div style={styles.root}>
-        <Row>
-          <Col lg={12}>
+        <Paper>
+          <div style={styles.contentWrapper}>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             {content}
-          </Col>
-        </Row>
+          </div>
+        </Paper>
       </div>
     );
   }

@@ -1,14 +1,18 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 
 class TopicControlBar extends React.Component {
   getStyles() {
     const styles = {
       root: {
-        padding: 5,
         backgroundColor: '#dddddd',
+        marginBottom: 15,
+      },
+      controlBar: {
+        paddingTop: 10,
+        paddingBottom: 10,
       },
     };
     return styles;
@@ -18,12 +22,16 @@ class TopicControlBar extends React.Component {
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
-        <Row>
-          <Col lg={12}>
-            {title}
-            <SnapshotSelectorContainer />
-          </Col>
-        </Row>
+        <Grid>
+          <Row style={styles.controlBar}>
+            <Col lg={3}>
+              {title}
+            </Col>
+            <Col lg={3}>
+              <SnapshotSelectorContainer />
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

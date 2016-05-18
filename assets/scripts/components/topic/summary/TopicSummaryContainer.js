@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import TopicSummary from './TopicSummary';
+import TopicInfo from './TopicInfo';
 import { fetchTopicSummary, selectTopic } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import TopicTopStoriesContainer from './TopicTopStoriesContainer';
@@ -12,17 +12,22 @@ import TopicTopMediaContainer from './TopicTopMediaContainer';
 import TopicTopWordsContainer from './TopicTopWordsContainer';
 import TopicControlBar from '../controlbar/TopicControlBar';
 import messages from '../../../resources/messages';
-import { Grid } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 class TopicSummaryContainer extends React.Component {
   componentDidMount() {
-    const { params, fetchData, onWillMount } = this.props;
+    const { fetchStatus, params, fetchData, onWillMount } = this.props;
     onWillMount(params.topicId);
-    fetchData(params.topicId);
+    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
+      fetchData(params.topicId);
+    }
   }
   getStyles() {
     const styles = {
       root: {
+      },
+      row: {
+        marginBottom: 15,
       },
     };
     return styles;
@@ -40,10 +45,22 @@ class TopicSummaryContainer extends React.Component {
           <div>
             <TopicControlBar title={info.name} />
             <Grid>
-              <TopicTopMediaContainer topicId={info.controversies_id} />
-              <TopicTopStoriesContainer topicId={info.controversies_id} />
-              <TopicTopWordsContainer topicId={info.controversies_id} />
-              <TopicSummary key="summary" topic={info} />
+              <Row style={styles.row}>
+                <Col lg={6}>
+                  <TopicInfo topic={info} />
+                </Col>
+                <Col lg={6}>
+                  <TopicTopWordsContainer topicId={info.controversies_id} />
+                </Col>
+              </Row>
+              <Row style={styles.row}>
+                <Col lg={6}>
+                  <TopicTopMediaContainer topicId={info.controversies_id} />
+                </Col>
+                <Col lg={6}>
+                  <TopicTopStoriesContainer topicId={info.controversies_id} />
+                </Col>
+              </Row>
             </Grid>
           </div>
         );

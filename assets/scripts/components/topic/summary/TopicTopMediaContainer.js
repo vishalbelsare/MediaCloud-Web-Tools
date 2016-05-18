@@ -6,7 +6,7 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import TopicTopMedia from './TopicTopMedia';
 import { fetchTopicTopMedia } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import Paper from 'material-ui/Paper';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
@@ -14,8 +14,10 @@ const localMessages = {
 
 class TopicTopMediaContainer extends React.Component {
   componentDidMount() {
-    const { topicId, snapshotId, fetchData, sort } = this.props;
-    fetchData(topicId, snapshotId, sort);
+    const { fetchStatus, topicId, snapshotId, fetchData, sort } = this.props;
+    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
+      fetchData(topicId, snapshotId, sort);
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.snapshotId !== this.props.snapshotId) {
@@ -29,13 +31,14 @@ class TopicTopMediaContainer extends React.Component {
   }
   getStyles() {
     const styles = {
-      root: {
+      contentWrapper: {
+        padding: 10,
       },
     };
     return styles;
   }
   render() {
-    const { topicId, fetchStatus, fetchData, media, sort, snapshotId } = this.props;
+    const { topicId, fetchStatus, fetchData, media, sort } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -50,12 +53,12 @@ class TopicTopMediaContainer extends React.Component {
     }
     return (
       <div style={styles.root}>
-        <Row>
-          <Col lg={12}>
+        <Paper>
+          <div style={styles.contentWrapper}>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             {content}
-          </Col>
-        </Row>
+          </div>
+        </Paper>
       </div>
     );
   }

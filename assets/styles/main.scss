@@ -7,3 +7,24 @@ body {
     margin: 0px;
     padding: 0px;
 }
+
+h2 {
+	margin-top: 0em;
+	margin-bottom: 0.2em;
+}
+
+table.small {
+	padding: 10px;
+}
+
+table.small th {
+	font-family: 'Roboto';
+   	font-weight: bold;
+    font-size: 13px;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgb(158, 158, 158);
+	position: relative;
+	background-color: inherit;
+}

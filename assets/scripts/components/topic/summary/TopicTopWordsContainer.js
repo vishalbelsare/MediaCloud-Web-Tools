@@ -6,7 +6,7 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import WordCloud from './WordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import Paper from 'material-ui/Paper';
 
 const localMessages = {
   title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -14,8 +14,10 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { topicId, snapshotId, fetchData } = this.props;
-    fetchData(topicId, snapshotId);
+    const { fetchStatus, topicId, snapshotId, fetchData } = this.props;
+    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
+      fetchData(topicId, snapshotId);
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.snapshotId !== this.props.snapshotId) {
@@ -25,7 +27,8 @@ class TopicTopStoriesContainer extends React.Component {
   }
   getStyles() {
     const styles = {
-      root: {
+      contentWrapper: {
+        padding: 10,
       },
     };
     return styles;
@@ -36,7 +39,7 @@ class TopicTopStoriesContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <WordCloud words={words} width={700} height={400} textColor={'#ff0000'} maxFontSize={32} />;
+        content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={fetchData(topicId)} />;
@@ -46,12 +49,12 @@ class TopicTopStoriesContainer extends React.Component {
     }
     return (
       <div style={styles.root}>
-        <Row>
-          <Col lg={12}>
+        <Paper>
+          <div style={styles.contentWrapper}>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             {content}
-          </Col>
-        </Row>
+          </div>
+        </Paper>
       </div>
     );
   }

@@ -1,10 +1,19 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Paper from 'material-ui/Paper';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import messages from '../../../resources/messages';
 
 class TopicTopMedia extends React.Component {
+
+  getStyles() {
+    const styles = {
+      scrollWrapper: {
+        overflow: 'scroll',
+        height: 300,
+        display: 'block',
+      },
+    };
+    return styles;
+  }
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -18,37 +27,34 @@ class TopicTopMedia extends React.Component {
 
   render() {
     const { media } = this.props;
+    const styles = this.getStyles();
     return (
-      <Paper>
-        <Table selectable={false}>
-          <TableHeader adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn><FormattedMessage {...messages.mediaName} /></TableHeaderColumn>
-              <TableHeaderColumn><FormattedMessage {...messages.mediaType} /></TableHeaderColumn>
-              <TableHeaderColumn><FormattedMessage {...messages.storyPlural} /></TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
-                <FormattedMessage {...messages.inlinks} /></a>
-              </TableHeaderColumn>
-              <TableHeaderColumn><FormattedMessage {...messages.outlinks} /></TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
-                <FormattedMessage {...messages.clicks} /></a>
-              </TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {media.map(m =>
-              (<TableRow key={m.media_id}>
-                <TableRowColumn><a href={m.url}>{m.name}</a></TableRowColumn>
-                <TableRowColumn>{m.type}</TableRowColumn>
-                <TableRowColumn>{m.story_count}</TableRowColumn>
-                <TableRowColumn>{m.inlink_count}</TableRowColumn>
-                <TableRowColumn>{m.outlink_count}</TableRowColumn>
-                <TableRowColumn>{m.bitly_click_count}</TableRowColumn>
-              </TableRow>)
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+      <table className="small">
+        <tbody style={styles.scrollWrapper}>
+          <tr>
+            <th><FormattedMessage {...messages.mediaName} /></th>
+            <th><FormattedMessage {...messages.mediaType} /></th>
+            <th><FormattedMessage {...messages.storyPlural} /></th>
+            <th><a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
+              <FormattedMessage {...messages.inlinks} /></a>
+            </th>
+            <th><FormattedMessage {...messages.outlinks} /></th>
+            <th><a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
+              <FormattedMessage {...messages.clicks} /></a>
+            </th>
+          </tr>
+          {media.map(m =>
+            (<tr key={m.media_id}>
+              <td><a href={m.url}>{m.name}</a></td>
+              <td>{m.type}</td>
+              <td>{m.story_count}</td>
+              <td>{m.inlink_count}</td>
+              <td>{m.outlink_count}</td>
+              <td>{m.bitly_click_count}</td>
+            </tr>)
+          )}
+        </tbody>
+      </table>
     );
   }
 
