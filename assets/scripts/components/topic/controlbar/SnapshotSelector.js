@@ -6,7 +6,9 @@ const SnapshotSelector = (props) => {
   const { snapshots, selectedId, onSnapshotSelected } = props;
   let idToPreSelect = selectedId;
   if (idToPreSelect == null) {
-    idToPreSelect = snapshots[0].controversy_dumps_id;
+    if (snapshots.length > 0) {
+      idToPreSelect = snapshots[0].controversy_dumps_id;
+    }
   }
   return (
     <div>

@@ -9,8 +9,8 @@ export function topicsList() {
   );
 }
 
-export function topicSummary(id) {
-  return fetch(`/api/topics/${id}/summary`, {
+export function topicSummary(topicId) {
+  return fetch(`/api/topics/${topicId}/summary`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -66,8 +66,17 @@ export function topicTopWords(topicId, snapshotId) {
   );
 }
 
-export function topicSnapshotsList(id) {
-  return fetch(`/api/topics/${id}/snapshots/list`, {
+export function topicSnapshotsList(topicId) {
+  return fetch(`/api/topics/${topicId}/snapshots/list`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
+
+export function topicSnapshotTimespansList(topicId, snapshotId) {
+  return fetch(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`, {
     method: 'get',
     credentials: 'include',
   }).then(

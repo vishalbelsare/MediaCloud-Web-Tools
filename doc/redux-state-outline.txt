@@ -8,7 +8,7 @@
     email: string
 	},
 
-  controversies: {
+  topics: {
     all: {
       fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
       list: {
@@ -18,11 +18,16 @@
     selected: {
       id: [id of controversy selected],
       filters: {
-        snapshotId: [id of snapshop],
+        snapshotId: [id of current snapshot],
+        timespanId: [id of current snapshot],
       },
       snapshots: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        list: [ // list of JSON snapshot objects ]
+        list: [ // list of JSON snapshot objects in the selected topic ]
+      }
+      timespans: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        list: [ // list of JSON timespan objects in the selected snapshot of the selected topic  ]
       }
       summary: {
         info: {

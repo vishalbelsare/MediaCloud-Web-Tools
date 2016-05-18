@@ -3,6 +3,7 @@ import * as api from '../lib/topics';
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
+export const TOPIC_FILTER_BY_TIMESPAN = 'TOPIC_FILTER_BY_TIMESPAN';
 export const FETCH_TOPIC_SUMMARY = 'FETCH_TOPIC_SUMMARY';
 export const FETCH_TOPIC_TOP_STORIES = 'FETCH_TOPIC_TOP_STORIES';
 export const SORT_TOPIC_TOP_STORIES = 'SORT_TOPIC_TOP_STORIES';
@@ -10,6 +11,7 @@ export const FETCH_TOPIC_TOP_MEDIA = 'FETCH_TOPIC_TOP_MEDIA';
 export const SORT_TOPIC_TOP_MEDIA = 'SORT_TOPIC_TOP_MEDIA';
 export const FETCH_TOPIC_TOP_WORDS = 'FETCH_TOPIC_TOP_WORDS';
 export const FETCH_TOPIC_SNAPSHOTS_LIST = 'FETCH_TOPIC_SNAPSHOTS_LIST';
+export const FETCH_TOPIC_TIMESPANS_LIST = 'FETCH_TOPIC_TIMESPANS_LIST';
 
 export function fetchTopicsList() {
   return {
@@ -30,6 +32,13 @@ export function selectTopic(id) {
 export function filterBySnapshot(id) {
   return {
     type: TOPIC_FILTER_BY_SNAPSHOT,
+    payload: { id },
+  };
+}
+
+export function filterByTimespan(id) {
+  return {
+    type: TOPIC_FILTER_BY_TIMESPAN,
     payload: { id },
   };
 }
@@ -89,6 +98,16 @@ export function fetchTopicSnapshotsList(id) {
     type: FETCH_TOPIC_SNAPSHOTS_LIST,
     payload: {
       promise: api.topicSnapshotsList(id),
+    },
+  };
+}
+
+
+export function fetchTopicSnapshotTimeslicesList(topicId, snapshotId) {
+  return {
+    type: FETCH_TOPIC_TIMESPANS_LIST,
+    payload: {
+      promise: api.topicSnapshotTimespansList(topicId, snapshotId),
     },
   };
 }

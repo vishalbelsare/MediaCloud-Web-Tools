@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { SELECT_TOPIC } from '../../../actions/topicActions';
 import snapshots from './snapshots';
+import timespans from './timespans';
 import summary from './summary/summary';
 import filters from './filters';
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   id,
   summary,
   snapshots,
+  timespans,
   filters,
 });
 

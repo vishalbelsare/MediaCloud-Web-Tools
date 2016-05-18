@@ -24,6 +24,13 @@ def api_topics_snapshots_list(topic_id):
     snapshots = mc.controversyDumpList(topic_id)
     return jsonify({'results':snapshots})
 
+
+@app.route('/api/topics/<topic_id>/snapshots/<snapshot_id>/timespans/list', methods=['GET'])
+#@flask_login.login_required
+def api_topics_timespan_list(topic_id,snapshot_id):
+    snapshots = mc.controversyDumpTimeSliceList(snapshot_id)
+    return jsonify({'results':snapshots})
+
 @app.route('/api/topics/<topic_id>/top-stories', methods=['GET'])
 #@flask_login.login_required
 def api_topics_top_stories(topic_id):

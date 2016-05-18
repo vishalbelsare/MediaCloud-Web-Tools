@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
+import TimespanSelectorContainer from './TimespanSelectorContainer';
 
 class TopicControlBar extends React.Component {
   getStyles() {
@@ -29,6 +30,7 @@ class TopicControlBar extends React.Component {
             </Col>
             <Col lg={3}>
               <SnapshotSelectorContainer />
+              <TimespanSelectorContainer />
             </Col>
           </Row>
         </Grid>
