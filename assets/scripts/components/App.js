@@ -6,7 +6,6 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import FullWidthSection from '../components/util/FullWidthSection';
 
@@ -75,13 +74,7 @@ class App extends React.Component {
           iconElementRight={loginLogoutButton}
         />
         <div style={styles.root}>
-          <Grid>
-            <Row>
-              <Col lg={12}>
-                {children}
-              </Col>
-            </Row>
-          </Grid>
+          {children}
         </div>
         <FullWidthSection style={styles.footer}>
           <p style={styles.p}><small>

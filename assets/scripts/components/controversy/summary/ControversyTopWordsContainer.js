@@ -12,8 +12,15 @@ const localMessages = {
 };
 
 class ControversyTopStoriesContainer extends React.Component {
-  componentWillMount() {
-    this.fetchData();
+  componentDidMount() {
+    const { controversyId, snapshotId, fetchData } = this.props;
+    fetchData(controversyId, snapshotId);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.snapshotId !== this.props.snapshotId) {
+      const { controversyId, snapshotId, fetchData } = this.props;
+      fetchData(controversyId, snapshotId);
+    }
   }
   getStyles() {
     const styles = {
@@ -22,20 +29,16 @@ class ControversyTopStoriesContainer extends React.Component {
     };
     return styles;
   }
-  fetchData() {
-    const { controversyId, onTryAgain } = this.props;
-    onTryAgain(controversyId);
-  }
   render() {
-    const { controversyId, fetchStatus, onTryAgain, words } = this.props;
+    const { controversyId, fetchStatus, fetchData, words } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <WordCloud words={words} />;
+        content = <WordCloud words={words} width={700} height={400} textColor={'#ff0000'} maxFontSize={32} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain(controversyId)} />;
+        content = <ErrorTryAgain onTryAgain={fetchData(controversyId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -53,22 +56,20 @@ ControversyTopStoriesContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
   controversyId: React.PropTypes.number.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-};
-
-ControversyTopStoriesContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  snapshotId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.selected.topWords.fetchStatus,
-  words: state.controversies.selected.topWords.words,
+  fetchStatus: state.controversies.selected.summary.topWords.fetchStatus,
+  words: state.controversies.selected.summary.topWords.list,
+  snapshotId: state.controversies.selected.filters.snapshotId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (controversyId) => {
-    dispatch(fetchControversyTopWords(controversyId));
+  fetchData: (controversyId, snapshotId) => {
+    dispatch(fetchControversyTopWords(controversyId, snapshotId));
   },
 });
 

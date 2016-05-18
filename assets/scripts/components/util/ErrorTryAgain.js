@@ -10,11 +10,12 @@ const localMessages = {
 
 class ErrorTryAgain extends React.Component {
   getStyles() {
+    const { padding } = this.props;
     const styles = {
       root: {
         backgroundColor: grey200,
         textAlign: 'center',
-        padding: 10,
+        padding: (padding !== null) ? padding : 10,
       },
       p: {
         color: grey400,
@@ -39,6 +40,7 @@ class ErrorTryAgain extends React.Component {
 ErrorTryAgain.propTypes = {
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
+  padding: React.PropTypes.number,
 };
 
 export default injectIntl(ErrorTryAgain);

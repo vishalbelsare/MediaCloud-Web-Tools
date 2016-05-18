@@ -6,16 +6,12 @@ import ReactFauxDOM from 'react-faux-dom';
 class WordCloud extends React.Component {
 
   render() {
-    const { words } = this.props;
+    const { words, width, height, maxFontSize, textColor } = this.props;
 
     const node = ReactFauxDOM.createElement('svg');
-    const maxSize = 32;
-    const width = 700;
-    const height = 400;
     const counts = words.map(({ count }) => count);
-    //const min = d3.min(counts);
     const max = d3.max(counts);
-    const slope = 32 / Math.log(max);
+    const slope = maxFontSize / Math.log(max);
     // get list of all words and sizes
     const wordList = words.map((w) => ({
       text: w.term,
@@ -28,10 +24,10 @@ class WordCloud extends React.Component {
     .font('Arial')
     .fontSize((d) => d.size)
     .on('end', (wordsAsData) => {
-        // Black and white
-        // var fill = d3.scale.linear().domain([0,100]).range(['black','white']);
-        // Colors
-        const svg = d3.select(node)
+      // Black and white
+      // var fill = d3.scale.linear().domain([0,100]).range(['black','white']);
+      // Colors
+      d3.select(node)
         .attr('width', width).attr('height', height)
         .append('g')
         .attr('transform', `translate(${width / 2},${height / 2})`)
@@ -39,7 +35,7 @@ class WordCloud extends React.Component {
         .data(wordsAsData)
         .enter().append('text')
         .attr('font-size', (d) => `${d.size}px`)
-        .attr('fill', '#ff0000')
+        .attr('fill', textColor)
         .attr('text-anchor', 'middle')
         .attr('font-weight', 'bold')
         .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
@@ -54,6 +50,10 @@ class WordCloud extends React.Component {
 
 WordCloud.propTypes = {
   words: React.PropTypes.array.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
+  maxFontSize: React.PropTypes.number.isRequired,
+  textColor: React.PropTypes.string.isRequired,
 };
 
 export default WordCloud;

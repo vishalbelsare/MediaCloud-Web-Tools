@@ -1,28 +1,24 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_TOP_STORIES } from '../../../actions/controversyActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import { FETCH_CONTROVERSY_SUMMARY } from '../../../../actions/controversyActions';
+import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,
-  sort: 'social',
 };
 
-function topStories(state = INITIAL_STATE, action) {
+function info(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_TOP_STORIES:
+    case FETCH_CONTROVERSY_SUMMARY:
       return Object.assign({}, state, {
-        ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_CONTROVERSY_TOP_STORIES):
+    case resolve(FETCH_CONTROVERSY_SUMMARY):
       return Object.assign({}, state, {
-        ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        stories: action.payload.results,
+        ...action.payload.results,
       });
-    case reject(FETCH_CONTROVERSY_TOP_STORIES):
+    case reject(FETCH_CONTROVERSY_SUMMARY):
       return Object.assign({}, state, {
-        ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,
       });
     default:
@@ -30,4 +26,4 @@ function topStories(state = INITIAL_STATE, action) {
   }
 }
 
-export default topStories;
+export default info;

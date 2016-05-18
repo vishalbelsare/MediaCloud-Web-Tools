@@ -12,13 +12,20 @@ const localMessages = {
 };
 
 class ControversyTopMediaContainer extends React.Component {
-  componentWillMount() {
-    this.fetchData();
+  componentDidMount() {
+    const { controversyId, snapshotId, fetchData, sort } = this.props;
+    fetchData(controversyId, snapshotId, sort);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.snapshotId !== this.props.snapshotId) {
+      const { controversyId, snapshotId, fetchData, sort } = this.props;
+      fetchData(controversyId, snapshotId, sort);
+    }
   }
   onChangeSort = (newSort) => {
-    const { controversyId, onTryAgain } = this.props;
-    onTryAgain(controversyId, newSort);
-  };
+    const { controversyId, snapshotId, fetchData } = this.props;
+    fetchData(controversyId, snapshotId, newSort);
+  }
   getStyles() {
     const styles = {
       root: {
@@ -26,12 +33,8 @@ class ControversyTopMediaContainer extends React.Component {
     };
     return styles;
   }
-  fetchData() {
-    const { controversyId, onTryAgain, sort } = this.props;
-    onTryAgain(controversyId, sort);
-  }
   render() {
-    const { controversyId, fetchStatus, onTryAgain, media, sort } = this.props;
+    const { controversyId, fetchStatus, fetchData, media, sort, snapshotId } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -39,7 +42,7 @@ class ControversyTopMediaContainer extends React.Component {
         content = <ControversyTopMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain(controversyId)} />;
+        content = <ErrorTryAgain fetchData={fetchData(controversyId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -58,23 +61,21 @@ ControversyTopMediaContainer.propTypes = {
   sort: React.PropTypes.string.isRequired,
   media: React.PropTypes.array,
   controversyId: React.PropTypes.number.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-};
-
-ControversyTopMediaContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  snapshotId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.selected.topMedia.fetchStatus,
-  sort: state.controversies.selected.topMedia.sort,
-  media: state.controversies.selected.topMedia.media,
+  fetchStatus: state.controversies.selected.summary.topMedia.fetchStatus,
+  sort: state.controversies.selected.summary.topMedia.sort,
+  media: state.controversies.selected.summary.topMedia.list,
+  snapshotId: state.controversies.selected.filters.snapshotId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (controversyId, sort) => {
-    dispatch(fetchControversyTopMedia(controversyId, sort));
+  fetchData: (controversyId, snapshotId, sort) => {
+    dispatch(fetchControversyTopMedia(controversyId, snapshotId, sort));
   },
 });
 

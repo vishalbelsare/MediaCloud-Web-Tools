@@ -12,12 +12,19 @@ const localMessages = {
 };
 
 class ControversyTopStoriesContainer extends React.Component {
-  componentWillMount() {
-    this.fetchData();
+  componentDidMount() {
+    const { controversyId, snapshotId, fetchData, sort } = this.props;
+    fetchData(controversyId, snapshotId, sort);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.snapshotId !== this.props.snapshotId) {
+      const { controversyId, snapshotId, fetchData, sort } = this.props;
+      fetchData(controversyId, snapshotId, sort);
+    }
   }
   onChangeSort = (newSort) => {
-    const { controversyId, onTryAgain } = this.props;
-    onTryAgain(controversyId, newSort);
+    const { controversyId, fetchData } = this.props;
+    fetchData(controversyId, newSort);
   };
   getStyles() {
     const styles = {
@@ -26,12 +33,8 @@ class ControversyTopStoriesContainer extends React.Component {
     };
     return styles;
   }
-  fetchData() {
-    const { controversyId, onTryAgain, sort } = this.props;
-    onTryAgain(controversyId, sort);
-  }
   render() {
-    const { controversyId, fetchStatus, onTryAgain, stories, sort } = this.props;
+    const { controversyId, fetchStatus, fetchData, stories, sort } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -39,7 +42,7 @@ class ControversyTopStoriesContainer extends React.Component {
         content = <ControversyTopStories stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={onTryAgain(controversyId)} />;
+        content = <ErrorTryAgain onTryAgain={fetchData(controversyId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -58,23 +61,21 @@ ControversyTopStoriesContainer.propTypes = {
   sort: React.PropTypes.string.isRequired,
   stories: React.PropTypes.array,
   controversyId: React.PropTypes.number.isRequired,
-  onTryAgain: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-};
-
-ControversyTopStoriesContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  snapshotId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.selected.topStories.fetchStatus,
-  sort: state.controversies.selected.topStories.sort,
-  stories: state.controversies.selected.topStories.stories,
+  fetchStatus: state.controversies.selected.summary.topStories.fetchStatus,
+  sort: state.controversies.selected.summary.topStories.sort,
+  stories: state.controversies.selected.summary.topStories.list,
+  snapshotId: state.controversies.selected.filters.snapshotId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onTryAgain: (controversyId, sort) => {
-    dispatch(fetchControversyTopStories(controversyId, sort));
+  fetchData: (controversyId, snapshotId, sort) => {
+    dispatch(fetchControversyTopStories(controversyId, snapshotId, sort));
   },
 });
 

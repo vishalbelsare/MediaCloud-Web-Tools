@@ -16,30 +16,34 @@
       },
     },
     selected: {
-      summary: {
-        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        // all the fields the API returns about a single controversy
+      id: [id of controversy selected],
+      filters: {
+        snapshotId: [id of snapshop],
       },
-      topStories: {
+      snapshots: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        sort: [ social | inlink ]
-        stories: {
-          // list of JSON story objects
-        },
-      },
-      topMedia: {
-        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        sort: [ social | inlink ]
-        media: {
-          // list of JSON media objects
-        },
-      },
-      topWords: {
-        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        words: {
-          // list of JSON word objects
-        },
+        list: [ // list of JSON snapshot objects ]
       }
+      summary: {
+        info: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          // all the fields the API returns about a single controversy
+        },
+        topStories: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          sort: [ social | inlink ]
+          list: [ // list of JSON story objects ],
+        },
+        topMedia: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          sort: [ social | inlink ]
+          list: [ // list of JSON media objects ],
+        },
+        topWords: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: [ // list of JSON word objects ],
+        }
+      },
     },
   }
 

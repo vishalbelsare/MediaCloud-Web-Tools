@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const Webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
@@ -31,7 +31,7 @@ module.exports = {
     // Avoid having to require files with an extension if they are here.
     extensions: ['', '.js', '.jsx', '.css', '.scss'],
   },
-  // devtool: 'inline-source-map',
+  devtool: 'inline-source-map',
   module: {
     // Various loaders to pre-process files of specific types.
     // If you wanted to SASS for example, you'd want to install this:
@@ -62,14 +62,12 @@ module.exports = {
       },
     ],
   },
-  postcss: [autoprefixer],
+  postcss: [autoprefixer],  // add in all the browser-specific vendor prefixes to CSS rules automatically
   plugins: [
     // Stop modules with syntax errors from being emitted.
-    new webpack.NoErrorsPlugin(),
+    new Webpack.NoErrorsPlugin(),
     // Ensure CSS chunks get written to their own file.
     new ExtractTextPlugin('[name].[chunkhash].css'),
-    // new webpack.optimize.UglifyJsPlugin(),
-    // new webpack.optimize.DedupePlugin(),
     // Create the manifest file that Flask and other frameworks use.
     new ManifestRevisionPlugin(path.join('build', 'manifest.json'), {
       rootAssetPath,

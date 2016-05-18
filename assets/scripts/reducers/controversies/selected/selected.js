@@ -1,14 +1,25 @@
 import { combineReducers } from 'redux';
-import summary from './summary';
-import topStories from './topStories';
-import topMedia from './topMedia';
-import topWords from './topWords';
+import { SELECT_CONTROVERSY } from '../../../actions/controversyActions';
+import snapshots from './snapshots';
+import summary from './summary/summary';
+import filters from './filters';
+
+const INITIAL_STATE = null;
+
+function id(state = INITIAL_STATE, action) {
+  switch (action.type) {
+    case SELECT_CONTROVERSY:
+      return parseInt(action.payload.id, 10);
+    default:
+      return state;
+  }
+}
 
 const rootReducer = combineReducers({
+  id,
   summary,
-  topStories,
-  topMedia,
-  topWords,
+  snapshots,
+  filters,
 });
 
 export default rootReducer;

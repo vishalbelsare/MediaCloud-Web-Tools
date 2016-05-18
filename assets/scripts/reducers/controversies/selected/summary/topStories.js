@@ -1,25 +1,27 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_TOP_WORDS } from '../../../actions/controversyActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import { FETCH_CONTROVERSY_TOP_STORIES } from '../../../../actions/controversyActions';
+import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,
+  sort: 'social',
+  list: [],
 };
 
-function topWords(state = INITIAL_STATE, action) {
+function topStories(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_TOP_WORDS:
+    case FETCH_CONTROVERSY_TOP_STORIES:
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_CONTROVERSY_TOP_WORDS):
+    case resolve(FETCH_CONTROVERSY_TOP_STORIES):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        words: action.payload.results,
+        list: action.payload.results,
       });
-    case reject(FETCH_CONTROVERSY_TOP_WORDS):
+    case reject(FETCH_CONTROVERSY_TOP_STORIES):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,
@@ -29,4 +31,4 @@ function topWords(state = INITIAL_STATE, action) {
   }
 }
 
-export default topWords;
+export default topStories;

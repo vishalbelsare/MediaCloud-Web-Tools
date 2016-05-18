@@ -6,16 +6,14 @@ import messages from '../../../resources/messages';
 
 class ControversyTopStories extends React.Component {
 
-  sortBySocial = (event) => {
+  sortBySocial = () => {
     const { onChangeSort } = this.props;
     onChangeSort('social');
-    event.preventDefault();
   }
 
-  sortByInlinks = (event) => {
+  sortByInlinks = () => {
     const { onChangeSort } = this.props;
     onChangeSort('inlink');
-    event.preventDefault();
   }
 
   render() {
@@ -28,9 +26,13 @@ class ControversyTopStories extends React.Component {
               <TableHeaderColumn><FormattedMessage {...messages.storyTitle} /></TableHeaderColumn>
               <TableHeaderColumn><FormattedMessage {...messages.media} /></TableHeaderColumn>
               <TableHeaderColumn><FormattedMessage {...messages.storyDate} /></TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={this.sortByInlinks}><FormattedMessage {...messages.inlinks} /></a></TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
+                <FormattedMessage {...messages.inlinks} /></a>
+              </TableHeaderColumn>
               <TableHeaderColumn><FormattedMessage {...messages.outlinks} /></TableHeaderColumn>
-              <TableHeaderColumn><a href="#" onClick={this.sortBySocial}><FormattedMessage {...messages.clicks} /></a></TableHeaderColumn>
+              <TableHeaderColumn><a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
+                <FormattedMessage {...messages.clicks} /></a>
+              </TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>

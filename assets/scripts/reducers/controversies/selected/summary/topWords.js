@@ -1,24 +1,28 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_SUMMARY } from '../../../actions/controversyActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import { FETCH_CONTROVERSY_TOP_WORDS } from '../../../../actions/controversyActions';
+import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,
+  list: [],
 };
 
-function summary(state = INITIAL_STATE, action) {
+function topWords(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_SUMMARY:
+    case FETCH_CONTROVERSY_TOP_WORDS:
       return Object.assign({}, state, {
+        ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_CONTROVERSY_SUMMARY):
+    case resolve(FETCH_CONTROVERSY_TOP_WORDS):
       return Object.assign({}, state, {
+        ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        ...action.payload.results,
+        list: action.payload.results,
       });
-    case reject(FETCH_CONTROVERSY_SUMMARY):
+    case reject(FETCH_CONTROVERSY_TOP_WORDS):
       return Object.assign({}, state, {
+        ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,
       });
     default:
@@ -26,4 +30,4 @@ function summary(state = INITIAL_STATE, action) {
   }
 }
 
-export default summary;
+export default topWords;

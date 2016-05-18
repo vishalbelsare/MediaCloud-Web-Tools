@@ -5,16 +5,18 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import ControversySummary from './ControversySummary';
-import { fetchControversySummary } from '../../../actions/controversyActions';
+import { fetchControversySummary, selectControversy } from '../../../actions/controversyActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
 import ControversyTopMediaContainer from './ControversyTopMediaContainer';
 import ControversyTopWordsContainer from './ControversyTopWordsContainer';
+import TopicControlBar from '../controlbar/TopicControlBar';
 import messages from '../../../resources/messages';
 
 class ControversySummaryContainer extends React.Component {
   componentWillMount() {
-    const { params, onTryAgain } = this.props;
+    const { params, onTryAgain, onWillMount } = this.props;
+    onWillMount(params.controversyId);
     onTryAgain(params.controversyId);
   }
   getStyles() {
@@ -35,10 +37,11 @@ class ControversySummaryContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         content = (
           <div>
-          <ControversySummary key="summary" controversy={info} />
-          <ControversyTopStoriesContainer controversyId={info.controversies_id} />
-          <ControversyTopMediaContainer controversyId={info.controversies_id} />
-          <ControversyTopWordsContainer controversyId={info.controversies_id} />
+            <TopicControlBar />
+            <ControversyTopMediaContainer controversyId={info.controversies_id} />
+            <ControversyTopStoriesContainer controversyId={info.controversies_id} />
+            <ControversyTopWordsContainer controversyId={info.controversies_id} />
+            <ControversySummary key="summary" controversy={info} />
           </div>
         );
         break;
@@ -62,21 +65,21 @@ ControversySummaryContainer.propTypes = {
   info: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
+  onWillMount: React.PropTypes.func.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
 };
 
-ControversySummaryContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.selected.summary.fetchStatus,
-  info: state.controversies.selected.summary,
+  fetchStatus: state.controversies.selected.summary.info.fetchStatus,
+  info: state.controversies.selected.summary.info,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onTryAgain: (controversyId) => {
     dispatch(fetchControversySummary(controversyId));
+  },
+  onWillMount: (controversyId) => {
+    dispatch(selectControversy(controversyId));
   },
 });
 
