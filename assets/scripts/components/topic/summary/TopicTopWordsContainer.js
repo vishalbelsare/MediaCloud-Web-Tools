@@ -21,8 +21,8 @@ class TopicTopStoriesContainer extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.snapshotId !== this.props.snapshotId) {
-      const { topicId, snapshotId, fetchData } = this.props;
-      fetchData(topicId, snapshotId);
+      const { topicId, fetchData } = this.props;
+      fetchData(topicId, nextProps.snapshotId);
     }
   }
   getStyles() {

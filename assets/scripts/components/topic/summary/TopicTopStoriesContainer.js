@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import TopicTopStories from './TopicTopStories';
-import { fetchTopicTopStories } from '../../../actions/topicActions';
+import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
@@ -20,14 +20,15 @@ class TopicTopStoriesContainer extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.snapshotId !== this.props.snapshotId) {
-      const { topicId, snapshotId, fetchData, sort } = this.props;
-      fetchData(topicId, snapshotId, sort);
+    if ((nextProps.snapshotId !== this.props.snapshotId) ||
+        (nextProps.sort !== this.props.sort)) {
+      const { topicId, fetchData } = this.props;
+      fetchData(topicId, nextProps.snapshotId, nextProps.sort);
     }
   }
   onChangeSort = (newSort) => {
-    const { topicId, fetchData } = this.props;
-    fetchData(topicId, newSort);
+    const { sortData } = this.props;
+    sortData(newSort);
   };
   getStyles() {
     const styles = {
@@ -70,6 +71,7 @@ TopicTopStoriesContainer.propTypes = {
   stories: React.PropTypes.array,
   topicId: React.PropTypes.number.isRequired,
   fetchData: React.PropTypes.func.isRequired,
+  sortData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   snapshotId: React.PropTypes.number,
 };
@@ -84,6 +86,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (topicId, snapshotId, sort) => {
     dispatch(fetchTopicTopStories(topicId, snapshotId, sort));
+  },
+  sortData: (sort) => {
+    dispatch(sortTopicTopStories(sort));
   },
 });
 

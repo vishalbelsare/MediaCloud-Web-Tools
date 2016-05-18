@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_TOPIC_TOP_MEDIA } from '../../../../actions/topicActions';
+import { FETCH_TOPIC_TOP_MEDIA, SORT_TOPIC_TOP_MEDIA } from '../../../../actions/topicActions';
 import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
@@ -25,6 +25,11 @@ function topMedia(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,
+      });
+    case SORT_TOPIC_TOP_MEDIA:
+      return Object.assign({}, state, {
+        ...state,
+        sort: action.payload.sort,
       });
     default:
       return state;
