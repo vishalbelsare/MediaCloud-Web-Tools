@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-export function controversiesList() {
+export function topicsList() {
   return fetch('/api/topics/list', {
     method: 'get',
     credentials: 'include',
@@ -9,7 +9,7 @@ export function controversiesList() {
   );
 }
 
-export function controversySummary(id) {
+export function topicSummary(id) {
   return fetch(`/api/topics/${id}/summary`, {
     method: 'get',
     credentials: 'include',
@@ -18,7 +18,7 @@ export function controversySummary(id) {
   );
 }
 
-export function controversyTopStories(topicId, snapshotId, sort) {
+export function topicTopStories(topicId, snapshotId, sort) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
@@ -35,7 +35,7 @@ export function controversyTopStories(topicId, snapshotId, sort) {
   );
 }
 
-export function controversyTopMedia(topicId, snapshotId, sort) {
+export function topicTopMedia(topicId, snapshotId, sort) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
@@ -52,7 +52,7 @@ export function controversyTopMedia(topicId, snapshotId, sort) {
   );
 }
 
-export function controversyTopWords(topicId, snapshotId) {
+export function topicTopWords(topicId, snapshotId) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;

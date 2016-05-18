@@ -4,7 +4,7 @@ import Paper from 'material-ui/Paper';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import messages from '../../../resources/messages';
 
-class ControversyTopStories extends React.Component {
+class TopicTopStories extends React.Component {
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -55,11 +55,11 @@ class ControversyTopStories extends React.Component {
 
 }
 
-ControversyTopStories.propTypes = {
+TopicTopStories.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
 };
 
-export default injectIntl(ControversyTopStories);
+export default injectIntl(TopicTopStories);

@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_TOP_WORDS } from '../../../../actions/controversyActions';
+import { FETCH_TOPIC_TOP_WORDS } from '../../../../actions/topicActions';
 import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
@@ -9,18 +9,18 @@ const INITIAL_STATE = {
 
 function topWords(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_TOP_WORDS:
+    case FETCH_TOPIC_TOP_WORDS:
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_CONTROVERSY_TOP_WORDS):
+    case resolve(FETCH_TOPIC_TOP_WORDS):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         list: action.payload.results,
       });
-    case reject(FETCH_CONTROVERSY_TOP_WORDS):
+    case reject(FETCH_TOPIC_TOP_WORDS):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,

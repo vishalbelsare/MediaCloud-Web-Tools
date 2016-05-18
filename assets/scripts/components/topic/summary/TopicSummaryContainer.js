@@ -4,20 +4,21 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import ControversySummary from './ControversySummary';
-import { fetchControversySummary, selectControversy } from '../../../actions/controversyActions';
+import TopicSummary from './TopicSummary';
+import { fetchTopicSummary, selectTopic } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
-import ControversyTopStoriesContainer from './ControversyTopStoriesContainer';
-import ControversyTopMediaContainer from './ControversyTopMediaContainer';
-import ControversyTopWordsContainer from './ControversyTopWordsContainer';
+import TopicTopStoriesContainer from './TopicTopStoriesContainer';
+import TopicTopMediaContainer from './TopicTopMediaContainer';
+import TopicTopWordsContainer from './TopicTopWordsContainer';
 import TopicControlBar from '../controlbar/TopicControlBar';
 import messages from '../../../resources/messages';
+import { Grid } from 'react-flexbox-grid/lib';
 
-class ControversySummaryContainer extends React.Component {
+class TopicSummaryContainer extends React.Component {
   componentDidMount() {
     const { params, fetchData, onWillMount } = this.props;
-    onWillMount(params.controversyId);
-    fetchData(params.controversyId);
+    onWillMount(params.topicId);
+    fetchData(params.topicId);
   }
   getStyles() {
     const styles = {
@@ -37,11 +38,13 @@ class ControversySummaryContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         content = (
           <div>
-            <TopicControlBar />
-            <ControversyTopMediaContainer controversyId={info.controversies_id} />
-            <ControversyTopStoriesContainer controversyId={info.controversies_id} />
-            <ControversyTopWordsContainer controversyId={info.controversies_id} />
-            <ControversySummary key="summary" controversy={info} />
+            <TopicControlBar title={info.name} />
+            <Grid>
+              <TopicTopMediaContainer topicId={info.controversies_id} />
+              <TopicTopStoriesContainer topicId={info.controversies_id} />
+              <TopicTopWordsContainer topicId={info.controversies_id} />
+              <TopicSummary key="summary" topic={info} />
+            </Grid>
           </div>
         );
         break;
@@ -60,7 +63,7 @@ class ControversySummaryContainer extends React.Component {
   }
 }
 
-ControversySummaryContainer.propTypes = {
+TopicSummaryContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   info: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
@@ -70,20 +73,20 @@ ControversySummaryContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.selected.summary.info.fetchStatus,
-  info: state.controversies.selected.summary.info,
+  fetchStatus: state.topics.selected.summary.info.fetchStatus,
+  info: state.topics.selected.summary.info,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (controversyId) => {
-    dispatch(fetchControversySummary(controversyId));
+  fetchData: (topicId) => {
+    dispatch(fetchTopicSummary(topicId));
   },
-  onWillMount: (controversyId) => {
-    dispatch(selectControversy(controversyId));
+  onWillMount: (topicId) => {
+    dispatch(selectTopic(topicId));
   },
 });
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ControversySummaryContainer));
+)(TopicSummaryContainer));

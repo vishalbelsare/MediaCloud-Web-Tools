@@ -1,4 +1,4 @@
-import { CONTROVERSY_FILTER_BY_SNAPSHOT } from '../../../actions/controversyActions';
+import { TOPIC_FILTER_BY_SNAPSHOT } from '../../../actions/topicActions';
 
 const INITIAL_STATE = {
   snapshotId: null,
@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 function info(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case CONTROVERSY_FILTER_BY_SNAPSHOT:
+    case TOPIC_FILTER_BY_SNAPSHOT:
       return Object.assign({}, state, {
         ...state,
         snapshotId: parseInt(action.payload.id, 10),

@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { Link } from 'react-router';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
-class ControversyListItem extends React.Component {
+class TopicListItem extends React.Component {
   getStyles() {
     const styles = {
       paper: {
@@ -23,38 +23,38 @@ class ControversyListItem extends React.Component {
     return styles;
   }
   render() {
-    const { controversy } = this.props;
+    const { topic } = this.props;
     const styles = this.getStyles();
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`/controversy/${controversy.controversies_id}`} style={styles.name}>{controversy.name}</Link>
-          <p style={styles.description}>{controversy.description}</p>
+          <Link to={`/topic/${topic.controversies_id}`} style={styles.name}>{topic.name}</Link>
+          <p style={styles.description}>{topic.description}</p>
         </Paper>
       </Col>
     );
   }
 }
 
-ControversyListItem.propTypes = {
-  controversy: React.PropTypes.object.isRequired,
+TopicListItem.propTypes = {
+  topic: React.PropTypes.object.isRequired,
 };
 
-const ControversyList = (props) => {
-  const { controversies } = props;
-  const controversiesArray = Object.keys(controversies).map((idx) => controversies[idx]);
+const TopicList = (props) => {
+  const { topics } = props;
+  const topicsArray = Object.keys(topics).map((idx) => topics[idx]);
   return (
     <Row>
-    {controversiesArray.map(controversy =>
-      <ControversyListItem key={controversy.controversies_id} controversy={controversy} />
+    {topicsArray.map(topic =>
+      <TopicListItem key={topic.controversies_id} topic={topic} />
     )}
     </Row>
   );
 };
 
-ControversyList.propTypes = {
-  controversies: React.PropTypes.object.isRequired,
+TopicList.propTypes = {
+  topics: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(ControversyList);
+export default injectIntl(TopicList);

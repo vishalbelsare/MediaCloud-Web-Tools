@@ -2,19 +2,19 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import ErrorTryAgain from '../util/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
-import ControversyList from './ControversyList';
-import { fetchControversiesList } from '../../actions/controversyActions';
+import TopicList from './TopicList';
+import { fetchTopicsList } from '../../actions/topicActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const localMessages = {
-  controversiesListTitle: { id: 'controversies.list.title', defaultMessage: 'Recent Topics' },
+  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
 };
 
-class ControversyListContainer extends React.Component {
+class TopicListContainer extends React.Component {
   componentDidMount() {
     const { fetchData } = this.props;
     fetchData();
@@ -27,15 +27,15 @@ class ControversyListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { controversies, fetchStatus, fetchData } = this.props;
+    const { topics, fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(localMessages.controversiesListTitle);
+    const title = formatMessage(localMessages.topicsListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <ControversyList controversies={controversies} />;
+        content = <TopicList topics={topics} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={fetchData} />;
@@ -46,40 +46,42 @@ class ControversyListContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-        <Row>
-          <Col lg={12}>
-            <h2>{title}</h2>
-            {content}
-          </Col>
-        </Row>
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h2>{title}</h2>
+              {content}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
 }
 
-ControversyListContainer.propTypes = {
+TopicListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  controversies: React.PropTypes.object.isRequired,
+  topics: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
 
-ControversyListContainer.contextTypes = {
+TopicListContainer.contextTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.controversies.all.fetchStatus,
-  controversies: state.controversies.all.list,
+  fetchStatus: state.topics.all.fetchStatus,
+  topics: state.topics.all.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: () => {
-    dispatch(fetchControversiesList());
+    dispatch(fetchTopicsList());
   },
 });
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ControversyListContainer));
+)(TopicListContainer));

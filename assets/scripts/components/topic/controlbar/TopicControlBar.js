@@ -7,18 +7,20 @@ class TopicControlBar extends React.Component {
   getStyles() {
     const styles = {
       root: {
-        height: 50,
+        padding: 5,
         backgroundColor: '#dddddd',
       },
     };
     return styles;
   }
   render() {
+    const { title } = this.props;
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
         <Row>
           <Col lg={12}>
+            {title}
             <SnapshotSelectorContainer />
           </Col>
         </Row>
@@ -29,6 +31,7 @@ class TopicControlBar extends React.Component {
 
 TopicControlBar.propTypes = {
   intl: React.PropTypes.object.isRequired,
+  title: React.PropTypes.string.isRequired,
 };
 
 export default injectIntl(TopicControlBar);

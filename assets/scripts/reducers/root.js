@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import user from './user';
-import controversies from './controversies/controversies';
+import topics from './topics/topics';
 import { routerReducer as routing } from 'react-router-redux';
 import { reducer as form } from 'redux-form';
 
 const rootReducer = combineReducers({
   user,
-  controversies,
+  topics,
   form,
   routing,
 });

@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_TOP_MEDIA } from '../../../../actions/controversyActions';
+import { FETCH_TOPIC_TOP_STORIES } from '../../../../actions/topicActions';
 import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
@@ -8,20 +8,20 @@ const INITIAL_STATE = {
   list: [],
 };
 
-function topMedia(state = INITIAL_STATE, action) {
+function topStories(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_TOP_MEDIA:
+    case FETCH_TOPIC_TOP_STORIES:
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_CONTROVERSY_TOP_MEDIA):
+    case resolve(FETCH_TOPIC_TOP_STORIES):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         list: action.payload.results,
       });
-    case reject(FETCH_CONTROVERSY_TOP_MEDIA):
+    case reject(FETCH_TOPIC_TOP_STORIES):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,
@@ -31,4 +31,4 @@ function topMedia(state = INITIAL_STATE, action) {
   }
 }
 
-export default topMedia;
+export default topStories;

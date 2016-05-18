@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_CONTROVERSY_LIST } from '../../actions/controversyActions';
+import { FETCH_TOPIC_LIST } from '../../actions/topicActions';
 
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
@@ -19,17 +19,17 @@ const INITIAL_STATE = {
 
 function all(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTROVERSY_LIST:
+    case FETCH_TOPIC_LIST:
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_ONGOING,
         list: {},
       });
-    case resolve(FETCH_CONTROVERSY_LIST):
+    case resolve(FETCH_TOPIC_LIST):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         list: arrayToDict(action.payload.results, 'controversies_id'),
       });
-    case reject(FETCH_CONTROVERSY_LIST):
+    case reject(FETCH_TOPIC_LIST):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
         list: {},

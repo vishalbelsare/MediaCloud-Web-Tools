@@ -1,8 +1,8 @@
 import React from 'react';
 import App from './components/App';
 import LoginFormContainer from './components/user/LoginFormContainer';
-import ControversyListContainer from './components/controversy/ControversyListContainer';
-import ControversySummaryContainer from './components/controversy/summary/ControversySummaryContainer';
+import TopicListContainer from './components/topic/TopicListContainer';
+import TopicSummaryContainer from './components/topic/summary/TopicSummaryContainer';
 import { hasCookies } from './lib/auth';
 import { logout } from './actions/userActions';
 import store from './store';
@@ -26,8 +26,8 @@ function onEnterLogout(nextState, replaceState) {
 
 const routes = (
   <Route path="/" component={App}>
-    <Route path="/controversies" component={ControversyListContainer} onEnter={requireAuth} />
-    <Route path="/controversy/:controversyId" component={ControversySummaryContainer} onEnter={requireAuth} />
+    <Route path="/topics" component={TopicListContainer} onEnter={requireAuth} />
+    <Route path="/topic/:topicId" component={TopicSummaryContainer} onEnter={requireAuth} />
     <Route path="/login" component={LoginFormContainer} />
     <Route path="/logout" onEnter={onEnterLogout} />
   </Route>

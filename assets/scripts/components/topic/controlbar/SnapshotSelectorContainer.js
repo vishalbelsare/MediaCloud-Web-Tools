@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SnapshotSelector from './SnapshotSelector';
-import { fetchControversySnapshotsList, filterBySnapshot } from '../../../actions/controversyActions';
+import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class SnapshotSelectorContainer extends React.Component {
@@ -50,14 +50,14 @@ SnapshotSelectorContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  topicId: state.controversies.selected.id,
-  fetchStatus: state.controversies.selected.snapshots.fetchStatus,
-  snapshots: state.controversies.selected.snapshots.list,
+  topicId: state.topics.selected.id,
+  fetchStatus: state.topics.selected.snapshots.fetchStatus,
+  snapshots: state.topics.selected.snapshots.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (topicId) => {
-    dispatch(fetchControversySnapshotsList(topicId));
+    dispatch(fetchTopicSnapshotsList(topicId));
   },
   onSnapshotSelected: (event) => {
     dispatch(filterBySnapshot(event.target.value));
