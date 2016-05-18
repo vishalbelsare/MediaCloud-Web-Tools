@@ -2,7 +2,7 @@
 const messages = {
 
   topicName: { id: 'topic.title.default', defaultMessage: 'Topic' },
-  topicSnapshots: { id: 'topic.snapshot', defaultMesasge: 'Snapshots' },
+  topicSnapshot: { id: 'topic.snapshot', defaultMesasge: 'Snapshot' },
 
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Inlinks' },
