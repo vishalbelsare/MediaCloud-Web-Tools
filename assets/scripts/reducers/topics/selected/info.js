@@ -1,6 +1,6 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_TOPIC_SUMMARY } from '../../../../actions/topicActions';
-import * as fetchConstants from '../../../../lib/fetchConstants.js';
+import { FETCH_TOPIC_SUMMARY } from '../../../actions/topicActions';
+import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,

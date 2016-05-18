@@ -12,11 +12,15 @@
     all: {
       fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
       list: {
-        // controversy_id => summary dict
+        // topic_id => summary dict
       },
     },
     selected: {
-      id: [id of controversy selected],
+      id: [id of topic selected],
+      info: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        // all the basic info about the selected topic
+      },
       filters: {
         snapshotId: [id of current snapshot],
         timespanId: [id of current snapshot],
@@ -30,10 +34,6 @@
         list: [ // list of JSON timespan objects in the selected snapshot of the selected topic  ]
       }
       summary: {
-        info: {
-          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-          // all the fields the API returns about a single controversy
-        },
         topStories: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           sort: [ social | inlink ]

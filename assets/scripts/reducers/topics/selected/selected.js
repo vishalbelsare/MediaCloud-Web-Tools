@@ -4,6 +4,7 @@ import snapshots from './snapshots';
 import timespans from './timespans';
 import summary from './summary/summary';
 import filters from './filters';
+import info from './info';
 
 const INITIAL_STATE = null;
 
@@ -18,6 +19,7 @@ function id(state = INITIAL_STATE, action) {
 
 const rootReducer = combineReducers({
   id,
+  info,
   summary,
   snapshots,
   timespans,
