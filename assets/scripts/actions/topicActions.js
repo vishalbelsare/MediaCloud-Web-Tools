@@ -12,6 +12,7 @@ export const SORT_TOPIC_TOP_MEDIA = 'SORT_TOPIC_TOP_MEDIA';
 export const FETCH_TOPIC_TOP_WORDS = 'FETCH_TOPIC_TOP_WORDS';
 export const FETCH_TOPIC_SNAPSHOTS_LIST = 'FETCH_TOPIC_SNAPSHOTS_LIST';
 export const FETCH_TOPIC_TIMESPANS_LIST = 'FETCH_TOPIC_TIMESPANS_LIST';
+export const FETCH_TOPIC_SENTENCE_COUNT = 'FETCH_TOPIC_SENTENCE_COUNT';
 
 export function fetchTopicsList() {
   return {
@@ -102,12 +103,20 @@ export function fetchTopicSnapshotsList(id) {
   };
 }
 
-
 export function fetchTopicSnapshotTimespansList(topicId, snapshotId) {
   return {
     type: FETCH_TOPIC_TIMESPANS_LIST,
     payload: {
       promise: api.topicSnapshotTimespansList(topicId, snapshotId),
+    },
+  };
+}
+
+export function fetchTopicSentenceCounts(topicId, snapshotId, timespanId) {
+  return {
+    type: FETCH_TOPIC_SENTENCE_COUNT,
+    payload: {
+      promise: api.topicSentenceCounts(topicId, snapshotId, timespanId),
     },
   };
 }

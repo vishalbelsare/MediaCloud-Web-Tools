@@ -92,3 +92,20 @@ export function topicSnapshotTimespansList(topicId, snapshotId) {
     response => response.json()
   );
 }
+
+export function topicSentenceCounts(topicId, snapshotId, timespanId) {
+  const params = {};
+  if (snapshotId !== null) {
+    params.snapshot = snapshotId;
+  }
+  if (timespanId !== null) {
+    params.timespan = timespanId;
+  }
+  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  return fetch(`/api/topics/${topicId}/sentences/count?${paramStr}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}

@@ -10,6 +10,7 @@ import TopicTopStoriesContainer from './TopicTopStoriesContainer';
 import TopicTopMediaContainer from './TopicTopMediaContainer';
 import TopicTopWordsContainer from './TopicTopWordsContainer';
 import TopicControlBar from '../controlbar/TopicControlBar';
+import TopicSentenceCountContainer from './TopicSentenceCountContainer';
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
@@ -48,7 +49,7 @@ class TopicSummaryContainer extends React.Component {
             <Grid>
               <Row style={styles.row}>
                 <Col lg={6}>
-                  <TopicInfo topic={topicInfo} />
+                  <TopicSentenceCountContainer topicId={topicId} filters={filters} />
                 </Col>
                 <Col lg={6}>
                   <TopicTopWordsContainer topicId={topicId} filters={filters} />
@@ -61,6 +62,12 @@ class TopicSummaryContainer extends React.Component {
                 <Col lg={6}>
                   <TopicTopStoriesContainer topicId={topicId} filters={filters} />
                 </Col>
+              </Row>
+              <Row style={styles.row}>
+                <Col lg={6}>
+                  <TopicInfo topic={topicInfo} />
+                </Col>
+                <Col lg={6} />
               </Row>
             </Grid>
           );

@@ -47,6 +47,11 @@
         topWords: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           list: [ // list of JSON word objects ],
+        },
+        sentenceCounts: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          total: [int],
+          list: [ // ordered list of {count,date} objects ],
         }
       },
     },
