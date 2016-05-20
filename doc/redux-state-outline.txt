@@ -51,6 +51,9 @@
         sentenceCounts: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           total: [int],
+          gap: [ +1DAY | +3DAYS | +7DAYS]
+          end: 'YYYY-MM-DD',
+          start: 'YYYY-MM-DD',
           list: [ // ordered list of {count,date} objects ],
         }
       },

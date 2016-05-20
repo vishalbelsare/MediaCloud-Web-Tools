@@ -16,11 +16,16 @@ function sentenceCount(state = INITIAL_STATE, action) {
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
     case resolve(FETCH_TOPIC_SENTENCE_COUNT):
+      const cleanedCounts = action.payload.results.counts.map((d) => {
+        const ymd = d.date.substr(0, 10).split('-');
+        const dateObj = new Date(Date.UTC(ymd[0], ymd[1] - 1, ymd[2]));
+        return { date: dateObj, count: d.count };
+      });
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         total: action.payload.results.total,
-        list: action.payload.results.counts,
+        list: cleanedCounts,
       });
     case reject(FETCH_TOPIC_SENTENCE_COUNT):
       return Object.assign({}, state, {

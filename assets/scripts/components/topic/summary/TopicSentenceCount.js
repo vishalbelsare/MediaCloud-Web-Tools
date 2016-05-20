@@ -1,8 +1,11 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import AttentionOverTimeChart from './AttentionOverTimeChart';
 import messages from '../../../resources/messages';
 
 const localMessages = {
+  chartTitle: { id: 'topic.summary.sentenceCount.chartTitle', defaultMessage: 'Attention Over Time' },
+  chartYAxisLabel: { id: 'topic.summary.sentenceCount.chartYAxisLabel', defaultMessage: 'sentences / day' },
   totalCount: { id: 'topic.summary.sentenceCount.total',
     defaultMessage: '{total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },
@@ -23,6 +26,7 @@ class TopicSentenceCount extends React.Component {
 
   render() {
     const { total, counts } = this.props;
+    const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     return (
       <div style={styles.scrollWrapper}>
@@ -31,6 +35,10 @@ class TopicSentenceCount extends React.Component {
           values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
         />
         </p>
+        <AttentionOverTimeChart data={counts} height={250}
+          title={ formatMessage(localMessages.chartTitle) }
+          yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
+        />
       </div>
     );
   }

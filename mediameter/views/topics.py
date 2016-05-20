@@ -1,4 +1,5 @@
 import logging
+from operator import itemgetter
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
@@ -78,9 +79,13 @@ def api_topics_sentence_count(topic_id):
         if k in ['end','gap','start']:
             continue
         counts.append({ 'date': k, 'count':v })
+    counts = sorted(counts, key=itemgetter('date'))
     results = {
         'results':{
             'total': response['count'],
+            'gap': response['split']['gap'],
+            'end': response['split']['end'],
+            'start': response['split']['start'],
             'counts': counts
         }
     }
