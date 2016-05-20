@@ -2,7 +2,7 @@ MediaMeter BoilerPlate Web App
 ==============================
 
 This is a boilerplate app combining a bunch of tech we will be using as the basis
-for some of our new web apps.
+for some of our new web apps.  Check out the `doc` folder for more documentation.
 
 Installation
 ------------
