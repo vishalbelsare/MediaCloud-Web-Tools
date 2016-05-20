@@ -40,9 +40,9 @@ class TopicSummaryContainer extends React.Component {
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
     let content = <div />;
-    switch(topicInfo.fetchStatus) {
+    switch (topicInfo.fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        let subContent = <div />
+        let subContent = <div />;
         if (this.filtersAreSet()) {
           subContent = (
             <Grid>
@@ -69,7 +69,7 @@ class TopicSummaryContainer extends React.Component {
         }
         content = (
           <div>
-            <TopicControlBar title={topicInfo.name}/>
+            <TopicControlBar title={topicInfo.name} />
             {subContent}
           </div>
         );
@@ -84,7 +84,6 @@ class TopicSummaryContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <div>
-          
           {content}
         </div>
       </div>
