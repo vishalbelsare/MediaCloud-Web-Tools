@@ -3,7 +3,7 @@ from operator import itemgetter
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
-from mediameter import app, mc
+from server import app, mc
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-from mediameter import app
+from server import app
 
 from werkzeug.serving import run_simple
 

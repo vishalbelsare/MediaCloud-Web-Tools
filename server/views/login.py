@@ -2,7 +2,7 @@ import logging
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
-from mediameter import app, auth
+from server import app, auth
 
 logger = logging.getLogger(__name__)
 

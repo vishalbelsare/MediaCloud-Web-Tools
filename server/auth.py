@@ -2,7 +2,7 @@ import datetime, logging
 import flask_login
 import mediacloud
 
-from mediameter import db, mc, login_manager
+from server import db, mc, login_manager
 
 logger = logging.getLogger(__name__)
 

@@ -1,25 +1,22 @@
-import os, logging, ConfigParser
+import os, logging, ConfigParser, logging.config, json
 from flask import Flask, render_template
 from flask_webpack import Webpack
 import pymongo, flask_login, mediacloud
 from flask.ext.cors import CORS
 
-webpack = Webpack()
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Set up some logging
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-logging.basicConfig(filename=os.path.join(base_dir,'logs','server.log'),level=logging.DEBUG)
+with open(os.path.join(base_dir,'config','server-logging.json'), 'r') as f:
+    logging_config = json.load(f)
+logging.config.dictConfig(logging_config)
 logger = logging.getLogger(__name__)
 logger.info("---------------------------------------------------------------------------")
 flask_login_logger = logging.getLogger('flask_login')
 flask_login_logger.setLevel(logging.DEBUG)
-#requests_logger = logging.getLogger('requests')
-#requests_logger.setLevel(logging.WARN)
-#mediacloud_logger = logging.getLogger('mediacloud')
-#mediacloud_logger.setLevel(logging.DEBUG)
 
 # load the shared settings file
-server_config_file_path = os.path.join(base_dir,'server.config')
+server_config_file_path = os.path.join(base_dir,'config','server.config')
 settings = ConfigParser.ConfigParser()
 settings.read(server_config_file_path)
 
@@ -32,6 +29,8 @@ db_host = settings.get('database', 'host')
 db_name = settings.get('database', 'name')
 db = pymongo.MongoClient(db_host)[db_name]
 logger.info("Connected to DB: %s@%s" % (db_name,db_host))
+
+webpack = Webpack()
 
 def create_app():
     '''
