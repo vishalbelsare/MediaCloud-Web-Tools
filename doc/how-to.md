@@ -22,13 +22,13 @@ module.  Try to follow REST-ful conventions.
 2. Design where your data will be saved in the redux store.
   * document this in `doc/redux-state-outline.txt`
 3. Create a helper method for JS to call your new endpoint.
-  * add it in the appropriate helper under `assets/scripts/lib`
+  * add it in the appropriate helper under `src/lib`
 4. Create an action type constant and action generator to call this api method.
-  * put these in the appropriate file under `assets/scripts/actions`
+  * put these in the appropriate file under `src/actions`
 5. Crate a reducer to save results from that call to the store.
-  * put this in the right place (based on step 2) under the `assets/scripts/reducers` directory tree
+  * put this in the right place (based on step 2) under the `src/reducers` directory tree
   * make sure to import and add the recuder to the correct parent reducer in the reducer tree
 6. Create a new container widget to fetch the data
-  * this should be a new file under the `assets/scripts/components/` directory tree
+  * this should be a new file under the `src/components/` directory tree
 7. Create a new component widget to display the data
-  * this should be a new file under the `assets/scripts/components/` directory tree
+  * this should be a new file under the `src/components/` directory tree

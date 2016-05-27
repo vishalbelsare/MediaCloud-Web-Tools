@@ -1,0 +1,6 @@
+[
+  {
+    "id": "login.success",
+    "defaultMessage": "You are logged in as {email}"
+  }
+]

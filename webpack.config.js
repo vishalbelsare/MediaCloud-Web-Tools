@@ -6,7 +6,7 @@ const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 
 // Development asset host, asset location and build output path.
 const publicHost = 'http://localhost:2992';
-const rootAssetPath = './assets';
+const rootAssetPath = './src';
 const buildOutputPath = './build/public';
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     // Chunks (files) that will get written out for JS and CSS files.
     app_js: [
       'webpack/hot/dev-server',
-      `${rootAssetPath}/scripts/index`,
+      `${rootAssetPath}/index`,
     ],
     app_css: [
       `${rootAssetPath}/styles/main`,
@@ -23,7 +23,7 @@ module.exports = {
   output: {
     // Where and how will the files be formatted when they are output.
     path: buildOutputPath,
-    publicPath: `${publicHost}/assets/`,
+    publicPath: `${publicHost}/src/`,
     filename: '[name].[hash].js',
     chunkFilename: '[id].[hash].js',
   },
@@ -41,7 +41,7 @@ module.exports = {
         test: /\.js?$/i,
         loaders: ['react-hot', 'babel'],
         exclude: /node_modules/,
-        include: path.join(__dirname, 'assets', 'scripts'),
+        include: path.join(__dirname, 'src'),
       },
       {
         test: /\.scss$/i,
