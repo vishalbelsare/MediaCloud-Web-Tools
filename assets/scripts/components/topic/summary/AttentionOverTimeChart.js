@@ -1,6 +1,8 @@
 import React from 'react';
-import highcharts from 'highcharts';
 import ReactHighcharts from 'react-highcharts';
+import HighchartsMore from 'highcharts-more';
+HighchartsMore(ReactHighcharts.Highcharts);
+import HighchartsOfflineExporting from 'highcharts-offline-exporting';
 
 class AttentionOverTime extends React.Component {
 
@@ -70,7 +72,6 @@ class AttentionOverTime extends React.Component {
       pointInterval: intervalMs,
       cursor: 'pointer',
     }];
-    console.log(allSeries);
     config.series = allSeries;
     // render out the chart
     return (
