@@ -8,13 +8,13 @@ Installation
 ------------
 
 Python 2.7:
- * `virtualenv venv`
+ * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
  * `pip install -r requirements.txt`
 
 NPM:
  * `npm install`
 
-And install MongoDb too.
+And install [MongoDb too](https://www.mongodb.com/dr/fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-3.2.6.tgz/download)
 
 For better debugging, make sure to install:
  * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
