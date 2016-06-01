@@ -11,7 +11,7 @@
 
   "handlers": {
     "file": {
-      "level": "INFO",
+      "level": "DEBUG",
       "class": "logging.handlers.RotatingFileHandler",
       "filename": "logs/server.log",
       "formatter": "generic",
@@ -24,11 +24,11 @@
   "loggers": {
     "": {
       "handlers": ["file"],
-      "level": "INFO",
+      "level": "DEBUG",
       "propagate": false
     },
     "mediameter": {
-      "level": "INFO",
+      "level": "DEBUG",
       "propagate": true
     }
   }
