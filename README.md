@@ -9,12 +9,22 @@ Installation
 
 Python 2.7:
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
+ *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
  * `pip install -r requirements.txt`
 
-NPM:
- * `npm install`
+NODE: 
+ * make sure your node installation is up-to-date
 
-And install [MongoDb too](https://www.mongodb.com/dr/fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-3.2.6.tgz/download)
+ NPM:
+ * `npm install` to pull necessary packages
+
+
+Install [MongoDb -reference ](https://www.mongodb.com/dr/fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-3.2.6.tgz/download) 
+Easiest way is to use Homebrew for this
+
+`brew install mongodb`
+
+Also, install [MongoHub](https://github.com/bububa/MongoHub-Mac)
 
 For better debugging, make sure to install:
  * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
@@ -23,7 +33,7 @@ For better debugging, make sure to install:
 Configuration
 ------------- 
 
-Copy `server.config.template` to `server.config` and fill in the required info there.
+Copy `server.config.template` to `server.config` and fill in the required info there (your MediaCloud API key).
 
 Developing
 ----------
