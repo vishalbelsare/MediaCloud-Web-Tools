@@ -6,4 +6,5 @@ host = localhost
 name = mm-boilerplate
 
 [server]
-secret_key = 'A_RANDOM_STRING'
+secret_key = A_RANDOM_STRING
+mode = DEV
