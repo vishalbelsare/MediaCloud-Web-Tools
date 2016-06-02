@@ -22,7 +22,7 @@ MongoDB:
 Configuration
 ------------- 
 
-Copy `server.config.template` to `server.config` and fill in the required info there (your MediaCloud API key).
+Copy `config/server.config.template` to `config/server.config` and fill in the required info there (your MediaCloud API key).
 
 Developing
 ----------

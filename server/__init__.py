@@ -12,6 +12,7 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Set up some logging
 with open(os.path.join(base_dir,'config','server-logging.json'), 'r') as f:
     logging_config = json.load(f)
+    logging_config['handlers']['file']['filename'] = os.path.join(base_dir,logging_config['handlers']['file']['filename'])
 logging.config.dictConfig(logging_config)
 logger = logging.getLogger(__name__)
 logger.info("---------------------------------------------------------------------------")
