@@ -4,8 +4,8 @@ MediaMeter BoilerPlate Web App
 This is a boilerplate app combining a bunch of tech we will be using as the basis
 for some of our new web apps.  Check out the `doc` folder for more documentation.
 
-Installation
-------------
+Dev Installation
+----------------
 
 Python 2.7:
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
@@ -52,6 +52,5 @@ You need to open two terminal windows and run one thing in each (so the hot-relo
 Release
 -------
 
-TBD:
- * This doesn't have a dev vs. production setup yet.
- * Note to future self: try out `npm run-script build`
+1. Update the version numbers (location TBD).
+2. Build the release version of the JS and CSS: `npm run release`.
