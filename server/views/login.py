@@ -14,8 +14,8 @@ def api_login_with_password():
     logger.debug("login request from %s" % username)
     password = request.form["password"]
     user = auth.authenticate_by_password(username,password)
-    if user.is_anonymous():   # login failed
-        logger.debug("  login failed")
+    if user.is_anonymous:   # login failed
+        logger.debug("  login failed (%s)" % user.is_anonymous)
         return abort(401)
     auth.login_user(user)
     response = {'email':username,'key': user.get_id()}
@@ -29,8 +29,8 @@ def api_login_with_key():
     logger.debug("login request from %s" % username)
     key = request.form["key"]
     user = auth.authenticate_by_key(username,key)
-    if user.is_anonymous():   # login failed
-        logger.debug("  login failed")
+    if user.is_anonymous:   # login failed
+        logger.debug("  login failed (%s)" % user.is_anonymous)
         return abort(401)
     auth.login_user(user)
     response = {'email':username,'key': user.get_id()}
