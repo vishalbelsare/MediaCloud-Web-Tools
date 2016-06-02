@@ -12,24 +12,13 @@ Python 2.7:
  *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
  * `pip install -r requirements.txt`
 
-NODE: 
- * make sure your node installation is up-to-date
+Node and npm:  
+ * make sure your node installation is up-to-date (we work with v5.9.0 right now)
+ * `npm install` to install all the package dependencies (as specified in the `package.json`)
 
- NPM:
- * `npm install` to pull necessary packages
-
-
-Install [MongoDb -reference ](https://www.mongodb.com/dr/fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-3.2.6.tgz/download) 
-Easiest way is to use Homebrew for this
-
-`brew install mongodb`
-
-Also, install [MongoHub](https://github.com/bububa/MongoHub-Mac)
-
-For better debugging, make sure to install:
- * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
- * [React Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi).
-
+MongoDB:
+[Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`
+ 
 Configuration
 ------------- 
 
@@ -38,9 +27,11 @@ Copy `server.config.template` to `server.config` and fill in the required info t
 Developing
 ----------
 
-Setup your environment with SublimeText and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
-
-You can run linting by hand too : `npm run lint`.
+You will make your life easier by installing these tools to help you develop better:
+ * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
+ * [React Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi).
+ * Setup your environment with [SublimeText](https://www.sublimetext.com) and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
+ * To browse your local DB on a Mac use [MongoHub](https://github.com/bububa/MongoHub-Mac), or [MongoExpress for a web-based UI](https://github.com/mongo-express/mongo-express)
 
 Running
 -------
@@ -49,8 +40,9 @@ You need to open two terminal windows and run one thing in each (so the hot-relo
  * `npm start`
  * `python run.py`
 
-Release
--------
+Releasing
+---------
 
 1. Update the version numbers (location TBD).
-2. Build the release version of the JS and CSS: `npm run release`.
+2. Run the linting by hand to make sure you don't have any code errors: `npm run lint`.
+3. Build the release version of the JS and CSS: `npm run release`.
