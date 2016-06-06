@@ -16,10 +16,11 @@ class User(flask_login.UserMixin):
         
     def is_active(self):
         return self.active
-    
+
+    @property
     def is_anonymous(self):
         return False
-    
+
     def is_authenticated(self):
         return True
     
@@ -68,8 +69,9 @@ def authenticate_by_key(username, key):
     logger.debug("user %s want to log in with key" % username)
     user_mc = mediacloud.MediaCloud(key)
     if user_mc.verifyAuthToken():
-        logger.debug("succeeded")
-        return create_and_cache_user(username, key)
+        user = create_and_cache_user(username, key)
+        logger.debug("  succeeded - got a key (user.is_anonymous=%s)" % user.is_anonymous)
+        return user
     logger.debug("failed")
     return flask_login.AnonymousUserMixin()
 
@@ -77,7 +79,10 @@ def authenticate_by_password(username, password):
     logger.debug("user %s want to log in with password" % username)
     try:
         key = mc.userAuthToken(username, password)
-        return create_and_cache_user(username, key)
+        user = create_and_cache_user(username, key)
+        logger.debug("  succeeded - got a key (user.is_anonymous=%s)" % user.is_anonymous)
+        return user
     except Exception:
+        logging.exception("authenticate_by_password failed for %s" % username)
         return flask_login.AnonymousUserMixin()
 

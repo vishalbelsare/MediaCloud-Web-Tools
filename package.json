@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "start": "if-env ENV=production && npm run start:prod || npm run start:dev",
-    "start:dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback",
-    "start:prod": "webpack",
-    "release": "NODE_ENV=production webpack -p --config webpack.production.config.js",
+    "start:dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config webpack.dev.config.js",
+    "release": "NODE_ENV=production webpack --progress -p --config webpack.prod.config.js",
     "lint": "eslint webpack.config.js src --fix --ext .jsx,.js"
   },
   "dependencies": {
@@ -50,6 +49,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-1": "^6.5.0",
     "classnames": "^2.2.5",
+    "clean-webpack-plugin": "^0.1.9",
     "css-loader": "^0.23.1",
     "eslint": "^2.9.0",
     "eslint-config-airbnb": "^6.2.0",

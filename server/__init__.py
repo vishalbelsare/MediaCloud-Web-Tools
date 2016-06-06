@@ -1,14 +1,18 @@
-import os, logging, ConfigParser, logging.config, json
+import os, logging, ConfigParser, logging.config, json, sys
 from flask import Flask, render_template
 from flask_webpack import Webpack
 import pymongo, flask_login, mediacloud
 from flask.ext.cors import CORS
+
+SERVER_MODE_DEV = "DEV"
+SERVER_MODE_PROD = "PROD"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Set up some logging
 with open(os.path.join(base_dir,'config','server-logging.json'), 'r') as f:
     logging_config = json.load(f)
+    logging_config['handlers']['file']['filename'] = os.path.join(base_dir,logging_config['handlers']['file']['filename'])
 logging.config.dictConfig(logging_config)
 logger = logging.getLogger(__name__)
 logger.info("---------------------------------------------------------------------------")
@@ -20,6 +24,13 @@ server_config_file_path = os.path.join(base_dir,'config','server.config')
 settings = ConfigParser.ConfigParser()
 settings.read(server_config_file_path)
 
+server_mode = settings.get('server','mode')
+if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
+    logger.error("Unknown server mode '%s', set a mode in the `config/server.config` file" % (server_mode))
+    sys.exit(1)
+else:
+    logger.info("Started server in %s mode" % (server_mode))
+
 # Connect to MediaCloud
 mc = mediacloud.api.AdminMediaCloud(settings.get('mediacloud','api_key'))
 logger.info("Connected to mediacloud")
@@ -30,6 +41,12 @@ db_name = settings.get('database', 'name')
 db = pymongo.MongoClient(db_host)[db_name]
 logger.info("Connected to DB: %s@%s" % (db_name,db_host))
 
+def isDevMode():
+    return server_mode == SERVER_MODE_DEV
+
+def isProdMode():
+    return server_mode == SERVER_MODE_PROD
+
 webpack = Webpack()
 
 def create_app():
@@ -37,11 +54,11 @@ def create_app():
     Factory method to create the app
     '''
     app = Flask(__name__)
-    settings = {
-        'DEBUG': True,
-        'WEBPACK_MANIFEST_PATH': '../build/manifest.json'
+    webpack_config = {
+        'DEBUG': isDevMode(),
+        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/manifest.json'
     }
-    app.config.update(settings)
+    app.config.update(webpack_config)
     webpack.init_app(app)
     return app
 
