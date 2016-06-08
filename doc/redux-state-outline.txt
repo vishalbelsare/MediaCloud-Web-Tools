@@ -58,7 +58,41 @@
         }
       },
     },
+sources: {
+    all: {
+      fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+      list: {
+        // itemId => summary dict
+      },
+    },
+    selected: {
+      id: [id of item selected],
+      info: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        // all the basic info about the selected topic
+      }
+      details: {
+        topWords: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: [ // list of JSON word objects ],
+        },
+        sentenceCounts: {
+            fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+            total: [int],
+            gap: [ +1DAY | +3DAYS | +7DAYS]
+            end: 'YYYY-MM-DD',
+            start: 'YYYY-MM-DD',
+            list: [ // ordered list of {count,date} objects ],
+          
+        },
+      },
+    },
+ 
+
+
   }
+
+
 
   form: {
     //managed by form helper library

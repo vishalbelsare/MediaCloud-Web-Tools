@@ -12,7 +12,8 @@ const localMessages = {
 class LoginContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLoggedIn) {
-      this.context.router.push('/topics');
+      //this.context.router.push('/topics');
+     this.context.router.push('/sources');
     }
   }
   render() {

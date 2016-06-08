@@ -5,6 +5,10 @@ const messages = {
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },
   topicTimespan: { id: 'topic.timespan', defaultMessage: 'Timespan' },
 
+  sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
+  sourceSnapshot: { id: 'source.snapshot', defaultMessage: 'Snapshot' },
+  sourceTimespan: { id: 'source.timespan', defaultMessage: 'Timespan' },
+
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Inlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
