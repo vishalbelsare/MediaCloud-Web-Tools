@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import SourceInfo from './SourceInfo';
+import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { selectSource, fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 // import SourceTopWordsContainer from './SourceTopWordsContainer';
@@ -37,7 +37,7 @@ class SourceCollectionDetailsContainer extends React.Component {
     let content = <div />;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SourceInfo source={sources} />;
+        content = <CollectionInfo source={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
         // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
@@ -81,7 +81,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
-    dispatch(selectSource(sourceId));
+    // dispatch(selectSource(sourceId));
     dispatch(fetchSourceCollectionDetails(sourceId));
   },
 });

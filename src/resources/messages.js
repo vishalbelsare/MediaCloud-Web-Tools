@@ -9,6 +9,8 @@ const messages = {
   sourceSnapshot: { id: 'source.snapshot', defaultMessage: 'Snapshot' },
   sourceTimespan: { id: 'source.timespan', defaultMessage: 'Timespan' },
 
+  collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },
+
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Inlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },

@@ -1,6 +1,7 @@
 import * as api from '../lib/sources';
 
 // export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
+export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_COLLECTION_LIST = 'FETCH_SOURCE_COLLECTION_LIST';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_SOURCE_COLLECTION_DETAILS = 'FETCH_SOURCE_COLLECTION_DETAILS';
@@ -15,16 +16,11 @@ export const FETCH_SOURCE_SUMMARY = 'FETCH_SOURCE_SUMMARY';
 export const SORT_SOURCE_DETAILS = 'SORT_SOURCE_DETAILS';
 export const SORT_SOURCE_COLLECTION_DETAILS = 'SORT_SOURCE_COLLECTION_DETAILS';
 export const FETCH_SOURCE_TOP_WORDS = 'FETCH_SOURCE_TOP_WORDS';
+export const FETCH_SOURCE_COLLECTION_TOP_WORDS = 'FETCH_SOURCE_COLLECTION_TOP_WORDS';
 export const FETCH_SOURCE_SNAPSHOTS_LIST = 'FETCH_SOURCE_SNAPSHOTS_LIST';
 export const FETCH_SOURCE_TIMESPANS_LIST = 'FETCH_SOURCE_TIMESPANS_LIST';
 export const FETCH_SOURCE_SENTENCE_COUNT = 'FETCH_SOURCE_SENTENCE_COUNT';
 
-export function selectSource(id) {
-  return {
-    type: SELECT_SOURCE,
-    payload: { id },
-  };
-}
 
 /* export function fetchSourceTagList() {
   return {
@@ -34,11 +30,20 @@ export function selectSource(id) {
     },
   };
 }*/
-export function fetchSourceCollectionSetList() {
+export function fetchSourceList() {
+  return {
+    type: FETCH_SOURCE_LIST,
+    payload: {
+      promise: api.sourceList(), // need to change this... TODO
+    },
+  };
+}
+
+export function fetchSourceCollectionList() {
   return {
     type: FETCH_SOURCE_COLLECTION_LIST,
     payload: {
-      promise: api.sourceCollectionSetList(), // need to change this... TODO
+      promise: api.sourceCollectionList(), // need to change this... TODO
     },
   };
 }
@@ -61,7 +66,7 @@ export function fetchSourceCollectionDetails(id) {
   };
 }
 
-export function fetchSentenceCount(id) {
+export function fetchSourceSentenceCount(id) {
   return {
     type: FETCH_SOURCE_SENTENCE_COUNT,
     payload: {

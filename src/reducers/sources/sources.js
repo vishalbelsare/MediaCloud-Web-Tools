@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
-import all from './all';
+import allcollections from './allcollections';
+import allsources from './allsources';
 import selected from './selected/selected';
 
 const rootReducer = combineReducers({
-  all,
+  allcollections,
+  allsources,
   selected,
 });
 
