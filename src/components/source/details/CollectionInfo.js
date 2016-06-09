@@ -27,10 +27,9 @@ class CollectionInfoItem extends React.Component {
     return (
       <Grid>
           <Row>
-            <h3>Related Tags: </h3>
             <Col xs={12} sm={6} md={3} lg={3}>
               <h3> {source.tags_id}</h3>
-              <Link to={`sourcesummary/${source.tag_sets_id}/details`} style={styles.name}>{source.label}</Link>
+              <Link to={`source/${source.id}/details`} style={styles.name}>{source.name}</Link>
             </Col>
           </Row>
         </Grid>
@@ -44,20 +43,25 @@ CollectionInfoItem.propTypes = {
 
 
 const CollectionInfo = (props) => {
-  const { sources } = props;
-  const sourceArray = Object.keys(sources).map((idx) => sources[idx]);
+  const { source } = props;
+  const { media } = source;
+  const sourceArray = Object.keys(media).map((idx) => media[idx]);
   return (
-    <Row>
-    {sourceArray.map(src =>
-      <CollectionInfoItem key={src.tags_id} source={src} />
-    )}
-    </Row>
+    <Grid>
+      <h3>Sources within Collection: </h3>
+      <Row>
+      {sourceArray.map(src =>
+        <CollectionInfoItem key={src.id} source={src} />
+      )}
+      </Row>
+    </Grid>
+
   );
 };
 
 
 CollectionInfo.propTypes = {
-  sources: React.PropTypes.object.isRequired,
+  source: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 

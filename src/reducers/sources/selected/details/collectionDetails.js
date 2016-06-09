@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_SOURCE_TAG_DETAILS } from '../../../../actions/sourceActions';
+import { FETCH_SOURCE_COLLECTION_DETAILS } from '../../../../actions/sourceActions';
 // import { FETCH_SOURCE_TAG_DETAILS, SORT_SOURCE_TAG_DETAILS } from '../../../../actions/sourceActions';
 
 import * as fetchConstants from '../../../../lib/fetchConstants.js';
@@ -19,16 +19,16 @@ function arrayToDict(arr, keyPropertyName) {
 
 function tagDetails(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_SOURCE_TAG_DETAILS:
+    case FETCH_SOURCE_COLLECTION_DETAILS:
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_SOURCE_TAG_DETAILS):
+    case resolve(FETCH_SOURCE_COLLECTION_DETAILS):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: arrayToDict(action.payload.results.media_tags, 'tags_id'),
+        list: action.payload.results,
       });
-    case reject(FETCH_SOURCE_TAG_DETAILS):
+    case reject(FETCH_SOURCE_COLLECTION_DETAILS):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
       });

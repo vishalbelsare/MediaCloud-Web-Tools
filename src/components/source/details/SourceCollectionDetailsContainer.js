@@ -29,15 +29,15 @@ class SourceCollectionDetailsContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, sources, fetchData, fetchStatus } = this.props;
+    const { sourceId, source, fetchData, fetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.sourceName);
+    const title = formatMessage(messages.collectionName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
     let content = <div />;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <CollectionInfo source={sources} />;
+        content = <CollectionInfo source={source} />;
         break;
       case fetchConstants.FETCH_FAILED:
         // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
@@ -68,7 +68,7 @@ SourceCollectionDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,
   sourceId: React.PropTypes.number,
   sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.object,
+  source: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -76,7 +76,7 @@ const mapStateToProps = (state) => ({
   fetchStatus: state.sources.selected.details.collectionDetails.fetchStatus,
   sourceId: state.sources.selected.id,
   sourceInfo: state.sources.selected.info,
-  sources: state.sources.selected.details.collectionDetails.list,
+  source: state.sources.selected.details.collectionDetails.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({

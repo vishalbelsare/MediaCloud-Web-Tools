@@ -28,7 +28,7 @@ function sourceDetails(state = INITIAL_STATE, action) {
     case resolve(FETCH_SOURCE_DETAILS):
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: arrayToDict(action.payload.results.media_source_tags, 'tags_id'),
+        list: action.payload.results,
       });
     case reject(FETCH_SOURCE_DETAILS):
       return Object.assign({}, state, {

@@ -40,13 +40,13 @@ const sourceRoutes = (
   <Route path="/sources" >
     <Route path="/source" >
         <IndexRoute component={SourceListContainer} onEnter={requireAuth} />
-        <Route path="/list" component={SourceListContainer} onEnter={requireAuth} />
-        <Route path="/:sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
+        <Route path="list" component={SourceListContainer} onEnter={requireAuth} />
+        <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
     </Route>
     <Route path="/collection" >
       <IndexRoute component={CollectionListContainer} onEnter={requireAuth} />
-      <Route path="./list" component={CollectionListContainer} onEnter={requireAuth} />
-        <Route path="/:sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
+      <Route path="list" component={CollectionListContainer} onEnter={requireAuth} />
+        <Route path=":sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
     </Route>
   </Route>
 );

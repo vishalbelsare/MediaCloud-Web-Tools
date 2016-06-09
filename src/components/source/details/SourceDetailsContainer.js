@@ -89,7 +89,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
-    //dispatch(selectSource(sourceId));
+    // dispatch(selectSource(sourceId));
     dispatch(fetchSourceDetails(sourceId));
   },
 });
