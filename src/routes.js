@@ -1,5 +1,6 @@
 import React from 'react';
 import App from './components/App';
+import { APP_NAME } from './config';
 import LoginFormContainer from './components/user/LoginFormContainer';
 import TopicListContainer from './components/topic/TopicListContainer';
 import TopicSummaryContainer from './components/topic/summary/TopicSummaryContainer';
@@ -27,16 +28,14 @@ function onEnterLogout(nextState, replaceState) {
   replaceState('/login');
 }
 
-const appName = 'sources';
-
 const topicRoutes = (
-  <Route path="/topics" component={TopicListContainer} onEnter={requireAuth} >
+  <Route path="/home" component={TopicListContainer} onEnter={requireAuth} >
     <Route path="/topic/:topicId" component={TopicSummaryContainer} onEnter={requireAuth} />
   </Route>
 );
 
 const sourceRoutes = (
-  <Route path="/sources" >
+  <Route path="/home" >
     <IndexRoute component={SourceListContainer} onEnter={requireAuth} />
     <Route path="/source/:sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
     <Route path="/collection/:sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
@@ -44,7 +43,7 @@ const sourceRoutes = (
 );
 
 let appRoutes = null;
-switch (appName) {
+switch (APP_NAME) {
   case 'topics':
     appRoutes = topicRoutes;
     break;
