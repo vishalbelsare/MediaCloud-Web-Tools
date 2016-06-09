@@ -49,6 +49,7 @@ class SourceCollectionDetailsContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <Grid>
+         <h3>Collection Id: {source.tags_id}</h3>
           <Row>
             <Col lg={12}>
               <h2>{title}</h2>

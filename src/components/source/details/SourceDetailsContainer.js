@@ -41,7 +41,6 @@ class SourceDetailsContainer extends React.Component {
         content = <SourceInfo sources={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        // 
         // this causes a render warning to not try to setState while in error - no dispatching either
         break;
       default:
@@ -51,10 +50,10 @@ class SourceDetailsContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <Grid>
+        <h3>Source Id: {sources.media_id} </h3>
           <Row>
             <Col lg={12}>
-              <h2>{title}</h2>
-              <h3>Source Id: {sourceId} </h3>
+              <h2>{title}</h2>      
               {content}
             </Col>
           </Row>
