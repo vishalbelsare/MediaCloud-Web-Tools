@@ -82,4 +82,4 @@ def index():
     logger.debug("homepage request")
     return render_template('index.html')
 
-from views import login, topics
+from views import login, topics,sources
