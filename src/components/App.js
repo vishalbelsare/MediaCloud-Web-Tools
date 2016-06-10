@@ -1,5 +1,6 @@
 import React from 'react';
 import Title from 'react-title-component';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AppBar from 'material-ui/AppBar';
@@ -67,6 +68,21 @@ class App extends React.Component {
     return (
       <div>
         <Title render={formatMessage(messages.appTitle)} />
+        <header>
+          <Grid>
+            <Row>
+              <Col lg={12}>
+                <div>
+                  <ul>
+                    <li className="dashboard"><a href="https://dashboard.mediameter.org/">Dashboard</a></li>
+                    <li className="sources"><a href="https://sources.mediameter.org/">Sources</a></li>
+                    <li className="topics"><a href="https://topics.mediameter.org/">Topics</a></li>
+                  </ul>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </header>
         <AppBar
           title={formatMessage(messages.appTitle)}
           zDepth={0}
