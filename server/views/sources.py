@@ -11,25 +11,47 @@ from server import app, mc
 logger = logging.getLogger(__name__)
 
 
-@app.route('/api/sources/media-tag-set/list', methods=['GET'])
+@app.route('/api/sources/source/list', methods=['GET'])
 #@flask_login.login_required
-def api_media_tag_set_list ():
-    media_tag_sets = [5, 556, 597, 1099]
-    tag_sets = _get_media_tag_set_list(media_tag_sets)
-    return jsonify({'results':tag_sets})
+def api_media_source_list ():
+    source_list = _get_media_source_list()
+    return jsonify({'results':source_list})
 
 #@cache
 #Helper
-def _get_media_tag_set_list(media_tag_sets):
-    tag_sets = [ mc.tagSet(tag_sets_id) for tag_sets_id in media_tag_sets ]
-    tag_sets = sorted(tag_sets, key=lambda ts: ts['label'])
-    return tag_sets
+def _get_media_source_list():
+    source_list = mc.mediaList(last_media_id=0,rows=100)
+    #source_list = sorted(source_list, key=lambda ts: ts['label'])
+    return source_list
+
+
+@app.route('/api/sources/collection/list', methods=['GET'])
+#@flask_login.login_required
+def api_get_media_tag_list():
+    tag_list = mc.tagList()
+    #tag_list = sorted(tag_list, key=lambda ts: ts['label'])
+    return jsonify({'results':tag_list})
+
+
+#@app.route('/api/sources/media-tag-set/list', methods=['GET'])
+#@flask_login.login_required
+#def api_media_tag_set_list ():
+#    media_tag_sets = [5, 556, 597, 1099]
+#    tag_sets = _get_media_tag_set_list(media_tag_sets)
+#    return jsonify({'results':tag_sets})
+
+#@cache
+#Helper
+#def _get_media_tag_set_list(media_tag_sets):
+#    tag_sets = [ mc.tagSet(tag_sets_id) for tag_sets_id in media_tag_sets ]
+ #   tag_sets = sorted(tag_sets, key=lambda ts: ts['label'])
+ #   return tag_sets
 
 @app.route('/api/sources/media-tag/<media_tag_id>/details', methods=['GET'])
 #@flask_login.login_required
 def api_media_tag_details(media_tag_id):
     info = _get_media_tag_details(media_tag_id)
-    return info
+    return jsonify({'results':info})
 
 
  #@cache 

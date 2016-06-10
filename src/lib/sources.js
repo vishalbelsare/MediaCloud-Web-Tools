@@ -1,7 +1,16 @@
 import fetch from 'isomorphic-fetch';
 
-export function sourceCollectionSetList() {
-  return fetch('api/sources/media-tag-set/list', {
+export function sourceList() {
+  return fetch('api/sources/source/list', {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
+
+export function sourceCollectionList() {
+  return fetch('api/sources/collection/list', {
     method: 'get',
     credentials: 'include',
   }).then(

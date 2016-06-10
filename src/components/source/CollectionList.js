@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { Link } from 'react-router';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
-class SourceListItem extends React.Component {
+class CollectionListItem extends React.Component {
   getStyles() {
     const styles = {
       paper: {
@@ -28,7 +28,7 @@ class SourceListItem extends React.Component {
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`source/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
+          <Link to={`collection/${source.tags_id}/details`} style={styles.name}>{source.tags_id}</Link>
           <p style={styles.description}>{source.url}</p>
           <p style={styles.description}>{source.tag}</p>
         </Paper>
@@ -37,25 +37,25 @@ class SourceListItem extends React.Component {
   }
 }
 
-SourceListItem.propTypes = {
+CollectionListItem.propTypes = {
   source: React.PropTypes.object.isRequired,
 };
 
-const SourceList = (props) => {
+const CollectionList = (props) => {
   const { sources } = props;
   const sourceArray = Object.keys(sources).map((idx) => sources[idx]);
   return (
     <Row>
     {sourceArray.map(source =>
-      <SourceListItem key={source.media_id} source={source} />
+      <CollectionListItem key={source.tags_id} source={source} />
     )}
     </Row>
   );
 };
 
-SourceList.propTypes = {
+CollectionList.propTypes = {
   sources: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(SourceList);
+export default injectIntl(CollectionList);

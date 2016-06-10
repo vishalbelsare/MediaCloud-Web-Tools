@@ -1,10 +1,9 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
 import { injectIntl } from 'react-intl';
 import { Link } from 'react-router';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
-class SourceListItem extends React.Component {
+class CollectionInfoItem extends React.Component {
   getStyles() {
     const styles = {
       paper: {
@@ -26,36 +25,40 @@ class SourceListItem extends React.Component {
     const { source } = this.props;
     const styles = this.getStyles();
     return (
-      <Col xs={12} sm={6} md={3} lg={3}>
-        <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`source/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
-          <p style={styles.description}>{source.url}</p>
-          <p style={styles.description}>{source.tag}</p>
-        </Paper>
-      </Col>
+      <Grid>
+          <Row>
+            <h3>Related Tags: </h3>
+            <Col xs={12} sm={6} md={3} lg={3}>
+              <h3> {source.tags_id}</h3>
+              <Link to={`sourcesummary/${source.tag_sets_id}/details`} style={styles.name}>{source.label}</Link>
+            </Col>
+          </Row>
+        </Grid>
     );
   }
 }
 
-SourceListItem.propTypes = {
+CollectionInfoItem.propTypes = {
   source: React.PropTypes.object.isRequired,
 };
 
-const SourceList = (props) => {
+
+const CollectionInfo = (props) => {
   const { sources } = props;
   const sourceArray = Object.keys(sources).map((idx) => sources[idx]);
   return (
     <Row>
-    {sourceArray.map(source =>
-      <SourceListItem key={source.media_id} source={source} />
+    {sourceArray.map(src =>
+      <CollectionInfoItem key={src.tags_id} source={src} />
     )}
     </Row>
   );
 };
 
-SourceList.propTypes = {
+
+CollectionInfo.propTypes = {
   sources: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(SourceList);
+export default injectIntl(CollectionInfo);

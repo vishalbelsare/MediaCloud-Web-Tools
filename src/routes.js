@@ -7,6 +7,7 @@ import TopicSummaryContainer from './components/topic/summary/TopicSummaryContai
 import SourceDetailsContainer from './components/source/details/SourceDetailsContainer';
 import SourceCollectionDetailsContainer from './components/source/details/SourceCollectionDetailsContainer';
 import SourceListContainer from './components/source/SourceListContainer';
+import CollectionListContainer from './components/source/CollectionListContainer';
 import { hasCookies } from './lib/auth';
 import { logout } from './actions/userActions';
 import store from './store';
@@ -37,8 +38,16 @@ const topicRoutes = (
 const sourceRoutes = (
   <Route path="/home" >
     <IndexRoute component={SourceListContainer} onEnter={requireAuth} />
-    <Route path="/source/:sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
-    <Route path="/collection/:sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
+    <Route path="/source" >
+        <IndexRoute component={SourceListContainer} onEnter={requireAuth} />
+        <Route path="/list" component={SourceListContainer} onEnter={requireAuth} />
+        <Route path="/:sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
+    </Route>
+    <Route path="/collection" >
+      <IndexRoute component={CollectionListContainer} onEnter={requireAuth} />
+      <Route path="./list" component={CollectionListContainer} onEnter={requireAuth} />
+        <Route path="/:sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
+    </Route>
   </Route>
 );
 

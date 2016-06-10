@@ -83,13 +83,13 @@ const mapStateToProps = (state) => ({
   // filters: state.sources.selected.filters,
   sourceId: state.sources.selected.id,
   sourceInfo: state.sources.selected.info,
-  fetchStatus: state.sources.selected.summary.sourceDetails.fetchStatus,
-  sources: state.sources.selected.summary.sourceDetails.list,
+  fetchStatus: state.sources.selected.details.sourceDetails.fetchStatus,
+  sources: state.sources.selected.details.sourceDetails.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
-    dispatch(selectSource(sourceId));
+    //dispatch(selectSource(sourceId));
     dispatch(fetchSourceDetails(sourceId));
   },
 });

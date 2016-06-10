@@ -6,15 +6,15 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import ErrorTryAgain from '../util/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
-import SourceList from './SourceList';
-import { fetchSourceList } from '../../actions/sourceActions';
+import CollectionList from './CollectionList';
+import { fetchSourceCollectionList } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const localMessages = {
-  sourcesListTitle: { id: 'sources.list.title', defaultMessage: 'List of Sources' },
+  collectionsListTitle: { id: 'sources.list.title', defaultMessage: 'List of Collections' },
 };
 
-class SourceListContainer extends React.Component {
+class SourceCollectionListContainer extends React.Component {
   componentDidMount() {
     const { fetchData } = this.props;
     fetchData();
@@ -29,13 +29,13 @@ class SourceListContainer extends React.Component {
   render() {
     const { sources, fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
-    const title = formatMessage(localMessages.sourcesListTitle);
+    const title = formatMessage(localMessages.collectionsListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SourceList sources={sources} />;
+        content = <CollectionList sources={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={fetchData} />;
@@ -59,29 +59,29 @@ class SourceListContainer extends React.Component {
   }
 }
 
-SourceListContainer.propTypes = {
+SourceCollectionListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   sources: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
 
-SourceListContainer.contextTypes = {
+SourceCollectionListContainer.contextTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.allsources.fetchStatus,
-  sources: state.sources.allsources.list,
+  fetchStatus: state.sources.allcollections.fetchStatus,
+  sources: state.sources.allcollections.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: () => {
-    dispatch(fetchSourceList());
+    dispatch(fetchSourceCollectionList());
   },
 });
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SourceListContainer));
+)(SourceCollectionListContainer));
