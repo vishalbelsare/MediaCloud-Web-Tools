@@ -1,5 +1,7 @@
 $font-stack: Droid Sans, Arial, Helvetica, sans;
 $primary-color: #222222;
+$brand-dark: #3c97bd;
+$brand-light: #4b9fcb;
 
 body {
   font-family: $font-stack;
@@ -30,34 +32,67 @@ table.small th {
 }
 
 header {
-  color: #ffffff;
-  background-color: #4b9fcb;
-  ul {
-    display: block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-family: 'Lato', sans-serif;
-    li {
+  font-family: 'Lato', sans-serif;
+  div.branding-toolbar {
+    color: #ffffff;
+    background-color: $brand-light;
+    ul {
       display: block;
-      float: left;
-      padding-left: 1em;
-      padding-right: 1em;
-      a {
-        font-size: 14px;
-        line-height: 1.4em;
-        text-decoration: none;
-        color: #ffffff;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      li {
+        display: block;
+        float: left;
+        padding-left: 1em;
+        padding-right: 1em;
+        a {
+          font-size: 14px;
+          line-height: 1.4em;
+          text-decoration: none;
+          color: #ffffff;
+        }
+      }
+      li.dashboard {
+          background-color: #e14c11;
+      }
+      li.sources {
+          background-color: rgb(85, 134, 138);
+      }
+      li.topics {
+          background-color: $brand-dark;
       }
     }
-    li.dashboard {
-        background-color: #e14c11;
-    }
-    li.sources {
-        background-color: rgb(85, 134, 138);
-    }
-    li.topics {
-        background-color: #3c97bd;
+  }
+  div.branding-masthead {
+    background-color: $brand-dark;
+    h1 {
+      font-size: 36px;
+      font-weight: 500;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      line-height: 1.1;
+      color: #ffffff;
+      img {
+        vertical-align: middle;
+        position: relative;
+        top: -0.33ex;
+        margin-right: 10px;
+      }
+      a {
+        text-decoration: none;
+      }
+      strong {
+        font-weight: 700;
+      }
+      small {
+        float: right;
+        margin-top: 50px;
+        font-size: 14px;
+        color: $brand-light;
+        vertical-align: baseline;
+        opacity: 0.5;
+      }
     }
   }
 }

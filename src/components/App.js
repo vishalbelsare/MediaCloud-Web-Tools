@@ -69,19 +69,35 @@ class App extends React.Component {
       <div>
         <Title render={formatMessage(messages.appTitle)} />
         <header>
-          <Grid>
-            <Row>
-              <Col lg={12}>
-                <div>
-                  <ul>
-                    <li className="dashboard"><a href="https://dashboard.mediameter.org/">Dashboard</a></li>
-                    <li className="sources"><a href="https://sources.mediameter.org/">Sources</a></li>
-                    <li className="topics"><a href="https://topics.mediameter.org/">Topics</a></li>
-                  </ul>
-                </div>
-              </Col>
-            </Row>
-          </Grid>
+          <div className="branding-toolbar">
+            <Grid>
+              <Row>
+                <Col lg={12}>
+                  <div>
+                    <ul>
+                      <li className="dashboard"><a href="https://dashboard.mediameter.org/">Dashboard</a></li>
+                      <li className="sources"><a href="https://sources.mediameter.org/">Sources</a></li>
+                      <li className="topics"><a href="https://topics.mediameter.org/">Topics</a></li>
+                    </ul>
+                  </div>
+                </Col>
+              </Row>
+            </Grid>
+          </div>
+          <div className="branding-masthead">
+            <Grid>
+              <Row>
+                <Col lg={12}>
+                  <h1>
+                    <a href="https://topics.mediameter.org"><img src={'/static/mm-logo-blue-2x.png'} width={65} height={65} /></a>
+                    <strong>MediaMeter</strong>
+                    &nbsp; Topic Mapper
+                    <small>analyze how the media frames a topic</small>
+                  </h1>
+                </Col>
+              </Row>
+            </Grid>
+          </div>
         </header>
         <AppBar
           title={formatMessage(messages.appTitle)}
