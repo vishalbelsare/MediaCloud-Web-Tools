@@ -28,7 +28,7 @@ class SourceListItem extends React.Component {
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`source/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
+          <Link to={`/sources/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
           <p style={styles.description}>{source.url}</p>
           <p style={styles.description}>{source.tag}</p>
         </Paper>

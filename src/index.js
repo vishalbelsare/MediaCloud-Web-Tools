@@ -10,7 +10,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { hasCookies, getCookies } from './lib/auth';
 import { loginWithKey } from './actions/userActions';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import routes from './routes';
+import routes from './routes/routes.js';
 import store from './store';
 
 // necessary lines for Material-UI library to work
