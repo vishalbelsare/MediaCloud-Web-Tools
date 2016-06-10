@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
-import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
-// import SourceTopWordsContainer from './SourceTopWordsContainer';
+import { fetchSourceDetails } from '../../../actions/sourceActions';
+import SourceTopWordsContainer from './SourceTopWordsContainer';
 // import SentenceCountContainer from './SentenceCountContainer';
 // import { Link } from 'react-router';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+import SourceControlBar from '../controlbar/SourceControlBar';
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
@@ -30,7 +31,11 @@ class SourceDetailsContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, sources, fetchData, fetchStatus } = this.props;
+    const { sources, fetchData, fetchStatus } = this.props;
+    let { sourceId } = this.props;
+    if (sourceId === null) {
+      sourceId = this.props.params.sourceId;
+    }
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.sourceName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -53,8 +58,11 @@ class SourceDetailsContainer extends React.Component {
         <h3>Source Id: {sources.media_id} </h3>
           <Row>
             <Col lg={12}>
-              <h2>{title}</h2>      
+              <h2>{title}</h2>
               {content}
+            </Col>
+            <Col lg={6}>
+              <SourceTopWordsContainer sourceId={sourceId} />
             </Col>
           </Row>
         </Grid>
@@ -69,7 +77,7 @@ SourceDetailsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
  // filters: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
-  sourceId: React.PropTypes.number,
+  sourceId: React.PropTypes.string.isRequired,
   sourceInfo: React.PropTypes.object,
   sources: React.PropTypes.object.isRequired,
 };

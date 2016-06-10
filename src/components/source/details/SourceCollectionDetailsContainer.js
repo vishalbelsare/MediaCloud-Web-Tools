@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
-import { selectSource, fetchSourceCollectionDetails } from '../../../actions/sourceActions';
+import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 // import SourceTopWordsContainer from './SourceTopWordsContainer';
 // import SentenceCountContainer from './SentenceCountContainer';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';

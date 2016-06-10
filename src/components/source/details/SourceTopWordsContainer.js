@@ -9,10 +9,10 @@ import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
 const localMessages = {
-  title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
+  title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
 };
 
-class SourceTopStoriesContainer extends React.Component {
+class SourceTopWordsContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus, sourceId, filters, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
@@ -60,30 +60,30 @@ class SourceTopStoriesContainer extends React.Component {
   }
 }
 
-SourceTopStoriesContainer.propTypes = {
+SourceTopWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
-  sourceId: React.PropTypes.number.isRequired,
+  sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.summary.topWords.fetchStatus,
-  words: state.sources.selected.summary.topWords.list,
+  fetchStatus: state.sources.selected.details.topWords.fetchStatus,
+  words: state.sources.selected.details.topWords.list.wordcounts,
   filters: state.sources.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId, snapshotId, timespanId) => {
-    if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchSourceTopWords(sourceId, snapshotId, timespanId));
-    }
+    // if ((snapshotId !== null) && (timespanId !== null)) {
+    dispatch(fetchSourceTopWords(sourceId, snapshotId, timespanId));
+    // }
   },
 });
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SourceTopStoriesContainer));
+)(SourceTopWordsContainer));
