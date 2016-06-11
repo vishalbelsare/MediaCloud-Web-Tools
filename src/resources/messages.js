@@ -15,7 +15,6 @@ const messages = {
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
-  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter Topic Mapper' },
   userLogin: { id: 'user.login', defaultMessage: 'Login' },
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
 
@@ -45,6 +44,7 @@ const messages = {
   storyTitle: { id: 'story.title', defaultMessage: 'Title' },
   storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
 
+  error: { id: 'error', defaultMessage: 'Error' },
 };
 
 export default messages;
