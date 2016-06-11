@@ -75,26 +75,23 @@ export function fetchSourceSentenceCount(id) {
   };
 }
 
-export function fetchSourceTopWords(itemId, snapshotId, timespanId, sort) {
+export function fetchSourceTopWords(id, snapshotId, timespanId, sort) {
   return {
     type: FETCH_SOURCE_TOP_WORDS,
     payload: {
-      promise: api.topWords(itemId, snapshotId, timespanId, sort),
+      promise: api.sourceWordCount(id, snapshotId, timespanId, sort),
     },
   };
 }
 
-export function fetchSourceCollectionTopWords(itemId, snapshotId, timespanId, sort) {
+export function fetchSourceCollectionTopWords(id, snapshotId, timespanId, sort) {
   return {
     type: FETCH_SOURCE_COLLECTION_TOP_WORDS,
     payload: {
-      promise: api.topWords(itemId, snapshotId, timespanId, sort),
+      promise: api.sourceWordCount(id, snapshotId, timespanId, sort),
     },
   };
 }
-
-/*
-
 
 export function filterBySnapshot(id) {
   return {
@@ -127,5 +124,5 @@ export function fetchSourceSnapshotTimespansList(itemId, snapshotId) {
       promise: api.snapshotTimespansList(itemId, snapshotId),
     },
   };
-}*/
+}
 

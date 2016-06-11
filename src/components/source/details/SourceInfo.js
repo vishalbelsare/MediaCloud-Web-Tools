@@ -27,13 +27,12 @@ class SourceInfoItem extends React.Component {
     return (
       <Grid>
           <Row>
-            <h3>Related Tags: </h3>
             <Col xs={12} sm={6} md={3} lg={3}>
               <h3> {source.tags_id}</h3>
-              <Link to={`sourcesummary/${source.tag_sets_id}/details`} style={styles.name}>{source.label}</Link>
+              <Link to={`collection/${source.tags_id}/details`} style={styles.name}>{source.label}</Link>
             </Col>
           </Row>
-        </Grid>
+      </Grid>
     );
   }
 }
@@ -44,14 +43,17 @@ SourceInfoItem.propTypes = {
 
 
 const SourceInfo = (props) => {
-  const { sources } = props;
-  const sourceArray = Object.keys(sources).map((idx) => sources[idx]);
+  const { media_source_tags } = props.sources;
+  const sourceArray = Object.keys(media_source_tags).map((idx) => media_source_tags[idx]);
   return (
-    <Row>
-    {sourceArray.map(src =>
-      <SourceInfoItem key={src.tags_id} source={src} />
-    )}
-    </Row>
+    <Grid>
+      <h4>Related Tags: </h4>
+      <Row>
+      {sourceArray.map(src =>
+        <SourceInfoItem key={src.tags_id} source={src} />
+      )}
+      </Row>
+    </Grid>
   );
 };
 

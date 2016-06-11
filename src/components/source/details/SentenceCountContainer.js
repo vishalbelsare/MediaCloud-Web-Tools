@@ -14,15 +14,15 @@ const localMessages = {
 
 class SentenceCountContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, itemId, filters, fetchData } = this.props;
+    const { fetchStatus, sourceId, filters, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(itemId, filters.snapshotId, filters.timespanId);
+      fetchData(sourceId, filters.snapshotId, filters.timespanId);
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.filters !== this.props.filters) {
-      const { itemId, fetchData } = this.props;
-      fetchData(itemId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
+      const { sourceId, fetchData } = this.props;
+      fetchData(sourceId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
     }
   }
   getStyles() {
@@ -34,7 +34,7 @@ class SentenceCountContainer extends React.Component {
     return styles;
   }
   render() {
-    const { itemId, fetchStatus, fetchData, total, counts } = this.props;
+    const { sourceId, fetchStatus, fetchData, total, counts } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -64,23 +64,23 @@ SentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
-  itemId: React.PropTypes.number.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.topics.selected.summary.sentenceCount.fetchStatus,
-  total: state.topics.selected.summary.sentenceCount.total,
-  counts: state.topics.selected.summary.sentenceCount.list,
-  filters: state.topics.selected.filters,
+  fetchStatus: state.source.selected.details.sentenceCount.fetchStatus,
+  total: state.source.selected.details.sentenceCount.total,
+  counts: state.source.selected.details.sentenceCount.list,
+  filters: state.source.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (itemId, snapshotId, timespanId) => {
+  fetchData: (sourceId, snapshotId, timespanId) => {
     if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchSentenceCounts(itemId, snapshotId, timespanId));
+      dispatch(fetchSentenceCounts(sourceId, snapshotId, timespanId));
     }
   },
 });
