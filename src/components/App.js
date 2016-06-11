@@ -1,22 +1,16 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-
 import { FormattedMessage, injectIntl } from 'react-intl';
+import BrandToolbar from './branding/BrandToolbar';
+import BrandMasthead from './branding/BrandMasthead';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
-
+import messages from '../resources/messages';
 import FullWidthSection from '../components/util/FullWidthSection';
-
-const messages = {
-  footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
-  footerBerkman: { id: 'footer.berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
-  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter Topic Mapper' },
-  appLogin: { id: 'app.login', defaultMessage: 'Login' },
-  appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
-};
+import { APP_NAME } from '../config';
+import { BRAND_COLORS } from '../styles/colors';
 
 class App extends React.Component {
 
@@ -59,45 +53,34 @@ class App extends React.Component {
     const { children, user } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
+    const brandColors = BRAND_COLORS[APP_NAME];
+    let toolNameMessage = null;
+    let tooldescriptionMessage = null;
+    switch( APP_NAME ){
+      case 'sources':
+        toolNameMessage = messages.sourcesToolName;
+        tooldescriptionMessage = messages.sourcesToolDescription;
+        break;
+      case 'topics':
+        toolNameMessage = messages.topicsToolName;
+        tooldescriptionMessage = messages.topicsToolDescription;
+        break;
+    }
     let loginLogoutButton = null;
     if (user.isLoggedIn) {
-      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogout)} onTouchTap={this.onRouteToLogout} />;
+      loginLogoutButton = <FlatButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
     } else {
-      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogin)} onTouchTap={this.onRouteToLogin} />;
+      loginLogoutButton = <FlatButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
     }
     return (
       <div>
         <Title render={formatMessage(messages.appTitle)} />
         <header>
-          <div className="branding-toolbar">
-            <Grid>
-              <Row>
-                <Col lg={12}>
-                  <div>
-                    <ul>
-                      <li className="dashboard"><a href="https://dashboard.mediameter.org/">Dashboard</a></li>
-                      <li className="sources"><a href="https://sources.mediameter.org/">Sources</a></li>
-                      <li className="topics"><a href="https://topics.mediameter.org/">Topics</a></li>
-                    </ul>
-                  </div>
-                </Col>
-              </Row>
-            </Grid>
-          </div>
-          <div className="branding-masthead">
-            <Grid>
-              <Row>
-                <Col lg={12}>
-                  <h1>
-                    <a href="https://topics.mediameter.org"><img src={'/static/mm-logo-blue-2x.png'} width={65} height={65} /></a>
-                    <strong>MediaMeter</strong>
-                    &nbsp; Topic Mapper
-                    <small>analyze how the media frames a topic</small>
-                  </h1>
-                </Col>
-              </Row>
-            </Grid>
-          </div>
+          <BrandToolbar backgroundColor={brandColors.light} />
+          <BrandMasthead name={formatMessage(toolNameMessage)}
+            description={formatMessage(tooldescriptionMessage)}
+            backgroundColor={brandColors.dark}
+          />
         </header>
         <AppBar
           title={formatMessage(messages.appTitle)}
@@ -112,14 +95,11 @@ class App extends React.Component {
           <p style={styles.p}><small>
             {'Created by '}
             <a style={styles.a} href="https://civic.mit.edu/">
-              <FormattedMessage {...messages.footerC4CM} />
+              <FormattedMessage {...messages.c4cmName} />
             </a>
             {' and '}
-            <a
-              style={styles.a}
-              href="https://cyber.law.harvard.edu"
-            >
-              <FormattedMessage {...messages.footerBerkman} />
+            <a style={styles.a} href="https://cyber.law.harvard.edu">
+              <FormattedMessage {...messages.berkmanName} />
             </a>.
           </small>
           </p>
