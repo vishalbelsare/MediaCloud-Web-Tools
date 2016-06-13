@@ -1,42 +1,14 @@
-import { resolve, reject } from 'redux-simple-promise';
 import { FETCH_TOPIC_LIST } from '../../actions/topicActions';
+import { createAsyncReducer, arrayToDict } from '../../lib/reduxHelpers';
 
-import * as fetchConstants from '../../lib/fetchConstants.js';
-
-// TODO: replace this with normalizr? https://github.com/gaearon/normalizr
-function arrayToDict(arr, keyPropertyName) {
-  const dict = {};
-  arr.forEach((item) => {
-    dict[item[keyPropertyName]] = item;
-  });
-  return dict;
-}
-
-const INITIAL_STATE = {
-  fetchStatus: fetchConstants.FETCH_INVALID,
-  list: {},
-};
-
-function all(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case FETCH_TOPIC_LIST:
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_ONGOING,
-        list: {},
-      });
-    case resolve(FETCH_TOPIC_LIST):
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: arrayToDict(action.payload.results, 'controversies_id'),
-      });
-    case reject(FETCH_TOPIC_LIST):
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_FAILED,
-        list: {},
-      });
-    default:
-      return state;
-  }
-}
+const all = createAsyncReducer({
+  initialState: {
+    list: {},
+  },
+  action: FETCH_TOPIC_LIST,
+  handleFetch: () => ({ list: {} }),
+  handleSuccess: (payload) => ({ list: arrayToDict(payload.results, 'controversies_id') }),
+  handleFailure: () => ({ list: {} }),
+});
 
 export default all;

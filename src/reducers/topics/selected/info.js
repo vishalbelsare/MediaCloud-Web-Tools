@@ -1,29 +1,12 @@
-import { resolve, reject } from 'redux-simple-promise';
 import { FETCH_TOPIC_SUMMARY } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
-const INITIAL_STATE = {
-  fetchStatus: fetchConstants.FETCH_INVALID,
-};
-
-function info(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case FETCH_TOPIC_SUMMARY:
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_ONGOING,
-      });
-    case resolve(FETCH_TOPIC_SUMMARY):
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        ...action.payload.results,
-      });
-    case reject(FETCH_TOPIC_SUMMARY):
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_FAILED,
-      });
-    default:
-      return state;
-  }
-}
+const info = createAsyncReducer({
+  initialState: {},
+  action: FETCH_TOPIC_SUMMARY,
+  handleFetch: () => ({}),
+  handleSuccess: (payload) => ({ ...payload.results }),
+  handleFailure: () => ({}),
+});
 
 export default info;
