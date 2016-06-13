@@ -17,26 +17,39 @@ import store from './store';
 const injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
-// load any cookies correctly
-if (hasCookies()) {
-  const cookies = getCookies();
-  store.dispatch(loginWithKey(cookies.email, cookies.key));
-}
-
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(hashHistory, store);
 
+
 // TODO: history.listen(location => analyticsService.track(location.pathname))
 
-ReactDOM.render(
-  <MuiThemeProvider muiTheme={getMuiTheme()}>
-    <Provider store={store}>
-      <IntlProvider locale="en">
-          <Router history={history}>
-            {routes}
-          </Router>
-      </IntlProvider>
-    </Provider>
-  </MuiThemeProvider>,
-  document.getElementById('app')
-);
+const renderApp = () => {
+  ReactDOM.render(
+    <MuiThemeProvider muiTheme={getMuiTheme()}>
+      <Provider store={store}>
+        <IntlProvider locale="en">
+            <Router history={history}>
+              {routes}
+            </Router>
+        </IntlProvider>
+      </Provider>
+    </MuiThemeProvider>,
+    document.getElementById('app')
+  );
+};
+
+// load any cookies correctly
+if (hasCookies()) {
+  const cookies = getCookies();
+  store.dispatch(loginWithKey(cookies.email, cookies.key))
+    .then((results) => {
+      if (results.hasOwnProperty('status') && (results.status !== 200)) {
+        if (window.location.href.indexOf('login') === -1) {
+          window.location = '/#/login';
+        }
+      }
+      renderApp();
+    });
+} else {
+  renderApp();
+}
