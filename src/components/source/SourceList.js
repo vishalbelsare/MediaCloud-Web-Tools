@@ -28,7 +28,7 @@ class SourceListItem extends React.Component {
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`/sources/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
+          <Link to={`/source/${source.media_id}/details`} style={styles.name}>{source.name}</Link>
           <p style={styles.description}>{source.url}</p>
         </Paper>
       </Col>
@@ -46,7 +46,7 @@ const SourceList = (props) => {
   return (
     <Row>
     {sourceArray.map(source =>
-      <SourceListItem key={source.id} source={source.name} />
+      <SourceListItem key={source.media_id} source={source} />
     )}
     </Row>
   );

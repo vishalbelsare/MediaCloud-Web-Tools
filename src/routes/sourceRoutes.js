@@ -9,15 +9,14 @@ import requireAuth from './routes.js';
 const sourceRoutes = (
   <Route path="/sources" >
     <Route path="/home" component={SourceListContainer} onEnter={requireAuth} />
-    <Route path="/sources" >
-        <IndexRoute component={SourceListContainer} onEnter={requireAuth} />
-        <Route path="/sources/list" component={SourceListContainer} onEnter={requireAuth} />
-        <Route path="/sources/:sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
+    <Route path="/source" >
+        <Route path="list" component={SourceListContainer} onEnter={requireAuth} />
+        <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
     </Route>
-    <Route path="/collections" >
+    <Route path="/collection" >
       <IndexRoute component={CollectionListContainer} onEnter={requireAuth} />
-      <Route path="/collections/list" component={CollectionListContainer} onEnter={requireAuth} />
-      <Route path="/collections/:sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
+      <Route path="list" component={CollectionListContainer} onEnter={requireAuth} />
+      <Route path=":sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
     </Route>
   </Route>
 );
