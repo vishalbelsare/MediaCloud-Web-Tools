@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SentenceCount from '../../vis/SentenceCount';
-import { fetchSentenceCounts } from '../../../actions/sourceActions';
+import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
@@ -42,7 +42,7 @@ class SentenceCountContainer extends React.Component {
         content = <SentenceCount total={total} counts={counts} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData(itemId)} />;
+        // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -71,17 +71,17 @@ SentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.source.selected.details.sentenceCount.fetchStatus,
-  total: state.source.selected.details.sentenceCount.total,
-  counts: state.source.selected.details.sentenceCount.list,
-  filters: state.source.selected.filters,
+  fetchStatus: state.sources.selected.details.sentenceCount.fetchStatus,
+  total: state.sources.selected.details.sentenceCount.total,
+  counts: state.sources.selected.details.sentenceCount.list,
+  filters: state.sources.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId, snapshotId, timespanId) => {
-    if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchSentenceCounts(sourceId, snapshotId, timespanId));
-    }
+   // if ((snapshotId !== null) && (timespanId !== null)) {
+      dispatch(fetchSourceSentenceCount(sourceId, null, null));
+   // }
   },
 });
 

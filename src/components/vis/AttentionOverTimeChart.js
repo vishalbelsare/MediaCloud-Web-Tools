@@ -50,7 +50,7 @@ class AttentionOverTime extends React.Component {
     config.title = { text: title };
     config.chart.height = height;
     config.yAxis.title = { text: yAxisLabel };
-    config.exporting.filename = title;
+    // config.exporting.filename = title;
     config.series = data;
     if (onDataPointClick !== null) {
       config.plotOptions.series.point = { events: { click: onDataPointClick } };

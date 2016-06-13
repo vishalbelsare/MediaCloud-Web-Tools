@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { FETCH_SENTENCE_COUNT } from '../../../../actions/sourceActions.js';
+import { FETCH_SOURCE_SENTENCE_COUNT } from '../../../../actions/sourceActions.js';
 import * as fetchConstants from '../../../../lib/fetchConstants.js';
 
 const INITIAL_STATE = {
@@ -10,24 +10,24 @@ const INITIAL_STATE = {
 
 function sentenceCount(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_SENTENCE_COUNT:
+    case FETCH_SOURCE_SENTENCE_COUNT:
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_ONGOING,
       });
-    case resolve(FETCH_SENTENCE_COUNT):
-      const cleanedCounts = action.payload.results.counts.map((d) => {
-        const ymd = d.date.substr(0, 10).split('-');
+    case resolve(FETCH_SOURCE_SENTENCE_COUNT):
+      const cleanedCounts = action.payload.results.sentenceCounts.map((d) => {
+        const ymd = d.timespanStart.substr(0, 10).split('-');
         const dateObj = new Date(Date.UTC(ymd[0], ymd[1] - 1, ymd[2]));
         return { date: dateObj, count: d.count };
       });
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        total: action.payload.results.total,
+        total: action.payload.results.sentenceCounts.length,
         list: cleanedCounts,
       });
-    case reject(FETCH_SENTENCE_COUNT):
+    case reject(FETCH_SOURCE_SENTENCE_COUNT):
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_FAILED,

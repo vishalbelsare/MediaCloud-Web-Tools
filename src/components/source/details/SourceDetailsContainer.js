@@ -7,7 +7,7 @@ import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceDetails } from '../../../actions/sourceActions';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
-// import SentenceCountContainer from './SentenceCountContainer';
+import SentenceCountContainer from './SentenceCountContainer';
 // import { Link } from 'react-router';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
@@ -64,6 +64,10 @@ class SourceDetailsContainer extends React.Component {
             <Col lg={6}>
               <SourceTopWordsContainer sourceId={sourceId} />
             </Col>
+            <Col lg={6}>
+              <SentenceCountContainer sourceId={sourceId} />
+            </Col>
+
           </Row>
         </Grid>
       </div>
