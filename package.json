@@ -13,6 +13,7 @@
     "d3": "^3.5.17",
     "d3-cloud": "^1.2.1",
     "flexboxgrid": "^6.3.0",
+    "highcharts-exporting": "^0.1.2",
     "highcharts-more": "^0.1.2",
     "highcharts-offline-exporting": "^0.1.2",
     "if-env": "^1.0.0",

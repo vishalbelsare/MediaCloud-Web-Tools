@@ -1,31 +1,16 @@
 import React from 'react';
 import Title from 'react-title-component';
-
 import { FormattedMessage, injectIntl } from 'react-intl';
-import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton';
+import BrandToolbar from './branding/BrandToolbar';
+import BrandMasthead from './branding/BrandMasthead';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
-
+import messages from '../resources/messages';
 import FullWidthSection from '../components/util/FullWidthSection';
-
-const messages = {
-  footerC4CM: { id: 'footer.c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
-  footerBerkman: { id: 'footer.berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
-  appTitle: { id: 'app.title', defaultMessage: 'MediaMeter Topic Mapper' },
-  appLogin: { id: 'app.login', defaultMessage: 'Login' },
-  appLogout: { id: 'app.logout', defaultMessage: 'Logout' },
-};
+import { APP_NAME } from '../config';
+import { BRAND_COLORS } from '../styles/colors';
 
 class App extends React.Component {
-
-  onRouteToLogout = () => {
-    this.context.router.push('/logout');
-  }
-
-  onRouteToLogin = () => {
-    this.context.router.push('/logout');
-  }
 
   getStyles() {
     const styles = {
@@ -55,24 +40,35 @@ class App extends React.Component {
   }
 
   render() {
-    const { children, user } = this.props;
+    const { children } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
-    let loginLogoutButton = null;
-    if (user.isLoggedIn) {
-      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogout)} onTouchTap={this.onRouteToLogout} />;
-    } else {
-      loginLogoutButton = <FlatButton label={formatMessage(messages.appLogin)} onTouchTap={this.onRouteToLogin} />;
+    const brandColors = BRAND_COLORS[APP_NAME];
+    let toolNameMessage = null;
+    let tooldescriptionMessage = null;
+    switch (APP_NAME) {
+      case 'sources':
+        toolNameMessage = messages.sourcesToolName;
+        tooldescriptionMessage = messages.sourcesToolDescription;
+        break;
+      case 'topics':
+        toolNameMessage = messages.topicsToolName;
+        tooldescriptionMessage = messages.topicsToolDescription;
+        break;
+      default:
+        toolNameMessage = messages.error;
+        tooldescriptionMessage = messages.error;
     }
     return (
       <div>
-        <Title render={formatMessage(messages.appTitle)} />
-        <AppBar
-          title={formatMessage(messages.appTitle)}
-          zDepth={0}
-          iconELementLeft={<div></div>}
-          iconElementRight={loginLogoutButton}
-        />
+        <Title render={formatMessage(messages.suiteName)} />
+        <header>
+          <BrandToolbar backgroundColor={brandColors.light} />
+          <BrandMasthead name={formatMessage(toolNameMessage)}
+            description={formatMessage(tooldescriptionMessage)}
+            backgroundColor={brandColors.dark}
+          />
+        </header>
         <div style={styles.root}>
           {children}
         </div>
@@ -80,14 +76,11 @@ class App extends React.Component {
           <p style={styles.p}><small>
             {'Created by '}
             <a style={styles.a} href="https://civic.mit.edu/">
-              <FormattedMessage {...messages.footerC4CM} />
+              <FormattedMessage {...messages.c4cmName} />
             </a>
             {' and '}
-            <a
-              style={styles.a}
-              href="https://cyber.law.harvard.edu"
-            >
-              <FormattedMessage {...messages.footerBerkman} />
+            <a style={styles.a} href="https://cyber.law.harvard.edu">
+              <FormattedMessage {...messages.berkmanName} />
             </a>.
           </small>
           </p>
@@ -102,7 +95,6 @@ App.propTypes = {
   children: React.PropTypes.node,
   handleTouchTapLeftIconButton: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object.isRequired,
 };
 
 App.contextTypes = {
@@ -110,8 +102,4 @@ App.contextTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-});
-
-export default injectIntl(connect(mapStateToProps, null)(App));
+export default injectIntl(connect(null, null)(App));

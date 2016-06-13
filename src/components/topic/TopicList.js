@@ -28,7 +28,7 @@ class TopicListItem extends React.Component {
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`/topic/${topic.controversies_id}`} style={styles.name}>{topic.name}</Link>
+          <Link to={`/topics/${topic.controversies_id}`} style={styles.name}>{topic.name}</Link>
           <p style={styles.description}>{topic.description}</p>
         </Paper>
       </Col>

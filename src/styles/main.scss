@@ -1,11 +1,13 @@
+@import '_branding';
+
 $font-stack: Droid Sans, Arial, Helvetica, sans;
 $primary-color: #222222;
 
 body {
-    font-family: $font-stack;
-    color: $primary-color;
-    margin: 0px;
-    padding: 0px;
+  font-family: $font-stack;
+  color: $primary-color;
+  margin: 0px;
+  padding: 0px;
 }
 
 h2 {
@@ -19,12 +21,12 @@ table.small {
 
 table.small th {
 	font-family: 'Roboto';
-   	font-weight: bold;
-    font-size: 13px;
-    text-align: left;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgb(158, 158, 158);
+ 	font-weight: bold;
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgb(158, 158, 158);
 	position: relative;
 	background-color: inherit;
 }

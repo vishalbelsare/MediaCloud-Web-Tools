@@ -11,6 +11,7 @@ import { hasCookies } from './lib/auth';
 import { logout } from './actions/userActions';
 import store from './store';
 import { Route, IndexRoute } from 'react-router';
+import { APP_NAME } from './config';
 
 // We need to restrict some routes to only users that are logged in
 function requireAuth(nextState, replace) {
@@ -27,8 +28,6 @@ function onEnterLogout(nextState, replaceState) {
   store.dispatch(logout());
   replaceState('/login');
 }
-
-const appName = 'sources';
 
 const topicRoutes = (
   <Route path="/topics" component={TopicListContainer} onEnter={requireAuth} >
@@ -52,7 +51,7 @@ const sourceRoutes = (
 );
 
 let appRoutes = null;
-switch (appName) {
+switch (APP_NAME) {
   case 'topics':
     appRoutes = topicRoutes;
     break;

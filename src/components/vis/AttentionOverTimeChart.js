@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
-import HighchartsMore from 'highcharts-more';
-HighchartsMore(ReactHighcharts.Highcharts);
-import HighchartsOfflineExporting from 'highcharts-offline-exporting';
+import highchartsMore from 'highcharts-more';
+highchartsMore(ReactHighcharts.Highcharts);
+import highchartsExporting from 'highcharts-exporting';
+highchartsExporting(ReactHighcharts.Highcharts);
+
+// import HighchartsOfflineExporting from 'highcharts-offline-exporting';
+// HighchartsOfflineExporting(ReactHighcharts.Highcharts);
 
 class AttentionOverTime extends React.Component {
 
@@ -34,12 +38,6 @@ class AttentionOverTime extends React.Component {
       },
       yAxis: {
         min: 0,
-      },
-      exporting: {
-        filename: 'mediacloud-pulse',
-        scale: 3,
-        sourceWidth: 1150,
-        sourceHeight: 200,
       },
     };
     return config;
