@@ -64,7 +64,7 @@ SentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
-  sourceId: React.PropTypes.number.isRequired,
+  sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,

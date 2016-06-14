@@ -23,16 +23,17 @@ class SourceInfoItem extends React.Component {
   }
   render() {
     const { source } = this.props;
+    const { show_on_media } = this.props.source;
     const styles = this.getStyles();
+    let content = <div />;
+    if (show_on_media === 1) {
+      content = (<Grid><Row><Col xs={12} sm={6} md={3} lg={3}>
+        <h3>{ source.tags_id }</h3>
+        <Link to={'collection/${source.tags_id}/details'} style={styles.name} > {source.label} </Link>
+        </Col></Row></Grid>);
+    }
     return (
-      <Grid>
-          <Row>
-            <Col xs={12} sm={6} md={3} lg={3}>
-              <h3> {source.tags_id}</h3>
-              <Link to={`collection/${source.tags_id}/details`} style={styles.name}>{source.label}</Link>
-            </Col>
-          </Row>
-      </Grid>
+      content
     );
   }
 }

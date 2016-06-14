@@ -81,7 +81,7 @@ SourceDetailsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
  // filters: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.string,
   sourceInfo: React.PropTypes.object,
   sources: React.PropTypes.object.isRequired,
 };
