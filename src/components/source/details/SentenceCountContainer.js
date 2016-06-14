@@ -78,9 +78,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (sourceId, snapshotId, timespanId) => {
+  fetchData: (sourceId) => {
    // if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchSourceSentenceCount(sourceId, null, null));
+    dispatch(fetchSourceSentenceCount(sourceId));
    // }
   },
 });

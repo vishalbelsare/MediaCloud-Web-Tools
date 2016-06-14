@@ -19,7 +19,7 @@ function sentenceCount(state = INITIAL_STATE, action) {
       const cleanedCounts = action.payload.results.sentenceCounts.map((d) => {
         const ymd = d.timespanStart.substr(0, 10).split('-');
         const dateObj = new Date(Date.UTC(ymd[0], ymd[1] - 1, ymd[2]));
-        return { date: dateObj, count: d.count };
+        return { date: dateObj, count: d.sentenceCount };
       });
       return Object.assign({}, state, {
         ...state,

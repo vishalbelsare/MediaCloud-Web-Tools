@@ -109,7 +109,7 @@ def _get_media_source_health(media_id):
 def _get_media_source_details(media_id, start_date_str = None):
     info = mc.media(media_id)
     info['id'] = media_id
-    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
+    info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
     info['feedCount'] = len(mc.feedList(media_id=media_id,rows=100))
     return info
 
