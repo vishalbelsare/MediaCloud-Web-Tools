@@ -78,8 +78,8 @@ def _get_media_tag_details(media_tag_id):
 #@flask_login.login_required
 def api_media_source_details(media_id):
     health = _get_media_source_health(media_id)
+    info = {}
     info = _get_media_source_details(media_id, health['start_date'][:10])
-    info['health'] = health
     return jsonify({'results':info})
 
 @app.route('/api/sources/media-tag/<media_tag_id>/sentences/count', methods=['GET'])
@@ -95,6 +95,7 @@ def api_media_tag_sentence_count(media_tag_id):
 def api_media_source_sentence_count(media_id):
     health = _get_media_source_health(media_id)
     info = {}
+    info['health'] = health
     info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], health['start_date'][:10] )
     return jsonify({'results':info})
 
@@ -132,6 +133,7 @@ def _recent_sentence_counts(fq, start_date_str=None):
     del sentences_over_time['end']
     del sentences_over_time['gap']
     del sentences_over_time['start']
+
     return [{'timespanStart':d,'sentenceCount':s} for (d, s) in sentences_over_time.iteritems()]
 ##??
 

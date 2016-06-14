@@ -24,7 +24,7 @@ class SentenceCount extends React.Component {
   }
 
   render() {
-    const { total, counts } = this.props;
+    const { total, counts, health } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     return (
@@ -37,6 +37,7 @@ class SentenceCount extends React.Component {
         <AttentionOverTimeChart data={counts} height={250}
           title={ formatMessage(localMessages.chartTitle) }
           yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
+          health={ health }
         />
       </div>
     );
@@ -47,6 +48,7 @@ class SentenceCount extends React.Component {
 SentenceCount.propTypes = {
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
+  health: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
 };
 
