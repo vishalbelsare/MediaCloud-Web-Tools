@@ -15,25 +15,34 @@ export function createAsyncReducer(handlers) {
     fetchStatus: fetchConstants.FETCH_INVALID,
     ...handlers.initialState,
   };
+  const reducers = {};
+  const asyncCallbackNames = ['handleFetch', 'handleSuccess', 'handleFetch'];
+  asyncCallbackNames.forEach((name) => {
+    if (handlers.hasOwnProperty(name)) {
+      reducers[name] = handlers[name];
+    } else {
+      reducers[name] = () => ({});
+    }
+  });
   return (state = initialState, action) => {
     switch (action.type) {
       case handlers.action:
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_ONGOING,
-          ...handlers.handleFetch(action.payload),
+          ...reducers.handleFetch(action.payload),
         });
       case resolve(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-          ...handlers.handleSuccess(action.payload),
+          ...reducers.handleSuccess(action.payload),
         });
       case reject(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_FAILED,
-          ...handlers.handleFailure(action.payload),
+          ...reducers.handleFailure(action.payload),
         });
       default:
         return state;
