@@ -19,7 +19,7 @@ function topMedia(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: action.payload.results,
+        ...action.payload,
       });
     case reject(FETCH_TOPIC_TOP_MEDIA):
       return Object.assign({}, state, {

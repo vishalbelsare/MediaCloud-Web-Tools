@@ -11,26 +11,25 @@ logger = logging.getLogger(__name__)
 #@flask_login.login_required
 def api_topics_list():
     controversy_list = mc.controversyList()
-    return jsonify({'results':controversy_list})
+    return jsonify({'list':controversy_list})
 
 @app.route('/api/topics/<topic_id>/summary', methods=['GET'])
 #@flask_login.login_required
 def api_topics_summary(topic_id):
     controversy = mc.controversy(topic_id)
-    return jsonify({'results':controversy})
+    return jsonify(controversy)
 
 @app.route('/api/topics/<topic_id>/snapshots/list', methods=['GET'])
 #@flask_login.login_required
 def api_topics_snapshots_list(topic_id):
     snapshots = mc.controversyDumpList(topic_id)
-    return jsonify({'results':snapshots})
-
+    return jsonify({'list':snapshots})
 
 @app.route('/api/topics/<topic_id>/snapshots/<snapshot_id>/timespans/list', methods=['GET'])
 #@flask_login.login_required
 def api_topics_timespan_list(topic_id,snapshot_id):
     snapshots = mc.controversyDumpTimeSliceList(snapshot_id)
-    return jsonify({'results':snapshots})
+    return jsonify({'list':snapshots})
 
 @app.route('/api/topics/<topic_id>/top-stories', methods=['GET'])
 #@flask_login.login_required
@@ -42,7 +41,7 @@ def api_topics_top_stories(topic_id):
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
     stories = mc.topicStoryList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,limit=25,sort=sort)
-    return jsonify({'results':stories})
+    return jsonify({'list':stories})
 
 @app.route('/api/topics/<topic_id>/top-media', methods=['GET'])
 #@flask_login.login_required
@@ -54,15 +53,15 @@ def api_topics_top_media(topic_id):
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
     media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort)[:25]
-    return jsonify({'results':media})
+    return jsonify({'list':media})
 
 @app.route('/api/topics/<topic_id>/top-words', methods=['GET'])
 #@flask_login.login_required
 def api_topics_top_words(topic_id):
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
-    media = mc.topicWordCount(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id)[:100]
-    return jsonify({'results':media})
+    words = mc.topicWordCount(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id)[:100]
+    return jsonify({'list':words})
 
 @app.route('/api/topics/<topic_id>/sentences/count', methods=['GET'])
 #@flask_login.login_required
@@ -81,12 +80,10 @@ def api_topics_sentence_count(topic_id):
         counts.append({ 'date': k, 'count':v })
     counts = sorted(counts, key=itemgetter('date'))
     results = {
-        'results':{
-            'total': response['count'],
-            'gap': response['split']['gap'],
-            'end': response['split']['end'],
-            'start': response['split']['start'],
-            'counts': counts
-        }
+        'total': response['count'],
+        'gap': response['split']['gap'],
+        'end': response['split']['end'],
+        'start': response['split']['start'],
+        'counts': counts
     }
     return jsonify(results)

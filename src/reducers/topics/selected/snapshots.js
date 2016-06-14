@@ -6,9 +6,6 @@ const snapshots = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_SNAPSHOTS_LIST,
-  handleFetch: () => ({ list: [] }),
-  handleSuccess: (payload) => ({ list: payload.results }),
-  handleFailure: () => ({ list: [] }),
 });
 
 export default snapshots;

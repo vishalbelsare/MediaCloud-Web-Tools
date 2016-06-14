@@ -6,9 +6,6 @@ const timespans = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_TIMESPANS_LIST,
-  handleFetch: () => ({ list: [] }),
-  handleSuccess: (payload) => ({ list: payload.results }),
-  handleFailure: () => ({ list: [] }),
 });
 
 export default timespans;

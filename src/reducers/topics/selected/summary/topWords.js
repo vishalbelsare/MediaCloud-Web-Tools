@@ -6,9 +6,6 @@ const topWords = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_TOP_WORDS,
-  handleFetch: () => ({ list: [] }),
-  handleSuccess: (payload) => ({ list: payload.results }),
-  handleFailure: () => ({ list: [] }),
 });
 
 export default topWords;

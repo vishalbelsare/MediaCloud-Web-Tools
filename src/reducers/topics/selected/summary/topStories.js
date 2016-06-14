@@ -19,7 +19,7 @@ function topStories(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: action.payload.results,
+        ...action.payload,
       });
     case reject(FETCH_TOPIC_TOP_STORIES):
       return Object.assign({}, state, {

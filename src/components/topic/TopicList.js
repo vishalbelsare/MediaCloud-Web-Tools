@@ -42,10 +42,9 @@ TopicListItem.propTypes = {
 
 const TopicList = (props) => {
   const { topics } = props;
-  const topicsArray = Object.keys(topics).map((idx) => topics[idx]);
   return (
     <Row>
-    {topicsArray.map(topic =>
+    {topics.map(topic =>
       <TopicListItem key={topic.controversies_id} topic={topic} />
     )}
     </Row>
@@ -53,7 +52,7 @@ const TopicList = (props) => {
 };
 
 TopicList.propTypes = {
-  topics: React.PropTypes.object.isRequired,
+  topics: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 

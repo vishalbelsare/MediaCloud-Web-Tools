@@ -70,7 +70,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchTopicSnapshotsList(topicId))
       .then((response) => {
         if (snapshotId === null) {
-          dispatch(filterBySnapshot(response.results[0].controversy_dumps_id));
+          dispatch(filterBySnapshot(response.list[0].controversy_dumps_id));
         }
       });
   },

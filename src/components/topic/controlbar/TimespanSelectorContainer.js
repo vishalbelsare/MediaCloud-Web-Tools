@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchTopicSnapshotTimespansList(topicId, snapshotId))
       .then((response) => {
         if (timespanId === null) {
-          dispatch(filterByTimespan(response.results[0].controversy_dump_time_slices_id));
+          dispatch(filterByTimespan(response.list[0].controversy_dump_time_slices_id));
         }
       });
   },

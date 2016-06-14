@@ -1,6 +1,7 @@
 import { FETCH_TOPIC_SENTENCE_COUNT } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
+// Helper to change solr dates into javascript date ojects
 function cleanDateCounts(counts) {
   return counts.map((d) => {
     const ymd = d.date.substr(0, 10).split('-');
@@ -15,12 +16,10 @@ const sentenceCount = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_SENTENCE_COUNT,
-  handleFetch: () => ({ list: [], total: null }),
   handleSuccess: (payload) => ({
-    total: payload.results.total,
-    list: cleanDateCounts(payload.results.counts),
+    total: payload.total,
+    list: cleanDateCounts(payload.counts),
   }),
-  handleFailure: () => ({ list: [], total: null }),
 });
 
 export default sentenceCount;

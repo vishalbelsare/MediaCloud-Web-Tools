@@ -61,7 +61,7 @@ class TopicListContainer extends React.Component {
 
 TopicListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  topics: React.PropTypes.object.isRequired,
+  topics: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
