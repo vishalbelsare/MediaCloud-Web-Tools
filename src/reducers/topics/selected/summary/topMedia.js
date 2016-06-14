@@ -29,7 +29,7 @@ function topMedia(state = INITIAL_STATE, action) {
     case SORT_TOPIC_TOP_MEDIA:
       return Object.assign({}, state, {
         ...state,
-        sort: action.payload.sort,
+        sort: action.payload,
       });
     default:
       return state;

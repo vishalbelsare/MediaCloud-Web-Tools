@@ -10,12 +10,12 @@ function info(state = INITIAL_STATE, action) {
     case TOPIC_FILTER_BY_SNAPSHOT:
       return Object.assign({}, state, {
         ...state,
-        snapshotId: parseInt(action.payload.id, 10),
+        snapshotId: parseInt(action.payload, 10),
       });
     case TOPIC_FILTER_BY_TIMESPAN:
       return Object.assign({}, state, {
         ...state,
-        timespanId: parseInt(action.payload.id, 10),
+        timespanId: parseInt(action.payload, 10),
       });
     default:
       return state;

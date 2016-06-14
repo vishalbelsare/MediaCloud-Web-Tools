@@ -1,5 +1,6 @@
 import * as api from '../lib/topics';
-
+import { createAction } from 'redux-actions';
+import { createAsyncAction } from '../lib/reduxHelpers';
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
@@ -14,109 +15,40 @@ export const FETCH_TOPIC_SNAPSHOTS_LIST = 'FETCH_TOPIC_SNAPSHOTS_LIST';
 export const FETCH_TOPIC_TIMESPANS_LIST = 'FETCH_TOPIC_TIMESPANS_LIST';
 export const FETCH_TOPIC_SENTENCE_COUNT = 'FETCH_TOPIC_SENTENCE_COUNT';
 
-export function fetchTopicsList() {
-  return {
-    type: FETCH_TOPIC_LIST,
-    payload: {
-      promise: api.topicsList(),
-    },
-  };
-}
+export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
-export function selectTopic(id) {
-  return {
-    type: SELECT_TOPIC,
-    payload: { id },
-  };
-}
+// pass in topicId
+export const selectTopic = createAction(SELECT_TOPIC, id => id);
 
-export function filterBySnapshot(id) {
-  return {
-    type: TOPIC_FILTER_BY_SNAPSHOT,
-    payload: { id },
-  };
-}
+// pass in topicId
+export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
 
-export function filterByTimespan(id) {
-  return {
-    type: TOPIC_FILTER_BY_TIMESPAN,
-    payload: { id },
-  };
-}
+// pass in topicId
+export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
 
-export function fetchTopicSummary(id) {
-  return {
-    type: FETCH_TOPIC_SUMMARY,
-    payload: {
-      promise: api.topicSummary(id),
-    },
-  };
-}
+// pass in topicId
+export const fetchTopicSummary = createAsyncAction(FETCH_TOPIC_SUMMARY, api.topicSummary);
 
-export function fetchTopicTopStories(topicId, snapshotId, timespanId, sort) {
-  return {
-    type: FETCH_TOPIC_TOP_STORIES,
-    payload: {
-      promise: api.topicTopStories(topicId, snapshotId, timespanId, sort),
-    },
-  };
-}
+// pass in topicId, snapshotId, timespanId, sort
+export const fetchTopicTopStories = createAsyncAction(FETCH_TOPIC_TOP_STORIES, api.topicTopStories);
 
-export function sortTopicTopStories(sort) {
-  return {
-    type: SORT_TOPIC_TOP_STORIES,
-    payload: { sort },
-  };
-}
+// pass in sort
+export const sortTopicTopStories = createAction(SORT_TOPIC_TOP_STORIES, sort => sort);
 
-export function fetchTopicTopMedia(topicId, snapshotId, timespanId, sort) {
-  return {
-    type: FETCH_TOPIC_TOP_MEDIA,
-    payload: {
-      promise: api.topicTopMedia(topicId, snapshotId, timespanId, sort),
-    },
-  };
-}
+// pass in topicId, snapshotId, timespanId, sort
+export const fetchTopicTopMedia = createAsyncAction(FETCH_TOPIC_TOP_MEDIA, api.topicTopMedia);
 
-export function sortTopicTopMedia(sort) {
-  return {
-    type: SORT_TOPIC_TOP_MEDIA,
-    payload: { sort },
-  };
-}
+// pass in sort
+export const sortTopicTopMedia = createAction(SORT_TOPIC_TOP_MEDIA, sort => sort);
 
-export function fetchTopicTopWords(topicId, snapshotId, timespanId, sort) {
-  return {
-    type: FETCH_TOPIC_TOP_WORDS,
-    payload: {
-      promise: api.topicTopWords(topicId, snapshotId, timespanId, sort),
-    },
-  };
-}
+// pass in topicId, snapshotId, timespanId, sort
+export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.topicTopWords);
 
-export function fetchTopicSnapshotsList(id) {
-  return {
-    type: FETCH_TOPIC_SNAPSHOTS_LIST,
-    payload: {
-      promise: api.topicSnapshotsList(id),
-    },
-  };
-}
+// pass in topicId
+export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_LIST, api.topicSnapshotsList);
 
-export function fetchTopicSnapshotTimespansList(topicId, snapshotId) {
-  return {
-    type: FETCH_TOPIC_TIMESPANS_LIST,
-    payload: {
-      promise: api.topicSnapshotTimespansList(topicId, snapshotId),
-    },
-  };
-}
+// pass in topicId
+export const fetchTopicSnapshotTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicSnapshotTimespansList);
 
-export function fetchTopicSentenceCounts(topicId, snapshotId, timespanId) {
-  return {
-    type: FETCH_TOPIC_SENTENCE_COUNT,
-    payload: {
-      promise: api.topicSentenceCounts(topicId, snapshotId, timespanId),
-    },
-  };
-}
+// pass in topicId, snapshotId, timespanId
+export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);

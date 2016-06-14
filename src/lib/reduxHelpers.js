@@ -11,6 +11,21 @@ export function arrayToDict(arr, keyPropertyName) {
 }
 
 /**
+ * Helper for generating async actions (these are promise-based).  Provide two params:
+ * - `type`: the action type constant
+ * - `fetcher`: the function object to run (args will be relayed automatically)
+ * This returns an action function you can use.
+ */
+export function createAsyncAction(type, fetcher) {
+  return (...args) => ({
+    type,
+    payload: {
+      promise: fetcher(...args),
+    },
+  });
+}
+
+/**
  * Helper for generating generic async reducers.  Pass in an object with the following properties
  * (each is optional):
  * - `initialState`: the initial state for this reducer (defaults to empty)

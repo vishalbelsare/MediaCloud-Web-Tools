@@ -11,7 +11,7 @@ const INITIAL_STATE = null;
 function id(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_TOPIC:
-      return parseInt(action.payload.id, 10);
+      return parseInt(action.payload, 10);
     default:
       return state;
   }
