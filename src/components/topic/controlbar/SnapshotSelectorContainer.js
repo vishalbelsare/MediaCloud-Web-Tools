@@ -10,9 +10,7 @@ import * as fetchConstants from '../../../lib/fetchConstants.js';
 class SnapshotSelectorContainer extends React.Component {
   componentDidMount() {
     const { fetchData, snapshotId, topicId } = this.props;
-    if (topicId !== null) {
-      fetchData(topicId, snapshotId);
-    }
+    fetchData(topicId, snapshotId);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.topicId !== this.props.topicId) {
@@ -67,12 +65,14 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (topicId, snapshotId) => {
-    dispatch(fetchTopicSnapshotsList(topicId))
-      .then((response) => {
-        if (snapshotId === null) {
-          dispatch(filterBySnapshot(response.list[0].controversy_dumps_id));
-        }
-      });
+    if (topicId !== null) {
+      dispatch(fetchTopicSnapshotsList(topicId))
+        .then((response) => {
+          if (snapshotId === null) {
+            dispatch(filterBySnapshot(response.list[0].controversy_dumps_id));
+          }
+        });
+    }
   },
   onSnapshotSelected: (snapshotId) => {
     dispatch(filterBySnapshot(snapshotId));
