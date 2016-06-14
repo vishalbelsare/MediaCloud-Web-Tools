@@ -26,12 +26,47 @@ export function createAsyncAction(type, fetcher) {
 }
 
 /**
+ * Helper to create a generic reducer.  Pass in an object with the following properties:
+ * - `intialState`: the intial state to use for this recuder (default to empty object)
+ * - `[OTHER_CONSTANTS]`: any other constants will be added as extra checks (this lets you include other actions in this reducer)
+ */
+export function createReducer(handlers) {
+  // there might be intial state we need to set up
+  let desiredInitialState = {};
+  if ('initialState' in handlers) {
+    desiredInitialState = handlers.initialState;
+  }
+  const initialState = {
+    fetchStatus: fetchConstants.FETCH_INVALID,
+    ...desiredInitialState,
+  };
+  // set up a lookup table for any things the user passed in
+  const actionLookup = {};
+  for (const key in handlers) {
+    if (!['initialState'].includes(key)) {
+      actionLookup[key] = handlers[key];
+    }
+  }
+  // and now set up the reducer method
+  return (state = initialState, action) => {
+    if (action.type in actionLookup) {
+      return Object.assign({}, state, {
+        ...state,
+        ...actionLookup[action.type](action.payload),
+      });
+    }
+    return state;
+  };
+}
+
+/**
  * Helper for generating generic async reducers.  Pass in an object with the following properties
  * (each is optional):
- * - `initialState`: the initial state for this reducer (defaults to empty)
- * - `handleFetch`: any state to set when the action is first dispatched (defaults to initialState)
+ * - `initialState`: the initial state for this reducer (defaults to empty object)
+ * - `handleFetch`: any state to set when the action is first dispatched (defaults to empty)
  * - `handleSuccess`: any state to set when the async call returns successfully (defaults to `{...payload}`)
- * - `handleFailure`: any state to set when the action is first dispatched (defaults to initialState)
+ * - `handleFailure`: any state to set when the action is first dispatched (defaults to empty)
+ * - `[OTHER_CONSTANTS]`: any other constants will be added as extra checks (this lets you include other actions in this reducer)
  * This handles setting the fetchState to the appropriate item from `fetchConstants` for you. So you can
  * write reducers like this and they will act like you'd expect:
  * ```es6
@@ -44,24 +79,34 @@ export function createAsyncAction(type, fetcher) {
  * ```
  */
 export function createAsyncReducer(handlers) {
+  // there might be intial state we need to set up
   let desiredInitialState = {};
-  if (handlers.hasOwnProperty('initialState')) {
+  if ('initialState' in handlers) {
     desiredInitialState = handlers.initialState;
   }
   const initialState = {
     fetchStatus: fetchConstants.FETCH_INVALID,
     ...desiredInitialState,
   };
+  // set up any async reducer handlers the user passed in
   const reducers = {  // set up some smart defaults for normal behaviour
-    handleFetch: () => (desiredInitialState),
+    handleFetch: () => ({}),
     handleSuccess: (payload) => ({ ...payload }),
-    handleFailure: () => (desiredInitialState),
+    handleFailure: () => ({}),
   };
   for (const key in reducers) { // override defaults with custom methods passed in
-    if (handlers.hasOwnProperty(key)) {
+    if (key in handlers) {
       reducers[key] = handlers[key];
     }
   }
+  // set up a lookup table for any other things the user passed in
+  const extraActionLookup = {};
+  for (const key in handlers) {
+    if (!['action', 'initialState', 'handleFetch', 'handleSuccess', 'handleFailure'].includes(key)) {
+      extraActionLookup[key] = handlers[key];
+    }
+  }
+  // now alter the state appropriately
   return (state = initialState, action) => {
     switch (action.type) {
       case handlers.action:
@@ -83,6 +128,12 @@ export function createAsyncReducer(handlers) {
           ...reducers.handleFailure(action.payload),
         });
       default:
+        if (action.type in extraActionLookup) {
+          return Object.assign({}, state, {
+            ...state,
+            ...extraActionLookup[action.type](action.payload),
+          });
+        }
         return state;
     }
   };

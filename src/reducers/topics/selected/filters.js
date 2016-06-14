@@ -1,25 +1,17 @@
 import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN } from '../../../actions/topicActions';
+import { createReducer } from '../../../lib/reduxHelpers';
 
-const INITIAL_STATE = {
-  snapshotId: null,
-  timespanId: null,
-};
-
-function info(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case TOPIC_FILTER_BY_SNAPSHOT:
-      return Object.assign({}, state, {
-        ...state,
-        snapshotId: parseInt(action.payload, 10),
-      });
-    case TOPIC_FILTER_BY_TIMESPAN:
-      return Object.assign({}, state, {
-        ...state,
-        timespanId: parseInt(action.payload, 10),
-      });
-    default:
-      return state;
-  }
-}
+const info = createReducer({
+  initialState: {
+    snapshotId: null,
+    timespanId: null,
+  },
+  TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
+    snapshotId: parseInt(payload, 10),
+  }),
+  TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
+    timespanId: parseInt(payload, 10),
+  }),
+});
 
 export default info;
