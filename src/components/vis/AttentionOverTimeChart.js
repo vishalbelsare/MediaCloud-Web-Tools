@@ -44,13 +44,19 @@ class AttentionOverTime extends React.Component {
   }
 
   render() {
-    const { data, height, title, onDataPointClick, yAxisLabel } = this.props;
+    const { data, height, title, onDataPointClick, yAxisLabel, health } = this.props;
     const config = this.getConfig();
     // add in custom props
+
+
     config.title = { text: title };
     config.chart.height = height;
     config.yAxis.title = { text: yAxisLabel };
     // config.exporting.filename = title;
+    config.xAxis = {
+      type: 'datetime',
+      plotBands: health,
+    };
     config.series = data;
     if (onDataPointClick !== null) {
       config.plotOptions.series.point = { events: { click: onDataPointClick } };
@@ -58,7 +64,7 @@ class AttentionOverTime extends React.Component {
     config.plotOptions.series.marker.enabled = (data.length < 30);   // don't show dots on line if more than N data points
     // clean up the data
     const dates = data.map((d) => d.date);
-    const intervalMs = (dates[1].getTime() - dates[0].getTime());
+    const intervalMs = (dates[1] - dates[0]);
     const intervalDays = intervalMs / (1000 * 60 * 60 * 24);
     const allSeries = [{
       id: 0,
@@ -66,7 +72,7 @@ class AttentionOverTime extends React.Component {
       color: '#000066',
       // turning variable time unit into days
       data: data.map((d) => d.count / intervalDays),
-      pointStart: dates[0].getTime(),
+      pointStart: dates[0],
       pointInterval: intervalMs,
       cursor: 'pointer',
     }];
@@ -84,6 +90,7 @@ AttentionOverTime.propTypes = {
   height: React.PropTypes.number.isRequired,
   title: React.PropTypes.string,
   yAxisLabel: React.PropTypes.string,
+  health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func,
 };
 

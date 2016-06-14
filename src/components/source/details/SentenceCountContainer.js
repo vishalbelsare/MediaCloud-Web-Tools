@@ -34,12 +34,12 @@ class SentenceCountContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, fetchStatus, fetchData, total, counts } = this.props;
+    const { sourceId, fetchStatus, fetchData, total, counts, health } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SentenceCount total={total} counts={counts} />;
+        content = <SentenceCount total={total} counts={counts} health={health} />;
         break;
       case fetchConstants.FETCH_FAILED:
         // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
@@ -68,12 +68,14 @@ SentenceCountContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
+  health: React.PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.sources.selected.details.sentenceCount.fetchStatus,
   total: state.sources.selected.details.sentenceCount.total,
   counts: state.sources.selected.details.sentenceCount.list,
+  health: state.sources.selected.details.sentenceCount.health,
   filters: state.sources.selected.filters,
 });
 
