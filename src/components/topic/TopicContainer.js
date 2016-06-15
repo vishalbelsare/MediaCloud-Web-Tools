@@ -46,7 +46,7 @@ class TopicContainer extends React.Component {
         content = (
           <div>
             <Title render={titleHandler} />
-            <TopicControlBar title={topicInfo.name} />
+            <TopicControlBar topicId={topicId} title={topicInfo.name} />
             {subContent}
           </div>
         );

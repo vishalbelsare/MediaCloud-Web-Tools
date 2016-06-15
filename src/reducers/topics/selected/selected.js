@@ -5,6 +5,7 @@ import timespans from './timespans';
 import summary from './summary/summary';
 import filters from './filters';
 import info from './info';
+import media from './media';
 
 const INITIAL_STATE = null;
 
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   snapshots,
   timespans,
   filters,
+  media,
 });
 
 export default rootReducer;

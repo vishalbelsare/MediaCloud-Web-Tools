@@ -45,6 +45,8 @@ const messages = {
   storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
 
   error: { id: 'error', defaultMessage: 'Error' },
+
+  nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
 };
 
 export default messages;

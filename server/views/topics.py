@@ -52,7 +52,10 @@ def api_topics_top_media(topic_id):
         sort = valid_sorts[0]
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
-    media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort)
+    limit = request.args.get('limit')
+    continuation_id = request.args.get('continuationId')
+    media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort,
+        limit=limit,continuation_id=continuation_id)
     return jsonify(media)
 
 @app.route('/api/topics/<topic_id>/top-words', methods=['GET'])
