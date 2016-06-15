@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import WordCloud from './WordCloud';
+import WordCloud from '../../vis/WordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
