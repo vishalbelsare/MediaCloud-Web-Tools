@@ -2,7 +2,7 @@ import os, logging, ConfigParser, logging.config, json, sys
 from flask import Flask, render_template
 from flask_webpack import Webpack
 import pymongo, flask_login, mediacloud
-from flask.ext.cors import CORS
+from flask_cors import CORS
 
 SERVER_MODE_DEV = "DEV"
 SERVER_MODE_PROD = "PROD"
