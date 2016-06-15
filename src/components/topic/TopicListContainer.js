@@ -66,10 +66,6 @@ TopicListContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
 };
 
-TopicListContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.all.fetchStatus,
   topics: state.topics.all.list,

@@ -11,9 +11,7 @@
   topics: {
     all: {
       fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-      list: {
-        // topic_id => summary dict
-      },
+      list: [ list of topic JSON objects ]
     },
     selected: {
       id: [id of topic selected],
@@ -37,12 +35,16 @@
         topStories: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           sort: [ social | inlink ]
-          list: [ // list of JSON story objects ],
+          continuation_id: number,
+          stories: // list of JSON story objects,
+          timeslice: // JSON object about timespan,
         },
         topMedia: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           sort: [ social | inlink ]
-          list: [ // list of JSON media objects ],
+          continuation_id: number,
+          stories: // list of JSON story objects,
+          timeslice: // JSON object about timespan,
         },
         topWords: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
@@ -57,6 +59,12 @@
           list: [ // ordered list of {count,date} objects ],
         }
       },
+      media: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        continuation_id: number,
+        stories: // list of JSON story objects,
+        timeslice: // JSON object about timespan,
+      }
     },
 sources: {
     all: {
