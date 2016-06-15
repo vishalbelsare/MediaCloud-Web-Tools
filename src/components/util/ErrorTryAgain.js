@@ -1,6 +1,6 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
-import { grey200, grey400 } from 'material-ui/styles/colors';
+import { grey400 } from 'material-ui/styles/colors';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
@@ -13,7 +13,6 @@ class ErrorTryAgain extends React.Component {
     const { padding } = this.props;
     const styles = {
       root: {
-        backgroundColor: grey200,
         textAlign: 'center',
         padding: (padding !== null) ? padding : 10,
       },
