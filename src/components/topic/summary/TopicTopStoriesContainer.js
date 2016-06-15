@@ -43,12 +43,12 @@ class TopicTopStoriesContainer extends React.Component {
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
   render() {
-    const { fetchStatus, stories, sort } = this.props;
+    const { fetchStatus, stories, sort, topicId } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <TopicTopStories stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />;
+        content = <TopicTopStories stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={this.refetchData} />;

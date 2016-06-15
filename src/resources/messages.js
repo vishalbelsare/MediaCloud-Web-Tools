@@ -30,7 +30,7 @@ const messages = {
   collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },
 
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
-  outlinks: { id: 'common.outlinks', defaultMessage: 'Inlinks' },
+  outlinks: { id: 'common.outlinks', defaultMessage: 'Outlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
 
@@ -45,6 +45,7 @@ const messages = {
   storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
 
   error: { id: 'error', defaultMessage: 'Error' },
+  details: { id: 'details', defaultMessage: 'Details' },
 
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
 };

@@ -18,7 +18,7 @@ export function topicSummary(topicId) {
   );
 }
 
-export function topicTopStories(topicId, snapshotId, timespanId, sort) {
+export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, continuationId) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
@@ -28,6 +28,12 @@ export function topicTopStories(topicId, snapshotId, timespanId, sort) {
   }
   if (sort !== null) {
     params.sort = sort;
+  }
+  if ((limit !== null) && (limit !== undefined)) {
+    params.limit = limit;
+  }
+  if ((continuationId !== null) && (continuationId !== undefined)) {
+    params.continuationId = continuationId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/top-stories?${paramStr}`, {
@@ -38,7 +44,7 @@ export function topicTopStories(topicId, snapshotId, timespanId, sort) {
   );
 }
 
-export function topicTopMedia(topicId, snapshotId, timespanId, sort) {
+export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, continuationId) {
   const params = {};
   if (snapshotId !== null) {
     params.snapshot = snapshotId;
@@ -48,6 +54,12 @@ export function topicTopMedia(topicId, snapshotId, timespanId, sort) {
   }
   if (sort !== null) {
     params.sort = sort;
+  }
+  if ((limit !== null) && (limit !== undefined)) {
+    params.limit = limit;
+  }
+  if ((continuationId !== null) && (continuationId !== undefined)) {
+    params.continuationId = continuationId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/top-media?${paramStr}`, {

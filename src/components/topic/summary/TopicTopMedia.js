@@ -57,7 +57,7 @@ class TopicTopMedia extends React.Component {
             )}
           </tbody>
         </table>
-        <Link to={`/topics/${topicId}/media`} style={styles.name}>{'details'}</Link>
+        <Link to={`/topics/${topicId}/media`} style={styles.name}><FormattedMessage {...messages.details} /></Link>
       </div>
     );
   }
