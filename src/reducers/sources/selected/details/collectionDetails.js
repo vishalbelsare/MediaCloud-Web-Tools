@@ -2,7 +2,7 @@
 import { FETCH_SOURCE_COLLECTION_DETAILS } from '../../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
-const sourceDetails = createAsyncReducer({
+const tagDetails = createAsyncReducer({
   initialState: {
     list: [],
   },

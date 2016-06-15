@@ -80,6 +80,7 @@ def api_media_source_details(media_id):
     health = _get_media_source_health(media_id)
     info = {}
     info = _get_media_source_details(media_id, health['start_date'][:10])
+    info['health'] = health
     return jsonify({'results':info})
 
 @app.route('/api/sources/media-tag/<media_tag_id>/sentences/count', methods=['GET'])

@@ -27,11 +27,15 @@ class SourceDetailsContainer extends React.Component {
       row: {
         marginBottom: 15,
       },
+      list: {
+        listStyleType: 'none',
+      },
     };
     return styles;
   }
   render() {
     const { sources, fetchData, fetchStatus } = this.props;
+    const { health } = this.props.sources;
     let { sourceId } = this.props;
     if (sourceId === null) {
       sourceId = this.props.params.sourceId;
@@ -41,9 +45,38 @@ class SourceDetailsContainer extends React.Component {
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
     let content = <div />;
+    let subContent = <div />;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         content = <SourceInfo sources={sources} />;
+        subContent = (
+            <Grid>
+              <h3>Source Id: {sources.media_id} </h3>
+              <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
+              </Row>
+              <Row>
+                <ul style={styles.list}>
+                  <li>Content from feedcount RSS `?`</li>
+                  <li>Sentences from { health.start_date.substring(0, 10) } to { health.end_date.substring(0, 10) } </li>
+                  <li>Averaging { health.num_stories_w } stories per day and { health.num_sentences_w.substring(0, 10) } sentences in the last week,</li>
+                  <li>we'd guess there are { health.coverage_gaps } "gaps" in our coverage (highlighted <b><span style={{ color: 'rgba(255, 0, 0, .6)' }}> in red </span></b> on the chart), compared to the highest weekly levels we've seen</li>
+                </ul>
+              </Row>
+              <Row>
+                <Col lg={12}>
+                  <h2>{title}</h2>
+                  {content}
+                </Col>
+                <Col lg={6}>
+                  <SourceTopWordsContainer sourceId={sourceId} />
+                </Col>
+                <Col lg={6}>
+                  <SentenceCountContainer sourceId={sourceId} />
+                </Col>
+
+              </Row>
+            </Grid>
+        );
         break;
       case fetchConstants.FETCH_FAILED:
         // this causes a render warning to not try to setState while in error - no dispatching either
@@ -54,22 +87,7 @@ class SourceDetailsContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-        <Grid>
-        <h3>Source Id: {sources.media_id} </h3>
-          <Row>
-            <Col lg={12}>
-              <h2>{title}</h2>
-              {content}
-            </Col>
-            <Col lg={6}>
-              <SourceTopWordsContainer sourceId={sourceId} />
-            </Col>
-            <Col lg={6}>
-              <SentenceCountContainer sourceId={sourceId} />
-            </Col>
-
-          </Row>
-        </Grid>
+          {subContent}
       </div>
     );
   }
