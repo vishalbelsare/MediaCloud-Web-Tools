@@ -9,8 +9,7 @@ import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class SnapshotSelectorContainer extends React.Component {
   componentDidMount() {
-    const { fetchData, snapshotId, topicId } = this.props;
-    fetchData(topicId, snapshotId);
+    this.refetchData();
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.topicId !== this.props.topicId) {
@@ -25,8 +24,12 @@ class SnapshotSelectorContainer extends React.Component {
     };
     return styles;
   }
+  refetchData = () => {
+    const { fetchData, snapshotId, topicId } = this.props;
+    fetchData(topicId, snapshotId);
+  }
   render() {
-    const { snapshots, fetchStatus, fetchData, onSnapshotSelected, snapshotId } = this.props;
+    const { snapshots, fetchStatus, onSnapshotSelected, snapshotId } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -34,10 +37,10 @@ class SnapshotSelectorContainer extends React.Component {
         content = <SnapshotSelector selectedId={snapshotId} snapshots={snapshots} onSnapshotSelected={onSnapshotSelected} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData} />;
+        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
         break;
       default:
-        content = <LoadingSpinner />;
+        content = <LoadingSpinner padding={0} size={10} />;
     }
     return (
       <div style={styles.root}>

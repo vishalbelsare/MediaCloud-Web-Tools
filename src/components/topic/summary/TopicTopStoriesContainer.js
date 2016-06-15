@@ -14,9 +14,9 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, topicId, filters, fetchData, sort } = this.props;
+    const { fetchStatus } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
+      this.refetchData();
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -38,8 +38,12 @@ class TopicTopStoriesContainer extends React.Component {
     };
     return styles;
   }
+  refetchData = () => {
+    const { topicId, filters, fetchData, sort } = this.props;
+    fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
+  }
   render() {
-    const { topicId, fetchStatus, fetchData, stories, sort } = this.props;
+    const { fetchStatus, stories, sort } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -47,7 +51,7 @@ class TopicTopStoriesContainer extends React.Component {
         content = <TopicTopStories stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData(topicId)} />;
+        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -79,7 +83,7 @@ TopicTopStoriesContainer.propTypes = {
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
   sort: state.topics.selected.summary.topStories.sort,
-  stories: state.topics.selected.summary.topStories.list,
+  stories: state.topics.selected.summary.topStories.stories,
 });
 
 const mapDispatchToProps = (dispatch) => ({

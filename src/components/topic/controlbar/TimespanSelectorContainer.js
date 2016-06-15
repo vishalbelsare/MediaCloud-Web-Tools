@@ -9,9 +9,9 @@ import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class TimespanSelectorContainer extends React.Component {
   componentDidMount() {
-    const { fetchData, topicId, snapshotId, timespanId } = this.props;
+    const { topicId, snapshotId } = this.props;
     if ((topicId !== null) && (snapshotId !== null)) {
-      fetchData(topicId, snapshotId, timespanId);
+      this.refetchData();
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -29,8 +29,12 @@ class TimespanSelectorContainer extends React.Component {
     };
     return styles;
   }
+  refetchData = () => {
+    const { topicId, snapshotId, fetchData } = this.props;
+    fetchData(topicId, snapshotId);
+  }
   render() {
-    const { timespans, fetchStatus, fetchData, onTimespanSelected } = this.props;
+    const { timespans, fetchStatus, onTimespanSelected } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -38,10 +42,10 @@ class TimespanSelectorContainer extends React.Component {
         content = <TimespanSelector timespans={timespans} onTimespanSelected={onTimespanSelected} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData} />;
+        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
         break;
       default:
-        content = <LoadingSpinner />;
+        content = <LoadingSpinner padding={0} size={10} />;
     }
     return (
       <div style={styles.root}>

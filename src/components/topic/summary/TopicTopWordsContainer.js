@@ -14,9 +14,9 @@ const localMessages = {
 
 class TopicTopStoriesContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, topicId, filters, fetchData } = this.props;
+    const { fetchStatus } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId, filters.timespanId);
+      this.refetchData();
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -33,8 +33,12 @@ class TopicTopStoriesContainer extends React.Component {
     };
     return styles;
   }
+  refetchData = () => {
+    const { topicId, filters, fetchData } = this.props;
+    fetchData(topicId, filters.snapshotId, filters.timespanId);
+  }
   render() {
-    const { topicId, fetchStatus, fetchData, words } = this.props;
+    const { fetchStatus, words } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -42,7 +46,7 @@ class TopicTopStoriesContainer extends React.Component {
         content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData(topicId)} />;
+        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
         break;
       default:
         content = <LoadingSpinner />;
