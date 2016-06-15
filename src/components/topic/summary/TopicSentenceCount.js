@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
-import AttentionOverTimeChart from './AttentionOverTimeChart';
+import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import messages from '../../../resources/messages';
 
 const localMessages = {

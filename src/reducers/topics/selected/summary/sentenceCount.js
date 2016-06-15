@@ -5,8 +5,8 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 function cleanDateCounts(counts) {
   return counts.map((d) => {
     const ymd = d.date.substr(0, 10).split('-');
-    const dateObj = new Date(Date.UTC(ymd[0], ymd[1] - 1, ymd[2]));
-    return { date: dateObj, count: d.count };
+    const timestamp = Date.UTC(ymd[0], ymd[1] - 1, ymd[2]);
+    return { date: timestamp, count: d.count };
   });
 }
 
