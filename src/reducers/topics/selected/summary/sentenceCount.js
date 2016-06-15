@@ -13,12 +13,12 @@ function cleanDateCounts(counts) {
 const sentenceCount = createAsyncReducer({
   initialState: {
     total: null,
-    list: [],
+    counts: [],
   },
   action: FETCH_TOPIC_SENTENCE_COUNT,
   handleSuccess: (payload) => ({
-    total: payload.total,
-    list: cleanDateCounts(payload.counts),
+    total: payload.count,
+    counts: cleanDateCounts(payload.split.counts),
   }),
 });
 

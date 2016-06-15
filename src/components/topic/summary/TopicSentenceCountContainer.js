@@ -73,7 +73,7 @@ TopicSentenceCountContainer.propTypes = {
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.summary.sentenceCount.fetchStatus,
   total: state.topics.selected.summary.sentenceCount.total,
-  counts: state.topics.selected.summary.sentenceCount.list,
+  counts: state.topics.selected.summary.sentenceCount.counts,
   filters: state.topics.selected.filters,
 });
 
