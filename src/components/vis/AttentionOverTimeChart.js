@@ -4,6 +4,8 @@ import highchartsMore from 'highcharts-more';
 highchartsMore(ReactHighcharts.Highcharts);
 import highchartsExporting from 'highcharts-exporting';
 highchartsExporting(ReactHighcharts.Highcharts);
+import highchartsOfflineExporting from 'highcharts-offline-exporting';
+highchartsOfflineExporting(ReactHighcharts.Highcharts);
 
 class AttentionOverTime extends React.Component {
 
@@ -46,6 +48,7 @@ class AttentionOverTime extends React.Component {
     config.title = { text: title };
     config.chart.height = height;
     config.yAxis.title = { text: yAxisLabel };
+    // config.exporting.filename = title;
     config.xAxis = {
       type: 'datetime',
       plotBands: health,
