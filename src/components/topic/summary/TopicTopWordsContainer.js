@@ -52,8 +52,8 @@ class TopicTopStoriesContainer extends React.Component {
     let headerContent = null;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
         headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
+        content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={this.refetchData} />;
