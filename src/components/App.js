@@ -6,7 +6,6 @@ import BrandMasthead from './branding/BrandMasthead';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 import messages from '../resources/messages';
-import FullWidthSection from '../components/util/FullWidthSection';
 import { APP_NAME } from '../config';
 import { BRAND_COLORS } from '../styles/colors';
 
@@ -21,6 +20,8 @@ class App extends React.Component {
       footer: {
         backgroundColor: grey200,
         textAlign: 'center',
+        paddingTop: 30,
+        paddingBottom: 30,
       },
       a: {
         color: grey800,
@@ -72,7 +73,7 @@ class App extends React.Component {
         <div style={styles.root}>
           {children}
         </div>
-        <FullWidthSection style={styles.footer}>
+        <div style={styles.footer}>
           <p style={styles.p}><small>
             {'Created by '}
             <a style={styles.a} href="https://civic.mit.edu/">
@@ -84,7 +85,7 @@ class App extends React.Component {
             </a>.
           </small>
           </p>
-        </FullWidthSection>
+        </div>
       </div>
     );
   }
