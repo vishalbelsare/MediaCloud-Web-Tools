@@ -8,7 +8,7 @@ import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
-import IconButton from 'material-ui/IconButton';
+import DownloadButton from '../../util/DownloadButton';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -56,7 +56,7 @@ class TopicInfluentialMediaContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
-    const url = `/api/topics/${topicId}/top-media.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
+    const url = `/api/topics/${topicId}/media.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
   render() {
@@ -64,16 +64,12 @@ class TopicInfluentialMediaContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     let content = fetchStatus;
     const styles = this.getStyles();
+    let headerContent = null;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
         content = (
           <div>
-            <div style={styles.floatRight}>
-              <IconButton iconClassName="material-icons" tooltip={formatMessage(messages.download)}
-                onClick={this.downloadCsv}
-              >get_app
-              </IconButton>
-            </div>
             <TopicInfluentialMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
             <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
           </div>
@@ -91,6 +87,7 @@ class TopicInfluentialMediaContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <div style={styles.contentWrapper}>
+                {headerContent}
                 <h2><FormattedMessage {...localMessages.title} /></h2>
                 {content}
               </div>

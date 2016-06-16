@@ -36,7 +36,7 @@ export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, co
     params.continuationId = continuationId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return fetch(`/api/topics/${topicId}/top-stories?${paramStr}`, {
+  return fetch(`/api/topics/${topicId}/stories?${paramStr}`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -62,7 +62,7 @@ export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, cont
     params.continuationId = continuationId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return fetch(`/api/topics/${topicId}/top-media?${paramStr}`, {
+  return fetch(`/api/topics/${topicId}/media?${paramStr}`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -79,7 +79,7 @@ export function topicTopWords(topicId, snapshotId, timespanId) {
     params.timespan = timespanId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return fetch(`/api/topics/${topicId}/top-words?${paramStr}`, {
+  return fetch(`/api/topics/${topicId}/words?${paramStr}`, {
     method: 'get',
     credentials: 'include',
   }).then(

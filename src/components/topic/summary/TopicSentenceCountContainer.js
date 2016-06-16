@@ -7,6 +7,8 @@ import TopicSentenceCount from './TopicSentenceCount';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
+import messages from '../../../resources/messages';
+import DownloadButton from '../../util/DownloadButton';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
@@ -14,9 +16,9 @@ const localMessages = {
 
 class TopicSentenceCountContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, topicId, filters, fetchData } = this.props;
+    const { fetchStatus } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(topicId, filters.snapshotId, filters.timespanId);
+      this.refetchData();
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -33,16 +35,28 @@ class TopicSentenceCountContainer extends React.Component {
     };
     return styles;
   }
+  refetchData = () => {
+    const { topicId, filters, fetchData } = this.props;
+    fetchData(topicId, filters.snapshotId, filters.timespanId);
+  }
+  downloadCsv = () => {
+    const { topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/sentences/count.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
+    window.location = url;
+  }
   render() {
-    const { topicId, fetchStatus, fetchData, total, counts } = this.props;
+    const { fetchStatus, total, counts } = this.props;
+    const { formatMessage } = this.props.intl;
     let content = fetchStatus;
     const styles = this.getStyles();
+    let headerContent = null;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
         content = <TopicSentenceCount total={total} counts={counts} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData(topicId)} />;
+        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -51,6 +65,7 @@ class TopicSentenceCountContainer extends React.Component {
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
+            {headerContent}
             <h2><FormattedMessage {...localMessages.title} /></h2>
             {content}
           </div>

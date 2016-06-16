@@ -7,7 +7,7 @@ from server import app, auth
 logger = logging.getLogger(__name__)
 
 @app.route('/api/login', methods=['POST'])
-def api_login_with_password():
+def login_with_password():
     if 'email' not in request.form or 'password' not in request.form:
         return json_error_response(400,"invalid options")
     username = request.form["email"]
@@ -22,7 +22,7 @@ def api_login_with_password():
     return jsonify(response)
 
 @app.route('/api/login-with-key', methods=['POST'])
-def api_login_with_key():
+def login_with_key():
     if 'email' not in request.form or 'key' not in request.form:
         return json_error_response(400,"invalid options")
     username = request.form["email"]

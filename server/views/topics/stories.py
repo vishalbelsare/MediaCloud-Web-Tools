@@ -8,9 +8,9 @@ import server.views.util.csv as csv
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/topics/<topic_id>/top-stories', methods=['GET'])
+@app.route('/api/topics/<topic_id>/stories', methods=['GET'])
 #@flask_login.login_required
-def api_topics_top_stories(topic_id):
+def topic_stories(topic_id):
     sort = validated_sort( request.args.get('sort') )
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
@@ -20,9 +20,9 @@ def api_topics_top_stories(topic_id):
         limit=limit,continuation_id=continuation_id)
     return jsonify(stories)
 
-@app.route('/api/topics/<topic_id>/top-stories.csv', methods=['GET'])
+@app.route('/api/topics/<topic_id>/stories.csv', methods=['GET'])
 #@flask_login.login_required
-def topic_top_stories_csv(topic_id):
+def topic_stories_csv(topic_id):
     sort = validated_sort( request.args.get('sort') )
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')

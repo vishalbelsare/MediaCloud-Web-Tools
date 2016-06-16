@@ -7,6 +7,8 @@ import WordCloud from '../../vis/WordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
+import messages from '../../../resources/messages';
+import DownloadButton from '../../util/DownloadButton';
 
 const localMessages = {
   title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -37,13 +39,21 @@ class TopicTopStoriesContainer extends React.Component {
     const { topicId, filters, fetchData } = this.props;
     fetchData(topicId, filters.snapshotId, filters.timespanId);
   }
+  downloadCsv = () => {
+    const { topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
+    window.location = url;
+  }
   render() {
     const { fetchStatus, words } = this.props;
+    const { formatMessage } = this.props.intl;
     let content = fetchStatus;
     const styles = this.getStyles();
+    let headerContent = null;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
+        headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={this.refetchData} />;
@@ -55,6 +65,7 @@ class TopicTopStoriesContainer extends React.Component {
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
+            {headerContent}
             <h2><FormattedMessage {...localMessages.title} /></h2>
             {content}
           </div>
