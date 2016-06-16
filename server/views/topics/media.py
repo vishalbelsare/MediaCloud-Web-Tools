@@ -1,19 +1,18 @@
-import logging
+import logging, json, datetime, flask
 from operator import itemgetter
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
 from server import app, mc
+from server.views.topics import validated_sort
+import server.views.util.csv as csv
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topic_id>/top-media', methods=['GET'])
 #@flask_login.login_required
-def api_topics_top_media(topic_id):
-    sort = request.args.get('sort')
-    valid_sorts = ['social','inlink']
-    if (sort is None) or (sort not in valid_sorts):
-        sort = valid_sorts[0]
+def topic_top_media(topic_id):
+    sort = validated_sort( request.args.get('sort') )
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
     limit = request.args.get('limit')
@@ -21,3 +20,28 @@ def api_topics_top_media(topic_id):
     media = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort,
         limit=limit,continuation_id=continuation_id)
     return jsonify(media)
+
+@app.route('/api/topics/<topic_id>/top-media.csv', methods=['GET'])
+#@flask_login.login_required
+def topic_top_media_csv(topic_id):
+    sort = validated_sort( request.args.get('sort') )
+    snapshot_id = request.args.get('snapshot')
+    timespan_id = request.args.get('timespan')
+    all_media = []
+    continuation_id = None
+    more_media = True
+    try:
+        while more_media:
+            page = mc.topicMediaList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort,
+                limit=1000,continuation_id=continuation_id)
+            page_media = page['media']
+            if len(page_media) > 0:
+                continuation_id = page['continuation_id']
+                all_media = all_media + page_media
+                more_media = True
+            else:
+                more_media = False
+        props = ['media_id','name','url','story_count','inlink_count','outlink_count','bitly_click_count']
+        return csv.stream_response(all_media,props,'media')
+    except Exception as exception:
+        return json.dumps({'error':str(exception)}, separators=(',',':')), 400

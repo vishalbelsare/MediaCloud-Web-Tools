@@ -8,6 +8,7 @@ import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -36,6 +37,12 @@ class TopicInfluentialMediaContainer extends React.Component {
     const styles = {
       contentWrapper: {
       },
+      iconStyles: {
+        marginRight: 24,
+      },
+      floatRight: {
+        float: 'right',
+      },
     };
     return styles;
   }
@@ -47,6 +54,11 @@ class TopicInfluentialMediaContainer extends React.Component {
     const { fetchData, topicId, filters, sort, continuationId } = this.props;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort, continuationId);
   }
+  downloadCsv = () => {
+    const { topicId, filters, sort } = this.props;
+    const url = `/api/topics/${topicId}/top-media.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
+    console.log(url);
+  }
   render() {
     const { fetchStatus, fetchData, media, sort } = this.props;
     const { formatMessage } = this.props.intl;
@@ -56,6 +68,12 @@ class TopicInfluentialMediaContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         content = (
           <div>
+            <div style={styles.floatRight}>
+              <IconButton iconClassName="material-icons" tooltip={formatMessage(messages.download)}
+                onClick={this.downloadCsv}
+              >get_app
+              </IconButton>
+            </div>
             <TopicInfluentialMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
             <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
           </div>

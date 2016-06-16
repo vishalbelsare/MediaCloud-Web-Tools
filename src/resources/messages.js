@@ -47,6 +47,7 @@ const messages = {
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
 
+  download: { id: 'download', defaultMessage: 'Download' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
 };
 
