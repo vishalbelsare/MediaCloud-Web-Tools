@@ -57,7 +57,7 @@ class TopicInfluentialMediaContainer extends React.Component {
   downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
     const url = `/api/topics/${topicId}/top-media.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
-    console.log(url);
+    window.location = url;
   }
   render() {
     const { fetchStatus, fetchData, media, sort } = this.props;
