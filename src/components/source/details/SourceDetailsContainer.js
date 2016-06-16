@@ -10,7 +10,6 @@ import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SentenceCountContainer from './SentenceCountContainer';
 // import { Link } from 'react-router';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';
-import SourceControlBar from '../controlbar/SourceControlBar';
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
