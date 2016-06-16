@@ -1,5 +1,4 @@
-import logging, json, datetime, flask
-from operator import itemgetter
+import logging, flask
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
