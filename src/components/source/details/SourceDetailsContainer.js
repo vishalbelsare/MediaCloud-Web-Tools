@@ -10,6 +10,7 @@ import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SentenceCountContainer from './SentenceCountContainer';
 // import { Link } from 'react-router';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
@@ -33,8 +34,7 @@ class SourceDetailsContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sources, fetchData, fetchStatus } = this.props;
-    const { health } = this.props.sources;
+    const { fetchData, fetchStatus } = this.props;
     let { sourceId } = this.props;
     if (sourceId === null) {
       sourceId = this.props.params.sourceId;
@@ -45,8 +45,11 @@ class SourceDetailsContainer extends React.Component {
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
+
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        const { sources } = this.props;
+        const { health } = this.props.sources;
         content = <SourceInfo sources={sources} />;
         subContent = (
             <Grid>
@@ -100,7 +103,7 @@ SourceDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.string,
   sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array,
 };
 
 SourceDetailsContainer.contextTypes = {

@@ -29,7 +29,7 @@ function all(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         ...state,
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        list: arrayToDict(action.payload.results, 'tag_sets_id'),
+        list: arrayToDict(action.payload.results, 'tags_id'),
       });
     case reject(FETCH_SOURCE_COLLECTION_LIST):
       return Object.assign({}, state, {

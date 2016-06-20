@@ -9,6 +9,15 @@ export function sourceList() {
   );
 }
 
+export function sourceSearch(wildcardString) {
+  return fetch(`api/sources/${wildcardString}/search`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
+
 export function sourceCollectionList() {
   return fetch('api/sources/collection/list', {
     method: 'get',

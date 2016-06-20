@@ -1,5 +1,6 @@
 import * as api from '../lib/sources';
-
+import { createAction } from 'redux-actions';
+import { createAsyncAction } from '../lib/reduxHelpers';
 // export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_COLLECTION_LIST = 'FETCH_SOURCE_COLLECTION_LIST';
@@ -20,109 +21,24 @@ export const FETCH_SOURCE_COLLECTION_TOP_WORDS = 'FETCH_SOURCE_COLLECTION_TOP_WO
 export const FETCH_SOURCE_SNAPSHOTS_LIST = 'FETCH_SOURCE_SNAPSHOTS_LIST';
 export const FETCH_SOURCE_TIMESPANS_LIST = 'FETCH_SOURCE_TIMESPANS_LIST';
 export const FETCH_SOURCE_SENTENCE_COUNT = 'FETCH_SOURCE_SENTENCE_COUNT';
+export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
+export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 
 
-/* export function fetchSourceTagList() {
-  return {
-    type: FETCH_SOURCE_TAG_LIST,
-    payload: {
-      promise: api.sourceTagList(),
-    },
-  };
-}*/
-export function fetchSourceList() {
-  return {
-    type: FETCH_SOURCE_LIST,
-    payload: {
-      promise: api.sourceList(), // need to change this... TODO
-    },
-  };
-}
+export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 
-export function fetchSourceCollectionList() {
-  return {
-    type: FETCH_SOURCE_COLLECTION_LIST,
-    payload: {
-      promise: api.sourceCollectionList(), // need to change this... TODO
-    },
-  };
-}
+export const fetchSourceCollectionList = createAction(FETCH_SOURCE_COLLECTION_LIST, api.sourceCollectionList);
 
+export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
-export function fetchSourceDetails(id) {
-  return {
-    type: FETCH_SOURCE_DETAILS,
-    payload: {
-      promise: api.sourceDetails(id),
-    },
-  };
-}
-export function fetchSourceCollectionDetails(id) {
-  return {
-    type: FETCH_SOURCE_COLLECTION_DETAILS,
-    payload: {
-      promise: api.sourceCollectionDetails(id),
-    },
-  };
-}
+export const fetchSourceCollectionDetails = createAction(FETCH_SOURCE_COLLECTION_DETAILS, api.sourceCollectionDetails, id => id);
 
-export function fetchSourceSentenceCount(id) {
-  return {
-    type: FETCH_SOURCE_SENTENCE_COUNT,
-    payload: {
-      promise: api.sourceSentenceCount(id),
-    },
-  };
-}
+export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
 
-export function fetchSourceTopWords(id, snapshotId, timespanId, sort) {
-  return {
-    type: FETCH_SOURCE_TOP_WORDS,
-    payload: {
-      promise: api.sourceWordCount(id, snapshotId, timespanId, sort),
-    },
-  };
-}
+export const fetchSourceTopWords = createAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 
-export function fetchSourceCollectionTopWords(id, snapshotId, timespanId, sort) {
-  return {
-    type: FETCH_SOURCE_COLLECTION_TOP_WORDS,
-    payload: {
-      promise: api.sourceWordCount(id, snapshotId, timespanId, sort),
-    },
-  };
-}
+export const fetchSourceCollectionTopWords = createAsyncAction(FETCH_SOURCE_COLLECTION_TOP_WORDS, api.sourceCollectionTopWords, id => id);
 
-export function filterBySnapshot(id) {
-  return {
-    type: SOURCE_FILTER_BY_SNAPSHOT,
-    payload: { id },
-  };
-}
+export const fetchSourceGeo = createAsyncAction(FETCH_SOURCE_GEO, api.sourceGeo, id => id);
 
-export function filterByTimespan(id) {
-  return {
-    type: SOURCE_FILTER_BY_TIMESPAN,
-    payload: { id },
-  };
-}
-
-
-export function fetchSourceSnapshotsList(id) {
-  return {
-    type: FETCH_SOURCE_SNAPSHOTS_LIST,
-    payload: {
-      promise: api.snapshotsList(id),
-    },
-  };
-}
-
-export function fetchSourceSnapshotTimespansList(itemId, snapshotId) {
-  return {
-    type: FETCH_SOURCE_TIMESPANS_LIST,
-    payload: {
-      promise: api.snapshotTimespansList(itemId, snapshotId),
-    },
-  };
-}
-
+export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);

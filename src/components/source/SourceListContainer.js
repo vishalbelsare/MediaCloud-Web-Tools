@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import ErrorTryAgain from '../util/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
 import SourceList from './SourceList';
+import SourceSearchContainer from './SourceSearchContainer';
 import { fetchSourceList } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
@@ -47,6 +48,7 @@ class SourceListContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <Grid>
+        <SourceSearchContainer />
           <Row>
             <Col lg={12}>
               <h2>{title}</h2>

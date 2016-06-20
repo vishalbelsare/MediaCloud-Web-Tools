@@ -11,6 +11,12 @@ from server import app, mc
 logger = logging.getLogger(__name__)
 
 
+@app.route('/api/sources/<str>/search', methods=['GET'])
+#@flask_login.login_required
+def media_search(str):
+    source_list = mc.mediaList(name_like=str)
+    return jsonify({'results':source_list})
+
 @app.route('/api/sources/source/list', methods=['GET'])
 #@flask_login.login_required
 def api_media_source_list ():
