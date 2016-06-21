@@ -50,8 +50,8 @@ class SourceDetailsContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         const { sources } = this.props;
         const { health } = this.props.sources;
-        content = <SourceInfo sources={sources} />;
-        subContent = (
+        subContent = <SourceInfo sources={sources} />;
+        content = (
             <Grid>
               <h3>Source Id: {sources.media_id} </h3>
               <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
@@ -67,7 +67,7 @@ class SourceDetailsContainer extends React.Component {
               <Row>
                 <Col lg={12}>
                   <h2>{title}</h2>
-                  {content}
+                  {subContent}
                 </Col>
                 <Col lg={6}>
                   <SourceTopWordsContainer sourceId={sourceId} />
@@ -89,7 +89,7 @@ class SourceDetailsContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-          {subContent}
+          {content}
       </div>
     );
   }

@@ -17,22 +17,39 @@ const localMessages = {
 
 class SourceSearchContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, fetchData } = this.props;
-    this.state = 'search for sources';
+    const { sourceSearchString, fetchStatus, fetchData } = this.props;
+    // this.state = sourceSearchString;
   }
   getStyles() {
     const styles = {
+      root: {
+      },
       contentWrapper: {
         padding: 10,
+      },
+      list: {
+        ul: {
+          li: {
+            listStyleType: 'none',
+          },
+        },
       },
     };
     return styles;
   }
-
+  handleSearch(handle) {
+    const { dispatchSearch } = this.props;
+    if (handle !== null && handle !== undefined) {
+      this.setState({ value: handle.value });
+      dispatchSearch(handle.value);
+    }
+  }
   render() {
     const { fetchStatus, fetchData, dispatchSearch } = this.props;
     let { sourceSearchString } = this.props;
     let content = [];
+    const styles = this.getStyles();
+    const handleSearch = this.handleSearch();
     if (this.state) {
       sourceSearchString = this.state.value;
     }
@@ -49,9 +66,17 @@ class SourceSearchContainer extends React.Component {
         content = <LoadingSpinner />;
 
     }
+    let currentValue = this.state !== null && this.state !== undefined ? this.state.value : '';
     return (
-      <Grid>
-      <Row><Multiselect textField = 'name' data = { sources } onChange = { value => this.setState({ value }) } onSearch = { value => dispatchSearch(value) } />
+      <Grid style={ styles.root }>
+      <Row style= { styles.list }>
+      <Multiselect style= { styles.list }
+        textField = 'name'
+        valueField = 'media_id'
+        defaultValue= { sourceSearchString }
+        data = { sources }
+        onChange = { value => this.setState({ value }) }
+        onSearch = { value => this.handleSearch({ value }) }/>
       </Row>
       <Row> { content } </Row>
       </Grid>
@@ -73,8 +98,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: () => {
+  fetchData: (e) => {
     if (this.state !== null) {
+      
       dispatch(fetchSourceSearch(this.state));
     }
   },
