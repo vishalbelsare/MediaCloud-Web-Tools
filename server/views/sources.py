@@ -36,22 +36,9 @@ def _get_media_source_list():
 def api_get_media_tag_list():
     tag_list = mc.tagList()
     #tag_list = sorted(tag_list, key=lambda ts: ts['label'])
+    logger.info(tag_list)
     return jsonify({'results':tag_list})
 
-
-#@app.route('/api/sources/media-tag-set/list', methods=['GET'])
-#@flask_login.login_required
-#def api_media_tag_set_list ():
-#    media_tag_sets = [5, 556, 597, 1099]
-#    tag_sets = _get_media_tag_set_list(media_tag_sets)
-#    return jsonify({'results':tag_sets})
-
-#@cache
-#Helper
-#def _get_media_tag_set_list(media_tag_sets):
-#    tag_sets = [ mc.tagSet(tag_sets_id) for tag_sets_id in media_tag_sets ]
- #   tag_sets = sorted(tag_sets, key=lambda ts: ts['label'])
- #   return tag_sets
 
 @app.route('/api/sources/collection/<media_tag_id>/details')
 #@flask_login.login_required

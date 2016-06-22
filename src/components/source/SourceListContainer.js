@@ -74,8 +74,8 @@ SourceListContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.allsources.fetchStatus,
-  sources: state.sources.allsources.list,
+  fetchStatus: state.sources.allSources.fetchStatus,
+  sources: state.sources.allSources.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
