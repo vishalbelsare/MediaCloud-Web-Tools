@@ -48,12 +48,12 @@ class SourceDetailsContainer extends React.Component {
 
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        const { sources } = this.props;
-        const { health } = this.props.sources;
-        subContent = <SourceInfo sources={sources} />;
+        const { source } = this.props;
+        const { health } = this.props.source;
+        subContent = <SourceInfo sources={source} />;
         content = (
             <Grid>
-              <h3>Source Id: {sources.media_id} </h3>
+              <h3>Source Id: {source.media_id} </h3>
               <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
               </Row>
               <Row>
@@ -114,8 +114,8 @@ const mapStateToProps = (state) => ({
   // filters: state.sources.selected.filters,
   sourceId: state.sources.selected.id,
   sourceInfo: state.sources.selected.info,
-  fetchStatus: state.sources.selected.details.sourceDetails.fetchStatus,
-  sources: state.sources.selected.details.sourceDetails.list,
+  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
+  source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
 const mapDispatchToProps = (dispatch) => ({

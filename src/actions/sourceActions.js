@@ -21,6 +21,7 @@ export const FETCH_SOURCE_COLLECTION_TOP_WORDS = 'FETCH_SOURCE_COLLECTION_TOP_WO
 export const FETCH_SOURCE_SNAPSHOTS_LIST = 'FETCH_SOURCE_SNAPSHOTS_LIST';
 export const FETCH_SOURCE_TIMESPANS_LIST = 'FETCH_SOURCE_TIMESPANS_LIST';
 export const FETCH_SOURCE_SENTENCE_COUNT = 'FETCH_SOURCE_SENTENCE_COUNT';
+export const FETCH_SOURCE_COLLECTION_SENTENCE_COUNT = 'FETCH_SOURCE_COLLECTION_SENTENCE_COUNT';
 export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 
@@ -34,6 +35,8 @@ export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.so
 export const fetchSourceCollectionDetails = createAction(FETCH_SOURCE_COLLECTION_DETAILS, api.sourceCollectionDetails, id => id);
 
 export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
+
+export const fetchSourceCollectionSentenceCount = createAsyncAction(FETCH_SOURCE_COLLECTION_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
 
 export const fetchSourceTopWords = createAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 

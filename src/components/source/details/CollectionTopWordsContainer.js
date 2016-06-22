@@ -3,20 +3,26 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import SentenceCount from '../../vis/SentenceCount';
-import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
+import WordCloud from '../../vis/WordCloud';
+import { fetchSourceCollectionTopWords } from '../../../actions/sourceActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
 const localMessages = {
-  title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
+  title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
 };
 
-class SentenceCountContainer extends React.Component {
+class SourceCollectionTopWordsContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, sourceId, fetchData } = this.props;
+    const { fetchStatus, sourceId, filters, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(sourceId);
+      fetchData(sourceId, filters.snapshotId, filters.timespanId);
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.filters !== this.props.filters) {
+      const { sourceId, fetchData } = this.props;
+      fetchData(sourceId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
     }
   }
   getStyles() {
@@ -28,15 +34,15 @@ class SentenceCountContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, fetchStatus, fetchData, total, counts, health } = this.props;
+    const { sourceId, fetchStatus, fetchData, words } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SentenceCount total={total} counts={counts} health={health} />;
+        content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
         break;
       case fetchConstants.FETCH_FAILED:
-        // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
+        content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -54,32 +60,30 @@ class SentenceCountContainer extends React.Component {
   }
 }
 
-SentenceCountContainer.propTypes = {
+SourceCollectionTopWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  words: React.PropTypes.array,
   sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  health: React.PropTypes.array,
+  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sentenceCount.fetchStatus,
-  total: state.sources.selected.details.sourceDetailsReducer.sentenceCount.total,
-  counts: state.sources.selected.details.sourceDetailsReducer.sentenceCount.list,
-  health: state.sources.selected.details.sourceDetailsReducer.sentenceCount.health,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.topWords.fetchStatus,
+  words: state.sources.selected.details.collectionDetailsReducer.topWords.list.wordcounts,
+  filters: state.sources.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
-   // if ((snapshotId !== null) && (timespanId !== null)) {
-    dispatch(fetchSourceSentenceCount(sourceId));
-   // }
+    // if ((snapshotId !== null) && (timespanId !== null)) {
+    dispatch(fetchSourceCollectionTopWords(sourceId));
+    // }
   },
 });
 
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SentenceCountContainer));
+)(SourceCollectionTopWordsContainer));

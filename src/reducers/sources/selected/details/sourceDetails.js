@@ -5,15 +5,15 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const sourceDetails = createAsyncReducer({
   initialState: {
-    list: [],
+    object: null,
   },
   action: FETCH_SOURCE_DETAILS,
-  handleFetch: () => ({ list: [], total: null }),
+  handleFetch: () => ({ object: null, total: null }),
   handleSuccess: (payload) => ({
     total: payload.total,
-    list: payload.results,
+    object: payload.results,
   }),
-  handleFailure: () => ({ list: [], total: null }),
+  handleFailure: () => ({ object: null, total: null }),
 });
 
 

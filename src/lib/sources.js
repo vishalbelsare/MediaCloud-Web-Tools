@@ -37,7 +37,7 @@ export function sourceDetails(mediaId) {
 }
 
 export function sourceCollectionDetails(mediaId) {
-  return fetch(`/api/sources/media-tag/${mediaId}/details`, {
+  return fetch(`/api/sources/collection/${mediaId}/details`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -47,6 +47,15 @@ export function sourceCollectionDetails(mediaId) {
 
 export function sourceSentenceCount(mediaId) {
   return fetch(`api/sources/media-source/${mediaId}/sentences/count`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
+
+export function sourceCollectionSentenceCount(mediaId) {
+  return fetch(`api/sources/media-tag/${mediaId}/sentences/count`, {
     method: 'get',
     credentials: 'include',
   }).then(

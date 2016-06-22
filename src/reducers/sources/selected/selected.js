@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { SELECT_SOURCE } from '../../../actions/sourceActions';
 import details from './details/details';
-import filters from './filters';
 import info from './info';
 
 const INITIAL_STATE = null;
@@ -19,7 +18,6 @@ const rootReducer = combineReducers({
   id,
   info,
   details,
-  filters,
 });
 
 export default rootReducer;

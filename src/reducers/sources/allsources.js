@@ -11,7 +11,7 @@ function arrayToDict(arr, keyPropertyName) {
   return dict;
 }
 
-const all = createAsyncReducer({
+const allsources = createAsyncReducer({
   initialState: {
     total: null,
     list: [],
@@ -24,4 +24,4 @@ const all = createAsyncReducer({
   }),
   handleFailure: () => ({ list: [], total: null }),
 });
-export default all;
+export default allsources;

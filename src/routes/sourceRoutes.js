@@ -16,9 +16,8 @@ const sourceRoutes = (
         <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
     </Route>
     <Route path="/collection" >
-      <IndexRoute component={CollectionListContainer} onEnter={requireAuth} />
       <Route path="list" component={CollectionListContainer} onEnter={requireAuth} />
-      <Route path=":sourceId/details" component={SourceCollectionDetailsContainer} onEnter={requireAuth} />
+      <Route path=":sourceId/details" component={SourceCollectionDetailsContainer} />
     </Route>
   </Route>
 );

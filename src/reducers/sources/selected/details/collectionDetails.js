@@ -1,19 +1,18 @@
-
 import { FETCH_SOURCE_COLLECTION_DETAILS } from '../../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
-const tagDetails = createAsyncReducer({
+const collectionDetails = createAsyncReducer({
   initialState: {
-    list: [],
+    object: null,
   },
   action: FETCH_SOURCE_COLLECTION_DETAILS,
-  handleFetch: () => ({ list: [], total: null }),
+  handleFetch: () => ({ object: null, total: null }),
   handleSuccess: (payload) => ({
     total: payload.total,
-    list: payload.results,
+    object: payload.results,
   }),
-  handleFailure: () => ({ list: [], total: null }),
+  handleFailure: () => ({ object: null, total: null }),
 });
 
 
-export default tagDetails;
+export default collectionDetails;

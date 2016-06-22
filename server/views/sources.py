@@ -53,7 +53,7 @@ def api_get_media_tag_list():
  #   tag_sets = sorted(tag_sets, key=lambda ts: ts['label'])
  #   return tag_sets
 
-@app.route('/api/sources/media-tag/<media_tag_id>/details', methods=['GET'])
+@app.route('/api/sources/collection/<media_tag_id>/details', methods=['GET'])
 #@flask_login.login_required
 def api_media_tag_details(media_tag_id):
     info = _get_media_tag_details(media_tag_id)

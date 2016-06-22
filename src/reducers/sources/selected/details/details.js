@@ -1,16 +1,11 @@
 import { combineReducers } from 'redux';
-import sourceDetails from './sourceDetails';
-import collectionDetails from './collectionDetails';
-import topWords from './topWords';
-import sentenceCount from './sentenceCount';
-// import topWords from './topWords';
-// import sentenceCount from './sentenceCount';
+import sourceDetailsReducer from './sourceDetailsReducer';
+import collectionDetailsReducer from './collectionDetailsReducer';
 
-const summaryReducer = combineReducers({
-  sourceDetails,
-  collectionDetails,
-  topWords,
-  sentenceCount,
+
+const details = combineReducers({
+  sourceDetailsReducer,
+  collectionDetailsReducer,
 });
 
-export default summaryReducer;
+export default details;
