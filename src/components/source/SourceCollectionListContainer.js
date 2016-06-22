@@ -62,7 +62,7 @@ class SourceCollectionListContainer extends React.Component {
 
 SourceCollectionListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
@@ -72,8 +72,8 @@ SourceCollectionListContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.allcollections.fetchStatus,
-  sources: state.sources.allcollections.list,
+  fetchStatus: state.sources.allCollections.fetchStatus,
+  sources: state.sources.allCollections.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({

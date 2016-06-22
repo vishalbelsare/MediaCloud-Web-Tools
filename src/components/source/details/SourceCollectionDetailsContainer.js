@@ -6,9 +6,9 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
-// import SourceTopWordsContainer from './SourceTopWordsContainer';
-// import SentenceCountContainer from './SentenceCountContainer';
-// import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+// import SourceTopWordsContainer from './SourceCollectionTopWordsContainer';
+// import SentenceCountContainer from './SourceCollectionSentenceCountContainer';
+
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
@@ -66,7 +66,7 @@ class SourceCollectionDetailsContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />  
-         { content } 
+         { content }
       </div>
     );
   }

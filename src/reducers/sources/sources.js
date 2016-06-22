@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
-import allcollections from './allcollections';
-import allsources from './allsources';
+import allCollections from './allCollections';
+import allSources from './allSources';
 import selected from './selected/selected';
 import sourceSearch from './sourceSearch';
 
 const rootReducer = combineReducers({
-  allcollections,
-  allsources,
+  allCollections,
+  allSources,
   sourceSearch,
   selected,
 });

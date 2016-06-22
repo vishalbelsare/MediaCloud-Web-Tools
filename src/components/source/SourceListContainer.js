@@ -28,7 +28,7 @@ class SourceListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sources, fetchStatus, fetchData } = this.props;
+    const { fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.sourcesListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -36,6 +36,7 @@ class SourceListContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        const { sources } = this.props;
         content = <SourceList sources={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
@@ -63,7 +64,7 @@ class SourceListContainer extends React.Component {
 
 SourceListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };

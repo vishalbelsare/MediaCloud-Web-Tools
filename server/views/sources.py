@@ -53,12 +53,12 @@ def api_get_media_tag_list():
  #   tag_sets = sorted(tag_sets, key=lambda ts: ts['label'])
  #   return tag_sets
 
-@app.route('/api/sources/collection/<media_tag_id>/details', methods=['GET'])
+@app.route('/api/sources/collection/<media_tag_id>/details')
 #@flask_login.login_required
 def api_media_tag_details(media_tag_id):
     info = _get_media_tag_details(media_tag_id)
+    logger.info(info)
     return jsonify({'results':info})
-
 
  #@cache 
  #Helper  
@@ -78,6 +78,7 @@ def _get_media_tag_details(media_tag_id):
             max_media_id = media[-1]['media_id']
         more_media = len(media)!=0
     info['media'] = [ {'id':m['media_id'],'name':m['name']} for m in sorted(all_media, key=lambda t: t['name']) ]
+    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
     return info
 
 @app.route('/api/sources/media-source/<media_id>/details')
@@ -117,7 +118,7 @@ def _get_media_source_health(media_id):
 def _get_media_source_details(media_id, start_date_str = None):
     info = mc.media(media_id)
     info['id'] = media_id
-    info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
+    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
     info['feedCount'] = len(mc.feedList(media_id=media_id,rows=100))
     return info
 
