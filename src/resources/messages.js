@@ -23,8 +23,7 @@ const messages = {
   topicTimespan: { id: 'topic.timespan', defaultMessage: 'Timespan' },
 
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
-  sourceSnapshot: { id: 'source.snapshot', defaultMessage: 'Snapshot' },
-  sourceTimespan: { id: 'source.timespan', defaultMessage: 'Timespan' },
+  sourceQuery: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
 
   timespan: { id: 'common.timespan', defaultMessage: 'Timespan' },
   collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },

@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import ErrorTryAgain from '../util/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
 import SourceList from './SourceList';
+import SourceSearchContainer from './SourceSearchContainer';
 import { fetchSourceList } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
@@ -27,7 +28,7 @@ class SourceListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sources, fetchStatus, fetchData } = this.props;
+    const { fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.sourcesListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -35,6 +36,7 @@ class SourceListContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        const { sources } = this.props;
         content = <SourceList sources={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
@@ -47,6 +49,7 @@ class SourceListContainer extends React.Component {
       <div style={styles.root}>
         <Title render={titleHandler} />
         <Grid>
+        <SourceSearchContainer />
           <Row>
             <Col lg={12}>
               <h2>{title}</h2>
@@ -61,7 +64,7 @@ class SourceListContainer extends React.Component {
 
 SourceListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
@@ -71,8 +74,8 @@ SourceListContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.allsources.fetchStatus,
-  sources: state.sources.allsources.list,
+  fetchStatus: state.sources.allSources.fetchStatus,
+  sources: state.sources.allSources.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({

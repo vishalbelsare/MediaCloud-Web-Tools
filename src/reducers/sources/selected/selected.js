@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux';
 import { SELECT_SOURCE } from '../../../actions/sourceActions';
-import snapshots from './snapshots';
-import timespans from './timespans';
 import details from './details/details';
-import filters from './filters';
-import info from './info';
-
+import sourceInfo from './sourceInfo';
+import collectionInfo from './collectionInfo';
 const INITIAL_STATE = null;
 
 function id(state = INITIAL_STATE, action) {
@@ -19,11 +16,9 @@ function id(state = INITIAL_STATE, action) {
 
 const rootReducer = combineReducers({
   id,
-  info,
+  sourceInfo,
+  collectionInfo,
   details,
-  snapshots,
-  timespans,
-  filters,
 });
 
 export default rootReducer;

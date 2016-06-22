@@ -7,9 +7,10 @@ import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceDetails } from '../../../actions/sourceActions';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
-import SentenceCountContainer from './SentenceCountContainer';
+// import SentenceCountContainer from './SentenceCountContainer';
 // import { Link } from 'react-router';
 // import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
@@ -33,8 +34,7 @@ class SourceDetailsContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sources, fetchData, fetchStatus } = this.props;
-    const { health } = this.props.sources;
+    const { fetchData, fetchStatus } = this.props;
     let { sourceId } = this.props;
     if (sourceId === null) {
       sourceId = this.props.params.sourceId;
@@ -45,12 +45,15 @@ class SourceDetailsContainer extends React.Component {
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
+
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SourceInfo sources={sources} />;
-        subContent = (
+        const { source } = this.props;
+        const { health } = this.props.source;
+        subContent = <SourceInfo sources={source} />;
+        content = (
             <Grid>
-              <h3>Source Id: {sources.media_id} </h3>
+              <h3>Source Id: {source.media_id} </h3>
               <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
               </Row>
               <Row>
@@ -64,13 +67,10 @@ class SourceDetailsContainer extends React.Component {
               <Row>
                 <Col lg={12}>
                   <h2>{title}</h2>
-                  {content}
+                  {subContent}
                 </Col>
                 <Col lg={6}>
                   <SourceTopWordsContainer sourceId={sourceId} />
-                </Col>
-                <Col lg={6}>
-                  <SentenceCountContainer sourceId={sourceId} />
                 </Col>
 
               </Row>
@@ -86,7 +86,7 @@ class SourceDetailsContainer extends React.Component {
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
-          {subContent}
+          {content}
       </div>
     );
   }
@@ -100,7 +100,7 @@ SourceDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.string,
   sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array,
 };
 
 SourceDetailsContainer.contextTypes = {
@@ -111,8 +111,8 @@ const mapStateToProps = (state) => ({
   // filters: state.sources.selected.filters,
   sourceId: state.sources.selected.id,
   sourceInfo: state.sources.selected.info,
-  fetchStatus: state.sources.selected.details.sourceDetails.fetchStatus,
-  sources: state.sources.selected.details.sourceDetails.list,
+  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
+  source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
 const mapDispatchToProps = (dispatch) => ({

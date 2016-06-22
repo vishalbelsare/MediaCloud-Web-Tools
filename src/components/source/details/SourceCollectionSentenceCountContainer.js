@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SentenceCount from '../../vis/SentenceCount';
-import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
+import { fetchSourceCollectionSentenceCount } from '../../../actions/sourceActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
@@ -12,7 +12,7 @@ const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
 };
 
-class SentenceCountContainer extends React.Component {
+class SourceCollectionSentenceCountContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus, sourceId, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
@@ -54,7 +54,7 @@ class SentenceCountContainer extends React.Component {
   }
 }
 
-SentenceCountContainer.propTypes = {
+SourceCollectionSentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
@@ -65,16 +65,16 @@ SentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sentenceCount.fetchStatus,
-  total: state.sources.selected.details.sourceDetailsReducer.sentenceCount.total,
-  counts: state.sources.selected.details.sourceDetailsReducer.sentenceCount.list,
-  health: state.sources.selected.details.sourceDetailsReducer.sentenceCount.health,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.sentenceCount.fetchStatus,
+  total: state.sources.selected.details.collectionDetailsReducer.sentenceCount.total,
+  counts: state.sources.selected.details.collectionDetailsReducer.sentenceCount.list,
+  health: state.sources.selected.details.collectionDetailsReducer.sentenceCount.health,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
    // if ((snapshotId !== null) && (timespanId !== null)) {
-    dispatch(fetchSourceSentenceCount(sourceId));
+    dispatch(fetchSourceCollectionSentenceCount(sourceId));
    // }
   },
 });
@@ -82,4 +82,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SentenceCountContainer));
+)(SourceCollectionSentenceCountContainer));

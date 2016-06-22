@@ -14,17 +14,12 @@ const localMessages = {
 
 class SourceTopWordsContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, sourceId, filters, fetchData } = this.props;
+    const { fetchStatus, sourceId, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(sourceId, filters.snapshotId, filters.timespanId);
+      fetchData(sourceId);
     }
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.filters !== this.props.filters) {
-      const { sourceId, fetchData } = this.props;
-      fetchData(sourceId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
-    }
-  }
+
   getStyles() {
     const styles = {
       contentWrapper: {
@@ -66,19 +61,17 @@ SourceTopWordsContainer.propTypes = {
   sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.topWords.fetchStatus,
-  words: state.sources.selected.details.topWords.list.wordcounts,
-  filters: state.sources.selected.filters,
+  fetchStatus: state.sources.selected.details.sourceDetailsReducer.topWords.fetchStatus,
+  words: state.sources.selected.details.sourceDetailsReducer.topWords.list.wordcounts,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (sourceId, snapshotId, timespanId) => {
+  fetchData: (sourceId) => {
     // if ((snapshotId !== null) && (timespanId !== null)) {
-    dispatch(fetchSourceTopWords(sourceId, snapshotId, timespanId));
+    dispatch(fetchSourceTopWords(sourceId));
     // }
   },
 });

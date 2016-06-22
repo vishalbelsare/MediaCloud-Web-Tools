@@ -27,7 +27,7 @@ class SourceCollectionListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sources, fetchStatus, fetchData } = this.props;
+    const { fetchStatus, fetchData } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.collectionsListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -35,6 +35,7 @@ class SourceCollectionListContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
+        const { sources } = this.props;
         content = <CollectionList sources={sources} />;
         break;
       case fetchConstants.FETCH_FAILED:
@@ -61,7 +62,7 @@ class SourceCollectionListContainer extends React.Component {
 
 SourceCollectionListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  sources: React.PropTypes.object.isRequired,
+  sources: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };
@@ -71,8 +72,8 @@ SourceCollectionListContainer.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.allcollections.fetchStatus,
-  sources: state.sources.allcollections.list,
+  fetchStatus: state.sources.allCollections.fetchStatus,
+  sources: state.sources.allCollections.list,
 });
 
 const mapDispatchToProps = (dispatch) => ({
