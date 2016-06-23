@@ -28,7 +28,7 @@ class CollectionListItem extends React.Component {
     return (
       <Col xs={12} sm={6} md={3} lg={3}>
         <Paper zDepth={1} rounded={false} style={styles.paper}>
-          <Link to={`/collections/${source.tags_id}/details`} style={styles.name}>{source.tags_id}</Link>
+          <Link to={`/collection/${source.tags_id}/details`} style={styles.name}>{source.tags_id}</Link>
           <p style={styles.description}>{source.url}</p>
           <p style={styles.description}>{source.tag}</p>
         </Paper>

@@ -5,6 +5,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const collectionTopWords = createAsyncReducer({
   initialState: {
+    total: null,
     list: [],
   },
   action: FETCH_SOURCE_COLLECTION_TOP_WORDS,

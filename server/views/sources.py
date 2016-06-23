@@ -44,7 +44,6 @@ def api_get_media_tag_list():
 #@flask_login.login_required
 def api_media_tag_details(media_tag_id):
     info = _get_media_tag_details(media_tag_id)
-    logger.info(info)
     return jsonify({'results':info})
 
  #@cache 
@@ -61,11 +60,13 @@ def _get_media_tag_details(media_tag_id):
         logging.warn("last_media_id %d" % max_media_id)
         media = mc.mediaList(tags_id=media_tag_id,last_media_id=max_media_id,rows=100)
         all_media = all_media + media
+        logger.info(media)
         if len(media)>0:
-            max_media_id = media[-1]['media_id']
+            max_media_id = media[len(media)-1]['media_id']
+
         more_media = len(media)!=0
     info['media'] = [ {'id':m['media_id'],'name':m['name']} for m in sorted(all_media, key=lambda t: t['name']) ]
-    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
+    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_tag_id)], start_date_str )
     return info
 
 @app.route('/api/sources/media-source/<media_id>/details')
