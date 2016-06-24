@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, render_template, jsonify, request, abort
+from flask import jsonify, request
 import flask_login
 
 from server import app, mc
@@ -21,9 +21,9 @@ def topic_words_csv(topic_id):
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
     response = _word_count(topic_id, snapshot_id, timespan_id)
-    props = ['term','stem','count']
-    return csv.stream_response(response,props,'sampled-words')
+    props = ['term', 'stem', 'count']
+    return csv.stream_response(response, props, 'sampled-words')
 
 def _word_count(topic_id, snapshot_id, timespan_id):
-    response = mc.topicWordCount(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id)
+    response = mc.topicWordCount(topic_id, snapshot_id=snapshot_id, timespan_id=timespan_id)
     return response

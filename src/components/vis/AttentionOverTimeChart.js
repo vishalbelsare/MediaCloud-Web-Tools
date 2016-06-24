@@ -7,6 +7,11 @@ highchartsExporting(ReactHighcharts.Highcharts);
 import highchartsOfflineExporting from 'highcharts-offline-exporting';
 highchartsOfflineExporting(ReactHighcharts.Highcharts);
 
+const SECS_PER_DAY = 1000 * 60 * 60 * 24;
+
+// don't show dots on line if more than this many data points
+const SERIES_MARKER_THRESHOLD = 30;
+
 class AttentionOverTime extends React.Component {
 
   getConfig() {
@@ -53,21 +58,21 @@ class AttentionOverTime extends React.Component {
       type: 'datetime',
       plotBands: health,
     };
-    config.series = data;
     if (onDataPointClick !== null) {
       config.plotOptions.series.point = { events: { click: onDataPointClick } };
     }
-    config.plotOptions.series.marker.enabled = (data.length < 30);   // don't show dots on line if more than N data points
+    config.plotOptions.series.marker.enabled = (data.length < SERIES_MARKER_THRESHOLD);
     // clean up the data
     const dates = data.map((d) => d.date);
+    // turning variable time unit into days
     const intervalMs = (dates[1] - dates[0]);
-    const intervalDays = intervalMs / (1000 * 60 * 60 * 24);
+    const intervalDays = intervalMs / SECS_PER_DAY;
+    const values = data.map((d) => d.count / intervalDays);
     const allSeries = [{
       id: 0,
       name: yAxisLabel,
       color: '#000066',
-      // turning variable time unit into days
-      data: data.map((d) => d.count / intervalDays),
+      data: values,
       pointStart: dates[0],
       pointInterval: intervalMs,
       cursor: 'pointer',
