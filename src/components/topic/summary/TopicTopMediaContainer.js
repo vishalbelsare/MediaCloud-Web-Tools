@@ -1,11 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../util/ErrorTryAgain';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import composeAsyncWidget from '../../util/composeAsyncWidget';
 import TopicTopMedia from './TopicTopMedia';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 
 const localMessages = {
@@ -13,17 +11,11 @@ const localMessages = {
 };
 
 class TopicTopMediaContainer extends React.Component {
-  componentDidMount() {
-    const { fetchStatus } = this.props;
-    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      this.refetchData();
-    }
-  }
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
-      const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
+      const { fetchData } = this.props;
+      fetchData(nextProps);
     }
   }
   onChangeSort = (newSort) => {
@@ -43,25 +35,14 @@ class TopicTopMediaContainer extends React.Component {
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
   render() {
-    const { fetchStatus, media, sort, topicId } = this.props;
-    let content = fetchStatus;
+    const { media, sort, topicId } = this.props;
     const styles = this.getStyles();
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        content = <TopicTopMedia media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />;
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner />;
-    }
     return (
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            {content}
+            <TopicTopMedia media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
           </div>
         </Paper>
       </div>
@@ -70,14 +51,18 @@ class TopicTopMediaContainer extends React.Component {
 }
 
 TopicTopMediaContainer.propTypes = {
+  // from context
+  intl: React.PropTypes.object.isRequired,
+  // from parent
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
+  sortData: React.PropTypes.func.isRequired,
+  // from state
   fetchStatus: React.PropTypes.string.isRequired,
   sort: React.PropTypes.string.isRequired,
   media: React.PropTypes.array,
-  topicId: React.PropTypes.number.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -86,18 +71,23 @@ const mapStateToProps = (state) => ({
   media: state.topics.selected.summary.topMedia.media,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId, timespanId, sort) => {
-    if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchTopicTopMedia(topicId, snapshotId, timespanId, sort));
-    }
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  asyncFetch: () => {
+    dispatch(fetchTopicTopMedia(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
+  },
+  fetchData: (props) => {
+    dispatch(fetchTopicTopMedia(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopMedia(sort));
   },
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopicTopMediaContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeAsyncWidget(
+        TopicTopMediaContainer
+      )
+    )
+  );

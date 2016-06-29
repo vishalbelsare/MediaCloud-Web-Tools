@@ -3,22 +3,15 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-
-import ErrorTryAgain from '../util/ErrorTryAgain';
-import LoadingSpinner from '../util/LoadingSpinner';
+import composeAsyncWidget from '../util/composeAsyncWidget';
 import TopicList from './TopicList';
 import { fetchTopicsList } from '../../actions/topicActions';
-import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const localMessages = {
   topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
 };
 
 class TopicListContainer extends React.Component {
-  componentDidMount() {
-    const { fetchData } = this.props;
-    fetchData();
-  }
   getStyles() {
     const styles = {
       root: {
@@ -27,22 +20,11 @@ class TopicListContainer extends React.Component {
     return styles;
   }
   render() {
-    const { topics, fetchStatus, fetchData } = this.props;
+    const { topics } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.topicsListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-    let content = fetchStatus;
     const styles = this.getStyles();
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        content = <TopicList topics={topics} />;
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner />;
-    }
     return (
       <div style={styles.root}>
         <Title render={titleHandler} />
@@ -50,7 +32,7 @@ class TopicListContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <h2>{title}</h2>
-              {content}
+              <TopicList topics={topics} />;
             </Col>
           </Row>
         </Grid>
@@ -60,10 +42,12 @@ class TopicListContainer extends React.Component {
 }
 
 TopicListContainer.propTypes = {
-  fetchStatus: React.PropTypes.string.isRequired,
+  // from state
   topics: React.PropTypes.array.isRequired,
+  // from context
   intl: React.PropTypes.object.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -72,12 +56,16 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: () => {
+  asyncFetch: () => {
     dispatch(fetchTopicsList());
   },
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopicListContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeAsyncWidget(
+        TopicListContainer
+      )
+    )
+  );

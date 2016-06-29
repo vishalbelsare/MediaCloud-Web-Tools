@@ -22,7 +22,7 @@ export const SORT_TOPIC_INFLUENTIAL_STORIES = 'SORT_TOPIC_INFLUENTIAL_STORIES';
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
 // pass in topicId
-export const selectTopic = createAction(SELECT_TOPIC, id => id);
+export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 
 // pass in topicId
 export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_LIST, api.topicSnapshotsList);

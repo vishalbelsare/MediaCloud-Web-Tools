@@ -2,18 +2,13 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import composeAsyncWidget from '../util/composeAsyncWidget';
 import LoadingSpinner from '../util/LoadingSpinner';
-import ErrorTryAgain from '../util/ErrorTryAgain';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import TopicControlBar from './controlbar/TopicControlBar';
 import messages from '../../resources/messages';
-import * as fetchConstants from '../../lib/fetchConstants.js';
 
 class TopicContainer extends React.Component {
-  componentDidMount() {
-    const { params, fetchData } = this.props;
-    fetchData(params.topicId);
-  }
   getStyles() {
     const styles = {
       root: {
@@ -25,42 +20,29 @@ class TopicContainer extends React.Component {
     return styles;
   }
   filtersAreSet() {
-    const { filters, topicId } = this.props;
+    const { filters } = this.props;
+    const { topicId } = this.props.params;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicId, topicInfo, fetchData } = this.props;
+    const { children, topicInfo } = this.props;
+    const topicId = parseInt(this.props.params, 10);
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.topicName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
-    let content = <div />;
-    switch (topicInfo.fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        let subContent = <div />;
-        if (this.filtersAreSet()) {
-          subContent = children;
-        } else {
-          subContent = <LoadingSpinner />;
-        }
-        content = (
-          <div>
-            <Title render={titleHandler} />
-            <TopicControlBar topicId={topicId} title={topicInfo.name} />
-            {subContent}
-          </div>
-        );
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData(topicId)} />;
-        break;
-      default:
-        content = <LoadingSpinner />;
+    let subContent = <div />;
+    if (this.filtersAreSet()) {
+      subContent = children;
+    } else {
+      subContent = <LoadingSpinner />;
     }
     return (
       <div style={styles.root}>
         <div>
-          {content}
+          <Title render={titleHandler} />
+          <TopicControlBar topicId={topicId} title={topicInfo.name} />
+          {subContent}
         </div>
       </div>
     );
@@ -68,29 +50,37 @@ class TopicContainer extends React.Component {
 }
 
 TopicContainer.propTypes = {
-  children: React.PropTypes.node,
+  // from context
   intl: React.PropTypes.object.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  children: React.PropTypes.node,
+  // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
+  // params from router
+  params: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  topicId: React.PropTypes.number,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
   topicInfo: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   filters: state.topics.selected.filters,
-  topicId: state.topics.selected.id,
+  fetchStatus: state.topics.selected.info.fetchStatus,
   topicInfo: state.topics.selected.info,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId) => {
-    dispatch(selectTopic(topicId));
-    dispatch(fetchTopicSummary(topicId));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  asyncFetch: () => {
+    dispatch(selectTopic(ownProps.params.topicId));
+    dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopicContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+        composeAsyncWidget(
+          TopicContainer
+        )
+      )
+  );

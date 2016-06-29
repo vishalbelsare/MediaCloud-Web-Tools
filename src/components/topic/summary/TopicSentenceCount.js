@@ -34,7 +34,7 @@ class TopicSentenceCount extends React.Component {
           values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
         />
         </p>
-        <AttentionOverTimeChart data={counts} height={250}
+        <AttentionOverTimeChart data={counts} height={styles.scrollWrapper.height - 70}
           title={ formatMessage(localMessages.chartTitle) }
           yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
         />

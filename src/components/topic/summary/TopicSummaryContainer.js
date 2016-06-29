@@ -46,14 +46,14 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row style={styles.row}>
-            <Col lg={6}>
-              <TopicTopMediaContainer topicId={topicId} filters={filters} />
-            </Col>
-            <Col lg={6}>
+            <Col lg={12}>
               <TopicTopStoriesContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row style={styles.row}>
+            <Col lg={6}>
+              <TopicTopMediaContainer topicId={topicId} filters={filters} />
+            </Col>
             <Col lg={6}>
               <TopicInfo topic={topicInfo} />
             </Col>

@@ -1,11 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../util/ErrorTryAgain';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import composeAsyncWidget from '../../util/composeAsyncWidget';
 import WordCloud from '../../vis/WordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
 import Paper from 'material-ui/Paper';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../util/DownloadButton';
@@ -15,16 +13,10 @@ const localMessages = {
 };
 
 class TopicTopStoriesContainer extends React.Component {
-  componentDidMount() {
-    const { fetchStatus } = this.props;
-    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      this.refetchData();
-    }
-  }
   componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
     if (nextProps.filters !== this.props.filters) {
-      const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
+      fetchData(nextProps);
     }
   }
   getStyles() {
@@ -35,39 +27,22 @@ class TopicTopStoriesContainer extends React.Component {
     };
     return styles;
   }
-  refetchData = () => {
-    const { topicId, filters, fetchData } = this.props;
-    fetchData(topicId, filters.snapshotId, filters.timespanId);
-  }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
     const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
     window.location = url;
   }
   render() {
-    const { fetchStatus, words } = this.props;
+    const { words } = this.props;
     const { formatMessage } = this.props.intl;
-    let content = fetchStatus;
     const styles = this.getStyles();
-    let headerContent = null;
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
-        content = <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />;
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner />;
-    }
     return (
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
-            {headerContent}
+            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            {content}
+            <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />
           </div>
         </Paper>
       </div>
@@ -76,12 +51,17 @@ class TopicTopStoriesContainer extends React.Component {
 }
 
 TopicTopStoriesContainer.propTypes = {
-  fetchStatus: React.PropTypes.string.isRequired,
-  words: React.PropTypes.array,
-  topicId: React.PropTypes.number.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  // from context
   intl: React.PropTypes.object.isRequired,
+  // from parent
+  topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
+  // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  // from state
+  words: React.PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -90,15 +70,22 @@ const mapStateToProps = (state) => ({
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId, timespanId) => {
-    if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchTopicTopWords(topicId, snapshotId, timespanId));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  asyncFetch: () => {
+    if ((ownProps.filters.snapshotId !== null) && (ownProps.filters.timespanId !== null)) {
+      dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
     }
+  },
+  fetchData: (props) => {
+    dispatch(fetchTopicTopWords(props.topicId, props.filters.snapshotId, props.filters.timespanId));
   },
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopicTopStoriesContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeAsyncWidget(
+        TopicTopStoriesContainer
+      )
+    )
+  );

@@ -10,8 +10,8 @@ import requireAuth from './routes.js';
 const topicRoutes = (
   <Route path="/">
     <Route path="/home" component={TopicListContainer} onEnter={requireAuth} />
-    <Route path="/topics" component={TopicContainer} >
-      <Route path="/topics/:topicId" component={TopicSummaryContainer} onEnter={requireAuth} />
+    <Route path="/topics/:topicId" component={TopicContainer} >
+      <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/media" component={TopicInfluentialMediaContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/stories" component={TopicInfluentialStoriesContainer} onEnter={requireAuth} />
     </Route>

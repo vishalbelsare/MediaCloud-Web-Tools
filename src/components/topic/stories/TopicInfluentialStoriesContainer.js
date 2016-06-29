@@ -25,7 +25,8 @@ class TopicInfluentialStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
-      const { topicId, fetchData } = this.props;
+      const { fetchData } = this.props;
+      const { topicId } = this.props.params;
       fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
     }
   }
@@ -47,15 +48,18 @@ class TopicInfluentialStoriesContainer extends React.Component {
     return styles;
   }
   refetchData = () => {
-    const { fetchData, topicId, filters, sort } = this.props;
+    const { fetchData, filters, sort } = this.props;
+    const { topicId } = this.props.params;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
   nextPage = () => {
-    const { fetchData, topicId, filters, sort, continuationId } = this.props;
+    const { fetchData, filters, sort, continuationId } = this.props;
+      const { topicId } = this.props.params;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort, continuationId);
   }
   downloadCsv = () => {
-    const { topicId, filters, sort } = this.props;
+    const { filters, sort } = this.props;
+      const { topicId } = this.props.params;
     const url = `/api/topics/${topicId}/stories.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
@@ -102,15 +106,18 @@ class TopicInfluentialStoriesContainer extends React.Component {
 TopicInfluentialStoriesContainer.ROWS_PER_PAGE = 20;
 
 TopicInfluentialStoriesContainer.propTypes = {
+  // from context
+  params: React.PropTypes.object.isRequired,       // params from router
+  intl: React.PropTypes.object.isRequired,
+  // from parent
+  // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
+  sortData: React.PropTypes.func.isRequired,
+  // from state
   fetchStatus: React.PropTypes.string.isRequired,
   sort: React.PropTypes.string.isRequired,
   stories: React.PropTypes.array.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
-  intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
   continuationId: React.PropTypes.number,
 };
@@ -121,11 +128,10 @@ const mapStateToProps = (state) => ({
   stories: state.topics.selected.stories.stories,
   continuationId: state.topics.selected.stories.continuation_id,
   filters: state.topics.selected.filters,
-  topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, snapshotId, timespanId, sort, continuationId) => {
     if ((snapshotId !== null) && (timespanId !== null)) {
       dispatch(fetchTopicInfluentialStories(topicId, snapshotId, timespanId, sort,
