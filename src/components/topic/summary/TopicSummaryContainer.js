@@ -81,9 +81,11 @@ class TopicSummaryContainer extends React.Component {
 }
 
 TopicSummaryContainer.propTypes = {
+  // from context
   intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,
+  // from state
   filters: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
   topicId: React.PropTypes.number,
   topicInfo: React.PropTypes.object,
 };
