@@ -38,9 +38,10 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_KEY):
+      const isLoggedIn = (action.payload.status !== 401);
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        isLoggedIn: true,
+        isLoggedIn,
         ...action.payload,
       });
     case reject(LOGIN_WITH_KEY):
