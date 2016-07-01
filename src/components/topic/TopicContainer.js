@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncWidget from '../util/composeAsyncWidget';
 import LoadingSpinner from '../util/LoadingSpinner';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
-import TopicControlBar from './controlbar/TopicControlBar';
+import ControlBar from './controlbar/ControlBar';
 import messages from '../../resources/messages';
 
 class TopicContainer extends React.Component {
@@ -41,7 +41,7 @@ class TopicContainer extends React.Component {
       <div style={styles.root}>
         <div>
           <Title render={titleHandler} />
-          <TopicControlBar topicId={topicId} title={topicInfo.name} />
+          <ControlBar topicId={topicId} title={topicInfo.name} />
           {subContent}
         </div>
       </div>

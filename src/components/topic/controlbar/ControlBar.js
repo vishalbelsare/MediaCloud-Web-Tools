@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './TimespanSelectorContainer';
 
-class TopicControlBar extends React.Component {
+class ControlBar extends React.Component {
   getStyles() {
     const styles = {
       root: {
@@ -42,10 +42,10 @@ class TopicControlBar extends React.Component {
   }
 }
 
-TopicControlBar.propTypes = {
+ControlBar.propTypes = {
   intl: React.PropTypes.object.isRequired,
   title: React.PropTypes.string,
   topicId: React.PropTypes.number,
 };
 
-export default injectIntl(TopicControlBar);
+export default injectIntl(ControlBar);
