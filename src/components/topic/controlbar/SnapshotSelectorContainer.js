@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SnapshotSelector from './SnapshotSelector';
@@ -20,6 +19,11 @@ class SnapshotSelectorContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
+        backgroundColor: '#303030',
+        color: '#ffffff',
+      },
+      right: {
+        float: 'right',
       },
     };
     return styles;
@@ -34,7 +38,13 @@ class SnapshotSelectorContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SnapshotSelector selectedId={snapshotId} snapshots={snapshots} onSnapshotSelected={onSnapshotSelected} />;
+        content = (
+          <div style={styles.right}>
+            <SnapshotSelector selectedId={snapshotId}
+              snapshots={snapshots} onSnapshotSelected={onSnapshotSelected}
+            />
+          </div>
+        );
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={this.refetchData} />;

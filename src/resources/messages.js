@@ -22,6 +22,9 @@ const messages = {
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },
   topicTimespan: { id: 'topic.timespan', defaultMessage: 'Timespan' },
 
+  snapshotAge: { id: 'topic.snapshot.age', defaultMessage: 'Snapshot taken {age}' },
+  snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a difference Snapshot' },
+
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
   sourceQuery: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
 

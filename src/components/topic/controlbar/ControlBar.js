@@ -9,12 +9,10 @@ class ControlBar extends React.Component {
   getStyles() {
     const styles = {
       root: {
-        backgroundColor: '#dddddd',
+        backgroundColor: '#f2f2f2',
         marginBottom: 15,
       },
       controlBar: {
-        paddingTop: 10,
-        paddingBottom: 10,
       },
     };
     return styles;
@@ -29,11 +27,11 @@ class ControlBar extends React.Component {
             <Col lg={3}>
               <b><Link to={`/topics/${topicId}`} style={styles.name}>{title}</Link></b>
             </Col>
-            <Col lg={3}>
-              <SnapshotSelectorContainer />
+            <Col lg={6}>
+              <TimespanSelectorContainer />
             </Col>
             <Col lg={3}>
-              <TimespanSelectorContainer />
+              <SnapshotSelectorContainer />
             </Col>
           </Row>
         </Grid>
