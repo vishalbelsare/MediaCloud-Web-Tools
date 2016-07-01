@@ -28,7 +28,6 @@ class SourceInfoItem extends React.Component {
     let content = <div />;
     if (show_on_media === 1) {
       content = (<Grid><Row><Col xs={12} sm={6} md={3} lg={3}>
-        <h3>{ source.tags_id }</h3>
         <Link to={`collection/${source.tags_id}/details`} style={styles.name} > {source.label} </Link>
         </Col></Row></Grid>);
     }
@@ -48,7 +47,7 @@ const SourceInfo = (props) => {
   const sourceArray = Object.keys(media_source_tags).map((idx) => media_source_tags[idx]);
   return (
     <Grid>
-      <h4>Related Tags: </h4>
+      <h4>Related Collections: </h4>
       <Row>
       {sourceArray.map(src =>
         <SourceInfoItem key={src.tags_id} source={src} />

@@ -34,7 +34,7 @@ def _get_media_source_list():
 @app.route('/api/sources/collection/list', methods=['GET'])
 #@flask_login.login_required
 def api_get_media_tag_list():
-    tag_list = mc.tagList()
+    tag_list = mc.tagList(tag_sets_id=5,rows=100) 
     #tag_list = sorted(tag_list, key=lambda ts: ts['label'])
     logger.info(tag_list)
     return jsonify({'results':tag_list})
@@ -82,7 +82,7 @@ def api_media_source_details(media_id):
 #@flask_login.login_required
 def api_media_tag_sentence_count(media_tag_id):
     info = {}
-    info['sentenceCounts'] = _recent_sentence_counts( ['tags_id_media:'+str(media_tag_id)] )
+    #info['sentenceCounts'] = _recent_sentence_counts( ['tags_id_media:'+str(media_tag_id)] )
     return jsonify({'results':info})
 
 
@@ -106,7 +106,7 @@ def _get_media_source_health(media_id):
 def _get_media_source_details(media_id, start_date_str = None):
     info = mc.media(media_id)
     info['id'] = media_id
-    #info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
+    info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], start_date_str )
     info['feedCount'] = len(mc.feedList(media_id=media_id,rows=100))
     return info
 

@@ -5,10 +5,13 @@ import SourceCollectionDetailsContainer from '../components/source/details/Sourc
 import SourceListContainer from '../components/source/SourceListContainer';
 import SourceSearchContainer from '../components/source/SourceSearchContainer';
 import SourceCollectionListContainer from '../components/source/SourceCollectionListContainer';
+
+import Glossary from '../components/util/glossary.js';
 import requireAuth from './routes.js';
 
 const sourceRoutes = (
-  <Route path="/sources" >
+  <Route path="/" >
+    <Route path="/glossary" component={ Glossary } />
     <Route path="/home" component={SourceCollectionListContainer} onEnter={requireAuth} />
     <Route path="/source" >
         <Route path="search" component={SourceSearchContainer} />

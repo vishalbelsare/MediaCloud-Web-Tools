@@ -7,7 +7,7 @@ import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 import SourceCollectionTopWordsContainer from './SourceCollectionTopWordsContainer';
-// import SentenceCountContainer from './SourceCollectionSentenceCountContainer';
+import SourceCollectionSentenceCountContainer from './SourceCollectionSentenceCountContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -25,10 +25,14 @@ class SourceCollectionDetailsContainer extends React.Component {
       row: {
         marginBottom: 15,
       },
+      description: {
+       
+      }
     };
     return styles;
   }
   render() {
+
     const { fetchData, fetchStatus } = this.props;
     let { collectionId } = this.props;
     if (collectionId === null) {
@@ -37,6 +41,8 @@ class SourceCollectionDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.collectionName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+
+
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
@@ -45,17 +51,23 @@ class SourceCollectionDetailsContainer extends React.Component {
         const { collection } = this.props;
         subContent = <CollectionInfo source={collection} />;
         content = (
-            <Grid>
-              <h3>Collection Id: {collectionId}</h3>
-              <Row>This collection is <b> ...awesome? no health info for collections yet, sorry! </b>.
+            <Grid style={styles.root}>
+              <h2>{title}: { collection.label } </h2>
+              <p style={styles.description}>{collection.description}</p>
+              <p style={styles.description}>This { collection.label } collection is part of a larger set entitled {collection.tag_set_label }, which is a {collection.tag_set_description}</p>
+              <Row> no health info for collections yet, sorry!
               </Row>
               <Row>
-                <Col lg={12}>
-                  <h2>{title}</h2>
+                <Col lg={6}>
                   {subContent}
                 </Col>
                 <Col lg={6}>
-                  <SourceCollectionTopWordsContainer sourceId={collectionId} />
+                  <Row >
+                    <SourceCollectionTopWordsContainer sourceId={collectionId} />
+                  </Row>
+                  <Row>
+                    <SourceCollectionSentenceCountContainer sourceId={collectionId} />
+                  </Row>
                 </Col>
 
               </Row>
@@ -85,7 +97,7 @@ SourceCollectionDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,
   collectionId: React.PropTypes.number,
   sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.array,
+  collection: React.PropTypes.array,
 };
 
 SourceCollectionDetailsContainer.contextTypes = {

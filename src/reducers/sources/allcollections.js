@@ -5,7 +5,9 @@ import { createAsyncReducer } from '../../lib/reduxHelpers';
 function arrayToDict(arr, keyPropertyName) {
   const dict = {};
   arr.forEach((item) => {
-    dict[item[keyPropertyName]] = item;
+    if (item.show_on_media === 1) {
+      dict[item[keyPropertyName]] = item;
+    }
   });
   return dict;
 }
