@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { push } from 'react-router-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import TimespanSelector from './TimespanSelector';
@@ -56,34 +56,53 @@ class TimespanSelectorContainer extends React.Component {
 }
 
 TimespanSelectorContainer.propTypes = {
-  fetchStatus: React.PropTypes.string.isRequired,
-  timespans: React.PropTypes.array.isRequired,
+  // from parent
+  topicId: React.PropTypes.number,
+  location: React.PropTypes.object.isRequired,
+  // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   onTimespanSelected: React.PropTypes.func.isRequired,
-  topicId: React.PropTypes.number,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  timespans: React.PropTypes.array.isRequired,
   snapshotId: React.PropTypes.number,
   timespanId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-  topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.timespans.fetchStatus,
   timespans: state.topics.selected.timespans.list,
   snapshotId: state.topics.selected.filters.snapshotId,
   timespanId: state.topics.selected.filters.timespanId,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, snapshotId, timespanId) => {
     dispatch(fetchTopicSnapshotTimespansList(topicId, snapshotId))
       .then((response) => {
         if (timespanId === null) {
-          dispatch(filterByTimespan(response.list[0].controversy_dump_time_slices_id));
+          const defaultTimespanId = response.list[0].controversy_dump_time_slices_id;
+          const newLocation = Object.assign({}, ownProps.location, {
+            query: {
+              ...ownProps.location.query,
+              timespanId: defaultTimespanId,
+            },
+          });
+          dispatch(push(newLocation));
+          dispatch(filterByTimespan(defaultTimespanId));
         }
       });
   },
   onTimespanSelected: (event) => {
-    dispatch(filterByTimespan(event.target.value));
+    const timespanId = event.target.value;
+    const newLocation = Object.assign({}, ownProps.location, {
+      query: {
+        ...ownProps.location.query,
+        timespanId,
+      },
+    });
+    dispatch(push(newLocation));
+    dispatch(filterByTimespan(timespanId));
   },
 });
 

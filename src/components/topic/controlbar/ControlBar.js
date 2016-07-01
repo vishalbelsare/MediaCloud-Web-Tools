@@ -18,7 +18,7 @@ class ControlBar extends React.Component {
     return styles;
   }
   render() {
-    const { title, topicId } = this.props;
+    const { title, topicId, location } = this.props;
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
@@ -28,10 +28,10 @@ class ControlBar extends React.Component {
               <b><Link to={`/topics/${topicId}`} style={styles.name}>{title}</Link></b>
             </Col>
             <Col lg={6}>
-              <TimespanSelectorContainer />
+              <TimespanSelectorContainer topicId={topicId} location={location} />
             </Col>
             <Col lg={3}>
-              <SnapshotSelectorContainer />
+              <SnapshotSelectorContainer topicId={topicId} location={location} />
             </Col>
           </Row>
         </Grid>
@@ -41,9 +41,12 @@ class ControlBar extends React.Component {
 }
 
 ControlBar.propTypes = {
+  // from context
   intl: React.PropTypes.object.isRequired,
+  // from parent
   title: React.PropTypes.string,
   topicId: React.PropTypes.number,
+  location: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(ControlBar);

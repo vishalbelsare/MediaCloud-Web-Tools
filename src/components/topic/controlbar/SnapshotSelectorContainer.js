@@ -1,4 +1,5 @@
 import React from 'react';
+import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
@@ -61,33 +62,53 @@ class SnapshotSelectorContainer extends React.Component {
 }
 
 SnapshotSelectorContainer.propTypes = {
-  fetchStatus: React.PropTypes.string.isRequired,
-  snapshots: React.PropTypes.array.isRequired,
+  // from parent
+  topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
+  // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   onSnapshotSelected: React.PropTypes.func.isRequired,
-  topicId: React.PropTypes.number,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  snapshots: React.PropTypes.array.isRequired,
   snapshotId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
-  topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.snapshots.fetchStatus,
   snapshots: state.topics.selected.snapshots.list,
   snapshotId: state.topics.selected.filters.snapshotId,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, snapshotId) => {
     if (topicId !== null) {
       dispatch(fetchTopicSnapshotsList(topicId))
         .then((response) => {
           if (snapshotId === null) {
-            dispatch(filterBySnapshot(response.list[0].controversy_dumps_id));
+            const newSnapshotId = response.list[0].controversy_dumps_id;
+            const newLocation = Object.assign({}, ownProps.location, {
+              query: {
+                ...ownProps.location.query,
+                timespanId: null,
+                snapshotId: newSnapshotId,
+              },
+            });
+            dispatch(push(newLocation));
+            dispatch(filterBySnapshot(newSnapshotId));
           }
         });
     }
   },
   onSnapshotSelected: (snapshotId) => {
+    const newLocation = Object.assign({}, ownProps.location, {
+      query: {
+        ...ownProps.location.query,
+        timespanId: null,
+        snapshotId,
+      },
+    });
+    dispatch(push(newLocation));
     dispatch(filterBySnapshot(snapshotId));
   },
 });

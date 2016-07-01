@@ -20,13 +20,11 @@ class TopicContainer extends React.Component {
     return styles;
   }
   filtersAreSet() {
-    const { filters } = this.props;
-    const { topicId } = this.props.params;
+    const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo } = this.props;
-    const topicId = parseInt(this.props.params, 10);
+    const { children, topicInfo, location, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.topicName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -41,7 +39,7 @@ class TopicContainer extends React.Component {
       <div style={styles.root}>
         <div>
           <Title render={titleHandler} />
-          <ControlBar topicId={topicId} title={topicInfo.name} />
+          <ControlBar topicId={topicId} title={topicInfo.name} location={location} />
           {subContent}
         </div>
       </div>
@@ -53,20 +51,22 @@ TopicContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   children: React.PropTypes.node,
+  location: React.PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // params from router
-  params: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
   // from state
+  filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   topicInfo: React.PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   filters: state.topics.selected.filters,
   fetchStatus: state.topics.selected.info.fetchStatus,
   topicInfo: state.topics.selected.info,
+  topicId: parseInt(ownProps.params.topicId, 10),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
