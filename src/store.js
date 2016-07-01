@@ -1,10 +1,15 @@
 import { createStore, applyMiddleware } from 'redux';
+import { hashHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
 import rootReducer from './reducers/root';
 
+const reduxRouterMiddleware = routerMiddleware(hashHistory);
+
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware(),
+  reduxRouterMiddleware,
   thunkMiddleware
 )(createStore);
 
