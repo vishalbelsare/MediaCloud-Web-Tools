@@ -8,8 +8,7 @@ import SourceInfo from './SourceInfo';
 import { fetchSourceDetails } from '../../../actions/sourceActions';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SentenceCountContainer from './SentenceCountContainer';
-// import { Link } from 'react-router';
-// import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+import SourceGeoContainer from './SourceGeoContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -71,10 +70,13 @@ class SourceDetailsContainer extends React.Component {
                     {subContent}
                   </Col>
                   <Col lg={6}>
-                    <SourceTopWordsContainer sourceId={sourceId} />
+                    <SourceTopWordsContainer sourceId={source.id} />
                   </Col>
                   <Col lg={6}>
-                    <SentenceCountContainer sourceId={sourceId} />
+                    <SentenceCountContainer sourceId={source.id} />
+                  </Col>
+                  <Col lg={6}>
+                    <SourceGeoContainer sourceId={source.id} />
                   </Col>
                 </Row>
               </div>

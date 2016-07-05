@@ -64,7 +64,7 @@ export function sourceCollectionSentenceCount(mediaId) {
 }
 
 export function sourceGeography(mediaId) {
-  return fetch(`api/sources/media-source/${mediaId}//geography`, {
+  return fetch(`api/sources/media-source/${mediaId}/geography`, {
     method: 'get',
     credentials: 'include',
   }).then(
