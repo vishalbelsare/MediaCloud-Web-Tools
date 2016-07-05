@@ -8,6 +8,7 @@ import CollectionInfo from './CollectionInfo';
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 import SourceCollectionTopWordsContainer from './SourceCollectionTopWordsContainer';
 import SourceCollectionSentenceCountContainer from './SourceCollectionSentenceCountContainer';
+import SourceCollectionGeoContainer from './SourceCollectionGeoContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -63,10 +64,13 @@ class SourceCollectionDetailsContainer extends React.Component {
                 </Col>
                 <Col lg={6}>
                   <Row >
-                    <SourceCollectionTopWordsContainer sourceId={collectionId} />
+                    <SourceCollectionTopWordsContainer sourceId={collection.id} />
                   </Row>
                   <Row>
-                    <SourceCollectionSentenceCountContainer sourceId={collectionId} />
+                    <SourceCollectionSentenceCountContainer sourceId={collection.id} />
+                  </Row>
+                   <Row>
+                    <SourceCollectionGeoContainer sourceId={collection.id} />
                   </Row>
                 </Col>
 
