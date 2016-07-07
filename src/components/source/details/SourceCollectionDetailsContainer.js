@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
+import SourceSearchContainer from '../SourceSearchContainer';
+
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 import SourceCollectionTopWordsContainer from './SourceCollectionTopWordsContainer';
 import SourceCollectionSentenceCountContainer from './SourceCollectionSentenceCountContainer';
@@ -47,6 +49,7 @@ class SourceCollectionDetailsContainer extends React.Component {
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
+
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         const { collection } = this.props;
@@ -87,10 +90,12 @@ class SourceCollectionDetailsContainer extends React.Component {
         break;
     }
     return (
+      <Grid><div><SourceSearchContainer /></div>
       <div style={styles.root}>
         <Title render={titleHandler} />  
          { content }
       </div>
+      </Grid>
     );
   }
 }

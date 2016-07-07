@@ -33,7 +33,7 @@ class SourceCollectionSentenceCountContainer extends React.Component {
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <SentenceCount total={total} counts={counts} health={health} />;
+        content = <SentenceCount total={counts.length} counts={counts} health={health} />;
         break;
       case fetchConstants.FETCH_FAILED:
         // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;

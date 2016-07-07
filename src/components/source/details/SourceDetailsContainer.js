@@ -6,6 +6,8 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceDetails } from '../../../actions/sourceActions';
+import SourceSearchContainer from '../SourceSearchContainer';
+
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SentenceCountContainer from './SentenceCountContainer';
 import SourceGeoContainer from './SourceGeoContainer';
@@ -45,6 +47,7 @@ class SourceDetailsContainer extends React.Component {
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
+
 
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
@@ -90,10 +93,13 @@ class SourceDetailsContainer extends React.Component {
         content = <LoadingSpinner />;
     }
     return (
+      <Grid>
+      <div><SourceSearchContainer /></div>
       <div style={styles.root}>
         <Title render={titleHandler} />
           {content}
       </div>
+      </Grid>
     );
   }
 }
