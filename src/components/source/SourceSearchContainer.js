@@ -2,18 +2,31 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { Multiselect } from 'react-widgets';
+import { Combobox } from 'react-widgets';
 import ErrorTryAgain from '../util/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
 import SourceSearchResult from './SourceSearchResult';
-import { fetchSourceSearch } from '../../actions/sourceActions';
+import { fetchSourceSearch,fetchSourceDetails } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
+import { Link } from 'react-router';
 
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessages = {
   title: { id: 'source.title.query', defaultMessage: 'Search by Keywords' },
 };
+
+
+let ComboboxListItem = React.createClass({
+  render() {
+    var selectedSource = this.props.item;
+    return (
+      <Row>
+        <Link key={selectedSource.media_id} to={`source/${selectedSource.media_id}/details`} > {selectedSource.name} </Link>
+      </Row>
+    );
+  },
+});
 
 class SourceSearchContainer extends React.Component {
   componentDidMount() {
@@ -23,11 +36,19 @@ class SourceSearchContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
+        backgroundColor: 'lightgray',
+        margin: 10,
       },
       contentWrapper: {
         padding: 10,
       },
+      input: {
+        width: 300,
+      },
       list: {
+        margin: 10,
+        padding: 10,
+        width: 300,
         ul: {
           li: {
             listStyleType: 'none',
@@ -44,10 +65,18 @@ class SourceSearchContainer extends React.Component {
       dispatchSearch(handle.value);
     }
   }
+  gotoDetailPage(handle) {
+    const { dispatchGoToDetailPage } = this.props;
+    if (handle !== null && handle !== undefined) {
+      this.setState({ value: handle.value });
+      dispatchGoToDetailPage(handle.value);
+    }
+  }
   render() {
     const { fetchStatus, fetchData, dispatchSearch } = this.props;
     let { sourceSearchString } = this.props;
     let content = [];
+    let linkContent = [];
     const styles = this.getStyles();
     const handleSearch = this.handleSearch();
     if (this.state) {
@@ -55,8 +84,8 @@ class SourceSearchContainer extends React.Component {
     }
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-         const { sources } = this.props;
-        // content = <SourceSearchResult sources={sources} />;
+        const { sources } = this.props;
+        
         // searchResults = { content };
         break;
       case fetchConstants.FETCH_FAILED:
@@ -69,14 +98,16 @@ class SourceSearchContainer extends React.Component {
     let currentValue = this.state !== null && this.state !== undefined ? this.state.value : '';
     return (
       <Grid style={ styles.root }>
-      <Row style= { styles.list }>
-      <Multiselect style= { styles.list }
+      <Row>
+      <Combobox style= { styles.list }
         textField = 'name'
         valueField = 'media_id'
         defaultValue= { sourceSearchString }
         data = { sources }
-        onChange = { value => this.setState({ value }) }
-        onSearch = { value => this.handleSearch({ value }) }/>
+        onChange = { value => this.handleSearch({ value }) }
+        onSelect = { value => this.gotoDetailPage({ value }) }
+        itemComponent = { ComboboxListItem }
+      />
       </Row>
       <Row> { content } </Row>
       </Grid>
@@ -89,7 +120,9 @@ SourceSearchContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   sources: React.PropTypes.array,
   sourceSearchString: React.PropTypes.string,
+  dispatchGoToDetailPage: React.PropTypes.func,
   dispatchSearch: React.PropTypes.func,
+  gotoPage: React.PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -99,10 +132,12 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (e) => {
-    if (this.state !== null) {
-      
+    if (this.state !== null) {   
       dispatch(fetchSourceSearch(this.state));
     }
+  },
+  dispatchGoToDetailPage: (event) => {
+    dispatch(fetchSourceDetails(event.media_id));
   },
   dispatchSearch: (event) => {
     dispatch(fetchSourceSearch(event));

@@ -43,6 +43,17 @@ class AttentionOverTime extends React.Component {
       yAxis: {
         min: 0,
       },
+      series: [{
+        name: 'UTC',
+        data: ['IE', 'IS', 'GB', 'PT'].map(function (code) {
+          return { code: code };
+        }),
+      }, {
+        name: 'UTC + 1',
+        data: ['NO', 'SE', 'DK', 'DE', 'NL', 'BE', 'LU', 'ES', 'FR', 'PL', 'CZ', 'AT', 'CH', 'LI', 'SK', 'HU', 'SI', 'IT', 'SM', 'HR', 'BA', 'YF', 'ME', 'AL', 'MK'].map(function (code) {
+          return { code: code };
+        }),
+      }]
     };
     return config;
   }

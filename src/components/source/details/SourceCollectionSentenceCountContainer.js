@@ -65,10 +65,10 @@ SourceCollectionSentenceCountContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.sentenceCount.fetchStatus,
-  total: state.sources.selected.details.collectionDetailsReducer.sentenceCount.total,
-  counts: state.sources.selected.details.collectionDetailsReducer.sentenceCount.list,
-  health: state.sources.selected.details.collectionDetailsReducer.sentenceCount.health,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.fetchStatus,
+  total: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.total,
+  counts: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.list,
+  health: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.health,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -2,10 +2,12 @@ import React from 'react';
 import { Route } from 'react-router';
 import { APP_NAME } from '../config';
 import { hasCookies } from '../lib/auth';
+
 import App from '../components/App';
 import sourceRoutes from './sourceRoutes';
 import topicRoutes from './topicRoutes';
 import userRoutes from './userRoutes';
+
 
 // We need to restrict some routes to only users that are logged in
 export function requireAuth(nextState, replace) {

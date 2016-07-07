@@ -14,15 +14,9 @@ const localMessages = {
 
 class SourceCollectionTopWordsContainer extends React.Component {
   componentDidMount() {
-    const { fetchStatus, sourceId, filters, fetchData } = this.props;
+    const { fetchStatus, sourceId, fetchData } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      fetchData(sourceId, filters.snapshotId, filters.timespanId);
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.filters !== this.props.filters) {
-      const { sourceId, fetchData } = this.props;
-      fetchData(sourceId, nextProps.filters.snapshotId, nextProps.filters.timespanId);
+      fetchData(sourceId);
     }
   }
   getStyles() {
@@ -66,18 +60,15 @@ SourceCollectionTopWordsContainer.propTypes = {
   sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.topWords.fetchStatus,
-  words: state.sources.selected.details.collectionDetailsReducer.topWords.list.wordcounts,
-  filters: state.sources.selected.filters,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.fetchStatus,
+  words: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.list.wordcounts,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchData: (sourceId) => {
-    // if ((snapshotId !== null) && (timespanId !== null)) {
     dispatch(fetchSourceCollectionTopWords(sourceId));
     // }
   },

@@ -7,9 +7,8 @@ import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceDetails } from '../../../actions/sourceActions';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
-// import SentenceCountContainer from './SentenceCountContainer';
-// import { Link } from 'react-router';
-// import SourceSentenceCountContainer from './sourceSentenceCountContainer';
+import SentenceCountContainer from './SentenceCountContainer';
+import SourceGeoContainer from './SourceGeoContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -35,13 +34,14 @@ class SourceDetailsContainer extends React.Component {
   }
   render() {
     const { fetchData, fetchStatus } = this.props;
+    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let { sourceId } = this.props;
     if (sourceId === null) {
       sourceId = this.props.params.sourceId;
     }
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.sourceName);
-    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+    
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
@@ -53,27 +53,33 @@ class SourceDetailsContainer extends React.Component {
         subContent = <SourceInfo sources={source} />;
         content = (
             <Grid>
-              <h3>Source Id: {source.media_id} </h3>
-              <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
-              </Row>
-              <Row>
-                <ul style={styles.list}>
-                  <li>Content from feedcount RSS `?`</li>
-                  <li>Sentences from { health.start_date.substring(0, 10) } to { health.end_date.substring(0, 10) } </li>
-                  <li>Averaging { health.num_stories_w } stories per day and { health.num_sentences_w.substring(0, 10) } sentences in the last week,</li>
-                  <li>we'd guess there are { health.coverage_gaps } "gaps" in our coverage (highlighted <b><span style={{ color: 'rgba(255, 0, 0, .6)' }}> in red </span></b> on the chart), compared to the highest weekly levels we've seen</li>
-                </ul>
-              </Row>
-              <Row>
-                <Col lg={12}>
-                  <h2>{title}</h2>
-                  {subContent}
-                </Col>
-                <Col lg={6}>
-                  <SourceTopWordsContainer sourceId={sourceId} />
-                </Col>
-
-              </Row>
+              <div>
+                <h2>Source: {source.name} </h2>
+                <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
+                </Row>
+                <Row>
+                  <ul style={styles.list}>
+                    <li>Content from { source.feedCount >= 100 ? 'more than 100' : source.feedCount } RSS { source.feedCount > 1 ? 'feeds' : 'feed' } </li>
+                    <li>Sentences from { health.start_date.substring(0, 10) } to { health.end_date.substring(0, 10) } </li>
+                    <li>Averaging { health.num_stories_w } stories per day and { health.num_sentences_w.substring(0, 10) } sentences in the last week,</li>
+                    <li>we'd guess there are { health.coverage_gaps } "gaps" in our coverage (highlighted <b><span style={{ color: 'rgba(255, 0, 0, .6)' }}> in red </span></b> on the chart), compared to the highest weekly levels we've seen</li>
+                  </ul>
+                </Row>
+                <Row>
+                  <Col lg={12}>
+                    {subContent}
+                  </Col>
+                  <Col lg={6}>
+                    <SourceTopWordsContainer sourceId={source.id} />
+                  </Col>
+                  <Col lg={6}>
+                    <SentenceCountContainer sourceId={source.id} />
+                  </Col>
+                  <Col lg={6}>
+                    <SourceGeoContainer sourceId={source.id} />
+                  </Col>
+                </Row>
+              </div>
             </Grid>
         );
         break;

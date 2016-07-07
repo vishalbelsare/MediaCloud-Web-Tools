@@ -6,8 +6,8 @@ import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
-// import SourceTopWordsContainer from './SourceCollectionTopWordsContainer';
-// import SentenceCountContainer from './SourceCollectionSentenceCountContainer';
+import SourceCollectionTopWordsContainer from './SourceCollectionTopWordsContainer';
+import SourceCollectionSentenceCountContainer from './SourceCollectionSentenceCountContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -25,10 +25,14 @@ class SourceCollectionDetailsContainer extends React.Component {
       row: {
         marginBottom: 15,
       },
+      description: {
+       
+      }
     };
     return styles;
   }
   render() {
+
     const { fetchData, fetchStatus } = this.props;
     let { collectionId } = this.props;
     if (collectionId === null) {
@@ -37,27 +41,42 @@ class SourceCollectionDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.collectionName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+
+
     const styles = this.getStyles();
     let content = <div />;
+    let subContent = <div />;
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         const { collection } = this.props;
+        subContent = <CollectionInfo source={collection} />;
         content = (
-          <Grid>
-          <h3>Collection Id: {collectionId}</h3>
-          <Row>This collection is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
+            <Grid style={styles.root}>
+              <h2>{title}: { collection.label } </h2>
+              <p style={styles.description}>{collection.description}</p>
+              <p style={styles.description}>This { collection.label } collection is part of a larger set entitled {collection.tag_set_label }, which is a {collection.tag_set_description}</p>
+              <Row> no health info for collections yet, sorry!
               </Row>
-            <Row>
-            <Col lg={12}>
-              <h2>{title}</h2>
-              <CollectionInfo source={collection.media} />;
-            </Col>
-            </Row>
-          </Grid>
-          );
+              <Row>
+                <Col lg={6}>
+                  {subContent}
+                </Col>
+                <Col lg={6}>
+                  <Row >
+                    <SourceCollectionTopWordsContainer sourceId={collectionId} />
+                  </Row>
+                  <Row>
+                    <SourceCollectionSentenceCountContainer sourceId={collectionId} />
+                  </Row>
+                </Col>
+
+              </Row>
+            </Grid>
+        );
+
         break;
       case fetchConstants.FETCH_FAILED:
-        // content = <ErrorTryAgain onTryAgain={fetchData(sourceId)} />;
+        // content = <ErrorTryAgain onTryAgain={fetchData(collectionId)} />;
         break;
       default:
         content = <LoadingSpinner />;
@@ -75,11 +94,10 @@ SourceCollectionDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
-  // filters: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
   collectionId: React.PropTypes.number,
   sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.array,
+  collection: React.PropTypes.array,
 };
 
 SourceCollectionDetailsContainer.contextTypes = {

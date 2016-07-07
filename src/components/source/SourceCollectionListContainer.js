@@ -11,7 +11,7 @@ import { fetchSourceCollectionList } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 
 const localMessages = {
-  collectionsListTitle: { id: 'sources.list.title', defaultMessage: 'List of Collections' },
+  collectionsListTitle: { id: 'sources.list.title', defaultMessage: 'List of Collections, first 100 rows' },
 };
 
 class SourceCollectionListContainer extends React.Component {

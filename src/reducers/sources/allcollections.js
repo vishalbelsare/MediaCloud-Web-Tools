@@ -5,7 +5,9 @@ import { createAsyncReducer } from '../../lib/reduxHelpers';
 function arrayToDict(arr, keyPropertyName) {
   const dict = {};
   arr.forEach((item) => {
-    dict[item[keyPropertyName]] = item;
+    if (item.show_on_media === 1) {
+      dict[item[keyPropertyName]] = item;
+    }
   });
   return dict;
 }
@@ -19,7 +21,7 @@ const allCollections = createAsyncReducer({
   handleFetch: () => ({ list: [], total: null }),
   handleSuccess: (payload) => ({
     total: payload.results.total,
-    list: arrayToDict(payload.results, 'id'),
+    list: arrayToDict(payload.results, 'tags_id'),
   }),
   handleFailure: () => ({ list: [], total: null }),
 });
