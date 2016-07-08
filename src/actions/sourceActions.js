@@ -45,6 +45,6 @@ export const fetchSourceCollectionTopWords = createAsyncAction(FETCH_SOURCE_COLL
 
 export const fetchSourceGeo = createAsyncAction(FETCH_SOURCE_GEO, api.sourceGeography, id => id);
 
-export const fetchSourceCollectionGeo = createAsyncAction(FETCH_SOURCE_GEO, api.sourceCollectionGeography, id => id);
+export const fetchSourceCollectionGeo = createAsyncAction(FETCH_SOURCE_COLLECTION_GEO, api.sourceCollectionGeography, id => id);
 
 export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);

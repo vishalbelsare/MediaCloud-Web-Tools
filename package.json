@@ -33,6 +33,7 @@
     "react-router-redux": "~4.0.4",
     "react-tap-event-plugin": "~1.0.0",
     "react-title-component": "~1.0.1",
+    "react-widgets": "1.0",
     "redux": "~3.5.2",
     "redux-actions": "~0.9.1",
     "redux-form": "~5.2.3",

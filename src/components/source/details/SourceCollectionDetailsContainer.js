@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
 // import ErrorTryAgain from '../../util/ErrorTryAgain';
+import SourceSearchContainer from '../SourceSearchContainer';
+
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
 import SourceCollectionTopWordsContainer from './SourceCollectionTopWordsContainer';
 import SourceCollectionSentenceCountContainer from './SourceCollectionSentenceCountContainer';
+import SourceCollectionGeoContainer from './SourceCollectionGeoContainer';
 
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -46,6 +49,7 @@ class SourceCollectionDetailsContainer extends React.Component {
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
+
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         const { collection } = this.props;
@@ -63,10 +67,13 @@ class SourceCollectionDetailsContainer extends React.Component {
                 </Col>
                 <Col lg={6}>
                   <Row >
-                    <SourceCollectionTopWordsContainer sourceId={collectionId} />
+                    <SourceCollectionTopWordsContainer sourceId={collection.id} />
                   </Row>
                   <Row>
-                    <SourceCollectionSentenceCountContainer sourceId={collectionId} />
+                    <SourceCollectionSentenceCountContainer sourceId={collection.id} />
+                  </Row>
+                   <Row>
+                    <SourceCollectionGeoContainer sourceId={collection.id} />
                   </Row>
                 </Col>
 
@@ -83,10 +90,12 @@ class SourceCollectionDetailsContainer extends React.Component {
         break;
     }
     return (
+      <Grid><div><SourceSearchContainer /></div>
       <div style={styles.root}>
         <Title render={titleHandler} />  
          { content }
       </div>
+      </Grid>
     );
   }
 }

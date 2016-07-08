@@ -4,7 +4,7 @@ import AttentionOverTimeChart from './AttentionOverTimeChart';
 
 const localMessages = {
   chartTitle: { id: 'sentenceCount.chartTitle', defaultMessage: 'Attention Over Time' },
-  chartYAxisLabel: { id: 'entenceCount.chartYAxisLabel', defaultMessage: 'sentences / day' },
+  chartYAxisLabel: { id: 'sentenceCount.chartYAxisLabel', defaultMessage: 'sentences / day' },
   totalCount: { id: 'sentenceCount.total',
     defaultMessage: '{total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },

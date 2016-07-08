@@ -15,6 +15,10 @@ Python 2.7:
 Node and npm:  
  * make sure your node installation is up-to-date (we work with v5.9.0 right now)
  * `npm install` to install all the package dependencies (as specified in the `package.json`)
+ * additional node modules needed:
+ * 		npm install react-widgets
+ * 		npm install react-highcharts
+ * 		npm install react-highlight
 
 MongoDB:
 [Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`

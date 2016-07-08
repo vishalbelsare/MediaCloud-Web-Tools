@@ -38,7 +38,7 @@ const sentenceCount = createAsyncReducer({
   action: FETCH_SOURCE_SENTENCE_COUNT,
   handleFetch: () => ({ list: [], total: null }),
   handleSuccess: (payload) => ({
-    total: payload.results.total,
+    total: payload.results.sentenceCounts.length,
     list: cleanDateCounts(payload.results.sentenceCounts),
     health: coverageGapsAsPlotBands(payload.results.health),
   }),

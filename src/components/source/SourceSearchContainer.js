@@ -10,6 +10,10 @@ import { fetchSourceSearch,fetchSourceDetails } from '../../actions/sourceAction
 import * as fetchConstants from '../../lib/fetchConstants.js';
 import { Link } from 'react-router';
 
+import { Button } from 'react-bootstrap';
+
+
+
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessages = {
@@ -19,10 +23,13 @@ const localMessages = {
 
 let ComboboxListItem = React.createClass({
   render() {
-    var selectedSource = this.props.item;
+    const selectedSource = this.props.item;
+    const listStyles = {
+      listStyleType: 'none',
+    };
     return (
-      <Row>
-        <Link key={selectedSource.media_id} to={`source/${selectedSource.media_id}/details`} > {selectedSource.name} </Link>
+      <Row style={listStyles}>
+        <Link key={selectedSource.media_id} style={listStyles} to={`source/${selectedSource.media_id}/details`} > {selectedSource.name} </Link>
       </Row>
     );
   },
@@ -35,9 +42,16 @@ class SourceSearchContainer extends React.Component {
   }
   getStyles() {
     const styles = {
+      bsStyle: {
+        opacity: 0,
+      },
       root: {
-        backgroundColor: 'lightgray',
+        border: '1px solid lightgray',
+        boxShadow: '2px 2px 4px 4px #cccccc',
         margin: 10,
+        marginTop: 0,
+        marginLeft: 0,
+        listStyleType: 'none',
       },
       contentWrapper: {
         padding: 10,
@@ -45,14 +59,23 @@ class SourceSearchContainer extends React.Component {
       input: {
         width: 300,
       },
+      comboBoxListItem: {
+        listStyleType: 'none',
+      },
       list: {
+        rwSelect: {
+          clear: 'both',
+        },
         margin: 10,
         padding: 10,
+        paddingTop: 0,
         width: 300,
+        listStyleType: 'none',
         ul: {
-          li: {
-            listStyleType: 'none',
-          },
+          listStyleType: 'none',
+        },
+        ulRwList: {
+          listStyleType: 'none',
         },
       },
     };
@@ -84,8 +107,7 @@ class SourceSearchContainer extends React.Component {
     }
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        const { sources } = this.props;
-        
+        const { sources } = this.props;   
         // searchResults = { content };
         break;
       case fetchConstants.FETCH_FAILED:
@@ -98,10 +120,12 @@ class SourceSearchContainer extends React.Component {
     let currentValue = this.state !== null && this.state !== undefined ? this.state.value : '';
     return (
       <Grid style={ styles.root }>
-      <Row>
+      <Row >
       <Combobox style= { styles.list }
         textField = 'name'
         valueField = 'media_id'
+        style = {styles.list}
+        bsStyle = {styles.list}
         defaultValue= { sourceSearchString }
         data = { sources }
         onChange = { value => this.handleSearch({ value }) }
@@ -109,7 +133,7 @@ class SourceSearchContainer extends React.Component {
         itemComponent = { ComboboxListItem }
       />
       </Row>
-      <Row> { content } </Row>
+      <Row style={ styles.list }> { content } </Row>
       </Grid>
     );
   }
