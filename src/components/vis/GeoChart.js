@@ -1,49 +1,45 @@
 import React from 'react';
-import ReactHighcharts from 'react-highcharts';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps.js';
-import { injectIntl } from 'react-intl';
-import Highlight from 'react-highlight';
-let ReactDOM = require('react-dom');
-var maps = require('./world-eckert3-highres');
+const maps = require('./world-eckert3-lowres');
 
 class GeoChart extends React.Component {
 
   getConfig() {
     const { data } = this.props;
-    let config = {
+    const config = {
       // Initiate the chart
       title: {
-        text: 'Geographic Attention via Highmaps',
+        text: '',
       },
-
-      subtitle: {
-        text: 'Source map: <a href="http://code.highcharts.com/mapdata/custom/world.js">World</a>',
-      },
-
       mapNavigation: {
         enabled: true,
         buttonOptions: {
           verticalAlign: 'bottom',
         },
       },
-
+      mapNavigation: {
+        enabled: false,
+      },
+      zoom: {
+        enabled: false,
+      },
       colorAxis: {
         min: 0,
       },
 
-      series : [{
+      series: [{
         data: data,
         mapData: maps,
         joinBy: 'iso-a2',
         name: 'Sentence percentage',
         states: {
           hover: {
-              color: '#BADA55',
+            color: '#BADA55',
           },
         },
         dataLabels: {
           enabled: false,
-          format: '{point.count}',
+          format: '{point.count} * 100 %',
         },
       }],
     };
@@ -51,10 +47,7 @@ class GeoChart extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
     const config = this.getConfig();
-
-
     return (
        React.createElement(ReactHighmaps, { config })
     );

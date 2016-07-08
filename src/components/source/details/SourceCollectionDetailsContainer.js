@@ -28,15 +28,11 @@ class SourceCollectionDetailsContainer extends React.Component {
       row: {
         marginBottom: 15,
       },
-      description: {
-       
-      }
     };
     return styles;
   }
   render() {
-
-    const { fetchData, fetchStatus } = this.props;
+    const { fetchStatus } = this.props;
     let { collectionId } = this.props;
     if (collectionId === null) {
       collectionId = this.props.params.sourceId;
@@ -44,7 +40,6 @@ class SourceCollectionDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.collectionName);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-
 
     const styles = this.getStyles();
     let content = <div />;
@@ -54,8 +49,14 @@ class SourceCollectionDetailsContainer extends React.Component {
       case fetchConstants.FETCH_SUCCEEDED:
         const { collection } = this.props;
         subContent = <CollectionInfo source={collection} />;
+        let wordCloudDesc = <p>This wordcloud shows you the most commonly used words in the Collection - {collection.label} (based on a sample of sentences). Click a word to load a Dashboard search showing you how {collection.label} writes about it.</p>;
+        let geoDesc = <p>Here is a heatmap of countries mentioned by {collection.label} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {collection.label} covers it.</p>;
+
         content = (
             <Grid style={styles.root}>
+              <Row>
+                <button ref="">Search Now</button><p>Use the Dashboard tool to search within the {collection.label}</p>
+              </Row>
               <h2>{title}: { collection.label } </h2>
               <p style={styles.description}>{collection.description}</p>
               <p style={styles.description}>This { collection.label } collection is part of a larger set entitled {collection.tag_set_label }, which is a {collection.tag_set_description}</p>
@@ -67,13 +68,13 @@ class SourceCollectionDetailsContainer extends React.Component {
                 </Col>
                 <Col lg={6}>
                   <Row >
-                    <SourceCollectionTopWordsContainer sourceId={collection.id} />
+                    <SourceCollectionTopWordsContainer sourceId={collection.id} sectionDescription= { wordCloudDesc } />
                   </Row>
                   <Row>
                     <SourceCollectionSentenceCountContainer sourceId={collection.id} />
                   </Row>
                    <Row>
-                    <SourceCollectionGeoContainer sourceId={collection.id} />
+                    <SourceCollectionGeoContainer sourceId={collection.id} sectionDescription= { geoDesc } />
                   </Row>
                 </Col>
 
@@ -92,7 +93,7 @@ class SourceCollectionDetailsContainer extends React.Component {
     return (
       <Grid><div><SourceSearchContainer /></div>
       <div style={styles.root}>
-        <Title render={titleHandler} />  
+        <Title render={titleHandler} />
          { content }
       </div>
       </Grid>
@@ -106,7 +107,7 @@ SourceCollectionDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,
   collectionId: React.PropTypes.number,
   sourceInfo: React.PropTypes.object,
-  collection: React.PropTypes.array,
+  collection: React.PropTypes.object,
 };
 
 SourceCollectionDetailsContainer.contextTypes = {

@@ -78,11 +78,11 @@ def api_media_source_details(media_id):
     info['health'] = health
     return jsonify({'results':info})
 
-@app.route('/api/sources/media-tag/<media_tag_id>/sentences/count', methods=['GET'])
+@app.route('/api/sources/collection/<media_tag_id>/sentences/count', methods=['GET'])
 #@flask_login.login_required
 def api_media_tag_sentence_count(media_tag_id):
     info = {}
-    #info['sentenceCounts'] = _recent_sentence_counts( ['tags_id_media:'+str(media_tag_id)] )
+    info['sentenceCounts'] = _recent_sentence_counts( ['tags_id_media:'+str(media_tag_id)] )
     return jsonify({'results':info})
 
 

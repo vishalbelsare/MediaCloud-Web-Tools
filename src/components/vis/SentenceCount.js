@@ -29,11 +29,6 @@ class SentenceCount extends React.Component {
     const styles = this.getStyles();
     return (
       <div style={styles.scrollWrapper}>
-        <p>
-        <FormattedMessage {...localMessages.totalCount}
-          values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
-        />
-        </p>
         <AttentionOverTimeChart data={counts} height={250}
           title={ formatMessage(localMessages.chartTitle) }
           yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }

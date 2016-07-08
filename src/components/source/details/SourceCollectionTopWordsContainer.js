@@ -28,7 +28,7 @@ class SourceCollectionTopWordsContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, fetchStatus, fetchData, words } = this.props;
+    const { sourceId, sectionDescription, fetchStatus, fetchData, words } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
@@ -46,6 +46,7 @@ class SourceCollectionTopWordsContainer extends React.Component {
         <Paper>
           <div style={styles.contentWrapper}>
             <h2><FormattedMessage {...localMessages.title} /></h2>
+            { sectionDescription }
             {content}
           </div>
         </Paper>
@@ -60,6 +61,7 @@ SourceCollectionTopWordsContainer.propTypes = {
   sourceId: React.PropTypes.string.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
+  sectionDescription: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

@@ -15,14 +15,14 @@ function arrayToDict(arr, keyPropertyName) {
 const allCollections = createAsyncReducer({
   initialState: {
     total: null,
-    list: [],
+    list: null,
   },
   action: FETCH_SOURCE_COLLECTION_LIST,
-  handleFetch: () => ({ list: [], total: null }),
+  handleFetch: () => ({ list: null, total: null }),
   handleSuccess: (payload) => ({
     total: payload.results.total,
     list: arrayToDict(payload.results, 'tags_id'),
   }),
-  handleFailure: () => ({ list: [], total: null }),
+  handleFailure: () => ({ list: null, total: null }),
 });
 export default allCollections;

@@ -37,7 +37,7 @@ export const fetchSourceCollectionDetails = createAsyncAction(FETCH_SOURCE_COLLE
 
 export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
 
-export const fetchSourceCollectionSentenceCount = createAsyncAction(FETCH_SOURCE_COLLECTION_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
+export const fetchSourceCollectionSentenceCount = createAsyncAction(FETCH_SOURCE_COLLECTION_SENTENCE_COUNT, api.sourceCollectionSentenceCount, id => id);
 
 export const fetchSourceTopWords = createAsyncAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 

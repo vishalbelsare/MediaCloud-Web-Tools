@@ -28,7 +28,7 @@ class SourceCollectionSentenceCountContainer extends React.Component {
     return styles;
   }
   render() {
-    const { sourceId, fetchStatus, fetchData, total, counts, health } = this.props;
+    const { fetchStatus, counts, health } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
