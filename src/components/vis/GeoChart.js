@@ -35,7 +35,7 @@ class GeoChart extends React.Component {
         data: data,
         mapData: maps,
         joinBy: 'iso-a2',
-        name: 'Random data',
+        name: 'Sentence percentage',
         states: {
           hover: {
               color: '#BADA55',
