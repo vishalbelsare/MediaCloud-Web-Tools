@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts/dist/ReactHighcharts.js';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps.js';
-
 import highchartsExporting from 'highcharts-exporting';
 highchartsExporting(ReactHighcharts.Highcharts);
-import highchartsOfflineExporting from 'highcharts-offline-exporting';
-highchartsOfflineExporting(ReactHighcharts.Highcharts);
+
 const maps = require('./world-eckert3-lowres');
 
 class GeoChart extends React.Component {
 
   getConfig() {
     const { data } = this.props;
+
     const config = {
       // Initiate the chart
       title: {
@@ -19,14 +18,25 @@ class GeoChart extends React.Component {
       },
       mapNavigation: {
         enabled: false,
+      },
+      exporting: {
+        enabled: true,
+      },
+      navigation: {
         buttonOptions: {
-          verticalAlign: 'bottom',
+          align: 'right',
         },
       },
       colorAxis: {
-        min: 1,
-        max: 100,
+        min: 0.00001,
+        max: 1.0,
         type: 'logarithmic',
+      },
+      tooltip: {
+        pointFormatter: function afmtxn() {
+          const pct = this.count * 100 + ' %';
+          return pct;
+        },
       },
       series: [{
         data: data,
@@ -47,7 +57,7 @@ class GeoChart extends React.Component {
         },
         dataLabels: {
           enabled: false,
-          format: '{point.count} ',
+          format: '{point.name} {point.count} ',
         },
       }],
     };
@@ -59,18 +69,19 @@ class GeoChart extends React.Component {
   render() {
     const config = this.getConfig();
     const gtDashboard = this.gotoDashboard;
+    config.exporting = true;
     config.plotOptions = {
-              series: {
-                point: {
-                  events: {
-                    click: function afn() {
-                      gtDashboard();
-                      alert('will go to dashboard');
-                    },
-                  },
-                },
-              },
-            }
+      series: {
+        point: {
+          events: {
+            click: function afn() {
+              gtDashboard();
+              alert('will go to dashboard');
+            },
+          },
+        },
+      },
+    }
     return (
        React.createElement(ReactHighmaps, { config })
     );

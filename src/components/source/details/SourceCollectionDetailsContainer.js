@@ -15,7 +15,7 @@ import SourceCollectionGeoContainer from './SourceCollectionGeoContainer';
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
-
+import FlatButton from 'material-ui/FlatButton'
 class SourceCollectionDetailsContainer extends React.Component {
   componentDidMount() {
     const { params, fetchData } = this.props;
@@ -30,6 +30,10 @@ class SourceCollectionDetailsContainer extends React.Component {
       },
     };
     return styles;
+  }
+  gotoDashboard() {
+    console.log('go to dashboard');
+    alert('will go to dashboard');
   }
   render() {
     const { fetchStatus } = this.props;
@@ -55,7 +59,7 @@ class SourceCollectionDetailsContainer extends React.Component {
         content = (
             <Grid style={styles.root}>
               <Row>
-                <button ref="">Search Now</button><p>Use the Dashboard tool to search within the {collection.label}</p>
+                  <FlatButton label="Search Now" primary onClick={this.goToDashboard} /><p>Use the Dashboard tool to search within the {collection.label}</p>
               </Row>
               <h2>{title}: { collection.label } </h2>
               <p style={styles.description}>{collection.description}</p>

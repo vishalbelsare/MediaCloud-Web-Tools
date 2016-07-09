@@ -77,7 +77,7 @@ SourceGeoContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
-  sectionDescription: React.PropTypes.string,
+  sectionDescription: React.PropTypes.object,
 };
 
 export default injectIntl(connect(

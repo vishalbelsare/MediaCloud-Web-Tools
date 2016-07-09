@@ -36,9 +36,8 @@ class SourceDetailsContainer extends React.Component {
     };
     return styles;
   }
-  goToDashboard = () => {
-    // const { dispatchToDashboard } = this.props;
-    // dispatchToDashboard();
+  gotoDashboard() {
+    alert('will go to dashboard');
   }
   render() {
     const { fetchStatus } = this.props;
@@ -74,7 +73,7 @@ class SourceDetailsContainer extends React.Component {
                   </Col>
                 </Row>
                 <Row>
-                  <FlatButton label="Search Now" primary onClick={this.goToDashboard} /><p>Use the Dashboard tool to search within the {source.name}</p>
+                  <FlatButton label="Search Now" primary onClick={this.gotoDashboard} /><p>Use the Dashboard tool to search within the {source.name}</p>
                 </Row>
                 <Row>This source is <b> { health.is_healthy === 1 ? <span style={{ color: 'rgba(0, 255, 0, .6)' }}> healthy </span> : <span style={{ color: 'rgba(255, 0, 0, .6)' }}> not healthy </span> }</b>.
                 </Row>
