@@ -34,12 +34,12 @@ class GeoChart extends React.Component {
       },
       tooltip: {
         pointFormatter: function afmtxn() {
-          const pct = this.count * 100 + ' %';
+          const pct = `${this.count * 100}%`;
           return pct;
         },
       },
       series: [{
-        data: data,
+        data,
         mapData: maps,
         joinBy: 'iso-a2',
         name: 'Sentence percentage',
@@ -63,25 +63,23 @@ class GeoChart extends React.Component {
     };
     return config;
   }
-  gotoDashboard(handle) {
+  gotoDashboard(evt) {
     // dispatch to dashboard
+    console.log('will go to dashboard');
+    console.log(evt);
   }
   render() {
     const config = this.getConfig();
-    const gtDashboard = this.gotoDashboard;
     config.exporting = true;
     config.plotOptions = {
       series: {
         point: {
           events: {
-            click: function afn() {
-              gtDashboard();
-              alert('will go to dashboard');
-            },
+            click: this.gotoDashboard,
           },
         },
       },
-    }
+    };
     return (
        React.createElement(ReactHighmaps, { config })
     );
