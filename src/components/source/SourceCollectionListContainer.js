@@ -62,7 +62,7 @@ class SourceCollectionListContainer extends React.Component {
 
 SourceCollectionListContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
-  sources: React.PropTypes.array.isRequired,
+  sources: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
 };

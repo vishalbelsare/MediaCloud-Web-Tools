@@ -1,13 +1,17 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import Link from 'react-router/lib/Link';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import Paper from 'material-ui/Paper';
 
 import GeoChart from '../../vis/GeoChart.js';
 import { fetchSourceCollectionGeo } from '../../../actions/sourceActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
+
+const localMessages = {
+  title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
+};
+
 
 class SourceCollectionGeoContainer extends React.Component {
   componentDidMount() {
@@ -16,10 +20,18 @@ class SourceCollectionGeoContainer extends React.Component {
       fetchData(collectionId);
     }
   }
-
+  getStyles() {
+    const styles = {
+      contentWrapper: {
+        padding: 10,
+      },
+    };
+    return styles;
+  }
   render() {
-    const { fetchStatus, collectionId } = this.props;
+    const { fetchStatus, sectionDescription } = this.props;
     let content = <div />;
+    const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
         const { geolist } = this.props;
@@ -34,7 +46,15 @@ class SourceCollectionGeoContainer extends React.Component {
         content = <LoadingSpinner />;
     }
     return (
-      <div>{ content }</div>
+      <div style={styles.root}>
+        <Paper>
+          <div style={styles.contentWrapper}>
+            <h2><FormattedMessage {...localMessages.title} /></h2>
+            {sectionDescription}
+            {content}
+          </div>
+        </Paper>
+      </div>
     );
   }
 }
@@ -57,6 +77,8 @@ SourceCollectionGeoContainer.propTypes = {
   collectionId: React.PropTypes.string.isRequired,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  sectionDescription: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(connect(

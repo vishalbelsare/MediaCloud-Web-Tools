@@ -55,7 +55,7 @@ export function sourceSentenceCount(mediaId) {
 }
 
 export function sourceCollectionSentenceCount(mediaId) {
-  return fetch(`api/sources/media-tag/${mediaId}/sentences/count`, {
+  return fetch(`api/sources/collection/${mediaId}/sentences/count`, {
     method: 'get',
     credentials: 'include',
   }).then(

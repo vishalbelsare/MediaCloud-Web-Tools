@@ -16,6 +16,8 @@ import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
+import FlatButton from 'material-ui/FlatButton';
+
 class SourceDetailsContainer extends React.Component {
   componentDidMount() {
     const { params, fetchData } = this.props;
@@ -34,16 +36,18 @@ class SourceDetailsContainer extends React.Component {
     };
     return styles;
   }
+  gotoDashboard() {
+    alert('will go to dashboard');
+  }
   render() {
-    const { fetchData, fetchStatus } = this.props;
-    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+    const { fetchStatus } = this.props;
     let { sourceId } = this.props;
     if (sourceId === null) {
       sourceId = this.props.params.sourceId;
     }
     const { formatMessage } = this.props.intl;
     const title = formatMessage(messages.sourceName);
-    
+    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
@@ -54,11 +58,24 @@ class SourceDetailsContainer extends React.Component {
         const { source } = this.props;
         const { health } = this.props.source;
         subContent = <SourceInfo sources={source} />;
+        let wordCloudDesc = <p>This wordcloud shows you the most commonly used words in {source.name} (based on a sample of sentences). Click a word to load a Dashboard search showing you how {source.name} writes about it.</p>;
+        let geoDesc = <p>Here is a heatmap of countries mentioned by {source.name} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {source.name} covers it.</p>;
+
         content = (
             <Grid>
               <div>
-                <h2>Source: {source.name} </h2>
-                <Row>This source is <b> <span style={{ color: 'rgba(255, 0, 0, .6)' }}> { health.is_healthy ? ' healthy' : ' not healthy' } </span> </b>.
+                <Row>
+                  <Col lg={8}>
+                    <h2>Media Source: {source.name} </h2>
+                  </Col>
+                  <Col lg={4}>
+                    <h2>#{source.id} </h2>
+                  </Col>
+                </Row>
+                <Row>
+                  <FlatButton label="Search Now" primary onClick={this.gotoDashboard} /><p>Use the Dashboard tool to search within the {source.name}</p>
+                </Row>
+                <Row>This source is <b> { health.is_healthy === 1 ? <span style={{ color: 'rgba(0, 255, 0, .6)' }}> healthy </span> : <span style={{ color: 'rgba(255, 0, 0, .6)' }}> not healthy </span> }</b>.
                 </Row>
                 <Row>
                   <ul style={styles.list}>
@@ -73,13 +90,13 @@ class SourceDetailsContainer extends React.Component {
                     {subContent}
                   </Col>
                   <Col lg={6}>
-                    <SourceTopWordsContainer sourceId={source.id} />
+                    <SourceTopWordsContainer sourceId={source.id} sectionDescription= { wordCloudDesc } />
                   </Col>
                   <Col lg={6}>
                     <SentenceCountContainer sourceId={source.id} />
                   </Col>
                   <Col lg={6}>
-                    <SourceGeoContainer sourceId={source.id} />
+                    <SourceGeoContainer sourceId={source.id} sectionDescription= { geoDesc } />
                   </Col>
                 </Row>
               </div>
@@ -111,8 +128,7 @@ SourceDetailsContainer.propTypes = {
  // filters: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.string,
-  sourceInfo: React.PropTypes.object,
-  sources: React.PropTypes.array,
+  source: React.PropTypes.object,
 };
 
 SourceDetailsContainer.contextTypes = {
@@ -122,7 +138,6 @@ SourceDetailsContainer.contextTypes = {
 const mapStateToProps = (state) => ({
   // filters: state.sources.selected.filters,
   sourceId: state.sources.selected.id,
-  sourceInfo: state.sources.selected.info,
   fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
