@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import GeoChart from '../../vis/GeoChart.js';

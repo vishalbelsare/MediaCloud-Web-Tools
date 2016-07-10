@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router';
+import Route from 'react-router/lib/Route';
 import TopicListContainer from '../components/topic/TopicListContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';

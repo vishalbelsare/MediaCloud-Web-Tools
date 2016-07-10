@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router';
+import Route from 'react-router/lib/Route';
 import LoginFormContainer from '../components/user/LoginFormContainer';
 import store from '../store';
 import { logout } from '../actions/userActions';

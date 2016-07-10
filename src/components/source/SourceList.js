@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import { injectIntl } from 'react-intl';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
 class SourceListItem extends React.Component {

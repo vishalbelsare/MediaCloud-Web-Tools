@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 import messages from '../../../resources/messages';
 
 class TopicTopStories extends React.Component {

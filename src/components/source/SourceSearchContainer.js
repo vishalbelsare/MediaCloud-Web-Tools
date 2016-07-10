@@ -8,7 +8,7 @@ import LoadingSpinner from '../util/LoadingSpinner';
 import SourceSearchResult from './SourceSearchResult';
 import { fetchSourceSearch,fetchSourceDetails } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
-import { Link } from 'react-router';
+import Link from 'react-router/lib/Link';
 
 import { Button } from 'react-bootstrap';
 

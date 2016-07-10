@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router';
+import Route from 'react-router/lib/Route';
 import SourceDetailsContainer from '../components/source/details/SourceDetailsContainer';
 import SourceCollectionDetailsContainer from '../components/source/details/SourceCollectionDetailsContainer';
 import SourceListContainer from '../components/source/SourceListContainer';
