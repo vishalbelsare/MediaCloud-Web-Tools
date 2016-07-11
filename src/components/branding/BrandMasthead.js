@@ -16,7 +16,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor } = this.props;
+    const { user, name, description, backgroundColor, lightColor } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = {
       root: {
@@ -41,9 +41,8 @@ class BrandMasthead extends React.Component {
           <Row>
             <Col lg={8}>
               <h1>
-                <a href="https://topics.mediameter.org"><img src={'/static/mm-logo-blue-2x.png'} width={65} height={65} /></a>
-                <strong><FormattedMessage {...messages.suiteName} /></strong>
-                &nbsp; {name}
+                <a href="https://topics.mediameter.org"><img src={'/static/mediacloud-logo-green-2x.png'} width={65} height={65} /></a>
+                <strong>{name}</strong>
               </h1>
             </Col>
             <Col lg={4}>
@@ -68,6 +67,7 @@ BrandMasthead.propTypes = {
   name: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
   backgroundColor: React.PropTypes.string.isRequired,
+  lightColor: React.PropTypes.string.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 

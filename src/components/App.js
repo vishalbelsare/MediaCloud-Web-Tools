@@ -67,6 +67,7 @@ class App extends React.Component {
           <BrandMasthead name={formatMessage(toolNameMessage)}
             description={formatMessage(tooldescriptionMessage)}
             backgroundColor={brandColors.dark}
+            lightColor={brandColors.light}
           />
         </header>
         <div style={styles.root}>

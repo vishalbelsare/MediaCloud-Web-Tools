@@ -11,7 +11,7 @@ const messages = {
   sourcesToolDescription: { id: 'tool.sources.description', defaultMessage: 'explore the variety of sources Media Cloud covers' },
   topicsToolShortName: { id: 'tool.topics.name.short', defaultMessage: 'Topics' },
   topicsToolName: { id: 'tool.topics.name', defaultMessage: 'Topic Mapper' },
-  topicsToolDescription: { id: 'tool.topics.description', defaultMessage: 'analyze how online media frames a topic' },
+  topicsToolDescription: { id: 'tool.topics.description', defaultMessage: 'analyze how online media focuses on a topic' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
