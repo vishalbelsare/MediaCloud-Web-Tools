@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux';
-import { hashHistory } from 'react-router';
+import hashHistory from 'react-router/lib/hashHistory';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
