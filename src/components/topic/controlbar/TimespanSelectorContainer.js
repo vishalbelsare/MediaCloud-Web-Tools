@@ -34,12 +34,12 @@ class TimespanSelectorContainer extends React.Component {
     fetchData(topicId, snapshotId);
   }
   render() {
-    const { timespans, fetchStatus, onTimespanSelected } = this.props;
+    const { timespans, fetchStatus, onTimespanSelected, timespanId } = this.props;
     let content = fetchStatus;
     const styles = this.getStyles();
     switch (fetchStatus) {
       case fetchConstants.FETCH_SUCCEEDED:
-        content = <TimespanSelector timespans={timespans} onTimespanSelected={onTimespanSelected} />;
+        content = <TimespanSelector selectedId={timespanId} timespans={timespans} onTimespanSelected={onTimespanSelected} />;
         break;
       case fetchConstants.FETCH_FAILED:
         content = <ErrorTryAgain onTryAgain={this.refetchData} />;

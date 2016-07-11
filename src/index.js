@@ -13,6 +13,8 @@ import { loginWithKey } from './actions/userActions';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import routes from './routes/routes.js';
 import store from './store';
+import { APP_NAME } from './config';
+import { filterBySnapshot, filterByTimespan } from './actions/topicActions';
 
 // necessary lines for Material-UI library to work
 const injectTapEventPlugin = require('react-tap-event-plugin');
@@ -21,7 +23,30 @@ injectTapEventPlugin();
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(hashHistory, store);
 
-
+// Grab any filters on the url and put them in the right place in the store
+switch (APP_NAME) {
+  case 'topics':
+    // check if url has any params we care about
+    const hash = window.location.hash;
+    const hashParts = hash.split('?');
+    const args = {};
+    const queryParts = hashParts[1].split('&');
+    for (const i in queryParts) {
+      const argParts = queryParts[i].split('=');
+      args[argParts[0]] = argParts[1];
+    }
+    if ('snapshotId' in args) {
+      store.dispatch(filterBySnapshot(args.snapshotId));
+    }
+    if ('timespanId' in args) {
+      store.dispatch(filterByTimespan(args.timespanId));
+    }
+    break;
+  case 'sources':
+    break;
+  default:
+    break;
+}
 // TODO: history.listen(location => analyticsService.track(location.pathname))
 
 const renderApp = () => {
