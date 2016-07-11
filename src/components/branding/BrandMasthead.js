@@ -39,13 +39,13 @@ class BrandMasthead extends React.Component {
       <div className="branding-masthead" style={styles.root} >
         <Grid>
           <Row>
-            <Col lg={8}>
+            <Col lg={6} md={6} sm={6}>
               <h1>
                 <a href="https://topics.mediameter.org"><img src={'/static/mediacloud-logo-green-2x.png'} width={65} height={65} /></a>
                 <strong>{name}</strong>
               </h1>
             </Col>
-            <Col lg={4}>
+            <Col lg={6} md={6} sm={6}>
               <div style={styles.right} >
                 <small>{description}</small>
               </div>

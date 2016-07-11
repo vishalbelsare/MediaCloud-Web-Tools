@@ -6,15 +6,15 @@ const messages = {
   dashboardToolShortName: { id: 'tool.dashboard.name.short', defaultMessage: 'Dashboard' },
   dashboardToolName: { id: 'tool.dashboard.name', defaultMessage: 'Dashboard' },
   dashboardToolDescription: { id: 'tool.dashboard.description', defaultMessage: 'examine how much attention online media gives a topic' },
-  sourcesToolShortName: { id: 'tool.sources.name.short', defaultMessage: 'Sources' },
+  sourcesToolShortName: { id: 'tool.sources.name.short', defaultMessage: 'Source Manager' },
   sourcesToolName: { id: 'tool.sources.name', defaultMessage: 'Source Manager' },
   sourcesToolDescription: { id: 'tool.sources.description', defaultMessage: 'explore the variety of sources Media Cloud covers' },
-  topicsToolShortName: { id: 'tool.topics.name.short', defaultMessage: 'Topics' },
+  topicsToolShortName: { id: 'tool.topics.name.short', defaultMessage: 'Topic Mapper' },
   topicsToolName: { id: 'tool.topics.name', defaultMessage: 'Topic Mapper' },
   topicsToolDescription: { id: 'tool.topics.description', defaultMessage: 'analyze how online media focuses on a topic' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
-  berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Center for Internet and Society at Harvard University' },
+  berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Klein Center for Internet and Society at Harvard University' },
   userLogin: { id: 'user.login', defaultMessage: 'Login' },
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
 

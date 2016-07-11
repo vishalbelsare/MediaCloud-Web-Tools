@@ -24,13 +24,13 @@ class ControlBar extends React.Component {
       <div style={styles.root}>
         <Grid>
           <Row style={styles.controlBar}>
-            <Col lg={3}>
+            <Col lg={3} md={3} sm={3}> 
               <b><Link to={`/topics/${topicId}`} style={styles.name}>{title}</Link></b>
             </Col>
-            <Col lg={6}>
+            <Col lg={6} md={6} sm={6}>
               <TimespanSelectorContainer topicId={topicId} location={location} />
             </Col>
-            <Col lg={3}>
+            <Col lg={3} md={3} sm={3}>
               <SnapshotSelectorContainer topicId={topicId} location={location} />
             </Col>
           </Row>

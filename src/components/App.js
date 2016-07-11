@@ -75,11 +75,11 @@ class App extends React.Component {
         </div>
         <div style={styles.footer}>
           <p style={styles.p}><small>
-            {'Created by '}
+            {'Created by the '}
             <a style={styles.a} href="https://civic.mit.edu/">
               <FormattedMessage {...messages.c4cmName} />
             </a>
-            {' and '}
+            {' and the '}
             <a style={styles.a} href="https://cyber.law.harvard.edu">
               <FormattedMessage {...messages.berkmanName} />
             </a>.
