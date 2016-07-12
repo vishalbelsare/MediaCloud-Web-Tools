@@ -40,7 +40,7 @@ class TopicInfluentialMediaContainer extends React.Component {
       iconStyles: {
         marginRight: 24,
       },
-      floatRight: {
+      actionButtons: {
         float: 'right',
       },
     };
@@ -87,7 +87,9 @@ class TopicInfluentialMediaContainer extends React.Component {
           <Row>
             <Col lg={12} md={12} sm={12}>
               <div style={styles.contentWrapper}>
-                {headerContent}
+                <div style={styles.actionButtons}>
+                  {headerContent}
+                </div>
                 <h2><FormattedMessage {...localMessages.title} /></h2>
                 {content}
               </div>

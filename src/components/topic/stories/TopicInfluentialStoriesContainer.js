@@ -43,7 +43,7 @@ class TopicInfluentialStoriesContainer extends React.Component {
       iconStyles: {
         marginRight: 24,
       },
-      floatRight: {
+      actionButtons: {
         float: 'right',
       },
     };
@@ -56,12 +56,12 @@ class TopicInfluentialStoriesContainer extends React.Component {
   }
   nextPage = () => {
     const { fetchData, filters, sort, continuationId } = this.props;
-      const { topicId } = this.props.params;
+    const { topicId } = this.props.params;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort, continuationId);
   }
   downloadCsv = () => {
     const { filters, sort } = this.props;
-      const { topicId } = this.props.params;
+    const { topicId } = this.props.params;
     const url = `/api/topics/${topicId}/stories.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
@@ -92,7 +92,9 @@ class TopicInfluentialStoriesContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              {headerContent}
+              <div style={styles.actionButtons}>
+                {headerContent}
+              </div>
               <h2><FormattedMessage {...localMessages.title} /></h2>
               {content}
             </Col>
