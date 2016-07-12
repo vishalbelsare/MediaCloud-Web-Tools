@@ -45,8 +45,8 @@ class TopicTopStories extends React.Component {
                 <FormattedMessage {...messages.clicks} /></a>
               </th>
             </tr>
-            {stories.map(story =>
-              (<tr key={story.stories_id}>
+            {stories.map((story, idx) =>
+              (<tr key={story.stories_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
                 <td><a href={story.url}>{story.title}</a></td>
                 <td><a href={story.media_url}>{story.media_name}</a></td>
                 <td>{story.publish_date}</td>

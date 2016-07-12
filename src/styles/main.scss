@@ -26,7 +26,24 @@ table.small th {
   text-align: left;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: rgb(158, 158, 158);
+  color: rgb(51, 51, 51);
 	position: relative;
 	background-color: inherit;
+}
+
+table.tr {
+  padding: 3px;
+}
+
+table tr.even {
+  background-color: rgb(242, 242, 242);
+}
+
+table tr.odd {
+  background-color: inherit;
+}
+
+a {
+  color: #47c4ac;
+  text-decoration: none;
 }
