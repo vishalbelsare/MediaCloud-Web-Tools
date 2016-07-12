@@ -121,3 +121,12 @@ export function topicSentenceCounts(topicId, snapshotId, timespanId) {
     response => response.json()
   );
 }
+
+export function story(topicId, storiesId) {
+  return fetch(`/api/topics/${topicId}/stories/${storiesId}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}

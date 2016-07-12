@@ -8,15 +8,21 @@ import server.views.util.csv as csv
 
 logger = logging.getLogger(__name__)
 
+@app.route('/api/topics/<topic_id>/stories/<stories_id>', methods=['GET'])
+#@flask_login.login_required
+def story(topic_id, stories_id):
+    story_info = mc.story(stories_id)    # TODO: replace with topic story call
+    return jsonify(story_info)
+
 @app.route('/api/topics/<topic_id>/stories', methods=['GET'])
 #@flask_login.login_required
 def topic_stories(topic_id):
-    sort = validated_sort( request.args.get('sort') )
+    sort = validated_sort(request.args.get('sort'))
     snapshot_id = request.args.get('snapshot')
     timespan_id = request.args.get('timespan')
     limit = request.args.get('limit')
     continuation_id = request.args.get('continuationId')
-    stories = mc.topicStoryList(topic_id,snapshot_id=snapshot_id,timespan_id=timespan_id,sort=sort,
+    stories = mc.topicStoryList(topic_id, snapshot_id=snapshot_id, timespan_id=timespan_id, sort=sort,
         limit=limit,continuation_id=continuation_id)
     return jsonify(stories)
 

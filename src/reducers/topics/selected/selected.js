@@ -7,6 +7,7 @@ import filters from './filters';
 import info from './info';
 import media from './media';
 import stories from './stories';
+import story from './story';
 
 const INITIAL_STATE = null;
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   filters,
   media,
   stories,
+  story,
 });
 
 export default rootReducer;
