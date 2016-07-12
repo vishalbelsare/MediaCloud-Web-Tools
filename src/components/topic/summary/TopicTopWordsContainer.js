@@ -7,6 +7,7 @@ import { fetchTopicTopWords } from '../../../actions/topicActions';
 import Paper from 'material-ui/Paper';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../util/DownloadButton';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -42,7 +43,7 @@ class TopicTopStoriesContainer extends React.Component {
           <div style={styles.contentWrapper}>
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <WordCloud words={words} width={600} height={300} textColor={'#ff0000'} maxFontSize={32} />
+            <WordCloud words={words} width={600} height={300} textColor={getBrandDarkColor()} maxFontSize={32} />
           </div>
         </Paper>
       </div>

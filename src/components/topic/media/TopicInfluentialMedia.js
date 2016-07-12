@@ -31,8 +31,8 @@ class TopicInfluentialMedia extends React.Component {
               <FormattedMessage {...messages.clicks} /></a>
             </th>
           </tr>
-          {media.map(m =>
-            (<tr key={m.media_id}>
+          {media.map((m, idx) =>
+            (<tr key={m.media_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
               <td><a href={m.url}>{m.name}</a></td>
               <td>{m.type}</td>
               <td>{m.story_count}</td>

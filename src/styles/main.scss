@@ -16,7 +16,9 @@ h2 {
 }
 
 table.small {
-	padding: 10px;
+  padding: 0px;
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 table.small th {
@@ -29,10 +31,7 @@ table.small th {
   color: rgb(51, 51, 51);
 	position: relative;
 	background-color: inherit;
-}
-
-table.tr {
-  padding: 3px;
+  padding: 5px;
 }
 
 table tr.even {
@@ -41,6 +40,10 @@ table tr.even {
 
 table tr.odd {
   background-color: inherit;
+}
+
+table td {
+  padding: 10px;
 }
 
 a {

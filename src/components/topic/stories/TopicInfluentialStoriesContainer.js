@@ -27,7 +27,9 @@ class TopicInfluentialStoriesContainer extends React.Component {
         (nextProps.sort !== this.props.sort)) {
       const { fetchData } = this.props;
       const { topicId } = this.props.params;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
+      if ((nextProps.filters.snapshotId !== null) && (nextProps.filters.timespanId !== null)) {
+        fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
+      }
     }
   }
   onChangeSort = (newSort) => {
@@ -89,12 +91,10 @@ class TopicInfluentialStoriesContainer extends React.Component {
       <div style={styles.root}>
         <Grid>
           <Row>
-            <Col lg={12}>
-              <div style={styles.contentWrapper}>
-                {headerContent}
-                <h2><FormattedMessage {...localMessages.title} /></h2>
-                {content}
-              </div>
+            <Col lg={12} md={12} sm={12}>
+              {headerContent}
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+              {content}
             </Col>
           </Row>
         </Grid>

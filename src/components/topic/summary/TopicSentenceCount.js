@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   chartTitle: { id: 'topic.summary.sentenceCount.chartTitle', defaultMessage: 'Attention Over Time' },
@@ -35,8 +36,8 @@ class TopicSentenceCount extends React.Component {
         />
         </p>
         <AttentionOverTimeChart data={counts} height={styles.scrollWrapper.height - 70}
-          title={ formatMessage(localMessages.chartTitle) }
           yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
+          lineColor={ getBrandDarkColor() }
         />
       </div>
     );

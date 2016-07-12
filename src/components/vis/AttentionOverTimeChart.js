@@ -5,7 +5,6 @@ highchartsMore(ReactHighcharts.Highcharts);
 import highchartsExporting from 'highcharts-exporting';
 highchartsExporting(ReactHighcharts.Highcharts);
 
-
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 
 // don't show dots on line if more than this many data points
@@ -60,7 +59,7 @@ class AttentionOverTime extends React.Component {
   }
 
   render() {
-    const { data, height, title, onDataPointClick, yAxisLabel, health } = this.props;
+    const { data, height, title, onDataPointClick, yAxisLabel, health, lineColor } = this.props;
     const config = this.getConfig();
     config.title = { text: title };
     config.chart.height = height;
@@ -83,7 +82,7 @@ class AttentionOverTime extends React.Component {
     const allSeries = [{
       id: 0,
       name: yAxisLabel,
-      color: '#000066',
+      color: lineColor,
       data: values,
       pointStart: dates[0],
       pointInterval: intervalMs,
@@ -105,6 +104,7 @@ AttentionOverTime.propTypes = {
   yAxisLabel: React.PropTypes.string,
   health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func,
+  lineColor: React.PropTypes.string.isRequired,
 };
 
 export default AttentionOverTime;

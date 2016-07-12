@@ -85,7 +85,7 @@ class TopicInfluentialMediaContainer extends React.Component {
       <div style={styles.root}>
         <Grid>
           <Row>
-            <Col lg={12}>
+            <Col lg={12} md={12} sm={12}>
               <div style={styles.contentWrapper}>
                 {headerContent}
                 <h2><FormattedMessage {...localMessages.title} /></h2>
