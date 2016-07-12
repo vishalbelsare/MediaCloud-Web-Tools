@@ -11,6 +11,7 @@ class ControlBar extends React.Component {
       root: {
         backgroundColor: '#f2f2f2',
         marginBottom: 15,
+        borderBottom: '1px solid rgb(215,215,215)',
       },
       leftArea: {
         paddingTop: 18,
