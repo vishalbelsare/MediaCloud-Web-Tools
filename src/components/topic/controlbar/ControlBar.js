@@ -28,7 +28,7 @@ class ControlBar extends React.Component {
         <Grid>
           <Row style={styles.controlBar}>
             <Col lg={3} md={3} sm={3} style={styles.leftArea}>
-              <b><LinkWithFilters to={`/topics/${topicId}`} style={styles.name}>{title}</LinkWithFilters></b>
+              <b><LinkWithFilters to={`/topics/${topicId}/summary`} style={styles.name}>{title}</LinkWithFilters></b>
             </Col>
             <Col lg={6} md={6} sm={6}>
               <TimespanSelectorContainer topicId={topicId} location={location} />
