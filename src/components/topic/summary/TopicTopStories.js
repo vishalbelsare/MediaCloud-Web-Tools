@@ -57,9 +57,6 @@ class TopicTopStories extends React.Component {
             )}
           </tbody>
         </table>
-        <LinkWithFilters to={`/topics/${topicId}/stories`} style={styles.name}>
-          <FormattedMessage {...messages.details} />
-        </LinkWithFilters>
       </div>
     );
   }

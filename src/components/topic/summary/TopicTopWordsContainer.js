@@ -25,6 +25,9 @@ class TopicTopStoriesContainer extends React.Component {
       contentWrapper: {
         padding: 10,
       },
+      actionButtons: {
+        float: 'right',
+      },
     };
     return styles;
   }
@@ -41,7 +44,9 @@ class TopicTopStoriesContainer extends React.Component {
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
-            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            <div style={styles.actionButtons}>
+              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             <WordCloud words={words} width={600} height={300} textColor={getBrandDarkColor()} maxFontSize={32} />
           </div>

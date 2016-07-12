@@ -57,9 +57,6 @@ class TopicTopMedia extends React.Component {
             )}
           </tbody>
         </table>
-        <LinkWithFilters to={`/topics/${topicId}/media`} style={styles.name}>
-          <FormattedMessage {...messages.details} />
-        </LinkWithFilters>
       </div>
     );
   }

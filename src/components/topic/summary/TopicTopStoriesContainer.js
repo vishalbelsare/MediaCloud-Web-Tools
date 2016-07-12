@@ -5,6 +5,8 @@ import composeAsyncWidget from '../../util/composeAsyncWidget';
 import TopicTopStories from './TopicTopStories';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import Paper from 'material-ui/Paper';
+import ExploreButton from './ExploreButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'topic.summary.topStories.title', defaultMessage: 'Top Stories' },
@@ -27,16 +29,23 @@ class TopicTopStoriesContainer extends React.Component {
       contentWrapper: {
         padding: 10,
       },
+      actionButtons: {
+        float: 'right',
+      },
     };
     return styles;
   }
   render() {
     const { stories, sort, topicId } = this.props;
+    const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
+            <div style={styles.actionButtons}>
+              <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/stories`} />
+            </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             <TopicTopStories stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
           </div>

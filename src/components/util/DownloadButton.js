@@ -3,24 +3,19 @@ import IconButton from 'material-ui/IconButton';
 
 class DownloadButton extends React.Component {
   getStyles() {
-    const { padding } = this.props;
-    const paddingToUse = (padding !== undefined) ? padding : 10;
     const styles = {
-      floatRight: {
-        float: 'right',
+      root: {
       },
     };
     return styles;
   }
   render() {
-    const { tooltip, onClick, floatRight } = this.props;
+    const { tooltip, onClick } = this.props;
     const styles = this.getStyles();
-    const float = (floatRight!==undefined) ? floatRight : true;
-    const wrapperStyles = (float) ? styles.floatRight : {};
     return (
-    <div style={wrapperStyles}>
+    <div style={styles.root}>
       <IconButton iconClassName="material-icons" tooltip={tooltip} onClick={onClick}>
-        get_app
+        file_download
       </IconButton>
     </div>
     );
@@ -28,9 +23,8 @@ class DownloadButton extends React.Component {
 }
 
 DownloadButton.propTypes = {
-  tooltip: React.PropTypes.string,
-  onClick: React.PropTypes.func,
-  floatRight: React.PropTypes.bool, // defaults to true
+  tooltip: React.PropTypes.string.isRequired,
+  onClick: React.PropTypes.func.isRequired,
 };
 
 export default DownloadButton;

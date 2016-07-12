@@ -50,6 +50,7 @@ const messages = {
   details: { id: 'details', defaultMessage: 'Details' },
 
   download: { id: 'download', defaultMessage: 'Download' },
+  explore: { id: 'explore', defaultMessage: 'Explore More' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
 };
 

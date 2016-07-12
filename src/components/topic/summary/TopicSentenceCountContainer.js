@@ -27,6 +27,9 @@ class TopicSentenceCountContainer extends React.Component {
       clearFix: {
         clear: 'both',
       },
+      actionButtons: {
+        float: 'right',
+      },
     };
     return styles;
   }
@@ -43,7 +46,9 @@ class TopicSentenceCountContainer extends React.Component {
       <div style={styles.root}>
         <Paper>
           <div style={styles.contentWrapper}>
-            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            <div style={styles.actionButtons}>
+              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             <div style={styles.clearFix} />
             <TopicSentenceCount total={total} counts={counts} />
