@@ -22,7 +22,7 @@ const TimespanSelector = (props) => {
 
 TimespanSelector.propTypes = {
   timespans: React.PropTypes.array.isRequired,
-  selectedId: React.PropTypes.number.isRequired,
+  selectedId: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
   onTimespanSelected: React.PropTypes.func,
 };

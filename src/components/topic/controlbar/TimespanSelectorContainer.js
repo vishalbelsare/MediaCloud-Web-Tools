@@ -25,13 +25,14 @@ class TimespanSelectorContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
+        paddingTop: 18,
       },
     };
     return styles;
   }
   refetchData = () => {
-    const { topicId, snapshotId, fetchData } = this.props;
-    fetchData(topicId, snapshotId);
+    const { topicId, snapshotId, timespanId, fetchData } = this.props;
+    fetchData(topicId, snapshotId, timespanId);
   }
   render() {
     const { timespans, fetchStatus, onTimespanSelected, timespanId } = this.props;
@@ -80,7 +81,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, snapshotId, timespanId) => {
     dispatch(fetchTopicSnapshotTimespansList(topicId, snapshotId))
       .then((response) => {
-        if (timespanId === null) {
+        if (timespanId === null || isNaN(timespanId)) {
           const defaultTimespanId = response.list[0].controversy_dump_time_slices_id;
           const newLocation = Object.assign({}, ownProps.location, {
             query: {
