@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import TopicInfluentialStories from './TopicInfluentialStories';
+import InfluentialStories from './InfluentialStories';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
 };
 
-class TopicInfluentialStoriesContainer extends React.Component {
+class InfluentialStoriesContainer extends React.Component {
   componentDidMount() {
     const { fetchStatus } = this.props;
     if (fetchStatus !== fetchConstants.FETCH_FAILED) {
@@ -67,6 +67,7 @@ class TopicInfluentialStoriesContainer extends React.Component {
   }
   render() {
     const { fetchStatus, fetchData, stories, sort } = this.props;
+    const { topicId } = this.props.params;
     const { formatMessage } = this.props.intl;
     let content = fetchStatus;
     const styles = this.getStyles();
@@ -76,7 +77,7 @@ class TopicInfluentialStoriesContainer extends React.Component {
         headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
         content = (
           <div>
-            <TopicInfluentialStories stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+            <InfluentialStories topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
             <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
           </div>
         );
@@ -105,9 +106,9 @@ class TopicInfluentialStoriesContainer extends React.Component {
   }
 }
 
-TopicInfluentialStoriesContainer.ROWS_PER_PAGE = 20;
+InfluentialStoriesContainer.ROWS_PER_PAGE = 20;
 
-TopicInfluentialStoriesContainer.propTypes = {
+InfluentialStoriesContainer.propTypes = {
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   intl: React.PropTypes.object.isRequired,
@@ -133,11 +134,11 @@ const mapStateToProps = (state) => ({
   topicInfo: state.topics.selected.info,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchData: (topicId, snapshotId, timespanId, sort, continuationId) => {
     if ((snapshotId !== null) && (timespanId !== null)) {
       dispatch(fetchTopicInfluentialStories(topicId, snapshotId, timespanId, sort,
-        TopicInfluentialStoriesContainer.ROWS_PER_PAGE, continuationId));
+        InfluentialStoriesContainer.ROWS_PER_PAGE, continuationId));
     }
   },
   sortData: (sort) => {
@@ -148,4 +149,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(TopicInfluentialStoriesContainer));
+)(InfluentialStoriesContainer));

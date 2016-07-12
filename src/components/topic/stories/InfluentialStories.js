@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../../resources/messages';
+import LinkWithFilters from '../LinkWithFilters';
 
-class TopicInfluentialMedia extends React.Component {
+class InfluentialStories extends React.Component {
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -15,7 +16,7 @@ class TopicInfluentialMedia extends React.Component {
   }
 
   render() {
-    const { stories } = this.props;
+    const { stories, topicId } = this.props;
     return (
       <table className="small">
         <tbody>
@@ -33,7 +34,11 @@ class TopicInfluentialMedia extends React.Component {
           </tr>
           {stories.map((story, idx) =>
             (<tr key={story.stories_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
-              <td><a href={story.url}>{story.title}</a></td>
+              <td>
+                <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
+                  {story.title}
+                </LinkWithFilters>
+              </td>
               <td><a href={story.media_url}>{story.media_name}</a></td>
               <td>{story.publish_date}</td>
               <td>{story.inlink_count}</td>
@@ -48,11 +53,12 @@ class TopicInfluentialMedia extends React.Component {
 
 }
 
-TopicInfluentialMedia.propTypes = {
+InfluentialStories.propTypes = {
   stories: React.PropTypes.array.isRequired,
+  topicId: React.PropTypes.string.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
 };
 
-export default injectIntl(TopicInfluentialMedia);
+export default injectIntl(InfluentialStories);
