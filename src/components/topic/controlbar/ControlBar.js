@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
+import LinkWithFilters from '../LinkWithFilters';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './TimespanSelectorContainer';
@@ -11,6 +11,9 @@ class ControlBar extends React.Component {
       root: {
         backgroundColor: '#f2f2f2',
         marginBottom: 15,
+      },
+      leftArea: {
+        paddingTop: 18,
       },
       controlBar: {
       },
@@ -24,8 +27,8 @@ class ControlBar extends React.Component {
       <div style={styles.root}>
         <Grid>
           <Row style={styles.controlBar}>
-            <Col lg={3} md={3} sm={3}> 
-              <b><Link to={`/topics/${topicId}`} style={styles.name}>{title}</Link></b>
+            <Col lg={3} md={3} sm={3} style={styles.leftArea}>
+              <b><LinkWithFilters to={`/topics/${topicId}`} style={styles.name}>{title}</LinkWithFilters></b>
             </Col>
             <Col lg={6} md={6} sm={6}>
               <TimespanSelectorContainer topicId={topicId} location={location} />

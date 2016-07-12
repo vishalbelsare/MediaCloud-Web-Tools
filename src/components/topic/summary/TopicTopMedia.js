@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
+import LinkWithFilters from '../LinkWithFilters';
 import messages from '../../../resources/messages';
 
 class TopicTopMedia extends React.Component {
@@ -57,7 +57,9 @@ class TopicTopMedia extends React.Component {
             )}
           </tbody>
         </table>
-        <Link to={`/topics/${topicId}/media`} style={styles.name}><FormattedMessage {...messages.details} /></Link>
+        <LinkWithFilters to={`/topics/${topicId}/media`} style={styles.name}>
+          <FormattedMessage {...messages.details} />
+        </LinkWithFilters>
       </div>
     );
   }
