@@ -4,10 +4,10 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import TopicInfo from './TopicInfo';
-import TopicTopStoriesContainer from './TopicTopStoriesContainer';
-import TopicTopMediaContainer from './TopicTopMediaContainer';
-import TopicTopWordsContainer from './TopicTopWordsContainer';
-import TopicSentenceCountContainer from './TopicSentenceCountContainer';
+import StoriesSummaryContainer from './StoriesSummaryContainer';
+import MediaSummaryContainer from './MediaSummaryContainer';
+import WordsSummaryContainer from './WordsSummaryContainer';
+import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
@@ -39,20 +39,20 @@ class TopicSummaryContainer extends React.Component {
         <Grid>
           <Row style={styles.row}>
             <Col lg={6} md={12} sm={12}>
-              <TopicSentenceCountContainer topicId={topicId} filters={filters} />
+              <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={6} md={12} sm={12}>
-              <TopicTopWordsContainer topicId={topicId} filters={filters} />
+              <WordsSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row style={styles.row}>
             <Col lg={12} md={12} sm={12}>
-              <TopicTopStoriesContainer topicId={topicId} filters={filters} />
+              <StoriesSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row style={styles.row}>
             <Col lg={6} md={12} sm={12}>
-              <TopicTopMediaContainer topicId={topicId} filters={filters} />
+              <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={6} md={12} sm={12}>
               <TopicInfo topic={topicInfo} />

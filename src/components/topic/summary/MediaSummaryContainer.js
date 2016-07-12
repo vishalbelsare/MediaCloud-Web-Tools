@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import TopicTopMedia from './TopicTopMedia';
+import MediaSummary from './MediaSummary';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import Paper from 'material-ui/Paper';
 import ExploreButton from './ExploreButton';
@@ -12,7 +12,7 @@ const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
 };
 
-class TopicTopMediaContainer extends React.Component {
+class MediaSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
         (nextProps.sort !== this.props.sort)) {
@@ -51,7 +51,7 @@ class TopicTopMediaContainer extends React.Component {
               <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/media`} />
             </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <TopicTopMedia media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
+            <MediaSummary media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
           </div>
         </Paper>
       </div>
@@ -59,7 +59,7 @@ class TopicTopMediaContainer extends React.Component {
   }
 }
 
-TopicTopMediaContainer.propTypes = {
+MediaSummaryContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
@@ -96,7 +96,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncWidget(
-        TopicTopMediaContainer
+        MediaSummaryContainer
       )
     )
   );

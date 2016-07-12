@@ -2,28 +2,24 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import TopicTopStories from './TopicTopStories';
-import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
+import WordCloud from '../../vis/WordCloud';
+import { fetchTopicTopWords } from '../../../actions/topicActions';
 import Paper from 'material-ui/Paper';
-import ExploreButton from './ExploreButton';
 import messages from '../../../resources/messages';
+import DownloadButton from '../../util/DownloadButton';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.summary.topStories.title', defaultMessage: 'Top Stories' },
+  title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
 };
 
-class TopicTopStoriesContainer extends React.Component {
+class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.filters !== this.props.filters) ||
-        (nextProps.sort !== this.props.sort)) {
-      const { fetchData } = this.props;
+    const { fetchData } = this.props;
+    if (nextProps.filters !== this.props.filters) {
       fetchData(nextProps);
     }
   }
-  onChangeSort = (newSort) => {
-    const { sortData } = this.props;
-    sortData(newSort);
-  };
   getStyles() {
     const styles = {
       contentWrapper: {
@@ -35,8 +31,13 @@ class TopicTopStoriesContainer extends React.Component {
     };
     return styles;
   }
+  downloadCsv = () => {
+    const { topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
+    window.location = url;
+  }
   render() {
-    const { stories, sort, topicId } = this.props;
+    const { words } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     return (
@@ -44,10 +45,10 @@ class TopicTopStoriesContainer extends React.Component {
         <Paper>
           <div style={styles.contentWrapper}>
             <div style={styles.actionButtons}>
-              <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/stories`} />
+              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <TopicTopStories stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
+            <WordCloud words={words} width={600} height={300} textColor={getBrandDarkColor()} maxFontSize={32} />
           </div>
         </Paper>
       </div>
@@ -55,36 +56,32 @@ class TopicTopStoriesContainer extends React.Component {
   }
 }
 
-TopicTopStoriesContainer.propTypes = {
+WordsSummaryContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
   // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
   // from state
+  words: React.PropTypes.array,
   fetchStatus: React.PropTypes.string.isRequired,
-  sort: React.PropTypes.string.isRequired,
-  stories: React.PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
-  sort: state.topics.selected.summary.topStories.sort,
-  stories: state.topics.selected.summary.topStories.stories,
+  fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
+  words: state.topics.selected.summary.topWords.list,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopStories(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
+    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
   },
   fetchData: (props) => {
-    dispatch(fetchTopicTopStories(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort));
-  },
-  sortData: (sort) => {
-    dispatch(sortTopicTopStories(sort));
+    dispatch(fetchTopicTopWords(props.topicId, props.filters.snapshotId, props.filters.timespanId));
   },
 });
 
@@ -92,7 +89,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncWidget(
-        TopicTopStoriesContainer
+        WordsSummaryContainer
       )
     )
   );

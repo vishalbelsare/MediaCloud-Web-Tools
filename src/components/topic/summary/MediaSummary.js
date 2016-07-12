@@ -1,9 +1,8 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LinkWithFilters from '../LinkWithFilters';
 import messages from '../../../resources/messages';
 
-class TopicTopMedia extends React.Component {
+class MediaSummary extends React.Component {
 
   getStyles() {
     const styles = {
@@ -27,7 +26,7 @@ class TopicTopMedia extends React.Component {
   }
 
   render() {
-    const { media, topicId } = this.props;
+    const { media } = this.props;
     const styles = this.getStyles();
     return (
       <div>
@@ -63,12 +62,11 @@ class TopicTopMedia extends React.Component {
 
 }
 
-TopicTopMedia.propTypes = {
+MediaSummary.propTypes = {
   media: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.number.isRequired,
 };
 
-export default injectIntl(TopicTopMedia);
+export default injectIntl(MediaSummary);

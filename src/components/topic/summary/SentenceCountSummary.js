@@ -11,7 +11,7 @@ const localMessages = {
   },
 };
 
-class TopicSentenceCount extends React.Component {
+class SentenceCountSummary extends React.Component {
 
   getStyles() {
     const styles = {
@@ -45,10 +45,10 @@ class TopicSentenceCount extends React.Component {
 
 }
 
-TopicSentenceCount.propTypes = {
+SentenceCountSummary.propTypes = {
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(TopicSentenceCount);
+export default injectIntl(SentenceCountSummary);

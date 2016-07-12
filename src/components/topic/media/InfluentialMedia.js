@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../../resources/messages';
 
-class TopicInfluentialMedia extends React.Component {
+class InfluentialMedia extends React.Component {
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -48,11 +48,11 @@ class TopicInfluentialMedia extends React.Component {
 
 }
 
-TopicInfluentialMedia.propTypes = {
+InfluentialMedia.propTypes = {
   media: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
 };
 
-export default injectIntl(TopicInfluentialMedia);
+export default injectIntl(InfluentialMedia);

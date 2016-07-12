@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../util/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
-import TopicInfluentialMedia from './TopicInfluentialMedia';
+import InfluentialMedia from './InfluentialMedia';
 import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -70,7 +70,7 @@ class TopicInfluentialMediaContainer extends React.Component {
         headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
         content = (
           <div>
-            <TopicInfluentialMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
+            <InfluentialMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
             <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
           </div>
         );

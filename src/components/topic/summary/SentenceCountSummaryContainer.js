@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import TopicSentenceCount from './TopicSentenceCount';
+import SentenceCountSummary from './SentenceCountSummary';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import Paper from 'material-ui/Paper';
 import messages from '../../../resources/messages';
@@ -12,7 +12,7 @@ const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
 };
 
-class TopicSentenceCountContainer extends React.Component {
+class SentenceCountSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
     if (nextProps.filters !== this.props.filters) {
@@ -51,7 +51,7 @@ class TopicSentenceCountContainer extends React.Component {
             </div>
             <h2><FormattedMessage {...localMessages.title} /></h2>
             <div style={styles.clearFix} />
-            <TopicSentenceCount total={total} counts={counts} />
+            <SentenceCountSummary total={total} counts={counts} />
           </div>
         </Paper>
       </div>
@@ -59,7 +59,7 @@ class TopicSentenceCountContainer extends React.Component {
   }
 }
 
-TopicSentenceCountContainer.propTypes = {
+SentenceCountSummaryContainer.propTypes = {
   // passed in
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -93,7 +93,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncWidget(
-        TopicSentenceCountContainer
+        SentenceCountSummaryContainer
       )
     )
   );

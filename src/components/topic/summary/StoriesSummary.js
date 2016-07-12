@@ -1,9 +1,8 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LinkWithFilters from '../LinkWithFilters';
 import messages from '../../../resources/messages';
 
-class TopicTopStories extends React.Component {
+class StoriesSummary extends React.Component {
 
   getStyles() {
     const styles = {
@@ -27,7 +26,7 @@ class TopicTopStories extends React.Component {
   }
 
   render() {
-    const { stories, topicId } = this.props;
+    const { stories } = this.props;
     const styles = this.getStyles();
     return (
       <div>
@@ -63,12 +62,11 @@ class TopicTopStories extends React.Component {
 
 }
 
-TopicTopStories.propTypes = {
+StoriesSummary.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   onChangeSort: React.PropTypes.func.isRequired,
   sortedBy: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.number.isRequired,
 };
 
-export default injectIntl(TopicTopStories);
+export default injectIntl(StoriesSummary);
