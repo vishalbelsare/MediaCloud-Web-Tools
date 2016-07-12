@@ -15,6 +15,7 @@ class TopicListContainer extends React.Component {
   getStyles() {
     const styles = {
       root: {
+        marginTop: 15,
       },
     };
     return styles;
@@ -30,7 +31,7 @@ class TopicListContainer extends React.Component {
         <Title render={titleHandler} />
         <Grid>
           <Row>
-            <Col lg={12}>
+            <Col lg={12} md={12} sm={12}>
               <h2>{title}</h2>
               <TopicList topics={topics} />;
             </Col>

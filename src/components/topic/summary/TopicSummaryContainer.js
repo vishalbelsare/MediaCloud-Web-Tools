@@ -38,26 +38,26 @@ class TopicSummaryContainer extends React.Component {
       subContent = (
         <Grid>
           <Row style={styles.row}>
-            <Col lg={6}>
+            <Col lg={6} md={12} sm={12}>
               <TopicSentenceCountContainer topicId={topicId} filters={filters} />
             </Col>
-            <Col lg={6}>
+            <Col lg={6} md={12} sm={12}>
               <TopicTopWordsContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row style={styles.row}>
-            <Col lg={12}>
+            <Col lg={12} md={12} sm={12}>
               <TopicTopStoriesContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row style={styles.row}>
-            <Col lg={6}>
+            <Col lg={6} md={12} sm={12}>
               <TopicTopMediaContainer topicId={topicId} filters={filters} />
             </Col>
-            <Col lg={6}>
+            <Col lg={6} md={12} sm={12}>
               <TopicInfo topic={topicInfo} />
             </Col>
-            <Col lg={6} />
+            <Col lg={6} md={12} sm={12} />
           </Row>
         </Grid>
       );

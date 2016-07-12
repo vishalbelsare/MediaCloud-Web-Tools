@@ -6,7 +6,7 @@ import LoginForm from './LoginForm';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessages = {
-  loginTitle: { id: 'login.title', defaultMessage: 'login' },
+  loginTitle: { id: 'login.title', defaultMessage: 'Login' },
 };
 
 class LoginContainer extends React.Component {
@@ -15,16 +15,25 @@ class LoginContainer extends React.Component {
       this.context.router.push('/home');
     }
   }
+  getStyles() {
+    const styles = {
+      root: {
+        marginTop: 15,
+      },
+    };
+    return styles;
+  }
   render() {
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.loginTitle)} | ${parentTitle}`;
+    const styles = this.getStyles();
     return (
       <Grid>
         <Row>
-          <Col lg={12}>
-        <Title render={titleHandler} />
-        <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
-        <LoginForm location={this.props.location} />
+          <Col lg={12} md={12} sm={12} style={styles.root}>
+            <Title render={titleHandler} />
+            <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
+            <LoginForm location={this.props.location} />
           </Col>
         </Row>
       </Grid>
