@@ -3,22 +3,44 @@ import d3 from 'd3';
 import d3LayoutCloud from 'd3-cloud';
 import ReactFauxDOM from 'react-faux-dom';
 
+const DEFAULT_WIDTH = 600;
+const DEFAULT_HEIGHT = 300;
+const DEFAULT_MAX_FONT_SIZE = 32;
+const DEFAULT_TEXT_COLOR = '#333333';
+
 class WordCloud extends React.Component {
 
   render() {
     const { words, width, height, maxFontSize, textColor } = this.props;
-
+    const options = {
+      width,
+      height,
+      maxFontSize,
+      textColor,
+    };
+    if (width !== null) {
+      options.width = DEFAULT_WIDTH;
+    }
+    if (height !== null) {
+      options.height = DEFAULT_HEIGHT;
+    }
+    if (maxFontSize !== null) {
+      options.maxFontSize = DEFAULT_MAX_FONT_SIZE;
+    }
+    if (textColor !== null) {
+      options.textColor = DEFAULT_TEXT_COLOR;
+    }
     const node = ReactFauxDOM.createElement('svg');
     const counts = words.map(({ count }) => count);
     const max = d3.max(counts);
-    const slope = maxFontSize / Math.log(max);
+    const slope = options.maxFontSize / Math.log(max);
     // get list of all words and sizes
     const wordList = words.map((w) => ({
       text: w.term,
       size: slope * Math.log(w.count),
     }));
     // create wordcloud
-    d3LayoutCloud().size([width, height])
+    d3LayoutCloud().size([options.width, options.height])
     .words(wordList)
     .rotate(() => (~~(Math.random() * 1) * 90))
     .font('Arial')
@@ -28,14 +50,14 @@ class WordCloud extends React.Component {
       // var fill = d3.scale.linear().domain([0,100]).range(['black','white']);
       // Colors
       d3.select(node)
-        .attr('width', width).attr('height', height)
+        .attr('width', options.width).attr('height', options.height)
         .append('g')
-        .attr('transform', `translate(${width / 2},${height / 2})`)
+        .attr('transform', `translate(${options.width / 2},${options.height / 2})`)
         .selectAll('text')
         .data(wordsAsData)
         .enter().append('text')
         .attr('font-size', (d) => `${d.size}px`)
-        .attr('fill', textColor)
+        .attr('fill', options.textColor)
         .attr('text-anchor', 'middle')
         .attr('font-weight', 'bold')
         .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
@@ -50,10 +72,10 @@ class WordCloud extends React.Component {
 
 WordCloud.propTypes = {
   words: React.PropTypes.array.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
-  maxFontSize: React.PropTypes.number.isRequired,
-  textColor: React.PropTypes.string.isRequired,
+  width: React.PropTypes.number,
+  height: React.PropTypes.number,
+  maxFontSize: React.PropTypes.number,
+  textColor: React.PropTypes.string,
 };
 
 export default WordCloud;

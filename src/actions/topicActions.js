@@ -20,6 +20,7 @@ export const FETCH_TOPIC_INFLUENTIAL_STORIES = 'FETCH_TOPIC_INFLUENTIAL_STORIES'
 export const SORT_TOPIC_INFLUENTIAL_STORIES = 'SORT_TOPIC_INFLUENTIAL_STORIES';
 export const SELECT_STORY = 'SELECT_STORY';
 export const FETCH_STORY = 'FETCH_STORY';
+export const FETCH_STORY_WORDS = 'FETCH_STORY_WORDS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -64,3 +65,5 @@ export const sortTopicInfluentialStories = createAction(SORT_TOPIC_INFLUENTIAL_S
 export const selectStory = createAction(SELECT_STORY, id => id);
 // pass in topic id and story id
 export const fetchStory = createAsyncAction(FETCH_STORY, api.story);
+// pass in topic id and story id
+export const fetchStoryWords = createAsyncAction(FETCH_STORY_WORDS, api.storyWords);

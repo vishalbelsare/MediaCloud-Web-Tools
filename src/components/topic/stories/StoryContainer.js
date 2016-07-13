@@ -5,6 +5,7 @@ import { selectStory, fetchStory } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import StoryDetails from './StoryDetails';
+import StoryWordsContainer from './StoryWordsContainer';
 
 class StoryContainer extends React.Component {
   getStyles() {
@@ -15,7 +16,7 @@ class StoryContainer extends React.Component {
     return styles;
   }
   render() {
-    const { story } = this.props;
+    const { story, topicId, storiesId } = this.props;
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
@@ -28,6 +29,9 @@ class StoryContainer extends React.Component {
           <Row>
             <Col lg={6} md={6} sm={12}>
               <StoryDetails story={story} />
+            </Col>
+            <Col lg={6} md={6} sm={12}>
+              <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
             </Col>
           </Row>
         </Grid>
@@ -46,18 +50,20 @@ StoryContainer.propTypes = {
   // from state
   story: React.PropTypes.object.isRequired,
   storiesId: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.string.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  fetchStatus: state.topics.selected.story.fetchStatus,
-  storiesId: state.topics.selected.story.id,
-  story: state.topics.selected.story,
+const mapStateToProps = (state, ownProps) => ({
+  fetchStatus: state.topics.selected.story.info.fetchStatus,
+  storiesId: ownProps.params.storiesId,
+  topicId: ownProps.params.topicId,
+  story: state.topics.selected.story.info,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(selectStory(ownProps.params.storiesId));       // save it to the state
+    dispatch(selectStory(ownProps.params.storiesId));    // save it to the state
     dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId)); // fetch the info we need
   },
 });

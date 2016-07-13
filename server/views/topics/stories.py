@@ -14,6 +14,12 @@ def story(topic_id, stories_id):
     story_info = mc.story(stories_id)    # TODO: replace with topic story call
     return jsonify(story_info)
 
+@app.route('/api/topics/<topic_id>/stories/<stories_id>/words', methods=['GET'])
+#@flask_login.login_required
+def storyWords(topic_id, stories_id):
+    story_words = mc.wordCount('stories_id:'+stories_id)    # TODO: replace with topic story words call
+    return jsonify(story_words)
+
 @app.route('/api/topics/<topic_id>/stories', methods=['GET'])
 #@flask_login.login_required
 def topic_stories(topic_id):

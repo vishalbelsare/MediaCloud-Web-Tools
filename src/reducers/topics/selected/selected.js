@@ -7,7 +7,7 @@ import filters from './filters';
 import info from './info';
 import media from './media';
 import stories from './stories';
-import story from './story';
+import story from './story/story';
 
 const INITIAL_STATE = null;
 

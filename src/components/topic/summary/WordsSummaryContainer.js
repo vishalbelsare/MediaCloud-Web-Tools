@@ -9,10 +9,6 @@ import messages from '../../../resources/messages';
 import DownloadButton from '../../util/DownloadButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
-const localMessages = {
-  title: { id: 'topic.summary.topWords.title', defaultMessage: 'Top Words' },
-};
-
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
@@ -47,8 +43,8 @@ class WordsSummaryContainer extends React.Component {
             <div style={styles.actionButtons}>
               <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
-            <h2><FormattedMessage {...localMessages.title} /></h2>
-            <WordCloud words={words} width={600} height={300} textColor={getBrandDarkColor()} maxFontSize={32} />
+            <h2><FormattedMessage {...messages.topWords} /></h2>
+            <WordCloud words={words} textColor={getBrandDarkColor()} />
           </div>
         </Paper>
       </div>

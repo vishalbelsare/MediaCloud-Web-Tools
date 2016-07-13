@@ -36,6 +36,8 @@ const messages = {
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
 
+  topWords: { id: 'topWords', defaultMessage: 'Top Words' },
+
   media: { id: 'media', defaultMessage: 'Media Source' },
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
   mediaName: { id: 'media.name', defaultMessage: 'Name' },

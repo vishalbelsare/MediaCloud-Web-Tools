@@ -6,7 +6,6 @@ class StoryDetails extends React.Component {
   getStyles() {
     const styles = {
       root: {
-
       },
       contentWrapper: {
         padding: 10,

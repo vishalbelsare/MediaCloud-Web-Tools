@@ -130,3 +130,12 @@ export function story(topicId, storiesId) {
     response => response.json()
   );
 }
+
+export function storyWords(topicId, storiesId) {
+  return fetch(`/api/topics/${topicId}/stories/${storiesId}/words`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
