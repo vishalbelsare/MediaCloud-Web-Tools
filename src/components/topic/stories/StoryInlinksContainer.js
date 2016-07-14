@@ -33,9 +33,9 @@ StoryInlinksContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
-  storiesId: React.PropTypes.string.isRequired,
+  storiesId: React.PropTypes.number.isRequired,
   timespanId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from state

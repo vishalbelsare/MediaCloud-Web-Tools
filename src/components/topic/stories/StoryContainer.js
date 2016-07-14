@@ -51,15 +51,15 @@ StoryContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   story: React.PropTypes.object.isRequired,
-  storiesId: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.string.isRequired,
+  storiesId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.story.info.fetchStatus,
-  storiesId: ownProps.params.storiesId,
-  topicId: ownProps.params.topicId,
+  storiesId: parseInt(ownProps.params.storiesId, 10),
+  topicId: parseInt(ownProps.params.topicId, 10),
   story: state.topics.selected.story.info,
 });
 
