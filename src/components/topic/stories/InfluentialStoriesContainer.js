@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import InfluentialStories from './InfluentialStories';
+import StoryTable from '../StoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
@@ -36,14 +36,12 @@ class InfluentialStoriesContainer extends React.Component {
     fetchData(this.props);
   }
   downloadCsv = () => {
-    const { filters, sort } = this.props;
-    const { topicId } = this.props.params;
+    const { filters, sort, topicId } = this.props;
     const url = `/api/topics/${topicId}/stories.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
   render() {
-    const { stories, sort } = this.props;
-    const { topicId } = this.props.params;
+    const { stories, sort, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <Grid>
@@ -54,7 +52,7 @@ class InfluentialStoriesContainer extends React.Component {
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
               <h2><FormattedMessage {...localMessages.title} /></h2>
-              <InfluentialStories topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
               <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
             </DataCard>
           </Col>
@@ -68,7 +66,6 @@ InfluentialStoriesContainer.ROWS_PER_PAGE = 50;
 
 InfluentialStoriesContainer.propTypes = {
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
   intl: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch

@@ -66,7 +66,6 @@ InfluentialMediaContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   sort: React.PropTypes.string.isRequired,
   media: React.PropTypes.array.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
   topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
