@@ -12,22 +12,13 @@ const localMessages = {
 };
 
 class TopicListContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-        marginTop: 15,
-      },
-    };
-    return styles;
-  }
   render() {
     const { topics } = this.props;
     const { formatMessage } = this.props.intl;
     const title = formatMessage(localMessages.topicsListTitle);
     const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-    const styles = this.getStyles();
     return (
-      <div style={styles.root}>
+      <div>
         <Title render={titleHandler} />
         <Grid>
           <Row>
