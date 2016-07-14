@@ -16,23 +16,43 @@ def story(topic_id, stories_id):
 
 @app.route('/api/topics/<topic_id>/stories/<stories_id>/words', methods=['GET'])
 #@flask_login.login_required
-def storyWords(topic_id, stories_id):
-    story_words = mc.wordCount('stories_id:'+stories_id) # TODO: replace with topic story words call
+def story_words(topic_id, stories_id):
+    story_words = _story_words(topic_id, stories_id)
     return jsonify(story_words)
+
+@app.route('/api/topics/<topic_id>/stories/<stories_id>/words.csv', methods=['GET'])
+#@flask_login.login_required
+def story_words_csv(topic_id, stories_id):
+    story_words = _story_words(topic_id, stories_id)
+    props = ['term', 'stem', 'count']
+    return csv.stream_response(story_words, props, 'story-'+str(stories_id)+'-words')
+
+def _story_words(topic_id, stories_id):
+    return mc.wordCount('stories_id:'+stories_id) # TODO: replace with topic story words call
 
 @app.route('/api/topics/<topic_id>/stories/<stories_id>/inlinks', methods=['GET'])
 #@flask_login.login_required
-def storyInlinks(topic_id, stories_id):
+def story_inlinks(topic_id, stories_id):
     timespan_id = request.args.get('timespanId')
     story_inlinks = mc.storyList('{~ controversy_dump_time_slice:'+timespan_id+' link_to_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
     return jsonify(story_inlinks)
 
+@app.route('/api/topics/<topic_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
+#@flask_login.login_required
+def story_inlinks_csv(topic_id, stories_id):
+    raise NotImplementedError
+
 @app.route('/api/topics/<topic_id>/stories/<stories_id>/outlinks', methods=['GET'])
 #@flask_login.login_required
-def storyOutlinks(topic_id, stories_id):
+def story_outlinks(topic_id, stories_id):
     timespan_id = request.args.get('timespanId')
     story_outlinks = mc.storyList('{~ controversy_dump_time_slice:'+timespan_id+' link_from_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
     return jsonify(story_outlinks)
+
+@app.route('/api/topics/<topic_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
+#@flask_login.login_required
+def story_outlinks_csv(topic_id, stories_id):
+    raise NotImplementedError
 
 @app.route('/api/topics/<topic_id>/stories', methods=['GET'])
 #@flask_login.login_required
