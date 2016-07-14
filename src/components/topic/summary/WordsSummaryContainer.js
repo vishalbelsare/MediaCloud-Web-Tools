@@ -6,7 +6,7 @@ import WordCloud from '../../vis/WordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import DownloadButton from '../../util/DownloadButton';
+import DownloadButton from '../../common/DownloadButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 class WordsSummaryContainer extends React.Component {

@@ -8,7 +8,7 @@ import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
-import DownloadButton from '../../util/DownloadButton';
+import DownloadButton from '../../common/DownloadButton';
 import messages from '../../../resources/messages';
 
 const localMessages = {

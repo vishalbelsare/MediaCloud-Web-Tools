@@ -5,7 +5,7 @@ import composeAsyncWidget from '../../util/composeAsyncWidget';
 import SentenceCountSummary from './SentenceCountSummary';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
-import DownloadButton from '../../util/DownloadButton';
+import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
 
 const localMessages = {

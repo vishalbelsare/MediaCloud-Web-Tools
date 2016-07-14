@@ -6,7 +6,7 @@ import composeAsyncWidget from '../../util/composeAsyncWidget';
 import messages from '../../../resources/messages';
 import StoryTable from '../StoryTable';
 import DataCard from '../../common/DataCard';
-import DownloadButton from '../../util/DownloadButton';
+import DownloadButton from '../../common/DownloadButton';
 
 class StoryInlinksContainer extends React.Component {
   downloadCsv = () => {

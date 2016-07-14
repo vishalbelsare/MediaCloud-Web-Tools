@@ -7,7 +7,7 @@ import WordCloud from '../../vis/WordCloud';
 import messages from '../../../resources/messages';
 import { getBrandDarkColor } from '../../../styles/colors';
 import DataCard from '../../common/DataCard';
-import DownloadButton from '../../util/DownloadButton';
+import DownloadButton from '../../common/DownloadButton';
 
 class StoryWordsContainer extends React.Component {
   downloadCsv = () => {
