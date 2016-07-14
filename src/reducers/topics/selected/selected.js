@@ -6,6 +6,7 @@ import summary from './summary/summary';
 import filters from './filters';
 import info from './info';
 import media from './media';
+import mediaSource from './mediaSource/mediaSource';
 import stories from './stories';
 import story from './story/story';
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   timespans,
   filters,
   media,
+  mediaSource,
   stories,
   story,
 });

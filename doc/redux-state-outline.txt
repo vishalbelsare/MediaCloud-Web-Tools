@@ -64,9 +64,15 @@
       media: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         continuation_id: number,
-        stories: // list of JSON story objects,
+        media: // list of JSON story objects,
         timeslice: // JSON object about timespan,
       },
+      stories: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        continuation_id: number,
+        stories: // list of JSON story objects,
+        timeslice: // JSON object about timespan,
+      }
       story: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         story: // JSON object about the story
@@ -83,6 +89,10 @@
           list: // list of story JSON objects
         },
       },
+      mediaSource: {
+        fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        media: // JSON object about the story
+      }
     },
 sources: {
     all: {

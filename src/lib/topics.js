@@ -167,3 +167,12 @@ export function storyOutlinks(topicId, timespanId, storiesId) {
     response => response.json()
   );
 }
+
+export function media(topicId, mediaId) {
+  return fetch(`/api/topics/${topicId}/media/${mediaId}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}

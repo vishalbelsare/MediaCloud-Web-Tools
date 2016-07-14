@@ -8,6 +8,12 @@ import server.views.util.csv as csv
 
 logger = logging.getLogger(__name__)
 
+@app.route('/api/topics/<topic_id>/media/<media_id>', methods=['GET'])
+#@flask_login.login_required
+def media(topic_id, media_id):
+    media_info = mc.media(media_id) # TODO: replace with topic media call
+    return jsonify(media_info)
+
 @app.route('/api/topics/<topic_id>/media', methods=['GET'])
 #@flask_login.login_required
 def topic_media(topic_id):

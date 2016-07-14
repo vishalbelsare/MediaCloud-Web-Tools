@@ -24,6 +24,8 @@ export const FETCH_STORY = 'FETCH_STORY';
 export const FETCH_STORY_WORDS = 'FETCH_STORY_WORDS';
 export const FETCH_STORY_INLINKS = 'FETCH_STORY_INLINKS';
 export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
+export const SELECT_MEDIA = 'SELECT_MEDIA';
+export const FETCH_MEDIA = 'FETCH_MEDIA';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -74,3 +76,8 @@ export const fetchStoryWords = createAsyncAction(FETCH_STORY_WORDS, api.storyWor
 export const fetchStoryInlinks = createAsyncAction(FETCH_STORY_INLINKS, api.storyInlinks);
 // pass in topic id, timespan id, and story id
 export const fetchStoryOutlinks = createAsyncAction(FETCH_STORY_OUTLINKS, api.storyOutlinks);
+
+// pass in media id
+export const selectMedia = createAction(SELECT_MEDIA, id => id);
+// pass in topic id and media id
+export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.media);

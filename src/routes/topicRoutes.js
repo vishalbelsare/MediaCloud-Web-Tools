@@ -6,6 +6,7 @@ import TopicSummaryContainer from '../components/topic/summary/TopicSummaryConta
 import InfluentialMediaContainer from '../components/topic/media/InfluentialMediaContainer';
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
+import MediaContainer from '../components/topic/media/MediaContainer';
 import requireAuth from './routes.js';
 
 const topicRoutes = (
@@ -14,6 +15,7 @@ const topicRoutes = (
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
       <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/media" component={InfluentialMediaContainer} onEnter={requireAuth} />
+      <Route path="/topics/:topicId/media/:mediaId" component={MediaContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
     </Route>
