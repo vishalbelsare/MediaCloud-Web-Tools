@@ -101,7 +101,7 @@ class TopicInfluentialMediaContainer extends React.Component {
   }
 }
 
-TopicInfluentialMediaContainer.ROWS_PER_PAGE = 20;
+TopicInfluentialMediaContainer.ROWS_PER_PAGE = 100;
 
 TopicInfluentialMediaContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
