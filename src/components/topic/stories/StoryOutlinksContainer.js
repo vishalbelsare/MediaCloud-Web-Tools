@@ -15,7 +15,7 @@ class StoryOutlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { outlinkedStories } = this.props;
+    const { outlinkedStories, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -23,7 +23,7 @@ class StoryOutlinksContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.outlinks} /></h2>
-        <StoryTable stories={outlinkedStories} />
+        <StoryTable stories={outlinkedStories} topicId={topicId} />
       </DataCard>
     );
   }

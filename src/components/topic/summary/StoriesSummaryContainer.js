@@ -2,11 +2,11 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import StoriesSummary from './StoriesSummary';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
-import Paper from 'material-ui/Paper';
+import DataCard from '../../common/DataCard';
 import ExploreButton from './ExploreButton';
 import messages from '../../../resources/messages';
+import StoryTable from '../StoryTable';
 
 const localMessages = {
   title: { id: 'topic.summary.topStories.title', defaultMessage: 'Top Stories' },
@@ -24,33 +24,17 @@ class StoriesSummaryContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   };
-  getStyles() {
-    const styles = {
-      contentWrapper: {
-        padding: 10,
-      },
-      actionButtons: {
-        float: 'right',
-      },
-    };
-    return styles;
-  }
   render() {
     const { stories, sort, topicId } = this.props;
     const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
     return (
-      <div style={styles.root}>
-        <Paper>
-          <div style={styles.contentWrapper}>
-            <div style={styles.actionButtons}>
-              <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/stories`} />
-            </div>
-            <h2><FormattedMessage {...localMessages.title} /></h2>
-            <StoriesSummary stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
-          </div>
-        </Paper>
-      </div>
+      <DataCard>
+        <div className="actions">
+          <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/stories`} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <StoryTable stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
+      </DataCard>
     );
   }
 }

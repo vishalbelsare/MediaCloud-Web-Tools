@@ -15,7 +15,7 @@ class StoryInlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories } = this.props;
+    const { inlinkedStories, topicId} = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -23,7 +23,7 @@ class StoryInlinksContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.inlinks} /></h2>
-        <StoryTable stories={inlinkedStories} />
+        <StoryTable stories={inlinkedStories} topicId={topicId} />
       </DataCard>
     );
   }

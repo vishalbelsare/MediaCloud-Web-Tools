@@ -11,39 +11,23 @@ const localMessages = {
   },
 };
 
-class SentenceCountSummary extends React.Component {
-
-  getStyles() {
-    const styles = {
-      scrollWrapper: {
-        overflow: 'scroll',
-        height: 300,
-        display: 'block',
-      },
-    };
-    return styles;
-  }
-
-  render() {
-    const { total, counts } = this.props;
-    const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
-    return (
-      <div style={styles.scrollWrapper}>
-        <p>
-        <FormattedMessage {...localMessages.totalCount}
-          values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
-        />
-        </p>
-        <AttentionOverTimeChart data={counts} height={styles.scrollWrapper.height - 70}
-          yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
-          lineColor={ getBrandDarkColor() }
-        />
-      </div>
-    );
-  }
-
-}
+const SentenceCountSummary = (props) => {
+  const { total, counts } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <div>
+      <p>
+      <FormattedMessage {...localMessages.totalCount}
+        values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
+      />
+      </p>
+      <AttentionOverTimeChart data={counts} height={254}
+        yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
+        lineColor={ getBrandDarkColor() }
+      />
+    </div>
+  );
+};
 
 SentenceCountSummary.propTypes = {
   total: React.PropTypes.number,

@@ -9,48 +9,38 @@ import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 
-class StoryContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-    };
-    return styles;
-  }
-  render() {
-    const { story, topicId, storiesId } = this.props;
-    const styles = this.getStyles();
-    return (
-      <div style={styles.root}>
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h2>{story.title}</h2>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={6} md={6} sm={12}>
-              <StoryDetails story={story} />
-            </Col>
-            <Col lg={6} md={6} sm={12}>
-              <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
-  }
-}
+const StoryContainer = (props) => {
+  const { story, topicId, storiesId } = props;
+  return (
+    <div>
+      <Grid>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <h2>{story.title}</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <StoryDetails story={story} />
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
+          </Col>
+        </Row>
+      </Grid>
+    </div>
+  );
+};
 
 StoryContainer.propTypes = {
   // from context

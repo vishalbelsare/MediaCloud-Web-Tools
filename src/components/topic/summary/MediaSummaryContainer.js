@@ -2,9 +2,9 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import MediaSummary from './MediaSummary';
+import MediaTable from '../MediaTable';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
-import Paper from 'material-ui/Paper';
+import DataCard from '../../common/DataCard';
 import ExploreButton from './ExploreButton';
 import messages from '../../../resources/messages';
 
@@ -24,17 +24,6 @@ class MediaSummaryContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   }
-  getStyles() {
-    const styles = {
-      contentWrapper: {
-        padding: 10,
-      },
-      actionButtons: {
-        float: 'right',
-      },
-    };
-    return styles;
-  }
   refetchData = () => {
     const { topicId, filters, fetchData, sort } = this.props;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
@@ -42,19 +31,14 @@ class MediaSummaryContainer extends React.Component {
   render() {
     const { media, sort, topicId } = this.props;
     const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
     return (
-      <div style={styles.root}>
-        <Paper>
-          <div style={styles.contentWrapper}>
-            <div style={styles.actionButtons}>
-              <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/media`} />
-            </div>
-            <h2><FormattedMessage {...localMessages.title} /></h2>
-            <MediaSummary media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
-          </div>
-        </Paper>
-      </div>
+      <DataCard>
+        <div className="actions">
+          <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/media`} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <MediaTable media={media} onChangeSort={this.onChangeSort} sortedBy={sort} topicId={topicId} />
+      </DataCard>
     );
   }
 }

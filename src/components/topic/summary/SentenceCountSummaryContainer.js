@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import SentenceCountSummary from './SentenceCountSummary';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
-import Paper from 'material-ui/Paper';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../util/DownloadButton';
+import DataCard from '../../common/DataCard';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
@@ -21,14 +21,8 @@ class SentenceCountSummaryContainer extends React.Component {
   }
   getStyles() {
     const styles = {
-      contentWrapper: {
-        padding: 10,
-      },
       clearFix: {
         clear: 'both',
-      },
-      actionButtons: {
-        float: 'right',
       },
     };
     return styles;
@@ -43,18 +37,14 @@ class SentenceCountSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     return (
-      <div style={styles.root}>
-        <Paper>
-          <div style={styles.contentWrapper}>
-            <div style={styles.actionButtons}>
-              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-            </div>
-            <h2><FormattedMessage {...localMessages.title} /></h2>
-            <div style={styles.clearFix} />
-            <SentenceCountSummary total={total} counts={counts} />
-          </div>
-        </Paper>
-      </div>
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <div style={styles.clearFix} />
+        <SentenceCountSummary total={total} counts={counts} />
+      </DataCard>
     );
   }
 }

@@ -1,19 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
+import LinkWithFilters from './LinkWithFilters';
 
 class StoryTable extends React.Component {
-
-  getStyles() {
-    const styles = {
-      scrollWrapper: {
-        overflow: 'scroll',
-        height: 300,
-        display: 'block',
-      },
-    };
-    return styles;
-  }
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -26,40 +16,43 @@ class StoryTable extends React.Component {
   }
 
   render() {
-    const { stories, onChangeSort } = this.props;
-    const styles = this.getStyles();
+    const { stories, onChangeSort, topicId } = this.props;
     let inlinkHeader = null;
-    let outlinkHeader = null;
+    let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
       inlinkHeader = (
         <a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
           <FormattedMessage {...messages.inlinks} />
         </a>
       );
-      outlinkHeader = (
+      socialHeader = (
         <a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
           <FormattedMessage {...messages.clicks} />
         </a>
       );
     } else {
       inlinkHeader = <FormattedMessage {...messages.inlinks} />;
-      outlinkHeader = <FormattedMessage {...messages.clicks} />
+      socialHeader = <FormattedMessage {...messages.clicks} />
     }
     return (
       <div>
         <table className="small">
-          <tbody style={styles.scrollWrapper}>
+          <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
               <th>{inlinkHeader}</th>
               <th><FormattedMessage {...messages.outlinks} /></th>
-              <th>{outlinkHeader}</th>
+              <th>{socialHeader}</th>
             </tr>
             {stories.map((story, idx) =>
               (<tr key={story.stories_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
-                <td><a href={story.url}>{story.title}</a></td>
+                <td>
+                  <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
+                    {story.title}
+                  </LinkWithFilters>
+                </td>
                 <td><a href={story.media_url}>{story.media_name}</a></td>
                 <td>{story.publish_date}</td>
                 <td>{story.inlink_count}</td>
@@ -78,6 +71,7 @@ class StoryTable extends React.Component {
 StoryTable.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   onChangeSort: React.PropTypes.func,
   sortedBy: React.PropTypes.string,
 };
