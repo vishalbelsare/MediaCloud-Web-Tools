@@ -32,11 +32,11 @@ class StoryTable extends React.Component {
       );
     } else {
       inlinkHeader = <FormattedMessage {...messages.inlinks} />;
-      socialHeader = <FormattedMessage {...messages.clicks} />
+      socialHeader = <FormattedMessage {...messages.clicks} />;
     }
     return (
       <div>
-        <table className="small">
+        <table>
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>
@@ -53,7 +53,11 @@ class StoryTable extends React.Component {
                     {story.title}
                   </LinkWithFilters>
                 </td>
-                <td><a href={story.media_url}>{story.media_name}</a></td>
+                <td>
+                  <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
+                    {story.media_id}
+                  </LinkWithFilters>
+                </td>
                 <td>{story.publish_date}</td>
                 <td>{story.inlink_count}</td>
                 <td>{story.outlink_count}</td>

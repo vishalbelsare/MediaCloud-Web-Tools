@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
+import LinkWithFilters from './LinkWithFilters';
 
 class MediaTable extends React.Component {
 
@@ -15,7 +16,7 @@ class MediaTable extends React.Component {
   }
 
   render() {
-    const { media, onChangeSort } = this.props;
+    const { media, onChangeSort, topicId } = this.props;
     let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
@@ -35,7 +36,7 @@ class MediaTable extends React.Component {
     }
     return (
       <div>
-        <table className="small">
+        <table>
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.mediaName} /></th>
@@ -47,7 +48,11 @@ class MediaTable extends React.Component {
             </tr>
             {media.map((m, idx) =>
               (<tr key={m.media_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
-                <td><a href={m.url}>{m.name}</a></td>
+                <td>
+                  <LinkWithFilters to={`/topics/${topicId}/stories/${m.media_id}`}>
+                    {m.name}
+                  </LinkWithFilters>
+                </td>
                 <td>{m.type}</td>
                 <td>{m.story_count}</td>
                 <td>{m.inlink_count}</td>
