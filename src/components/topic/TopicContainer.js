@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../util/composeAsyncWidget';
-import LoadingSpinner from '../util/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import ControlBar from './controlbar/ControlBar';
 import messages from '../../resources/messages';

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import ErrorTryAgain from '../../common/ErrorTryAgain';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import TimespanSelector from './TimespanSelector';
 import { fetchTopicSnapshotTimespansList, filterByTimespan } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';

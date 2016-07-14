@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ErrorTryAgain from '../../common/ErrorTryAgain';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import SentenceCount from '../../vis/SentenceCount';
 import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';

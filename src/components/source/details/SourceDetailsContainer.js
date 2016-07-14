@@ -2,7 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceInfo from './SourceInfo';
 // import ErrorTryAgain from '../../common/ErrorTryAgain';
 import { fetchSourceDetails } from '../../../actions/sourceActions';

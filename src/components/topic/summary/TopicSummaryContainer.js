@@ -2,7 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';

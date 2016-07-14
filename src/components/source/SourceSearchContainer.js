@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { Combobox } from 'react-widgets';
 import ErrorTryAgain from '../common/ErrorTryAgain';
-import LoadingSpinner from '../util/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner';
 import SourceSearchResult from './SourceSearchResult';
 import { fetchSourceSearch,fetchSourceDetails } from '../../actions/sourceActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';

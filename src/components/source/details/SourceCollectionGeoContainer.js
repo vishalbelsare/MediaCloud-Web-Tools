@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import LoadingSpinner from '../../util/LoadingSpinner';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import Paper from 'material-ui/Paper';
 
 import GeoChart from '../../vis/GeoChart.js';

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 import ErrorTryAgain from '../common/ErrorTryAgain';
-import LoadingSpinner from '../util/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner';
 import SourceList from './SourceList';
 import SourceSearchContainer from './SourceSearchContainer';
 import { fetchSourceList } from '../../actions/sourceActions';
