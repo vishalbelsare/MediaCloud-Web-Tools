@@ -11,27 +11,25 @@ const localMessages = {
   topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
 };
 
-class TopicListContainer extends React.Component {
-  render() {
-    const { topics } = this.props;
-    const { formatMessage } = this.props.intl;
-    const title = formatMessage(localMessages.topicsListTitle);
-    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
-    return (
-      <div>
-        <Title render={titleHandler} />
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h2>{title}</h2>
-              <TopicList topics={topics} />;
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
-  }
-}
+const TopicListContainer = (props) => {
+  const { topics } = props;
+  const { formatMessage } = props.intl;
+  const title = formatMessage(localMessages.topicsListTitle);
+  const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+  return (
+    <div>
+      <Title render={titleHandler} />
+      <Grid>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <h2>{title}</h2>
+            <TopicList topics={topics} />;
+          </Col>
+        </Row>
+      </Grid>
+    </div>
+  );
+};
 
 TopicListContainer.propTypes = {
   // from state
