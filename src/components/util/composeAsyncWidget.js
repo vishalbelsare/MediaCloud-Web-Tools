@@ -1,5 +1,5 @@
 import React from 'react';
-import ErrorTryAgain from './ErrorTryAgain';
+import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from './LoadingSpinner';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 

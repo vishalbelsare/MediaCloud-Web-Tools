@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../util/ErrorTryAgain';
+import ErrorTryAgain from '../../common/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import WordCloud from '../../vis/WordCloud';
 import { fetchSourceCollectionTopWords } from '../../../actions/sourceActions';

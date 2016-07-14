@@ -1,7 +1,7 @@
 import React from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../util/ErrorTryAgain';
+import ErrorTryAgain from '../../common/ErrorTryAgain';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import SnapshotSelector from './SnapshotSelector';
 import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';

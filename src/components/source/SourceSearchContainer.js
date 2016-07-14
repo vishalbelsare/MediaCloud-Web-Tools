@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { Combobox } from 'react-widgets';
-import ErrorTryAgain from '../util/ErrorTryAgain';
+import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
 import SourceSearchResult from './SourceSearchResult';
 import { fetchSourceSearch,fetchSourceDetails } from '../../actions/sourceActions';

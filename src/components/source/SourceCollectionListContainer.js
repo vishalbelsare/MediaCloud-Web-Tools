@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
-import ErrorTryAgain from '../util/ErrorTryAgain';
+import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from '../util/LoadingSpinner';
 import CollectionList from './CollectionList';
 import { fetchSourceCollectionList } from '../../actions/sourceActions';

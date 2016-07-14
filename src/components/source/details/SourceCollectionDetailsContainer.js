@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../util/LoadingSpinner';
 import CollectionInfo from './CollectionInfo';
-// import ErrorTryAgain from '../../util/ErrorTryAgain';
+// import ErrorTryAgain from '../../common/ErrorTryAgain';
 import SourceSearchContainer from '../SourceSearchContainer';
 
 import { fetchSourceCollectionDetails } from '../../../actions/sourceActions';
