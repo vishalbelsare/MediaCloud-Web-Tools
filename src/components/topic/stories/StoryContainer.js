@@ -6,6 +6,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import StoryDetails from './StoryDetails';
 import StoryWordsContainer from './StoryWordsContainer';
+import StoryInlinksContainer from './StoryInlinksContainer';
+import StoryOutlinksContainer from './StoryOutlinksContainer';
 
 class StoryContainer extends React.Component {
   getStyles() {
@@ -32,6 +34,16 @@ class StoryContainer extends React.Component {
             </Col>
             <Col lg={6} md={6} sm={12}>
               <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
           </Row>
         </Grid>

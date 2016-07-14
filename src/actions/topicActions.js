@@ -1,6 +1,7 @@
 import * as api from '../lib/topics';
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
+
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
@@ -21,6 +22,8 @@ export const SORT_TOPIC_INFLUENTIAL_STORIES = 'SORT_TOPIC_INFLUENTIAL_STORIES';
 export const SELECT_STORY = 'SELECT_STORY';
 export const FETCH_STORY = 'FETCH_STORY';
 export const FETCH_STORY_WORDS = 'FETCH_STORY_WORDS';
+export const FETCH_STORY_INLINKS = 'FETCH_STORY_INLINKS';
+export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -67,3 +70,7 @@ export const selectStory = createAction(SELECT_STORY, id => id);
 export const fetchStory = createAsyncAction(FETCH_STORY, api.story);
 // pass in topic id and story id
 export const fetchStoryWords = createAsyncAction(FETCH_STORY_WORDS, api.storyWords);
+// pass in topic id, timespan id, and story id
+export const fetchStoryInlinks = createAsyncAction(FETCH_STORY_INLINKS, api.storyInlinks);
+// pass in topic id, timespan id, and story id
+export const fetchStoryOutlinks = createAsyncAction(FETCH_STORY_OUTLINKS, api.storyOutlinks);

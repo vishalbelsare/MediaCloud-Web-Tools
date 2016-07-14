@@ -70,6 +70,18 @@
       story: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         story: // JSON object about the story
+        words: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of JSON objects
+        },
+        inlinks: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of story JSON objects
+        },
+        outlinks: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of story JSON objects
+        },
       },
     },
 sources: {

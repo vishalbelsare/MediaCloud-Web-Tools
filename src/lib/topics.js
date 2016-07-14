@@ -139,3 +139,31 @@ export function storyWords(topicId, storiesId) {
     response => response.json()
   );
 }
+
+export function storyInlinks(topicId, timespanId, storiesId) {
+  const params = {};
+  if ((timespanId !== null) && (timespanId !== undefined)) {
+    params.timespanId = timespanId;
+  }
+  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  return fetch(`/api/topics/${topicId}/stories/${storiesId}/inlinks?${paramStr}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
+
+export function storyOutlinks(topicId, timespanId, storiesId) {
+  const params = {};
+  if (timespanId !== null) {
+    params.timespanId = timespanId;
+  }
+  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  return fetch(`/api/topics/${topicId}/stories/${storiesId}/outlinks?${paramStr}`, {
+    method: 'get',
+    credentials: 'include',
+  }).then(
+    response => response.json()
+  );
+}
