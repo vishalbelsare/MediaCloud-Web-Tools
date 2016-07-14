@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import RaisedButton from 'material-ui/RaisedButton';
 import messages from '../../resources/messages';
 
@@ -16,7 +16,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor, lightColor } = this.props;
+    const { user, name, description, backgroundColor } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = {
       root: {

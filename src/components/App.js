@@ -1,8 +1,8 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import BrandToolbar from './branding/BrandToolbar';
-import BrandMasthead from './branding/BrandMasthead';
+import BrandToolbar from './common/BrandToolbar';
+import BrandMasthead from './common/BrandMasthead';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 import messages from '../resources/messages';
