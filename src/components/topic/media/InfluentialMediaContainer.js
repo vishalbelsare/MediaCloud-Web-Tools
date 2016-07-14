@@ -1,54 +1,33 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../common/ErrorTryAgain';
-import LoadingSpinner from '../../common/LoadingSpinner';
-import InfluentialMedia from './InfluentialMedia';
+import MediaTable from '../MediaTable';
 import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FlatButton from 'material-ui/FlatButton';
 import DownloadButton from '../../common/DownloadButton';
 import messages from '../../../resources/messages';
+import DataCard from '../../common/DataCard';
+import composeAsyncWidget from '../../util/composeAsyncWidget';
 
 const localMessages = {
   title: { id: 'topic.influentialMedia.title', defaultMessage: 'Influential Media' },
 };
 
-class TopicInfluentialMediaContainer extends React.Component {
-  componentDidMount() {
-    const { fetchStatus } = this.props;
-    if (fetchStatus !== fetchConstants.FETCH_FAILED) {
-      this.refetchData();
-    }
-  }
+class InfluentialMediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.filters !== this.props.filters) ||
-        (nextProps.sort !== this.props.sort)) {
-      const { topicId, fetchData } = this.props;
-      fetchData(topicId, nextProps.filters.snapshotId, nextProps.filters.timespanId, nextProps.sort);
+    const { fetchData } = this.props;
+    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort)) {
+      fetchData(nextProps);
     }
   }
   onChangeSort = (newSort) => {
     const { sortData } = this.props;
     sortData(newSort);
   }
-  getStyles() {
-    const styles = {
-      contentWrapper: {
-      },
-      iconStyles: {
-        marginRight: 24,
-      },
-      actionButtons: {
-        float: 'right',
-      },
-    };
-    return styles;
-  }
   refetchData = () => {
-    const { fetchData, topicId, filters, sort } = this.props;
-    fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
+    const { fetchData } = this.props;
+    fetchData(this.props);
   }
   nextPage = () => {
     const { fetchData, topicId, filters, sort, continuationId } = this.props;
@@ -60,50 +39,30 @@ class TopicInfluentialMediaContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { fetchStatus, fetchData, media, sort } = this.props;
+    const { media, sort, topicId } = this.props;
     const { formatMessage } = this.props.intl;
-    let content = fetchStatus;
-    const styles = this.getStyles();
-    let headerContent = null;
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        headerContent = <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />;
-        content = (
-          <div>
-            <InfluentialMedia media={media} onChangeSort={this.onChangeSort} sortedBy={sort} />
-            <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
-          </div>
-        );
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={fetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner />;
-    }
     return (
-      <div style={styles.root}>
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <div style={styles.contentWrapper}>
-                <div style={styles.actionButtons}>
-                  {headerContent}
-                </div>
-                <h2><FormattedMessage {...localMessages.title} /></h2>
-                {content}
+      <Grid>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <DataCard>
+              <div className="actions">
+                <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <MediaTable media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
+            </DataCard>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
 
-TopicInfluentialMediaContainer.ROWS_PER_PAGE = 100;
+InfluentialMediaContainer.ROWS_PER_PAGE = 50;
 
-TopicInfluentialMediaContainer.propTypes = {
+InfluentialMediaContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   sort: React.PropTypes.string.isRequired,
   media: React.PropTypes.array.isRequired,
@@ -128,10 +87,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: (topicId, snapshotId, timespanId, sort, continuationId) => {
-    if ((snapshotId !== null) && (timespanId !== null)) {
-      dispatch(fetchTopicInfluentialMedia(topicId, snapshotId, timespanId, sort,
-        TopicInfluentialMediaContainer.ROWS_PER_PAGE, continuationId));
+  fetchData: (props) => {
+    if ((props.filters.snapshotId !== null) && (props.filters.timespanId !== null)) {
+      dispatch(fetchTopicInfluentialMedia(props.topicId, props.filters.snapshotId,
+        props.filters.timespanId, props.sort, InfluentialMediaContainer.ROWS_PER_PAGE,
+        props.continuationId));
     }
   },
   sortData: (sort) => {
@@ -139,7 +99,19 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopicInfluentialMediaContainer));
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps);
+    },
+  });
+}
+
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeAsyncWidget(
+        InfluentialMediaContainer
+      )
+    )
+  );

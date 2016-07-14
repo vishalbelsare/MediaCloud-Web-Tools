@@ -16,9 +16,8 @@ const localMessages = {
 
 class InfluentialStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.filters !== this.props.filters) ||
-        (nextProps.sort !== this.props.sort)) {
-      const { fetchData } = this.props;
+    const { fetchData } = this.props;
+    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort)) {
       if ((nextProps.filters.snapshotId !== null) && (nextProps.filters.timespanId !== null)) {
         fetchData(nextProps);
       }
@@ -47,27 +46,25 @@ class InfluentialStoriesContainer extends React.Component {
     const { topicId } = this.props.params;
     const { formatMessage } = this.props.intl;
     return (
-      <div>
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <DataCard>
-                <div className="actions">
-                  <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-                </div>
-                <h2><FormattedMessage {...localMessages.title} /></h2>
-                <InfluentialStories topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
-                <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
-              </DataCard>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+      <Grid>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <DataCard>
+              <div className="actions">
+                <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+              </div>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <InfluentialStories topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
+            </DataCard>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
 
-InfluentialStoriesContainer.ROWS_PER_PAGE = 100;
+InfluentialStoriesContainer.ROWS_PER_PAGE = 50;
 
 InfluentialStoriesContainer.propTypes = {
   // from context
