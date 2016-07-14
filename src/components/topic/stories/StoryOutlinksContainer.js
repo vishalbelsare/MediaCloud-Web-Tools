@@ -4,35 +4,27 @@ import { connect } from 'react-redux';
 import { fetchStoryOutlinks } from '../../../actions/topicActions';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import messages from '../../../resources/messages';
-import Paper from 'material-ui/Paper';
 import StoryTable from '../StoryTable';
+import DataCard from '../../common/DataCard';
+import DownloadButton from '../../util/DownloadButton';
 
 class StoryOutlinksContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-      contentWrapper: {
-        padding: 10,
-      },
-      actionButtons: {
-        float: 'right',
-      },
-    };
-    return styles;
+  downloadCsv = () => {
+    const { storiesId, topicId, timespanId } = this.props;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/outlinks.csv?timespanId=${timespanId}`;
+    window.location = url;
   }
   render() {
     const { outlinkedStories } = this.props;
-    const styles = this.getStyles();
+    const { formatMessage } = this.props.intl;
     return (
-      <div style={styles.root}>
-        <Paper>
-          <div style={styles.contentWrapper}>
-            <h2><FormattedMessage {...messages.outlinks} /></h2>
-            <StoryTable stories={outlinkedStories} />
-          </div>
-        </Paper>
-      </div>
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...messages.outlinks} /></h2>
+        <StoryTable stories={outlinkedStories} />
+      </DataCard>
     );
   }
 }

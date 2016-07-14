@@ -5,35 +5,27 @@ import { fetchStoryWords } from '../../../actions/topicActions';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import WordCloud from '../../vis/WordCloud';
 import messages from '../../../resources/messages';
-import Paper from 'material-ui/Paper';
 import { getBrandDarkColor } from '../../../styles/colors';
+import DataCard from '../../common/DataCard';
+import DownloadButton from '../../util/DownloadButton';
 
 class StoryWordsContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-      contentWrapper: {
-        padding: 10,
-      },
-      actionButtons: {
-        float: 'right',
-      },
-    };
-    return styles;
+  downloadCsv = () => {
+    const { storiesId, topicId } = this.props;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/words.csv`;
+    window.location = url;
   }
   render() {
     const { words } = this.props;
-    const styles = this.getStyles();
+    const { formatMessage } = this.props.intl;
     return (
-      <div style={styles.root}>
-        <Paper>
-          <div style={styles.contentWrapper}>
-            <h2><FormattedMessage {...messages.topWords} /></h2>
-            <WordCloud words={words} textColor={getBrandDarkColor()} />
-          </div>
-        </Paper>
-      </div>
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...messages.topWords} /></h2>
+        <WordCloud words={words} textColor={getBrandDarkColor()} />
+      </DataCard>
     );
   }
 }

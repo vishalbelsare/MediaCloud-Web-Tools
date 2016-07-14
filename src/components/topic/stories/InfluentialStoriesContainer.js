@@ -106,7 +106,7 @@ class InfluentialStoriesContainer extends React.Component {
   }
 }
 
-InfluentialStoriesContainer.ROWS_PER_PAGE = 20;
+InfluentialStoriesContainer.ROWS_PER_PAGE = 100;
 
 InfluentialStoriesContainer.propTypes = {
   // from context
