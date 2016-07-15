@@ -21,7 +21,7 @@ const SentenceCountSummary = (props) => {
         values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
       />
       </p>
-      <AttentionOverTimeChart data={counts} height={254}
+      <AttentionOverTimeChart data={counts} height={200}
         yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
         lineColor={ getBrandDarkColor() }
       />
