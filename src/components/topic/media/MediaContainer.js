@@ -5,9 +5,10 @@ import { selectMedia, fetchMedia } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import MediaDetails from './MediaDetails';
+import MediaCollectionsList from './MediaCollectionsList';
 
 const MediaContainer = (props) => {
-  const { media, topicId, storiesId } = props;
+  const { media, topicId, mediaId } = props;
   return (
     <div>
       <Grid>
@@ -17,8 +18,11 @@ const MediaContainer = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col lg={6} md={6} sm={12}>
+          <Col lg={3} md={3} sm={6}>
             <MediaDetails media={media} />
+          </Col>
+          <Col lg={3} md={3} sm={6}>
+            <MediaCollectionsList name={media.name} collections={media.collections} />
           </Col>
         </Row>
       </Grid>
