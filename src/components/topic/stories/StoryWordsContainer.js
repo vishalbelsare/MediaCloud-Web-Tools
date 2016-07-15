@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchStoryWords } from '../../../actions/topicActions';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import WordCloud from '../../vis/WordCloud';
+import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import messages from '../../../resources/messages';
 import { getBrandDarkColor } from '../../../styles/colors';
 import DataCard from '../../common/DataCard';
@@ -24,7 +24,7 @@ class StoryWordsContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.topWords} /></h2>
-        <WordCloud words={words} textColor={getBrandDarkColor()} />
+        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
       </DataCard>
     );
   }

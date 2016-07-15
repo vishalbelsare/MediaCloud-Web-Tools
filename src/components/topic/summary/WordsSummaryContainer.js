@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import WordCloud from '../../vis/WordCloud';
+import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
@@ -30,7 +30,7 @@ class WordsSummaryContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.topWords} /></h2>
-        <WordCloud words={words} textColor={getBrandDarkColor()} />
+        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
       </DataCard>
     );
   }

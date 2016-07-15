@@ -7,16 +7,18 @@ const DEFAULT_WIDTH = 600;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MAX_FONT_SIZE = 32;
 const DEFAULT_TEXT_COLOR = '#333333';
+const DEFAULT_LINK_COLOR = '#000000';
 
 class WordCloud extends React.Component {
 
   render() {
-    const { words, width, height, maxFontSize, textColor } = this.props;
+    const { words, width, height, maxFontSize, textColor, onWordClick, linkColor } = this.props;
     const options = {
       width,
       height,
       maxFontSize,
       textColor,
+      linkColor,
     };
     if (width !== null) {
       options.width = DEFAULT_WIDTH;
@@ -29,6 +31,9 @@ class WordCloud extends React.Component {
     }
     if (textColor !== null) {
       options.textColor = DEFAULT_TEXT_COLOR;
+    }
+    if (linkColor !== null) {
+      options.linkColor = DEFAULT_LINK_COLOR;
     }
     const node = ReactFauxDOM.createElement('svg');
     const counts = words.map(({ count }) => count);
@@ -64,7 +69,20 @@ class WordCloud extends React.Component {
         .text((d) => d.text);
     })
     .start();
-
+    if (this.onWordClick !== undefined) {
+      node.selectAll('text')
+        .on('mouseover', () => {
+          d3.select(this).attr('fill', this.options.linkColor)
+            .attr('cursor', 'pointer');
+        })
+        .on('mouseout', () => {
+          d3.select(this).attr('fill', this.options.textColor)
+            .attr('cursor', 'default');
+        })
+        .on('click', (d) => {
+          onWordClick(d);
+        });
+    }
     return node.toReact();
   }
 
@@ -76,6 +94,8 @@ WordCloud.propTypes = {
   height: React.PropTypes.number,
   maxFontSize: React.PropTypes.number,
   textColor: React.PropTypes.string,
+  onWordClick: React.PropTypes.func,
+  linkColor: React.PropTypes.string,
 };
 
 export default WordCloud;
