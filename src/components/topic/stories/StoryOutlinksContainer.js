@@ -9,6 +9,12 @@ import DataCard from '../../common/DataCard';
 import DownloadButton from '../../common/DownloadButton';
 
 class StoryOutlinksContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
+    if (nextProps.timespanId !== this.props.timespanId) {
+      fetchData(nextProps.timespanId);
+    }
+  }
   downloadCsv = () => {
     const { storiesId, topicId, timespanId } = this.props;
     const url = `/api/topics/${topicId}/stories/${storiesId}/outlinks.csv?timespanId=${timespanId}`;
@@ -36,8 +42,10 @@ StoryOutlinksContainer.propTypes = {
   storiesId: React.PropTypes.number.isRequired,
   timespanId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
-  // from dispatch
+  // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
+  // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   outlinkedStories: React.PropTypes.array.isRequired,

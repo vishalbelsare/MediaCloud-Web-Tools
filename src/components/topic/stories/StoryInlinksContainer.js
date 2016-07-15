@@ -9,13 +9,19 @@ import DataCard from '../../common/DataCard';
 import DownloadButton from '../../common/DownloadButton';
 
 class StoryInlinksContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
+    if (nextProps.timespanId !== this.props.timespanId) {
+      fetchData(nextProps.timespanId);
+    }
+  }
   downloadCsv = () => {
     const { storiesId, topicId, timespanId } = this.props;
     const url = `/api/topics/${topicId}/stories/${storiesId}/inlinks.csv?timespanId=${timespanId}`;
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId} = this.props;
+    const { inlinkedStories, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -36,8 +42,10 @@ StoryInlinksContainer.propTypes = {
   storiesId: React.PropTypes.number.isRequired,
   timespanId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
-  // from dispatch
+  // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
+  // from fetchData
+  fetchData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   inlinkedStories: React.PropTypes.array.isRequired,
