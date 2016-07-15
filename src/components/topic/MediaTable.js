@@ -49,7 +49,7 @@ class MediaTable extends React.Component {
             {media.map((m, idx) =>
               (<tr key={m.media_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
-                  <LinkWithFilters to={`/topics/${topicId}/stories/${m.media_id}`}>
+                  <LinkWithFilters to={`/topics/${topicId}/media/${m.media_id}`}>
                     {m.name}
                   </LinkWithFilters>
                 </td>
