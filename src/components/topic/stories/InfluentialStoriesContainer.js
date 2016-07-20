@@ -32,12 +32,16 @@ class InfluentialStoriesContainer extends React.Component {
     fetchData(this.props);
   }
   nextPage = () => {
-    const { fetchData } = this.props;
-    fetchData(this.props);
+    const { fetchPagedData, links } = this.props;
+    fetchPagedData(this.props, links.previous);
+  }
+  previousPage = () => {
+    const { fetchPagedData, links } = this.props;
+    fetchPagedData(this.props, links.next);
   }
   downloadCsv = () => {
     const { filters, sort, topicId } = this.props;
-    const url = `/api/topics/${topicId}/stories.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}&sort=${sort}`;
+    const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
   render() {
@@ -53,6 +57,7 @@ class InfluentialStoriesContainer extends React.Component {
               </div>
               <h2><FormattedMessage {...localMessages.title} /></h2>
               <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />
               <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
             </DataCard>
           </Col>
@@ -70,6 +75,7 @@ InfluentialStoriesContainer.propTypes = {
   // from parent
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
+  fetchPagedData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
@@ -77,7 +83,7 @@ InfluentialStoriesContainer.propTypes = {
   stories: React.PropTypes.array.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
-  continuationId: React.PropTypes.number,
+  links: React.PropTypes.object,
   topicId: React.PropTypes.number.isRequired,
 };
 
@@ -85,17 +91,22 @@ const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.stories.fetchStatus,
   sort: state.topics.selected.stories.sort,
   stories: state.topics.selected.stories.stories,
-  continuationId: state.topics.selected.stories.continuation_id,
+  links: state.topics.selected.stories.links,
   filters: state.topics.selected.filters,
   topicInfo: state.topics.selected.info,
   topicId: state.topics.selected.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchPagedData: (props, linkId) => {
+    dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
+      props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
+      linkId));
+  },
   fetchData: (props) => {
     dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
       props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
-      props.continuationId));
+      props.links.current));
   },
   sortData: (sort) => {
     dispatch(sortTopicInfluentialStories(sort));

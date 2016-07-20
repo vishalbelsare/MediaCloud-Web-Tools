@@ -86,7 +86,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(fetchTopicSnapshotsList(topicId))
         .then((response) => {
           if (snapshotId === null) {
-            const newSnapshotId = response.list[0].controversy_dumps_id;
+            const newSnapshotId = response.list[0].snapshots_id;
             const newLocation = Object.assign({}, ownProps.location, {
               query: {
                 ...ownProps.location.query,

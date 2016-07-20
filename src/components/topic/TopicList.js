@@ -9,7 +9,7 @@ const TopicListItem = (props) => {
   return (
     <Col xs={12} sm={6} md={3} lg={3}>
       <DataCard>
-        <h3><Link to={`/topics/${topic.controversies_id}/summary`}>{topic.name}</Link></h3>
+        <h3><Link to={`/topics/${topic.topics_id}/summary`}>{topic.name}</Link></h3>
         <p><small>{topic.description}</small></p>
       </DataCard>
     </Col>
@@ -25,7 +25,7 @@ const TopicList = (props) => {
   return (
     <Row>
     {topics.map(topic =>
-      <TopicListItem key={topic.controversies_id} topic={topic} />
+      <TopicListItem key={topic.topics_id} topic={topic} />
     )}
     </Row>
   );

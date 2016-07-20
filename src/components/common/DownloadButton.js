@@ -1,5 +1,8 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import { getBrandDarkColor } from '../../styles/colors';
+import Link from 'react-router/lib/Link';
 
 class DownloadButton extends React.Component {
   getStyles() {
@@ -13,11 +16,9 @@ class DownloadButton extends React.Component {
     const { tooltip, onClick } = this.props;
     const styles = this.getStyles();
     return (
-    <div style={styles.root}>
-      <IconButton iconClassName="material-icons" tooltip={tooltip} onClick={onClick}>
-        file_download
-      </IconButton>
-    </div>
+    <Link to="#" onClick={onClick} name={tooltip}>
+      <FontIcon className="material-icons" color={getBrandDarkColor()}>file_download</FontIcon>
+    </Link>
     );
   }
 }

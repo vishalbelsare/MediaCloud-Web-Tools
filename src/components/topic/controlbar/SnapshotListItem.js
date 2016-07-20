@@ -29,16 +29,20 @@ class SnapshotListItem extends React.Component {
 
   handleClick = (evt) => {
     evt.preventDefault();
-    const { id, onSnapshotSelected } = this.props;
-    onSnapshotSelected(id);
+    const { id, onSelected } = this.props;
+    onSelected(id);
   }
 
   render() {
-    const { name, date } = this.props;
+    const { snapshot } = this.props;
     const styles = this.getStyles();
+    const label = snapshot.snapshot_date.substr(0, 16);
+    const date = snapshot.snapshot_date.substr(0, 16);
+    const state = snapshot.sate;
     return (
       <div style={styles.root} onClick={this.handleClick}>
-        <div style={styles.title}>{ name }</div>
+        <div style={styles.title}>{ label }</div>
+        <small style={styles.subTitle}>{ state }</small>
         <small style={styles.subTitle}>
           <FormattedMessage {...messages.snapshotAge} values={{ age: moment(date).fromNow() }} />
         </small>
@@ -50,9 +54,8 @@ class SnapshotListItem extends React.Component {
 
 SnapshotListItem.propTypes = {
   id: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  date: React.PropTypes.string.isRequired,
-  onSnapshotSelected: React.PropTypes.func.isRequired,
+  snapshot: React.PropTypes.object.isRequired,
+  onSelected: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(SnapshotListItem);

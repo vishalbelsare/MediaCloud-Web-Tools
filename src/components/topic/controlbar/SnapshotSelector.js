@@ -64,7 +64,7 @@ class SnapshotSelector extends React.Component {
     // default to select first if you need to
     let selected = null;
     for (const snapshot in snapshots) {
-      if (snapshot.controversy_dumps_id === selectedId) {
+      if (snapshot.snapshots_id === selectedId) {
         selected = snapshot;
         break;
       }
@@ -75,7 +75,7 @@ class SnapshotSelector extends React.Component {
     return (
       <div style={styles.root}>
         <div style={styles.label}>
-          {selected.dump_date.substr(0, 16)}
+          {selected.snapshot_date.substr(0, 16)}
         </div>
         <IconButton
           iconClassName="material-icons" tooltip={formatMessage(messages.snapshotChange)}
@@ -94,9 +94,8 @@ class SnapshotSelector extends React.Component {
           style={styles.popover}
         >
           {snapshots.map(snapshot =>
-            <SnapshotListItem key={snapshot.controversy_dumps_id} id={snapshot.controversy_dumps_id}
-              name={snapshot.dump_date.substr(0, 16)} date={snapshot.dump_date.substr(0, 16)}
-              onSnapshotSelected={() => { this.handleSnapshotSelected(snapshot.controversy_dumps_id); }}
+            <SnapshotListItem key={snapshot.snapshots_id} snapshot={snapshot}
+              onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
             />
           )}
         </Popover>

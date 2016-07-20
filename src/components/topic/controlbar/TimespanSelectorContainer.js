@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import ErrorTryAgain from '../../common/ErrorTryAgain';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TimespanSelector from './TimespanSelector';
-import { fetchTopicSnapshotTimespansList, filterByTimespan } from '../../../actions/topicActions';
+import { fetchTopicTimespansList, filterByTimespan } from '../../../actions/topicActions';
 import * as fetchConstants from '../../../lib/fetchConstants.js';
 
 class TimespanSelectorContainer extends React.Component {
@@ -79,10 +79,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, snapshotId, timespanId) => {
-    dispatch(fetchTopicSnapshotTimespansList(topicId, snapshotId))
+    dispatch(fetchTopicTimespansList(topicId, snapshotId))
       .then((response) => {
         if (timespanId === null || isNaN(timespanId)) {
-          const defaultTimespanId = response.list[0].controversy_dump_time_slices_id;
+          const defaultTimespanId = response.list[0].timespans_id;
           const newLocation = Object.assign({}, ownProps.location, {
             query: {
               ...ownProps.location.query,

@@ -12,6 +12,8 @@ const localMessages = {
   title: { id: 'topic.summary.topStories.title', defaultMessage: 'Top Stories' },
 };
 
+const NUM_TO_SHOW = 10;
+
 class StoriesSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
@@ -62,10 +64,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopStories(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
+    dispatch(fetchTopicTopStories(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId, ownProps.sort, NUM_TO_SHOW));
   },
   fetchData: (props) => {
-    dispatch(fetchTopicTopStories(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort));
+    dispatch(fetchTopicTopStories(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort, NUM_TO_SHOW));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));

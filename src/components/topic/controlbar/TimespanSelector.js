@@ -9,9 +9,7 @@ const TimespanSelector = (props) => {
       <FormattedMessage {...messages.topicTimespan} />
       <select defaultValue={selectedId} onChange={onTimespanSelected}>
         {timespans.map(timespan =>
-          <option key={timespan.controversy_dump_time_slices_id}
-            value={timespan.controversy_dump_time_slices_id}
-          >
+          <option key={timespan.timespans_id} value={timespan.timespans_id}>
             {timespan.start_date.substr(0, 10)} to {timespan.end_date.substr(0, 10)}
           </option>
         )}

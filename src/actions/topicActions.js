@@ -37,7 +37,7 @@ export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_L
 // pass in topicId
 export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
 // pass in topicId
-export const fetchTopicSnapshotTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicSnapshotTimespansList);
+export const fetchTopicTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicTimespansList);
 // pass in topicId
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
 
@@ -56,12 +56,12 @@ export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.t
 // pass in topicId, snapshotId, timespanId
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);
 
-// pass in topicId, snapshotId, timespanId, sort, limit, continuationId
+// pass in topicId, snapshotId, timespanId, sort, limit, linkId
 export const fetchTopicInfluentialMedia = createAsyncAction(FETCH_TOPIC_INFLUENTIAL_MEDIA, api.topicTopMedia);
 // pass in sort
 export const sortTopicInfluentialMedia = createAction(SORT_TOPIC_INFLUENTIAL_MEDIA, sort => sort);
 
-// pass in topicId, snapshotId, timespanId, sort, limit, continuationId
+// pass in topicId, snapshotId, timespanId, sort, limit, linkId
 export const fetchTopicInfluentialStories = createAsyncAction(FETCH_TOPIC_INFLUENTIAL_STORIES, api.topicTopStories);
 // pass in sort
 export const sortTopicInfluentialStories = createAction(SORT_TOPIC_INFLUENTIAL_STORIES, sort => sort);

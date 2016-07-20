@@ -18,13 +18,13 @@ export function topicSummary(topicId) {
   );
 }
 
-export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, continuationId) {
+export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, linkId) {
   const params = {};
   if (snapshotId !== null) {
-    params.snapshot = snapshotId;
+    params.snapshotId = snapshotId;
   }
   if (timespanId !== null) {
-    params.timespan = timespanId;
+    params.timespanId = timespanId;
   }
   if (sort !== null) {
     params.sort = sort;
@@ -32,8 +32,8 @@ export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, co
   if ((limit !== null) && (limit !== undefined)) {
     params.limit = limit;
   }
-  if ((continuationId !== null) && (continuationId !== undefined)) {
-    params.continuationId = continuationId;
+  if ((linkId !== null) && (linkId !== undefined)) {
+    params.linkId = linkId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/stories?${paramStr}`, {
@@ -44,13 +44,13 @@ export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, co
   );
 }
 
-export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, continuationId) {
+export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, linkId) {
   const params = {};
   if (snapshotId !== null) {
-    params.snapshot = snapshotId;
+    params.snapshotId = snapshotId;
   }
   if (timespanId !== null) {
-    params.timespan = timespanId;
+    params.timespanId = timespanId;
   }
   if (sort !== null) {
     params.sort = sort;
@@ -58,8 +58,8 @@ export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, cont
   if ((limit !== null) && (limit !== undefined)) {
     params.limit = limit;
   }
-  if ((continuationId !== null) && (continuationId !== undefined)) {
-    params.continuationId = continuationId;
+  if ((linkId !== null) && (linkId !== undefined)) {
+    params.linkId = linkId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/media?${paramStr}`, {
@@ -73,10 +73,10 @@ export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, cont
 export function topicTopWords(topicId, snapshotId, timespanId) {
   const params = {};
   if (snapshotId !== null) {
-    params.snapshot = snapshotId;
+    params.snapshotId = snapshotId;
   }
   if (timespanId !== null) {
-    params.timespan = timespanId;
+    params.timespanId = timespanId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/words?${paramStr}`, {
@@ -96,7 +96,7 @@ export function topicSnapshotsList(topicId) {
   );
 }
 
-export function topicSnapshotTimespansList(topicId, snapshotId) {
+export function topicTimespansList(topicId, snapshotId) {
   return fetch(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`, {
     method: 'get',
     credentials: 'include',
@@ -108,10 +108,10 @@ export function topicSnapshotTimespansList(topicId, snapshotId) {
 export function topicSentenceCounts(topicId, snapshotId, timespanId) {
   const params = {};
   if (snapshotId !== null) {
-    params.snapshot = snapshotId;
+    params.snapshotId = snapshotId;
   }
   if (timespanId !== null) {
-    params.timespan = timespanId;
+    params.timespanId = timespanId;
   }
   const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
   return fetch(`/api/topics/${topicId}/sentences/count?${paramStr}`, {

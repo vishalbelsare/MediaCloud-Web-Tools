@@ -12,6 +12,8 @@ const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
 };
 
+const NUM_TO_SHOW = 10;
+
 class MediaSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if ((nextProps.filters !== this.props.filters) ||
@@ -66,10 +68,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopMedia(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
+    dispatch(fetchTopicTopMedia(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId, ownProps.sort, NUM_TO_SHOW));
   },
   fetchData: (props) => {
-    dispatch(fetchTopicTopMedia(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort));
+    dispatch(fetchTopicTopMedia(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort, NUM_TO_SHOW));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopMedia(sort));
