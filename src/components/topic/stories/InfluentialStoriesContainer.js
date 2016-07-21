@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import StoryTable from '../StoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -33,11 +34,11 @@ class InfluentialStoriesContainer extends React.Component {
   }
   nextPage = () => {
     const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.previous);
+    fetchPagedData(this.props, links.next);
   }
   previousPage = () => {
     const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.next);
+    fetchPagedData(this.props, links.previous);
   }
   downloadCsv = () => {
     const { filters, sort, topicId } = this.props;
@@ -45,8 +46,16 @@ class InfluentialStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId } = this.props;
+    const { stories, sort, topicId, links } = this.props;
     const { formatMessage } = this.props.intl;
+    let previousButton = null;
+    if ((links !== undefined) && links.hasOwnProperty('previous')) {
+      previousButton = <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />;
+    }
+    let nextButton = null;
+    if ((links !== undefined) && links.hasOwnProperty('next')) {
+      nextButton = <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />;
+    }
     return (
       <Grid>
         <Row>
@@ -57,8 +66,8 @@ class InfluentialStoriesContainer extends React.Component {
               </div>
               <h2><FormattedMessage {...localMessages.title} /></h2>
               <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
-              <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />
-              <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />
+              { previousButton }
+              { nextButton }
             </DataCard>
           </Col>
         </Row>
@@ -72,6 +81,7 @@ InfluentialStoriesContainer.ROWS_PER_PAGE = 50;
 InfluentialStoriesContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
@@ -91,22 +101,39 @@ const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.stories.fetchStatus,
   sort: state.topics.selected.stories.sort,
   stories: state.topics.selected.stories.stories,
-  links: state.topics.selected.stories.links,
+  links: state.topics.selected.stories.link_ids,
   filters: state.topics.selected.filters,
   topicInfo: state.topics.selected.info,
   topicId: state.topics.selected.id,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchPagedData: (props, linkId) => {
     dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
       props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
-      linkId));
+      linkId))
+      .then((results) => {
+        const newLocation = Object.assign({}, ownProps.location, {
+          query: {
+            ...ownProps.location.query,
+            linkId: results.link_ids.current,
+          },
+        });
+        dispatch(push(newLocation));
+      });
   },
   fetchData: (props) => {
     dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
-      props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
-      props.links.current));
+      props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE))
+      .then((results) => {
+        const newLocation = Object.assign({}, ownProps.location, {
+          query: {
+            ...ownProps.location.query,
+            linkId: results.link_ids.current,
+          },
+        });
+        dispatch(push(newLocation));
+      });
   },
   sortData: (sort) => {
     dispatch(sortTopicInfluentialStories(sort));
