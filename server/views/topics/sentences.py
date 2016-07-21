@@ -4,6 +4,7 @@ import flask_login
 
 from server import app, mc
 import server.views.util.csv as csv
+from server.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ def topic_sentence_count_csv(topic_id):
     props = ['date', 'numFound']
     return csv.stream_response(response['split']['counts'], props, 'stories')
 
+@cache
 def _sentence_count(topic_id, snapshot_id, timespan_id):
     # TODO: replace with timespan/single call
     timespan = None

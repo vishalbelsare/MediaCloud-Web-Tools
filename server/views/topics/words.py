@@ -4,6 +4,7 @@ import flask_login
 
 from server import app, mc
 import server.views.util.csv as csv
+from server.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ def topic_words_csv(topic_id):
     props = ['term', 'stem', 'count']
     return csv.stream_response(response, props, 'sampled-words')
 
+@cache
 def _topic_word_count(topic_id, snapshot_id, timespan_id):
     response = mc.topicWordCount(topic_id, snapshot_id=snapshot_id, timespan_id=timespan_id)
     return response

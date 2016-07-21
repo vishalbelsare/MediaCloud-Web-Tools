@@ -6,6 +6,7 @@ import flask_login
 from server import app, mc
 from server.views.topics import validated_sort
 import server.views.util.csv as csv
+from server.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ def story_words_csv(topic_id, stories_id):
     props = ['term', 'stem', 'count']
     return csv.stream_response(story_words, props, 'story-'+str(stories_id)+'-words')
 
+@cache
 def _story_words(topic_id, stories_id):
     return mc.wordCount('stories_id:'+stories_id) # TODO: replace with topic story words call
 
@@ -35,7 +37,7 @@ def _story_words(topic_id, stories_id):
 #@flask_login.login_required
 def story_inlinks(topic_id, stories_id):
     timespan_id = request.args.get('timespanId')
-    inlinks = mc.storyList('{~ controversy_dump_time_slice:'+timespan_id+' link_to_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
+    inlinks = mc.storyList('{~ topic_timespan:'+timespan_id+' link_to_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topic_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
@@ -47,7 +49,7 @@ def story_inlinks_csv(topic_id, stories_id):
 #@flask_login.login_required
 def story_outlinks(topic_id, stories_id):
     timespan_id = request.args.get('timespanId')
-    outlinks = mc.storyList('{~ controversy_dump_time_slice:'+timespan_id+' link_from_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
+    outlinks = mc.storyList('{~ topic_timespan:'+timespan_id+' link_from_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
     return jsonify(outlinks)
 
 @app.route('/api/topics/<topic_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
