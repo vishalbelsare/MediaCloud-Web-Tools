@@ -1,4 +1,5 @@
 import React from 'react';
+import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -49,6 +50,7 @@ class InfluentialMediaContainer extends React.Component {
     const { media, sort, topicId, links } = this.props;
     const { formatMessage } = this.props.intl;
     let previousButton = null;
+    const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     if ((links !== undefined) && links.hasOwnProperty('previous')) {
       previousButton = <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />;
     }
@@ -60,6 +62,7 @@ class InfluentialMediaContainer extends React.Component {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
+            <Title render={titleHandler} />
             <DataCard border={false}>
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
@@ -8,11 +9,15 @@ import StoryDetails from './StoryDetails';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
+import messages from '../../../resources/messages';
 
 const StoryContainer = (props) => {
   const { story, topicId, storiesId } = props;
+  const { formatMessage } = props.intl;
+  const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
   return (
     <div>
+      <Title render={titleHandler} />
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>

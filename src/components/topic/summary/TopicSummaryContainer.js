@@ -1,5 +1,4 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../../common/LoadingSpinner';
@@ -8,7 +7,6 @@ import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
-import messages from '../../../resources/messages';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 class TopicSummaryContainer extends React.Component {
@@ -28,9 +26,6 @@ class TopicSummaryContainer extends React.Component {
   }
   render() {
     const { filters, topicId, topicInfo } = this.props;
-    const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.topicName);
-    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
@@ -71,7 +66,6 @@ class TopicSummaryContainer extends React.Component {
     );
     return (
       <div style={styles.root}>
-        <Title render={titleHandler} />
         <div>
           {content}
         </div>

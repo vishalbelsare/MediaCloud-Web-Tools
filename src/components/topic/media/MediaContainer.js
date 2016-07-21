@@ -1,4 +1,5 @@
 import React from 'react';
+import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
@@ -9,8 +10,10 @@ import MediaCollectionsList from './MediaCollectionsList';
 
 const MediaContainer = (props) => {
   const { media, topicId, mediaId } = props;
+  const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
   return (
     <div>
+      <Title render={titleHandler} />
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
