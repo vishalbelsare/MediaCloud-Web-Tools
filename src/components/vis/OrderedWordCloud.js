@@ -91,7 +91,7 @@ class OrderedWordCloud extends React.Component {
     let wordNodes;
     const wordListHeight = options.height - 2 * options.padding;
     const wordWrapper = svg.append('g')
-        .attr('transform', `translate(${2 * options.padding},0})`);
+        .attr('transform', `translate(${2 * options.padding},0)`);
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
       // Create words
       wordNodes = wordWrapper.selectAll('.word')
