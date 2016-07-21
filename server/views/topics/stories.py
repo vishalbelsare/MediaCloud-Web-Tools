@@ -76,21 +76,21 @@ def topic_stories_csv(topic_id):
     snapshot_id = request.args.get('snapshotId')
     timespan_id = request.args.get('timespanId')
     all_stories = []
-    continuation_id = None
+    link_id = None
     more_stories = True
     try:
         while more_stories:
             page = mc.topicStoryList(topic_id, snapshot_id=snapshot_id, timespan_id=timespan_id,
-                sort=sort, limit=1000, continuation_id=continuation_id)
-            page_stories = page['stories']
-            if len(page_stories) > 0:
-                continuation_id = page['continuation_id']
-                all_stories = all_stories + page_stories
+                sort=sort, limit=1000, link_id=link_id)
+            all_stories = all_stories + page['stories']
+            if 'next' in page['link_ids']:
+                link_id = page['link_ids']['next']
                 more_stories = True
             else:
                 more_stories = False
-        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id', 'inlink_count',
-            'outlink_count', 'bitly_click_count']
+        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id',
+            'media_inlink_count', 'inlink_count',
+            'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
         return csv.stream_response(all_stories, props, 'stories')
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400

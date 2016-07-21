@@ -27,12 +27,12 @@ class StoryTable extends React.Component {
       );
       socialHeader = (
         <a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
-          <FormattedMessage {...messages.clicks} />
+          <FormattedMessage {...messages.facebookShares} />
         </a>
       );
     } else {
       inlinkHeader = <FormattedMessage {...messages.inlinks} />;
-      socialHeader = <FormattedMessage {...messages.clicks} />;
+      socialHeader = <FormattedMessage {...messages.facebookShares} />;
     }
     return (
       <div>
@@ -59,9 +59,9 @@ class StoryTable extends React.Component {
                   </LinkWithFilters>
                 </td>
                 <td>{story.publish_date}</td>
-                <td>{story.inlink_count}</td>
+                <td>{story.media_inlink_count}</td>
                 <td>{story.outlink_count}</td>
-                <td>{story.bitly_click_count}</td>
+                <td>{story.facebook_share_count}</td>
               </tr>)
             )}
           </tbody>

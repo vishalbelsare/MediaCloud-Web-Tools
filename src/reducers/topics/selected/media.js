@@ -4,7 +4,7 @@ import { createAsyncReducer } from '../../../lib/reduxHelpers';
 const influentialMedia = createAsyncReducer({
   initialState: {
     media: [],
-    links: {},
+    link_ids: {},
     sort: 'social',
   },
   action: FETCH_TOPIC_INFLUENTIAL_MEDIA,

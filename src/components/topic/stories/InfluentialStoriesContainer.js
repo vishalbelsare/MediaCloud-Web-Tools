@@ -10,6 +10,7 @@ import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
+import { pagedAndSortedLocation } from '../../util/paging';
 
 const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
@@ -40,8 +41,9 @@ class InfluentialStoriesContainer extends React.Component {
     const { fetchPagedData, links } = this.props;
     fetchPagedData(this.props, links.previous);
   }
-  downloadCsv = () => {
+  downloadCsv = (evt) => {
     const { filters, sort, topicId } = this.props;
+    evt.preventDefault();
     const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
@@ -60,7 +62,7 @@ class InfluentialStoriesContainer extends React.Component {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <DataCard>
+            <DataCard border={false}>
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
@@ -113,29 +115,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
       linkId))
       .then((results) => {
-        const newLocation = Object.assign({}, ownProps.location, {
-          query: {
-            ...ownProps.location.query,
-            linkId: results.link_ids.current,
-          },
-        });
-        dispatch(push(newLocation));
+        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
       });
   },
   fetchData: (props) => {
     dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
       props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE))
       .then((results) => {
-        const newLocation = Object.assign({}, ownProps.location, {
-          query: {
-            ...ownProps.location.query,
-            linkId: results.link_ids.current,
-          },
-        });
-        dispatch(push(newLocation));
+        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
       });
   },
   sortData: (sort) => {
+    dispatch(push(pagedAndSortedLocation(ownProps.location, null, sort)));
     dispatch(sortTopicInfluentialStories(sort));
   },
 });

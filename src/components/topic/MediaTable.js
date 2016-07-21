@@ -27,12 +27,12 @@ class MediaTable extends React.Component {
       );
       socialHeader = (
         <a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
-          <FormattedMessage {...messages.clicks} />
+          <FormattedMessage {...messages.facebookShares} />
         </a>
       );
     } else {
       inlinkHeader = <FormattedMessage {...messages.inlinks} />;
-      socialHeader = <FormattedMessage {...messages.clicks} />;
+      socialHeader = <FormattedMessage {...messages.facebookShares} />;
     }
     return (
       <div>
@@ -55,9 +55,9 @@ class MediaTable extends React.Component {
                 </td>
                 <td>{m.type}</td>
                 <td>{m.story_count}</td>
-                <td>{m.inlink_count}</td>
+                <td>{m.media_inlink_count}</td>
                 <td>{m.outlink_count}</td>
-                <td>{m.bitly_click_count}</td>
+                <td>{m.facebook_share_count}</td>
               </tr>)
             )}
           </tbody>

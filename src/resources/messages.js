@@ -34,6 +34,7 @@ const messages = {
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Outlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
+  facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },

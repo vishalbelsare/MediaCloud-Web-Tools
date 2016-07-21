@@ -40,14 +40,16 @@ def topic_media_csv(topic_id):
         while more_media:
             page = mc.topicMediaList(topic_id, snapshot_id=snapshot_id, timespan_id=timespan_id, sort=sort,
                 limit=1000, link_id=link_id)
-            page_media = page['media']
-            if len(page_media) > 0:
-                link_id = page['links']['next']
-                all_media = all_media + page_media
+            all_media = all_media + page['media']
+            if 'next' in page['link_ids']:
+                link_id = page['link_ids']['next']
                 more_media = True
             else:
                 more_media = False
-        props = ['media_id', 'name', 'url', 'story_count', 'inlink_count', 'outlink_count', 'bitly_click_count']
+        logger.warn(len(all_media))
+        props = ['media_id', 'name', 'url', 'story_count', 
+                 'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
+                 'outlink_count', 'bitly_click_count']
         return csv.stream_response(all_media, props, 'media')
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
