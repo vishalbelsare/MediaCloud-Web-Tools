@@ -42,8 +42,7 @@ const messages = {
   media: { id: 'media', defaultMessage: 'Media Source' },
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
   mediaName: { id: 'media.name', defaultMessage: 'Name' },
-  mediaType: { id: 'media.type', defaultMessage: 'Media Type' },
-
+  
   story: { id: 'story', defaultMessage: 'Story' },
   storyPlural: { id: 'stories', defaultMessage: 'Stories' },
   storyTitle: { id: 'story.title', defaultMessage: 'Title' },

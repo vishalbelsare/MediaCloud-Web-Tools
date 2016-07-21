@@ -40,7 +40,6 @@ class MediaTable extends React.Component {
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.mediaName} /></th>
-              <th><FormattedMessage {...messages.mediaType} /></th>
               <th><FormattedMessage {...messages.storyPlural} /></th>
               <th>{inlinkHeader}</th>
               <th><FormattedMessage {...messages.outlinks} /></th>
@@ -53,7 +52,6 @@ class MediaTable extends React.Component {
                     {m.name}
                   </LinkWithFilters>
                 </td>
-                <td>{m.type}</td>
                 <td>{m.story_count}</td>
                 <td>{m.media_inlink_count}</td>
                 <td>{m.outlink_count}</td>
