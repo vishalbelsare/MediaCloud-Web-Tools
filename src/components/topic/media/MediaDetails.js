@@ -16,6 +16,11 @@ const MediaDetails = (props) => {
       </h2>
       <ul>
         <li><a href={media.url}>{media.url}</a></li>
+        <li>outlink: {media.outlink_count}</li>
+        <li>inlinks: {media.inlink_count}</li>
+        <li>media inlinks: {media.media_inlink_count}</li>
+        <li>sum media inlinks: {media.sum_media_inlink_count}</li>
+        <li>bit.ly: {media.bitly_click_count}</li>
       </ul>
     </DataCard>
   );
