@@ -30,7 +30,7 @@ const TopicInfo = (props) => {
       formattedTotal: topic.num_iterations,
     });
   }
-  const bitlyMessage = (topic.process_with_bitly) ? localMessages.processedWithBitly : localMessages.notProcessedWithBitly;
+  const bitlyMessage = (topic.process_with_bitly === '1') ? localMessages.processedWithBitly : localMessages.notProcessedWithBitly;
   return (
     <DataCard>
       <h2>

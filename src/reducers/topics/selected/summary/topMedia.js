@@ -4,7 +4,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers.js';
 const topMedia = createAsyncReducer({
   initialState: {
     sort: 'social',
-    stories: [],
+    media: [],
   },
   action: FETCH_TOPIC_TOP_MEDIA,
   SORT_TOPIC_TOP_MEDIA: (payload) => ({ sort: payload }),
