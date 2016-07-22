@@ -3,7 +3,6 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncWidget from '../util/composeAsyncWidget';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 
 class TopicContainer extends React.Component {
@@ -25,17 +24,11 @@ class TopicContainer extends React.Component {
     const { children, topicInfo } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     const styles = this.getStyles();
-    let subContent = <div />;
-    if (this.filtersAreSet()) {
-      subContent = children;
-    } else {
-      subContent = <LoadingSpinner />;
-    }
     return (
       <div style={styles.root}>
         <div>
           <Title render={titleHandler} />
-          {subContent}
+          {children}
         </div>
       </div>
     );

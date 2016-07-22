@@ -1,23 +1,16 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncWidget from '../util/composeAsyncWidget';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import ControlBar from './controlbar/ControlBar';
-import messages from '../../resources/messages';
 
-class TopicContainer extends React.Component {
+class FilteredTopicContainer extends React.Component {
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
     const { children, topicInfo, location, topicId } = this.props;
-    const { formatMessage } = this.props.intl;
-    const title = formatMessage(messages.topicName);
-    const titleHandler = parentTitle => `${title} | ${parentTitle}`;
     let subContent = <div />;
     if (this.filtersAreSet()) {
       subContent = children;
@@ -33,7 +26,7 @@ class TopicContainer extends React.Component {
   }
 }
 
-TopicContainer.propTypes = {
+FilteredTopicContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   children: React.PropTypes.node,
@@ -44,15 +37,15 @@ TopicContainer.propTypes = {
   topicInfo: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
 });
 
-export default 
+export default
   injectIntl(
     connect(mapStateToProps, null)(
-      TopicContainer
+      FilteredTopicContainer
     )
   );
