@@ -9,7 +9,7 @@ import InfluentialMediaContainer from '../components/topic/media/InfluentialMedi
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
-import CreateFrameContainer from '../components/topic/frames/CreateFrameContainer';
+import CreateFocusContainer from '../components/topic/foci/CreateFocusContainer';
 import requireAuth from './routes.js';
 
 const topicRoutes = (
@@ -27,7 +27,7 @@ const topicRoutes = (
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
       </Route>
 
-      <Route path="/topics/:topicId/frames/create" component={CreateFrameContainer} />
+      <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
 
     </Route>
 
