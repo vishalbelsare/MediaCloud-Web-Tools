@@ -15,5 +15,10 @@ a {
   text-decoration: none;
 }
 
+p.light {
+  color: rgb(153,153,153);
+}
+
+@import '_controlbar';
 @import '_table';
 @import '_datacard';
