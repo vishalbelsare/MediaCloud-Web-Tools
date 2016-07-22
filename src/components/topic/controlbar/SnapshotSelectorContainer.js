@@ -1,16 +1,12 @@
 import React from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import ErrorTryAgain from '../../common/ErrorTryAgain';
-import LoadingSpinner from '../../common/LoadingSpinner';
 import SnapshotSelector from './SnapshotSelector';
 import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import composeAsyncWidget from '../../util/composeAsyncWidget';
+import filteredLocation from '../../util/composeAsyncWidget';
 
 class SnapshotSelectorContainer extends React.Component {
-  componentDidMount() {
-    this.refetchData();
-  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.topicId !== this.props.topicId) {
       const { fetchData } = this.props;
@@ -29,33 +25,16 @@ class SnapshotSelectorContainer extends React.Component {
     };
     return styles;
   }
-  refetchData = () => {
-    const { fetchData, snapshotId, topicId } = this.props;
-    fetchData(topicId, snapshotId);
-  }
   render() {
-    const { snapshots, fetchStatus, onSnapshotSelected, snapshotId } = this.props;
-    let content = fetchStatus;
+    const { snapshots, onSnapshotSelected, snapshotId } = this.props;
     const styles = this.getStyles();
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        content = (
-          <div style={styles.right}>
-            <SnapshotSelector selectedId={snapshotId}
-              snapshots={snapshots} onSnapshotSelected={onSnapshotSelected}
-            />
-          </div>
-        );
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner padding={0} size={10} />;
-    }
     return (
       <div style={styles.root}>
-        {content}
+        <div style={styles.right}>
+          <SnapshotSelector selectedId={snapshotId}
+            snapshots={snapshots} onSnapshotSelected={onSnapshotSelected}
+          />
+        </div>
       </div>
     );
   }
@@ -68,6 +47,8 @@ SnapshotSelectorContainer.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   onSnapshotSelected: React.PropTypes.func.isRequired,
+  // from mergeProps
+  asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   snapshots: React.PropTypes.array.isRequired,
@@ -87,13 +68,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         .then((response) => {
           if (snapshotId === null) {
             const newSnapshotId = response.list[0].snapshots_id;
-            const newLocation = Object.assign({}, ownProps.location, {
-              query: {
-                ...ownProps.location.query,
-                timespanId: null,
-                snapshotId: newSnapshotId,
-              },
-            });
+            const newLocation = filteredLocation(ownProps.location, newSnapshotId, null);
             dispatch(push(newLocation));
             dispatch(filterBySnapshot(newSnapshotId));
           }
@@ -101,19 +76,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   onSnapshotSelected: (snapshotId) => {
-    const newLocation = Object.assign({}, ownProps.location, {
-      query: {
-        ...ownProps.location.query,
-        timespanId: null,
-        snapshotId,
-      },
-    });
+    const newLocation = filteredLocation(ownProps.location, snapshotId, null);
     dispatch(push(newLocation));
     dispatch(filterBySnapshot(snapshotId));
   },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SnapshotSelectorContainer);
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.topicId, stateProps.snapshotId);
+    },
+  });
+}
+
+export default
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeAsyncWidget(
+      SnapshotSelectorContainer
+    )
+  );
