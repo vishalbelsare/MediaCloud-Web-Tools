@@ -28,10 +28,6 @@ class InfluentialMediaContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   }
-  refetchData = () => {
-    const { fetchData } = this.props;
-    fetchData(this.props);
-  }
   previousPage = () => {
     const { fetchPagedData, links } = this.props;
     fetchPagedData(this.props, links.previous);
