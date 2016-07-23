@@ -30,6 +30,8 @@
       timespans: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         list: [ // list of JSON timespan objects in the selected snapshot of the selected topic  ]
+        isVisible: [ true | false ],
+        selectedTab: [ monthly | weekly | daily | custom ],
       }
       summary: {
         topStories: {

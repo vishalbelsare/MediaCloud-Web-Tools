@@ -10,6 +10,11 @@ Cloud api client library.  The in-browser Javascript app follows the Flux design
 as implemented in the Redux library.  The view layer is implemented via React components, 
 with visualizations created using HighCharts and d3.js.
 
+Opinions
+--------
+
+ * Having one state mangement approach makes life easer, so toss everything in the Redux store (including UI state and so on).
+
 Adding a New Widget
 -------------------
 

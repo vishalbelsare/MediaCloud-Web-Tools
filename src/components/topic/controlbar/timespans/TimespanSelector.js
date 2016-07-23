@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../../resources/messages';
+import messages from '../../../../resources/messages';
 
 const TimespanSelector = (props) => {
-  const { timespans, selectedId, onTimespanSelected } = props;
+  const { timespans, selectedId, onTimespanSelected, onCollapse } = props;
   return (
     <div>
       <FormattedMessage {...messages.topicTimespan} />
@@ -14,6 +14,7 @@ const TimespanSelector = (props) => {
           </option>
         )}
       </select>
+      <a href="#" onClick={onCollapse}>Hide Timeline</a>
     </div>
   );
 };
@@ -23,6 +24,7 @@ TimespanSelector.propTypes = {
   selectedId: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
   onTimespanSelected: React.PropTypes.func,
+  onCollapse: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(TimespanSelector);

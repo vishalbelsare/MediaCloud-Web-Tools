@@ -1,19 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import ErrorTryAgain from '../../common/ErrorTryAgain';
-import LoadingSpinner from '../../common/LoadingSpinner';
 import TimespanSelector from './TimespanSelector';
-import { fetchTopicTimespansList, filterByTimespan } from '../../../actions/topicActions';
-import * as fetchConstants from '../../../lib/fetchConstants.js';
+import TimespanCollapsed from './TimespanCollapsed';
+import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls } from '../../../../actions/topicActions';
+import composeAsyncWidget from '../../../util/composeAsyncWidget';
 
 class TimespanSelectorContainer extends React.Component {
-  componentDidMount() {
-    const { topicId, snapshotId } = this.props;
-    if ((topicId !== null) && (snapshotId !== null)) {
-      this.refetchData();
-    }
-  }
   componentWillReceiveProps(nextProps) {
     if (((nextProps.topicId !== this.props.topicId) ||
         (nextProps.snapshotId !== this.props.snapshotId)) &&
@@ -22,37 +15,40 @@ class TimespanSelectorContainer extends React.Component {
       fetchData(nextProps.topicId, nextProps.snapshotId, nextProps.timespanId);
     }
   }
-  getStyles() {
-    const styles = {
-      root: {
-        paddingTop: 18,
-      },
-    };
-    return styles;
-  }
   refetchData = () => {
     const { topicId, snapshotId, timespanId, fetchData } = this.props;
     fetchData(topicId, snapshotId, timespanId);
   }
+  handleExpand = (evt) => {
+    const { setExpanded } = this.props;
+    evt.preventDefault();
+    setExpanded(true);
+  }
+  handleCollapse = (evt) => {
+    const { setExpanded } = this.props;
+    evt.preventDefault();
+    setExpanded(false);
+  }
   render() {
-    const { timespans, fetchStatus, onTimespanSelected, timespanId } = this.props;
-    let content = fetchStatus;
-    const styles = this.getStyles();
-    switch (fetchStatus) {
-      case fetchConstants.FETCH_SUCCEEDED:
-        content = <TimespanSelector selectedId={timespanId} timespans={timespans} onTimespanSelected={onTimespanSelected} />;
-        break;
-      case fetchConstants.FETCH_FAILED:
-        content = <ErrorTryAgain onTryAgain={this.refetchData} />;
-        break;
-      default:
-        content = <LoadingSpinner padding={0} size={10} />;
+    const { timespans, onTimespanSelected, timespanId, isVisible, visibleTab } = this.props;
+    let content = null;
+    if (isVisible) {
+      content = (<TimespanSelector
+        selectedId={timespanId}
+        timespans={timespans}
+        onTimespanSelected={onTimespanSelected}
+        onCollapse={this.handleCollapse}
+      />);
+    } else {
+      let timespan = null;
+      for (const idx in timespans) {
+        if (timespans[idx].timespans_id === timespanId) {
+          timespan = timespans[idx];
+        }
+      }
+      content = <TimespanCollapsed timespan={timespan} onExpand={this.handleExpand} />;
     }
-    return (
-      <div style={styles.root}>
-        {content}
-      </div>
-    );
+    return content;
   }
 }
 
@@ -63,9 +59,12 @@ TimespanSelectorContainer.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   onTimespanSelected: React.PropTypes.func.isRequired,
+  setExpanded: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   timespans: React.PropTypes.array.isRequired,
+  isVisible: React.PropTypes.bool.isRequired,
+  selectedTab: React.PropTypes.string.isRequired,
   snapshotId: React.PropTypes.number,
   timespanId: React.PropTypes.number,
 };
@@ -75,9 +74,14 @@ const mapStateToProps = (state) => ({
   timespans: state.topics.selected.timespans.list,
   snapshotId: state.topics.selected.filters.snapshotId,
   timespanId: state.topics.selected.filters.timespanId,
+  isVisible: state.topics.selected.timespans.isVisible,
+  selectedTab: state.topics.selected.timespans.selectedTab,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  setExpanded: (isExpanded) => {
+    dispatch(toggleTimespanControls(isExpanded));
+  },
   fetchData: (topicId, snapshotId, timespanId) => {
     dispatch(fetchTopicTimespansList(topicId, snapshotId))
       .then((response) => {
@@ -107,7 +111,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TimespanSelectorContainer);
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.topicId, stateProps.snapshotId, stateProps.timespanId);
+    },
+  });
+}
+
+export default
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    composeAsyncWidget(
+      TimespanSelectorContainer
+    )
+  );
