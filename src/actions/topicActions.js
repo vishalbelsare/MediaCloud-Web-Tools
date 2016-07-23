@@ -27,6 +27,7 @@ export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const FETCH_MEDIA = 'FETCH_MEDIA';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
+export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -84,3 +85,4 @@ export const selectMedia = createAction(SELECT_MEDIA, id => id);
 export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.media);
 
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
+export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);

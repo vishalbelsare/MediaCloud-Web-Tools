@@ -17,4 +17,24 @@
     border-bottom: 1px solid rgb(215,215,215);
   }
 
+  .timespan-selector {
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .period-controls a {
+      margin-right: 8px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    a.toggle-control {
+      float: right;
+      color: rgb(201,201,201);
+    }
+
+  }
+
 }

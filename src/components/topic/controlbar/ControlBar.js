@@ -25,13 +25,7 @@ const ControlBar = (props) => {
         </Grid>
       </div>
       <div className="sub">
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <TimespanSelectorContainer topicId={topicId} location={location} />
-            </Col>
-          </Row>
-        </Grid>
+        <TimespanSelectorContainer topicId={topicId} location={location} />
       </div>
     </div>
   );
