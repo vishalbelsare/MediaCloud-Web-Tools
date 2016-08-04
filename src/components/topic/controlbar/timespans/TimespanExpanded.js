@@ -10,6 +10,11 @@ function filterByPeriod(timespans, period) {
 
 class TimespanExpanded extends React.Component {
 
+  componentWillMount = () => {
+    const { selectedTimespan } = this.props;
+    this.setPeriod(selectedTimespan.period);
+  }
+
   setPeriod = (period) => {
     const { onPeriodSelected } = this.props;
     onPeriodSelected(period);
