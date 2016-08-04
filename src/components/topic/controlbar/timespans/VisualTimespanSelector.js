@@ -7,9 +7,13 @@ import Dimensions from 'react-dimensions';
 
 class VisualTimespanSelector extends React.Component {
 
+  formattedDate(d) {
+    const { formatDate } = this.props.intl;
+    return formatDate(d, { year: '2-digit', month: 'numeric', day: 'numeric' });
+  }
+
   render() {
     const { containerWidth, timespans, selectedTimespan, onTimespanSelected, startDate, endDate } = this.props;
-    const { formatDate } = this.props.intl;
     const horizontalPadding = 30;
     const verticalPadding = 20;
     const width = containerWidth - horizontalPadding;
@@ -25,7 +29,7 @@ class VisualTimespanSelector extends React.Component {
       .scale(xScale)
       .orient('bottom')
       .ticks(10)
-      .tickFormat(d => formatDate(d, { year: '2-digit', month: 'numeric', day: 'numeric' }));
+      .tickFormat(d => this.formattedDate(d));
     const chartWrapper = svg.append('g')
       .attr('class', 'chart')
       .attr('transform', `translate(${horizontalPadding},${verticalPadding})`);
@@ -50,7 +54,9 @@ class VisualTimespanSelector extends React.Component {
           .attr('data-end', t => xScale(t.endDateMoment.toDate()))
           .attr('width', t => (xScale(t.endDateMoment.toDate()) - xScale(t.startDateMoment.toDate())))
           .attr('height', 20)
-          .on('click', onTimespanSelected);
+          .on('click', onTimespanSelected)
+          .append('svg:title')
+            .text(t => `${this.formattedDate(t.startDateMoment.toDate())}-${this.formattedDate(t.endDateMoment.toDate())}`);
     // highlight the selected timespan
     if (timespans.includes(selectedTimespan)) {
       chartWrapper.append('g')
@@ -65,7 +71,9 @@ class VisualTimespanSelector extends React.Component {
           .attr('width', xScale(selectedTimespan.endDateMoment.toDate()) - xScale(selectedTimespan.startDateMoment.toDate()))
           .attr('height', 20)
           .attr('style', `fill:${getBrandDarkColor()};fill-opacity:0.9`)
-          .on('click', onTimespanSelected);
+          .on('click', onTimespanSelected)
+          .append('svg:title')
+            .text(`${this.formattedDate(selectedTimespan.startDateMoment.toDate())}-${this.formattedDate(selectedTimespan.endDateMoment.toDate())}`);
     }
     return (
       <div>
