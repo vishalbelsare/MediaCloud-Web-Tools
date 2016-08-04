@@ -38,7 +38,7 @@ export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_LIST, api.topicSnapshotsList);
 // pass in topicId
 export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
-// pass in topicId
+// pass in topicId and snapshotId
 export const fetchTopicTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicTimespansList);
 // pass in topicId
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
