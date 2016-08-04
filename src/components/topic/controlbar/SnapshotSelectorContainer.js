@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import SnapshotSelector from './SnapshotSelector';
 import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
-import filteredLocation from '../../util/composeAsyncWidget';
+import { filteredLocation } from '../../util/paging';
 
 class SnapshotSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
