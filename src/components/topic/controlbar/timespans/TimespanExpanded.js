@@ -16,22 +16,30 @@ class TimespanExpanded extends React.Component {
 
   setPeriodToOverall = (evt) => {
     evt.preventDefault();
-    this.setPeriod('overall')
+    this.setPeriod('overall');
   }
 
   setPeriodToMonthly = (evt) => {
     evt.preventDefault();
-    this.setPeriod('monthly')
+    this.setPeriod('monthly');
   }
 
   setPeriodToWeekly = (evt) => {
     evt.preventDefault();
-    this.setPeriod('weekly')
+    this.setPeriod('weekly');
   }
 
   setPeriodToCustom = (evt) => {
     evt.preventDefault();
-    this.setPeriod('custom')
+    this.setPeriod('custom');
+  }
+
+  fireTimespanSelected = (evt) => {
+    const { onTimespanSelected } = this.props;
+    evt.preventDefault();
+    const timespanId = evt.target.getAttribute('key');
+    console.log(timespanId);
+    //onTimespanSelected(timespanId);
   }
 
   render() {
@@ -55,7 +63,7 @@ class TimespanExpanded extends React.Component {
         <Row>
           <Col lg={12}>
           {filterByPeriod(timespans, selectedPeriod).map(t =>
-            <p key={t.timespans_id}>{t.start_date.substr(0, 10)} to {t.end_date.substr(0, 10)}</p>
+            <a key={t.timespans_id} href="#" onClick={this.fireTimespanSelected}>{t.start_date.substr(0, 10)} to {t.end_date.substr(0, 10)}</a>
           )}
           </Col>
         </Row>
