@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import TimespanExpanded from './TimespanExpanded';
 import TimespanCollapsed from './TimespanCollapsed';
-import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
+import { fetchTopicSnapshotsList, fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
 import composeAsyncWidget from '../../../util/composeAsyncWidget';
+import { filteredLocation } from '../../../util/paging';
 
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -34,22 +35,24 @@ class TimespanSelectorContainer extends React.Component {
     const { timespans, onTimespanSelected, onPeriodSelected, timespanId, isVisible, selectedPeriod } = this.props;
     let content = null;
     let selectedTimespan = null;
-    for (const idx in timespans) {
-      if (timespans[idx].timespans_id === timespanId) {
-        selectedTimespan = timespans[idx];
+    if (timespans.length > 0) {
+      for (const idx in timespans) {
+        if (timespans[idx].timespans_id === timespanId) {
+          selectedTimespan = timespans[idx];
+        }
       }
-    }
-    if (isVisible) {
-      content = (<TimespanExpanded
-        timespans={timespans}
-        selectedTimespan={selectedTimespan}
-        onTimespanSelected={onTimespanSelected}
-        selectedPeriod={selectedPeriod}
-        onPeriodSelected={onPeriodSelected}
-        onCollapse={this.handleCollapse}
-      />);
-    } else {
-      content = <TimespanCollapsed timespan={selectedTimespan} onExpand={this.handleExpand} />;
+      if (isVisible) {
+        content = (<TimespanExpanded
+          timespans={timespans}
+          selectedTimespan={selectedTimespan}
+          onTimespanSelected={onTimespanSelected}
+          selectedPeriod={selectedPeriod}
+          onPeriodSelected={onPeriodSelected}
+          onCollapse={this.handleCollapse}
+        />);
+      } else {
+        content = <TimespanCollapsed timespan={selectedTimespan} onExpand={this.handleExpand} />;
+      }
     }
     return (
       <div className="timespan-selector">
@@ -77,6 +80,18 @@ TimespanSelectorContainer.propTypes = {
   timespanId: React.PropTypes.number,
 };
 
+// helper to update the url and fire off event
+function updateTimespan(dispatch, location, timespanId) {
+  const newLocation = Object.assign({}, location, {
+    query: {
+      ...location.query,
+      timespanId,
+    },
+  });
+  dispatch(push(newLocation));
+  dispatch(filterByTimespan(timespanId));
+}
+
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.timespans.fetchStatus,
   timespans: state.topics.selected.timespans.list,
@@ -98,34 +113,21 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((response) => {
         if (timespanId === null || isNaN(timespanId)) {
           const defaultTimespanId = response.list[0].timespans_id;
-          const newLocation = Object.assign({}, ownProps.location, {
-            query: {
-              ...ownProps.location.query,
-              timespanId: defaultTimespanId,
-            },
-          });
-          dispatch(push(newLocation));
-          dispatch(filterByTimespan(defaultTimespanId));
+          updateTimespan(dispatch, ownProps.location, defaultTimespanId);
         }
       });
   },
-  onTimespanSelected: (event) => {
-    const timespanId = event.target.value;
-    const newLocation = Object.assign({}, ownProps.location, {
-      query: {
-        ...ownProps.location.query,
-        timespanId,
-      },
-    });
-    dispatch(push(newLocation));
-    dispatch(filterByTimespan(timespanId));
+  onTimespanSelected: (timespanId) => {
+    updateTimespan(dispatch, ownProps.location, timespanId);
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, stateProps.snapshotId, stateProps.timespanId);
+      if (stateProps.snapshotId !== null) {
+        dispatchProps.fetchData(ownProps.topicId, stateProps.snapshotId, stateProps.timespanId);
+      }
     },
   });
 }

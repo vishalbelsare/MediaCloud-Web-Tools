@@ -1,9 +1,8 @@
 @import '_branding';
-
-$primary-color: #222222;
+@import '_constants';
 
 body {
-  font-family: Roboto, Droid Sans, Arial, Helvetica, sans;
+  font-family: $font-families;
   font-size: 13px;
   color: $primary-color;
   margin: 0px;
@@ -22,3 +21,4 @@ p.light {
 @import '_controlbar';
 @import '_table';
 @import '_datacard';
+@import '_visual_timespan_selector';

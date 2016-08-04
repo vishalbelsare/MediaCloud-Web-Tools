@@ -1,10 +1,11 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../../../resources/messages';
+import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import VisualTimespanSelector from './VisualTimespanSelector';
+import d3 from 'd3';
 
-function filterByPeriod(timespans, period){
-  return timespans.filter( (t) => t.period === period );
+function filterByPeriod(timespans, period) {
+  return timespans.filter((t) => t.period === period);
 }
 
 class TimespanExpanded extends React.Component {
@@ -34,16 +35,15 @@ class TimespanExpanded extends React.Component {
     this.setPeriod('custom');
   }
 
-  fireTimespanSelected = (evt) => {
+  fireTimespanSelected = (timespan) => {
     const { onTimespanSelected } = this.props;
-    evt.preventDefault();
-    const timespanId = evt.target.getAttribute('key');
-    console.log(timespanId);
-    //onTimespanSelected(timespanId);
+    onTimespanSelected(timespan.timespans_id);
   }
 
   render() {
     const { timespans, selectedTimespan, selectedPeriod, onCollapse } = this.props;
+    const oldestTimespanStart = d3.min(timespans.map((t) => t.startDateMoment.toDate()));
+    const latestTimespanEnd = d3.max(timespans.map((t) => t.endDateMoment.toDate()));
     return (
       <Grid>
         <Row>
@@ -62,9 +62,13 @@ class TimespanExpanded extends React.Component {
         </Row>
         <Row>
           <Col lg={12}>
-          {filterByPeriod(timespans, selectedPeriod).map(t =>
-            <a key={t.timespans_id} href="#" onClick={this.fireTimespanSelected}>{t.start_date.substr(0, 10)} to {t.end_date.substr(0, 10)}</a>
-          )}
+          <VisualTimespanSelector
+            timespans={filterByPeriod(timespans, selectedPeriod)}
+            startDate={oldestTimespanStart}
+            endDate={latestTimespanEnd}
+            onTimespanSelected={this.fireTimespanSelected}
+            selectedTimespan={selectedTimespan}
+          />
           </Col>
         </Row>
       </Grid>
@@ -73,6 +77,7 @@ class TimespanExpanded extends React.Component {
 }
 
 TimespanExpanded.propTypes = {
+  // from parent
   timespans: React.PropTypes.array.isRequired,
   selectedTimespan: React.PropTypes.object.isRequired,
   onCollapse: React.PropTypes.func.isRequired,
