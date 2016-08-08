@@ -6,12 +6,12 @@ import { push } from 'react-router-redux';
 import StoryTable from '../StoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import FlatButton from 'material-ui/FlatButton';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
 import composeAsyncWidget from '../../util/composeAsyncWidget';
 import { pagedAndSortedLocation } from '../../util/paging';
+import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
@@ -20,7 +20,7 @@ const localMessages = {
 class InfluentialStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
-    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort)) {
+    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort) || (nextProps.links.current !== this.props.links.current)) {
       if ((nextProps.filters.snapshotId !== null) && (nextProps.filters.timespanId !== null)) {
         fetchData(nextProps);
       }
@@ -34,14 +34,6 @@ class InfluentialStoriesContainer extends React.Component {
     const { fetchData } = this.props;
     fetchData(this.props);
   }
-  nextPage = () => {
-    const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.next);
-  }
-  previousPage = () => {
-    const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.previous);
-  }
   downloadCsv = (evt) => {
     const { filters, sort, topicId } = this.props;
     evt.preventDefault();
@@ -49,17 +41,9 @@ class InfluentialStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, links } = this.props;
+    const { stories, sort, topicId, previousButton, nextButton } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
-    let previousButton = null;
-    if ((links !== undefined) && links.hasOwnProperty('previous')) {
-      previousButton = <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />;
-    }
-    let nextButton = null;
-    if ((links !== undefined) && links.hasOwnProperty('next')) {
-      nextButton = <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />;
-    }
     return (
       <Grid>
         <Row>
@@ -100,6 +84,9 @@ InfluentialStoriesContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   links: React.PropTypes.object,
   topicId: React.PropTypes.number.isRequired,
+  // from PagedContainer wrapper
+  nextButton: React.PropTypes.node,
+  previousButton: React.PropTypes.node,
 };
 
 const mapStateToProps = (state) => ({
@@ -139,14 +126,22 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps);
     },
+    nextPage: () => {
+      dispatchProps.fetchPagedData(stateProps, stateProps.links.next);
+    },
+    previousPage: () => {
+      dispatchProps.fetchPagedData(stateProps, stateProps.links.previous);
+    },
   });
 }
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncWidget(
-        InfluentialStoriesContainer
+      composePagedContainer(
+        composeAsyncWidget(
+          InfluentialStoriesContainer
+        )
       )
     )
   );
