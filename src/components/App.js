@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import messages from '../resources/messages';
 import { APP_NAME } from '../config';
 import { BRAND_COLORS } from '../styles/colors';
+// polyfill for Safari :-(
 import intl from 'intl';
 import intlEn from 'intl/locale-data/jsonp/en.js';
 
