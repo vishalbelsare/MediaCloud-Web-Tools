@@ -14,13 +14,13 @@ function createApiPromise(url) {
   );
 }
 
-export function topicsList() {
-  return fetch('/api/topics/list', {
-    method: 'get',
-    credentials: 'include',
-  }).then(
-    response => response.json()
-  );
+export function topicsList(linkId) {
+  const params = {};
+  if ((linkId !== null) && (linkId !== undefined)) {
+    params.linkId = linkId;
+  }
+  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  return createApiPromise(`/api/topics/list?${paramStr}`);
 }
 
 export function topicSummary(topicId) {
