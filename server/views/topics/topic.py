@@ -16,22 +16,22 @@ def topic_list():
     return jsonify(all_topics)
 
 @cache
-@app.route('/api/topics/<topic_id>/summary', methods=['GET'])
+@app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 #@flask_login.login_required
-def topic_summary(topic_id):
-    topic = mc.topic(topic_id)
+def topic_summary(topics_id):
+    topic = mc.topic(topics_id)
     return jsonify(topic)
 
 @cache
-@app.route('/api/topics/<topic_id>/snapshots/list', methods=['GET'])
+@app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 #@flask_login.login_required
-def topic_snapshots_list(topic_id):
-    snapshots = mc.topicSnapshotList(topic_id)
+def topic_snapshots_list(topics_id):
+    snapshots = mc.topicSnapshotList(topics_id)
     return jsonify({'list':snapshots})
 
 @cache
-@app.route('/api/topics/<topic_id>/snapshots/<snapshot_id>/timespans/list', methods=['GET'])
+@app.route('/api/topics/<topics_id>/snapshots/<snapshots_id>/timespans/list', methods=['GET'])
 #@flask_login.login_required
-def topic_timespan_list(topic_id, snapshot_id):
-    snapshots = mc.topicTimespanList(topic_id, snapshot_id)
+def topic_timespan_list(topics_id, snapshots_id):
+    snapshots = mc.topicTimespanList(topics_id, snapshots_id=snapshots_id)
     return jsonify({'list':snapshots})
