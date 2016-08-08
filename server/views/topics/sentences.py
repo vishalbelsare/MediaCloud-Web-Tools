@@ -29,7 +29,7 @@ def topic_sentence_count_csv(topics_id):
 def _sentence_count(topics_id, snapshots_id, timespans_id):
     # TODO: replace with timespan/single call
     timespan = None
-    timespan_list = mc.topicTimespanList(topics_id, snapshots_id)
+    timespan_list = mc.topicTimespanList(topics_id, snapshots_id=snapshots_id)
     for t in timespan_list:
         if t['timespans_id'] == int(timespans_id):
             timespan = t

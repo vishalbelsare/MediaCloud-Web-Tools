@@ -7,6 +7,7 @@ import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
+import TopicTimespanInfo from './TopicTimespanInfo';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 class TopicSummaryContainer extends React.Component {
@@ -25,7 +26,7 @@ class TopicSummaryContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { filters, topicId, topicInfo } = this.props;
+    const { filters, topicId, topicInfo, timespan } = this.props;
     const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
@@ -49,6 +50,11 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={6} md={12} sm={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
+            <Col lg={6} md={12} sm={12}>
+              <TopicTimespanInfo timespan={timespan} />
+            </Col>
+          </Row>
+          <Row style={styles.row}>
             <Col lg={6} md={12} sm={12}>
               <TopicInfo topic={topicInfo} />
             </Col>
@@ -79,6 +85,7 @@ TopicSummaryContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
   // from state
+  timespan: React.PropTypes.object,
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
   topicInfo: React.PropTypes.object,
@@ -88,6 +95,7 @@ const mapStateToProps = (state) => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
+  timespan: state.topics.selected.timespans.selected,
 });
 
 export default injectIntl(connect(

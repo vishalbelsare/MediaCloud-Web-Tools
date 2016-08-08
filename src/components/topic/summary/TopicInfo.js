@@ -36,8 +36,8 @@ const TopicInfo = (props) => {
       <h2>
         <FormattedMessage {...localMessages.title} />
       </h2>
-      <p className="light">{topic.description}</p>
-      <p className="light">
+      <p>{topic.description}</p>
+      <p>
         <FormattedHTMLMessage {...localMessages.state} values={{ state: topic.state }} />
         {spiderText}
         <FormattedMessage {...bitlyMessage} />

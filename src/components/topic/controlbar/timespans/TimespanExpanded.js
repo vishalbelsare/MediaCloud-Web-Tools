@@ -47,8 +47,8 @@ class TimespanExpanded extends React.Component {
 
   render() {
     const { timespans, selectedTimespan, selectedPeriod, onCollapse } = this.props;
-    const oldestTimespanStart = d3.min(timespans.map((t) => t.startDateMoment.toDate()));
-    const latestTimespanEnd = d3.max(timespans.map((t) => t.endDateMoment.toDate()));
+    const oldestTimespanStart = d3.min(timespans.map((t) => t.startDateObj));
+    const latestTimespanEnd = d3.max(timespans.map((t) => t.endDateObj));
     return (
       <Grid>
         <Row>

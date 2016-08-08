@@ -113,25 +113,25 @@ export function createAsyncReducer(handlers) {
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_ONGOING,
-          ...reducers.handleFetch(action.payload),
+          ...reducers.handleFetch(action.payload, state),
         });
       case resolve(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-          ...reducers.handleSuccess(action.payload),
+          ...reducers.handleSuccess(action.payload, state),
         });
       case reject(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_FAILED,
-          ...reducers.handleFailure(action.payload),
+          ...reducers.handleFailure(action.payload, state),
         });
       default:
         if (action.type in extraActionLookup) {
           return Object.assign({}, state, {
             ...state,
-            ...extraActionLookup[action.type](action.payload),
+            ...extraActionLookup[action.type](action.payload, state),
           });
         }
         return state;
