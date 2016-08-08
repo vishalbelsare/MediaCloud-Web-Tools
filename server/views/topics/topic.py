@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify
+from flask import jsonify, request
 import flask_login
 
 from server import app, mc
@@ -11,8 +11,9 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/list', methods=['GET'])
 #@flask_login.login_required
 def topic_list():
-    all_topics = mc.topicList()
-    return jsonify({'list':all_topics})
+    link_id = request.args.get('linkId')
+    all_topics = mc.topicList(link_id=link_id)
+    return jsonify(all_topics)
 
 @cache
 @app.route('/api/topics/<topic_id>/summary', methods=['GET'])

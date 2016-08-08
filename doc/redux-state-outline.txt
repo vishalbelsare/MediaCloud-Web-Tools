@@ -11,7 +11,8 @@
   topics: {
     all: {
       fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-      list: [ list of topic JSON objects ]
+      topics: [ list of topic JSON objects ]
+      link_ids: { standard links info }
     },
     selected: {
       id: [id of topic selected],

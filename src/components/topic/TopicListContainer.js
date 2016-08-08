@@ -42,7 +42,7 @@ TopicListContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.all.fetchStatus,
-  topics: state.topics.all.list,
+  topics: state.topics.all.topics,
 });
 
 const mapDispatchToProps = (dispatch) => ({

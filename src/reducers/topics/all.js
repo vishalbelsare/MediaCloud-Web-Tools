@@ -3,7 +3,8 @@ import { createAsyncReducer } from '../../lib/reduxHelpers';
 
 const all = createAsyncReducer({
   initialState: {
-    list: [],
+    topics: [],
+    link_ids: {},
   },
   action: FETCH_TOPIC_LIST,
 });
