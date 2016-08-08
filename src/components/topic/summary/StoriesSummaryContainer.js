@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import ExploreButton from './ExploreButton';
@@ -77,7 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         StoriesSummaryContainer
       )
     )

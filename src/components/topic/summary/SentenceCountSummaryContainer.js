@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import SentenceCountSummary from './SentenceCountSummary';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -82,7 +82,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         SentenceCountSummaryContainer
       )
     )

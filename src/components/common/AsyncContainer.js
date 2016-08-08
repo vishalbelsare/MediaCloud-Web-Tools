@@ -9,8 +9,8 @@ import * as fetchConstants from '../../lib/fetchConstants.js';
  * method will call out to a fetchData property that reads the params to use from the state
  * (via mergeProps).
  */
-export default function composeAsyncWidget(ComposedContainer) {
-  class ComposedAsyncWidget extends React.Component {
+export default function composeAsyncContainer(ComposedContainer) {
+  class ComposedAsyncContainer extends React.Component {
     componentDidMount() {
       const { asyncFetch } = this.props;
       asyncFetch();
@@ -31,9 +31,9 @@ export default function composeAsyncWidget(ComposedContainer) {
       return content;
     }
   }
-  ComposedAsyncWidget.propTypes = {
+  ComposedAsyncContainer.propTypes = {
     fetchStatus: React.PropTypes.string.isRequired,
     asyncFetch: React.PropTypes.func.isRequired,
   };
-  return ComposedAsyncWidget;
+  return ComposedAsyncContainer;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncWidget from '../util/composeAsyncWidget';
+import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 
 class TopicContainer extends React.Component {
@@ -67,7 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-        composeAsyncWidget(
+        composeAsyncContainer(
           TopicContainer
         )
       )

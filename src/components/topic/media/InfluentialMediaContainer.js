@@ -10,7 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DownloadButton from '../../common/DownloadButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/paging';
 
 const localMessages = {
@@ -135,7 +135,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         InfluentialMediaContainer
       )
     )

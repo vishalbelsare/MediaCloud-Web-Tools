@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryDetails from './StoryDetails';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         StoryContainer
       )
     )

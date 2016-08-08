@@ -5,7 +5,7 @@ import TimespanExpanded from './TimespanExpanded';
 import TimespanCollapsed from './TimespanCollapsed';
 import { fetchTopicSnapshotsList, fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
-import composeAsyncWidget from '../../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../../common/AsyncContainer';
 import { filteredLocation } from '../../../util/paging';
 
 class TimespanSelectorContainer extends React.Component {
@@ -134,7 +134,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    composeAsyncWidget(
+    composeAsyncContainer(
       TimespanSelectorContainer
     )
   );

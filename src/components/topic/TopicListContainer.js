@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncWidget from '../util/composeAsyncWidget';
+import composeAsyncContainer from '../common/AsyncContainer';
 import TopicList from './TopicList';
 import { fetchTopicsList } from '../../actions/topicActions';
 import { pagedLocation } from '../util/paging';
@@ -82,7 +82,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composePagedContainer(
-        composeAsyncWidget(
+        composeAsyncContainer(
           TopicListContainer
         )
       )

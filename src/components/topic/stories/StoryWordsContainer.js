@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchStoryWords } from '../../../actions/topicActions';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import messages from '../../../resources/messages';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -57,7 +57,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         StoryWordsContainer
       )
     )

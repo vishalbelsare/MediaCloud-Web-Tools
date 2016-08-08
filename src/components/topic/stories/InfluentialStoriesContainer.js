@@ -9,7 +9,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/paging';
 import composePagedContainer from '../../common/PagedContainer';
 
@@ -139,7 +139,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composePagedContainer(
-        composeAsyncWidget(
+        composeAsyncContainer(
           InfluentialStoriesContainer
         )
       )

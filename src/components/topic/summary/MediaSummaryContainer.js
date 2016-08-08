@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaTable from '../MediaTable';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         MediaSummaryContainer
       )
     )

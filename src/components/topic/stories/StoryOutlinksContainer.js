@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchStoryOutlinks } from '../../../actions/topicActions';
-import composeAsyncWidget from '../../util/composeAsyncWidget';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import messages from '../../../resources/messages';
 import StoryTable from '../StoryTable';
 import DataCard from '../../common/DataCard';
@@ -74,7 +74,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncWidget(
+      composeAsyncContainer(
         StoryOutlinksContainer
       )
     )
