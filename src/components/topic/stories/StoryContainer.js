@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -10,6 +10,11 @@ import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 import messages from '../../../resources/messages';
+
+const localMessages = {
+  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}',
+  },
+};
 
 class StoryContainer extends React.Component {
 
@@ -30,7 +35,7 @@ class StoryContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <h2>{story.title}</h2>
+              <h2><FormattedMessage {...localMessages.mainTitle} values={{ title: story.title }} /></h2>
             </Col>
           </Row>
           <Row>
@@ -95,7 +100,9 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncContainer(
-        StoryContainer
+        injectIntl(
+          StoryContainer
+        )
       )
     )
   );
