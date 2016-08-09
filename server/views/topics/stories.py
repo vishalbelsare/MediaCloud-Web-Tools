@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 #@flask_login.login_required
 def story(topics_id, stories_id):
-    story_info = mc.story(stories_id)
+    story_info = mc.topicStoryList(topics_id, stories_id=stories_id)['stories'][0]
     story_info['media_name'] = mc.media(story_info['media_id'])['name']
     story_info['media_url'] = mc.media(story_info['media_id'])['url']
     return jsonify(story_info)
