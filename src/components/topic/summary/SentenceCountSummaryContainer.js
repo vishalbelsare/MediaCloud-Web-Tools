@@ -2,11 +2,12 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import SentenceCountSummary from './SentenceCountSummary';
+import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
@@ -43,7 +44,9 @@ class SentenceCountSummaryContainer extends React.Component {
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <div style={styles.clearFix} />
-        <SentenceCountSummary total={total} counts={counts} />
+        <AttentionOverTimeChart total={total} data={counts} height={200}
+          lineColor={ getBrandDarkColor() }
+        />
       </DataCard>
     );
   }
