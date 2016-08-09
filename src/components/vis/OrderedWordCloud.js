@@ -7,7 +7,6 @@ const localMessages = {
   wordCloudCount: { id: 'wordcloud.rollover.count', defaultMessage: 'Uses: {count}' },
   wordCloudStem: { id: 'wordcloud.rollover.stem', defaultMessage: 'Stem: {stem}' },
   worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
-  worldCloudTermFreq: { id: 'wordcloud.rollover.termFrequencyScore', defaultMessage: 'TF Score: {termFrequency}' },
 };
 
 const DEFAULT_WIDTH = 550;
@@ -125,11 +124,10 @@ class OrderedWordCloud extends React.Component {
             tooltipDiv.html(
                 formatMessage(localMessages.wordCloudStem, { stem: d.stem }) + '<br />' +
                 formatMessage(localMessages.worldCloudTerm, { term: d.term }) + '<br />' +
-                formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) }) + '<br />' +
-                formatMessage(localMessages.worldCloudTermFreq, { termFrequency: formatNumber(d.tfnorm, { maximumSignificantDigits: 4 }) })
+                formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) })
               )
               .style('left', `${d3.event.pageX}px`)
-              .style('top', `${d3.event.pageY - 70}px`);
+              .style('top', `${d3.event.pageY - 48}px`);
           }
         })
         .on('mouseout', () => {
