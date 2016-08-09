@@ -26,6 +26,14 @@ export const FETCH_STORY_INLINKS = 'FETCH_STORY_INLINKS';
 export const FETCH_STORY_OUTLINKS = 'FETCH_STORY_OUTLINKS';
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const FETCH_MEDIA = 'FETCH_MEDIA';
+export const FETCH_MEDIA_SENTENCE_COUNT = 'FETCH_MEDIA_SENTENCE_COUNT';
+export const FETCH_MEDIA_STORIES = 'FETCH_MEDIA_STORIES';
+export const SORT_MEDIA_STORIES = 'SORT_MEDIA_STORIES';
+export const FETCH_MEDIA_INLINKS = 'FETCH_MEDIA_INLINKS';
+export const SORT_MEDIA_INLINKS = 'SORT_MEDIA_INLINKS';
+export const FETCH_MEDIA_OUTLINKS = 'FETCH_MEDIA_OUTLINKS';
+export const SORT_MEDIA_OUTLINKS = 'SORT_MEDIA_OUTLINKS';
+export const FETCH_MEDIA_WORDS = 'FETCH_MEDIA_WORDS';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 
@@ -81,8 +89,24 @@ export const fetchStoryOutlinks = createAsyncAction(FETCH_STORY_OUTLINKS, api.st
 
 // pass in media id
 export const selectMedia = createAction(SELECT_MEDIA, id => id);
-// pass in topic id and media id
+// pass in topic id, media id, snapshot id, timespan id
 export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.media);
+// pass in topic id, media id, snapshot id, timespan id
+export const fetchMediaSentenceCounts = createAsyncAction(FETCH_MEDIA_SENTENCE_COUNT, api.mediaSentenceCounts);
+// pass in topic id, media id, snapshot id, timespan id, sort, limit
+export const fetchMediaStories = createAsyncAction(FETCH_MEDIA_STORIES, api.mediaStories);
+// pass in sort
+export const sortMediaStories = createAction(SORT_MEDIA_STORIES, sort => sort);
+// pass in topic id, media id, snapshot id, timespan id, sort, limit
+export const fetchMediaInlinks = createAsyncAction(FETCH_MEDIA_INLINKS, api.mediaInlinks);
+// pass in sort
+export const sortMediaInlinks = createAction(SORT_MEDIA_INLINKS, sort => sort);
+// pass in topic id, media id, snapshot id, timespan id, sort, limit
+export const fetchMediaOutlinks = createAsyncAction(FETCH_MEDIA_OUTLINKS, api.mediaOutlinks);
+// pass in sort
+export const sortMediaOutlinks = createAction(SORT_MEDIA_OUTLINKS, sort => sort);
+// pass in topic id, media id, snapshot id, timespan id
+export const fetchMediaWords = createAsyncAction(FETCH_MEDIA_WORDS, api.mediaWords);
 
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
 export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);

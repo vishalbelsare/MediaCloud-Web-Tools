@@ -46,7 +46,7 @@ def story_inlinks(topics_id, stories_id):
 #@flask_login.login_required
 def story_inlinks_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    return _download_stories_csv('story-'+stories_id+'-inlinks', topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
+    return stream_story_list_csv('story-'+stories_id+'-inlinks', topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks', methods=['GET'])
 #@flask_login.login_required
@@ -59,7 +59,7 @@ def story_outlinks(topics_id, stories_id):
 #@flask_login.login_required
 def story_outlinks_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    return _download_stories_csv('story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
+    return stream_story_list_csv('story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
 #@flask_login.login_required
@@ -79,9 +79,9 @@ def topic_stories_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id = request.args.get('snapshotId')
     timespans_id = request.args.get('timespanId')
-    return _download_stories_csv('stories', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort)
+    return stream_story_list_csv('stories', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort)
 
-def _download_stories_csv(filename, topics_id, **kwargs):
+def stream_story_list_csv(filename, topics_id, **kwargs):
     '''
     Helper method to strem a list of stories back to the client as a csv.  Any args you pass in will be
     simply be passed on to a call to topicStoryList.

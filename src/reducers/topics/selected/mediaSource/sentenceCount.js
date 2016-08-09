@@ -1,4 +1,4 @@
-import { FETCH_TOPIC_SENTENCE_COUNT } from '../../../../actions/topicActions';
+import { FETCH_MEDIA_SENTENCE_COUNT } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 import { cleanDateCounts } from '../../../../lib/dateUtil';
 
@@ -7,7 +7,7 @@ const sentenceCount = createAsyncReducer({
     total: null,
     counts: [],
   },
-  action: FETCH_TOPIC_SENTENCE_COUNT,
+  action: FETCH_MEDIA_SENTENCE_COUNT,
   handleSuccess: (payload) => ({
     total: payload.count,
     counts: cleanDateCounts(payload.split),

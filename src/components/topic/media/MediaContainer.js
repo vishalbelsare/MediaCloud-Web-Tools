@@ -1,12 +1,18 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaDetails from './MediaDetails';
-import MediaCollectionsList from './MediaCollectionsList';
+import MediaInlinkContainer from './MediaInlinkContainer';
+import MediaOutlinkContainer from './MediaOutlinkContainer';
+import MediaStoriesContainer from './MediaStoriesContainer';
+
+const localMessages = {
+  mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Details: {title}' },
+};
 
 const MediaContainer = (props) => {
   const { media, topicId, mediaId } = props;
@@ -17,15 +23,23 @@ const MediaContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <h2>{media.name}</h2>
+            <h2><FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} /></h2>
           </Col>
         </Row>
         <Row>
-          <Col lg={3} md={3} sm={6}>
+          <Col lg={6} md={6} sm={12}>
             <MediaDetails media={media} />
           </Col>
-          <Col lg={3} md={3} sm={6}>
-            <MediaCollectionsList name={media.name} collections={media.collections} />
+          <Col lg={6} md={6} sm={12}>
+            <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <MediaInlinkContainer topicId={topicId} mediaId={mediaId} />
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            <MediaOutlinkContainer topicId={topicId} mediaId={mediaId} />
           </Col>
         </Row>
       </Grid>
@@ -42,15 +56,15 @@ MediaContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   media: React.PropTypes.object.isRequired,
-  mediaId: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.string.isRequired,
+  mediaId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.mediaSource.info.fetchStatus,
-  mediaId: ownProps.params.mediaId,
-  topicId: ownProps.params.topicId,
+  mediaId: parseInt(ownProps.params.mediaId, 10),
+  topicId: parseInt(ownProps.params.topicId, 10),
   media: state.topics.selected.mediaSource.info,
 });
 

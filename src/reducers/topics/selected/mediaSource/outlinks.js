@@ -1,0 +1,14 @@
+import { FETCH_MEDIA_OUTLINKS, SORT_MEDIA_OUTLINKS } from '../../../../actions/topicActions';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
+
+const outlinks = createAsyncReducer({
+  initialState: {
+    sort: 'social',
+    stories: [],
+    links_ids: {},
+  },
+  action: FETCH_MEDIA_OUTLINKS,
+  SORT_MEDIA_OUTLINKS: (payload) => ({ sort: payload }),
+});
+
+export default outlinks;

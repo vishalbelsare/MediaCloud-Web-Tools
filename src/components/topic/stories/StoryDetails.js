@@ -19,11 +19,11 @@ const localMessages = {
   detectedLanguage: { id: 'story.details.detectedLanguage',
     defaultMessage: 'We have detected that it\'s language "{detectedLanguage}"' },
   inlinkCount: { id: 'story.details.inlinkCount',
-    defaultMessage: '{count, plural,\n  =0 {No stories link}\n  =1 {One story links}\n  other {# stories link}} link to this one.' },
+    defaultMessage: '{count, plural,\n  =0 {No stories link}\n  =1 {One story links}\n  other {# stories link}} link to this one during this timespan.' },
   mediaInlinkCount: { id: 'story.details.mediaInlinkCount',
-    defaultMessage: '{count, plural,\n  =0 {No other media sources link}\n  =1 {One other media source links}\n  other {# other media sources link}} to this story.' },
+    defaultMessage: '{count, plural,\n  =0 {No other media sources link}\n  =1 {One other media source links}\n  other {# other media sources link}} to this story during this timespan.' },
   outlinkCount: { id: 'story.details.outlinkCount',
-    defaultMessage: 'This story has links to {count, plural,\n  =0 {no other stories}\n  =1 {one other story}\n  other {# other stories}}.' },
+    defaultMessage: 'This story has links to {count, plural,\n  =0 {no other stories}\n  =1 {one other story}\n  other {# other stories}} in this Topic.' },
 };
 
 const StoryDetails = (props) => {
