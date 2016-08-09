@@ -53,7 +53,7 @@ StoryInlinksContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.story.inlinks.fetchStatus,
-  inlinkedStories: state.topics.selected.story.inlinks.list,
+  inlinkedStories: state.topics.selected.story.inlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,
 });
 

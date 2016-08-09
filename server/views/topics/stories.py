@@ -39,7 +39,7 @@ def _story_words(topics_id, stories_id):
 #@flask_login.login_required
 def story_inlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    inlinks = mc.storyList('{~ topic_timespan:'+timespans_id+' link_to_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
+    inlinks = mc.topicStoryList(topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
@@ -51,7 +51,7 @@ def story_inlinks_csv(topics_id, stories_id):
 #@flask_login.login_required
 def story_outlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    outlinks = mc.storyList('{~ topic_timespan:'+timespans_id+' link_from_story:'+stories_id+' }') # TODO: replace with topic story inlinks call
+    outlinks = mc.topicStoryList(topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(outlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])

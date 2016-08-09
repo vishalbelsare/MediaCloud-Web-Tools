@@ -87,11 +87,11 @@
         },
         inlinks: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-          list: // list of story JSON objects
+          stories: // list of story JSON objects
         },
         outlinks: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-          list: // list of story JSON objects
+          stories: // list of story JSON objects
         },
       },
       mediaSource: {

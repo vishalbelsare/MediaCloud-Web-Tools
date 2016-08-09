@@ -3,12 +3,10 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const inlinks = createAsyncReducer({
   initialState: {
-    list: [],
+    stories: [],
+    links_ids: {},
   },
   action: FETCH_STORY_INLINKS,
-  handleSuccess: (payload) => ({
-    list: payload,
-  }),
 });
 
 export default inlinks;

@@ -53,7 +53,7 @@ StoryOutlinksContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.story.outlinks.fetchStatus,
-  outlinkedStories: state.topics.selected.story.outlinks.list,
+  outlinkedStories: state.topics.selected.story.outlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,
 });
 
