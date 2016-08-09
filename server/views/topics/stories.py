@@ -13,25 +13,25 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 #@flask_login.login_required
 def story(topics_id, stories_id):
-    story_info = mc.story(stories_id) # TODO: replace with topic story call
+    story_info = mc.story(stories_id)
     return jsonify(story_info)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
 #@flask_login.login_required
 def story_words(topics_id, stories_id):
-    words = _story_words(topics_id, stories_id)
-    return jsonify(words)
+    story_words = _story_words(topics_id, stories_id)
+    return jsonify(story_words)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 #@flask_login.login_required
 def story_words_csv(topics_id, stories_id):
-    words = _story_words(topics_id, stories_id)
+    story_words = _story_words(topics_id, stories_id)
     props = ['term', 'stem', 'count']
     return csv.stream_response(story_words, props, 'story-'+str(stories_id)+'-words')
 
 @cache
 def _story_words(topics_id, stories_id):
-    return mc.wordCount('stories_id:'+stories_id) # TODO: replace with topic story words call
+    return mc.wordCount('stories_id:'+stories_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])
 #@flask_login.login_required
