@@ -1,13 +1,20 @@
 import React from 'react';
 import d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
+import { injectIntl } from 'react-intl';
+
+const localMessages = {
+  wordCloudCount: { id: 'wordcloud.rollover.count', defaultMessage: 'Uses: {count}' },
+  wordCloudStem: { id: 'wordcloud.rollover.stem', defaultMessage: 'Stem: {stem}' },
+  worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
+  worldCloudTermFreq: { id: 'wordcloud.rollover.termFrequencyScore', defaultMessage: 'TF Score: {termFrequency}' },
+};
 
 const DEFAULT_WIDTH = 550;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 24;
 const DEFAULT_TEXT_COLOR = '#333333';
-const DEFAULT_LINK_COLOR = '#000000';
 
 class OrderedWordCloud extends React.Component {
 
@@ -51,7 +58,8 @@ class OrderedWordCloud extends React.Component {
   }
 
   render() {
-    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor } = this.props;
+    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips } = this.props;
+    const { formatMessage, formatNumber } = this.props.intl;
     const options = {
       width,
       height,
@@ -60,25 +68,35 @@ class OrderedWordCloud extends React.Component {
       padding: 0,
       minFontSize,
       maxFontSize,
+      showTooltips,
     };
-    if (width !== null) {
+    if (width === undefined) {
       options.width = DEFAULT_WIDTH;
     }
-    if (height !== null) {
+    if (height === undefined) {
       options.height = DEFAULT_HEIGHT;
     }
-    if (minFontSize !== null) {
+    if (minFontSize === undefined) {
       options.minFontSize = DEFAULT_MIN_FONT_SIZE;
     }
-    if (maxFontSize !== null) {
+    if (maxFontSize === undefined) {
       options.maxFontSize = DEFAULT_MAX_FONT_SIZE;
     }
-    if (textColor !== null) {
+    if (textColor === undefined) {
       options.textColor = DEFAULT_TEXT_COLOR;
     }
+    if (showTooltips === undefined) {
+      options.showTooltips = false;
+    }
+    console.log(showTooltips)
+    console.log(options);
     // add in tf normalization
     const allSum = d3.sum(words, term => parseInt(term.count, 10));
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
+    // create a rollover tooltip helper
+    const tooltipDiv = d3.select('body').append('div')
+      .attr('class', 'ordered-word-cloud-tooltip')
+      .style('opacity', 0);
     // start layout calculations
     const node = ReactFauxDOM.createElement('svg');
     const fullExtent = d3.extent(words, d => d.tfnorm);
@@ -100,7 +118,34 @@ class OrderedWordCloud extends React.Component {
         .append('text').classed('word', true).classed('left', true)
         .attr('font-size', d => this.fontSize(d, fullExtent, sizeRange))
         .text(d => d.term)
-        .attr('font-weight', 'bold');
+        .attr('font-weight', 'bold')
+        .on('mouseover', (d) => {
+          if (options.showTooltips) {
+            tooltipDiv.transition()
+              .duration(200)
+              .style('opacity', 0.9);
+            tooltipDiv.html(
+                formatMessage(localMessages.wordCloudStem, { stem: d.stem }) + '<br />' +
+                formatMessage(localMessages.worldCloudTerm, { term: d.term }) + '<br />' +
+                formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) }) + '<br />' +
+                formatMessage(localMessages.worldCloudTermFreq, { termFrequency: formatNumber(d.tfnorm, { maximumSignificantDigits: 4 }) })
+              )
+              .style('left', `${d3.event.pageX}px`)
+              .style('top', `${d3.event.pageY - 70}px`);
+          }
+        })
+        .on('mouseout', () => {
+          if (options.showTooltips) {
+            tooltipDiv.transition()
+              .duration(500)
+              .style('opacity', 0);
+          }
+        })
+        .on('click', (d) => {
+          if ((onWordClick !== null) && (onWordClick !== undefined)) {
+            onWordClick(d);
+          }
+        });
       // Layout
       y = 0;
       const leftHeight = this.listCloudLayout(wordNodes, innerWidth, fullExtent, sizeRange);
@@ -110,24 +155,6 @@ class OrderedWordCloud extends React.Component {
     if (y < options.height) {
       svg.attr('height', y);
     }
-    /* d3.selectAll('.word')
-        .on('mouseover', function () {
-            d3.select(this).attr('fill', that.config.linkColor)
-            .attr('cursor','pointer');
-        })
-        .on('mouseout', function () {
-            var color = '#000';
-            if (d3.select(this).classed('left')) {
-                color = that.leftModel.getColor();
-            }
-            if (d3.select(this).classed('right')) {
-                color = that.rightModel.getColor();
-            }
-            d3.select(this).attr('fill', color)
-            .attr('cursor','default');
-        });
-    d3.selectAll('.left.word')
-        .on('click', this.refineBothQueries);*/
     return node.toReact();
   }
 
@@ -142,6 +169,8 @@ OrderedWordCloud.propTypes = {
   textColor: React.PropTypes.string,
   onWordClick: React.PropTypes.func,
   linkColor: React.PropTypes.string,
+  showTooltips: React.PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
 };
 
-export default OrderedWordCloud;
+export default injectIntl(OrderedWordCloud);

@@ -70,8 +70,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(selectStory(ownProps.params.storiesId));    // save it to the state
-    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId)); // fetch the info we need
+    dispatch(selectStory(ownProps.params.storiesId));
+    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
   },
 });
 

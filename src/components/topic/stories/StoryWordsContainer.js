@@ -24,7 +24,7 @@ class StoryWordsContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.topWords} /></h2>
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
+        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} showTooltips={true} />
       </DataCard>
     );
   }
