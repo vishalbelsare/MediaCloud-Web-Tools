@@ -88,8 +88,6 @@ class OrderedWordCloud extends React.Component {
     if (showTooltips === undefined) {
       options.showTooltips = false;
     }
-    console.log(showTooltips)
-    console.log(options);
     // add in tf normalization
     const allSum = d3.sum(words, term => parseInt(term.count, 10));
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
