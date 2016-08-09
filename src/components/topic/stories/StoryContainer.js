@@ -26,7 +26,7 @@ const StoryContainer = (props) => {
         </Row>
         <Row>
           <Col lg={6} md={6} sm={12}>
-            <StoryDetails story={story} />
+            <StoryDetails topicId={topicId} story={story} />
           </Col>
           <Col lg={6} md={6} sm={12}>
             <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
