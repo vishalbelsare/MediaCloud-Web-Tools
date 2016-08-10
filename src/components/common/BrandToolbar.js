@@ -12,31 +12,29 @@ const BrandToolbar = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <div>
-              <ul>
-                <li className="dashboard">
-                  <a href="https://dashboard.mediameter.org/"
-                    title={formatMessage(messages.dashboardToolDescription)}
-                  >
-                    <FormattedMessage {...messages.dashboardToolShortName} />
-                  </a>
-                </li>
-                <li className="sources">
-                  <a href="https://sources.mediameter.org/"
-                    title={formatMessage(messages.sourcesToolDescription)}
-                  >
-                    <FormattedMessage {...messages.sourcesToolShortName} />
-                  </a>
-                </li>
-                <li className="topics">
-                  <a href="https://topics.mediameter.org/"
-                    title={formatMessage(messages.topicsToolDescription)}
-                  >
-                    <FormattedMessage {...messages.topicsToolShortName} />
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <ul>
+              <li className="dashboard">
+                <a href="https://dashboard.mediameter.org/"
+                  title={formatMessage(messages.dashboardToolDescription)}
+                >
+                  <FormattedMessage {...messages.dashboardToolShortName} />
+                </a>
+              </li>
+              <li className="sources">
+                <a href="https://sources.mediameter.org/"
+                  title={formatMessage(messages.sourcesToolDescription)}
+                >
+                  <FormattedMessage {...messages.sourcesToolShortName} />
+                </a>
+              </li>
+              <li className="topics">
+                <a href="https://topics.mediameter.org/"
+                  title={formatMessage(messages.topicsToolDescription)}
+                >
+                  <FormattedMessage {...messages.topicsToolShortName} />
+                </a>
+              </li>
+            </ul>
           </Col>
         </Row>
       </Grid>
