@@ -1,13 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LinkWithFilters from '../LinkWithFilters';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import LinkWithFilters from '../LinkWithFilters';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import messages from '../../../resources/messages';
 
 const ControlBar = (props) => {
-  const { title, topicId, location } = props;
+  const { title, topicId, location, snapshotId } = props;
+  let subControls = null;
+  if ((snapshotId !== null) && (snapshotId !== undefined)) {
+    subControls = <TimespanSelectorContainer topicId={topicId} location={location} snapshotId={snapshotId} />;
+  }
   return (
     <div className="controlbar">
       <div className="main">
@@ -25,7 +30,7 @@ const ControlBar = (props) => {
         </Grid>
       </div>
       <div className="sub">
-        <TimespanSelectorContainer topicId={topicId} location={location} />
+        {subControls}
       </div>
     </div>
   );
@@ -38,6 +43,17 @@ ControlBar.propTypes = {
   title: React.PropTypes.string,
   topicId: React.PropTypes.number,
   location: React.PropTypes.object.isRequired,
+  // from state
+  snapshotId: React.PropTypes.number,
 };
 
-export default injectIntl(ControlBar);
+const mapStateToProps = (state) => ({
+  snapshotId: state.topics.selected.filters.snapshotId,
+});
+
+export default
+  connect(mapStateToProps)(
+    injectIntl(
+      ControlBar
+    )
+  );
