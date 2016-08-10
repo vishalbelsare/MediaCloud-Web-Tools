@@ -115,7 +115,7 @@ def _stream_media_list_csv(filename, topics_id, **kwargs):
                 more_media = True
             else:
                 more_media = False
-        props = ['media_id', 'name', 'url', 'story_count', 
+        props = ['media_id', 'name', 'url', 'story_count',
                  'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
                  'outlink_count', 'bitly_click_count', 'facebook_share_count']
         return csv.stream_response(all_media, props, filename)
