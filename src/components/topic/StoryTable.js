@@ -36,7 +36,7 @@ class StoryTable extends React.Component {
     }
     return (
       <div>
-        <table>
+        <table width="100%">
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>
