@@ -43,7 +43,7 @@ const StoryDetails = (props) => {
       <p>
         <FormattedHTMLMessage {...localMessages.summary}
           values={ {
-            publishDate: formatDate(story.publish_date,
+            publishDate: formatDate(story.publishDateObj,
               { year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
             storyUrl: story.url,
             mediaName: story.media_name,
