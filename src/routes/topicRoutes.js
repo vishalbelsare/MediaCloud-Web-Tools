@@ -10,7 +10,7 @@ import InfluentialStoriesContainer from '../components/topic/stories/Influential
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
 import CreateFocusContainer from '../components/topic/foci/CreateFocusContainer';
-import requireAuth from './routes.js';
+import { requireAuth } from './routes.js';
 
 const topicRoutes = (
   <Route path="/">
