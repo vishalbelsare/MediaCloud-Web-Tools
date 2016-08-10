@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { Combobox } from 'react-widgets';
+/*import { Combobox } from 'react-widgets';
 import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from '../common/LoadingSpinner';
 import SourceSearchResult from './SourceSearchResult';
@@ -173,3 +173,4 @@ export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
 )(SourceSearchContainer));
+*/
