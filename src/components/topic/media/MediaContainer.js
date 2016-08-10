@@ -13,7 +13,7 @@ import MediaSentenceCountContainer from './MediaSentenceCountContainer';
 import MediaWordsContainer from './MediaWordsContainer';
 
 const localMessages = {
-  mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Details: {title}' },
+  mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Source Details: {title}' },
 };
 
 const MediaContainer = (props) => {
