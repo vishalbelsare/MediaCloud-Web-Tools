@@ -11,15 +11,15 @@ class CreateFocusControlBar extends React.Component {
       <div className="controlbar">
         <Grid>
           <Row>
-            <Col lg={1} md={1} sm={12} className="left">
+            <Col lg={2} md={2} sm={12} className="left">
               <LinkWithFilters to={`/topics/${topicId}/summary`}>
                 &larr; <FormattedMessage {...messages.backToTopic} />
               </LinkWithFilters>
             </Col>
-            <Col lg={10} md={10} sm={12} className="middle">
+            <Col lg={8} md={8} sm={12} className="middle">
               
             </Col>
-            <Col lg={1} md={1} sm={12}>
+            <Col lg={2} md={2} sm={12}>
               
             </Col>
           </Row>

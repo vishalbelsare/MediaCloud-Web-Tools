@@ -1,6 +1,10 @@
 
 {
 
+  brand: {
+    mastheadText: "html string to use in the header instead of the tool name",
+  },
+
 	user: {
 		fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
     isLoggedIn: bool,

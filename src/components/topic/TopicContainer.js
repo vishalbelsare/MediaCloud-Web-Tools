@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
+import { setBrandMastheadText } from '../../actions/brandActions';
 
 class TopicContainer extends React.Component {
   getStyles() {
@@ -60,7 +61,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
-    dispatch(fetchTopicSummary(ownProps.params.topicId));
+    dispatch(fetchTopicSummary(ownProps.params.topicId))
+      .then((topic) => dispatch(
+        setBrandMastheadText(`<span>Topic: <a href="/#/topics/${topic.topics_id}/summary">${topic.name}</a></span>`))
+      );
   },
 });
 

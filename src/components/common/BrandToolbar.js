@@ -28,7 +28,7 @@ const BrandToolbar = (props) => {
                 </a>
               </li>
               <li className="topics">
-                <a href="https://topics.mediameter.org/"
+                <a href="/"
                   title={formatMessage(messages.topicsToolDescription)}
                 >
                   <FormattedMessage {...messages.topicsToolShortName} />

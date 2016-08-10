@@ -13,7 +13,7 @@ const CreateFocusContainer = (props) => {
       <CreateFocusControlBar topicId={topicId} />
       <Grid>
         <Row>
-          <Col lg={1} md={1} sm={12}>
+          <Col lg={12} md={12} sm={12}>
             <h2><FormattedMessage {...messages.focusCreate1Title} /></h2>
             <p className="light">
               <FormattedMessage {...messages.focusCreate1About} />

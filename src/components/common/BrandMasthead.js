@@ -16,7 +16,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor } = this.props;
+    const { user, name, description, backgroundColor, mastheadText } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = {
       root: {
@@ -35,14 +35,15 @@ class BrandMasthead extends React.Component {
     } else {
       loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
     }
+    const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });
     return (
       <div className="branding-masthead" style={styles.root} >
         <Grid>
           <Row>
             <Col lg={6} md={6} sm={6}>
               <h1>
-                <a href="https://topics.mediameter.org"><img src={'/static/mediacloud-logo-green-2x.png'} width={65} height={65} /></a>
-                <strong>{name}</strong>
+                <a href="/"><img src={'/static/mediacloud-logo-green-2x.png'} width={65} height={65} /></a>
+                <strong dangerouslySetInnerHTML={createMastheadText()} />
               </h1>
             </Col>
             <Col lg={6} md={6} sm={6}>
@@ -69,6 +70,7 @@ BrandMasthead.propTypes = {
   backgroundColor: React.PropTypes.string.isRequired,
   lightColor: React.PropTypes.string.isRequired,
   intl: React.PropTypes.object.isRequired,
+  mastheadText: React.PropTypes.string,
 };
 
 BrandMasthead.contextTypes = {
@@ -77,6 +79,7 @@ BrandMasthead.contextTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  mastheadText: state.brand.mastheadText,
 });
 
 export default injectIntl(connect(mapStateToProps, null)(BrandMasthead));
