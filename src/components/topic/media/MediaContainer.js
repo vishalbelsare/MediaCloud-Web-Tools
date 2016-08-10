@@ -37,19 +37,23 @@ const MediaContainer = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col lg={6} md={6} sm={12}>
-            <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-          <Col lg={6} md={6} sm={12}>
+          <Col lg={12} md={12} sm={12}>
             <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />
           </Col>
         </Row>
         <Row>
-          <Col lg={6} md={6} sm={12}>
+          <Col lg={12} md={12} sm={12}>
             <MediaInlinkContainer topicId={topicId} mediaId={mediaId} />
           </Col>
-          <Col lg={6} md={6} sm={12}>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
             <MediaOutlinkContainer topicId={topicId} mediaId={mediaId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
           </Col>
         </Row>
       </Grid>
