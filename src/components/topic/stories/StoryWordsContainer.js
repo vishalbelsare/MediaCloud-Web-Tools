@@ -1,13 +1,13 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchStoryWords } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import messages from '../../../resources/messages';
-import { getBrandDarkColor } from '../../../styles/colors';
+import { fetchStoryWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
+import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 class StoryWordsContainer extends React.Component {
   downloadCsv = () => {
@@ -24,7 +24,7 @@ class StoryWordsContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...messages.topWords} /></h2>
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} showTooltips={true} />
+        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} showTooltips />
       </DataCard>
     );
   }

@@ -10,6 +10,7 @@ import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
 import MediaSentenceCountContainer from './MediaSentenceCountContainer';
+import MediaWordsContainer from './MediaWordsContainer';
 
 const localMessages = {
   mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Details: {title}' },
@@ -37,7 +38,7 @@ const MediaContainer = (props) => {
         </Row>
         <Row>
           <Col lg={6} md={6} sm={12}>
-            WORDCLOUD!
+            <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
           </Col>
           <Col lg={6} md={6} sm={12}>
             <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />

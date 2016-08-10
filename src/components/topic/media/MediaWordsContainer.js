@@ -3,13 +3,13 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import { fetchTopicTopWords } from '../../../actions/topicActions';
+import { fetchMediaWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
-class WordsSummaryContainer extends React.Component {
+class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
     if (nextProps.filters !== this.props.filters) {
@@ -17,9 +17,9 @@ class WordsSummaryContainer extends React.Component {
     }
   }
   downloadCsv = (event) => {
-    const { topicId, filters } = this.props;
+    const { topicId, mediaId, filters } = this.props;
     event.preventDefault();
-    const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/media/${mediaId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -37,7 +37,7 @@ class WordsSummaryContainer extends React.Component {
   }
 }
 
-WordsSummaryContainer.propTypes = {
+MediaWordsContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
@@ -52,25 +52,30 @@ WordsSummaryContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
-  words: state.topics.selected.summary.topWords.list,
+  fetchStatus: state.topics.selected.mediaSource.words.fetchStatus,
+  words: state.topics.selected.mediaSource.words.list,
   filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
-  },
   fetchData: (props) => {
-    dispatch(fetchTopicTopWords(props.topicId, props.filters.snapshotId, props.filters.timespanId));
+    dispatch(fetchMediaWords(ownProps.topicId, ownProps.mediaId, props.filters.snapshotId, props.filters.timespanId));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        WordsSummaryContainer
+        MediaWordsContainer
       )
     )
   );

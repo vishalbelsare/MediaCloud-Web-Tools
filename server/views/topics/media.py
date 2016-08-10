@@ -4,6 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, mc
+from server.cache import cache
 from server.views.topics import validated_sort
 import server.views.util.csv as csv
 from server.views.topics.sentences import split_sentence_count, stream_sentence_count_csv
@@ -120,3 +121,23 @@ def _stream_media_list_csv(filename, topics_id, **kwargs):
         return csv.stream_response(all_media, props, filename)
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
+
+@app.route('/api/topics/<topics_id>/media/<media_id>/words', methods=['GET'])
+#@flask_login.login_required
+def media_words(topics_id, media_id):
+    timespans_id = request.args.get('timespanId')
+    word_list = _media_words(topics_id, media_id, timespans_id)[:100]
+    return jsonify(word_list)
+
+@app.route('/api/topics/<topics_id>/media/<media_id>/words.csv', methods=['GET'])
+#@flask_login.login_required
+def media_words_csv(topics_id, media_id):
+    timespans_id = request.args.get('timespanId')
+    word_list = _media_words(topics_id, media_id, timespans_id)
+    props = ['term', 'stem', 'count']
+    return csv.stream_response(word_list, props, 'media-'+str(media_id)+'-words')
+
+@cache
+def _media_words(topics_id, media_id, timespans_id):
+    return mc.topicWordCount(topics_id, fq='media_id:'+media_id, timespans_id=timespans_id)
+

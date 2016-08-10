@@ -21,19 +21,21 @@ def story(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
 #@flask_login.login_required
 def story_words(topics_id, stories_id):
-    word_list = _story_words(topics_id, stories_id)
+    timespans_id = request.args.get('timespanId')
+    word_list = _story_words(topics_id, stories_id, timespans_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 #@flask_login.login_required
 def story_words_csv(topics_id, stories_id):
-    word_list = _story_words(topics_id, stories_id)
+    timespans_id = request.args.get('timespanId')
+    word_list = _story_words(topics_id, stories_id, timespans_id)
     props = ['term', 'stem', 'count']
     return csv.stream_response(word_list, props, 'story-'+str(stories_id)+'-words')
 
 @cache
-def _story_words(topics_id, stories_id):
-    return mc.wordCount('stories_id:'+stories_id)
+def _story_words(topics_id, stories_id, timespans_id):
+    return mc.topicWordCount(topics_id, fq='stories_id:'+stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])
 #@flask_login.login_required
