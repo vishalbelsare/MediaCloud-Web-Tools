@@ -11,7 +11,7 @@ from server.cache import cache
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story(topics_id, stories_id):
     story_info = mc.topicStoryList(topics_id, stories_id=stories_id)['stories'][0]
     story_info['media_name'] = mc.media(story_info['media_id'])['name']
@@ -19,14 +19,14 @@ def story(topics_id, stories_id):
     return jsonify(story_info)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_words(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     word_list = _story_words(topics_id, stories_id, timespans_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_words_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     word_list = _story_words(topics_id, stories_id, timespans_id)
@@ -38,33 +38,33 @@ def _story_words(topics_id, stories_id, timespans_id):
     return mc.topicWordCount(topics_id, fq='stories_id:'+stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_inlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     inlinks = mc.topicStoryList(topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_inlinks_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('story-'+stories_id+'-inlinks', topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_outlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     outlinks = mc.topicStoryList(topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(outlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def story_outlinks_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_stories(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id = request.args.get('snapshotId')
@@ -76,7 +76,7 @@ def topic_stories(topics_id):
     return jsonify(stories)
 
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_stories_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id = request.args.get('snapshotId')

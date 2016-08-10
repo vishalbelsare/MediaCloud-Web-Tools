@@ -13,7 +13,7 @@ from server.views.topics.stories import stream_story_list_csv
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/media', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_media(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id = request.args.get('snapshotId')
@@ -25,14 +25,14 @@ def topic_media(topics_id):
     return jsonify(media_list)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     media_info = mc.topicMediaList(topics_id, media_id=media_id, timespans_id=timespans_id)['media'][0]
     return jsonify(media_info)
 
 @app.route('/api/topics/<topics_id>/media.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id = request.args.get('snapshotId')
@@ -53,7 +53,7 @@ def topic_media_sentence_count_csv(topics_id, media_id):
         fq="media_id:"+media_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_stories(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
@@ -62,13 +62,13 @@ def media_stories(topics_id, media_id):
     return jsonify(stories)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_stories_csv(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('media-'+media_id+'-stories', topics_id, media_id=media_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/inlinks', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_inlinks(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
@@ -77,13 +77,13 @@ def media_inlinks(topics_id, media_id):
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/inlinks.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_inlinks_csv(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('media-'+media_id+'-inlinks', topics_id, link_to_media_id=media_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/outlinks', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_outlinks(topics_id, media_id):
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
@@ -92,7 +92,7 @@ def media_outlinks(topics_id, media_id):
     return jsonify(outlinks)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/outlinks.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_outlinks_csv(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('media-'+media_id+'-outlinks', topics_id, link_from_media_id=media_id, timespans_id=timespans_id)
@@ -123,14 +123,14 @@ def _stream_media_list_csv(filename, topics_id, **kwargs):
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/words', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_words(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     word_list = _media_words(topics_id, media_id, timespans_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/words.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_words_csv(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     word_list = _media_words(topics_id, media_id, timespans_id)

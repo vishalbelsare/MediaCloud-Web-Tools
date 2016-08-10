@@ -9,7 +9,7 @@ from server.cache import cache
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topic_id>/words', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_words(topic_id):
     snapshots_id = request.args.get('snapshotId')
     timespans_id = request.args.get('timespanId')
@@ -17,7 +17,7 @@ def topic_words(topic_id):
     return jsonify(response)
 
 @app.route('/api/topics/<topic_id>/words.csv', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def topic_words_csv(topic_id):
     snapshots_id = request.args.get('snapshotId')
     timespans_id = request.args.get('timespanId')

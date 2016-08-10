@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 @app.route('/api/sources/<str>/search', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def media_search(str):
     source_list = mc.mediaList(name_like=str)
     return jsonify({'results':source_list})
 
 @app.route('/api/sources/source/list', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_source_list ():
     source_list = _get_media_source_list()
     return jsonify({'results':source_list})
@@ -32,7 +32,7 @@ def _get_media_source_list():
 
 
 @app.route('/api/sources/collection/list', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def api_get_media_tag_list():
     tag_list = mc.tagList(tag_sets_id=5,rows=100) 
     #tag_list = sorted(tag_list, key=lambda ts: ts['label'])
@@ -41,7 +41,7 @@ def api_get_media_tag_list():
 
 
 @app.route('/api/sources/collection/<media_tag_id>/details')
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_tag_details(media_tag_id):
     info = _get_media_tag_details(media_tag_id)
     return jsonify({'results':info})
@@ -70,7 +70,7 @@ def _get_media_tag_details(media_tag_id):
     return info
 
 @app.route('/api/sources/media-source/<media_id>/details')
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_source_details(media_id):
     health = _get_media_source_health(media_id)
     info = {}
@@ -79,7 +79,7 @@ def api_media_source_details(media_id):
     return jsonify({'results':info})
 
 @app.route('/api/sources/collection/<media_tag_id>/sentences/count', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_tag_sentence_count(media_tag_id):
     info = {}
     info['sentenceCounts'] = _recent_sentence_counts( ['tags_id_media:'+str(media_tag_id)] )
@@ -87,7 +87,7 @@ def api_media_tag_sentence_count(media_tag_id):
 
 
 @app.route('/api/sources/media-source/<media_id>/sentences/count')
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_source_sentence_count(media_id):
     health = _get_media_source_health(media_id)
     info = {}
@@ -160,14 +160,14 @@ def _geotag_count(query):
     return res
 
 @app.route('/api/sources/media-source/<media_id>/geography')
-#@flask_login.login_required
+@flask_login.login_required
 def api_media_source_geography(media_id):
     info = {}
     info['geography'] = _geotag_count('media_id:'+str(media_id))
     return jsonify({'results':info})
 
 @app.route('/api/sources/media-tag/<media_tag_id>/geography')
-#@flask_login.login_required
+@flask_login.login_required
 def geo_geography(media_tag_id):
     info = {}
     info['geography'] = _geotag_count('tags_id_media:'+str(media_tag_id))
@@ -180,14 +180,14 @@ def _wordcount(query):
     return res
 
 @app.route('/api/sources/media-source/<media_id>/words')
-#@flask_login.login_required
+@flask_login.login_required
 def media_source_words(media_id):
     info = {}
     info['wordcounts'] = _wordcount('media_id:'+str(media_id))
     return jsonify({'results':info})
 
 @app.route('/api/sources/media-tag/<media_tag_id>/words')
-#@flask_login.login_required
+@flask_login.login_required
 def media_tag_words(media_tag_id):
     info = {}
     info['wordcounts'] = _wordcount('tags_id_media:'+str(media_tag_id))
