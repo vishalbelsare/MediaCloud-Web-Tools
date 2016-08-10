@@ -9,6 +9,7 @@ import MediaDetails from './MediaDetails';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
+import MediaSentenceCountContainer from './MediaSentenceCountContainer';
 
 const localMessages = {
   mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Details: {title}' },
@@ -29,6 +30,14 @@ const MediaContainer = (props) => {
         <Row>
           <Col lg={6} md={6} sm={12}>
             <MediaDetails media={media} />
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            WORDCLOUD!
           </Col>
           <Col lg={6} md={6} sm={12}>
             <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />
@@ -55,6 +64,7 @@ MediaContainer.propTypes = {
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
+  filters: React.PropTypes.object.isRequired,
   media: React.PropTypes.object.isRequired,
   mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
@@ -62,6 +72,7 @@ MediaContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+  filters: state.topics.selected.filters,
   fetchStatus: state.topics.selected.mediaSource.info.fetchStatus,
   mediaId: parseInt(ownProps.params.mediaId, 10),
   topicId: parseInt(ownProps.params.topicId, 10),

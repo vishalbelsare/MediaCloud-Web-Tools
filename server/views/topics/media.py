@@ -6,7 +6,7 @@ import flask_login
 from server import app, mc
 from server.views.topics import validated_sort
 import server.views.util.csv as csv
-from server.views.topics.sentences import split_sentence_count
+from server.views.topics.sentences import split_sentence_count, stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 
 logger = logging.getLogger(__name__)
@@ -43,6 +43,13 @@ def topic_media_sentence_count(topics_id, media_id):
     snapshots_id = request.args.get('snapshotId')
     timespans_id = request.args.get('timespanId')
     return jsonify(split_sentence_count(topics_id, snapshots_id, timespans_id, fq='media_id:'+media_id))
+
+@app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count.csv', methods=['GET'])
+def topic_media_sentence_count_csv(topics_id, media_id):
+    snapshots_id = request.args.get('snapshotId')
+    timespans_id = request.args.get('timespanId')
+    return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id, timespans_id,
+        fq="media_id:"+media_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
 #@flask_login.login_required

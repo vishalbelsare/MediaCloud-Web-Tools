@@ -39,6 +39,6 @@ def split_sentence_count(topics_id, snapshots_id, timespans_id, **kwargs):
 
 def stream_sentence_count_csv(filename, topics_id, snapshots_id, timespans_id, **kwargs):
     results = split_sentence_count(topics_id, snapshots_id, timespans_id, **kwargs)
-    clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems()]
+    clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems() if date not in ['gap','start','end']]
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, filename)

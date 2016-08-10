@@ -3,17 +3,17 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
+import { fetchMediaSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
+  title: { id: 'media.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
 };
 
-class SentenceCountSummaryContainer extends React.Component {
+class MediaSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
     if (nextProps.filters !== this.props.filters) {
@@ -29,9 +29,9 @@ class SentenceCountSummaryContainer extends React.Component {
     return styles;
   }
   downloadCsv = (event) => {
-    const { topicId, filters } = this.props;
+    const { topicId, mediaId, filters } = this.props;
     event.preventDefault();
-    const url = `/api/topics/${topicId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/media/${mediaId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -45,20 +45,19 @@ class SentenceCountSummaryContainer extends React.Component {
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <div style={styles.clearFix} />
-        <AttentionOverTimeChart total={total} data={counts} height={200}
-          lineColor={ getBrandDarkColor() }
-        />
+        <AttentionOverTimeChart total={total} data={counts} height={200} lineColor={ getBrandDarkColor() } />
       </DataCard>
     );
   }
 }
 
-SentenceCountSummaryContainer.propTypes = {
+MediaSentenceCountContainer.propTypes = {
   // passed in
   topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  mediaId: React.PropTypes.number.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
+  filters: React.PropTypes.object.isRequired,
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
   // from dispath
@@ -69,25 +68,32 @@ SentenceCountSummaryContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.topics.selected.summary.sentenceCount.fetchStatus,
-  total: state.topics.selected.summary.sentenceCount.total,
-  counts: state.topics.selected.summary.sentenceCount.counts,
+  fetchStatus: state.topics.selected.mediaSource.sentenceCount.fetchStatus,
+  total: state.topics.selected.mediaSource.sentenceCount.total,
+  counts: state.topics.selected.mediaSource.sentenceCount.counts,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchTopicSentenceCounts(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
-  },
-  fetchData: (props) => {
-    dispatch(fetchTopicSentenceCounts(props.topicId, props.filters.snapshotId, props.filters.timespanId));
+  fetchData: (stateProps) => {
+    dispatch(fetchMediaSentenceCounts(ownProps.topicId, ownProps.mediaId, 
+      stateProps.filters.snapshotId, stateProps.filters.timespanId));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        SentenceCountSummaryContainer
+        MediaSentenceCountContainer
       )
     )
   );
