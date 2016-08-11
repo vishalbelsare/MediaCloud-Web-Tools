@@ -64,6 +64,7 @@ class FocalTechniqueSelector extends React.Component {
               nameMsg={ localMessages.referenceName }
               descriptionMsg={ localMessages.referenceDescription }
               disabled
+              comingSoon
             />
           </Col>
           <Col lg={2} md={2} sm={6}>
@@ -75,6 +76,7 @@ class FocalTechniqueSelector extends React.Component {
               nameMsg={ localMessages.manualName }
               descriptionMsg={ localMessages.manualDescription }
               disabled
+              comingSoon
             />
           </Col>
           <Col lg={2} md={2} sm={6}>
@@ -86,6 +88,7 @@ class FocalTechniqueSelector extends React.Component {
               nameMsg={ localMessages.automagicName }
               descriptionMsg={ localMessages.automagicDescription }
               disabled
+              comingSoon
             />
           </Col>
           <Col lg={2} md={2} sm={0} />
