@@ -17,15 +17,15 @@ class MediaInlinksContainer extends React.Component {
       fetchData(nextProps);
     }
   }
+  onChangeSort = (newSort) => {
+    const { sortData } = this.props;
+    sortData(newSort);
+  }
   downloadCsv = (event) => {
     const { mediaId, topicId, filters } = this.props;
     event.preventDefault();
     const url = `/api/topics/${topicId}/media/${mediaId}/inlinks.csv?timespanId=${filters.timespanId}`;
     window.location = url;
-  }
-  onChangeSort = (newSort) => {
-    const { sortData } = this.props;
-    sortData(newSort);
   }
   render() {
     const { inlinkedStories, topicId } = this.props;
@@ -69,8 +69,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
-    dispatch(fetchMediaInlinks(ownProps.topicId, ownProps.mediaId, 
-      stateProps.filters.snapshotId, stateProps.filters.timespanId, stateProps.sort, 
+    dispatch(fetchMediaInlinks(ownProps.topicId, ownProps.mediaId,
+      stateProps.filters.snapshotId, stateProps.filters.timespanId, stateProps.sort,
       STORIES_TO_SHOW)); // fetch the info we need
   },
   sortData: (sort) => {

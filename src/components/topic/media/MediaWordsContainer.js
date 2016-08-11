@@ -41,6 +41,7 @@ MediaWordsContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
+  mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
   // from dispatch
