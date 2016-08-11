@@ -42,24 +42,8 @@ export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }
 
-export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, linkId) {
-  const params = {};
-  if (snapshotId !== null) {
-    params.snapshotId = snapshotId;
-  }
-  if (timespanId !== null) {
-    params.timespanId = timespanId;
-  }
-  if (sort !== null) {
-    params.sort = sort;
-  }
-  if ((limit !== null) && (limit !== undefined)) {
-    params.limit = limit;
-  }
-  if ((linkId !== null) && (linkId !== undefined)) {
-    params.linkId = linkId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, linkId, q) {
+  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit, linkId, q });
   return createApiPromise(`/api/topics/${topicId}/stories?${paramStr}`);
 }
 

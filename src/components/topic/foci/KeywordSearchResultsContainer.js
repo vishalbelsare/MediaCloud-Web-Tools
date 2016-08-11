@@ -1,0 +1,86 @@
+import React from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { fetchCreateFocusKeywordStories } from '../../../actions/topicActions';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import composeAsyncContainer from '../../common/AsyncContainer';
+import StoryTable from '../StoryTable';
+
+const STORIES_TO_SHOW = 20;
+
+const localMessages = {
+  title: { id: 'focus.create.keyword.results.title', defaultMessage: 'Some Matching Stories' },
+  about: { id: 'focus.create.keyword.results.about',
+    defaultMessage: 'Here is a preview of the top stores in the Timespan of the Topic you are investigating.  Look over these resuls to make sure they are the types of stories you are hoping this Focus will focus in on.' },
+};
+
+class KeywordSearchResultsContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
+    if ((nextProps.keywords !== this.props.keywords)) {
+      fetchData(nextProps);
+    }
+  }
+  render() {
+    const { stories, topicId } = this.props;
+    return (
+      <Row>
+        <Col lg={10} md={10} sm={12}>
+          <h3><FormattedMessage {...localMessages.title} /></h3>
+          <StoryTable stories={stories} topicId={topicId} />
+        </Col>
+        <Col lg={2} md={2} sm={12}>
+          <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>
+        </Col>
+      </Row>
+    );
+  }
+}
+
+KeywordSearchResultsContainer.propTypes = {
+  // from context
+  intl: React.PropTypes.object.isRequired,
+  // from parent
+  keywords: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  // from mergeProps
+  asyncFetch: React.PropTypes.func.isRequired,
+  // from fetchData
+  fetchData: React.PropTypes.func.isRequired,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  stories: React.PropTypes.array.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  fetchStatus: state.topics.selected.focalSets.create.matchingStories.fetchStatus,
+  filters: state.topics.selected.filters,
+  stories: state.topics.selected.focalSets.create.matchingStories.stories,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (stateProps) => {
+    // topicId, snapshotId, timespanId, sort, limit, linkId, q
+    dispatch(fetchCreateFocusKeywordStories(ownProps.topicId,
+      stateProps.filters.snapshotId, stateProps.filters.timespanId,
+      null, STORIES_TO_SHOW, null, stateProps.keywords));
+  },
+});
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps);
+    },
+  });
+}
+
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeAsyncContainer(
+        KeywordSearchResultsContainer
+      )
+    )
+  );

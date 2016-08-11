@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import list from './list';
-import create from './create';
+import create from './create/create';
 
 const focalSetsReducer = combineReducers({
   list,

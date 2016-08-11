@@ -38,6 +38,8 @@ export const FETCH_MEDIA_WORDS = 'FETCH_MEDIA_WORDS';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const SET_NEW_FOCUS_PROPERTIES = 'SET_NEW_FOCUS_PROPERTIES';
+export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
+export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -115,4 +117,9 @@ export const fetchMediaWords = createAsyncAction(FETCH_MEDIA_WORDS, api.mediaWor
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
 export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);
 
+// pass in array of attributes for the new focus
 export const setNewFocusProperties = createAction(SET_NEW_FOCUS_PROPERTIES, props => props);
+// pass in the number of the step to go to
+export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);
+// pass in topicId, snapshotId, timespanId, q
+export const fetchCreateFocusKeywordStories = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_STORIES, api.topicTopStories);

@@ -71,8 +71,9 @@ def topic_stories(topics_id):
     timespans_id = request.args.get('timespanId')
     limit = request.args.get('limit')
     link_id = request.args.get('linkId')
+    q = request.args.get('q')
     stories = mc.topicStoryList(topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
-        sort=sort, limit=limit, link_id=link_id)
+        sort=sort, limit=limit, link_id=link_id, q=q)
     return jsonify(stories)
 
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])

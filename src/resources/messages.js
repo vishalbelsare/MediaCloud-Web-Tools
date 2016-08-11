@@ -26,7 +26,6 @@ const messages = {
   snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a difference Snapshot' },
 
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
-  sourceQuery: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
 
   timespan: { id: 'common.timespan', defaultMessage: 'Timespan' },
   collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },
@@ -55,6 +54,9 @@ const messages = {
 
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
+  search: { id: 'search', defaultMessage: 'Search' },
+  searchByKeywords: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
+  next: { id: 'search', defaultMessage: 'Next' },
 
   download: { id: 'download', defaultMessage: 'Download' },
   explore: { id: 'explore', defaultMessage: 'Explore More' },

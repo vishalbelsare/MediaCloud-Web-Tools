@@ -1,15 +1,16 @@
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TextField from 'material-ui/TextField';
-import { setNewFocusProperties } from '../../../actions/topicActions';
+import { setNewFocusProperties, goToCreateFocusStep } from '../../../actions/topicActions';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import FocalSetSelector from './FocalSetSelector';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetSelector';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../lib/focalTechniques';
-import RaisedButton from 'material-ui/RaisedButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
@@ -21,7 +22,7 @@ const localMessages = {
   focusDescription: { id: 'focus.description', defaultMessage: 'Focus Description' },
 };
 
-class CreateFocusContainer extends React.Component {
+class CreateFocusSetupContainer extends React.Component {
 
   handleFocalSetSelected = (focalSetId) => {
     const { setProperties } = this.props;
@@ -41,7 +42,16 @@ class CreateFocusContainer extends React.Component {
       if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
         let focalSetContent = null;
         if (properties.focalSetId < 0) {
-          focalSetContent = <CreateFocalSetForm />;
+          focalSetContent = (
+            <div>
+              <CreateFocalSetForm />
+              <Row>
+                <Col lg={12} md={12} sm={12} >
+                  <RaisedButton type="submit" label={formatMessage(messages.next)} primary />
+                </Col>
+              </Row>
+            </div>
+          );
         }
         step2Content = (
           <div>
@@ -76,11 +86,6 @@ class CreateFocusContainer extends React.Component {
               onSelected={this.handleFocalSetSelected}
             />
             { focalSetContent }
-            <Row>
-              <Col lg={12} md={12} sm={12} >
-                <RaisedButton type="submit" label="Next" primary />
-              </Col>
-            </Row>
           </div>
         );
       }
@@ -107,7 +112,7 @@ class CreateFocusContainer extends React.Component {
 
 }
 
-CreateFocusContainer.propTypes = {
+CreateFocusSetupContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   // form context
@@ -135,6 +140,9 @@ const mapDispatchToProps = (dispatch) => ({
   setProperties: (properties) => {
     dispatch(setNewFocusProperties(properties));
   },
+  goToStep: (step) => {
+    dispatch(goToCreateFocusStep(step));
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -150,6 +158,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         focusProps.focalSetDescription = stateProps.formData.focalSetDescription.value;
       }
       dispatchProps.setProperties(focusProps);
+      dispatchProps.goToStep(1);
     },
   });
 }
@@ -172,6 +181,6 @@ const reduxFormConfig = {
 export default
   reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps, mergeProps)(
     injectIntl(
-      CreateFocusContainer
+      CreateFocusSetupContainer
     )
   );
