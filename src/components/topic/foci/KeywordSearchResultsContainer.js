@@ -15,12 +15,6 @@ const localMessages = {
 };
 
 class KeywordSearchResultsContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if ((nextProps.keywords !== this.props.keywords)) {
-      fetchData(nextProps);
-    }
-  }
   render() {
     const { stories, topicId } = this.props;
     return (
@@ -64,7 +58,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     // topicId, snapshotId, timespanId, sort, limit, linkId, q
     dispatch(fetchCreateFocusKeywordStories(ownProps.topicId,
       stateProps.filters.snapshotId, stateProps.filters.timespanId,
-      null, STORIES_TO_SHOW, null, stateProps.keywords));
+      null, STORIES_TO_SHOW, null, ownProps.keywords));
   },
 });
 
