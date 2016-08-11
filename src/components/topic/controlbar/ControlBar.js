@@ -14,7 +14,7 @@ const ControlBar = (props) => {
     subControls = <TimespanSelectorContainer topicId={topicId} location={location} snapshotId={snapshotId} />;
   }
   return (
-    <div className="controlbar">
+    <div className="controlbar controlbar-topic">
       <div className="main">
         <Grid>
           <Row>

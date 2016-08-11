@@ -10,5 +10,6 @@
   "rules": {
     "max-len": 0,
     "no-case-declarations": 0,
+    "react/jsx-filename-extension": 0,
  }
 }

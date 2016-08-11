@@ -170,3 +170,8 @@ export function mediaWords(topicId, mediaId, snapshotId, timespanId) {
   const paramStr = generateParamStr({ snapshotId, timespanId });
   return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words?${paramStr}`);
 }
+
+export function topicFocalSetsList(topicId, snapshotId) {
+  const paramStr = generateParamStr({ snapshotId });
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/list?${paramStr}`);
+}

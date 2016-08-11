@@ -25,7 +25,7 @@ const LoginFormComponent = (props) => {
         value={ (location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
       />
       <br />
-      <RaisedButton type="submit" label="Login" primary disabled={fetchStatus==fetchConstants.FETCH_ONGOING} />
+      <RaisedButton type="submit" label="Login" primary disabled={fetchStatus === fetchConstants.FETCH_ONGOING} />
     </form>
   );
 };

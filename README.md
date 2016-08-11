@@ -23,6 +23,12 @@ Node and npm:
 MongoDB:
 [Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`
  
++++ Updating npm depedencies
+
+First make sure you have npm-check-updates installed: `npm install -g npm-check-updates`.
+Then to update the dependencies in our package.json, run `npm-check-updates -u`.
+And then do a regular `npm install` to test them all out.
+
 Configuration
 ------------- 
 

@@ -46,9 +46,6 @@ const messages = {
 
   focus: { id: 'focus', defaultMessage: 'Focus' },
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Focus' },
-  focusCreate1Title: { id: 'focusCreate1Title', defaultMessage: 'Step 1: Setup your focus' },
-  focusCreate1About: { id: 'focusCreate1About', defaultMessage: 'Creating a Focus helps you filter stories in useful ways within your Topic. Foci capture different slices of the conversations within your Topic for the purposes of comparing them within a Focal Set. A Focal Set is a set of Foci that you can compare to each other.' },
-  pickFocalSet: { id: 'pickFocalSet', defaultMessage: 'Pick an existing Focal Set' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
 
   story: { id: 'story', defaultMessage: 'Story' },

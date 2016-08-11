@@ -46,14 +46,14 @@
           sort: [ social | inlink ]
           continuation_id: number,
           stories: // list of JSON story objects,
-          timeslice: // JSON object about timespan,
+          timespan: // JSON object about timespan,
         },
         topMedia: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           sort: [ social | inlink ]
           continuation_id: number,
           stories: // list of JSON story objects,
-          timeslice: // JSON object about timespan,
+          timespan: // JSON object about timespan,
         },
         topWords: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
@@ -74,17 +74,17 @@
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         continuation_id: number,
         media: // list of JSON story objects,
-        timeslice: // JSON object about timespan,
+        timespan: // JSON object about timespan,
       },
       stories: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         continuation_id: number,
         stories: // list of JSON story objects,
-        timeslice: // JSON object about timespan,
+        timespan: // JSON object about timespan,
       }
       story: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
-        story: // JSON object about the story
+        info: { // JSON object about the story },
         words: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           list: // list of JSON objects
@@ -101,6 +101,20 @@
       mediaSource: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         media: // JSON object about the story
+      },
+      focalSets: {
+        list: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: [ array of json focalSet objects },
+        },
+        create: {
+          currentStep: [1|2|3|4],
+          properties: {
+            name: "string",
+            focalSetId: number,
+            focalTechnique: "string",
+          },
+        }
       }
     },
 sources: {

@@ -7,35 +7,34 @@ export default class Selector extends React.Component {
   handleChange = (event, index, value) => {
     const { onSelectionChanged } = this.props;
     if (onSelectionChanged !== undefined) {
-      onSelectionChanged(value);
+      onSelectionChanged(index, value);
     }
   }
 
   render() {
-    const { selectedId, disabled } = this.props;
+    const { selectedValue, disabled, options } = this.props;
     let isDisabled = disabled;
-    let idToSelect = selectedId;
-    if (idToSelect === undefined) idToSelect = 1;
+    let valueToSelect = selectedValue;
+    // if (idToSelect === undefined) idToSelect = options;
     if (isDisabled === undefined) isDisabled = false;
     return (
       <SelectField
-        value={selectedId}
+        value={valueToSelect}
         disabled={isDisabled}
         autoWidth
         onChange={this.handleChange}
       >
-        <MenuItem value={1} primaryText="Never" />
-        <MenuItem value={2} primaryText="Every Night" />
-        <MenuItem value={3} primaryText="Weeknights" />
-        <MenuItem value={4} primaryText="Weekends" />
-        <MenuItem value={5} primaryText="Weekly" />
+        {options.map(option =>
+          <MenuItem key={option.value} value={option.value} primaryText={option.name} />
+        )}
       </SelectField>
     );
   }
 }
 
 Selector.propTypes = {
-  selectedId: React.PropTypes.number,
+  options: React.PropTypes.array.isRequired,
+  selectedValue: React.PropTypes.number,
   disabled: React.PropTypes.bool,
   onSelectionChanged: React.PropTypes.function,
 };

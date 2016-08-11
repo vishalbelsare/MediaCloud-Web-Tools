@@ -14,6 +14,7 @@ export const SORT_TOPIC_TOP_MEDIA = 'SORT_TOPIC_TOP_MEDIA';
 export const FETCH_TOPIC_TOP_WORDS = 'FETCH_TOPIC_TOP_WORDS';
 export const FETCH_TOPIC_SNAPSHOTS_LIST = 'FETCH_TOPIC_SNAPSHOTS_LIST';
 export const FETCH_TOPIC_TIMESPANS_LIST = 'FETCH_TOPIC_TIMESPANS_LIST';
+export const FETCH_TOPIC_FOCAL_SETS_LIST = 'FETCH_TOPIC_FOCAL_SETS_LIST';
 export const FETCH_TOPIC_SENTENCE_COUNT = 'FETCH_TOPIC_SENTENCE_COUNT';
 export const FETCH_TOPIC_INFLUENTIAL_MEDIA = 'FETCH_TOPIC_INFLUENTIAL_MEDIA';
 export const SORT_TOPIC_INFLUENTIAL_MEDIA = 'SORT_TOPIC_INFLUENTIAL_MEDIA';
@@ -36,6 +37,7 @@ export const SORT_MEDIA_OUTLINKS = 'SORT_MEDIA_OUTLINKS';
 export const FETCH_MEDIA_WORDS = 'FETCH_MEDIA_WORDS';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
+export const SET_NEW_FOCUS_PROPERTIES = 'SET_NEW_FOCUS_PROPERTIES';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -48,6 +50,8 @@ export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_L
 export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
 // pass in topicId and snapshotId
 export const fetchTopicTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicTimespansList);
+// pass in topicId and snapshotId
+export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
 // pass in topicId
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
 
@@ -110,3 +114,5 @@ export const fetchMediaWords = createAsyncAction(FETCH_MEDIA_WORDS, api.mediaWor
 
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
 export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);
+
+export const setNewFocusProperties = createAction(SET_NEW_FOCUS_PROPERTIES, props => props);

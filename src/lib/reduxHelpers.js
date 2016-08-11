@@ -52,7 +52,7 @@ export function createReducer(handlers) {
     if (action.type in actionLookup) {
       return Object.assign({}, state, {
         ...state,
-        ...actionLookup[action.type](action.payload),
+        ...actionLookup[action.type](action.payload, state),
       });
     }
     return state;

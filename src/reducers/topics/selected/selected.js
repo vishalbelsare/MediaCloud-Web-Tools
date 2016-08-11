@@ -9,6 +9,7 @@ import media from './media';
 import mediaSource from './mediaSource/mediaSource';
 import stories from './stories';
 import story from './story/story';
+import focalSets from './focalSets/focalSets';
 
 const INITIAL_STATE = null;
 
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   mediaSource,
   stories,
   story,
+  focalSets,
 });
 
 export default rootReducer;
