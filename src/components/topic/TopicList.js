@@ -6,11 +6,19 @@ import DataCard from '../common/DataCard';
 
 const TopicListItem = (props) => {
   const { topic } = props;
+  const disable = (topic.state !== 'ready');
+  let title = null;
+  if (disable) {
+    title = topic.name;
+  } else {
+    title = <Link to={`/topics/${topic.topics_id}/summary`}>{topic.name}</Link>;
+  }
   return (
     <Col xs={12} sm={6} md={3} lg={3}>
-      <DataCard>
-        <h3><Link to={`/topics/${topic.topics_id}/summary`}>{topic.name}</Link></h3>
-        <p><small>{topic.description}</small></p>
+      <DataCard disabled={disable}>
+        <h3>{title}</h3>
+        <p><i>{topic.description}</i></p>
+        <p><small>{topic.state}</small></p>
       </DataCard>
     </Col>
   );

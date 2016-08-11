@@ -20,9 +20,13 @@
     font-size: 1.1em;
   }
 
-}
+  &.disabled {
+    color: #cccccc;
+  }
 
-.datacard-unbordered {
-  border: 0px;
-  padding: 0px;
+  &.unbordered {
+    border: 0px;
+    padding: 0px;
+  }
+
 }

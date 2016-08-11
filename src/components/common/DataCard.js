@@ -1,14 +1,12 @@
 import React from 'react';
 
 class DataCard extends React.Component {
-  isBordered = () => {
-    const { border } = this.props;
-    return (border !== false);
-  }
   render() {
-    const { children } = this.props;
-    const unbordered = (this.isBordered()) ? '' : 'datacard-unbordered';
-    const classes = `datacard ${unbordered}`;
+    const { children, border, disabled } = this.props;
+    const unborderedClass = (border === false) ? 'unbordered' : '' ;
+    const disabledClass = (disabled === true) ? 'disabled' : '';
+    const rootClasses = `${unborderedClass} ${disabledClass}`;
+    const classes = `datacard ${rootClasses}`;
     return (
       <div className={classes}>
         {children}
@@ -20,8 +18,8 @@ class DataCard extends React.Component {
 DataCard.propTypes = {
   // from parent
   children: React.PropTypes.node.isRequired,
-  // from params
   border: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
 };
 
 export default DataCard;
