@@ -1,10 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchCreateFocusKeywordStories } from '../../../actions/topicActions';
+import { fetchCreateFocusKeywordStories } from '../../../../actions/topicActions';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import StoryTable from '../StoryTable';
+import composeAsyncContainer from '../../../common/AsyncContainer';
+import StoryTable from '../../StoryTable';
 
 const STORIES_TO_SHOW = 20;
 
@@ -15,6 +15,10 @@ const localMessages = {
 };
 
 class KeywordSearchResultsContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
+    fetchData(nextProps);
+  }
   render() {
     const { stories, topicId } = this.props;
     return (
