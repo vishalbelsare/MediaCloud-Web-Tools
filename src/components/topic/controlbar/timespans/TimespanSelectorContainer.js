@@ -74,10 +74,10 @@ TimespanSelectorContainer.propTypes = {
 };
 
 // helper to update the url and fire off event
-function updateTimespan(dispatch, location, timespanId) {
+function updateTimespan(dispatch, location, snapshotId, timespanId) {
   const newLocation = Object.assign({}, location, {
     query: {
-      ...location.query,
+      snapshotId,
       timespanId,
     },
   });
@@ -106,12 +106,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((response) => {
         if (timespanId === null || isNaN(timespanId)) {
           const defaultTimespanId = response.list[0].timespans_id;
-          updateTimespan(dispatch, ownProps.location, defaultTimespanId);
+          const snapshotId = response.list[0].snapshots_id;
+          updateTimespan(dispatch, ownProps.location, snapshotId, defaultTimespanId);
         }
       });
   },
-  onTimespanSelected: (timespanId) => {
-    updateTimespan(dispatch, ownProps.location, timespanId);
+  onTimespanSelected: (timespan) => {
+    updateTimespan(dispatch, ownProps.location, timespan.snapshots_id, timespan.timespans_id);
   },
 });
 

@@ -14,28 +14,6 @@ class SnapshotSelector extends React.Component {
     };
   }
 
-  getStyles() {
-    const styles = {
-      root: {
-        color: '#ffffff',
-        display: 'block',
-        paddingLeft: 20,
-        backgroundColor: '#303030',
-      },
-      label: {
-        fontSize: 13,
-        lineHeight: '48px',
-        display: 'inline-block',
-        verticalAlign: 'center',
-      },
-      popover: {
-        height: 300,
-        overflowY: 'scroll',
-      },
-    };
-    return styles;
-  }
-
   handlePopupOpenClick = (event) => {
     event.preventDefault();
     this.setState({
@@ -60,7 +38,6 @@ class SnapshotSelector extends React.Component {
     const { snapshots, selectedId } = this.props;
     const { formatMessage } = this.props.intl;
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
-    const styles = this.getStyles();
     // default to select first if you need to
     let selected = null;
     for (const snapshot in snapshots) {
@@ -73,8 +50,8 @@ class SnapshotSelector extends React.Component {
       selected = snapshots[0];
     }
     return (
-      <div style={styles.root}>
-        <div style={styles.label}>
+      <div className="snapshot-selector">
+        <div className="label">
           {selected.snapshot_date.substr(0, 16)}
         </div>
         <IconButton
@@ -91,7 +68,7 @@ class SnapshotSelector extends React.Component {
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={this.handlePopupRequestClose}
           animation={PopoverAnimationVertical}
-          style={styles.popover}
+          className="popup-list"
         >
           {snapshots.map(snapshot =>
             <SnapshotListItem key={snapshot.snapshots_id} snapshot={snapshot}

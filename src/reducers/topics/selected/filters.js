@@ -8,6 +8,7 @@ const info = createReducer({
   },
   TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
     snapshotId: parseInt(payload, 10),
+    timespanId: null,
   }),
   TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
     timespanId: parseInt(payload, 10),

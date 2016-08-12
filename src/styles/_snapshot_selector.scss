@@ -1,0 +1,36 @@
+
+.snapshot-selector {
+  
+  color: #ffffff;
+  display: block;
+  padding-left: 20px;
+  background-color: #303030;
+
+  .label {
+    font-size: 13px;
+    line-height: 48px;
+    display: inline-block;
+    vertical-align: center;
+  }
+
+  .popup-list {
+    max-height: 300;
+    overflow-y: scroll;
+  }
+
+}
+
+.snapshot-item {
+  padding: 10px;
+  background-color: #303030;
+  border-bottom: 1px solid #666666;
+  color: #ffffff;
+  font-size: 13px;
+  cursor: pointer;
+
+  &.disabled {
+    color: #999999;
+    cursor: default;
+  }
+
+}

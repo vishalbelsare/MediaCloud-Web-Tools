@@ -42,7 +42,7 @@ class TimespanExpanded extends React.Component {
 
   fireTimespanSelected = (timespan) => {
     const { onTimespanSelected } = this.props;
-    onTimespanSelected(timespan.timespans_id);
+    onTimespanSelected(timespan);
   }
 
   render() {

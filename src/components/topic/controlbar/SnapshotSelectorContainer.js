@@ -67,6 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(fetchTopicSnapshotsList(topicId))
         .then((response) => {
           if (snapshotId === null) {
+            // default to first snapshot (ie. latest) if none is specified
             const newSnapshotId = response.list[0].snapshots_id;
             const newLocation = filteredLocation(ownProps.location, newSnapshotId, null);
             dispatch(push(newLocation));
