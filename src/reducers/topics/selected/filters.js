@@ -5,10 +5,12 @@ const info = createReducer({
   initialState: {
     snapshotId: null,
     timespanId: null,
+    fociId: null,
   },
   TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
     snapshotId: parseInt(payload, 10),
     timespanId: null,
+    fociId: null,
   }),
   TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
     timespanId: parseInt(payload, 10),

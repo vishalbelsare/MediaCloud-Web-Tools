@@ -104,6 +104,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = {
       snapshotId: props.filters.snapshotId,
       timespanId: props.filters.timespanId,
+      fociId: props.filters.fociId,
       sort: props.sort,
       limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
       linkId,
@@ -117,6 +118,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = {
       snapshotId: props.filters.snapshotId,
       timespanId: props.filters.timespanId,
+      fociId: props.filters.fociId,
       sort: props.sort,
       limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
     };

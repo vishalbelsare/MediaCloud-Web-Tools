@@ -67,6 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = {
       snapshotId: ownProps.filters.snapshotId,
       timespanId: ownProps.filters.timespanId,
+      fociId: ownProps.filters.fociId,
       sort: ownProps.sort,
       limit: NUM_TO_SHOW,
     };
@@ -76,6 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = {
       snapshotId: props.filters.snapshotId,
       timespanId: props.filters.timespanId,
+      fociId: props.filters.fociId,
       sort: props.sort,
       limit: NUM_TO_SHOW,
     };
