@@ -59,7 +59,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
+    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
   },
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, props.filters.snapshotId, props.filters.timespanId));

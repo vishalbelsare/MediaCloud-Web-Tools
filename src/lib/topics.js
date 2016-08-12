@@ -66,10 +66,8 @@ export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, link
   return createApiPromise(`/api/topics/${topicId}/media?${paramStr}`);
 }
 
-export function topicTopWords(topicId, snapshotId, timespanId) {
-  const params = {};
-  const paramStr = generateParamStr({ snapshotId, timespanId });
-  return createApiPromise(`/api/topics/${topicId}/words?${paramStr}`);
+export function topicTopWords(topicId, params) {
+  return createApiPromise(`/api/topics/${topicId}/words`, params);
 }
 
 export function topicSnapshotsList(topicId) {
