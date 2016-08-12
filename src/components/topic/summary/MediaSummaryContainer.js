@@ -66,21 +66,31 @@ const mapStateToProps = (state) => ({
   media: state.topics.selected.summary.topMedia.media,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchTopicTopMedia(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId, ownProps.sort, NUM_TO_SHOW));
-  },
+const mapDispatchToProps = (dispatch) => ({
   fetchData: (props) => {
-    dispatch(fetchTopicTopMedia(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort, NUM_TO_SHOW));
+    const params = {
+      ...props.filters,
+      sort: props.sort,
+      limit: NUM_TO_SHOW,
+    };
+    dispatch(fetchTopicTopMedia(props.topicId, params));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopMedia(sort));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         MediaSummaryContainer
       )

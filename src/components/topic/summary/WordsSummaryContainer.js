@@ -57,18 +57,23 @@ const mapStateToProps = (state) => ({
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
-  },
+const mapDispatchToProps = (dispatch) => ({
   fetchData: (props) => {
-    dispatch(fetchTopicTopWords(props.topicId, props.filters.snapshotId, props.filters.timespanId));
+    dispatch(fetchTopicTopWords(props.topicId, props.filters));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         WordsSummaryContainer
       )

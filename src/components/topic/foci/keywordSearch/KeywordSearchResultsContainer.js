@@ -61,9 +61,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
     // topicId, snapshotId, timespanId, sort, limit, linkId, q
     const params = {
-      snapshotId: stateProps.filters.snapshotId,
-      timespanId: stateProps.filters.timespanId,
-      fociId: stateProps.filters.fociId,
+      ...stateProps.filters,
       limit: STORIES_TO_SHOW,
       keywords: ownProps.keywords,
     };

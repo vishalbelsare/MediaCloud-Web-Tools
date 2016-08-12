@@ -62,22 +62,10 @@ const mapStateToProps = (state) => ({
   stories: state.topics.selected.summary.topStories.stories,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    const params = {
-      snapshotId: ownProps.filters.snapshotId,
-      timespanId: ownProps.filters.timespanId,
-      fociId: ownProps.filters.fociId,
-      sort: ownProps.sort,
-      limit: NUM_TO_SHOW,
-    };
-    dispatch(fetchTopicTopStories(ownProps.topicId, params));
-  },
+const mapDispatchToProps = (dispatch) => ({
   fetchData: (props) => {
     const params = {
-      snapshotId: props.filters.snapshotId,
-      timespanId: props.filters.timespanId,
-      fociId: props.filters.fociId,
+      ...props.filters,
       sort: props.sort,
       limit: NUM_TO_SHOW,
     };
@@ -88,9 +76,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         StoriesSummaryContainer
       )

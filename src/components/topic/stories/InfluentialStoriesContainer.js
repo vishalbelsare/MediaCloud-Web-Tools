@@ -74,7 +74,6 @@ InfluentialStoriesContainer.propTypes = {
   // from parent
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  fetchPagedData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
@@ -100,27 +99,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchPagedData: (props, linkId) => {
+  fetchData: (props, linkId) => {
     const params = {
-      snapshotId: props.filters.snapshotId,
-      timespanId: props.filters.timespanId,
-      fociId: props.filters.fociId,
+      ...props.filters,
       sort: props.sort,
       limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
       linkId,
-    };
-    dispatch(fetchTopicInfluentialStories(props.topicId, params))
-      .then((results) => {
-        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
-      });
-  },
-  fetchData: (props) => {
-    const params = {
-      snapshotId: props.filters.snapshotId,
-      timespanId: props.filters.timespanId,
-      fociId: props.filters.fociId,
-      sort: props.sort,
-      limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
     };
     dispatch(fetchTopicInfluentialStories(props.topicId, params))
       .then((results) => {
@@ -139,10 +123,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.fetchData(stateProps);
     },
     nextPage: () => {
-      dispatchProps.fetchPagedData(stateProps, stateProps.links.next);
+      dispatchProps.fetchData(stateProps, stateProps.links.next);
     },
     previousPage: () => {
-      dispatchProps.fetchPagedData(stateProps, stateProps.links.previous);
+      dispatchProps.fetchData(stateProps, stateProps.links.previous);
     },
   });
 }

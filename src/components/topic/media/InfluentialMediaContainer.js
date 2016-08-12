@@ -102,18 +102,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchPagedData: (props, linkId) => {
-    dispatch(fetchTopicInfluentialMedia(props.topicId, props.filters.snapshotId,
-      props.filters.timespanId, props.sort, InfluentialMediaContainer.ROWS_PER_PAGE,
-      linkId))
-      .then((results) => {
-        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
-      });
-  },
-  fetchData: (props) => {
-    dispatch(fetchTopicInfluentialMedia(props.topicId, props.filters.snapshotId,
-      props.filters.timespanId, props.sort, InfluentialMediaContainer.ROWS_PER_PAGE,
-      props.links.current))
+  fetchData: (props, linkId) => {
+    const params = {
+      ...props.filters,
+      sort: props.sort,
+      limit: InfluentialMediaContainer.ROWS_PER_PAGE,
+      linkId,
+    };
+    dispatch(fetchTopicInfluentialMedia(props.topicId, params))
       .then((results) => {
         dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
       });
@@ -128,6 +124,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps);
+    },
+    fetchPagedData: (props, linkId) => {
+      dispatchProps.fetchData(props, linkId);
     },
   });
 }
