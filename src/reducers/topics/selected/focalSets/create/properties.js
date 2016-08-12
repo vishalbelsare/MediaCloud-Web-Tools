@@ -5,10 +5,8 @@ export const INITIAL_STATE = {
   topicId: null,
   name: null,
   description: null,
-  focalSetId: null,
+  focalSetDefinition: null,
   focalTechnique: null,
-  focalSetName: null,
-  focalSetDescription: null,
 };
 
 const createFociReducer = createReducer({

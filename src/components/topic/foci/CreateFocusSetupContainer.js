@@ -25,9 +25,9 @@ const localMessages = {
 
 class CreateFocusSetupContainer extends React.Component {
 
-  handleFocalSetSelected = (focalSetId) => {
+  handleFocalSetSelected = (focalSetDefinition) => {
     const { setProperties } = this.props;
-    setProperties({ focalSetId });
+    setProperties({ focalSetDefinition });
   }
 
   handleFocalTechniqueSelected = (focalTechnique) => {
@@ -42,17 +42,8 @@ class CreateFocusSetupContainer extends React.Component {
     if (properties.focalTechnique !== null) {
       if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
         let focalSetContent = null;
-        if (properties.focalSetId < 0) {
-          focalSetContent = (
-            <div>
-              <CreateFocalSetForm />
-              <Row>
-                <Col lg={12} md={12} sm={12} >
-                  <RaisedButton type="submit" label={formatMessage(messages.next)} primary />
-                </Col>
-              </Row>
-            </div>
-          );
+        if ((properties.focalSetDefinition !== null) && (properties.focalSetDefinition.focal_set_definitions_id < 0)) {
+          focalSetContent = <CreateFocalSetForm />;
         }
         step2Content = (
           <div>
@@ -83,13 +74,20 @@ class CreateFocusSetupContainer extends React.Component {
               </Col>
             </Row>
             <FocalSetDefinitionSelector focalSetDefinitions={focalSetDefinitions}
-              selected={properties.focalSetId}
+              selected={properties.focalSetDefinition}
               onSelected={this.handleFocalSetSelected}
             />
             { focalSetContent }
           </div>
         );
       }
+    }
+    let nextButtonDisabled = true;
+    if ((properties.focalTechnique !== null) &&
+        (properties.focalSetDefinition !== null) &&
+        ('focal_set_definitions_id' in properties.focalSetDefinition) &&
+        (properties.focalSetDefinition.focal_set_definitions_id !== null)) {
+      nextButtonDisabled = false;
     }
     return (
       <Grid>
@@ -106,6 +104,11 @@ class CreateFocusSetupContainer extends React.Component {
             onSelected={this.handleFocalTechniqueSelected}
           />
           { step2Content }
+          <Row>
+            <Col lg={12} md={12} sm={12} >
+              <RaisedButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
+            </Col>
+          </Row>
         </form>
       </Grid>
     );
@@ -160,7 +163,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         name: values.focusName,
         description: values.focusDescription,
       };
-      if (stateProps.properties.focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+      if (stateProps.properties.focalSetDefinition.focal_set_definitions_id === NEW_FOCAL_SET_PLACEHOLDER_ID) {
         focusProps.focalSetName = stateProps.formData.focalSetName.value;
         focusProps.focalSetDescription = stateProps.formData.focalSetDescription.value;
       }

@@ -43,6 +43,7 @@ export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_ST
 export const CREATE_FOCAL_SET_DEFINITION = 'CREATE_FOCAL_SET_DEFINITION';
 export const FETCH_FOCAL_SET_DEFINITIONS = 'FETCH_FOCAL_SET_DEFINITIONS';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
+export const CREATE_FOCUS_DEFINITION = 'CREATE_FOCUS_DEFINITION';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -130,6 +131,8 @@ export const fetchCreateFocusKeywordStories = createAsyncAction(FETCH_CREATE_FOC
 export const createFocalSetDefinition = createAsyncAction(CREATE_FOCAL_SET_DEFINITION, api.createFocalSetDefinition);
 // pass in the topicId
 export const fetchFocalSetDefinitions = createAsyncAction(FETCH_FOCAL_SET_DEFINITIONS, api.listFocalSetDefinitions);
+// pass in topicId and params (object with name, description, focal_set_definitions_id, query)
+export const createFocusDefinition = createAsyncAction(CREATE_FOCUS_DEFINITION, api.createFocusDefinition);
 
 // pass in a boolean
 export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHOT, needsNewSnapshot => needsNewSnapshot);

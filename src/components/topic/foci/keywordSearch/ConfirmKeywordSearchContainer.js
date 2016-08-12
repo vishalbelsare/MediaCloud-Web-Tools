@@ -4,7 +4,8 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
+import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition }
+  from '../../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },
@@ -73,16 +74,37 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   saveFocus: (topicId, properties) => {
-    dispatch(setTopicNeedsNewSnapshot(true));
-    if (properties.focalSetId === -1) {
-      /*dispatch(createFocalSetDefinition(topicId, {
+    const newFocusDefinition = {
+      name: properties.name,
+      description: properties.description,
+      query: properties.keywords,
+    };
+    if (properties.focalSetDefinition.focal_set_definitions_id === -1) {
+      const newFocalSetDefinition = {
         name: properties.focalSetName,
         description: properties.focalSetDescription,
         focalTechnique: properties.focalTechnique,
-      }));*/
-      // then => create focus
+      };
+      console.log(newFocalSetDefinition);
+      /*
+      dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
+        .then( (results) => {
+          newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
+          createFocusDefinition(topicId, newFocusDefinition)
+        })
+        .then( (results) => {
+          dispatch(setTopicNeedsNewSnapshot(true));
+        });
+      */
     } else {
-      // create focus
+      newFocusDefinition.focalSetDefinitionsId = properties.focalSetDefinition.focal_set_definitions_id;
+      console.log(newFocusDefinition);
+      /*
+      createFocusDefinition(topicId, newFocusDefinition)
+        .then( (results) => {
+          dispatch(setTopicNeedsNewSnapshot(true));
+        });
+      */
     }
   },
 });

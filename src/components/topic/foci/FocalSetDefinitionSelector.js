@@ -15,9 +15,9 @@ export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
 class FocalSetDefinitionSelector extends React.Component {
 
-  handleClick = (focalSetId) => {
+  handleClick = (focalSet) => {
     const { onSelected } = this.props;
-    onSelected(focalSetId);
+    onSelected(focalSet);
   }
 
   handleSelectNew = () => {
@@ -26,12 +26,13 @@ class FocalSetDefinitionSelector extends React.Component {
 
   handleSelect = (id) => {
     const { onSelected } = this.props;
-    onSelected(id);
+    onSelected({ focal_set_definitions_id: id });
   }
 
   render() {
     const { focalSetDefinitions, selected } = this.props;
     const { formatMessage } = this.props.intl;
+    const selectedId = (selected === null) ? null : selected.focal_set_definitions_id;
     return (
       <div>
         <Row>
@@ -43,14 +44,14 @@ class FocalSetDefinitionSelector extends React.Component {
         <Row>
           {focalSetDefinitions.map(focalSetDef =>
             <FocalSetSummary
-              selected={(selected === focalSetDef.focal_sets_id)}
+              selected={(selectedId === focalSetDef.focal_set_definitions_id)}
               key={focalSetDef.focal_set_definitions_id}
               focalSet={focalSetDef}
               onClick={this.handleClick}
             />
           )}
           <FocalSetSummary key={NEW_FOCAL_SET_PLACEHOLDER_ID}
-            selected={(selected === NEW_FOCAL_SET_PLACEHOLDER_ID)}
+            selected={(selectedId === NEW_FOCAL_SET_PLACEHOLDER_ID)}
             focalSet={{
               name: formatMessage(localMessages.newFocalSetName),
               description: formatMessage(localMessages.newFocalSetDescription),
@@ -66,7 +67,7 @@ class FocalSetDefinitionSelector extends React.Component {
 
 FocalSetDefinitionSelector.propTypes = {
   focalSetDefinitions: React.PropTypes.array.isRequired,
-  selected: React.PropTypes.number,
+  selected: React.PropTypes.object,
   onSelected: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
