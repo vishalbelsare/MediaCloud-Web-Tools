@@ -16,15 +16,16 @@ class SnapshotListItem extends React.Component {
   }
 
   render() {
-    const { snapshot } = this.props;
+    const { snapshot, selected } = this.props;
     const { formatMessage } = this.props.intl;
     const label = snapshot.snapshot_date.substr(0, 16);
     const date = snapshot.snapshot_date.substr(0, 16);
     const isCompleted = (snapshot.state === 'completed');
     const stateMessage = (isCompleted) ? '' : formatMessage(localMessages.snapshotNotReady);
-    const disabledClass = (isCompleted) ? '' : 'disabled!';
     const clickHandler = (isCompleted) ? this.handleClick : null;
-    const rootClasses = `snapshot-item ${disabledClass}`;
+    const disabledClass = (isCompleted) ? '' : 'disabled';
+    const selectedClass = (selected === true) ? 'selected' : '';
+    const rootClasses = `snapshot-item ${disabledClass} ${selectedClass}`;
     return (
       <div className={rootClasses} onClick={clickHandler}>
         <div className="title">{ label }</div>
@@ -41,6 +42,7 @@ SnapshotListItem.propTypes = {
   id: React.PropTypes.number.isRequired,
   snapshot: React.PropTypes.object.isRequired,
   onSelected: React.PropTypes.func.isRequired,
+  selected: React.PropTypes.bool,
 };
 
 export default injectIntl(SnapshotListItem);

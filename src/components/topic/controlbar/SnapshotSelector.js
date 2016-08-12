@@ -40,9 +40,9 @@ class SnapshotSelector extends React.Component {
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
     // default to select first if you need to
     let selected = null;
-    for (const snapshot in snapshots) {
-      if (snapshot.snapshots_id === selectedId) {
-        selected = snapshot;
+    for (const idx in snapshots) {
+      if (snapshots[idx].snapshots_id === selectedId) {
+        selected = snapshots[idx];
         break;
       }
     }
@@ -72,6 +72,7 @@ class SnapshotSelector extends React.Component {
         >
           {snapshots.map(snapshot =>
             <SnapshotListItem key={snapshot.snapshots_id} snapshot={snapshot}
+              selected={snapshot.snapshots_id === selected.snapshots_id}
               onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
             />
           )}

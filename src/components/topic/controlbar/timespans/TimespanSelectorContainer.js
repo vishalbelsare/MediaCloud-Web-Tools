@@ -106,8 +106,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((response) => {
         if (timespanId === null || isNaN(timespanId)) {
           const defaultTimespanId = response.list[0].timespans_id;
-          const snapshotId = response.list[0].snapshots_id;
-          updateTimespan(dispatch, ownProps.location, snapshotId, defaultTimespanId);
+          const newSnapshotId = response.list[0].snapshots_id;
+          updateTimespan(dispatch, ownProps.location, newSnapshotId, defaultTimespanId);
         }
       });
   },

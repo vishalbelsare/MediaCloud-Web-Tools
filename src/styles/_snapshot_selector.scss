@@ -23,7 +23,7 @@
 .snapshot-item {
   padding: 10px;
   background-color: #303030;
-  border-bottom: 1px solid #666666;
+  border-top: 1px solid #666666;
   color: #ffffff;
   font-size: 13px;
   cursor: pointer;
@@ -31,6 +31,10 @@
   &.disabled {
     color: #999999;
     cursor: default;
+  }
+
+  &.selected {
+    color: rgb(71, 196, 172);
   }
 
 }
