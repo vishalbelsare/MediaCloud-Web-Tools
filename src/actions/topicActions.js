@@ -92,9 +92,9 @@ export const selectStory = createAction(SELECT_STORY, id => id);
 export const fetchStory = createAsyncAction(FETCH_STORY, api.story);
 // pass in topic id and story id
 export const fetchStoryWords = createAsyncAction(FETCH_STORY_WORDS, api.storyWords);
-// pass in topic id, timespan id, and story id
+// pass in topic id, story id, and filters
 export const fetchStoryInlinks = createAsyncAction(FETCH_STORY_INLINKS, api.storyInlinks);
-// pass in topic id, timespan id, and story id
+// pass in topic id, story id, and filters
 export const fetchStoryOutlinks = createAsyncAction(FETCH_STORY_OUTLINKS, api.storyOutlinks);
 
 // pass in media id

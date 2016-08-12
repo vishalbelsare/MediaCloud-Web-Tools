@@ -10,15 +10,15 @@ import DownloadButton from '../../common/DownloadButton';
 
 class StoryInlinksContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if (nextProps.timespanId !== this.props.timespanId) {
-      fetchData(nextProps.timespanId);
+    const { fetchData, filters } = this.props;
+    if (nextProps.filters !== filters) {
+      fetchData(nextProps.filters);
     }
   }
   downloadCsv = (event) => {
-    const { storiesId, topicId, timespanId } = this.props;
+    const { storiesId, topicId, filters } = this.props;
     event.preventDefault();
-    const url = `/api/topics/${topicId}/stories/${storiesId}/inlinks.csv?timespanId=${timespanId}`;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/inlinks.csv?timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -41,7 +41,7 @@ StoryInlinksContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   storiesId: React.PropTypes.number.isRequired,
-  timespanId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
@@ -55,19 +55,19 @@ StoryInlinksContainer.propTypes = {
 const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.story.inlinks.fetchStatus,
   inlinkedStories: state.topics.selected.story.inlinks.stories,
-  timespanId: state.topics.selected.filters.timespanId,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (timespanId) => {
-    dispatch(fetchStoryInlinks(ownProps.topicId, timespanId, ownProps.storiesId)); // fetch the info we need
+  fetchData: (filters) => {
+    dispatch(fetchStoryInlinks(ownProps.topicId, ownProps.storiesId, filters));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.timespanId);
+      dispatchProps.fetchData(stateProps.filters);
     },
   });
 }

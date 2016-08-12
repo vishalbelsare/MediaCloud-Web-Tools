@@ -69,9 +69,12 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
-    dispatch(fetchMediaOutlinks(ownProps.topicId, ownProps.mediaId,
-      stateProps.filters.snapshotId, stateProps.filters.timespanId, stateProps.sort,
-      STORIES_TO_SHOW)); // fetch the info we need
+    const params = {
+      ...stateProps.filters,
+      sort: stateProps.sort,
+      limit: STORIES_TO_SHOW,
+    };
+    dispatch(fetchMediaOutlinks(ownProps.topicId, ownProps.mediaId, params)); // fetch the info we need
   },
   sortData: (sort) => {
     dispatch(sortMediaOutlinks(sort));

@@ -10,15 +10,15 @@ import DownloadButton from '../../common/DownloadButton';
 
 class StoryOutlinksContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if (nextProps.timespanId !== this.props.timespanId) {
-      fetchData(nextProps.timespanId);
+    const { fetchData, filters } = this.props;
+    if (nextProps.filters !== filters) {
+      fetchData(nextProps.filters);
     }
   }
   downloadCsv = (event) => {
-    const { storiesId, topicId, timespanId } = this.props;
+    const { storiesId, topicId, filters } = this.props;
     event.preventDefault();
-    const url = `/api/topics/${topicId}/stories/${storiesId}/outlinks.csv?timespanId=${timespanId}`;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/outlinks.csv?timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -41,7 +41,7 @@ StoryOutlinksContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   storiesId: React.PropTypes.number.isRequired,
-  timespanId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
@@ -59,15 +59,15 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (timespanId) => {
-    dispatch(fetchStoryOutlinks(ownProps.topicId, timespanId, ownProps.storiesId)); // fetch the info we need
+  fetchData: (filters) => {
+    dispatch(fetchStoryOutlinks(ownProps.topicId, ownProps.storiesId, filters));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.timespanId);
+      dispatchProps.fetchData(stateProps.filters);
     },
   });
 }

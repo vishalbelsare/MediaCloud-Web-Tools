@@ -76,8 +76,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
-    dispatch(fetchMediaSentenceCounts(ownProps.topicId, ownProps.mediaId, 
-      stateProps.filters.snapshotId, stateProps.filters.timespanId));
+    dispatch(fetchMediaSentenceCounts(ownProps.topicId, ownProps.mediaId, stateProps.filters));
   },
 });
 

@@ -67,65 +67,44 @@ export const topicTopWords = (topicId, params) => createApiPromise(`/api/topics/
 
 export const topicSnapshotsList = (topicId) => createApiPromise(`/api/topics/${topicId}/snapshots/list`);
 
-export const topicTimespansList =
-  (topicId, snapshotId) => createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
+export const topicTimespansList = (topicId, snapshotId) => createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
 
-export const topicSentenceCounts = 
-  (topicId, params) => createApiPromise(`/api/topics/${topicId}/sentences/count`, params);
+export const topicSentenceCounts = (topicId, params) => createApiPromise(`/api/topics/${topicId}/sentences/count`, params);
 
-export function story(topicId, storiesId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
+export const story = (topicId, storiesId) => createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
+
+export const storyWords = (topicId, storiesId) => createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
+
+export function storyInlinks(topicId, storiesId, params) {
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/inlinks`, params);
 }
 
-export function storyWords(topicId, storiesId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
-}
-
-export function storyInlinks(topicId, timespanId, storiesId) {
-  const params = {};
-  if ((timespanId !== null) && (timespanId !== undefined)) {
-    params.timespanId = timespanId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/inlinks?${paramStr}`);
-}
-
-export function storyOutlinks(topicId, timespanId, storiesId) {
-  const params = {};
-  if ((timespanId !== null) && (timespanId !== undefined)) {
-    params.timespanId = timespanId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/outlinks?${paramStr}`);
+export function storyOutlinks(topicId, storiesId, params) {
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/outlinks`, params);
 }
 
 export function media(topicId, mediaId) {
   return createApiPromise(`/api/topics/${topicId}/media/${mediaId}`);
 }
 
-export function mediaSentenceCounts(topicId, mediaId, snapshotId, timespanId) {
-  const paramStr = generateParamStr({ snapshotId, timespanId });
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/sentences/count?${paramStr}`);
+export function mediaSentenceCounts(topicId, mediaId, params) {
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/sentences/count`, params);
 }
 
-export function mediaStories(topicId, mediaId, snapshotId, timespanId, sort, limit) {
-  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit });
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/stories?${paramStr}`);
+export function mediaStories(topicId, mediaId, params) {
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/stories`, params);
 }
 
-export function mediaInlinks(topicId, mediaId, snapshotId, timespanId, sort, limit) {
-  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit });
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/inlinks?${paramStr}`);
+export function mediaInlinks(topicId, mediaId, params) {
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/inlinks`, params);
 }
 
-export function mediaOutlinks(topicId, mediaId, snapshotId, timespanId, sort, limit) {
-  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit });
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks?${paramStr}`);
+export function mediaOutlinks(topicId, mediaId, params) {
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks`, params);
 }
 
-export function mediaWords(topicId, mediaId, snapshotId, timespanId) {
-  const paramStr = generateParamStr({ snapshotId, timespanId });
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words?${paramStr}`);
+export function mediaWords(topicId, mediaId, params) {
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words`, params);
 }
 
 export function topicFocalSetsList(topicId, snapshotId) {

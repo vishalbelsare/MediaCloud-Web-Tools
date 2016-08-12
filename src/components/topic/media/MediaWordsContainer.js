@@ -60,7 +60,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
-    dispatch(fetchMediaWords(ownProps.topicId, ownProps.mediaId, props.filters.snapshotId, props.filters.timespanId));
+    dispatch(fetchMediaWords(ownProps.topicId, ownProps.mediaId, props.filters));
   },
 });
 
