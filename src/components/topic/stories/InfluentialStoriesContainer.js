@@ -101,16 +101,26 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchPagedData: (props, linkId) => {
-    dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
-      props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE,
-      linkId))
+    const params = {
+      snapshotId: props.filters.snapshotId,
+      timespanId: props.filters.timespanId,
+      sort: props.sort,
+      limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
+      linkId,
+    };
+    dispatch(fetchTopicInfluentialStories(props.topicId, params))
       .then((results) => {
         dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
       });
   },
   fetchData: (props) => {
-    dispatch(fetchTopicInfluentialStories(props.topicId, props.filters.snapshotId,
-      props.filters.timespanId, props.sort, InfluentialStoriesContainer.ROWS_PER_PAGE))
+    const params = {
+      snapshotId: props.filters.snapshotId,
+      timespanId: props.filters.timespanId,
+      sort: props.sort,
+      limit: InfluentialStoriesContainer.ROWS_PER_PAGE,
+    };
+    dispatch(fetchTopicInfluentialStories(props.topicId, params))
       .then((results) => {
         dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
       });

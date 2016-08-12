@@ -60,9 +60,13 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
     // topicId, snapshotId, timespanId, sort, limit, linkId, q
-    dispatch(fetchCreateFocusKeywordStories(ownProps.topicId,
-      stateProps.filters.snapshotId, stateProps.filters.timespanId,
-      null, STORIES_TO_SHOW, null, ownProps.keywords));
+    const params = {
+      snapshotId: stateProps.filters.snapshotId,
+      timespanId: stateProps.filters.timespanId,
+      limit: STORIES_TO_SHOW,
+      keywords: ownProps.keywords,
+    };
+    dispatch(fetchCreateFocusKeywordStories(ownProps.topicId, params));
   },
 });
 

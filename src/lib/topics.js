@@ -20,8 +20,12 @@ function generateParamStr(params) {
  * encoded on it already, and this will return a promise to call it with the appropriate headers and
  * such.  It also parses the json response for you.
  */
-function createApiPromise(url) {
-  return fetch(url, {
+function createApiPromise(url, params) {
+  let fullUrl = url;
+  if (params !== undefined) {
+    fullUrl = `${url}?${generateParamStr(params)}`;
+  }
+  return fetch(fullUrl, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -49,54 +53,22 @@ function createPostingApiPromise(url, params) {
   );
 }
 
-export function topicsList(linkId) {
-  const params = {};
-  if ((linkId !== null) && (linkId !== undefined)) {
-    params.linkId = linkId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return createApiPromise(`/api/topics/list?${paramStr}`);
-}
+export const topicsList = (linkId) => createApiPromise('/api/topics/list', { linkId });
 
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }
 
-export function topicTopStories(topicId, snapshotId, timespanId, sort, limit, linkId, q) {
-  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit, linkId, q });
-  return createApiPromise(`/api/topics/${topicId}/stories?${paramStr}`);
-}
+export const topicTopStories = (topicId, params) => createApiPromise(`/api/topics/${topicId}/stories`, params);
 
 export function topicTopMedia(topicId, snapshotId, timespanId, sort, limit, linkId) {
-  const params = {};
-  if (snapshotId !== null) {
-    params.snapshotId = snapshotId;
-  }
-  if (timespanId !== null) {
-    params.timespanId = timespanId;
-  }
-  if (sort !== null) {
-    params.sort = sort;
-  }
-  if ((limit !== null) && (limit !== undefined)) {
-    params.limit = limit;
-  }
-  if ((linkId !== null) && (linkId !== undefined)) {
-    params.linkId = linkId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  const paramStr = generateParamStr({ snapshotId, timespanId, sort, limit, linkId });
   return createApiPromise(`/api/topics/${topicId}/media?${paramStr}`);
 }
 
 export function topicTopWords(topicId, snapshotId, timespanId) {
   const params = {};
-  if (snapshotId !== null) {
-    params.snapshotId = snapshotId;
-  }
-  if (timespanId !== null) {
-    params.timespanId = timespanId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
+  const paramStr = generateParamStr({ snapshotId, timespanId });
   return createApiPromise(`/api/topics/${topicId}/words?${paramStr}`);
 }
 
@@ -186,4 +158,8 @@ export function createFocalSetDefinition(topicId, params) {
 
 export function listFocalSetDefinitions(topicId) {
   return createApiPromise(`api/topics/${topicId}/focal-set-definitions`);
+}
+
+export function createFocusDefinition(topicId, params) {
+  return createApiPromise(`/api/topics/${topicId}/focus-definitions/create`, params);
 }

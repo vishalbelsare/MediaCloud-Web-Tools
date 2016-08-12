@@ -64,10 +64,22 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicTopStories(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId, ownProps.sort, NUM_TO_SHOW));
+    const params = {
+      snapshotId: ownProps.filters.snapshotId,
+      timespanId: ownProps.filters.timespanId,
+      sort: ownProps.sort,
+      limit: NUM_TO_SHOW,
+    };
+    dispatch(fetchTopicTopStories(ownProps.topicId, params));
   },
   fetchData: (props) => {
-    dispatch(fetchTopicTopStories(props.topicId, props.filters.snapshotId, props.filters.timespanId, props.sort, NUM_TO_SHOW));
+    const params = {
+      snapshotId: props.filters.snapshotId,
+      timespanId: props.filters.timespanId,
+      sort: props.sort,
+      limit: NUM_TO_SHOW,
+    };
+    dispatch(fetchTopicTopStories(props.topicId, params));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));
