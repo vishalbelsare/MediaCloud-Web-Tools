@@ -6,9 +6,11 @@ import fetch from 'isomorphic-fetch';
 function generateParamStr(params) {
   const cleanedParams = {};
   for (const key in params) {
-    const value = params[key];
-    if ((value !== null) && (value !== undefined)) {
-      cleanedParams[key] = value;
+    if (params.hasOwnProperty(key)) {
+      const value = params[key];
+      if ((value !== null) && (value !== undefined)) {
+        cleanedParams[key] = value;
+      }
     }
   }
   const paramStr = Object.keys(cleanedParams).map((key) => `${key}=${encodeURIComponent(cleanedParams[key])}`).join('&');
@@ -42,7 +44,9 @@ function createApiPromise(url, params) {
 function createPostingApiPromise(url, params) {
   const formData = new FormData();
   for (const key in params) {
-    formData.append(key, params[key]);
+    if (params.hasOwnProperty(key)) {
+      formData.append(key, params[key]);
+    }
   }
   return fetch(url, {
     method: 'post',
