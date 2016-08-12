@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 @flask_login.login_required
 def story(topics_id, stories_id):
-    story_info = mc.topicStoryList(topics_id, stories_id=stories_id)['stories'][0]
+    story_info = _topic_story_list(topics_id, stories_id=stories_id)['stories'][0]
     story_info['media_name'] = mc.media(story_info['media_id'])['name']
     story_info['media_url'] = mc.media(story_info['media_id'])['url']
     return jsonify(story_info)
@@ -41,7 +41,7 @@ def _story_words(topics_id, stories_id, timespans_id):
 @flask_login.login_required
 def story_inlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    inlinks = mc.topicStoryList(topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
+    inlinks = _topic_story_list(topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
@@ -54,7 +54,7 @@ def story_inlinks_csv(topics_id, stories_id):
 @flask_login.login_required
 def story_outlinks(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    outlinks = mc.topicStoryList(topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
+    outlinks = _topic_story_list(topics_id, link_from_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(outlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
@@ -72,7 +72,7 @@ def topic_stories(topics_id):
     limit = request.args.get('limit')
     link_id = request.args.get('linkId')
     q = request.args.get('q')
-    stories = mc.topicStoryList(topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
+    stories = _topic_story_list(topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
         sort=sort, limit=limit, link_id=link_id, q=q)
     return jsonify(stories)
 
@@ -83,6 +83,10 @@ def topic_stories_csv(topics_id):
     snapshots_id = request.args.get('snapshotId')
     timespans_id = request.args.get('timespanId')
     return stream_story_list_csv('stories', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort)
+
+@cache
+def _topic_story_list(topics_id, **kwargs):
+    return mc.topicStoryList(topics_id, **kwargs)
 
 def stream_story_list_csv(filename, topics_id, **kwargs):
     '''
@@ -95,7 +99,7 @@ def stream_story_list_csv(filename, topics_id, **kwargs):
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
         while more_stories:
-            page = mc.topicStoryList(topics_id, **params)
+            page = _topic_story_list(topics_id, **params)
             all_stories = all_stories + page['stories']
             if 'next' in page['link_ids']:
                 params['link_id'] = page['link_ids']['next']

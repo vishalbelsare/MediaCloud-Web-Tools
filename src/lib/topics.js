@@ -29,6 +29,26 @@ function createApiPromise(url) {
   );
 }
 
+/**
+ * Helper to create a promise that calls the API on the server with some POST'd data. Pass in the endpoint url,
+ * and a data object to encode and POST, and this will return a promise to call it with the appropriate headers
+ * and such.  It also parses the json response for you.
+ */
+
+function createPostingApiPromise(url, params) {
+  const formData = new FormData();
+  for (const key in params) {
+    formData.append(key, params[key]);
+  }
+  return fetch(url, {
+    method: 'post',
+    credentials: 'include',
+    body: formData,
+  }).then(
+    response => response.json()
+  );
+}
+
 export function topicsList(linkId) {
   const params = {};
   if ((linkId !== null) && (linkId !== undefined)) {
@@ -158,4 +178,12 @@ export function mediaWords(topicId, mediaId, snapshotId, timespanId) {
 export function topicFocalSetsList(topicId, snapshotId) {
   const paramStr = generateParamStr({ snapshotId });
   return createApiPromise(`/api/topics/${topicId}/focal-sets/list?${paramStr}`);
+}
+
+export function createFocalSetDefinition(topicId, params) {
+  return createPostingApiPromise(`api/topics/${topicId}/focal-set-definitions/create`, params);
+}
+
+export function listFocalSetDefinitions(topicId) {
+  return createApiPromise(`api/topics/${topicId}/focal-set-definitions`);
 }

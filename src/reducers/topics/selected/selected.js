@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SELECT_TOPIC } from '../../../actions/topicActions';
+import { SELECT_TOPIC, SET_TOPIC_NEEDS_NEW_SNAPSHOT } from '../../../actions/topicActions';
 import snapshots from './snapshots';
 import timespans from './timespans';
 import summary from './summary/summary';
@@ -11,9 +11,7 @@ import stories from './stories';
 import story from './story/story';
 import focalSets from './focalSets/focalSets';
 
-const INITIAL_STATE = null;
-
-function id(state = INITIAL_STATE, action) {
+function id(state = null, action) {
   switch (action.type) {
     case SELECT_TOPIC:
       return parseInt(action.payload, 10);
@@ -22,8 +20,18 @@ function id(state = INITIAL_STATE, action) {
   }
 }
 
+function needsNewSnapshot(state = false, action) {
+  switch (action.type) {
+    case SET_TOPIC_NEEDS_NEW_SNAPSHOT:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   id,
+  needsNewSnapshot,
   info,
   summary,
   snapshots,

@@ -4,13 +4,14 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TextField from 'material-ui/TextField';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../actions/topicActions';
+import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../actions/topicActions';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
-import FocalSetSelector from './FocalSetSelector';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetSelector';
+import FocalSetDefinitionSelector from './FocalSetDefinitionSelector';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../lib/focalTechniques';
 import messages from '../../../resources/messages';
+import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
@@ -35,7 +36,7 @@ class CreateFocusSetupContainer extends React.Component {
   }
 
   render() {
-    const { fields: { focusName, focusDescription }, handleSubmit, finishStep, properties, focalSets } = this.props;
+    const { fields: { focusName, focusDescription }, handleSubmit, finishStep, properties, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
     let step2Content = null;
     if (properties.focalTechnique !== null) {
@@ -81,7 +82,7 @@ class CreateFocusSetupContainer extends React.Component {
                 <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
               </Col>
             </Row>
-            <FocalSetSelector focalSets={focalSets}
+            <FocalSetDefinitionSelector focalSetDefinitions={focalSetDefinitions}
               selected={properties.focalSetId}
               onSelected={this.handleFocalSetSelected}
             />
@@ -120,28 +121,34 @@ CreateFocusSetupContainer.propTypes = {
   // from form helper
   fields: React.PropTypes.object.isRequired,
   // from state
-  focalSets: React.PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  focalSetDefinitions: React.PropTypes.array.isRequired,
   properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
   // from dispatch
   setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from LoginForm helper
   handleSubmit: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  focalSets: state.topics.selected.focalSets.list.list,
+  focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
+  fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
   properties: state.topics.selected.focalSets.create.properties,
   formData: state.form.focusCreateSetup,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   setProperties: (properties) => {
     dispatch(setNewFocusProperties(properties));
   },
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
+  },
+  asyncFetch: () => {
+    dispatch(fetchFocalSetDefinitions(ownProps.topicId));
   },
 });
 
@@ -180,7 +187,9 @@ const reduxFormConfig = {
 
 export default
   reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps, mergeProps)(
-    injectIntl(
-      CreateFocusSetupContainer
+    composeAsyncContainer(
+      injectIntl(
+        CreateFocusSetupContainer
+      )
     )
   );

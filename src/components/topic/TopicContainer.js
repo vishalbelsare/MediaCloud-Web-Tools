@@ -5,30 +5,24 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import { setBrandMastheadText } from '../../actions/brandActions';
+import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-      row: {
-        marginBottom: 15,
-      },
-    };
-    return styles;
-  }
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo } = this.props;
+    const { children, topicInfo, needsNewSnapshot, handleGenerateSnapshotRequest } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
-    const styles = this.getStyles();
     return (
-      <div style={styles.root}>
+      <div className="topic-container">
         <div>
           <Title render={titleHandler} />
+          <NeedsNewSnapshotWarning
+            needsNewSnapshot={needsNewSnapshot}
+            onGenerateSnapshotRequest={handleGenerateSnapshotRequest}
+          />
           {children}
         </div>
       </div>
@@ -44,11 +38,12 @@ TopicContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  // params from router
+  handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   topicInfo: React.PropTypes.object,
+  needsNewSnapshot: React.PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -56,6 +51,7 @@ const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.info.fetchStatus,
   topicInfo: state.topics.selected.info,
   topicId: parseInt(ownProps.params.topicId, 10),
+  needsNewSnapshot: state.topics.selected.needsNewSnapshot,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -65,6 +61,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((topic) => dispatch(
         setBrandMastheadText(`<span>Topic: <a href="/#/topics/${topic.topics_id}/summary">${topic.name}</a></span>`))
       );
+  },
+  handleGenerateSnapshotRequest: () => {
+    console.log('generate a new snapshot!');
   },
 });
 

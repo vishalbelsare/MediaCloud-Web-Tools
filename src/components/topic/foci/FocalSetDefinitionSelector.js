@@ -13,7 +13,7 @@ const localMessages = {
 
 export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
-class FocalSetSelector extends React.Component {
+class FocalSetDefinitionSelector extends React.Component {
 
   handleClick = (focalSetId) => {
     const { onSelected } = this.props;
@@ -30,7 +30,7 @@ class FocalSetSelector extends React.Component {
   }
 
   render() {
-    const { focalSets, selected } = this.props;
+    const { focalSetDefinitions, selected } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div>
@@ -41,18 +41,17 @@ class FocalSetSelector extends React.Component {
           </Col>
         </Row>
         <Row>
-          {focalSets.map(focalSet =>
+          {focalSetDefinitions.map(focalSetDef =>
             <FocalSetSummary
-              selected={(selected === focalSet.focal_sets_id)}
-              key={focalSet.focal_sets_id}
-              focalSet={focalSet}
+              selected={(selected === focalSetDef.focal_sets_id)}
+              key={focalSetDef.focal_set_definitions_id}
+              focalSet={focalSetDef}
               onClick={this.handleClick}
             />
           )}
           <FocalSetSummary key={NEW_FOCAL_SET_PLACEHOLDER_ID}
             selected={(selected === NEW_FOCAL_SET_PLACEHOLDER_ID)}
             focalSet={{
-              id: NEW_FOCAL_SET_PLACEHOLDER_ID,
               name: formatMessage(localMessages.newFocalSetName),
               description: formatMessage(localMessages.newFocalSetDescription),
             }}
@@ -65,8 +64,8 @@ class FocalSetSelector extends React.Component {
 
 }
 
-FocalSetSelector.propTypes = {
-  focalSets: React.PropTypes.array.isRequired,
+FocalSetDefinitionSelector.propTypes = {
+  focalSetDefinitions: React.PropTypes.array.isRequired,
   selected: React.PropTypes.number,
   onSelected: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
@@ -74,5 +73,5 @@ FocalSetSelector.propTypes = {
 
 export default
   injectIntl(
-    FocalSetSelector
+    FocalSetDefinitionSelector
   );
