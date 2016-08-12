@@ -74,18 +74,23 @@ const mapStateToProps = (state) => ({
   counts: state.topics.selected.summary.sentenceCount.counts,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchTopicSentenceCounts(ownProps.topicId, ownProps.filters.snapshotId, ownProps.filters.timespanId));
-  },
+const mapDispatchToProps = (dispatch) => ({
   fetchData: (props) => {
-    dispatch(fetchTopicSentenceCounts(props.topicId, props.filters.snapshotId, props.filters.timespanId));
+    dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         SentenceCountSummaryContainer
       )

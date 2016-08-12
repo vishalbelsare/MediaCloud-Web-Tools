@@ -63,29 +63,15 @@ export const topicTopStories = (topicId, params) => createApiPromise(`/api/topic
 
 export const topicTopMedia = (topicId, params) => createApiPromise(`/api/topics/${topicId}/media`, params);
 
-export function topicTopWords(topicId, params) {
-  return createApiPromise(`/api/topics/${topicId}/words`, params);
-}
+export const topicTopWords = (topicId, params) => createApiPromise(`/api/topics/${topicId}/words`, params);
 
-export function topicSnapshotsList(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/snapshots/list`);
-}
+export const topicSnapshotsList = (topicId) => createApiPromise(`/api/topics/${topicId}/snapshots/list`);
 
-export function topicTimespansList(topicId, snapshotId) {
-  return createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
-}
+export const topicTimespansList =
+  (topicId, snapshotId) => createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
 
-export function topicSentenceCounts(topicId, snapshotId, timespanId) {
-  const params = {};
-  if ((snapshotId !== null) && (snapshotId !== undefined)) {
-    params.snapshotId = snapshotId;
-  }
-  if ((timespanId !== null) && (timespanId !== undefined)) {
-    params.timespanId = timespanId;
-  }
-  const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&');
-  return createApiPromise(`/api/topics/${topicId}/sentences/count?${paramStr}`);
-}
+export const topicSentenceCounts = 
+  (topicId, params) => createApiPromise(`/api/topics/${topicId}/sentences/count`, params);
 
 export function story(topicId, storiesId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
