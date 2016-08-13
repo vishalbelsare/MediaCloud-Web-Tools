@@ -63,6 +63,8 @@ const messages = {
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
 
+  focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
+
 };
 
 export default messages;

@@ -26,13 +26,13 @@ class SnapshotSelectorContainer extends React.Component {
     return styles;
   }
   render() {
-    const { snapshots, onSnapshotSelected, snapshotId } = this.props;
+    const { snapshots, handleSnapshotSelected, snapshotId } = this.props;
     const styles = this.getStyles();
     return (
       <div style={styles.root}>
         <div style={styles.right}>
           <SnapshotSelector selectedId={snapshotId}
-            snapshots={snapshots} onSnapshotSelected={onSnapshotSelected}
+            snapshots={snapshots} onSnapshotSelected={handleSnapshotSelected}
           />
         </div>
       </div>
@@ -46,7 +46,7 @@ SnapshotSelectorContainer.propTypes = {
   location: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  onSnapshotSelected: React.PropTypes.func.isRequired,
+  handleSnapshotSelected: React.PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -69,15 +69,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           if (snapshotId === null) {
             // default to first snapshot (ie. latest) if none is specified
             const newSnapshotId = response.list[0].snapshots_id;
-            const newLocation = filteredLocation(ownProps.location, newSnapshotId, null);
+            const newLocation = filteredLocation(ownProps.location, {
+              snapshotId: newSnapshotId,
+              timespanId: null,
+              focusId: null,
+            });
             dispatch(push(newLocation));
             dispatch(filterBySnapshot(newSnapshotId));
           }
         });
     }
   },
-  onSnapshotSelected: (snapshotId) => {
-    const newLocation = filteredLocation(ownProps.location, snapshotId, null);
+  handleSnapshotSelected: (snapshotId) => {
+    const newLocation = filteredLocation(ownProps.location, {
+      snapshotId,
+      timespanId: null,
+      focusId: null,
+    });
     dispatch(push(newLocation));
     dispatch(filterBySnapshot(snapshotId));
   },

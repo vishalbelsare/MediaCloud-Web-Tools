@@ -7,7 +7,7 @@ from server import app, mc
 from server.views.topics import validated_sort
 import server.views.util.csv as csv
 from server.cache import cache
-
+from server.views.util.request import filters_from_args
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
@@ -66,23 +66,22 @@ def story_outlinks_csv(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
 @flask_login.login_required
 def topic_stories(topics_id):
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     sort = validated_sort(request.args.get('sort'))
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
     limit = request.args.get('limit')
     link_id = request.args.get('linkId')
     q = request.args.get('q')
-    stories = _topic_story_list(topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
-        sort=sort, limit=limit, link_id=link_id, q=q)
+    stories = _topic_story_list(topics_id, sort=sort, limit=limit, link_id=link_id, q=q,
+        snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
     return jsonify(stories)
 
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def topic_stories_csv(topics_id):
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     sort = validated_sort(request.args.get('sort'))
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
-    return stream_story_list_csv('stories', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort)
+    return stream_story_list_csv('stories', topics_id, sort=sort,
+        snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
 
 @cache
 def _topic_story_list(topics_id, **kwargs):

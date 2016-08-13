@@ -9,6 +9,7 @@ from server.views.topics import validated_sort
 import server.views.util.csv as csv
 from server.views.topics.sentences import split_sentence_count, stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
+from server.views.util.request import filters_from_args
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +17,11 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 def topic_media(topics_id):
     sort = validated_sort(request.args.get('sort'))
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     limit = request.args.get('limit')
     link_id = request.args.get('linkId')
-    media_list = mc.topicMediaList(topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort,
-        limit=limit, link_id=link_id)
+    media_list = mc.topicMediaList(topics_id, sort=sort, limit=limit, link_id=link_id,
+        snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
     return jsonify(media_list)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>', methods=['GET'])
@@ -35,22 +35,20 @@ def media(topics_id, media_id):
 @flask_login.login_required
 def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
-    return _stream_media_list_csv('media', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, sort=sort)
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    return _stream_media_list_csv('media', topics_id, sort=sort,
+        snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
 def topic_media_sentence_count(topics_id, media_id):
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
-    return jsonify(split_sentence_count(topics_id, snapshots_id, timespans_id, fq='media_id:'+media_id))
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    return jsonify(split_sentence_count(topics_id, snapshots_id, timespans_id, fq='media_id:'+media_id, foci_id=foci_id))
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count.csv', methods=['GET'])
 def topic_media_sentence_count_csv(topics_id, media_id):
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id, timespans_id,
-        fq="media_id:"+media_id)
+        fq="media_id:"+media_id, foci_id=foci_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
 @flask_login.login_required

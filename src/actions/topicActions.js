@@ -44,6 +44,7 @@ export const CREATE_FOCAL_SET_DEFINITION = 'CREATE_FOCAL_SET_DEFINITION';
 export const FETCH_FOCAL_SET_DEFINITIONS = 'FETCH_FOCAL_SET_DEFINITIONS';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const CREATE_FOCUS_DEFINITION = 'CREATE_FOCUS_DEFINITION';
+export const TOPIC_FILTER_BY_FOCUS = 'TOPIC_FILTER_BY_FOCUS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -52,14 +53,16 @@ export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 
 // pass in topicId
 export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_LIST, api.topicSnapshotsList);
-// pass in topicId
+// pass in snapshotId
 export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
 // pass in topicId and snapshotId
 export const fetchTopicTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicTimespansList);
 // pass in topicId and snapshotId
 export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
-// pass in topicId
+// pass in timespanId
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
+// pass in focusId
+export const filterByFocus = createAction(TOPIC_FILTER_BY_FOCUS, id => id);
 
 // pass in topicId
 export const fetchTopicSummary = createAsyncAction(FETCH_TOPIC_SUMMARY, api.topicSummary);

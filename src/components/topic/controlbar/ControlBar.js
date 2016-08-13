@@ -1,29 +1,35 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import LinkWithFilters from '../LinkWithFilters';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
-import messages from '../../../resources/messages';
+import FocusSelectorContainer from './FocusSelectorContainer';
+import LinkWithFilters from '../LinkWithFilters';
 
 const ControlBar = (props) => {
-  const { title, topicId, location, snapshotId } = props;
+  const { topicInfo, topicId, location, filters } = props;
+  // both the focus and timespans selectors need the snapshot to be selected first
+  let focusSelector = null;
   let subControls = null;
-  if ((snapshotId !== null) && (snapshotId !== undefined)) {
-    subControls = <TimespanSelectorContainer topicId={topicId} location={location} snapshotId={snapshotId} />;
+  if ((filters.snapshotId !== null) && (filters.snapshotId !== undefined)) {
+    subControls = <TimespanSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
+    focusSelector = <FocusSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
   }
   return (
     <div className="controlbar controlbar-topic">
       <div className="main">
         <Grid>
           <Row>
-            <Col lg={6} md={6} sm={6} className="left">
-              <LinkWithFilters to={`/topics/${topicId}/foci/create`}>
-                <FormattedMessage {...messages.focusCreate} />
-              </LinkWithFilters>
+            <Col lg={4} md={4} sm={4} className="left">
+              <b><LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>
+                {topicInfo.name}
+              </LinkWithFilters></b>
             </Col>
-            <Col lg={6} md={6} sm={6} className="right">
+            <Col lg={4} md={4} sm={4} >
+              {focusSelector}
+            </Col>
+            <Col lg={4} md={4} sm={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
             </Col>
           </Row>
@@ -40,15 +46,16 @@ ControlBar.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
-  title: React.PropTypes.string,
   topicId: React.PropTypes.number,
   location: React.PropTypes.object.isRequired,
   // from state
-  snapshotId: React.PropTypes.number,
+  filters: React.PropTypes.object.isRequired,
+  topicInfo: React.PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
-  snapshotId: state.topics.selected.filters.snapshotId,
+  filters: state.topics.selected.filters,
+  topicInfo: state.topics.selected.info,
 });
 
 export default

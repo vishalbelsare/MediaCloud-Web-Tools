@@ -1,61 +1,4 @@
-import fetch from 'isomorphic-fetch';
-
-/**
- * Helper to stich together any defined params into a string suitable for url arg submission
- */
-function generateParamStr(params) {
-  const cleanedParams = {};
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
-      const value = params[key];
-      if ((value !== null) && (value !== undefined)) {
-        cleanedParams[key] = value;
-      }
-    }
-  }
-  const paramStr = Object.keys(cleanedParams).map((key) => `${key}=${encodeURIComponent(cleanedParams[key])}`).join('&');
-  return paramStr;
-}
-
-/**
- * Helper to create a promise that calls the API on the server. Pass in the endpoint url, with params
- * encoded on it already, and this will return a promise to call it with the appropriate headers and
- * such.  It also parses the json response for you.
- */
-function createApiPromise(url, params) {
-  let fullUrl = url;
-  if (params !== undefined) {
-    fullUrl = `${url}?${generateParamStr(params)}`;
-  }
-  return fetch(fullUrl, {
-    method: 'get',
-    credentials: 'include',
-  }).then(
-    response => response.json()
-  );
-}
-
-/**
- * Helper to create a promise that calls the API on the server with some POST'd data. Pass in the endpoint url,
- * and a data object to encode and POST, and this will return a promise to call it with the appropriate headers
- * and such.  It also parses the json response for you.
- */
-
-function createPostingApiPromise(url, params) {
-  const formData = new FormData();
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
-      formData.append(key, params[key]);
-    }
-  }
-  return fetch(url, {
-    method: 'post',
-    credentials: 'include',
-    body: formData,
-  }).then(
-    response => response.json()
-  );
-}
+import { createApiPromise, createPostingApiPromise } from './apiUtil';
 
 export const topicsList = (linkId) => createApiPromise('/api/topics/list', { linkId });
 
@@ -112,8 +55,7 @@ export function mediaWords(topicId, mediaId, params) {
 }
 
 export function topicFocalSetsList(topicId, snapshotId) {
-  const paramStr = generateParamStr({ snapshotId });
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/list?${paramStr}`);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/list`, { snapshotId });
 }
 
 export function createFocalSetDefinition(topicId, params) {
@@ -121,7 +63,7 @@ export function createFocalSetDefinition(topicId, params) {
 }
 
 export function listFocalSetDefinitions(topicId) {
-  return createApiPromise(`api/topics/${topicId}/focal-set-definitions`);
+  return createApiPromise(`api/topics/${topicId}/focal-set-definitions/list`);
 }
 
 export function createFocusDefinition(topicId, params) {

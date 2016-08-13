@@ -41,13 +41,13 @@ StoryOutlinksContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   storiesId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   // from state
+  filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   outlinkedStories: React.PropTypes.array.isRequired,
 };
@@ -56,6 +56,7 @@ const mapStateToProps = (state) => ({
   fetchStatus: state.topics.selected.story.outlinks.fetchStatus,
   outlinkedStories: state.topics.selected.story.outlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -14,7 +14,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import routes from './routes/routes.js';
 import store from './store';
 import { APP_NAME } from './config';
-import { filterBySnapshot, filterByTimespan } from './actions/topicActions';
+import { filterBySnapshot, filterByTimespan, filterByFocus } from './actions/topicActions';
 
 // necessary lines for Material-UI library to work
 const injectTapEventPlugin = require('react-tap-event-plugin');
@@ -40,6 +40,9 @@ switch (APP_NAME) {
     }
     if ('timespanId' in args) {
       store.dispatch(filterByTimespan(args.timespanId));
+    }
+    if ('focusId' in args) {
+      store.dispatch(filterByFocus(args.focusId));
     }
     break;
   case 'sources':

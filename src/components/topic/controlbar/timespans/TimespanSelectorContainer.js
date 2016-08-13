@@ -6,6 +6,7 @@ import TimespanCollapsed from './TimespanCollapsed';
 import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
 import composeAsyncContainer from '../../../common/AsyncContainer';
+import { filteredLocation } from '../../../util/paging';
 
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -30,14 +31,14 @@ class TimespanSelectorContainer extends React.Component {
     setExpanded(false);
   }
   render() {
-    const { timespans, selectedTimespan, onTimespanSelected, onPeriodSelected, isVisible, selectedPeriod } = this.props;
+    const { timespans, selectedTimespan, handleTimespanSelected, onPeriodSelected, isVisible, selectedPeriod } = this.props;
     let content = null;
     if ((timespans.length > 0) && (selectedTimespan !== null) && (selectedTimespan !== undefined)) {
       if (isVisible) {
         content = (<TimespanExpanded
           timespans={timespans}
           selectedTimespan={selectedTimespan}
-          onTimespanSelected={onTimespanSelected}
+          onTimespanSelected={handleTimespanSelected}
           selectedPeriod={selectedPeriod}
           onPeriodSelected={onPeriodSelected}
           onCollapse={this.handleCollapse}
@@ -61,7 +62,7 @@ TimespanSelectorContainer.propTypes = {
   snapshotId: React.PropTypes.number,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  onTimespanSelected: React.PropTypes.func.isRequired,
+  handleTimespanSelected: React.PropTypes.func.isRequired,
   setExpanded: React.PropTypes.func.isRequired,
   onPeriodSelected: React.PropTypes.func.isRequired,
   // from state
@@ -75,12 +76,7 @@ TimespanSelectorContainer.propTypes = {
 
 // helper to update the url and fire off event
 function updateTimespan(dispatch, location, snapshotId, timespanId) {
-  const newLocation = Object.assign({}, location, {
-    query: {
-      snapshotId,
-      timespanId,
-    },
-  });
+  const newLocation = filteredLocation(location, { snapshotId, timespanId });
   dispatch(push(newLocation));
   dispatch(filterByTimespan(timespanId));
 }
@@ -111,7 +107,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
       });
   },
-  onTimespanSelected: (timespan) => {
+  handleTimespanSelected: (timespan) => {
     updateTimespan(dispatch, ownProps.location, timespan.snapshots_id, timespan.timespans_id);
   },
 });

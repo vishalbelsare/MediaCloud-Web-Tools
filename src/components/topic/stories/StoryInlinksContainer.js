@@ -41,7 +41,6 @@ StoryInlinksContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   storiesId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
@@ -50,6 +49,7 @@ StoryInlinksContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   inlinkedStories: React.PropTypes.array.isRequired,
+  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

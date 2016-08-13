@@ -15,3 +15,9 @@ def json_error_response(message, status_code=400):
     })
     response.status_code = status_code
     return response
+
+def filters_from_args(request_args):
+    '''
+    Helper to centralize reading filters from url params
+    '''
+    return request_args.get('snapshotId'), request_args.get('timespanId'), request_args.get('focusId')

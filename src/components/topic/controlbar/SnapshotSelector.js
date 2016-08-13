@@ -71,7 +71,9 @@ class SnapshotSelector extends React.Component {
           className="popup-list"
         >
           {snapshots.map(snapshot =>
-            <SnapshotListItem key={snapshot.snapshots_id} snapshot={snapshot}
+            <SnapshotListItem key={snapshot.snapshots_id} 
+              id={snapshot.snapshots_id}
+              snapshot={snapshot}
               selected={snapshot.snapshots_id === selected.snapshots_id}
               onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
             />

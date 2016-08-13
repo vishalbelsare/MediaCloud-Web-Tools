@@ -7,12 +7,14 @@ import Link from 'react-router/lib/Link';
  * replacement for the react-router Link tag.
  **/
 const LinkWithFilters = (props) => {
-  const { to, style, children, filters } = props;
+  const { to, style, children, defaultFilters, filters } = props;
+  const filtersToUse = ((filters !== undefined) && (filters !== null)) ? filters : defaultFilters;
   const linkLocation = {
     pathname: to,
     query: {
-      snapshotId: filters.snapshotId,
-      timespanId: filters.timespanId,
+      snapshotId: filtersToUse.snapshotId,
+      timespanId: filtersToUse.timespanId,
+      focusId: filtersToUse.focusId,
     },
   };
   return (
@@ -25,12 +27,13 @@ LinkWithFilters.propTypes = {
   children: React.PropTypes.node.isRequired,
   to: React.PropTypes.string.isRequired,
   style: React.PropTypes.object,
+  filters: React.PropTypes.object,  // use this to override
   // from state
-  filters: React.PropTypes.object.isRequired,
+  defaultFilters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  filters: state.topics.selected.filters,
+  defaultFilters: state.topics.selected.filters,
 });
 
 export default connect(

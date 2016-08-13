@@ -5,23 +5,22 @@ import flask_login
 from server import app, mc
 import server.views.util.csv as csv
 from server.cache import cache
+from server.views.util.request import filters_from_args
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/sentences/count', methods=['GET'])
 @flask_login.login_required
 def topic_sentence_count(topics_id):
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
-    response = split_sentence_count(topics_id, snapshots_id, timespans_id)
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    response = split_sentence_count(topics_id, snapshots_id, timespans_id, foci_id=foci_id)
     return jsonify(response)
 
 @app.route('/api/topics/<topics_id>/sentences/count.csv', methods=['GET'])
 @flask_login.login_required
 def topic_sentence_count_csv(topics_id):
-    snapshots_id = request.args.get('snapshotId')
-    timespans_id = request.args.get('timespanId')
-    return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id, timespans_id)
+    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id, timespans_id, foci_id=foci_id)
 
 @cache
 def split_sentence_count(topics_id, snapshots_id, timespans_id, **kwargs):

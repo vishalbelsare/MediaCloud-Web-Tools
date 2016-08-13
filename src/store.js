@@ -16,9 +16,9 @@ const middlewares = [
 
 // only log actions in dev mode
 if (APP_MODE === 'dev') {
-  const createLogger = require('redux-logger');
-  const logger = createLogger();
-  middlewares.push(logger);
+//  const createLogger = require('redux-logger');
+//  const logger = createLogger();
+//  middlewares.push(logger);
 }
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);

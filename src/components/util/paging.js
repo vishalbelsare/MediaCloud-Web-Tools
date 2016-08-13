@@ -18,12 +18,11 @@ export function pagedLocation(location, linkId) {
   });
 }
 
-export function filteredLocation(location, snapshotId, timespanId) {
+export function filteredLocation(location, filters) {
   return Object.assign({}, location, {
     query: {
       ...location.query,
-      snapshotId,
-      timespanId,
+      ...filters,
     },
   });
 }

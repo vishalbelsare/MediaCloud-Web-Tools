@@ -1,4 +1,5 @@
-import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN } from '../../../actions/topicActions';
+import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS } 
+  from '../../../actions/topicActions';
 import { createReducer } from '../../../lib/reduxHelpers';
 
 const info = createReducer({
@@ -14,6 +15,9 @@ const info = createReducer({
   }),
   TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
     timespanId: parseInt(payload, 10),
+  }),
+  TOPIC_FILTER_BY_FOCUS: (payload) => ({
+    focusId: parseInt(payload, 10),
   }),
 });
 

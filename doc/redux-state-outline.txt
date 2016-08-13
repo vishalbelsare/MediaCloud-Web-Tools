@@ -26,7 +26,8 @@
       },
       filters: {
         snapshotId: [id of current snapshot],
-        timespanId: [id of current snapshot],
+        timespanId: [id of current timespan],
+        focusId: [id of current focus],
       },
       snapshots: {
         fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
@@ -107,6 +108,15 @@
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           list: [ array of json focalSet objects },
         },
+        foci: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: [ array of json focus objects],
+          selected: { json object of the selected focus },
+        },
+        definitions: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: [ array of json focalSet objects },
+        }
         create: {
           currentStep: [1|2|3|4],
           properties: {
