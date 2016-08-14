@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateSnackBar({ open: true, message: focalSetSavedMessage }));  // user feedback
           // save the focus
           newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
-          createFocusDefinition(topicId, newFocusDefinition)
+          dispatch(createFocusDefinition(topicId, newFocusDefinition))
             .then(() => {
               dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
