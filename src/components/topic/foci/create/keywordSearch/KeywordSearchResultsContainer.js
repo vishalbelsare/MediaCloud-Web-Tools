@@ -63,7 +63,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = {
       ...stateProps.filters,
       limit: STORIES_TO_SHOW,
-      keywords: ownProps.keywords,
+      q: ownProps.keywords,
     };
     dispatch(fetchCreateFocusKeywordStories(ownProps.topicId, params));
   },

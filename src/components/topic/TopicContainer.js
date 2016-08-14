@@ -4,7 +4,8 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
-import { setBrandMastheadText } from '../../actions/appActions';
+import { setBrandMastheadText, updateSnackBar } from '../../actions/appActions';
+import messages from '../../resources/messages';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
@@ -63,6 +64,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       );*/
   },
   handleGenerateSnapshotRequest: () => {
+    // TODO: add the generate request
+    dispatch(updateSnackBar({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
     console.log('generate a new snapshot!');
   },
 });

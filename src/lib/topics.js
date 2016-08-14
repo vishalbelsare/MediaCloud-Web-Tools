@@ -98,8 +98,8 @@ export function listFocalSetDefinitions(topicId) {
 }
 
 export function createFocusDefinition(topicId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'focal_set_definitions_id', 'query']);
-  return createApiPromise(`/api/topics/${topicId}/focus-definitions/create`, acceptedParams);
+  const acceptedParams = acceptParams(params, ['name', 'description', 'focalSetDefinitionsId', 'query']);
+  return createPostingApiPromise(`/api/topics/${topicId}/focus-definitions/create`, acceptedParams);
 }
 
 export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {

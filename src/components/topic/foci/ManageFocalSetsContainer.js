@@ -4,17 +4,25 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import ConfirmationDialog from '../../common/ConfirmationDialog';
-import { fetchFocalSetDefinitions, deleteFocalSetDefinition } from '../../../actions/topicActions';
+import LinkWithFilters from '../LinkWithFilters';
+import { fetchFocalSetDefinitions, deleteFocalSetDefinition, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateSnackBar } from '../../../actions/appActions';
+import messages from '../../../resources/messages';
 import FocalSetSummary from './create/FocalSetSummary';
+import ManageFocalSetsControlBar from './ManageFocalSetsControlBar';
 
 const localMessages = {
   focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Focal Sets' },
+  focalSetsManageAbout: { id: 'focalSets.manage.about',
+    defaultMessage: 'Every Focus is part of a Focal Set. All the Foci within a Focal Set share the same Focal Technique. Our tools lets you compare Foci with a Focal Set, but they don\'t let you easily compare Foci in different Focal Sets.' },
   removeTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove It?' },
   removeAbout: { id: 'focalSets.manage.remove.about', defaultMessage: '<p>Removing a Focal Set means that the next Snapshot you make will NOT include it.  This will NOT remove the Focal Set from this Snapshot.</p><p>Are you sure you want to remove this Focal Set? All the Foci that are part of it will be removed as well.</p>' },
   removeOk: { id: 'focalSets.manage.remove.ok', defaultMessage: 'Remove It' },
   removeSucceeded: { id: 'focalSets.manage.remove.succeeded', defaultMessage: 'Removed the Focal Set' },
   removeFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Focal Set failed :-(' },
+  focalSetsListTitle: { id: 'focalSets.manage.list.title', defaultMessage: 'Focal Sets for the Next Snapshot' },
+  focalSetsListAbout: { id: 'focalSets.manage.list.about',
+    defaultMessage: 'You can\'t change the Focal Sets or Foci within a Snapshot.  You can change the Focal Sets and Foci that will be included in the <b>next</b> Snapshot.  Here\'s a list of what will be included so far:' },
 };
 
 class ManageFocalSetsContainer extends React.Component {
@@ -46,7 +54,7 @@ class ManageFocalSetsContainer extends React.Component {
   }
 
   render() {
-    const { focalSetDefinitions } = this.props;
+    const { topicId, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
     this.removeConfirmationDialog = (
       <ConfirmationDialog
@@ -61,24 +69,45 @@ class ManageFocalSetsContainer extends React.Component {
       </ConfirmationDialog>
     );
     return (
-      <Grid>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h2><FormattedMessage {...localMessages.focalSetsManageTitle} /></h2>
-          </Col>
-        </Row>
-        <Row>
-          {focalSetDefinitions.map(focalSetDef =>
-            <FocalSetSummary
-              key={focalSetDef.focal_set_definitions_id}
-              focalSet={focalSetDef}
-              onDeleteClick={this.handleDeleteClick}
-              editable
-            />
-          )}
-          {this.removeConfirmationDialog}
-        </Row>
-      </Grid>
+      <div>
+        <ManageFocalSetsControlBar topicId={topicId} />
+        <Grid>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <h2><FormattedMessage {...localMessages.focalSetsManageTitle} /></h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={10} md={10} sm={12}>
+              <p>
+                <FormattedMessage {...localMessages.focalSetsManageAbout} />
+              </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={10} md={10} sm={12}>
+              <h3><FormattedMessage {...localMessages.focalSetsListTitle} /></h3>
+              <p><FormattedHTMLMessage {...localMessages.focalSetsListAbout} /></p>
+              <p>
+                <LinkWithFilters to={`/topics/${topicId}/foci/create`}>
+                  <FormattedMessage {...messages.focusCreate} />
+                </LinkWithFilters>
+              </p>
+            </Col>
+          </Row>
+          <Row>
+            {focalSetDefinitions.map(focalSetDef =>
+              <FocalSetSummary
+                key={focalSetDef.focal_set_definitions_id}
+                focalSet={focalSetDef}
+                onDeleteClick={this.handleDeleteClick}
+                editable
+              />
+            )}
+            {this.removeConfirmationDialog}
+          </Row>
+        </Grid>
+      </div>
     );
   }
 
@@ -113,6 +142,7 @@ const mapDispatchToProps = (dispatch) => ({
           dispatch(updateSnackBar({ open: true, message: failedMessage }));
         } else {
           dispatch(updateSnackBar({ open: true, message: succeededMessage }));
+          dispatch(setTopicNeedsNewSnapshot(true));
           dispatch(fetchFocalSetDefinitions(topicId));
         }
       });

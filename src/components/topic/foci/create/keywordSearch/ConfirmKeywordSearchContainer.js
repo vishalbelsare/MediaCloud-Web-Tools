@@ -4,8 +4,13 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition }
+import { push } from 'react-router-redux';
+import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
   from '../../../../../actions/topicActions';
+import { updateSnackBar } from '../../../../../actions/appActions';
+import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
+import { filteredLocation } from '../../../../util/paging';
+import messages from '../../../../../resources/messages';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },
@@ -15,12 +20,14 @@ const localMessages = {
   keywords: { id: 'focus.create.confirm.keywords', defaultMessage: '<b>Keywords</b>: {keywords}' },
   generateSnapshot: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Generate Snapshot' },
   addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Focus' },
+  focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Focal Set.' },
+  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Focus.' },
 };
 
 class ConfirmKeywordSearchContainer extends React.Component {
 
   render() {
-    const { topicId, saveAndAddAnother, saveAndGenerateSnapshot, properties } = this.props;
+    const { saveAndAddAnother, saveAndGenerateSnapshot, properties } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <Grid>
@@ -72,8 +79,8 @@ const mapStateToProps = (state) => ({
   formData: state.form.focusCreateSetup,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  saveFocus: (topicId, properties) => {
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage, generateSnapshot, generatingSnapshotMessage) => {
     const newFocusDefinition = {
       name: properties.name,
       description: properties.description,
@@ -85,26 +92,38 @@ const mapDispatchToProps = (dispatch) => ({
         description: properties.focalSetDescription,
         focalTechnique: properties.focalTechnique,
       };
-      console.log(newFocalSetDefinition);
-      /*
+      // save the focal definition
       dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
-        .then( (results) => {
+        .then((results) => {
+          dispatch(updateSnackBar({ open: true, message: focalSetSavedMessage }));  // user feedback
+          // save the focus
           newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
           createFocusDefinition(topicId, newFocusDefinition)
-        })
-        .then( (results) => {
-          dispatch(setTopicNeedsNewSnapshot(true));
+            .then(() => {
+              dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
+              dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+              dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
+              if (generateSnapshot) {
+                // TODO: fire off generate action
+                // dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));  // user feedback
+              }
+              dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
+            });
         });
-      */
     } else {
       newFocusDefinition.focalSetDefinitionsId = properties.focalSetDefinition.focal_set_definitions_id;
-      console.log(newFocusDefinition);
-      /*
-      createFocusDefinition(topicId, newFocusDefinition)
-        .then( (results) => {
-          dispatch(setTopicNeedsNewSnapshot(true));
+      dispatch(createFocusDefinition(topicId, newFocusDefinition))
+        .then((results) => {
+          // TODO: check results to make sure it worked before proceeding
+          dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
+          dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+          dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
+          if (generateSnapshot) {
+            // TODO: fire off generate action
+            // dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));  // user feedback
+          }
+          dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
         });
-      */
     }
   },
 });
@@ -112,24 +131,25 @@ const mapDispatchToProps = (dispatch) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     saveAndAddAnother: () => {
-      console.log('saveAndAddAnother');
-      dispatchProps.saveFocus(ownProps.topicId, stateProps.properties);
-      // save Focus
-      // reset properties
-      // go to step zero
+      dispatchProps.saveFocus(ownProps.topicId, stateProps.properties,
+        ownProps.intl.formatMessage(localMessages.focalSetSaved),
+        ownProps.intl.formatMessage(localMessages.focusSaved),
+        false, ownProps.intl.formatMessage(messages.snapshotGenerating)
+      );
     },
-    saveAndGenerateSnapshot: (properties) => {
-      console.log('saveAndGenerateSnapshot');
-      // save Focus
-      // generate snapshot
-      // go to focus summary
+    saveAndGenerateSnapshot: () => {
+      dispatchProps.saveFocus(ownProps.topicId, stateProps.properties,
+        ownProps.intl.formatMessage(localMessages.focalSetSaved),
+        ownProps.intl.formatMessage(localMessages.focusSaved),
+        true, ownProps.intl.formatMessage(messages.snapshotGenerating)
+      );
     },
   });
 }
 
 export default
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    injectIntl(
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       ConfirmKeywordSearchContainer
     )
   );
