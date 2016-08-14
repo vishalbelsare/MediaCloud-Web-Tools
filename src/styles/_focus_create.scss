@@ -30,13 +30,9 @@ form.focus-create-setup {
 
   .focal-set-summary {
     cursor: pointer;
-    p {
-      padding-left: 13px;
-      padding-right: 13px;
-    }
-    border: 1px solid #cccccc;
     &.selected {
       border-bottom: 4px solid rgb(0,0,0);
     }
   }
+  
 }

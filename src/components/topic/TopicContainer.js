@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
-import { setBrandMastheadText } from '../../actions/brandActions';
+import { setBrandMastheadText } from '../../actions/appActions';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {

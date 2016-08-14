@@ -57,6 +57,7 @@ const messages = {
   search: { id: 'search', defaultMessage: 'Search' },
   searchByKeywords: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
   next: { id: 'search', defaultMessage: 'Next' },
+  manage: { id: 'search', defaultMessage: 'manage' },
 
   download: { id: 'download', defaultMessage: 'Download' },
   explore: { id: 'explore', defaultMessage: 'Explore More' },

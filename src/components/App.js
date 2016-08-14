@@ -1,16 +1,18 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import BrandToolbar from './common/BrandToolbar';
-import BrandMasthead from './common/BrandMasthead';
 import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
-import messages from '../resources/messages';
-import { APP_NAME } from '../config';
-import { BRAND_COLORS } from '../styles/colors';
+import Snackbar from 'material-ui/Snackbar';
 // polyfill for Safari :-(
 import intl from 'intl';
 import intlEn from 'intl/locale-data/jsonp/en.js';
+import BrandToolbar from './common/BrandToolbar';
+import BrandMasthead from './common/BrandMasthead';
+import messages from '../resources/messages';
+import { APP_NAME } from '../config';
+import { BRAND_COLORS } from '../styles/colors';
+import { updateSnackBar } from '../actions/appActions';
 
 class App extends React.Component {
 
@@ -43,7 +45,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, snackBarInfo, handleSnackBarRequestClose } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     const brandColors = BRAND_COLORS[APP_NAME];
@@ -89,6 +91,12 @@ class App extends React.Component {
           </small>
           </p>
         </div>
+        <Snackbar
+          open={snackBarInfo.open}
+          message={snackBarInfo.message}
+          autoHideDuration={4000}
+          onRequestClose={handleSnackBarRequestClose}
+        />
       </div>
     );
   }
@@ -99,6 +107,10 @@ App.propTypes = {
   children: React.PropTypes.node,
   handleTouchTapLeftIconButton: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
+  // from state
+  snackBarInfo: React.PropTypes.object.isRequired,
+  // from dispatch
+  handleSnackBarRequestClose: React.PropTypes.func.isRequired,
 };
 
 App.contextTypes = {
@@ -106,4 +118,19 @@ App.contextTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(connect(null, null)(App));
+const mapStateToProps = (state) => ({
+  snackBarInfo: state.app.snackBar,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  handleSnackBarRequestClose: () => {
+    dispatch(updateSnackBar({ open: false, message: '' }));
+  },
+});
+
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      App
+    )
+  );

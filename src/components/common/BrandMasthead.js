@@ -79,7 +79,7 @@ BrandMasthead.contextTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  mastheadText: state.brand.mastheadText,
+  mastheadText: state.app.mastheadText,
 });
 
 export default injectIntl(connect(mapStateToProps, null)(BrandMasthead));

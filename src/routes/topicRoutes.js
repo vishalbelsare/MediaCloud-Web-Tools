@@ -10,6 +10,7 @@ import InfluentialStoriesContainer from '../components/topic/stories/Influential
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
 import CreateFocusContainer from '../components/topic/foci/create/CreateFocusContainer';
+import ManageFocalSetsContainer from '../components/topic/foci/ManageFocalSetsContainer';
 import { requireAuth } from './routes.js';
 
 const topicRoutes = (
@@ -28,6 +29,8 @@ const topicRoutes = (
       </Route>
 
       <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
+
+      <Route path="/topics/:topicId/foci/manage" component={ManageFocalSetsContainer} />
 
     </Route>
 

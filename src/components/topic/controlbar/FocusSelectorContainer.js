@@ -30,15 +30,20 @@ class FocusSelectorContainer extends React.Component {
     const selectedId = (selectedFocus !== null) ? selectedFocus.foci_id : null;
     if (foci.length !== 0) {
       content = (
-        <SelectField value={selectedId}
-          onChange={this.handleChange}
-          hintText={formatMessage(messages.focusPick)}
-        >
-          {foci.map(f =>
-            <MenuItem key={f.foci_id} value={f.foci_id} primaryText={`${f.focalSet.name}: ${f.name}`} />
-          )}
-          <MenuItem key={REMOVE_FOCUS} value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
-        </SelectField>
+        <div>
+          <SelectField value={selectedId}
+            onChange={this.handleChange}
+            hintText={formatMessage(messages.focusPick)}
+          >
+            {foci.map(f =>
+              <MenuItem key={f.foci_id} value={f.foci_id} primaryText={`${f.focalSet.name}: ${f.name}`} />
+            )}
+            <MenuItem key={REMOVE_FOCUS} value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
+          </SelectField>
+          <LinkWithFilters to={`/topics/${topicId}/foci/manage`}>
+            <FormattedMessage {...messages.manage} />
+          </LinkWithFilters>
+        </div>
       );
     } else {
       content = (

@@ -37,3 +37,9 @@ def topic_focal_set_definitions_create(topics_id):
     focal_technique = request.form['focalTechnique']
     new_focal_set = mc.topicFocalSetDefinitionCreate(topics_id, name, description, focal_technique)
     return jsonify(new_focal_set)
+
+@app.route('/api/topics/<topics_id>/focal-set-definitions/<focal_set_definitions_id>/delete', methods=['DELETE'])
+@flask_login.login_required
+def topic_focal_set_definition_delete(topics_id, focal_set_definitions_id):
+    results = mc.topicFocalSetDefinitionDelete(topics_id, focal_set_definitions_id)
+    return jsonify(results)
