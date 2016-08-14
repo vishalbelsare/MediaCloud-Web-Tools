@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition }
-  from '../../../../actions/topicActions';
+  from '../../../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },

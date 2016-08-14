@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LinkWithFilters from '../LinkWithFilters';
+import LinkWithFilters from '../../LinkWithFilters';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import messages from '../../../resources/messages';
+import messages from '../../../../resources/messages';
 
 class CreateFocusControlBar extends React.Component {
   render() {

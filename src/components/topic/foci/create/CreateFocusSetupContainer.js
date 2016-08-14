@@ -4,14 +4,14 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TextField from 'material-ui/TextField';
-import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../actions/topicActions';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import FocalSetDefinitionSelector from './FocalSetDefinitionSelector';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../lib/focalTechniques';
-import messages from '../../../resources/messages';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
+import messages from '../../../../resources/messages';
+import composeAsyncContainer from '../../../common/AsyncContainer';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },

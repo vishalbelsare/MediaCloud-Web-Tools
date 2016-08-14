@@ -1,57 +1,87 @@
-import { createApiPromise, createPostingApiPromise } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
 
-export const topicsList = (linkId) => createApiPromise('/api/topics/list', { linkId });
+export function topicsList(linkId) {
+  return createApiPromise('/api/topics/list', { linkId });
+}
 
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }
 
-export const topicTopStories = (topicId, params) => createApiPromise(`/api/topics/${topicId}/stories`, params);
+export function topicTopStories(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/stories`, acceptedParams);
+}
 
-export const topicTopMedia = (topicId, params) => createApiPromise(`/api/topics/${topicId}/media`, params);
+export function topicTopMedia(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/media`, acceptedParams);
+}
 
-export const topicTopWords = (topicId, params) => createApiPromise(`/api/topics/${topicId}/words`, params);
+export function topicTopWords(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
+}
 
-export const topicSnapshotsList = (topicId) => createApiPromise(`/api/topics/${topicId}/snapshots/list`);
+export function topicSnapshotsList(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/snapshots/list`);
+}
 
-export const topicTimespansList = (topicId, snapshotId) => createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
+export function topicTimespansList(topicId, snapshotId) {
+  return createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
+}
 
-export const topicSentenceCounts = (topicId, params) => createApiPromise(`/api/topics/${topicId}/sentences/count`, params);
+export function topicSentenceCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/sentences/count`, acceptedParams);
+}
 
-export const story = (topicId, storiesId) => createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
+export function story(topicId, storiesId) {
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
+}
 
-export const storyWords = (topicId, storiesId) => createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
+export function storyWords(topicId, storiesId) {
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
+}
 
 export function storyInlinks(topicId, storiesId, params) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/inlinks`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/inlinks`, acceptedParams);
 }
 
 export function storyOutlinks(topicId, storiesId, params) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/outlinks`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/outlinks`, acceptedParams);
 }
 
-export function media(topicId, mediaId) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}`);
+export function media(topicId, mediaId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}`, acceptedParams);
 }
 
 export function mediaSentenceCounts(topicId, mediaId, params) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/sentences/count`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/sentences/count`, acceptedParams);
 }
 
 export function mediaStories(topicId, mediaId, params) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/stories`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/stories`, acceptedParams);
 }
 
 export function mediaInlinks(topicId, mediaId, params) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/inlinks`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/inlinks`, acceptedParams);
 }
 
 export function mediaOutlinks(topicId, mediaId, params) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/outlinks`, acceptedParams);
 }
 
 export function mediaWords(topicId, mediaId, params) {
-  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words`, params);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/media/${mediaId}/words`, acceptedParams);
 }
 
 export function topicFocalSetsList(topicId, snapshotId) {
@@ -59,7 +89,8 @@ export function topicFocalSetsList(topicId, snapshotId) {
 }
 
 export function createFocalSetDefinition(topicId, params) {
-  return createPostingApiPromise(`api/topics/${topicId}/focal-set-definitions/create`, params);
+  const acceptedParams = acceptParams(params, ['name', 'description', 'focalTechnique']);
+  return createPostingApiPromise(`api/topics/${topicId}/focal-set-definitions/create`, acceptedParams);
 }
 
 export function listFocalSetDefinitions(topicId) {
@@ -67,5 +98,6 @@ export function listFocalSetDefinitions(topicId) {
 }
 
 export function createFocusDefinition(topicId, params) {
-  return createApiPromise(`/api/topics/${topicId}/focus-definitions/create`, params);
+  const acceptedParams = acceptParams(params, ['name', 'description', 'focal_set_definitions_id', 'query']);
+  return createApiPromise(`/api/topics/${topicId}/focus-definitions/create`, acceptedParams);
 }

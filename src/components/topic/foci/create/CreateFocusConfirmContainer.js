@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import ConfirmKeywordSearchContainer from './keywordSearch/ConfirmKeywordSearchContainer';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
 
 const localMessages = {
   unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },

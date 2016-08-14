@@ -9,7 +9,7 @@ import InfluentialMediaContainer from '../components/topic/media/InfluentialMedi
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
-import CreateFocusContainer from '../components/topic/foci/CreateFocusContainer';
+import CreateFocusContainer from '../components/topic/foci/create/CreateFocusContainer';
 import { requireAuth } from './routes.js';
 
 const topicRoutes = (

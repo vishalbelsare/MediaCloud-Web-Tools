@@ -6,18 +6,18 @@ const info = createReducer({
   initialState: {
     snapshotId: null,
     timespanId: null,
-    fociId: null,
+    focusId: null,
   },
   TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
-    snapshotId: parseInt(payload, 10),
+    snapshotId: (isNaN(payload)) ? null : parseInt(payload, 10),
     timespanId: null,
-    fociId: null,
+    focusId: null,
   }),
   TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
-    timespanId: parseInt(payload, 10),
+    timespanId: (isNaN(payload)) ? null : parseInt(payload, 10),
   }),
   TOPIC_FILTER_BY_FOCUS: (payload) => ({
-    focusId: parseInt(payload, 10),
+    focusId: (isNaN(payload)) ? null : parseInt(payload, 10),
   }),
 });
 

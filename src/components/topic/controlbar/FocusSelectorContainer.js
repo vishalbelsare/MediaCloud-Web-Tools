@@ -10,6 +10,8 @@ import { filteredLocation } from '../../util/paging';
 import LinkWithFilters from '../LinkWithFilters';
 import messages from '../../../resources/messages';
 
+const REMOVE_FOCUS = 0;
+
 class FocusSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.snapshotId !== this.props.snapshotId) {
@@ -35,6 +37,7 @@ class FocusSelectorContainer extends React.Component {
           {foci.map(f =>
             <MenuItem key={f.foci_id} value={f.foci_id} primaryText={`${f.focalSet.name}: ${f.name}`} />
           )}
+          <MenuItem key={REMOVE_FOCUS} value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
         </SelectField>
       );
     } else {
@@ -79,9 +82,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   handleFocusSelected: (focusId) => {
-    const newLocation = filteredLocation(ownProps.location, { focusId });
+    const selectedFocusId = (focusId === REMOVE_FOCUS) ? null : focusId;
+    const newLocation = filteredLocation(ownProps.location, { selectedFocusId });
     dispatch(push(newLocation));
-    dispatch(filterByFocus(focusId));
+    dispatch(filterByFocus(selectedFocusId));
   },
 });
 

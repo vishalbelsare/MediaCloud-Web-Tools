@@ -55,3 +55,19 @@ export function createPostingApiPromise(url, params) {
     response => response.json()
   );
 }
+
+/**
+ * Filter the params for a list of acceptableKeys
+ */
+export function acceptParams(params, acceptableKeys) {
+  if ((params === undefined) || (params === null)) {
+    return '';
+  }
+  const accepted = {};
+  for (const key of Object.keys(params)) {
+    if (acceptableKeys.includes(key)) {
+      accepted[key] = params[key];
+    }
+  }
+  return accepted;
+}

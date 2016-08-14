@@ -64,6 +64,7 @@ const messages = {
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
 
   focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
+  removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any focus' },
 
 };
 

@@ -25,7 +25,7 @@ function getTimespanFromListById(list, id) {
 const timespans = createAsyncReducer({
   initialState: {
     list: [],
-    isVisible: true,
+    isVisible: false,
     selectedPeriod: 'overall',
     selectedId: null, // annoying that I have to keep this here too... topic.filters should be the one true source of this info :-(
     selected: null,

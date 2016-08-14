@@ -4,8 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../actions/topicActions';
-import messages from '../../../../resources/messages';
+import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import messages from '../../../../../resources/messages';
 import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
 
 const localMessages = {

@@ -4,8 +4,8 @@ import CreateFocusControlBar from './CreateFocusControlBar';
 import CreateFocusSetupContainer from './CreateFocusSetupContainer';
 import CreateFocusEditContainer from './CreateFocusEditContainer';
 import CreateFocusConfirmContainer from './CreateFocusConfirmContainer';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../actions/topicActions';
-import { INITIAL_STATE } from '../../../reducers/topics/selected/focalSets/create/properties';
+import { setNewFocusProperties, goToCreateFocusStep } from '../../../../actions/topicActions';
+import { INITIAL_STATE } from '../../../../reducers/topics/selected/focalSets/create/properties';
 
 class CreateFocusContainer extends React.Component {
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContainer';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
 
 const localMessages = {
   unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
