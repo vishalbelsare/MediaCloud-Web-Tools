@@ -12,7 +12,7 @@ import BrandMasthead from './common/BrandMasthead';
 import messages from '../resources/messages';
 import { APP_NAME } from '../config';
 import { BRAND_COLORS } from '../styles/colors';
-import { updateSnackBar } from '../actions/appActions';
+import { updateFeedback } from '../actions/appActions';
 import { VERSION } from '../config';
 
 class App extends React.Component {
@@ -46,7 +46,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { children, snackBarInfo, handleSnackBarRequestClose } = this.props;
+    const { children, feedback, handleSnackBarRequestClose } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = this.getStyles();
     const brandColors = BRAND_COLORS[APP_NAME];
@@ -95,8 +95,8 @@ class App extends React.Component {
           </p>
         </div>
         <Snackbar
-          open={snackBarInfo.open}
-          message={snackBarInfo.message}
+          open={feedback.open}
+          message={feedback.message}
           autoHideDuration={4000}
           onRequestClose={handleSnackBarRequestClose}
         />
@@ -111,7 +111,7 @@ App.propTypes = {
   handleTouchTapLeftIconButton: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
   // from state
-  snackBarInfo: React.PropTypes.object.isRequired,
+  feedback: React.PropTypes.object.isRequired,
   // from dispatch
   handleSnackBarRequestClose: React.PropTypes.func.isRequired,
 };
@@ -122,12 +122,12 @@ App.contextTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  snackBarInfo: state.app.snackBar,
+  feedback: state.app.feedback,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   handleSnackBarRequestClose: () => {
-    dispatch(updateSnackBar({ open: false, message: '' }));
+    dispatch(updateFeedback({ open: false, message: '' }));
   },
 });
 

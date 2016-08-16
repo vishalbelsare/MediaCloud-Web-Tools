@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary, generateSnapshot } from '../../actions/topicActions';
-import { setBrandMastheadText, updateSnackBar } from '../../actions/appActions';
+import { setBrandMastheadText, updateFeedback } from '../../actions/appActions';
 import messages from '../../resources/messages';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
@@ -67,7 +67,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(generateSnapshot(ownProps.params.topicId))
       .then((results) => {
         if (results.success === 1) {
-          dispatch(updateSnackBar({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
         } else {
           // TODO: error message!
         }

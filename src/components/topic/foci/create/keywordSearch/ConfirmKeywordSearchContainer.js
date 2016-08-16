@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { push } from 'react-router-redux';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties, generateSnapshot }
   from '../../../../../actions/topicActions';
-import { updateSnackBar } from '../../../../../actions/appActions';
+import { updateFeedback } from '../../../../../actions/appActions';
 import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
 import messages from '../../../../../resources/messages';
 
@@ -95,18 +95,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
         .then((results) => {
           // TODO: check results to make sure it worked before proceeding
-          dispatch(updateSnackBar({ open: true, message: focalSetSavedMessage }));  // user feedback
+          dispatch(updateFeedback({ open: true, message: focalSetSavedMessage }));  // user feedback
           // save the focus
           newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
           dispatch(createFocusDefinition(topicId, newFocusDefinition))
             .then(() => {
               dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-              dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
+              dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
               if (shouldGenerateSnapshot) {
                 dispatch(generateSnapshot(ownProps.topicId))
                   .then(() => {
-                    dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));
+                    dispatch(updateFeedback({ open: true, message: generatingSnapshotMessage }));
                   });
               }
               dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
@@ -119,11 +119,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // TODO: check results to make sure it worked before proceeding
           dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
           dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-          dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
+          dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
           if (shouldGenerateSnapshot) {
             dispatch(generateSnapshot(ownProps.topicId))
               .then(() => {
-                dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));
+                dispatch(updateFeedback({ open: true, message: generatingSnapshotMessage }));
               });
           }
           dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page

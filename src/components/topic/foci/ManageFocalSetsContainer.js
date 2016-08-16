@@ -8,7 +8,7 @@ import ConfirmationDialog from '../../common/ConfirmationDialog';
 import LinkWithFilters from '../LinkWithFilters';
 import { fetchFocalSetDefinitions, deleteFocalSetDefinition, setTopicNeedsNewSnapshot, generateSnapshot }
   from '../../../actions/topicActions';
-import { updateSnackBar } from '../../../actions/appActions';
+import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import FocalSetSummary from './create/FocalSetSummary';
 import ManageFocalSetsControlBar from './ManageFocalSetsControlBar';
@@ -170,9 +170,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(deleteFocalSetDefinition(topicId, focalSetDefinitionId))
       .then((results) => {
         if (results.success === 0) {
-          dispatch(updateSnackBar({ open: true, message: failedMessage }));
+          dispatch(updateFeedback({ open: true, message: failedMessage }));
         } else {
-          dispatch(updateSnackBar({ open: true, message: succeededMessage }));
+          dispatch(updateFeedback({ open: true, message: succeededMessage }));
           dispatch(setTopicNeedsNewSnapshot(true));
           dispatch(fetchFocalSetDefinitions(topicId));
         }
@@ -182,7 +182,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(generateSnapshot(ownProps.params.topicId))
       .then((results) => {
         if (results.success === 1) {
-          dispatch(updateSnackBar({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
         } else {
           // TODO: error message!
         }
