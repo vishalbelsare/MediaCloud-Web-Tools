@@ -20,7 +20,7 @@ def topic_sentence_count(topics_id):
 @flask_login.login_required
 def topic_sentence_count_csv(topics_id):
     snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id, timespans_id, foci_id=foci_id)
+    return stream_sentence_count_csv('sentence-counts', topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
 
 @cache
 def split_sentence_count(topics_id, **kwargs):
