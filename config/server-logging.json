@@ -30,6 +30,10 @@
     "mediameter": {
       "level": "DEBUG",
       "propagate": true
+    },
+    "requests": {
+      "level": "DEBUG",
+      "propagate": true
     }
   }
 
