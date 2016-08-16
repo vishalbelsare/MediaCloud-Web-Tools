@@ -13,6 +13,7 @@ import messages from '../resources/messages';
 import { APP_NAME } from '../config';
 import { BRAND_COLORS } from '../styles/colors';
 import { updateSnackBar } from '../actions/appActions';
+import { VERSION } from '../config';
 
 class App extends React.Component {
 
@@ -88,6 +89,8 @@ class App extends React.Component {
             <a style={styles.a} href="https://cyber.law.harvard.edu">
               <FormattedMessage {...messages.berkmanName} />
             </a>.
+            <br />
+            v{VERSION}
           </small>
           </p>
         </div>
