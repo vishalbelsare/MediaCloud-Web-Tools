@@ -3,9 +3,9 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, mc
-import server.views.util.csv as csv
+import server.util.csv as csv
 from server.cache import cache
-from server.views.util.request import filters_from_args
+from server.util.request import filters_from_args
 
 logger = logging.getLogger(__name__)
 

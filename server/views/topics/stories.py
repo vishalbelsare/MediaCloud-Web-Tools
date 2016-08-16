@@ -5,9 +5,9 @@ import flask_login
 
 from server import app, mc
 from server.views.topics import validated_sort
-import server.views.util.csv as csv
+import server.util.csv as csv
 from server.cache import cache
-from server.views.util.request import filters_from_args
+from server.util.request import filters_from_args
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])

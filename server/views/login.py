@@ -1,19 +1,14 @@
 import logging
-from flask import Flask, render_template, jsonify, request, abort
-import flask_login
+from flask import jsonify, request
 
 from server import app, auth
-from server.views.util.request import validate_params_exist, json_error_response
+from server.util.request import form_fields_required, json_error_response
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/login', methods=['POST'])
+@form_fields_required('email', 'password')
 def login_with_password():
-    try:
-        validate_params_exist(request.form, ['email', 'password'])
-    except Exception as e:
-        logger.exception("Missing a required param")
-        return json_error_response(e.args[0])
     username = request.form["email"]
     logger.debug("login request from %s", username)
     password = request.form["password"]
@@ -26,12 +21,8 @@ def login_with_password():
     return jsonify(response)
 
 @app.route('/api/login-with-key', methods=['POST'])
+@form_fields_required('email', 'key')
 def login_with_key():
-    try:
-        validate_params_exist(request.form, ['email', 'key'])
-    except Exception as e:
-        logger.exception("Missing a required param")
-        return json_error_response(e.args[0])
     username = request.form["email"]
     logger.debug("login request from %s", username)
     key = request.form["key"]
