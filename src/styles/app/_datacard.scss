@@ -1,6 +1,8 @@
+@import '../_constants';
+
 .datacard {
 
-  border: 1px solid rgb(242,242,242);
+  border: 1px solid $material-grey300;
   padding: 20px;
   margin-bottom: 20px;
 
@@ -21,7 +23,7 @@
   }
 
   &.disabled {
-    color: #cccccc;
+    color: $material-grey400;
   }
 
   &.unbordered {

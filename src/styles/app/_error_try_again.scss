@@ -1,0 +1,11 @@
+@import '../_constants';
+
+.error-try-again {
+	text-align: center;
+	padding: 10px;
+
+	p {
+		color: $material-grey400;
+	}
+
+}

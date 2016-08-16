@@ -1,10 +1,12 @@
+@import '../_constants';
+
 .controlbar {
 
   margin-bottom: 15px;
 
   .main {
-    background-color: rgb(238,238,238); // material grey200
-    border-bottom: 1px solid rgb(224,224,224); // material grey300
+    background-color: $material-grey200;
+    border-bottom: 1px solid $material-grey300;
 
     .left {
       padding-top: 18px;
@@ -14,8 +16,8 @@
   }
 
   .sub {
-    background-color: #ffffff;
-    border-bottom: 1px solid rgb(224,224,224); // material grey300
+    background-color: $white;
+    border-bottom: 1px solid $material-grey300;
   }
 
 }

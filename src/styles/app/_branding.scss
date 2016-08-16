@@ -1,7 +1,8 @@
+@import '../_constants';
 
 #branding-toolbar {
   font-family: 'Lato', sans-serif;
-  color: #ffffff;
+  color: $white;
   ul {
     display: block;
     list-style: none;
@@ -16,17 +17,17 @@
         font-size: 18px;
         line-height: 1.4em;
         text-decoration: none;
-        color: #ffffff;
+        color: $white;
       }
     }
     li.dashboard {
-        background-color: #e14c11;
+        background-color: $dashboard-primary;
     }
     li.sources {
-        background-color: #3c97bd;
+        background-color: $sources-primary;
     }
     li.topics {
-        background-color: #47c4ac;
+        background-color: $topics-primary;
     }
   }
 }
@@ -39,7 +40,7 @@
     margin-top: 20px;
     margin-bottom: 10px;
     line-height: 1.1;
-    color: #ffffff;
+    color: $white;
     img {
       vertical-align: middle;
       position: relative;
@@ -52,7 +53,7 @@
     strong {
       font-weight: 700;
       a {
-        color: #ffffff;
+        color: $white;
       }
     }
   }
@@ -62,7 +63,7 @@
     margin-bottom: 10px;
     float: right;
     font-size: 18px;
-    color: #ffffff;
+    color: $white;
     opacity: 0.5;
     font-variant: small-caps;
   }
