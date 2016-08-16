@@ -1,3 +1,22 @@
+@import '_constants';
+
+body {
+  font-family: $font-families;
+  font-size: 13px;
+  color: $primary-color;
+  margin: 0px;
+  padding: 0px;
+}
+
+a {
+  color: #47c4ac;
+  text-decoration: none;
+}
+
+p.light {
+  color: rgb(153,153,153);
+}
+
 table {
   padding: 0px;
   border-spacing: 0;

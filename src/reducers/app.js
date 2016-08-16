@@ -1,8 +1,8 @@
-import { SET_BRAND_MASTHEAD_TEXT, UPDATE_SNACK_BAR } from '../actions/appActions';
+import { SET_BRAND_MASTHEAD_TEXT, UPDATE_FEEDBACK } from '../actions/appActions';
 
 const INITIAL_STATE = {
   mastheadText: null,
-  snackBar: {
+  feedback: {
     open: false,
     message: '',
   },
@@ -16,9 +16,9 @@ export default function user(state = INITIAL_STATE, action) {
         mastheadText: action.payload,
       });
 
-    case UPDATE_SNACK_BAR:
+    case UPDATE_FEEDBACK:
       return Object.assign({}, state, {
-        snackBar: action.payload,
+        feedback: action.payload,
       });
 
     default:

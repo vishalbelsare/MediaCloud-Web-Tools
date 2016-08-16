@@ -14,7 +14,10 @@ module.exports = {
       `${rootAssetPath}/index`,
     ],
     app_css: [
-      `${rootAssetPath}/styles/main`,
+      `${rootAssetPath}/styles/base`,
+      `${rootAssetPath}/styles/app/app`,
+      `${rootAssetPath}/styles/viz/viz`,
+      `${rootAssetPath}/styles/topics/topics`,
     ],
   },
   output: {
@@ -31,8 +34,6 @@ module.exports = {
   devtool: 'eval',
   module: {
     // Various loaders to pre-process files of specific types.
-    // If you wanted to SASS for example, you'd want to install this:
-    //   https://github.com/jtangelder/sass-loader
     loaders: [
       {
         test: /\.js?$/i,

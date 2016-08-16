@@ -37,7 +37,7 @@ class BrandMasthead extends React.Component {
     }
     const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });
     return (
-      <div className="branding-masthead" style={styles.root} >
+      <div id="branding-masthead" style={styles.root} >
         <Grid>
           <Row>
             <Col lg={6} md={6} sm={6}>

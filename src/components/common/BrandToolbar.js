@@ -8,7 +8,7 @@ const BrandToolbar = (props) => {
   const { formatMessage } = props.intl;
   const styles = { backgroundColor };
   return (
-    <div className="branding-toolbar" style={styles} >
+    <div id="branding-toolbar" style={styles} >
       <Grid>
         <Row>
           <Col lg={12}>
