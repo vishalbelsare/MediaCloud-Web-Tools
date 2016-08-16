@@ -2,6 +2,7 @@ import datetime
 import logging
 import flask_login
 import mediacloud
+from flask import request
 
 from server import db, mc, login_manager
 
@@ -56,9 +57,9 @@ def load_user(userid):
     return User.get(userid)
 
 @login_manager.request_loader
-def load_user_from_request(request):
-    if COOKIE_USER_KEY in request.cookies:
-        return User.get(request.cookies[COOKIE_USER_KEY])
+def load_user_from_request(request_object):
+    if COOKIE_USER_KEY in request_object.cookies:
+        return User.get(request_object.cookies[COOKIE_USER_KEY])
     return None
 
 def login_user(user):
@@ -95,3 +96,14 @@ def authenticate_by_password(username, password):
     except Exception:
         logging.exception("authenticate_by_password failed for %s", username)
         return flask_login.AnonymousUserMixin()
+
+def user_mediacloud_key():
+    return request.cookies[COOKIE_USER_KEY]
+
+def user_mediacloud_client():
+    '''
+    Return a mediacloud client for the logged in user
+    '''
+    user_mc_key = user_mediacloud_key()
+    user_mc = mediacloud.api.MediaCloud(user_mc_key)
+    return user_mc
