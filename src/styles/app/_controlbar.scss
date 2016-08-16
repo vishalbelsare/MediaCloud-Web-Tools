@@ -3,8 +3,8 @@
   margin-bottom: 15px;
 
   .main {
-    background-color: #f2f2f2;
-    border-bottom: 1px solid rgb(215,215,215);
+    background-color: rgb(238,238,238); // material grey200
+    border-bottom: 1px solid rgb(224,224,224); // material grey300
 
     .left {
       padding-top: 18px;
@@ -15,7 +15,7 @@
 
   .sub {
     background-color: #ffffff;
-    border-bottom: 1px solid rgb(215,215,215);
+    border-bottom: 1px solid rgb(224,224,224); // material grey300
   }
 
 }

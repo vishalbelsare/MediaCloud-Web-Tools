@@ -9,12 +9,11 @@ body {
 }
 
 a {
-  color: #47c4ac;
   text-decoration: none;
 }
 
 p.light {
-  color: rgb(153,153,153);
+  color: rgb(189,189,189); // material grey400
 }
 
 table {
@@ -28,14 +27,14 @@ table th {
   text-align: left;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: rgb(51, 51, 51);
+  color: rgb(33,33,33); // material grey900
 	position: relative;
 	background-color: inherit;
   padding: 5px;
 }
 
 table tr.even {
-  background-color: rgb(242, 242, 242);
+  background-color: rgb(238,238,238); // material grey200
 }
 
 table tr.odd {
@@ -45,4 +44,24 @@ table tr.odd {
 table td {
   padding: 8px;
   font-size: 13px;
+}
+
+footer {
+  background-color: rgb(238,238,238); // material grey200
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-top: 1px solid rgb(224,224,224); // material grey300
+
+  p {
+    margin: 0 auto;
+    padding: 0;
+    color: rgb(66,66,66); // material grey800
+    max-width: 356px;
+  }
+
+  a {
+    color: rgb(66,66,66); // material grey800
+  }
+
 }

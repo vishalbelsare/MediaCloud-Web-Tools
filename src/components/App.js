@@ -1,7 +1,6 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { darkWhite, grey200, grey800 } from 'material-ui/styles/colors';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
 // polyfill for Safari :-(
@@ -17,38 +16,9 @@ import { VERSION } from '../config';
 
 class App extends React.Component {
 
-  getStyles() {
-    const styles = {
-      root: {
-        minHeight: 400,
-        marginBottom: 20,
-      },
-      footer: {
-        backgroundColor: grey200,
-        textAlign: 'center',
-        paddingTop: 30,
-        paddingBottom: 30,
-      },
-      a: {
-        color: grey800,
-      },
-      p: {
-        margin: '0 auto',
-        padding: 0,
-        text: grey800,
-        maxWidth: 356,
-      },
-      iconButton: {
-        color: darkWhite,
-      },
-    };
-    return styles;
-  }
-
   render() {
     const { children, feedback, handleSnackBarRequestClose } = this.props;
     const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
     const brandColors = BRAND_COLORS[APP_NAME];
     let toolNameMessage = null;
     let tooldescriptionMessage = null;
@@ -76,24 +46,24 @@ class App extends React.Component {
             lightColor={brandColors.light}
           />
         </header>
-        <div style={styles.root}>
+        <div id="content">
           {children}
         </div>
-        <div style={styles.footer}>
-          <p style={styles.p}><small>
+        <footer>
+          <p><small>
             {'Created by the '}
-            <a style={styles.a} href="https://civic.mit.edu/">
+            <a href="https://civic.mit.edu/">
               <FormattedMessage {...messages.c4cmName} />
             </a>
             {' and the '}
-            <a style={styles.a} href="https://cyber.law.harvard.edu">
+            <a href="https://cyber.law.harvard.edu">
               <FormattedMessage {...messages.berkmanName} />
             </a>.
             <br />
             v{VERSION}
           </small>
           </p>
-        </div>
+        </footer>
         <Snackbar
           open={feedback.open}
           message={feedback.message}
