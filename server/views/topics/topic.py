@@ -7,7 +7,6 @@ from server.cache import cache
 
 logger = logging.getLogger(__name__)
 
-@cache
 @app.route('/api/topics/list', methods=['GET'])
 @flask_login.login_required
 def topic_list():
@@ -22,14 +21,12 @@ def topic_summary(topics_id):
     topic = mc.topic(topics_id)
     return jsonify(topic)
 
-@cache
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required
 def topic_snapshots_list(topics_id):
     snapshots = mc.topicSnapshotList(topics_id)
     return jsonify({'list':snapshots})
 
-@cache
 @app.route('/api/topics/<topics_id>/snapshots/generate', methods=['POST'])
 @flask_login.login_required
 def topic_snapshot_generate(topics_id):
