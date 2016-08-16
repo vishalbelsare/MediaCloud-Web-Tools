@@ -19,8 +19,8 @@ const localMessages = {
 
 class InfluentialMediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort)) {
+    const { fetchData, filters, sort } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
       fetchData(nextProps);
     }
   }
@@ -36,9 +36,8 @@ class InfluentialMediaContainer extends React.Component {
     const { fetchPagedData, links } = this.props;
     fetchPagedData(this.props, links.next);
   }
-  downloadCsv = (evt) => {
+  downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
-    evt.preventDefault();
     const url = `/api/topics/${topicId}/media.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }

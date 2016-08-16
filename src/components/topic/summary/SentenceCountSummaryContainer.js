@@ -28,9 +28,8 @@ class SentenceCountSummaryContainer extends React.Component {
     };
     return styles;
   }
-  downloadCsv = (event) => {
+  downloadCsv = () => {
     const { topicId, filters } = this.props;
-    event.preventDefault();
     const url = `/api/topics/${topicId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
     window.location = url;
   }

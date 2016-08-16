@@ -16,9 +16,8 @@ class WordsSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  downloadCsv = (event) => {
+  downloadCsv = () => {
     const { topicId, filters } = this.props;
-    event.preventDefault();
     const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
     window.location = url;
   }

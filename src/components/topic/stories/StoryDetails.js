@@ -19,7 +19,7 @@ const localMessages = {
   detectedLanguage: { id: 'story.details.detectedLanguage',
     defaultMessage: 'We have detected that it\'s language "{detectedLanguage}"' },
   inlinkCount: { id: 'story.details.inlinkCount',
-    defaultMessage: '{count, plural,\n  =0 {No stories link}\n  =1 {One story links}\n  other {# stories link}} link to this one during this timespan.' },
+    defaultMessage: '{count, plural,\n  =0 {No stories link}\n  =1 {One story links}\n  other {# stories link}} to this one during this timespan.' },
   mediaInlinkCount: { id: 'story.details.mediaInlinkCount',
     defaultMessage: '{count, plural,\n  =0 {No other media sources link}\n  =1 {One other media source links}\n  other {# other media sources link}} to this story during this timespan.' },
   outlinkCount: { id: 'story.details.outlinkCount',

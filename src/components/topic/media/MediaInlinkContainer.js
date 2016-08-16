@@ -12,8 +12,8 @@ const STORIES_TO_SHOW = 10;
 
 class MediaInlinksContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort)) {
+    const { fetchData, filters, sort } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
       fetchData(nextProps);
     }
   }
@@ -21,9 +21,8 @@ class MediaInlinksContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   }
-  downloadCsv = (event) => {
+  downloadCsv = () => {
     const { mediaId, topicId, filters } = this.props;
-    event.preventDefault();
     const url = `/api/topics/${topicId}/media/${mediaId}/inlinks.csv?timespanId=${filters.timespanId}`;
     window.location = url;
   }

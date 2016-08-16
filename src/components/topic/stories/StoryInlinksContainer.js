@@ -15,9 +15,8 @@ class StoryInlinksContainer extends React.Component {
       fetchData(nextProps.filters);
     }
   }
-  downloadCsv = (event) => {
+  downloadCsv = () => {
     const { storiesId, topicId, filters } = this.props;
-    event.preventDefault();
     const url = `/api/topics/${topicId}/stories/${storiesId}/inlinks.csv?timespanId=${filters.timespanId}`;
     window.location = url;
   }

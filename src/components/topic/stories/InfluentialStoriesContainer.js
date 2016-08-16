@@ -19,9 +19,9 @@ const localMessages = {
 
 class InfluentialStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if ((nextProps.filters !== this.props.filters) || (nextProps.sort !== this.props.sort) || (nextProps.links.current !== this.props.links.current)) {
-      if ((nextProps.filters.snapshotId !== null) && (nextProps.filters.timespanId !== null)) {
+    const { fetchData, filters, sort, links } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
+      if ((nextProps.filters.snapshotId !== null) && (filters.timespanId !== null)) {
         fetchData(nextProps);
       }
     }
@@ -34,9 +34,8 @@ class InfluentialStoriesContainer extends React.Component {
     const { fetchData } = this.props;
     fetchData(this.props);
   }
-  downloadCsv = (evt) => {
+  downloadCsv = () => {
     const { filters, sort, topicId } = this.props;
-    evt.preventDefault();
     const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }

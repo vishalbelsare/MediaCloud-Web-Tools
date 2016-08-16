@@ -15,8 +15,8 @@ const localMessages = {
 
 class MediaSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if (nextProps.filters !== this.props.filters) {
+    const { fetchData, filters } = this.props;
+    if (nextProps.filters.timespanId !== filters.timespanId) {
       fetchData(nextProps);
     }
   }
@@ -28,9 +28,8 @@ class MediaSentenceCountContainer extends React.Component {
     };
     return styles;
   }
-  downloadCsv = (event) => {
+  downloadCsv = () => {
     const { topicId, mediaId, filters } = this.props;
-    event.preventDefault();
     const url = `/api/topics/${topicId}/media/${mediaId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
     window.location = url;
   }
