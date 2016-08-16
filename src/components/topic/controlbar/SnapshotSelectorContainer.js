@@ -13,29 +13,12 @@ class SnapshotSelectorContainer extends React.Component {
       fetchData(nextProps.topicId, nextProps.snapshotId);
     }
   }
-  getStyles() {
-    const styles = {
-      root: {
-        backgroundColor: '#303030',
-        color: '#ffffff',
-      },
-      right: {
-        float: 'right',
-      },
-    };
-    return styles;
-  }
   render() {
     const { snapshots, handleSnapshotSelected, snapshotId } = this.props;
-    const styles = this.getStyles();
     return (
-      <div style={styles.root}>
-        <div style={styles.right}>
-          <SnapshotSelector selectedId={snapshotId}
-            snapshots={snapshots} onSnapshotSelected={handleSnapshotSelected}
-          />
-        </div>
-      </div>
+      <SnapshotSelector selectedId={snapshotId}
+        snapshots={snapshots} onSnapshotSelected={handleSnapshotSelected}
+      />
     );
   }
 }

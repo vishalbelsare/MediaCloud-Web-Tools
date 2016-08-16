@@ -1,3 +1,5 @@
+@import '../constants';
+
 form.focus-create-setup {
 
   label {
@@ -20,18 +22,18 @@ form.focus-create-setup {
         cursor: default;
       }
       p {
-        color: #cccccc;
+        color: $material-grey500;
       }
     }
     &.selected {
-      border-bottom: 4px solid rgb(0,0,0);
+      border-bottom: 4px solid $black;
     }
   }
 
   .focal-set-summary {
     cursor: pointer;
     &.selected {
-      border-bottom: 4px solid rgb(0,0,0);
+      border-bottom: 4px solid $black;
     }
   }
   

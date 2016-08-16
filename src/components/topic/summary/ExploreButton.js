@@ -2,28 +2,16 @@ import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import LinkWithFilters from '../LinkWithFilters';
 
-class ExploreButton extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-    };
-    return styles;
-  }
-  render() {
-    const { tooltip, to, style } = this.props;
-    const styles = this.getStyles();
-    return (
-    <div style={styles.root}>
-      <LinkWithFilters to={to} style={style}>
-        <IconButton iconClassName="material-icons" tooltip={tooltip}>
-          subdirectory_arrow_right
-        </IconButton>
-      </LinkWithFilters>
-    </div>
-    );
-  }
-}
+const ExploreButton = (props) => {
+  const { tooltip, to, style } = props;
+  return (
+    <LinkWithFilters to={to} style={style}>
+      <IconButton iconClassName="material-icons" tooltip={tooltip}>
+        subdirectory_arrow_right
+      </IconButton>
+    </LinkWithFilters>
+  );
+};
 
 ExploreButton.propTypes = {
   tooltip: React.PropTypes.string.isRequired,

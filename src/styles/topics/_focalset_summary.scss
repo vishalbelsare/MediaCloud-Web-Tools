@@ -1,6 +1,8 @@
+@import '../constants';
+
 .focal-set-summary {
 
-  border: 1px solid #cccccc;
+  border: 1px solid $material-grey500;
 
   p {
     padding-left: 13px;

@@ -7,7 +7,7 @@ div.ordered-word-cloud-tooltip {
     padding: 8px;
     font-family: $font-families;
     font-size: 11px;
-    background: rgb(190,190,190);
-    border: 1px solid rgb(242,242,242);
+    background: $material-grey400;
+    border: 1px solid $material-grey200;
     pointer-events: none;
 }

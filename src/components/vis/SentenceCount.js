@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import AttentionOverTimeChart from './AttentionOverTimeChart';
 
 const localMessages = {
@@ -10,35 +10,19 @@ const localMessages = {
   },
 };
 
-class SentenceCount extends React.Component {
-
-  getStyles() {
-    const styles = {
-      scrollWrapper: {
-        overflow: 'scroll',
-        height: 300,
-        display: 'block',
-      },
-    };
-    return styles;
-  }
-
-  render() {
-    const { total, counts, health } = this.props;
-    const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
-    return (
-      <div style={styles.scrollWrapper}>
-        <AttentionOverTimeChart data={counts} height={250}
-          title={ formatMessage(localMessages.chartTitle) }
-          yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
-          health={ health }
-        />
-      </div>
-    );
-  }
-
-}
+const SentenceCount = (props) => {
+  const { total, counts, health } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <div>
+      <AttentionOverTimeChart data={counts} height={250}
+        title={ formatMessage(localMessages.chartTitle) }
+        yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
+        health={ health }
+      />
+    </div>
+  );
+};
 
 SentenceCount.propTypes = {
   total: React.PropTypes.number,

@@ -1,10 +1,12 @@
+@import '../constants';
 
 .snapshot-selector {
   
-  color: #ffffff;
+  color: $white;
   display: block;
   padding-left: 20px;
-  background-color: #303030;
+  background-color: $material-grey900;
+  float: right;
 
   .label {
     font-size: 13px;
@@ -14,7 +16,7 @@
   }
 
   .popup-list {
-    max-height: 300;
+    max-height: 300px;
     overflow-y: scroll;
   }
 
@@ -22,19 +24,19 @@
 
 .snapshot-item {
   padding: 10px;
-  background-color: #303030;
-  border-top: 1px solid #666666;
-  color: #ffffff;
+  background-color: $material-grey900;
+  border-top: 1px solid $material-grey800;
+  color: $white;
   font-size: 13px;
   cursor: pointer;
 
   &.disabled {
-    color: #999999;
+    color: $material-grey500;
     cursor: default;
   }
 
   &.selected {
-    color: rgb(71, 196, 172);
+    color: $topics-primary;
   }
 
 }

@@ -20,14 +20,6 @@ class SentenceCountSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  getStyles() {
-    const styles = {
-      clearFix: {
-        clear: 'both',
-      },
-    };
-    return styles;
-  }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
     const url = `/api/topics/${topicId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
@@ -36,14 +28,12 @@ class SentenceCountSummaryContainer extends React.Component {
   render() {
     const { total, counts } = this.props;
     const { formatMessage } = this.props.intl;
-    const styles = this.getStyles();
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <div style={styles.clearFix} />
         <AttentionOverTimeChart total={total} data={counts} height={200}
           lineColor={ getBrandDarkColor() }
         />

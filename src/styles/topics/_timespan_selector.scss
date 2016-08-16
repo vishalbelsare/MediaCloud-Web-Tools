@@ -4,7 +4,7 @@
   
   .xaxis {
     fill: none;
-    stroke: rgb(204,204,204);
+    stroke: $material-grey300;
     shape-rendering: crispEdges;
   }
 
@@ -15,10 +15,10 @@
   }
 
   .timespan {
-    fill: rgb(153,153,153);
+    fill: $material-grey500;
     fill-opacity: 0.5;
     stroke-width: 1;
-    stroke: rgb(255,255,255);
+    stroke: $white;
     stroke-opacity: 0.5;
     cursor: pointer;
   }
@@ -42,7 +42,7 @@
 
     a.toggle-control {
       float: right;
-      color: rgb(201,201,201);
+      color: $material-grey500;
     }
 
   }

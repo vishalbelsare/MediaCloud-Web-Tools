@@ -11,29 +11,18 @@ import TopicTimespanInfo from './TopicTimespanInfo';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 class TopicSummaryContainer extends React.Component {
-  getStyles() {
-    const styles = {
-      root: {
-      },
-      row: {
-        marginBottom: 15,
-      },
-    };
-    return styles;
-  }
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
     const { filters, topicId, topicInfo, timespan } = this.props;
-    const styles = this.getStyles();
     let content = <div />;
     let subContent = <div />;
     if (this.filtersAreSet()) {
       subContent = (
         <Grid>
-          <Row style={styles.row}>
+          <Row>
             <Col lg={6} md={12} sm={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
@@ -41,12 +30,12 @@ class TopicSummaryContainer extends React.Component {
               <WordsSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
-          <Row style={styles.row}>
+          <Row>
             <Col lg={12} md={12} sm={12}>
               <StoriesSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
-          <Row style={styles.row}>
+          <Row>
             <Col lg={6} md={12} sm={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
@@ -54,7 +43,7 @@ class TopicSummaryContainer extends React.Component {
               <TopicTimespanInfo timespan={timespan} />
             </Col>
           </Row>
-          <Row style={styles.row}>
+          <Row>
             <Col lg={6} md={12} sm={12}>
               <TopicInfo topic={topicInfo} />
             </Col>
@@ -71,7 +60,7 @@ class TopicSummaryContainer extends React.Component {
       </div>
     );
     return (
-      <div style={styles.root}>
+      <div>
         <div>
           {content}
         </div>
