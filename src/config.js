@@ -13,4 +13,4 @@ export const APP_MODE = 'dev';
 /**
  * Specify a version number
  */
-export const VERSION = '0.2.0';
+export const VERSION = '0.3.0';
