@@ -3,10 +3,10 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
+import messages from '../../resources/messages';
 
 const localMessages = {
   warning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
-  generate: { id: 'needSnapshot.generate', defaultMessage: 'Generate Snapshot' },
 };
 
 class NeedsNewSnapshotWarning extends React.Component {
@@ -26,7 +26,7 @@ class NeedsNewSnapshotWarning extends React.Component {
               <FormattedMessage {...localMessages.warning } />
             </Col>
             <Col lg={2} md={2} sm={6}>
-              <RaisedButton label={formatMessage(localMessages.generate)} onClick={onGenerateSnapshotRequest} />
+              <RaisedButton label={formatMessage(messages.snapshotGenerate)} onClick={onGenerateSnapshotRequest} />
             </Col>
           </Row>
         </Grid>

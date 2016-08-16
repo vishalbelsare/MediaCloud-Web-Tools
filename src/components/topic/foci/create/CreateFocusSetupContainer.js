@@ -17,7 +17,7 @@ const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
   about: { id: 'focus.create.setup.about',
     defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
-  describeFocusTitle: { id: 'focus.create.describe.title', defaultMessage: 'Describe Your New Focus' },
+  describeFocusTitle: { id: 'focus.create.describe.title', defaultMessage: 'Describe Your New {focalTechnique} Focus' },
   describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },
   focusName: { id: 'focus.name', defaultMessage: 'Focus Name' },
   focusDescription: { id: 'focus.description', defaultMessage: 'Focus Description' },
@@ -49,7 +49,7 @@ class CreateFocusSetupContainer extends React.Component {
           <div>
             <Row>
               <Col lg={10} md={10} sm={10}>
-                <h3><FormattedMessage {...localMessages.describeFocusTitle} /></h3>
+                <h3><FormattedMessage {...localMessages.describeFocusTitle} values={ { focalTechnique: properties.focalTechnique } } /></h3>
               </Col>
             </Row>
             <Row>

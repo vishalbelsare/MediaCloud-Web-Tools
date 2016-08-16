@@ -5,11 +5,10 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import { push } from 'react-router-redux';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
+import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties, generateSnapshot }
   from '../../../../../actions/topicActions';
 import { updateSnackBar } from '../../../../../actions/appActions';
 import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
-import { filteredLocation } from '../../../../util/paging';
 import messages from '../../../../../resources/messages';
 
 const localMessages = {
@@ -80,7 +79,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage, generateSnapshot, generatingSnapshotMessage) => {
+  saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage, shouldGenerateSnapshot, generatingSnapshotMessage) => {
     const newFocusDefinition = {
       name: properties.name,
       description: properties.description,
@@ -95,6 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       // save the focal definition
       dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
         .then((results) => {
+          // TODO: check results to make sure it worked before proceeding
           dispatch(updateSnackBar({ open: true, message: focalSetSavedMessage }));  // user feedback
           // save the focus
           newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
@@ -103,9 +103,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
               dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
-              if (generateSnapshot) {
-                // TODO: fire off generate action
-                // dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));  // user feedback
+              if (shouldGenerateSnapshot) {
+                dispatch(generateSnapshot(ownProps.topicId))
+                  .then(() => {
+                    dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));
+                  });
               }
               dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
             });
@@ -113,14 +115,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     } else {
       newFocusDefinition.focalSetDefinitionsId = properties.focalSetDefinition.focal_set_definitions_id;
       dispatch(createFocusDefinition(topicId, newFocusDefinition))
-        .then((results) => {
+        .then(() => {
           // TODO: check results to make sure it worked before proceeding
           dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
           dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
           dispatch(updateSnackBar({ open: true, message: focusSavedMessage }));  // user feedback
-          if (generateSnapshot) {
-            // TODO: fire off generate action
-            // dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));  // user feedback
+          if (shouldGenerateSnapshot) {
+            dispatch(generateSnapshot(ownProps.topicId))
+              .then(() => {
+                dispatch(updateSnackBar({ open: true, message: generatingSnapshotMessage }));
+              });
           }
           dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
         });

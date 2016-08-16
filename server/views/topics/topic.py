@@ -30,8 +30,16 @@ def topic_snapshots_list(topics_id):
     return jsonify({'list':snapshots})
 
 @cache
+@app.route('/api/topics/<topics_id>/snapshots/generate', methods=['POST'])
+@flask_login.login_required
+def topic_snapshot_generate(topics_id):
+    results = mc.topicGenerateSnapshot(topics_id)
+    return jsonify(results)
+
+@cache
 @app.route('/api/topics/<topics_id>/snapshots/<snapshots_id>/timespans/list', methods=['GET'])
 @flask_login.login_required
 def topic_timespan_list(topics_id, snapshots_id):
-    snapshots = mc.topicTimespanList(topics_id, snapshots_id=snapshots_id)
+    foci_id = request.args.get('focusId')
+    snapshots = mc.topicTimespanList(topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
     return jsonify({'list':snapshots})

@@ -45,7 +45,11 @@ class FocalSetSummary extends React.Component {
           </div>
           <p>
             <b>{focalSet.name}</b>
-            <br />
+          </p>
+          <p>
+            <i>{focalSet.focal_technique}</i>
+          </p>
+          <p>
             {focalSet.description}
           </p>
         </div>

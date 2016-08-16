@@ -27,8 +27,9 @@ export function topicSnapshotsList(topicId) {
   return createApiPromise(`/api/topics/${topicId}/snapshots/list`);
 }
 
-export function topicTimespansList(topicId, snapshotId) {
-  return createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`);
+export function topicTimespansList(topicId, snapshotId, params) {
+  const acceptedParams = acceptParams(params, ['focusId']);
+  return createApiPromise(`/api/topics/${topicId}/snapshots/${snapshotId}/timespans/list`, acceptedParams);
 }
 
 export function topicSentenceCounts(topicId, params) {
@@ -105,4 +106,8 @@ export function createFocusDefinition(topicId, params) {
 export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {
   return createApiPromise(
     `/api/topics/${topicId}/focal-set-definitions/${focalSetDefinitionId}/delete`, null, 'delete');
+}
+
+export function topicGenerateSnapshot(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/snapshots/generate`);
 }

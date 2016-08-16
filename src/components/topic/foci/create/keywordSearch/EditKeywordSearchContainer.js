@@ -42,7 +42,6 @@ class EditKeywordSearchContainer extends React.Component {
           <Row>
             <Col lg={8} md={8} sm={10}>
               <TextField
-                defaultValue={ properties.name }
                 floatingLabelText={ formatMessage(messages.searchByKeywords) }
                 errorText={keywords.touched ? keywords.error : ''}
                 fullWidth

@@ -16,9 +16,9 @@ const NUM_TO_SHOW = 10;
 
 class MediaSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.filters !== this.props.filters) ||
+    const { filters, fetchData } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) ||
         (nextProps.sort !== this.props.sort)) {
-      const { fetchData } = this.props;
       fetchData(nextProps);
     }
   }

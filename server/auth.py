@@ -7,6 +7,8 @@ from server import db, mc, login_manager
 
 logger = logging.getLogger(__name__)
 
+COOKIE_USER_KEY = "mediameter_user_key"
+
 # User class
 class User(flask_login.UserMixin):
 
@@ -55,8 +57,8 @@ def load_user(userid):
 
 @login_manager.request_loader
 def load_user_from_request(request):
-    if 'mediameter_user_key' in request.cookies:
-        return User.get(request.cookies['mediameter_user_key'])
+    if COOKIE_USER_KEY in request.cookies:
+        return User.get(request.cookies[COOKIE_USER_KEY])
     return None
 
 def login_user(user):

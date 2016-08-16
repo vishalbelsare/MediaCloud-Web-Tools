@@ -88,7 +88,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleFocusSelected: (focusId) => {
     const selectedFocusId = (focusId === REMOVE_FOCUS) ? null : focusId;
-    const newLocation = filteredLocation(ownProps.location, { selectedFocusId });
+    const newLocation = filteredLocation(ownProps.location, { focusId: selectedFocusId });
     dispatch(push(newLocation));
     dispatch(filterByFocus(selectedFocusId));
   },

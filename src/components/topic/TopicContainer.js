@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
+import { selectTopic, fetchTopicSummary, generateSnapshot } from '../../actions/topicActions';
 import { setBrandMastheadText, updateSnackBar } from '../../actions/appActions';
 import messages from '../../resources/messages';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
@@ -64,9 +64,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       );*/
   },
   handleGenerateSnapshotRequest: () => {
-    // TODO: add the generate request
-    dispatch(updateSnackBar({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
-    console.log('generate a new snapshot!');
+    dispatch(generateSnapshot(ownProps.params.topicId))
+      .then((results) => {
+        if (results.success === 1) {
+          dispatch(updateSnackBar({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
+        } else {
+          // TODO: error message!
+        }
+      });
   },
 });
 

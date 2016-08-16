@@ -10,15 +10,16 @@ import { filteredLocation } from '../../../util/paging';
 
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    if (((nextProps.topicId !== this.props.topicId) || (nextProps.snapshotId !== this.props.snapshotId)) &&
-        (nextProps.topicId !== null) && (nextProps.snapshotId !== null)) {
-      const { fetchData } = this.props;
-      fetchData(nextProps.topicId, nextProps.snapshotId, nextProps.timespanId);
+    const { filters, fetchData, selectedTimespan } = this.props;
+    if (((nextProps.filters.snapshotId !== filters.snapshotId) ||
+         (nextProps.filters.focusId !== filters.focusId)) &&
+        (nextProps.topicId !== null) && (nextProps.filters.snapshotId !== null)) {
+      fetchData(nextProps.topicId, nextProps.filters.snapshotId, nextProps.filters.focusId, nextProps.timespanId, selectedTimespan);
     }
   }
   refetchData = () => {
-    const { topicId, snapshotId, timespanId, fetchData } = this.props;
-    fetchData(topicId, snapshotId, timespanId);
+    const { topicId, filters, timespanId, fetchData, selectedTimespan } = this.props;
+    fetchData(topicId, filters.snapshotId, filters.focusId, timespanId, selectedTimespan);
   }
   handleExpand = (evt) => {
     const { setExpanded } = this.props;
@@ -57,9 +58,9 @@ class TimespanSelectorContainer extends React.Component {
 
 TimespanSelectorContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number,
+  topicId: React.PropTypes.number.isRequired,
   location: React.PropTypes.object.isRequired,
-  snapshotId: React.PropTypes.number,
+  filters: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   handleTimespanSelected: React.PropTypes.func.isRequired,
@@ -75,10 +76,10 @@ TimespanSelectorContainer.propTypes = {
 };
 
 // helper to update the url and fire off event
-function updateTimespan(dispatch, location, snapshotId, timespanId) {
-  const newLocation = filteredLocation(location, { snapshotId, timespanId });
-  dispatch(push(newLocation));
+function updateTimespan(dispatch, location, snapshotId, focusId, timespanId) {
+  const newLocation = filteredLocation(location, { snapshotId, focusId, timespanId });
   dispatch(filterByTimespan(timespanId));
+  dispatch(push(newLocation));
 }
 
 const mapStateToProps = (state) => ({
@@ -97,26 +98,48 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   setExpanded: (isExpanded) => {
     dispatch(toggleTimespanControls(isExpanded));
   },
-  fetchData: (topicId, snapshotId, timespanId) => {
-    dispatch(fetchTopicTimespansList(topicId, snapshotId))
+  fetchData: (topicId, snapshotId, focusId, timespanId, selectedTimespan) => {
+    console.log(`calling ts.fetchData with focusId ${focusId}`);
+    const cleanedFocus = isNaN(focusId) ? null : focusId;
+    console.log(`  cleaned ${cleanedFocus}`);
+    dispatch(fetchTopicTimespansList(topicId, snapshotId, { focusId: cleanedFocus }))
       .then((response) => {
+        let pickDefault = false;
         if (timespanId === null || isNaN(timespanId)) {
+          // no timespan selected so we'll default to one
+          pickDefault = true;
+        } else {
+          // if the topic has switched, we need to figure out what the corresponding timespan is
+          if ((selectedTimespan !== undefined) && (selectedTimespan.foci_id !== cleanedFocus)) {
+            // iterate through new list of timespans to find one with a matching period, start_date and end_date
+            const matchingNewTimespan = response.list.find(ts => (
+              ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
+            ));
+            if (matchingNewTimespan !== undefined) {
+              updateTimespan(dispatch, ownProps.location, matchingNewTimespan.snapshots_id, matchingNewTimespan.foci_id, matchingNewTimespan.timespans_id);
+            } else {
+              pickDefault = true;
+            }
+          }
+        }
+        if (pickDefault) {
           const defaultTimespanId = response.list[0].timespans_id;
           const newSnapshotId = response.list[0].snapshots_id;
-          updateTimespan(dispatch, ownProps.location, newSnapshotId, defaultTimespanId);
+          updateTimespan(dispatch, ownProps.location, newSnapshotId, response.list[0].foci_id, defaultTimespanId);
         }
       });
   },
   handleTimespanSelected: (timespan) => {
-    updateTimespan(dispatch, ownProps.location, timespan.snapshots_id, timespan.timespans_id);
+    updateTimespan(dispatch, ownProps.location, timespan.snapshots_id, timespan.foci_id, timespan.timespans_id);
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      if (stateProps.snapshotId !== null) {
-        dispatchProps.fetchData(ownProps.topicId, ownProps.snapshotId, stateProps.timespanId);
+      if (ownProps.filters.snapshotId !== null) {
+        dispatchProps.fetchData(ownProps.topicId, ownProps.filters.snapshotId,
+          ownProps.filters.focusId, stateProps.timespanId, stateProps.selectedTimespan);
       }
     },
   });

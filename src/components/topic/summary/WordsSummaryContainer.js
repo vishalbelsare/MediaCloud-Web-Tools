@@ -11,8 +11,8 @@ import { getBrandDarkColor } from '../../../styles/colors';
 
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if (nextProps.filters !== this.props.filters) {
+    const { filters, fetchData } = this.props;
+    if (nextProps.filters.timespanId !== filters.timespanId) {
       fetchData(nextProps);
     }
   }

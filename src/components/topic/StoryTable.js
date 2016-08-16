@@ -60,7 +60,7 @@ class StoryTable extends React.Component {
                   </LinkWithFilters>
                 </td>
                 <td>{story.publish_date}</td>
-                <td>{story.media_inlink_count}</td>
+                <td>{story.inlink_count}</td>
                 <td>{story.outlink_count}</td>
                 <td>{story.bitly_click_count}</td>
                 <td>{story.facebook_share_count}</td>

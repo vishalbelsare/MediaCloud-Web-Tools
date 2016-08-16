@@ -1,7 +1,7 @@
 import { FETCH_TOPIC_FOCAL_SETS_LIST } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
-const list = createAsyncReducer({
+const all = createAsyncReducer({
   initialState: {
     list: [],
   },
@@ -11,4 +11,4 @@ const list = createAsyncReducer({
   }),
 });
 
-export default list;
+export default all;

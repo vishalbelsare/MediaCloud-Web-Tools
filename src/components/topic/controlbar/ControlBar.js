@@ -13,7 +13,7 @@ const ControlBar = (props) => {
   let focusSelector = null;
   let subControls = null;
   if ((filters.snapshotId !== null) && (filters.snapshotId !== undefined)) {
-    subControls = <TimespanSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
+    subControls = <TimespanSelectorContainer topicId={topicId} location={location} filters={filters} />;
     focusSelector = <FocusSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
   }
   return (

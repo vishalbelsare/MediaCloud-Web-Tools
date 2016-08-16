@@ -24,6 +24,7 @@ const messages = {
 
   snapshotAge: { id: 'topic.snapshot.age', defaultMessage: 'Snapshot taken {age}' },
   snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a different Snapshot' },
+  snapshotGenerate: { id: 'needSnapshot.generate', defaultMessage: 'Generate Snapshot' },
   snapshotGenerating: { id: 'topic.snapshot.generating', defaultMessage: 'We are generating a new Snapshot; it could take a few minutes.' },
 
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },

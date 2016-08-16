@@ -46,6 +46,7 @@ export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const CREATE_FOCUS_DEFINITION = 'CREATE_FOCUS_DEFINITION';
 export const TOPIC_FILTER_BY_FOCUS = 'TOPIC_FILTER_BY_FOCUS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
+export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -56,7 +57,7 @@ export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 export const fetchTopicSnapshotsList = createAsyncAction(FETCH_TOPIC_SNAPSHOTS_LIST, api.topicSnapshotsList);
 // pass in snapshotId
 export const filterBySnapshot = createAction(TOPIC_FILTER_BY_SNAPSHOT, id => id);
-// pass in topicId and snapshotId
+// pass in topicId, snapshotId and focusId
 export const fetchTopicTimespansList = createAsyncAction(FETCH_TOPIC_TIMESPANS_LIST, api.topicTimespansList);
 // pass in topicId and snapshotId
 export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
@@ -142,3 +143,6 @@ export const deleteFocalSetDefinition = createAsyncAction(DELETE_FOCUS_DEFINITIO
 
 // pass in a boolean
 export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHOT, needsNewSnapshot => needsNewSnapshot);
+
+// pass in topic Id
+export const generateSnapshot = createAsyncAction(TOPIC_GENERATE_SNAPSHOT, api.topicGenerateSnapshot);

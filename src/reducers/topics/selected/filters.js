@@ -2,6 +2,10 @@ import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOC
   from '../../../actions/topicActions';
 import { createReducer } from '../../../lib/reduxHelpers';
 
+function parseId(potentialId) {
+  return (isNaN(potentialId) || potentialId === null) ? null : parseInt(potentialId, 10);
+}
+
 const info = createReducer({
   initialState: {
     snapshotId: null,
@@ -9,15 +13,15 @@ const info = createReducer({
     focusId: null,
   },
   TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
-    snapshotId: (isNaN(payload)) ? null : parseInt(payload, 10),
+    snapshotId: parseId(payload),
     timespanId: null,
     focusId: null,
   }),
-  TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
-    timespanId: (isNaN(payload)) ? null : parseInt(payload, 10),
-  }),
   TOPIC_FILTER_BY_FOCUS: (payload) => ({
-    focusId: (isNaN(payload)) ? null : parseInt(payload, 10),
+    focusId: parseId(payload),
+  }),
+  TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
+    timespanId: parseId(payload),
   }),
 });
 

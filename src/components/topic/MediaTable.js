@@ -54,7 +54,7 @@ class MediaTable extends React.Component {
                   </LinkWithFilters>
                 </td>
                 <td>{m.story_count}</td>
-                <td>{m.media_inlink_count}</td>
+                <td>{m.inlink_count}</td>
                 <td>{m.outlink_count}</td>
                 <td>{m.bitly_click_count}</td>
                 <td>{m.facebook_share_count}</td>

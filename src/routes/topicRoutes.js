@@ -20,7 +20,7 @@ const topicRoutes = (
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 
-      <Route path="/topics/:topicId/temp" component={FilteredTopicContainer} onEnter={requireAuth} >
+      <Route path="/topics/:topicId/test-filters" component={FilteredTopicContainer} onEnter={requireAuth} >
         <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media" component={InfluentialMediaContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media/:mediaId" component={MediaContainer} onEnter={requireAuth} />

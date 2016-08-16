@@ -104,7 +104,7 @@
         media: // JSON object about the story
       },
       focalSets: {
-        list: {
+        all: {
           fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
           list: [ array of json focalSet objects },
         },
