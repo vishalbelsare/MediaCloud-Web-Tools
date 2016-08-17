@@ -11,14 +11,16 @@ const localMessages = {
 };
 
 const SentenceCount = (props) => {
-  const { total, counts, health } = props;
+  const { counts, health } = props;
   const { formatMessage } = props.intl;
   return (
     <div>
-      <AttentionOverTimeChart data={counts} height={250}
-        title={ formatMessage(localMessages.chartTitle) }
-        yAxisLabel={ formatMessage(localMessages.chartYAxisLabel) }
-        health={ health }
+      <AttentionOverTimeChart
+        data={counts}
+        height={250}
+        title={formatMessage(localMessages.chartTitle)}
+        yAxisLabel={formatMessage(localMessages.chartYAxisLabel)}
+        health={health}
       />
     </div>
   );

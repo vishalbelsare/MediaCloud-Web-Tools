@@ -1,5 +1,5 @@
 import React from 'react';
-import d3 from 'd3';
+import * as d3 from 'd3';
 import d3LayoutCloud from 'd3-cloud';
 import ReactFauxDOM from 'react-faux-dom';
 
@@ -60,13 +60,14 @@ class WordCloud extends React.Component {
         .attr('transform', `translate(${options.width / 2},${options.height / 2})`)
         .selectAll('text')
         .data(wordsAsData)
-        .enter().append('text')
-        .attr('font-size', (d) => `${d.size}px`)
-        .attr('fill', options.textColor)
-        .attr('text-anchor', 'middle')
-        .attr('font-weight', 'bold')
-        .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
-        .text((d) => d.text);
+        .enter()
+          .append('text')
+            .attr('font-size', (d) => `${d.size}px`)
+            .attr('fill', options.textColor)
+            .attr('text-anchor', 'middle')
+            .attr('font-weight', 'bold')
+            .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
+            .text((d) => d.text);
     })
     .start();
     if (this.onWordClick !== undefined) {

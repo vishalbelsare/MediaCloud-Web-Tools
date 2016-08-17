@@ -2,8 +2,9 @@ import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
 import highchartsMore from 'highcharts-more';
-highchartsMore(ReactHighcharts.Highcharts);
 import highchartsExporting from 'highcharts-exporting';
+
+highchartsMore(ReactHighcharts.Highcharts);
 highchartsExporting(ReactHighcharts.Highcharts);
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -96,9 +97,10 @@ class AttentionOverTimeChart extends React.Component {
     if ((total !== null) && (total !== undefined)) {
       totalInfo = (
         <p>
-        <FormattedMessage {...localMessages.totalCount}
-          values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
-        />
+          <FormattedMessage
+            {...localMessages.totalCount}
+            values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
+          />
         </p>
       );
     }
