@@ -17,16 +17,23 @@ class StoryTable extends React.Component {
 
   render() {
     const { stories, onChangeSort, topicId } = this.props;
+    const { formatMessage } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
       inlinkHeader = (
-        <a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
+        <a
+          href={`#${formatMessage(messages.sortByMediaInlinks)}`}
+          onClick={e => { e.preventDefault(); this.sortByInlinks(); }}
+        >
           <FormattedMessage {...messages.inlinks} />
         </a>
       );
       socialHeader = (
-        <a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
+        <a
+          href={`#${formatMessage(messages.sortByBitlyClicks)}`}
+          onClick={e => { e.preventDefault(); this.sortBySocial(); }}
+        >
           <FormattedMessage {...messages.bitlyClicks} />
         </a>
       );
@@ -48,7 +55,7 @@ class StoryTable extends React.Component {
               <th><FormattedMessage {...messages.facebookShares} /></th>
             </tr>
             {stories.map((story, idx) =>
-              (<tr key={story.stories_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
+              (<tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
                   <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
                     {story.title}
@@ -56,7 +63,7 @@ class StoryTable extends React.Component {
                 </td>
                 <td>
                   <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
-                    {story.media_id}
+                    {story.media_name}
                   </LinkWithFilters>
                 </td>
                 <td>{story.publish_date}</td>

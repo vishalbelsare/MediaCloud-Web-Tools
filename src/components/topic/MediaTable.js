@@ -17,16 +17,23 @@ class MediaTable extends React.Component {
 
   render() {
     const { media, onChangeSort, topicId } = this.props;
+    const { formatMessage } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
       inlinkHeader = (
-        <a href="#" onClick={ e => {e.preventDefault(); this.sortByInlinks();}}>
+        <a
+          href={`#${formatMessage(messages.sortByMediaInlinks)}`}
+          onClick={e => { e.preventDefault(); this.sortByInlinks(); }}
+        >
           <FormattedMessage {...messages.inlinks} />
         </a>
       );
       socialHeader = (
-        <a href="#" onClick={ e => {e.preventDefault(); this.sortBySocial();}}>
+        <a
+          href={`#${formatMessage(messages.sortByBitlyClicks)}`}
+          onClick={e => { e.preventDefault(); this.sortBySocial(); }}
+        >
           <FormattedMessage {...messages.bitlyClicks} />
         </a>
       );
@@ -47,7 +54,7 @@ class MediaTable extends React.Component {
               <th><FormattedMessage {...messages.facebookShares} /></th>
             </tr>
             {media.map((m, idx) =>
-              (<tr key={m.media_id} className={ (idx % 2 === 0) ? 'even' : 'odd'}>
+              (<tr key={m.media_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
                   <LinkWithFilters to={`/topics/${topicId}/media/${m.media_id}`}>
                     {m.name}
