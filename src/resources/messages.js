@@ -33,6 +33,7 @@ const messages = {
   collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },
 
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
+  mediaInlinks: { id: 'common.inlinks', defaultMessage: 'Media Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Outlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
   bitlyClicks: { id: 'common.bitlyClicks', defaultMessage: 'Bit.ly Clicks' },
