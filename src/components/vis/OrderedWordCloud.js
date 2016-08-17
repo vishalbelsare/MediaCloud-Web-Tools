@@ -1,5 +1,5 @@
 import React from 'react';
-import d3 from 'd3';
+import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
 import { injectIntl } from 'react-intl';
 
@@ -18,8 +18,8 @@ const DEFAULT_TEXT_COLOR = '#333333';
 class OrderedWordCloud extends React.Component {
 
   fontSize = (term, extent, sizeRange) => {
-    const size = sizeRange.min + (sizeRange.max - sizeRange.min)
-            * (Math.log(term.tfnorm) - Math.log(extent[0])) / (Math.log(extent[1]) - Math.log(extent[0]));
+    const size = sizeRange.min + (((sizeRange.max - sizeRange.min)
+            * (Math.log(term.tfnorm) - Math.log(extent[0]))) / (Math.log(extent[1]) - Math.log(extent[0])));
     return size;
   }
 
@@ -27,7 +27,7 @@ class OrderedWordCloud extends React.Component {
     const canvas = document.getElementById('canvas');   // TODO: replace with a constant
     const canvasContext2d = canvas.getContext('2d');
     let x = 0;
-    if (typeof(words) === 'undefined') {
+    if (typeof (words) === 'undefined') {
       return x;
     }
     words.attr('x', d => {
@@ -39,7 +39,7 @@ class OrderedWordCloud extends React.Component {
       if (x + textLength + 10 > width) {  // TODO: replace 10 with state property for padding
         lastX = 0;
       }
-      x = lastX + textLength + 0.3 * fs;
+      x = lastX + textLength + (0.3 * fs);
       return lastX;
     });
     let y = -0.5 * sizeRange.max;
@@ -97,14 +97,14 @@ class OrderedWordCloud extends React.Component {
     // start layout calculations
     const node = ReactFauxDOM.createElement('svg');
     const fullExtent = d3.extent(words, d => d.tfnorm);
-    const innerWidth = (options.width - 2 * options.padding);
+    const innerWidth = options.width - (2 * options.padding);
     const svg = d3.select(node)
         .attr('height', options.height)
         .attr('width', options.width);
     let y = options.height;
     const sizeRange = { min: options.minFontSize, max: options.maxFontSize };
     let wordNodes;
-    const wordListHeight = options.height - 2 * options.padding;
+    const wordListHeight = options.height - (2 * options.padding);
     const wordWrapper = svg.append('g')
         .attr('transform', `translate(${2 * options.padding},0)`);
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
@@ -112,7 +112,9 @@ class OrderedWordCloud extends React.Component {
       wordNodes = wordWrapper.selectAll('.word')
         .data(words, d => d.stem)
         .enter()
-        .append('text').classed('word', true).classed('left', true)
+        .append('text')
+          .classed('word', true)
+          .classed('left', true)
         .attr('font-size', d => this.fontSize(d, fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
@@ -146,7 +148,7 @@ class OrderedWordCloud extends React.Component {
       y = 0;
       const leftHeight = this.listCloudLayout(wordNodes, innerWidth, fullExtent, sizeRange);
       y = Math.max(y, leftHeight);
-      sizeRange.max = sizeRange.max - 1;
+      sizeRange.max -= 1;
     }
     if (y < options.height) {
       svg.attr('height', y);
