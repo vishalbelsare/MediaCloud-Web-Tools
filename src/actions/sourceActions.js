@@ -1,13 +1,13 @@
-import * as api from '../lib/sources';
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
+import * as api from '../lib/sources';
+
 // export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_COLLECTION_LIST = 'FETCH_SOURCE_COLLECTION_LIST';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_SOURCE_COLLECTION_DETAILS = 'FETCH_SOURCE_COLLECTION_DETAILS';
-
-export const SELECT_SOURCE = 'SELECT_SOURCE';
+export const SELECT = 'SELECT';
 export const SOURCE_FILTER_BY_SNAPSHOT = 'SOURCE_FILTER_BY_SNAPSHOT';
 export const SOURCE_FILTER_BY_TIMESPAN = 'SOURCE_FILTER_BY_TIMESPAN';
 export const FETCH_SOURCE_SUMMARY = 'FETCH_SOURCE_SUMMARY';
@@ -26,6 +26,7 @@ export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const FETCH_SOURCE_COLLECTION_GEO = 'FETCH_SOURCE_COLLECTION_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 
+export const select = createAction(SELECT, id => id);
 
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 

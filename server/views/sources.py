@@ -1,15 +1,14 @@
 import datetime, json, logging, traceback, sys
 from random import randint
-
 import logging
 from operator import itemgetter
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 
+from server.cache import cache
 from server import app, mc
 
 logger = logging.getLogger(__name__)
-
 
 @app.route('/api/sources/<str>/search', methods=['GET'])
 @flask_login.login_required
@@ -95,13 +94,13 @@ def api_media_source_sentence_count(media_id):
     info['sentenceCounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)], health['start_date'][:10] )
     return jsonify({'results':info})
 
-#@cache
+@cache
 #Helper
 def _get_media_source_health(media_id):
     return mc.mediaHealth(media_id)
     ###??
 
-#@cache
+@cache
 #Helper
 def _get_media_source_details(media_id, start_date_str = None):
     info = mc.media(media_id)
@@ -110,8 +109,7 @@ def _get_media_source_details(media_id, start_date_str = None):
     info['feedCount'] = len(mc.feedList(media_id=media_id,rows=100))
     return info
 
-#@cache
-#Helper
+@cache
 def _recent_sentence_counts(fq, start_date_str=None):
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query

@@ -35,7 +35,7 @@ class App extends React.Component {
         tooldescriptionMessage = messages.error;
     }
     return (
-      <div>
+      <div className={`app-${APP_NAME}`}>
         <Title render={formatMessage(messages.suiteName)} />
         <header>
           <BrandToolbar backgroundColor={brandColors.light} />

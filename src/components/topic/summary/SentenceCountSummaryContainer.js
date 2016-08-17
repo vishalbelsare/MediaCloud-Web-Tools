@@ -34,8 +34,11 @@ class SentenceCountSummaryContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <AttentionOverTimeChart total={total} data={counts} height={200}
-          lineColor={ getBrandDarkColor() }
+        <AttentionOverTimeChart
+          total={total}
+          data={counts}
+          height={200}
+          lineColor={getBrandDarkColor()}
         />
       </DataCard>
     );

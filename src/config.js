@@ -2,7 +2,7 @@
 /**
  * Specify which app this should run; either 'topics' or 'sources'.
  */
-export const APP_NAME = 'topics';
+export const APP_NAME = 'sources';
 
 /**
  * Specify which app this should run; either 'dev' or 'prod'.

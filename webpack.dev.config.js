@@ -17,7 +17,12 @@ module.exports = {
       `${rootAssetPath}/styles/base`,
       `${rootAssetPath}/styles/app/app`,
       `${rootAssetPath}/styles/viz/viz`,
+    ],
+    topics_css: [
       `${rootAssetPath}/styles/topics/topics`,
+    ],
+    sources_css: [
+      `${rootAssetPath}/styles/sources/sources`,
     ],
   },
   output: {

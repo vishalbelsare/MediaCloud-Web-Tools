@@ -1,0 +1,19 @@
+@import '../constants';
+
+.app-sources {
+  a {
+    color: $sources-primary;
+  }
+}
+
+.health-gap {
+  color: rgba(255, 0, 0, 0.6);
+}
+
+.healthy {
+  color: rgba(0, 153, 0, 0.6);
+}
+
+.unhealthy {
+  color: rgba(255, 0, 0, 0.6);
+}

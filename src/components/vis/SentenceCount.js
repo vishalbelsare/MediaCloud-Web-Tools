@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import AttentionOverTimeChart from './AttentionOverTimeChart';
+import { getBrandDarkColor } from '../../styles/colors';
 
 const localMessages = {
   chartTitle: { id: 'sentenceCount.chartTitle', defaultMessage: 'Attention Over Time' },
@@ -21,6 +22,7 @@ const SentenceCount = (props) => {
         title={formatMessage(localMessages.chartTitle)}
         yAxisLabel={formatMessage(localMessages.chartYAxisLabel)}
         health={health}
+        lineColor={getBrandDarkColor()}
       />
     </div>
   );
