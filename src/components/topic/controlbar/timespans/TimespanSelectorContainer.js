@@ -108,7 +108,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           pickDefault = true;
         } else {
           // if the topic has switched, we need to figure out what the corresponding timespan is
-          if ((selectedTimespan !== undefined) && (selectedTimespan.foci_id !== cleanedFocus)) {
+          if ((selectedTimespan !== undefined) && (selectedTimespan !== null) && (selectedTimespan.foci_id !== cleanedFocus)) {
             // iterate through new list of timespans to find one with a matching period, start_date and end_date
             const matchingNewTimespan = response.list.find(ts => (
               ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
