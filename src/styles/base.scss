@@ -13,6 +13,18 @@ a {
   text-decoration: none;
 }
 
+p {
+  font-family: $body-text-font-families;
+}
+
+td {
+  font-family: $body-text-font-families;
+}
+
+li {
+  font-family: $body-text-font-families;
+}
+
 p.light {
   color: $material-grey400;
 }

@@ -9,17 +9,16 @@ import intlEn from 'intl/locale-data/jsonp/en.js';
 import BrandToolbar from './common/BrandToolbar';
 import BrandMasthead from './common/BrandMasthead';
 import messages from '../resources/messages';
-import { APP_NAME } from '../config';
-import { BRAND_COLORS } from '../styles/colors';
+import { APP_NAME, VERSION } from '../config';
+import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
-import { VERSION } from '../config';
 
 class App extends React.Component {
 
   render() {
     const { children, feedback, handleSnackBarRequestClose } = this.props;
     const { formatMessage } = this.props.intl;
-    const brandColors = BRAND_COLORS[APP_NAME];
+    const brandColors = getBrandColors();
     let toolNameMessage = null;
     let tooldescriptionMessage = null;
     switch (APP_NAME) {
@@ -40,7 +39,8 @@ class App extends React.Component {
         <Title render={formatMessage(messages.suiteName)} />
         <header>
           <BrandToolbar backgroundColor={brandColors.light} />
-          <BrandMasthead name={formatMessage(toolNameMessage)}
+          <BrandMasthead
+            name={formatMessage(toolNameMessage)}
             description={formatMessage(tooldescriptionMessage)}
             backgroundColor={brandColors.dark}
             lightColor={brandColors.light}

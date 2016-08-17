@@ -1,8 +1,16 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import d3 from 'd3';
+import * as d3 from 'd3';
 import VisualTimespanSelector from './VisualTimespanSelector';
+
+const localMessages = {
+  timespansOverall: { id: 'timespans.overall', defaultMessage: 'Overall' },
+  timespansMonthly: { id: 'timespans.overall', defaultMessage: 'Monthly' },
+  timespansWeekly: { id: 'timespans.overall', defaultMessage: 'Weekly' },
+  timespansCustom: { id: 'timespans.overall', defaultMessage: 'Custom' },
+  timespansHide: { id: 'timespans.hide', defaultMessage: 'Hide Timespans' },
+};
 
 function filterByPeriod(timespans, period) {
   return timespans.filter((t) => t.period === period);
@@ -53,16 +61,26 @@ class TimespanExpanded extends React.Component {
       <Grid>
         <Row>
           <Col lg={2} md={2} sm={0} className="period-controls">
-            <a href="#see-overall-timspans" onClick={this.setPeriodToOverall}>Overall</a>
-            <a href="#see-monthly-timspans" onClick={this.setPeriodToMonthly}>Monthly</a>
-            <a href="#see-weekly-timspans" onClick={this.setPeriodToWeekly}>Weekly</a>
-            <a href="#see-custom-timspans" onClick={this.setPeriodToCustom}>Custom</a>
+            <a href="#see-overall-timspans" onClick={this.setPeriodToOverall}>
+              <FormattedMessage {...localMessages.timespansOverall} />
+            </a>
+            <a href="#see-monthly-timspans" onClick={this.setPeriodToMonthly}>
+              <FormattedMessage {...localMessages.timespansMonthly} />
+            </a>
+            <a href="#see-weekly-timspans" onClick={this.setPeriodToWeekly}>
+              <FormattedMessage {...localMessages.timespansWeekly} />
+            </a>
+            <a href="#see-custom-timspans" onClick={this.setPeriodToCustom}>
+              <FormattedMessage {...localMessages.timespansCustom} />
+            </a>
           </Col>
           <Col lg={8} md={8} sm={6} className="center">
             {selectedTimespan.start_date.substr(0, 10)} to {selectedTimespan.end_date.substr(0, 10)}
           </Col>
           <Col lg={2} md={2} sm={6} >
-            <a href="#hide-timespans" className="toggle-control" onClick={onCollapse}>Hide Timespans</a>
+            <a href="#hide-timespans" className="toggle-control" onClick={onCollapse}>
+              <FormattedMessage {...localMessages.timespansHide} />
+            </a>
           </Col>
         </Row>
         <Row>

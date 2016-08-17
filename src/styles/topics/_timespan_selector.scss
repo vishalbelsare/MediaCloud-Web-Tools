@@ -4,14 +4,20 @@
   
   .xaxis {
     fill: none;
-    stroke: $material-grey300;
+    stroke: $material-grey700;
     shape-rendering: crispEdges;
-  }
-
-  .axis text {
-    font-family: $font-families;
     font-size: 11px;
     stroke: none;
+
+    tick, line, path {
+      stroke: $material-grey700;
+    }
+
+    text {
+      font-family: $font-families;
+      stroke: $material-grey700;
+    }
+
   }
 
   .timespan {
