@@ -14,21 +14,24 @@ const BrandToolbar = (props) => {
           <Col lg={12}>
             <ul>
               <li className="dashboard">
-                <a href="https://dashboard.mediameter.org/"
+                <a
+                  href="https://dashboard.mediameter.org/"
                   title={formatMessage(messages.dashboardToolDescription)}
                 >
                   <FormattedMessage {...messages.dashboardToolShortName} />
                 </a>
               </li>
               <li className="sources">
-                <a href="https://sources.mediameter.org/"
+                <a
+                  href="https://sources.mediameter.org/"
                   title={formatMessage(messages.sourcesToolDescription)}
                 >
                   <FormattedMessage {...messages.sourcesToolShortName} />
                 </a>
               </li>
               <li className="topics">
-                <a href="/"
+                <a
+                  href="/"
                   title={formatMessage(messages.topicsToolDescription)}
                 >
                   <FormattedMessage {...messages.topicsToolShortName} />
