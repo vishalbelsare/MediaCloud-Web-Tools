@@ -47,7 +47,7 @@ def _story_words(user_mc_key, topics_id, stories_id, timespans_id):
 def story_inlinks(topics_id, stories_id):
     user_mc = user_mediacloud_client()
     timespans_id = request.args.get('timespanId')
-    inlinks = _topic_story_list(user_mc, topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
+    inlinks = _topic_story_list(user_mediacloud_key(), topics_id, link_to_stories_id=stories_id, timespans_id=timespans_id)
     return jsonify(inlinks)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
