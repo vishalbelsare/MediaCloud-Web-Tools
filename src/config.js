@@ -7,7 +7,7 @@ export const APP_NAME = 'sources';
 /**
  * Specify which app this should run; either 'dev' or 'prod'.
  */
-export const APP_MODE = 'dev';
+export const APP_MODE = 'prod';
 
 
 /**
