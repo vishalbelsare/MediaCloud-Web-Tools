@@ -25,6 +25,12 @@ const localMessages = {
 };
 
 class SourceDetailsContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sourceId !== this.props.sourceId) {
+      const { fetchData } = this.props;
+      fetchData(nextProps.sourceId);
+    }
+  }
   render() {
     const { source, handleDashboardClick, handleWordCloudClick, handleCountryClick } = this.props;
     const { formatMessage } = this.props.intl;
@@ -94,6 +100,7 @@ SourceDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
   // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   handleDashboardClick: React.PropTypes.func.isRequired,
   handleWordCloudClick: React.PropTypes.func.isRequired,
@@ -114,10 +121,10 @@ const mapStateToProps = (state, ownProps) => ({
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(select(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId));
+const mapDispatchToProps = (dispatch) => ({
+  fetchData: (sourceId) => {
+    dispatch(select(sourceId));
+    dispatch(fetchSourceDetails(sourceId));
   },
 });
 
@@ -134,6 +141,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       const { source } = stateProps;
       const searchStr = `${word.stem}*`;
       window.location = `https://dashboard.mediameter.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+    },
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.params.sourceId);
     },
   });
 }
