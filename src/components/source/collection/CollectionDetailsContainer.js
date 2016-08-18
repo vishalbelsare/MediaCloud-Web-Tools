@@ -131,7 +131,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
     handleDashboardClick: () => {
       const { collection } = stateProps;
-      window.location = `https://dashboard.mediameter.org/#query/["*"]/[{"sets":[${ownProps.params.collectionId}]}]/[]/[]/[{"uid":1,"name":"${collection.name}","color":"55868A"}]`;
+      window.location = `https://dashboard.mediameter.org/#query/["*"]/[{"sets":[${ownProps.params.collectionId}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
     },
     handleWordCloudClick: (word) => {
       const { collection } = stateProps;
