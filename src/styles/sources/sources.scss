@@ -1,5 +1,24 @@
 @import '_base';
+@import '../_constants';
 
-.source-details {
-	padding-top: 15px;
+.details {
+  padding-top: 15px;
+}
+
+h1 {
+
+  small.id-number {
+    display: inline-block;
+    margin-left: 10px;
+    color: $material-grey500;
+    font-weight: normal;
+  }
+
+}
+
+.source-list { 
+  ul {
+    max-height: 430px;
+    overflow-y: scroll;
+  }
 }

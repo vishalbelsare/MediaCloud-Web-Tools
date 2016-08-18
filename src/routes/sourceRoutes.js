@@ -1,7 +1,7 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import SourceDetailsContainer from '../components/source/mediaSource/SourceDetailsContainer';
-import SourceCollectionDetailsContainer from '../components/source/details/SourceCollectionDetailsContainer';
+import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
 import SourceListContainer from '../components/source/SourceListContainer';
 import SourceSearchContainer from '../components/source/SourceSearchContainer';
 import SourceCollectionListContainer from '../components/source/SourceCollectionListContainer';
@@ -19,7 +19,7 @@ const sourceRoutes = (
     </Route>
     <Route path="/collection" >
       <Route path="list" component={SourceCollectionListContainer} onEnter={requireAuth} />
-      <Route path=":sourceId/details" component={SourceCollectionDetailsContainer} />
+      <Route path=":collectionId/details" component={CollectionDetailsContainer} onEnter={requireAuth} />
     </Route>
   </Route>
 );

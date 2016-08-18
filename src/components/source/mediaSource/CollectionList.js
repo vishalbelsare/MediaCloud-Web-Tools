@@ -6,7 +6,7 @@ const CollectionList = (props) => {
   const { title, intro, collections } = props;
   return (
     <DataCard className="collection-list">
-      <h3>{title}</h3>
+      <h2>{title}</h2>
       <p>{intro}</p>
       <ul>
       {collections.map(c =>

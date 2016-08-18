@@ -16,7 +16,7 @@ const localMessages = {
   sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
-    defaultMessage: 'The {name} is in {count} collections.',
+    defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
   sourceDetailsTopWordsInfo: { id: 'source.details.words.info',
     defaultMessage: 'This wordcloud shows you the most commonly used words in {name} (based on a sample of sentences). Click a word to load a Dashboard search showing you how the {name} writes about it.' },
@@ -30,13 +30,13 @@ class SourceDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const collections = source.media_source_tags.filter((c) => c.show_on_media === 1);
     return (
-      <Grid className="source-details">
+      <Grid className="details source-details">
         <Row>
           <Col lg={8}>
-            <h2>
+            <h1>
               <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small>#{source.id}</small>
-            </h2>
+              <small className="id-number">#{source.id}</small>
+            </h1>
           </Col>
           <Col lg={4}>
             <RaisedButton
@@ -49,7 +49,7 @@ class SourceDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={8} md={8} sm={12}>
-            <SourceBasicInfo source={source} onDashboardClick={handleDashboardClick} />
+            <SourceBasicInfo source={source} />
           </Col>
           <Col lg={4} md={4} sm={12}>
             <CollectionList
@@ -75,7 +75,7 @@ class SourceDetailsContainer extends React.Component {
               onWordClick={handleWordCloudClick}
             />
           </Col>
-          <Col lg={6}>
+          <Col lg={6} md={6} sm={12}>
             <SourceGeographyContainer
               sourceId={source.id}
               intro={formatMessage(localMessages.sourceDetailsMapInfo, { name: source.name })}

@@ -2,15 +2,15 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import { fetchSourceTopWords } from '../../../actions/sourceActions';
+import { fetchSourceCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 
 const localMessages = {
-  title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
+  title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
 };
 
-const SourceTopWordsContainer = (props) => {
+const CollectionTopWordsContainer = (props) => {
   const { intro, words, onWordClick } = props;
   return (
     <DataCard>
@@ -21,9 +21,9 @@ const SourceTopWordsContainer = (props) => {
   );
 };
 
-SourceTopWordsContainer.propTypes = {
+CollectionTopWordsContainer.propTypes = {
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  collectionId: React.PropTypes.number.isRequired,
   intro: React.PropTypes.string.isRequired,
   onWordClick: React.PropTypes.func,
   // from state
@@ -35,13 +35,13 @@ SourceTopWordsContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.topWords.fetchStatus,
-  words: state.sources.selected.details.sourceDetailsReducer.topWords.list.wordcounts,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.fetchStatus,
+  words: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.list.wordcounts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchSourceTopWords(ownProps.sourceId));
+    dispatch(fetchSourceCollectionTopWords(ownProps.collectionId));
   },
 });
 
@@ -49,7 +49,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncContainer(
-        SourceTopWordsContainer
+        CollectionTopWordsContainer
       )
     )
   );
