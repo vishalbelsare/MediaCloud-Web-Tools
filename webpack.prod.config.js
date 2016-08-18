@@ -11,10 +11,19 @@ module.exports = {
   entry: {
     // Chunks (files) that will get written out for JS and CSS files.
     app_js: [
+      'webpack/hot/dev-server',
       `${rootAssetPath}/index`,
     ],
     app_css: [
-      `${rootAssetPath}/styles/main`,
+      `${rootAssetPath}/styles/base`,
+      `${rootAssetPath}/styles/app/app`,
+      `${rootAssetPath}/styles/viz/viz`,
+    ],
+    topics_css: [
+      `${rootAssetPath}/styles/topics/topics`,
+    ],
+    sources_css: [
+      `${rootAssetPath}/styles/sources/sources`,
     ],
   },
   output: {
