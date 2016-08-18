@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import RaisedButton from 'material-ui/RaisedButton';
+import { push } from 'react-router-redux';
 import messages from '../../resources/messages';
+
+const localMessages = {
+  goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
+};
 
 class BrandMasthead extends React.Component {
 
@@ -16,7 +21,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor, mastheadText } = this.props;
+    const { user, name, description, backgroundColor, mastheadText, navigateToHome } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = {
       root: {
@@ -42,7 +47,9 @@ class BrandMasthead extends React.Component {
           <Row>
             <Col lg={6} md={6} sm={6}>
               <h1>
-                <a href="/"><img src={'/static/mediacloud-logo-green-2x.png'} width={65} height={65} /></a>
+                <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+                  <img alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+                </a>
                 <strong dangerouslySetInnerHTML={createMastheadText()} />
               </h1>
             </Col>
@@ -64,13 +71,18 @@ class BrandMasthead extends React.Component {
 }
 
 BrandMasthead.propTypes = {
-  user: React.PropTypes.object.isRequired,
+  // from parent
   name: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
   backgroundColor: React.PropTypes.string.isRequired,
   lightColor: React.PropTypes.string.isRequired,
+  // from context
   intl: React.PropTypes.object.isRequired,
+  // state
+  user: React.PropTypes.object.isRequired,
   mastheadText: React.PropTypes.string,
+  // from dispatch
+  navigateToHome: React.PropTypes.func.isRequired,
 };
 
 BrandMasthead.contextTypes = {
@@ -82,4 +94,16 @@ const mapStateToProps = (state) => ({
   mastheadText: state.app.mastheadText,
 });
 
-export default injectIntl(connect(mapStateToProps, null)(BrandMasthead));
+const mapDispatchToProps = (dispatch) => ({
+  navigateToHome: (event) => {
+    event.preventDefault();
+    dispatch(push('/home'));
+  },
+});
+
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      BrandMasthead
+    )
+  );
