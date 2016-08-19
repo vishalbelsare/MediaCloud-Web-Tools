@@ -109,7 +109,6 @@ def _get_media_source_details(media_id, start_date_str = None):
     info['feedCount'] = len(mc.feedList(media_id=media_id,rows=100))
     return info
 
-@cache
 def _recent_sentence_counts(fq, start_date_str=None):
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query
@@ -124,11 +123,7 @@ def _recent_sentence_counts(fq, start_date_str=None):
     sentences_over_time = mc.sentenceCount('*', solr_filter=fq, split=True,
         split_start_date=datetime.datetime.strftime(start_date,'%Y-%m-%d'),
         split_end_date=datetime.datetime.strftime(yesterday,'%Y-%m-%d'))['split']
-    del sentences_over_time['end']
-    del sentences_over_time['gap']
-    del sentences_over_time['start']
-
-    return [{'timespanStart':d,'sentenceCount':s} for (d, s) in sentences_over_time.iteritems()]
+    return sentences_over_time
 ##??
 
 # generated via regex from 

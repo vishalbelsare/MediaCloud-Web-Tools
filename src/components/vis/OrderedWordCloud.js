@@ -120,14 +120,15 @@ class OrderedWordCloud extends React.Component {
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {
           if (options.showTooltips) {
+            let tooltipHtml = formatMessage(localMessages.wordCloudStem, { stem: d.stem });
+            tooltipHtml += '<br />';
+            tooltipHtml += formatMessage(localMessages.worldCloudTerm, { term: d.term });
+            tooltipHtml += '<br />';
+            tooltipHtml += formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) });
             tooltipDiv.transition()
               .duration(200)
               .style('opacity', 0.9);
-            tooltipDiv.html(
-                formatMessage(localMessages.wordCloudStem, { stem: d.stem }) + '<br />' +
-                formatMessage(localMessages.worldCloudTerm, { term: d.term }) + '<br />' +
-                formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) })
-              )
+            tooltipDiv.html(tooltipHtml)
               .style('left', `${d3.event.pageX}px`)
               .style('top', `${d3.event.pageY - 48}px`);
           }

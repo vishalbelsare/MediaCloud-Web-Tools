@@ -106,18 +106,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (timespanId === null || isNaN(timespanId)) {
           // no timespan selected so we'll default to one
           pickDefault = true;
-        } else {
+        } else if ((selectedTimespan !== undefined) && (selectedTimespan !== null) && (selectedTimespan.foci_id !== cleanedFocus)) {
           // if the topic has switched, we need to figure out what the corresponding timespan is
-          if ((selectedTimespan !== undefined) && (selectedTimespan !== null) && (selectedTimespan.foci_id !== cleanedFocus)) {
-            // iterate through new list of timespans to find one with a matching period, start_date and end_date
-            const matchingNewTimespan = response.list.find(ts => (
-              ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
-            ));
-            if (matchingNewTimespan !== undefined) {
-              updateTimespan(dispatch, ownProps.location, matchingNewTimespan.snapshots_id, matchingNewTimespan.foci_id, matchingNewTimespan.timespans_id);
-            } else {
-              pickDefault = true;
-            }
+          // iterate through new list of timespans to find one with a matching period, start_date and end_date
+          const matchingNewTimespan = response.list.find(ts => (
+            ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
+          ));
+          if (matchingNewTimespan !== undefined) {
+            updateTimespan(dispatch, ownProps.location, matchingNewTimespan.snapshots_id, matchingNewTimespan.foci_id, matchingNewTimespan.timespans_id);
+          } else {
+            pickDefault = true;
           }
         }
         if (pickDefault) {

@@ -1,6 +1,5 @@
 import React from 'react';
-import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
 
 const localMessages = {
@@ -31,11 +30,13 @@ const TopicTimespanInfo = (props) => {
         <FormattedMessage {...localMessages.title} />
       </h2>
       <p>
-        <FormattedHTMLMessage {...localMessages.summary} values={{
-          period: timespan.period,
-          startDate: formatDate(timespan.startDateObj, { year: '2-digit', month: 'numeric', day: 'numeric' }),
-          endDate: formatDate(timespan.endDateObj, { year: '2-digit', month: 'numeric', day: 'numeric' }),
-        }}
+        <FormattedHTMLMessage
+          {...localMessages.summary}
+          values={{
+            period: timespan.period,
+            startDate: formatDate(timespan.startDateObj, { year: '2-digit', month: 'numeric', day: 'numeric' }),
+            endDate: formatDate(timespan.endDateObj, { year: '2-digit', month: 'numeric', day: 'numeric' }),
+          }}
         />
       </p>
       <ul>

@@ -7,7 +7,7 @@ const topStories = createAsyncReducer({
     stories: [],
   },
   action: FETCH_TOPIC_TOP_STORIES,
-  SORT_TOPIC_TOP_STORIES: (payload) => ({ sort: payload }),
+  [SORT_TOPIC_TOP_STORIES]: (payload) => ({ sort: payload }),
 });
 
 export default topStories;

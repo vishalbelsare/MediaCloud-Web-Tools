@@ -50,7 +50,8 @@ class FocalSetDefinitionSelector extends React.Component {
               onClick={this.handleClick}
             />
           )}
-          <FocalSetSummary key={NEW_FOCAL_SET_PLACEHOLDER_ID}
+          <FocalSetSummary
+            key={NEW_FOCAL_SET_PLACEHOLDER_ID}
             selected={(selectedId === NEW_FOCAL_SET_PLACEHOLDER_ID)}
             focalSet={{
               name: formatMessage(localMessages.newFocalSetName),

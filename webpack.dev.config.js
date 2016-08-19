@@ -43,8 +43,9 @@ module.exports = {
     preLoaders: [
       {
         test: /\.js$/,
-        include: rootAssetPath,
         loader: 'eslint',
+        include: path.join(__dirname, 'src'),
+        exclude: './src/components/vis/world-eckert3-lowres.js',
       },
     ],
     // Various loaders to pre-process files of specific types.
@@ -77,9 +78,9 @@ module.exports = {
   eslint: {
     useEslintrc: true,
   },
-  postcss: [autoprefixer],  // add in all the browser-specific vendor prefixes to CSS rules automatically
+  postcss: () => [autoprefixer],
   plugins: [
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
+    //new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     // Stop modules with syntax errors from being emitted.
     new webpack.NoErrorsPlugin(),
     new CaseSensitivePathsPlugin(),

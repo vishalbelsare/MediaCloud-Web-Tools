@@ -2,7 +2,7 @@ import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-export default class Selector extends React.Component {
+class Selector extends React.Component {
 
   handleChange = (event, index, value) => {
     const { onSelectionChanged } = this.props;

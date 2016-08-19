@@ -24,72 +24,70 @@ const localMessages = {
     defaultMessage: 'Here is a heatmap of countries mentioned by {name} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {name} covers it.' },
 };
 
-class CollectionDetailsContainer extends React.Component {
-  render() {
-    const { collectionId, collection, handleDashboardClick, handleWordCloudClick, handleCountryClick } = this.props;
-    const { formatMessage } = this.props.intl;
-    return (
-      <Grid className="details collection-details">
-        <Row>
-          <Col lg={8}>
-            <h1>
-              <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="id-number">#{collection.id}</small>
-            </h1>
-          </Col>
-          <Col lg={4}>
-            <RaisedButton
-              style={{ float: 'right' }}
-              label={formatMessage(localMessages.searchNow)}
-              primary
-              onClick={handleDashboardClick}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} md={8} sm={12}>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <CollectionBasicInfo collection={collection} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={12} md={12} sm={12}>
-                <CollectionSentenceCountContainer collectionId={collectionId} />
-              </Col>
-            </Row>
-          </Col>
-          <Col lg={4} md={4} sm={12}>
-            <SourceList
-              title={formatMessage(localMessages.collectionDetailsSourcesTitle)}
-              intro={formatMessage(localMessages.collectionDetailsSourcesIntro, {
-                name: collection.name,
-                count: collection.media.length,
-              })}
-              sources={collection.media}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <CollectionTopWordsContainer
-              collectionId={collectionId}
-              intro={formatMessage(localMessages.collectionDetailsTopWordsInfo, { name: collection.label })}
-              onWordClick={handleWordCloudClick}
-            />
-          </Col>
-          <Col lg={6} md={6} sm={12}>
-            <CollectionGeographyContainer
-              collectionId={collectionId}
-              intro={formatMessage(localMessages.collectionDetailsMapInfo, { name: collection.label })}
-              onCountryClick={handleCountryClick}
-            />
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
-}
+const CollectionDetailsContainer = (props) => {
+  const { collectionId, collection, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <Grid className="details collection-details">
+      <Row>
+        <Col lg={8}>
+          <h1>
+            <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
+            <small className="id-number">#{collection.id}</small>
+          </h1>
+        </Col>
+        <Col lg={4}>
+          <RaisedButton
+            style={{ float: 'right' }}
+            label={formatMessage(localMessages.searchNow)}
+            primary
+            onClick={handleDashboardClick}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={8} md={8} sm={12}>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <CollectionBasicInfo collection={collection} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <CollectionSentenceCountContainer collectionId={collectionId} />
+            </Col>
+          </Row>
+        </Col>
+        <Col lg={4} md={4} sm={12}>
+          <SourceList
+            title={formatMessage(localMessages.collectionDetailsSourcesTitle)}
+            intro={formatMessage(localMessages.collectionDetailsSourcesIntro, {
+              name: collection.name,
+              count: collection.media.length,
+            })}
+            sources={collection.media}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} md={6} sm={12}>
+          <CollectionTopWordsContainer
+            collectionId={collectionId}
+            intro={formatMessage(localMessages.collectionDetailsTopWordsInfo, { name: collection.label })}
+            onWordClick={handleWordCloudClick}
+          />
+        </Col>
+        <Col lg={6} md={6} sm={12}>
+          <CollectionGeographyContainer
+            collectionId={collectionId}
+            intro={formatMessage(localMessages.collectionDetailsMapInfo, { name: collection.label })}
+            onCountryClick={handleCountryClick}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 CollectionDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
@@ -126,8 +124,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleCountryClick: (country) => {
-      console.log(country);
+    handleCountryClick: () => {
+      // console.log(country);
     },
     handleDashboardClick: () => {
       const { collection } = stateProps;

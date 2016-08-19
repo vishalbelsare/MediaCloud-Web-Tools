@@ -8,24 +8,20 @@ const localMessages = {
   unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
 };
 
-class CreateFocusConfirmContainer extends React.Component {
-
-  render() {
-    const { topicId, properties } = this.props;
-    let content = null;
-    if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-      content = <ConfirmKeywordSearchContainer topicId={topicId} />;
-    } else {
-      content = <FormattedMessage {...localMessages.unimplemented} />;
-    }
-    return (
-      <div>
-        { content }
-      </div>
-    );
+const CreateFocusConfirmContainer = (props) => {
+  const { topicId, properties } = props;
+  let content = null;
+  if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
+    content = <ConfirmKeywordSearchContainer topicId={topicId} />;
+  } else {
+    content = <FormattedMessage {...localMessages.unimplemented} />;
   }
-
-}
+  return (
+    <div>
+      { content }
+    </div>
+  );
+};
 
 CreateFocusConfirmContainer.propTypes = {
   // from parent

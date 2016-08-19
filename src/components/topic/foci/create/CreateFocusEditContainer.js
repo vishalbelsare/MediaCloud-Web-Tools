@@ -8,24 +8,20 @@ const localMessages = {
   unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
 };
 
-class CreateFocusEditContainer extends React.Component {
-
-  render() {
-    const { topicId, properties } = this.props;
-    let content = null;
-    if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-      content = <EditKeywordSearchContainer topicId={topicId} />;
-    } else {
-      content = <FormattedMessage {...localMessages.unimplemented} />;
-    }
-    return (
-      <div>
-        { content }
-      </div>
-    );
+const CreateFocusEditContainer = (props) => {
+  const { topicId, properties } = props;
+  let content = null;
+  if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
+    content = <EditKeywordSearchContainer topicId={topicId} />;
+  } else {
+    content = <FormattedMessage {...localMessages.unimplemented} />;
   }
-
-}
+  return (
+    <div>
+      { content }
+    </div>
+  );
+};
 
 CreateFocusEditContainer.propTypes = {
   // from parent

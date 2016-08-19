@@ -10,37 +10,34 @@ const localMessages = {
   focalSetWhy: { id: 'focalSet.why', defaultMessage: 'Give your new Focal Set a name and description so others can recognize what it is for.' },
 };
 
-export default class CreateFocalSetForm extends React.Component {
-
-  render() {
-    const { fields: { focalSetName, focalSetDescription } } = this.props;
-    const { formatMessage } = this.props.intl;
-    return (
-      <div>
-        <Row>
-          <Col lg={4} md={4} sm={12}>
-            <TextField
-              floatingLabelText={formatMessage(localMessages.focalSetName)}
-              errorText={focalSetName.touched ? focalSetName.error : ''}
-              {...focalSetName}
-            />
-          </Col>
-          <Col lg={4} md={4} sm={12}>
-            <TextField
-              floatingLabelText={formatMessage(localMessages.focalSetDescription)}
-              errorText={focalSetDescription.touched ? focalSetDescription.error : ''}
-              {...focalSetDescription}
-            />
-          </Col>
-          <Col lg={2} md={2} sm={0} />
-          <Col lg={2} md={2} sm={21}>
-            <p className="light"><i><FormattedMessage {...localMessages.focalSetWhy} /></i></p>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-}
+const CreateFocalSetForm = (props) => {
+  const { fields: { focalSetName, focalSetDescription } } = props;
+  const { formatMessage } = this.props.intl;
+  return (
+    <div>
+      <Row>
+        <Col lg={4} md={4} sm={12}>
+          <TextField
+            floatingLabelText={formatMessage(localMessages.focalSetName)}
+            errorText={focalSetName.touched ? focalSetName.error : ''}
+            {...focalSetName}
+          />
+        </Col>
+        <Col lg={4} md={4} sm={12}>
+          <TextField
+            floatingLabelText={formatMessage(localMessages.focalSetDescription)}
+            errorText={focalSetDescription.touched ? focalSetDescription.error : ''}
+            {...focalSetDescription}
+          />
+        </Col>
+        <Col lg={2} md={2} sm={0} />
+        <Col lg={2} md={2} sm={21}>
+          <p className="light"><i><FormattedMessage {...localMessages.focalSetWhy} /></i></p>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 CreateFocalSetForm.propTypes = {
   fields: React.PropTypes.object.isRequired,

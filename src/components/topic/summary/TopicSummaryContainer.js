@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
@@ -8,7 +9,6 @@ import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import TopicTimespanInfo from './TopicTimespanInfo';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 class TopicSummaryContainer extends React.Component {
   filtersAreSet() {

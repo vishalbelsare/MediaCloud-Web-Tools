@@ -21,8 +21,10 @@ const LoginFormComponent = (props) => {
         errorText={password.touched ? password.error : ''}
         {...password}
       />
-      <input type="hidden" name="destination"
-        value={ (location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
+      <input
+        type="hidden"
+        name="destination"
+        value={(location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
       />
       <br />
       <RaisedButton type="submit" label="Login" primary disabled={fetchStatus === fetchConstants.FETCH_ONGOING} />

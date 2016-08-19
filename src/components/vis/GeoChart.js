@@ -2,6 +2,7 @@ import React from 'react';
 import ReactHighcharts from 'react-highcharts/dist/ReactHighcharts.js';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps.js';
 import highchartsExporting from 'highcharts-exporting';
+
 highchartsExporting(ReactHighcharts.Highcharts);
 
 const maps = require('./world-eckert3-lowres');
@@ -63,10 +64,9 @@ class GeoChart extends React.Component {
     };
     return config;
   }
-  gotoDashboard(evt) {
-    // dispatch to dashboard
-    console.log('will go to dashboard');
-    console.log(evt);
+  gotoDashboard(event) {
+    event.preventDefault();
+    // cancel event, dispatch to dashboard
   }
   render() {
     const config = this.getConfig();

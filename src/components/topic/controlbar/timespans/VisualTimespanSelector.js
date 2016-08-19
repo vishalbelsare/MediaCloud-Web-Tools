@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
-import Dimensions from 'react-dimensions';
+import dimensions from 'react-dimensions';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
 class VisualTimespanSelector extends React.Component {
@@ -100,5 +100,5 @@ VisualTimespanSelector.propTypes = {
 
 export default
   injectIntl(
-    Dimensions()(VisualTimespanSelector)
+    dimensions()(VisualTimespanSelector)
   );

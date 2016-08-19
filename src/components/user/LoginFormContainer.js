@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import LoginForm from './LoginForm';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessages = {
   loginTitle: { id: 'login.title', defaultMessage: 'Login' },

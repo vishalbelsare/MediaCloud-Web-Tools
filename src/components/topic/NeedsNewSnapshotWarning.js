@@ -23,7 +23,7 @@ class NeedsNewSnapshotWarning extends React.Component {
           <Row>
             <Col lg={10} md={10} sm={6}>
               <FontIcon className="material-icons" color={'#000000'}>warning</FontIcon>
-              <FormattedMessage {...localMessages.warning } />
+              <FormattedMessage {...localMessages.warning} />
             </Col>
             <Col lg={2} md={2} sm={6}>
               <RaisedButton label={formatMessage(messages.snapshotGenerate)} onClick={onGenerateSnapshotRequest} />

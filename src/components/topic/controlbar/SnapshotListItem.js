@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../../resources/messages';
 import moment from 'moment';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   snapshotNotReady: { id: 'snapshot.notReady', defaultMessage: 'Not ready yet.' },

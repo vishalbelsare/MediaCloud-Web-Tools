@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, fetchTopicSummary, generateSnapshot } from '../../actions/topicActions';
-import { setBrandMastheadText, updateFeedback } from '../../actions/appActions';
+import { updateFeedback } from '../../actions/appActions';
 import messages from '../../resources/messages';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
@@ -59,9 +59,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
     dispatch(fetchTopicSummary(ownProps.params.topicId));
-/*      .then((topic) => dispatch(
-        setBrandMastheadText(`<span>Topic: <a href="/#/topics/${topic.topics_id}/summary">${topic.name}</a></span>`))
-      );*/
   },
   handleGenerateSnapshotRequest: () => {
     dispatch(generateSnapshot(ownProps.params.topicId))

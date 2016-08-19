@@ -77,7 +77,7 @@ class AttentionOverTimeChart extends React.Component {
     }
     config.plotOptions.series.marker.enabled = (data.length < SERIES_MARKER_THRESHOLD);
     // clean up the data
-    const dates = data.map((d) => d.date);
+    const dates = data.map((d) => d.date / 1000);
     // turning variable time unit into days
     const intervalMs = (dates[1] - dates[0]);
     const intervalDays = intervalMs / SECS_PER_DAY;

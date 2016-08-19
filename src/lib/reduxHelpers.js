@@ -42,11 +42,11 @@ export function createReducer(handlers) {
   };
   // set up a lookup table for any things the user passed in
   const actionLookup = {};
-  for (const key in handlers) {
+  Object.keys(handlers).forEach((key) => {
     if (!['initialState'].includes(key)) {
       actionLookup[key] = handlers[key];
     }
-  }
+  });
   // and now set up the reducer method
   return (state = initialState, action) => {
     if (action.type in actionLookup) {
@@ -94,18 +94,18 @@ export function createAsyncReducer(handlers) {
     handleSuccess: (payload) => ({ ...payload }),
     handleFailure: () => ({}),
   };
-  for (const key in reducers) { // override defaults with custom methods passed in
+  Object.keys(reducers).forEach((key) => {   // override defaults with custom methods passed in
     if (key in handlers) {
       reducers[key] = handlers[key];
     }
-  }
+  });
   // set up a lookup table for any other things the user passed in
   const extraActionLookup = {};
-  for (const key in handlers) {
+  Object.keys(handlers).forEach((key) => {
     if (!['action', 'initialState', 'handleFetch', 'handleSuccess', 'handleFailure'].includes(key)) {
       extraActionLookup[key] = handlers[key];
     }
-  }
+  });
   // now alter the state appropriately
   return (state = initialState, action) => {
     switch (action.type) {

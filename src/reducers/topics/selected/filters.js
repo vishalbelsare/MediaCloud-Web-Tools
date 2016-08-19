@@ -1,5 +1,4 @@
-import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS } 
-  from '../../../actions/topicActions';
+// import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS } from '../../../actions/topicActions';
 import { createReducer } from '../../../lib/reduxHelpers';
 
 function parseId(potentialId) {

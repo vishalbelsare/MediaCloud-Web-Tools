@@ -5,14 +5,14 @@ import fetch from 'isomorphic-fetch';
  */
 function generateParamStr(params) {
   const cleanedParams = {};
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
+  Object.keys(params).forEach((key) => {
+    if ({}.hasOwnProperty.call(params, key)) {
       const value = params[key];
       if ((value !== null) && (value !== undefined)) {
         cleanedParams[key] = value;
       }
     }
-  }
+  });
   const paramStr = Object.keys(cleanedParams).map((key) => `${key}=${encodeURIComponent(cleanedParams[key])}`).join('&');
   return paramStr;
 }
@@ -42,11 +42,11 @@ export function createApiPromise(url, params, httpMethod = 'get') {
  */
 export function createPostingApiPromise(url, params) {
   const formData = new FormData();
-  for (const key in params) {
-    if (params.hasOwnProperty(key)) {
+  params.keys().each((key) => {
+    if ({}.hasOwnProperty.call(params, key)) {
       formData.append(key, params[key]);
     }
-  }
+  });
   return fetch(url, {
     method: 'post',
     credentials: 'include',

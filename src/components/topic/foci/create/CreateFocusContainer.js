@@ -47,7 +47,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
   handleUnmount: () => {
     dispatch(goToCreateFocusStep(0));
     dispatch(setNewFocusProperties(INITIAL_STATE));

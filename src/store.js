@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware } from 'redux';
 import hashHistory from 'react-router/lib/hashHistory';
 import { routerMiddleware } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
+import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './reducers/root';
 import { APP_MODE } from './config.js';
 
@@ -21,6 +21,12 @@ if (APP_MODE === 'dev') {
 //  middlewares.push(logger);
 }
 
+const store = createStore(rootReducer, {}, compose(
+  applyMiddleware(...middlewares),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+
+/*
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 
 function configureStore() {
@@ -30,5 +36,5 @@ function configureStore() {
 }
 
 const store = configureStore();
-
+*/
 export default store;

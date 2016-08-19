@@ -3,15 +3,15 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import MediaTable from '../MediaTable';
 import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../actions/topicActions';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import FlatButton from 'material-ui/FlatButton';
 import DownloadButton from '../../common/DownloadButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/paging';
+import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {
   title: { id: 'topic.influentialMedia.title', defaultMessage: 'Influential Media' },
@@ -19,8 +19,8 @@ const localMessages = {
 
 class InfluentialMediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
+    const { fetchData, filters, sort, links } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
       fetchData(nextProps);
     }
   }
@@ -28,31 +28,15 @@ class InfluentialMediaContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   }
-  previousPage = () => {
-    const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.previous);
-  }
-  nextPage = () => {
-    const { fetchPagedData, links } = this.props;
-    fetchPagedData(this.props, links.next);
-  }
   downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
     const url = `/api/topics/${topicId}/media.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
     window.location = url;
   }
   render() {
-    const { media, sort, topicId, links } = this.props;
+    const { media, sort, topicId, previousButton, nextButton } = this.props;
     const { formatMessage } = this.props.intl;
-    let previousButton = null;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
-    if ((links !== undefined) && links.hasOwnProperty('previous')) {
-      previousButton = <FlatButton label={formatMessage(messages.previousPage)} primary onClick={this.previousPage} />;
-    }
-    let nextButton = null;
-    if ((links !== undefined) && links.hasOwnProperty('next')) {
-      nextButton = <FlatButton label={formatMessage(messages.nextPage)} primary onClick={this.nextPage} />;
-    }
     return (
       <Grid>
         <Row>
@@ -83,11 +67,13 @@ InfluentialMediaContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  fetchPagedData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
   links: React.PropTypes.object,
+  // from PagedContainer wrapper
+  nextButton: React.PropTypes.node,
+  previousButton: React.PropTypes.node,
 };
 
 const mapStateToProps = (state) => ({
@@ -124,8 +110,11 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps);
     },
-    fetchPagedData: (props, linkId) => {
-      dispatchProps.fetchData(props, linkId);
+    nextPage: () => {
+      dispatchProps.fetchData(stateProps, stateProps.links.next);
+    },
+    previousPage: () => {
+      dispatchProps.fetchData(stateProps, stateProps.links.previous);
     },
   });
 }
@@ -133,8 +122,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        InfluentialMediaContainer
+      composePagedContainer(
+        composeAsyncContainer(
+          InfluentialMediaContainer
+        )
       )
     )
   );

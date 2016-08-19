@@ -6,8 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TextField from 'material-ui/TextField';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
-import FocalSetDefinitionSelector from './FocalSetDefinitionSelector';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID, FocalSetDefinitionSelector } from './FocalSetDefinitionSelector';
 import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
 import messages from '../../../../resources/messages';
@@ -49,13 +48,13 @@ class CreateFocusSetupContainer extends React.Component {
           <div>
             <Row>
               <Col lg={10} md={10} sm={10}>
-                <h3><FormattedMessage {...localMessages.describeFocusTitle} values={ { focalTechnique: properties.focalTechnique } } /></h3>
+                <h3><FormattedMessage {...localMessages.describeFocusTitle} values={{ focalTechnique: properties.focalTechnique }} /></h3>
               </Col>
             </Row>
             <Row>
               <Col lg={4} md={4} sm={12}>
                 <TextField
-                  floatingLabelText={ formatMessage(localMessages.focusName) }
+                  floatingLabelText={formatMessage(localMessages.focusName)}
                   errorText={focusName.touched ? focusName.error : ''}
                   {...focusName}
                 />
@@ -63,7 +62,7 @@ class CreateFocusSetupContainer extends React.Component {
               <Col lg={4} md={4} sm={12}>
                 <TextField
                   multiLine
-                  floatingLabelText={ formatMessage(localMessages.focusDescription) }
+                  floatingLabelText={formatMessage(localMessages.focusDescription)}
                   errorText={focusDescription.touched ? focusDescription.error : ''}
                   {...focusDescription}
                 />
@@ -73,7 +72,8 @@ class CreateFocusSetupContainer extends React.Component {
                 <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
               </Col>
             </Row>
-            <FocalSetDefinitionSelector focalSetDefinitions={focalSetDefinitions}
+            <FocalSetDefinitionSelector
+              focalSetDefinitions={focalSetDefinitions}
               selected={properties.focalSetDefinition}
               onSelected={this.handleFocalSetSelected}
             />
@@ -100,7 +100,8 @@ class CreateFocusSetupContainer extends React.Component {
               </p>
             </Col>
           </Row>
-          <FocalTechniqueSelector selected={properties.focalTechnique}
+          <FocalTechniqueSelector
+            selected={properties.focalTechnique}
             onSelected={this.handleFocalTechniqueSelected}
           />
           { step2Content }

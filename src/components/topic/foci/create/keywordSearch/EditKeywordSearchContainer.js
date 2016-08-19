@@ -14,51 +14,47 @@ const localMessages = {
     defaultMessage: 'This Focus is driven by a keyword search.  Any stories that match to boolean query you create will be included in the Focus for analysis together.' },
 };
 
-class EditKeywordSearchContainer extends React.Component {
-
-  render() {
-    const { fields: { keywords }, topicId, handleSubmit, handleSearchClick, finishStep, properties } = this.props;
-    const { formatMessage } = this.props.intl;
-    let previewContent = null;
-    if ((properties.keywords !== null) && (properties.keywords !== undefined) && (properties.keywords.length > 0)) {
-      previewContent = (
-        <div>
-          <KeywordSearchResultsContainer topicId={topicId} keywords={properties.keywords} />
-          <RaisedButton type="submit" label={formatMessage(messages.next)} primary />
-        </div>
-      );
-    }
-    return (
-      <Grid>
-        <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
-          <Row>
-            <Col lg={10} md={10} sm={10}>
-              <h2><FormattedMessage {...localMessages.title} values={ { name: properties.name } } /></h2>
-              <p>
-                <FormattedMessage {...localMessages.about} />
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={8} md={8} sm={10}>
-              <TextField
-                floatingLabelText={ formatMessage(messages.searchByKeywords) }
-                errorText={keywords.touched ? keywords.error : ''}
-                fullWidth
-                {...keywords}
-              />
-            </Col>
-            <Col lg={2} md={2} sm={2}>
-              <RaisedButton label={formatMessage(messages.search)} style={ { marginTop: 33 } } onClick={ handleSearchClick } />
-            </Col>
-          </Row>
-          { previewContent }
-        </form>
-      </Grid>
+const EditKeywordSearchContainer = (props) => {
+  const { fields: { keywords }, topicId, handleSubmit, handleSearchClick, finishStep, properties } = props;
+  const { formatMessage } = props.intl;
+  let previewContent = null;
+  if ((properties.keywords !== null) && (properties.keywords !== undefined) && (properties.keywords.length > 0)) {
+    previewContent = (
+      <div>
+        <KeywordSearchResultsContainer topicId={topicId} keywords={properties.keywords} />
+        <RaisedButton type="submit" label={formatMessage(messages.next)} primary />
+      </div>
     );
   }
-
-}
+  return (
+    <Grid>
+      <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <Row>
+          <Col lg={10} md={10} sm={10}>
+            <h2><FormattedMessage {...localMessages.title} values={{ name: properties.name }} /></h2>
+            <p>
+              <FormattedMessage {...localMessages.about} />
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={8} md={8} sm={10}>
+            <TextField
+              floatingLabelText={formatMessage(messages.searchByKeywords)}
+              errorText={keywords.touched ? keywords.error : ''}
+              fullWidth
+              {...keywords}
+            />
+          </Col>
+          <Col lg={2} md={2} sm={2}>
+            <RaisedButton label={formatMessage(messages.search)} style={{ marginTop: 33 }} onClick={handleSearchClick} />
+          </Col>
+        </Row>
+        { previewContent }
+      </form>
+    </Grid>
+  );
+};
 
 EditKeywordSearchContainer.propTypes = {
   // from parent

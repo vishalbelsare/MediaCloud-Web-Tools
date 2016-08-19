@@ -47,46 +47,46 @@ class FocalTechniqueSelector extends React.Component {
         <Row>
           <Col lg={2} md={2} sm={6}>
             <FocalTechniqueDescription
-              onClick={ this.selectBooleanQuery }
-              selected={ selected === FOCAL_TECHNIQUE_BOOLEAN_QUERY }
+              onClick={this.selectBooleanQuery}
+              selected={selected === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
               id="Boolean Query"
               image="/static/img/focal-technique-keywords-2x.png"
-              nameMsg={ localMessages.keywordName }
-              descriptionMsg={ localMessages.keywordDescription }
+              nameMsg={localMessages.keywordName}
+              descriptionMsg={localMessages.keywordDescription}
             />
           </Col>
           <Col lg={2} md={2} sm={6}>
             <FocalTechniqueDescription
-              onClick={ this.selectReferenceSetUpload }
-              selected={ selected === FOCAL_TECHNIQUE_REFERENCE_SET }
+              onClick={this.selectReferenceSetUpload}
+              selected={selected === FOCAL_TECHNIQUE_REFERENCE_SET}
               id="Reference Set Upload"
               image="/static/img/focal-technique-reference-2x.png"
-              nameMsg={ localMessages.referenceName }
-              descriptionMsg={ localMessages.referenceDescription }
+              nameMsg={localMessages.referenceName}
+              descriptionMsg={localMessages.referenceDescription}
               disabled
               comingSoon
             />
           </Col>
           <Col lg={2} md={2} sm={6}>
             <FocalTechniqueDescription
-              onClick={ this.selectCommunityDetection }
-              selected={ selected === FOCAL_TECHNIQUE_COMMUNITY_DETECTION }
+              onClick={this.selectCommunityDetection}
+              selected={selected === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
               id="Community Selection"
               image="/static/img/focal-technique-manual-2x.png"
-              nameMsg={ localMessages.manualName }
-              descriptionMsg={ localMessages.manualDescription }
+              nameMsg={localMessages.manualName}
+              descriptionMsg={localMessages.manualDescription}
               disabled
               comingSoon
             />
           </Col>
           <Col lg={2} md={2} sm={6}>
             <FocalTechniqueDescription
-              onClick={ this.selectAutoMatic }
-              selected={ selected === FOCAL_TECHNIQUE_AUTO_MAGIC }
+              onClick={this.selectAutoMatic}
+              selected={selected === FOCAL_TECHNIQUE_AUTO_MAGIC}
               id="AutoMagic Community Detection"
               image="/static/img/focal-technique-automagic-2x.png"
-              nameMsg={ localMessages.automagicName }
-              descriptionMsg={ localMessages.automagicDescription }
+              nameMsg={localMessages.automagicName}
+              descriptionMsg={localMessages.automagicDescription}
               disabled
               comingSoon
             />

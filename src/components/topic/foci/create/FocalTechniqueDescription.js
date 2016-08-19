@@ -7,14 +7,15 @@ const localMessages = {
 
 const FocalTechniqueDescription = (props) => {
   const { selected, disabled, nameMsg, descriptionMsg, image, onClick, comingSoon } = props;
+  const { formatMessage } = props.intl;
   const disabledClass = (disabled === true) ? 'disabled' : '';
   const selectedClass = (selected === true) ? 'selected' : '';
   const rootClasses = `focal-technique-description ${disabledClass} ${selectedClass}`;
   const clickHandler = (disabled === true) ? null : onClick;
-  const comingSoonContent = (comingSoon === true) ? <span style={ { color: '#FFD700' } }><FormattedMessage {...localMessages.comingSoon} /></span> : null;
+  const comingSoonContent = (comingSoon === true) ? <span style={{ color: '#FFD700' }}><FormattedMessage {...localMessages.comingSoon} /></span> : null;
   return (
     <div className={rootClasses}>
-      <img src={image} width={136} height={136} onClick={clickHandler} />
+      <img alt={formatMessage(nameMsg)} src={image} width={136} height={136} onClick={clickHandler} />
       <p><b><FormattedMessage {...nameMsg} /></b></p>
       <p>
         {comingSoonContent}

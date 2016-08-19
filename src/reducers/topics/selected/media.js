@@ -8,7 +8,7 @@ const influentialMedia = createAsyncReducer({
     sort: 'social',
   },
   action: FETCH_TOPIC_INFLUENTIAL_MEDIA,
-  SORT_TOPIC_INFLUENTIAL_MEDIA: (payload) => ({ sort: payload }),
+  [SORT_TOPIC_INFLUENTIAL_MEDIA]: (payload) => ({ sort: payload }),
 });
 
 export default influentialMedia;

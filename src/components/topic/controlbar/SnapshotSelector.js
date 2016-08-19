@@ -1,8 +1,9 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import messages from '../../../resources/messages';
 import IconButton from 'material-ui/IconButton';
 import { Popover, PopoverAnimationVertical } from 'material-ui/Popover';
+import moment from 'moment';
+import messages from '../../../resources/messages';
 import SnapshotListItem from './SnapshotListItem';
 
 class SnapshotSelector extends React.Component {
@@ -36,23 +37,18 @@ class SnapshotSelector extends React.Component {
 
   render() {
     const { snapshots, selectedId } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatDate } = this.props.intl;
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
     // default to select first if you need to
-    let selected = null;
-    for (const idx in snapshots) {
-      if (snapshots[idx].snapshots_id === selectedId) {
-        selected = snapshots[idx];
-        break;
-      }
-    }
+    let selected = snapshots.find((snapshot) => (snapshot.snapshots_id === selectedId));
     if (selected === null) {
       selected = snapshots[0];
     }
+    let selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
     return (
       <div className="snapshot-selector">
         <div className="label">
-          {selected.snapshot_date.substr(0, 16)}
+          {selectedDate}
         </div>
         <IconButton
           iconClassName="material-icons" tooltip={formatMessage(messages.snapshotChange)}
@@ -71,10 +67,11 @@ class SnapshotSelector extends React.Component {
           className="popup-list"
         >
           {snapshots.map(snapshot =>
-            <SnapshotListItem key={snapshot.snapshots_id}
+            <SnapshotListItem
+              key={snapshot.snapshots_id}
               id={snapshot.snapshots_id}
               snapshot={snapshot}
-              selected={snapshot.snapshots_id === selected.snapshots_id}
+              selected={snapshot.snapshots_id === selectedId}
               onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
             />
           )}

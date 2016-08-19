@@ -6,7 +6,7 @@ const info = createAsyncReducer({
     id: null,
   },
   action: FETCH_MEDIA,
-  SELECT_MEDIA: (payload) => ({ id: payload }),
+  [SELECT_MEDIA]: (payload) => ({ id: payload }),
 });
 
 export default info;

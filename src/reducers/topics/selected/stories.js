@@ -8,7 +8,7 @@ const influentialStories = createAsyncReducer({
     sort: 'social',
   },
   action: FETCH_TOPIC_INFLUENTIAL_STORIES,
-  SORT_TOPIC_INFLUENTIAL_STORIES: (payload) => ({ sort: payload }),
+  [SORT_TOPIC_INFLUENTIAL_STORIES]: (payload) => ({ sort: payload }),
 });
 
 export default influentialStories;

@@ -130,8 +130,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleCountryClick: (country) => {
-      console.log(country);
+    handleCountryClick: () => {
+      // console.log(country);
     },
     handleDashboardClick: () => {
       const { source } = stateProps;

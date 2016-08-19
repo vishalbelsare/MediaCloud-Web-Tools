@@ -41,46 +41,53 @@ const StoryDetails = (props) => {
     <DataCard>
       <h2><FormattedMessage {...localMessages.title} /></h2>
       <p>
-        <FormattedHTMLMessage {...localMessages.summary}
-          values={ {
+        <FormattedHTMLMessage
+          {...localMessages.summary}
+          values={{
             publishDate: formatDate(story.publishDateObj,
               { year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
             storyUrl: story.url,
             mediaName: story.media_name,
-          } }
+          }}
         />
         {mediaLink}
         <FormattedMessage {...localMessages.otherInfo} />
       </p>
       <ul>
         <li>
-          <FormattedMessage {...localMessages.bitlyClicks}
-            values={ { count: story.bitly_click_count } }
+          <FormattedMessage
+            {...localMessages.bitlyClicks}
+            values={{ count: story.bitly_click_count }}
           />
         </li>
         <li>
-          <FormattedMessage {...localMessages.facebookShares}
-            values={ { count: story.facebook_share_count } }
+          <FormattedMessage
+            {...localMessages.facebookShares}
+            values={{ count: story.facebook_share_count }}
           />
         </li>
         <li>
-          <FormattedMessage {...localMessages.detectedLanguage}
-            values={ { detectedLanguage: story.language } }
+          <FormattedMessage
+            {...localMessages.detectedLanguage}
+            values={{ detectedLanguage: story.language }}
           />
         </li>
         <li>
-          <FormattedMessage {...localMessages.inlinkCount}
-            values={ { count: story.inlink_count } }
+          <FormattedMessage
+            {...localMessages.inlinkCount}
+            values={{ count: story.inlink_count }}
           />
         </li>
         <li>
-          <FormattedMessage {...localMessages.mediaInlinkCount}
-            values={ { count: story.media_inlink_count } }
+          <FormattedMessage
+            {...localMessages.mediaInlinkCount}
+            values={{ count: story.media_inlink_count }}
           />
         </li>
         <li>
-          <FormattedMessage {...localMessages.outlinkCount}
-            values={ { count: story.outlink_count } }
+          <FormattedMessage
+            {...localMessages.outlinkCount}
+            values={{ count: story.outlink_count }}
           />
         </li>
       </ul>

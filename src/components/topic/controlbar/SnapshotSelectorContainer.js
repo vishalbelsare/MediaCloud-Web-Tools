@@ -16,8 +16,10 @@ class SnapshotSelectorContainer extends React.Component {
   render() {
     const { snapshots, handleSnapshotSelected, snapshotId } = this.props;
     return (
-      <SnapshotSelector selectedId={snapshotId}
-        snapshots={snapshots} onSnapshotSelected={handleSnapshotSelected}
+      <SnapshotSelector
+        selectedId={snapshotId}
+        snapshots={snapshots}
+        onSnapshotSelected={handleSnapshotSelected}
       />
     );
   }

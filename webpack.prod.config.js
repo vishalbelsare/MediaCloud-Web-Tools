@@ -1,13 +1,17 @@
 const path = require('path');
-const Webpack = require('webpack');
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 const rootAssetPath = './src';
 
 module.exports = {
+  bail: true,
+  devtool: 'source-map',
   entry: {
     // Chunks (files) that will get written out for JS and CSS files.
     app_js: [
@@ -30,29 +34,34 @@ module.exports = {
     // Where and how will the files be formatted when they are output.
     path: './server/static/gen',
     publicPath: '/static/gen/',
-    filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].js',
+    filename: '[name].[chunkhash:8].js',
+    chunkFilename: '[id].[chunkhash:8].chunk.js',
   },
   resolve: {
     // Avoid having to require files with an extension if they are here.
     extensions: ['', '.js', '.jsx', '.css', '.scss'],
   },
-  devtool: 'eval',
   module: {
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'eslint',
+        include: path.join(__dirname, 'src'),
+      },
+    ],
     // Various loaders to pre-process files of specific types.
     // If you wanted to SASS for example, you'd want to install this:
     //   https://github.com/jtangelder/sass-loader
     loaders: [
       {
         test: /\.js?$/i,
-        loaders: ['babel'],
+        loader: 'babel',
         exclude: /node_modules/,
         include: path.join(__dirname, 'src'),
       },
       {
         test: /\.scss$/i,
-        loader: ExtractTextPlugin.extract('style', 'css!sass'),
-        // loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap'),
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?sourceMap'),
       },
       {
         test: /\.css$/i,
@@ -68,22 +77,46 @@ module.exports = {
       },
     ],
   },
-  postcss: [autoprefixer],  // add in all the browser-specific vendor prefixes to CSS rules automatically
+  eslint: {
+    useEslintrc: true,
+  },
+  postcss: () => [autoprefixer],
   plugins: [
-    new Webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+    new HtmlWebpackPlugin({
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
       },
     }),
-    new CleanWebpackPlugin(['server/static/gen'], {
-      root: __dirname,
-      verbose: true,
-      dry: false,
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true,
+        warnings: false,
+      },
+      mangle: {
+        screw_ie8: true,
+      },
+      output: {
+        comments: false,
+        screw_ie8: true,
+      },
     }),
     // Stop modules with syntax errors from being emitted.
-    new Webpack.NoErrorsPlugin(),
+    // new webpack.NoErrorsPlugin(),
+    new CaseSensitivePathsPlugin(),
     // Ensure CSS chunks get written to their own file.
-    new ExtractTextPlugin('[name].[chunkhash].css'),
+    new ExtractTextPlugin('[name].[chunkhash:8].css'),
     // Create the manifest file that Flask and other frameworks use.
     new ManifestRevisionPlugin(path.join('server', 'static', 'gen', 'manifest.json'), {
       rootAssetPath,

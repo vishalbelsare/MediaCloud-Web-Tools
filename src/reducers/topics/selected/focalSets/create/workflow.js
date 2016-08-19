@@ -5,7 +5,7 @@ const createFociReducer = createReducer({
   initialState: {
     currentStep: 0,
   },
-  GO_TO_CREATE_FOCUS_STEP: (payload) => ({
+  [GO_TO_CREATE_FOCUS_STEP]: (payload) => ({
     currentStep: payload,
   }),
 });

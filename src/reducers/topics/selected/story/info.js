@@ -1,6 +1,6 @@
+import moment from 'moment';
 import { FETCH_STORY, SELECT_STORY } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-import moment from 'moment';
 
 const info = createAsyncReducer({
   initialState: {
@@ -11,7 +11,7 @@ const info = createAsyncReducer({
     ...payload,
     publishDateObj: moment(payload.publish_date).toDate(),
   }),
-  SELECT_STORY: (payload) => ({ id: payload }),
+  [SELECT_STORY]: (payload) => ({ id: payload }),
 });
 
 export default info;

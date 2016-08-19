@@ -31,7 +31,8 @@ class FocusSelectorContainer extends React.Component {
     if (foci.length !== 0) {
       content = (
         <div>
-          <SelectField value={selectedId}
+          <SelectField
+            value={selectedId}
             onChange={this.handleChange}
             hintText={formatMessage(messages.focusPick)}
           >

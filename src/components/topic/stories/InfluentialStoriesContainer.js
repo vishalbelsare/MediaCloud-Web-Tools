@@ -3,9 +3,9 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import StoryTable from '../StoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import DownloadButton from '../../common/DownloadButton';
 import DataCard from '../../common/DataCard';
@@ -21,18 +21,12 @@ class InfluentialStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort, links } = this.props;
     if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
-      if ((nextProps.filters.snapshotId !== null) && (filters.timespanId !== null)) {
-        fetchData(nextProps);
-      }
+      fetchData(nextProps);
     }
   }
   onChangeSort = (newSort) => {
     const { sortData } = this.props;
     sortData(newSort);
-  }
-  refetchData = () => {
-    const { fetchData } = this.props;
-    fetchData(this.props);
   }
   downloadCsv = () => {
     const { filters, sort, topicId } = this.props;

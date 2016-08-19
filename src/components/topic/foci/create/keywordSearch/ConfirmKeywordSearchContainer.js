@@ -23,41 +23,37 @@ const localMessages = {
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Focus.' },
 };
 
-class ConfirmKeywordSearchContainer extends React.Component {
-
-  render() {
-    const { saveAndAddAnother, saveAndGenerateSnapshot, properties } = this.props;
-    const { formatMessage } = this.props.intl;
-    return (
-      <Grid>
-        <Row>
-          <Col lg={10} md={10} sm={10}>
-            <h2><FormattedMessage {...localMessages.title} values={ { name: properties.name } } /></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={10} md={10} sm={10}>
-            <ul>
-              <li><FormattedHTMLMessage {...localMessages.name} values={ { name: properties.name } } /></li>
-              <li><FormattedHTMLMessage {...localMessages.description} values={ { description: properties.description } } /></li>
-              <li><FormattedHTMLMessage {...localMessages.focalTechnique} values={ { name: properties.focalTechnique } } /></li>
-              <li><FormattedHTMLMessage {...localMessages.keywords} values={ { keywords: properties.keywords } } /></li>
-            </ul>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={3} md={3} sm={12}>
-            <FlatButton label={formatMessage(localMessages.addAnotherFocus)} onClick={ saveAndAddAnother } />
-          </Col>
-          <Col lg={3} md={3} sm={12}>
-            <RaisedButton primary label={formatMessage(localMessages.generateSnapshot)} onClick={ saveAndGenerateSnapshot } />
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
-
-}
+const ConfirmKeywordSearchContainer = (props) => {
+  const { saveAndAddAnother, saveAndGenerateSnapshot, properties } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <Grid>
+      <Row>
+        <Col lg={10} md={10} sm={10}>
+          <h2><FormattedMessage {...localMessages.title} values={{ name: properties.name }} /></h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10} md={10} sm={10}>
+          <ul>
+            <li><FormattedHTMLMessage {...localMessages.name} values={{ name: properties.name }} /></li>
+            <li><FormattedHTMLMessage {...localMessages.description} values={{ description: properties.description }} /></li>
+            <li><FormattedHTMLMessage {...localMessages.focalTechnique} values={{ name: properties.focalTechnique }} /></li>
+            <li><FormattedHTMLMessage {...localMessages.keywords} values={{ keywords: properties.keywords }} /></li>
+          </ul>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={3} md={3} sm={12}>
+          <FlatButton label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
+        </Col>
+        <Col lg={3} md={3} sm={12}>
+          <RaisedButton primary label={formatMessage(localMessages.generateSnapshot)} onClick={saveAndGenerateSnapshot} />
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 ConfirmKeywordSearchContainer.propTypes = {
   // from parent
