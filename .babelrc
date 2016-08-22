@@ -10,7 +10,12 @@
         ["react-intl", {
           "messagesDir": "./build/messages/"
         }]
-      ]    
+      ]
+    },
+    "production": {
+      "plugins": [
+        "transform-react-remove-prop-types"
+      ]
     }
   }
 }

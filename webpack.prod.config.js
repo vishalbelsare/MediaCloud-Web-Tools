@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -10,12 +10,10 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const rootAssetPath = './src';
 
 module.exports = {
-  bail: true,
-  devtool: 'source-map',
+  bail: true, // stop after the first error
   entry: {
     // Chunks (files) that will get written out for JS and CSS files.
     app_js: [
-      'webpack/hot/dev-server',
       `${rootAssetPath}/index`,
     ],
     app_css: [
@@ -41,6 +39,7 @@ module.exports = {
     // Avoid having to require files with an extension if they are here.
     extensions: ['', '.js', '.jsx', '.css', '.scss'],
   },
+  devtool: 'cheap-module-source-map',
   module: {
     preLoaders: [
       {
@@ -49,19 +48,17 @@ module.exports = {
         include: path.join(__dirname, 'src'),
       },
     ],
-    // Various loaders to pre-process files of specific types.
-    // If you wanted to SASS for example, you'd want to install this:
-    //   https://github.com/jtangelder/sass-loader
     loaders: [
       {
         test: /\.js?$/i,
-        loader: 'babel',
+        loaders: ['babel'],
         exclude: /node_modules/,
         include: path.join(__dirname, 'src'),
       },
       {
         test: /\.scss$/i,
         loader: ExtractTextPlugin.extract('style', 'css!postcss!sass?sourceMap'),
+        // loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap'),
       },
       {
         test: /\.css$/i,
@@ -80,9 +77,15 @@ module.exports = {
   eslint: {
     useEslintrc: true,
   },
-  postcss: () => [autoprefixer],
+  postcss: () => [autoprefixer],  // add in all the browser-specific vendor prefixes to CSS rules automatically
   plugins: [
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
+    new CleanWebpackPlugin(['server/static/gen'], {
+      root: __dirname,
+      verbose: true,
+      dry: false,
+    }),
+    new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({
       minify: {
         removeComments: true,
@@ -113,8 +116,7 @@ module.exports = {
       },
     }),
     // Stop modules with syntax errors from being emitted.
-    // new webpack.NoErrorsPlugin(),
-    new CaseSensitivePathsPlugin(),
+    new webpack.NoErrorsPlugin(),
     // Ensure CSS chunks get written to their own file.
     new ExtractTextPlugin('[name].[chunkhash:8].css'),
     // Create the manifest file that Flask and other frameworks use.
