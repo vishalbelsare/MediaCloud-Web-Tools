@@ -9,37 +9,22 @@ import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
 import BrandToolbar from './common/BrandToolbar';
 import BrandMasthead from './common/BrandMasthead';
 import messages from '../resources/messages';
-import { APP_NAME, VERSION } from '../config';
+import { VERSION } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 
-const App = (props) => {
-  const { children, feedback, handleSnackBarRequestClose } = props;
+const AppContainer = (props) => {
+  const { children, feedback, handleSnackBarRequestClose, name, title, description } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
-  let toolNameMessage = null;
-  let tooldescriptionMessage = null;
-  switch (APP_NAME) {
-    case 'sources':
-      toolNameMessage = messages.sourcesToolName;
-      tooldescriptionMessage = messages.sourcesToolDescription;
-      break;
-    case 'topics':
-      toolNameMessage = messages.topicsToolName;
-      tooldescriptionMessage = messages.topicsToolDescription;
-      break;
-    default:
-      toolNameMessage = messages.error;
-      tooldescriptionMessage = messages.error;
-  }
   return (
-    <div className={`app-${APP_NAME}`}>
+    <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
       <header>
         <BrandToolbar backgroundColor={brandColors.light} />
         <BrandMasthead
-          name={formatMessage(toolNameMessage)}
-          description={formatMessage(tooldescriptionMessage)}
+          name={title}
+          description={description}
           backgroundColor={brandColors.dark}
           lightColor={brandColors.light}
         />
@@ -72,7 +57,7 @@ const App = (props) => {
   );
 };
 
-App.propTypes = {
+AppContainer.propTypes = {
   children: React.PropTypes.node,
   handleTouchTapLeftIconButton: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
@@ -80,9 +65,13 @@ App.propTypes = {
   feedback: React.PropTypes.object.isRequired,
   // from dispatch
   handleSnackBarRequestClose: React.PropTypes.func.isRequired,
+  // from parent
+  name: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  description: React.PropTypes.string.isRequired,
 };
 
-App.contextTypes = {
+AppContainer.contextTypes = {
   router: React.PropTypes.object.isRequired,
   store: React.PropTypes.object.isRequired,
 };
@@ -100,6 +89,6 @@ const mapDispatchToProps = (dispatch) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      App
+      AppContainer
     )
   );

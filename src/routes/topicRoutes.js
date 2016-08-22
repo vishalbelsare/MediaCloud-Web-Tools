@@ -12,11 +12,16 @@ import MediaContainer from '../components/topic/media/MediaContainer';
 import CreateFocusContainer from '../components/topic/foci/create/CreateFocusContainer';
 import ManageFocalSetsContainer from '../components/topic/foci/ManageFocalSetsContainer';
 import { requireAuth } from './routes.js';
+import userRoutes from './userRoutes';
+import TopicsApp from '../components/topic/TopicsApp';
 
 const topicRoutes = (
-  <Route path="/">
+  <Route path="/" component={TopicsApp}>
+
     <IndexRedirect to="/home" />
     <Route path="/home" component={TopicListContainer} onEnter={requireAuth} />
+
+    {userRoutes}
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 

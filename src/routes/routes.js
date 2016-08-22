@@ -1,12 +1,8 @@
-import React from 'react';
-import Route from 'react-router/lib/Route';
 import { APP_NAME } from '../config';
 import { hasCookies } from '../lib/auth';
 
-import App from '../components/App';
 import sourceRoutes from './sourceRoutes';
 import topicRoutes from './topicRoutes';
-import userRoutes from './userRoutes';
 
 
 // We need to restrict some routes to only users that are logged in
@@ -31,11 +27,6 @@ switch (APP_NAME) {
     appRoutes = null;
 }
 
-const routes = (
-  <Route path="/" component={App}>
-    {userRoutes}
-    {appRoutes}
-  </Route>
-);
+const routes = appRoutes;
 
 export default routes;
