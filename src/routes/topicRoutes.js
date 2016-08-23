@@ -14,11 +14,15 @@ import ManageFocalSetsContainer from '../components/topic/foci/ManageFocalSetsCo
 import { requireAuth } from './routes.js';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
+import About from '../components/topic/About';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
 
     <IndexRedirect to="/home" />
+
+    <Route path="/about" component={About} />
+
     <Route path="/home" component={TopicListContainer} onEnter={requireAuth} />
 
     {userRoutes}
