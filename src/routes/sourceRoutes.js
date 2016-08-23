@@ -6,7 +6,7 @@ import Introduction from '../components/source/Introduction';
 import PageWrapper from '../components/source/PageWrapper';
 import requireAuth from './routes.js';
 import userRoutes from './userRoutes';
-import SourcesApp from '../components/topic/TopicsApp';
+import SourcesApp from '../components/source/SourcesApp';
 
 const sourceRoutes = (
   <Route path="/" component={SourcesApp}>

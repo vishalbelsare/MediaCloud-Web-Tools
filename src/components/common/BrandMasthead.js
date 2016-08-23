@@ -21,7 +21,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor, mastheadText, navigateToHome } = this.props;
+    const { user, name, description, backgroundColor, mastheadText, navigateToHome, drawer, showLoginButton } = this.props;
     const { formatMessage } = this.props.intl;
     const styles = {
       root: {
@@ -35,10 +35,12 @@ class BrandMasthead extends React.Component {
       },
     };
     let loginLogoutButton = null;
-    if (user.isLoggedIn) {
-      loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
-    } else {
-      loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
+    if (showLoginButton !== false) {
+      if (user.isLoggedIn) {
+        loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
+      } else {
+        loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
+      }
     }
     const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });
     return (
@@ -60,6 +62,7 @@ class BrandMasthead extends React.Component {
               <div style={styles.clear} />
               <div style={styles.right} >
                 {loginLogoutButton}
+                {drawer}
               </div>
             </Col>
           </Row>
@@ -76,6 +79,8 @@ BrandMasthead.propTypes = {
   description: React.PropTypes.string.isRequired,
   backgroundColor: React.PropTypes.string.isRequired,
   lightColor: React.PropTypes.string.isRequired,
+  drawer: React.PropTypes.node,
+  showLoginButton: React.PropTypes.bool,
   // from context
   intl: React.PropTypes.object.isRequired,
   // state

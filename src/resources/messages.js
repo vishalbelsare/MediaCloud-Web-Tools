@@ -72,6 +72,10 @@ const messages = {
   focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
   removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any focus' },
 
+  menuOpenTooltip: { id: 'menu.open.tooltip', defaultMessage: 'Open Main Menu' },
+  menuTitle: { id: 'menu.title', defaultMessage: 'Main Menu' },
+  menuAbout: { id: 'menu.about', defaultMessage: 'About Topic Mapper' },
+
 };
 
 export default messages;

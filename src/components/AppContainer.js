@@ -14,7 +14,7 @@ import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 
 const AppContainer = (props) => {
-  const { children, feedback, handleSnackBarRequestClose, name, title, description } = props;
+  const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
   return (
@@ -27,6 +27,8 @@ const AppContainer = (props) => {
           description={description}
           backgroundColor={brandColors.dark}
           lightColor={brandColors.light}
+          drawer={drawer}
+          showLoginButton={showLoginButton}
         />
       </header>
       <div id="content">
@@ -69,6 +71,8 @@ AppContainer.propTypes = {
   name: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
+  drawer: React.PropTypes.node,
+  showLoginButton: React.PropTypes.bool,
 };
 
 AppContainer.contextTypes = {
