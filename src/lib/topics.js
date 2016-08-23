@@ -109,5 +109,5 @@ export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {
 }
 
 export function topicGenerateSnapshot(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/snapshots/generate`);
+  return createPostingApiPromise(`/api/topics/${topicId}/snapshots/generate`);
 }

@@ -42,11 +42,13 @@ export function createApiPromise(url, params, httpMethod = 'get') {
  */
 export function createPostingApiPromise(url, params) {
   const formData = new FormData();
-  params.keys().each((key) => {
-    if ({}.hasOwnProperty.call(params, key)) {
-      formData.append(key, params[key]);
-    }
-  });
+  if (params !== undefined) {
+    params.keys().each((key) => {
+      if ({}.hasOwnProperty.call(params, key)) {
+        formData.append(key, params[key]);
+      }
+    });
+  }
   return fetch(url, {
     method: 'post',
     credentials: 'include',
