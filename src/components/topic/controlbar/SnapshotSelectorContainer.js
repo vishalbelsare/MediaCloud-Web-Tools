@@ -53,7 +53,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         .then((response) => {
           if (snapshotId === null) {
             // default to first snapshot (ie. latest) if none is specified
-            const newSnapshotId = response.list[0].snapshots_id;
+            const firstReadySnapshot = response.list[0].find((s) => s.state === 'completed');
+            const newSnapshotId = firstReadySnapshot.snapshots_id;
             const newLocation = filteredLocation(ownProps.location, {
               snapshotId: newSnapshotId,
               timespanId: null,
