@@ -1,10 +1,14 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Col } from 'react-flexbox-grid/lib';
 import DeleteButton from '../../../common/DeleteButton';
 
 const localMessages = {
-  focalSetDelete: { id: 'focalSets.delete', defaultMessage: 'Delete this focal set' },
+  focalSetDelete: { id: 'focalSets.delete', defaultMessage: 'Delete this Focal Set' },
+  focalSetTechnique: { id: 'focalSets.technique', defaultMessage: 'All the Foci in this Set use the {technique} Focal Technique.' },
+  focusCount: { id: 'focalSets.focus.count',
+    defaultMessage: 'This Focal Set has {count, plural,\n =0 {no Foci}\n =1 {one Focus}\n other {# Foci}} in it.',
+  },
 };
 
 // handles focal sets or focal set definitions
@@ -37,6 +41,26 @@ class FocalSetSummary extends React.Component {
         <DeleteButton onClick={this.handleOnDeleteClick} tooltip={formatMessage(localMessages.focalSetDelete)} />
       );
     }
+    let fociInfo = null;
+    if (('focus_definitions' in focalSet)) {
+      fociInfo = (
+        <div>
+          <p>
+            <FormattedMessage
+              {...localMessages.focusCount}
+              values={{ count: focalSet.focus_definitions.length }}
+            />
+          </p>
+          <ul>
+            {focalSet.focus_definitions.map((focus) => (
+              <li key={focus.focus_definitions_id}>
+                {focus.name} - {focus.description}
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
     return (
       <Col lg={3} md={3} sm={12}>
         <div onClick={this.handleOnClick} className={rootClasses}>
@@ -47,11 +71,13 @@ class FocalSetSummary extends React.Component {
             <b>{focalSet.name}</b>
           </p>
           <p>
-            <i>{focalSet.focal_technique}</i>
+            {focalSet.description}.
+            <FormattedMessage
+              {...localMessages.focalSetTechnique}
+              values={{ technique: focalSet.focal_technique }}
+            />
           </p>
-          <p>
-            {focalSet.description}
-          </p>
+          {fociInfo}
         </div>
       </Col>
     );

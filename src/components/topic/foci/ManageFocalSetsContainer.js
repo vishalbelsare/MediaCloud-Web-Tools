@@ -131,7 +131,12 @@ class ManageFocalSetsContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={10} md={10} sm={12}>
-              <RaisedButton label={formatMessage(messages.snapshotGenerate)} onClick={handleGenerateSnapshotRequest} />
+              <br />
+              <RaisedButton
+                label={formatMessage(messages.snapshotGenerate)}
+                primary
+                onClick={handleGenerateSnapshotRequest}
+              />
             </Col>
           </Row>
         </Grid>
