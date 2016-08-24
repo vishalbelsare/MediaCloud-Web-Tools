@@ -17,7 +17,6 @@ const messages = {
   berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Klein Center for Internet and Society at Harvard University' },
   userLogin: { id: 'user.login', defaultMessage: 'Login' },
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
-  userLoginFailed: { id: 'user.loginFailed', defaultMessage: 'Invalid username or password' },
 
   topicName: { id: 'topic.title.default', defaultMessage: 'Topic' },
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },

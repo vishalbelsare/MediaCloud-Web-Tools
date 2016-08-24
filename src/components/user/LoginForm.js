@@ -9,12 +9,18 @@ import * as fetchConstants from '../../lib/fetchConstants.js';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 
+const localMessages = {
+  missingEmail: { id: 'You need to enter your email address.' },
+  missingPassword: { id: 'You need to enter your password.' },
+  loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
+};
+
 const LoginFormComponent = (props) => {
   const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, errorMessage } = props;
   const { formatMessage } = props.intl;
   let emailError = errorMessage;
   if (emailError === null) {
-    emailError = email.touched ? email.error : '';
+    emailError = email.touched ? formatMessage(email.error) : '';
   }
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
@@ -27,11 +33,16 @@ const LoginFormComponent = (props) => {
       <TextField
         floatingLabelText={formatMessage(messages.userPassword)}
         type="password"
-        errorText={password.touched ? password.error : ''}
+        errorText={password.touched ? formatMessage(password.error) : ''}
         {...password}
       />
       <br />
-      <RaisedButton type="submit" label="Login" primary disabled={fetchStatus === fetchConstants.FETCH_ONGOING} />
+      <RaisedButton
+        type="submit"
+        label={formatMessage(messages.userLogin)}
+        primary
+        disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
+      />
     </form>
   );
 };
@@ -59,7 +70,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
       if (response.status === 401) {
-        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(messages.userLoginFailed)));
+        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(localMessages.loginFailed)));
       } else {
         // redirect to destination if there is one
         const loc = ownProps.location;
@@ -76,10 +87,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function validate(values) {
   const errors = {};
   if (!notEmptyString(values.email)) {
-    errors.email = 'You forgot to enter your email address';
+    errors.email = localMessages.missingEmail;
   }
   if (!notEmptyString(values.password)) {
-    errors.password = 'You forgot to enter your password';
+    errors.password = localMessages.missingPassword;
   }
   return errors;
 }
