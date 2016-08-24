@@ -3,13 +3,14 @@ import { reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 
 const LoginFormComponent = (props) => {
-  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, location, errorMessage } = props;
+  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, errorMessage } = props;
   const { formatMessage } = props.intl;
   let emailError = errorMessage;
   if (emailError === null) {
@@ -28,11 +29,6 @@ const LoginFormComponent = (props) => {
         type="password"
         errorText={password.touched ? password.error : ''}
         {...password}
-      />
-      <input
-        type="hidden"
-        name="destination"
-        value={(location && location.state && location.state.nextPathname) ? location.state.nextPathname : ''}
       />
       <br />
       <RaisedButton type="submit" label="Login" primary disabled={fetchStatus === fetchConstants.FETCH_ONGOING} />
@@ -58,7 +54,7 @@ const mapStateToProps = (state) => ({
   errorMessage: state.user.errorMessage,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
@@ -66,7 +62,11 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(setLoginErrorMessage('Login Failed'));
       } else {
         // redirect to destination if there is one
-        console.log(values.destination);
+        const loc = ownProps.location;
+        const redirect = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
+        if (redirect) {
+          dispatch(push(redirect));
+        }
       }
     });
   },
@@ -86,7 +86,7 @@ function validate(values) {
 
 const reduxFormConfig = {
   form: 'login',
-  fields: ['email', 'password', 'destination'],
+  fields: ['email', 'password'],
   validate,
 };
 
