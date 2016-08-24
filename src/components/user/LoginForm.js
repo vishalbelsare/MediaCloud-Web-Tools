@@ -9,13 +9,17 @@ import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 
 const LoginFormComponent = (props) => {
-  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, location } = props;
+  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, location, errorMessage } = props;
   const { formatMessage } = props.intl;
+  let emailError = errorMessage;
+  if (emailError === null) {
+    emailError = email.touched ? email.error : '';
+  }
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
       <TextField
         floatingLabelText={formatMessage(messages.userEmail)}
-        errorText={email.touched ? email.error : ''}
+        errorText={emailError}
         {...email}
       />
       <br />
@@ -37,16 +41,21 @@ const LoginFormComponent = (props) => {
 };
 
 LoginFormComponent.propTypes = {
+  // from composition
   intl: React.PropTypes.object.isRequired,
   fields: React.PropTypes.object.isRequired,
-  onSubmitLoginForm: React.PropTypes.func.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
   location: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  errorMessage: React.PropTypes.string,
+  // from dispatch
+  onSubmitLoginForm: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchStatus: state.user.fetchStatus,
+  errorMessage: state.user.errorMessage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
