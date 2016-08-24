@@ -59,7 +59,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
       if (response.status === 401) {
-        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(messages.loginFailed)));
+        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(messages.userLoginFailed)));
       } else {
         // redirect to destination if there is one
         const loc = ownProps.location;
@@ -90,6 +90,9 @@ const reduxFormConfig = {
   validate,
 };
 
-const LoginForm = reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(injectIntl(LoginFormComponent));
-
-export default LoginForm;
+export default
+  injectIntl(
+    reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(
+      LoginFormComponent
+    )
+  );
