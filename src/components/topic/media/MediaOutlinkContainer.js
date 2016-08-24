@@ -6,7 +6,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import messages from '../../../resources/messages';
 import StoryTable from '../StoryTable';
 import DataCard from '../../common/DataCard';
-import DownloadButton from '../../common/DownloadButton';
+import { DownloadButton } from '../../common/IconButton';
 
 const STORIES_TO_SHOW = 10;
 

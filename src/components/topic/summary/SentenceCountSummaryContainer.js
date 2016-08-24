@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
-import DownloadButton from '../../common/DownloadButton';
+import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 

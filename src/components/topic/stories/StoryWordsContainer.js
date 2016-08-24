@@ -6,7 +6,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchStoryWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import DownloadButton from '../../common/DownloadButton';
+import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 class StoryWordsContainer extends React.Component {

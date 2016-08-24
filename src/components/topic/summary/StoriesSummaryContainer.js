@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import ExploreButton from '../../common/ExploreButton';
+import { ExploreButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 
 const localMessages = {

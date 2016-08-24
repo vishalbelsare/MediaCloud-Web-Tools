@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaTable from '../MediaTable';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import ExploreButton from '../../common/ExploreButton';
+import { ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },

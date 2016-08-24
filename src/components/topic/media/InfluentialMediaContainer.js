@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import MediaTable from '../MediaTable';
 import { fetchTopicInfluentialMedia, sortTopicInfluentialMedia } from '../../../actions/topicActions';
-import DownloadButton from '../../common/DownloadButton';
+import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';

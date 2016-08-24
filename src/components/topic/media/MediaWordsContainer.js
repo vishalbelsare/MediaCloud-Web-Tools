@@ -6,7 +6,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchMediaWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import DownloadButton from '../../common/DownloadButton';
+import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 class MediaWordsContainer extends React.Component {
