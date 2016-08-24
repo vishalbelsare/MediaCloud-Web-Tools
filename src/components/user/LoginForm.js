@@ -3,7 +3,7 @@ import { reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { loginWithPassword } from '../../actions/userActions';
+import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
@@ -51,7 +51,15 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   onSubmitLoginForm: (values) => {
-    dispatch(loginWithPassword(values.email, values.password, values.destination));
+    dispatch(loginWithPassword(values.email, values.password, values.destination))
+    .then((response) => {
+      if (response.status === 401) {
+        dispatch(setLoginErrorMessage('Login Failed'));
+      } else {
+        // redirect to destination if there is one
+        console.log(values.destination);
+      }
+    });
   },
 });
 

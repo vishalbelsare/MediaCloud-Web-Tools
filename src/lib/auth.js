@@ -1,31 +1,17 @@
 import cookie from 'react-cookie';
-import fetch from 'isomorphic-fetch';
+import { createPostingApiPromise } from './apiUtil';
 
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';
 
 export function promiseToLoginWithPassword(email, password) {
-  const formData = new FormData();
-  formData.append('email', email);
-  formData.append('password', password);
-  return fetch('/api/login', {
-    method: 'post',
-    body: formData,
-  }).then(
-    response => response.json()
-  );
+  const params = { email, password };
+  return createPostingApiPromise('/api/login', params);
 }
 
 export function promiseToLoginWithKey(email, key) {
-  const formData = new FormData();
-  formData.append('email', email);
-  formData.append('key', key);
-  return fetch('/api/login-with-key', {
-    method: 'post',
-    body: formData,
-  }).then(
-    response => response.json()
-  );
+  const params = { email, key };
+  return createPostingApiPromise('/api/login-with-key', params);
 }
 
 export function saveCookies(email, key) {

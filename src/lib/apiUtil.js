@@ -43,7 +43,7 @@ export function createApiPromise(url, params, httpMethod = 'get') {
 export function createPostingApiPromise(url, params) {
   const formData = new FormData();
   if (params !== undefined) {
-    params.keys().each((key) => {
+    Object.keys(params).forEach((key) => {
       if ({}.hasOwnProperty.call(params, key)) {
         formData.append(key, params[key]);
       }
