@@ -67,13 +67,14 @@ const messages = {
   storyTitle: { id: 'story.title', defaultMessage: 'Title' },
   storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
 
+  ok: { id: 'ok', defaultMessage: 'OK' },
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
   search: { id: 'search', defaultMessage: 'Search' },
   searchByKeywords: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
-  next: { id: 'search', defaultMessage: 'Next' },
-  manage: { id: 'search', defaultMessage: 'manage' },
-
+  next: { id: 'bext', defaultMessage: 'Next' },
+  manage: { id: 'manage', defaultMessage: 'manage' },
+  help: { id: 'help', defaultMessage: 'Help' },
   download: { id: 'download', defaultMessage: 'Download' },
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },

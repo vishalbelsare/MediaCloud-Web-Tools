@@ -1,21 +1,36 @@
+@import '../_constants';
 
 .app-icon {
   width: 26px;
   height: 26px;
   border-radius: 13px;
+  display: inline-block;
 
   &.app-icon-download {
     svg {
       margin-top: 6px;
-      margin-left: 7px;
     }
   }
 
   &.app-icon-explore {
     svg {
       margin-top: 10px;
-      margin-left: 8px;
     }
   }
   
+  &.app-icon-help {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    background-color: $material-grey400;
+    svg {
+      margin-top: 4px;
+    }
+  }
+
+}
+
+h2 {
+  .app-icon-help {
+  }
 }

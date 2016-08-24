@@ -51,7 +51,8 @@ class SnapshotSelector extends React.Component {
           {selectedDate}
         </div>
         <IconButton
-          iconClassName="material-icons" tooltip={formatMessage(messages.snapshotChange)}
+          iconClassName="material-icons"
+          tooltip={formatMessage(messages.snapshotChange)}
           onClick={this.handlePopupOpenClick}
           iconStyle={{ color: 'white' }}
         >
