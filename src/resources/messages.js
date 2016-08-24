@@ -22,6 +22,16 @@ const messages = {
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },
   topicTimespan: { id: 'topic.timespan', defaultMessage: 'Timespan' },
 
+  topicNameProp: { id: 'topic.prop.name', defaultMessage: 'Name' },
+  topicDescriptionProp: { id: 'topic.prop.description', defaultMessage: 'Description' },
+  topicStartDateProp: { id: 'topic.prop.startDate', defaultMessage: 'Start Date' },
+  topicEndDateProp: { id: 'topic.prop.endDate', defaultMessage: 'End Date' },
+  topicQueryProp: { id: 'topic.prop.query', defaultMessage: 'Query' },
+  topicValidationProp: { id: 'topic.prop.validationPattern', defaultMessage: 'Validation Pattern' },
+  topicIterationsProp: { id: 'topic.prop.iteration', defaultMessage: 'Iterations' },
+  toicSkipSolrQueryProp: { id: 'topic.prop.public', defaultMessage: 'Skip SOLR Query' },
+  topicPublicProp: { id: 'topic.prop.public', defaultMessage: 'Public' },
+
   snapshotAge: { id: 'topic.snapshot.age', defaultMessage: 'Snapshot taken {age}' },
   snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a different Snapshot' },
   snapshotGenerate: { id: 'needSnapshot.generate', defaultMessage: 'Generate Snapshot' },
@@ -75,6 +85,9 @@ const messages = {
   menuOpenTooltip: { id: 'menu.open.tooltip', defaultMessage: 'Open Main Menu' },
   menuTitle: { id: 'menu.title', defaultMessage: 'Main Menu' },
   menuAbout: { id: 'menu.about', defaultMessage: 'About Topic Mapper' },
+
+  userEmail: { id: 'user.email', defaultMessage: 'Email' },
+  userPassword: { id: 'user.password', defaultMessage: 'Password' },
 
 };
 

@@ -1,22 +1,26 @@
 import React from 'react';
 import { reduxForm } from 'redux-form';
+import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { loginWithPassword } from '../../actions/userActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
+import messages from '../../resources/messages';
+import { notEmptyString } from '../../lib/formValidators';
 
 const LoginFormComponent = (props) => {
   const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, location } = props;
+  const { formatMessage } = props.intl;
   return (
-    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))}>
+    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
       <TextField
-        floatingLabelText="Email"
+        floatingLabelText={formatMessage(messages.userEmail)}
         errorText={email.touched ? email.error : ''}
         {...email}
       />
       <br />
       <TextField
-        floatingLabelText="Password"
+        floatingLabelText={formatMessage(messages.userPassword)}
         type="password"
         errorText={password.touched ? password.error : ''}
         {...password}
@@ -33,6 +37,7 @@ const LoginFormComponent = (props) => {
 };
 
 LoginFormComponent.propTypes = {
+  intl: React.PropTypes.object.isRequired,
   fields: React.PropTypes.object.isRequired,
   onSubmitLoginForm: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
@@ -53,10 +58,10 @@ const mapDispatchToProps = (dispatch) => ({
 // in-browser validation callback
 function validate(values) {
   const errors = {};
-  if (!values.email || values.email.trim() === '') {
+  if (!notEmptyString(values.email)) {
     errors.email = 'You forgot to enter your email address';
   }
-  if (!values.password || values.password.trim() === '') {
+  if (!notEmptyString(values.password)) {
     errors.password = 'You forgot to enter your password';
   }
   return errors;
@@ -68,6 +73,6 @@ const reduxFormConfig = {
   validate,
 };
 
-const LoginForm = reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(LoginFormComponent);
+const LoginForm = reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(injectIntl(LoginFormComponent));
 
 export default LoginForm;

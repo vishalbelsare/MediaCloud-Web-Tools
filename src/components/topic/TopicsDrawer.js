@@ -11,6 +11,7 @@ import messages from '../../resources/messages';
 
 const localMessages = {
   allTopics: { id: 'menu.items.allTopics', defaultMessage: 'All Topics' },
+  createNewTopic: { id: 'menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
 class TopicsDrawer extends React.Component {
@@ -46,9 +47,14 @@ class TopicsDrawer extends React.Component {
     let appMenuItems = null;
     if (user.isLoggedIn) {
       appMenuItems = (
-        <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
-          <FormattedMessage {...localMessages.allTopics} />
-        </MenuItem>
+        <div>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
+            <FormattedMessage {...localMessages.allTopics} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
+            <FormattedMessage {...localMessages.createNewTopic} />
+          </MenuItem>
+        </div>
       );
     }
     // bring it all together in a controlled drawer

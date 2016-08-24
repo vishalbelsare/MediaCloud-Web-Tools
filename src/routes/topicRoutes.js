@@ -15,6 +15,7 @@ import { requireAuth } from './routes.js';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
+import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -24,6 +25,8 @@ const topicRoutes = (
     <Route path="/about" component={About} />
 
     <Route path="/home" component={TopicListContainer} onEnter={requireAuth} />
+
+    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
 
     {userRoutes}
 
