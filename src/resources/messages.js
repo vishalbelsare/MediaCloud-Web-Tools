@@ -75,7 +75,7 @@ const messages = {
   manage: { id: 'search', defaultMessage: 'manage' },
 
   download: { id: 'download', defaultMessage: 'Download' },
-  explore: { id: 'explore', defaultMessage: 'Explore More' },
+  explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
 

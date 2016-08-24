@@ -5,8 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaTable from '../MediaTable';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import ExploreButton from './ExploreButton';
-import messages from '../../../resources/messages';
+import ExploreButton from '../../common/ExploreButton';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
@@ -32,11 +31,10 @@ class MediaSummaryContainer extends React.Component {
   }
   render() {
     const { media, sort, topicId } = this.props;
-    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/media`} />
+          <ExploreButton to={`/topics/${topicId}/media`} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <MediaTable media={media} onChangeSort={this.onChangeSort} sortedBy={sort} topicId={topicId} />

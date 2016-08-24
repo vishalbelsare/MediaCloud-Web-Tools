@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import ExploreButton from './ExploreButton';
-import messages from '../../../resources/messages';
+import ExploreButton from '../../common/ExploreButton';
 import StoryTable from '../StoryTable';
 
 const localMessages = {
@@ -28,11 +27,10 @@ class StoriesSummaryContainer extends React.Component {
   };
   render() {
     const { stories, sort, topicId } = this.props;
-    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton tooltip={formatMessage(messages.explore)} to={`/topics/${topicId}/stories`} />
+          <ExploreButton linkTo={`/topics/${topicId}/stories`} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <StoryTable stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />

@@ -1,0 +1,21 @@
+
+.app-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+
+  &.app-icon-download {
+    svg {
+      margin-top: 6px;
+      margin-left: 7px;
+    }
+  }
+
+  &.app-icon-explore {
+    svg {
+      margin-top: 10px;
+      margin-left: 8px;
+    }
+  }
+  
+}
