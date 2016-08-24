@@ -59,7 +59,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
       if (response.status === 401) {
-        dispatch(setLoginErrorMessage('Login Failed'));
+        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(messages.loginFailed)));
       } else {
         // redirect to destination if there is one
         const loc = ownProps.location;
