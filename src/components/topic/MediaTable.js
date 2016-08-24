@@ -1,7 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
+
+const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
 class MediaTable extends React.Component {
 
@@ -16,27 +19,47 @@ class MediaTable extends React.Component {
   }
 
   render() {
-    const { media, onChangeSort, topicId } = this.props;
+    const { media, onChangeSort, topicId, sortedBy } = this.props;
     const { formatMessage } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
-      inlinkHeader = (
-        <a
-          href={`#${formatMessage(messages.sortByMediaInlinks)}`}
-          onClick={e => { e.preventDefault(); this.sortByInlinks(); }}
-        >
-          <FormattedMessage {...messages.inlinks} />
-        </a>
-      );
-      socialHeader = (
-        <a
-          href={`#${formatMessage(messages.sortByBitlyClicks)}`}
-          onClick={e => { e.preventDefault(); this.sortBySocial(); }}
-        >
-          <FormattedMessage {...messages.bitlyClicks} />
-        </a>
-      );
+      if (sortedBy === 'inlink') {
+        inlinkHeader = (
+          <div>
+            <FormattedMessage {...messages.mediaInlinks} />
+            <ArrowDropDownIcon style={ICON_STYLE} />
+          </div>
+        );
+      } else {
+        inlinkHeader = (
+          <a
+            href={`#${formatMessage(messages.sortByMediaInlinks)}`}
+            onClick={e => { e.preventDefault(); this.sortByInlinks(); }}
+            title={formatMessage(messages.sortByMediaInlinks)}
+          >
+            <FormattedMessage {...messages.mediaInlinks} />
+          </a>
+        );
+      }
+      if (sortedBy === 'social') {
+        socialHeader = (
+          <div>
+            <FormattedMessage {...messages.bitlyClicks} />
+            <ArrowDropDownIcon style={ICON_STYLE} />
+          </div>
+        );
+      } else {
+        socialHeader = (
+          <a
+            href={`#${formatMessage(messages.sortByBitlyClicks)}`}
+            onClick={e => { e.preventDefault(); this.sortBySocial(); }}
+            title={formatMessage(messages.sortByBitlyClicks)}
+          >
+            <FormattedMessage {...messages.bitlyClicks} />
+          </a>
+        );
+      }
     } else {
       inlinkHeader = <FormattedMessage {...messages.mediaInlinks} />;
       socialHeader = <FormattedMessage {...messages.bitlyClicks} />;
