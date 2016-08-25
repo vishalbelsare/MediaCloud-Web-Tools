@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import MediaTable from '../MediaTable';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
@@ -9,6 +10,10 @@ import { ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
+  helpTitle: { id: 'topic.summary.topMedia.help.title', defaultMessage: 'About Top Media' },
+  helpText: { id: 'topic.summary.topMedia.help.text',
+    defaultMessage: '<p>This table shows you the media that wrote about this Topic the most.</p><p>This table has one row for each Media Source.  The column currently being used to sort the results has a little down arrow next to it.  Click one of the green column headers to change how it is sorted.  Here is a summary of the columns:</p><ul><li>Name: the name of the Media Source; click to see details about this source\'s content within this Topic</li><li>Media Inlinks: how many unique other Media Sources have links to this content from this Media Source in the Topic</li><li>Outlinks: the number of links in this Media Source to other stories</li><li>Bit.ly Clicks: the number of clicks on links to stories from this Media Source shortened using the Bit.ly URL shortening service</li><li>Facebook Shares: the number of times stories from this Media Source were shared on Facebook</li></ul><p>Click the download button in the top right to download a CSV of the full list of stories</p>',
+  },
 };
 
 const NUM_TO_SHOW = 10;
@@ -30,13 +35,16 @@ class MediaSummaryContainer extends React.Component {
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
   render() {
-    const { media, sort, topicId } = this.props;
+    const { media, sort, topicId, helpButton } = this.props;
     return (
       <DataCard>
         <div className="actions">
           <ExploreButton to={`/topics/${topicId}/media`} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <MediaTable media={media} onChangeSort={this.onChangeSort} sortedBy={sort} topicId={topicId} />
       </DataCard>
     );
@@ -44,8 +52,9 @@ class MediaSummaryContainer extends React.Component {
 }
 
 MediaSummaryContainer.propTypes = {
-  // from context
+  // from compositional chain
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -89,8 +98,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        MediaSummaryContainer
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+        composeAsyncContainer(
+          MediaSummaryContainer
+        )
       )
     )
   );

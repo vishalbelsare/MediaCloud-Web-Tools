@@ -12,8 +12,8 @@ import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
-  helpText: { id: 'topic.summary.words.help.text',
-    defaultMessage: '<p>This is a visualization showing the top words in your Topic. The words that show up more often appear bigger, and show up first.  This is based on a sample of the stories in the overall Topic.  We have done extensive testing to validate that the sample size is representative of the entire Topic.</p><p>You can click the download button to download a CSV file of word counts from a larger sample of stories from the Topic.</p><p>We count words based on their stem, but show you the most commonly used stem within the sample.  To be concrete, that means if you see a word like "education" as the top word, that includes any variations of the "educ" stem (ie. educated, education, etc).</p>',
+  helpText: { id: 'topic.summary.words.help.into',
+    defaultMessage: '<p>This is a visualization showing the top words in your Topic.</p>',
   },
 };
 
@@ -48,7 +48,7 @@ class WordsSummaryContainer extends React.Component {
 }
 
 WordsSummaryContainer.propTypes = {
-  // from context
+  // from compositional chain
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
   // from parent
@@ -85,7 +85,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordsSummaryContainer
         )

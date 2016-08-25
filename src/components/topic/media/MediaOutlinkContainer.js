@@ -3,12 +3,18 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchMediaOutlinks, sortMediaOutlinks } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import StoryTable from '../StoryTable';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 
 const STORIES_TO_SHOW = 10;
+
+const localMessages = {
+  helpTitle: { id: 'media.outlinks.help.title', defaultMessage: 'About Media Outlinks' },
+  helpIntro: { id: 'media.outlinks.help.intro', defaultMessage: '<p>This is a table of stories linked to in stories published by this Media Source within the Topic.</p>' },
+};
 
 class MediaOutlinksContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -27,14 +33,17 @@ class MediaOutlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { outlinkedStories, topicId } = this.props;
+    const { outlinkedStories, topicId, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...messages.outlinks} /></h2>
+        <h2>
+          <FormattedMessage {...messages.outlinks} />
+          {helpButton}
+        </h2>
         <StoryTable stories={outlinkedStories} topicId={topicId} onChangeSort={this.onChangeSort} />
       </DataCard>
     );
@@ -42,8 +51,9 @@ class MediaOutlinksContainer extends React.Component {
 }
 
 MediaOutlinksContainer.propTypes = {
-  // from context
+  // from composition chain
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
   mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
@@ -91,8 +101,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        MediaOutlinksContainer
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpIntro, messages.storiesTableHelpText])(
+        composeAsyncContainer(
+          MediaOutlinksContainer
+        )
       )
     )
   );

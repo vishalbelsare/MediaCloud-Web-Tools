@@ -58,6 +58,9 @@ const messages = {
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
+  wordcloudHelpText: { id: 'wordcloud.help.text',
+    defaultMessage: '<p>This is an ordered word cloud. The words that show up more often appear bigger, and show up first in the list.  This is based on a sample of the stories in the overall Topic.  We have done extensive testing to validate that the sample size is representative of the entire Topic.</p><p>You can click the download button to download a CSV file of word counts from a larger sample of stories from the Topic.</p><p>We count words based on their stem, but show you the most commonly used stem within the sample.  To be concrete, that means if you see a word like "education" as the top word, that includes any variations of the "educ" stem (ie. educated, education, etc).</p>',
+  },
 
   media: { id: 'media', defaultMessage: 'Media Source' },
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
@@ -71,6 +74,10 @@ const messages = {
   storyPlural: { id: 'stories', defaultMessage: 'Stories' },
   storyTitle: { id: 'story.title', defaultMessage: 'Title' },
   storyDate: { id: 'story.date', defaultMessage: 'Publish Data' },
+  storiesTableHelpTitle: { id: 'stories.help.title', defaultMessage: 'About Stories' },
+  storiesTableHelpText: { id: 'stories.help.text',
+    defaultMessage: '<p>This table has one row for each Story.  The column currently being used to sort the results has a little down arrow next to it.  Click one of the green column headers to change how it is sorted.  Here is a summary of the columns:</p><ul><li>Title: the title of the story; click to see details about this story</li><li>Media Source: the name of the Media Source; click to see details about this source\'s content within this Topic</li><li>Publish Date: our best guess of the date and time this content was published</li><li>Media Inlinks: how many unique other Media Sources have links to this content in the Topic</li><li>Outlinks: the number of links in this story to other stories</li><li>Bit.ly Clicks: the number of clicks on links to this story shortened using the Bit.ly URL shortening service</li><li>Facebook Shares: the number of times this story was shared on Facebook</li></ul><p>Click the download button in the top right to download a CSV of the full list of stories</p>',
+  },
 
   ok: { id: 'ok', defaultMessage: 'OK' },
   error: { id: 'error', defaultMessage: 'Error' },
@@ -94,6 +101,10 @@ const messages = {
 
   userEmail: { id: 'user.email', defaultMessage: 'Email' },
   userPassword: { id: 'user.password', defaultMessage: 'Password' },
+
+  attentionChartHelpText: { id: 'attentionChart.help.text',
+    defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
+  },
 
 };
 

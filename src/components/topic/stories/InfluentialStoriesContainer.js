@@ -10,6 +10,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/paging';
 import composePagedContainer from '../../common/PagedContainer';
 
@@ -34,7 +35,7 @@ class InfluentialStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, previousButton, nextButton } = this.props;
+    const { stories, sort, topicId, previousButton, nextButton, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     return (
@@ -46,7 +47,10 @@ class InfluentialStoriesContainer extends React.Component {
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
-              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <h2>
+                <FormattedMessage {...localMessages.title} />
+                {helpButton}
+              </h2>
               <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
               { previousButton }
               { nextButton }
@@ -61,8 +65,9 @@ class InfluentialStoriesContainer extends React.Component {
 InfluentialStoriesContainer.ROWS_PER_PAGE = 50;
 
 InfluentialStoriesContainer.propTypes = {
-  // from context
+  // from the composition chain
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   location: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
@@ -127,9 +132,11 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composePagedContainer(
-        composeAsyncContainer(
-          InfluentialStoriesContainer
+      composeHelpfulContainer(messages.storiesTableHelpTitle, messages.storiesTableHelpText)(
+        composePagedContainer(
+          composeAsyncContainer(
+            InfluentialStoriesContainer
+          )
         )
       )
     )

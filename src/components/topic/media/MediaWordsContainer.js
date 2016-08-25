@@ -2,12 +2,20 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchMediaWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
+
+const localMessages = {
+  helpTitle: { id: 'media.words.help.title', defaultMessage: 'About Media Top Words' },
+  helpText: { id: 'media.words.help.into',
+    defaultMessage: '<p>This is a visualization showing the top words used by this Media Source within the Topic.</p>',
+  },
+};
 
 class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -23,14 +31,17 @@ class MediaWordsContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { words } = this.props;
+    const { words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...messages.topWords} /></h2>
+        <h2>
+          <FormattedMessage {...messages.topWords} />
+          {helpButton}
+        </h2>
         <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
       </DataCard>
     );
@@ -38,8 +49,9 @@ class MediaWordsContainer extends React.Component {
 }
 
 MediaWordsContainer.propTypes = {
-  // from context
+  // from compositional chain
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
   mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
@@ -75,8 +87,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        MediaWordsContainer
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
+        composeAsyncContainer(
+          MediaWordsContainer
+        )
       )
     )
   );

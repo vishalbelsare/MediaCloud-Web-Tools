@@ -9,6 +9,7 @@ import { HelpButton } from './IconButton';
  * Use this with the JS Composition pattern to make a Container that has a help button.
  * Clicking that button brings up a dialog with the title and text from the message key
  * that you specify.
+ * `contentHTMLTextMsgId` can be a intl message id or an array of intl message ids.
  */
 function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
   return (ChildComponent) => {
@@ -32,6 +33,12 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
           />,
         ];
         const helpButton = <HelpButton onClick={this.handleOpen} />;
+        let content = null;
+        if (Array.isArray(contentHTMLTextMsgId)) {
+          content = contentHTMLTextMsgId.map((msgId) => <FormattedHTMLMessage {...msgId} />);
+        } else {
+          content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
+        }
         return (
           <div className="helpful">
             <ChildComponent {...this.props} helpButton={helpButton} />
@@ -42,7 +49,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
               open={this.state.open}
               onRequestClose={this.handleClose}
             >
-              <FormattedHTMLMessage {...contentHTMLTextMsgId} />
+              {content}
             </Dialog>
           </div>
         );

@@ -11,10 +11,10 @@ import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Sentences Over Time' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
+  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
+  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
   helpText: { id: 'topic.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the attention paid to this topic over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.  Click the three lines in the top right of the chart to export it.</p>',
+    defaultMessage: '<p>This chart shows you the coverage of this Topic over time.</p>',
   },
 };
 
@@ -63,6 +63,9 @@ class SentenceCountSummaryContainer extends React.Component {
 }
 
 SentenceCountSummaryContainer.propTypes = {
+  // from composition chain
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // passed in
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -73,9 +76,6 @@ SentenceCountSummaryContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -101,7 +101,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
           SentenceCountSummaryContainer
         )
