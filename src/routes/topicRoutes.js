@@ -16,6 +16,7 @@ import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
+import AttentionContainer from '../components/topic/attention/AttentionContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -38,6 +39,7 @@ const topicRoutes = (
         <Route path="/topics/:topicId/media/:mediaId" component={MediaContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
+        <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
       </Route>
 
       <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
