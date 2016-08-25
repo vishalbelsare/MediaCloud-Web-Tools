@@ -5,6 +5,14 @@ import { Popover, PopoverAnimationVertical } from 'material-ui/Popover';
 import moment from 'moment';
 import messages from '../../../resources/messages';
 import SnapshotListItem from './SnapshotListItem';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+
+const localMessages = {
+  helpTitle: { id: 'snapshot.selector.help.title', defaultMessage: 'About Snapshots' },
+  helpText: { id: 'snapshot.selector.help.text',
+    defaultMessage: '<p>A Snapshot is a fronze-in-time collection of all the content in your Topic.  You can\'t change anything within a Snapshot; you can just browse and explore it.  If you want to make any changes you need to generate a new Snapshot.  They are frozen-in-time so you can use them for reproduceable research; you wouldn\'t want your changing out from under you while you are analyzing it, or once you have published a report.</p><p>Click the arrow to see a popup list of the other Snapshots within this topic.  Click one from the list that appears to switch to it.</p>',
+  },
+};
 
 class SnapshotSelector extends React.Component {
 
@@ -36,7 +44,7 @@ class SnapshotSelector extends React.Component {
   }
 
   render() {
-    const { snapshots, selectedId } = this.props;
+    const { snapshots, selectedId, helpButton } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
     // default to select first if you need to
@@ -48,7 +56,7 @@ class SnapshotSelector extends React.Component {
     return (
       <div className="snapshot-selector">
         <div className="label">
-          {selectedDate}
+          {selectedDate} {helpButton}
         </div>
         <IconButton
           iconClassName="material-icons"
@@ -88,6 +96,12 @@ SnapshotSelector.propTypes = {
   selectedId: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
   onSnapshotSelected: React.PropTypes.func,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
-export default injectIntl(SnapshotSelector);
+export default
+  injectIntl(
+    composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      SnapshotSelector
+    )
+  );
