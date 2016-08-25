@@ -35,7 +35,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
         const helpButton = <HelpButton onClick={this.handleOpen} />;
         let content = null;
         if (Array.isArray(contentHTMLTextMsgId)) {
-          content = contentHTMLTextMsgId.map((msgId) => <FormattedHTMLMessage {...msgId} />);
+          content = contentHTMLTextMsgId.map((msgId) => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
         } else {
           content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
         }

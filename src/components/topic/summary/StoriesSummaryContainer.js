@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import { ExploreButton } from '../../common/IconButton';
+import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 import messages from '../../../resources/messages';
 
@@ -28,12 +28,19 @@ class StoriesSummaryContainer extends React.Component {
     const { sortData } = this.props;
     sortData(newSort);
   };
+  downloadCsv = () => {
+    const { filters, sort, topicId } = this.props;
+    const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
+    window.location = url;
+  }
   render() {
     const { stories, sort, topicId, helpButton } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <ExploreButton linkTo={`/topics/${topicId}/stories`} />
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />

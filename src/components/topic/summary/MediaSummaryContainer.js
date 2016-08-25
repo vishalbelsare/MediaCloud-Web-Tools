@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import MediaTable from '../MediaTable';
+import messages from '../../../resources/messages';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import { ExploreButton } from '../../common/IconButton';
+import { DownloadButton, ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
@@ -34,12 +35,19 @@ class MediaSummaryContainer extends React.Component {
     const { topicId, filters, fetchData, sort } = this.props;
     fetchData(topicId, filters.snapshotId, filters.timespanId, sort);
   }
+  downloadCsv = () => {
+    const { topicId, filters, sort } = this.props;
+    const url = `/api/topics/${topicId}/media.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
+    window.location = url;
+  }
   render() {
     const { media, sort, topicId, helpButton } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <ExploreButton to={`/topics/${topicId}/media`} />
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />

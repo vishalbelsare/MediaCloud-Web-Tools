@@ -1,5 +1,14 @@
 @import '../_constants';
 
+.datacard {
+  .actions {
+    a.icon-button-link {
+      margin-left: 10px;
+      display: inline-block;
+    }    
+  }
+}
+
 .app-icon {
   width: 26px;
   height: 26px;
