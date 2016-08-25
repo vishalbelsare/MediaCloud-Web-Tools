@@ -7,7 +7,7 @@ export const APP_NAME = 'topics';
 /**
  * Specify which app this should run; either 'dev' or 'prod'.
  */
-export const APP_MODE = 'prod';
+export const APP_MODE = 'dev';
 
 
 /**
