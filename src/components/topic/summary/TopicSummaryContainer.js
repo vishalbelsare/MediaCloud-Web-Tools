@@ -87,7 +87,9 @@ const mapStateToProps = (state) => ({
   timespan: state.topics.selected.timespans.selected,
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  null
-)(TopicSummaryContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps)(
+      TopicSummaryContainer
+    )
+  );
