@@ -10,18 +10,22 @@ import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 
 const localMessages = {
-  missingEmail: { id: 'You need to enter your email address.' },
-  missingPassword: { id: 'You need to enter your password.' },
+  missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
+  missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
 };
 
 const LoginFormComponent = (props) => {
   const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, errorMessage } = props;
   const { formatMessage } = props.intl;
-  let emailError = errorMessage;
-  if (emailError === null) {
-    emailError = email.touched ? formatMessage(email.error) : '';
+  let emailError = null;
+  if (errorMessage) {
+    emailError = errorMessage;
   }
+  if (emailError === null) {
+    emailError = (email.touched && email.error) ? formatMessage(email.error) : '';
+  }
+  const passwordError = (password.touched && password.error) ? formatMessage(password.error) : '';
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
       <TextField
@@ -33,7 +37,7 @@ const LoginFormComponent = (props) => {
       <TextField
         floatingLabelText={formatMessage(messages.userPassword)}
         type="password"
-        errorText={password.touched ? formatMessage(password.error) : ''}
+        errorText={passwordError}
         {...password}
       />
       <br />
