@@ -115,7 +115,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     try:
         while more_media:
             page = user_mc.topicMediaList(topics_id, **params)
-            all_media = all_media + page['stories']
+            all_media = all_media + page['media']
             if 'next' in page['link_ids']:
                 params['link_id'] = page['link_ids']['next']
                 more_media = True
@@ -123,7 +123,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
                 more_media = False
         props = ['media_id', 'name', 'url', 'story_count',
                  'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
-                 'outlink_count', 'bitly_click_count', 'facebook_share_count']
+                 'outlink_count', 'bitly_click_count'] # 'facebook_share_count']
         return csv.stream_response(all_media, props, filename)
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
