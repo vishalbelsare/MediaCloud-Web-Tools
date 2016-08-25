@@ -55,5 +55,7 @@ Releasing
 
 1. Update the version number in `src/config.js`.
 2. Run the linting by hand to make sure you don't have any code errors: `npm run lint`.
-4. Changing the server mode in `config/server.config` to PROD.
-3. Build the release version of the JS and CSS: `npm run release`.
+3. Change the server mode in `config/server.config` to `PROD`.
+4. Change the client mode in `src/config.js` to `prod`. 
+5. Build the release version of the JS and CSS: `npm run release`.
+6. Test it and then tag and commit it all.
