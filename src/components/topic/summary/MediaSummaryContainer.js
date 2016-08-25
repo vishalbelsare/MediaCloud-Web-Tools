@@ -46,7 +46,7 @@ class MediaSummaryContainer extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton to={`/topics/${topicId}/media`} />
+          <ExploreButton linkTo={`/topics/${topicId}/media`} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
