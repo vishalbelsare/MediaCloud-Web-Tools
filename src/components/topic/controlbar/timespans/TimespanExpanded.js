@@ -2,7 +2,9 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
+import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import VisualTimespanSelector from './VisualTimespanSelector';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   timespansOverall: { id: 'timespans.overall', defaultMessage: 'Overall' },
@@ -54,47 +56,52 @@ class TimespanExpanded extends React.Component {
   }
 
   render() {
-    const { timespans, selectedTimespan, selectedPeriod, onCollapse } = this.props;
+    const { timespans, selectedTimespan, selectedPeriod, onCollapse, helpButton } = this.props;
     const oldestTimespanStart = d3.min(timespans.map((t) => t.startDateObj));
     const latestTimespanEnd = d3.max(timespans.map((t) => t.endDateObj));
     return (
-      <Grid>
-        <Row>
-          <Col lg={2} md={2} sm={0} className="period-controls">
-            <a href="#see-overall-timspans" onClick={this.setPeriodToOverall}>
-              <FormattedMessage {...localMessages.timespansOverall} />
-            </a>
-            <a href="#see-monthly-timspans" onClick={this.setPeriodToMonthly}>
-              <FormattedMessage {...localMessages.timespansMonthly} />
-            </a>
-            <a href="#see-weekly-timspans" onClick={this.setPeriodToWeekly}>
-              <FormattedMessage {...localMessages.timespansWeekly} />
-            </a>
-            <a href="#see-custom-timspans" onClick={this.setPeriodToCustom}>
-              <FormattedMessage {...localMessages.timespansCustom} />
-            </a>
-          </Col>
-          <Col lg={8} md={8} sm={6} className="center">
-            {selectedTimespan.start_date.substr(0, 10)} to {selectedTimespan.end_date.substr(0, 10)}
-          </Col>
-          <Col lg={2} md={2} sm={6} >
-            <a href="#hide-timespans" className="toggle-control" onClick={onCollapse}>
-              <FormattedMessage {...localMessages.timespansHide} />
-            </a>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <VisualTimespanSelector
-              timespans={filterByPeriod(timespans, selectedPeriod)}
-              startDate={oldestTimespanStart}
-              endDate={latestTimespanEnd}
-              onTimespanSelected={this.fireTimespanSelected}
-              selectedTimespan={selectedTimespan}
-            />
-          </Col>
-        </Row>
-      </Grid>
+      <div className="expanded">
+        <Grid>
+          <Row>
+            <Col lg={2} md={2} sm={0} className="period-controls">
+              <a href="#see-overall-timspans" onClick={this.setPeriodToOverall}>
+                <FormattedMessage {...localMessages.timespansOverall} />
+              </a>
+              <a href="#see-monthly-timspans" onClick={this.setPeriodToMonthly}>
+                <FormattedMessage {...localMessages.timespansMonthly} />
+              </a>
+              <a href="#see-weekly-timspans" onClick={this.setPeriodToWeekly}>
+                <FormattedMessage {...localMessages.timespansWeekly} />
+              </a>
+              <a href="#see-custom-timspans" onClick={this.setPeriodToCustom}>
+                <FormattedMessage {...localMessages.timespansCustom} />
+              </a>
+            </Col>
+            <Col lg={8} md={8} sm={6} className="center">
+              {selectedTimespan.start_date.substr(0, 10)} to {selectedTimespan.end_date.substr(0, 10)}
+            </Col>
+            <Col lg={2} md={2} sm={6} >
+              <div className="toggle-control">
+                <a href="#hide-timespans" onClick={onCollapse}>
+                  <FormattedMessage {...localMessages.timespansHide} />
+                </a>
+                {helpButton}
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <VisualTimespanSelector
+                timespans={filterByPeriod(timespans, selectedPeriod)}
+                startDate={oldestTimespanStart}
+                endDate={latestTimespanEnd}
+                onTimespanSelected={this.fireTimespanSelected}
+                selectedTimespan={selectedTimespan}
+              />
+            </Col>
+          </Row>
+        </Grid>
+      </div>
     );
   }
 }
@@ -107,6 +114,13 @@ TimespanExpanded.propTypes = {
   onTimespanSelected: React.PropTypes.func.isRequired,
   selectedPeriod: React.PropTypes.string.isRequired,
   onPeriodSelected: React.PropTypes.func.isRequired,
+  // from composition chain
+  helpButton: React.PropTypes.node.isRequired,
 };
 
-export default injectIntl(TimespanExpanded);
+export default
+  injectIntl(
+    composeHelpfulContainer(messages.timespansHelpTitle, messages.timespansHelpText)(
+      TimespanExpanded
+    )
+  );

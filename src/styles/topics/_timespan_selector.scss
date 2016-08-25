@@ -46,9 +46,11 @@
       text-align: center;
     }
 
-    a.toggle-control {
+    .toggle-control {
       float: right;
-      color: $material-grey500;
+      a {
+        color: $material-grey500;
+      }
     }
 
   }

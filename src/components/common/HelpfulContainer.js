@@ -34,7 +34,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
         const helpButton = <HelpButton onClick={this.handleOpen} />;
         return (
           <div className="helpful">
-            <ChildComponent {...this.props} helpButton={helpButton} />;
+            <ChildComponent {...this.props} helpButton={helpButton} />
             <Dialog
               title={formatMessage(contentTitleMsgId)}
               actions={dialogActions}
