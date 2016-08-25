@@ -1,13 +1,12 @@
 import React from 'react';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
-import { DownloadButton, HelpButton } from '../../common/IconButton';
+import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
@@ -41,15 +40,8 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts } = this.props;
+    const { total, counts, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    const dialogActions = [
-      <FlatButton
-        label={formatMessage(messages.ok)}
-        primary
-        onTouchTap={this.handleClose}
-      />,
-    ];
     return (
       <DataCard>
         <div className="actions">
@@ -57,7 +49,7 @@ class SentenceCountSummaryContainer extends React.Component {
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          <HelpButton onClick={this.handleOpen} />
+          {helpButton}
         </h2>
         <AttentionOverTimeChart
           total={total}
@@ -65,15 +57,6 @@ class SentenceCountSummaryContainer extends React.Component {
           height={200}
           lineColor={getBrandDarkColor()}
         />
-        <Dialog
-          title={formatMessage(localMessages.helpTitle)}
-          actions={dialogActions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
-          <FormattedHTMLMessage {...localMessages.helpText} />
-        </Dialog>
       </DataCard>
     );
   }
@@ -90,8 +73,9 @@ SentenceCountSummaryContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  // from context
+  // from composition chain
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -117,8 +101,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        SentenceCountSummaryContainer
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+        composeAsyncContainer(
+          SentenceCountSummaryContainer
+        )
       )
     )
   );
