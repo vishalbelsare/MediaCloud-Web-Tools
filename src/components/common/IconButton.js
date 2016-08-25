@@ -7,6 +7,10 @@ import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 
+/**
+ * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
+ * Components in the `icons` directory, then export wrapper instances of them here.
+ */
 function composeIconButton(Icon, tooltipMessage) {
   class AppIconButton extends React.Component {
     handleClick = (event) => {

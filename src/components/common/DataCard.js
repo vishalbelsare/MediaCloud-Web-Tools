@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * The primary unit of our interface. Any self-contained piece of a larger report page should
+ * be inside of a DataCard.
+ */
 const DataCard = (props) => {
   const { children, border, disabled, className } = props;
   const unborderedClass = (border === false) ? 'unbordered' : '';
