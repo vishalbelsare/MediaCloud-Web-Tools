@@ -26,7 +26,7 @@ function composeIconButton(Icon, tooltipMessage) {
       const linkTarget = linkTo || formatMessage(tooltipMessage);
       const clickHandler = (onClick) ? this.handleClick : null;
       return (
-        <Link to={linkTarget} onClick={clickHandler} className="icon-button-link" name={formatMessage(tooltipMessage)}>
+        <Link to={linkTarget} onTouchTap={clickHandler} className="icon-button-link" name={formatMessage(tooltipMessage)}>
           <IconButton
             tooltip={formatMessage(tooltipMessage)}
             style={{ padding: 0, border: 0, width: 26, height: 26 }}
