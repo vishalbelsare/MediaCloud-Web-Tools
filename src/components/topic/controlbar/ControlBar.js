@@ -28,13 +28,13 @@ const ControlBar = (props) => {
             <Col lg={4} md={4} sm={4} className="left">
               <b>
                 <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>{topicInfo.name}</LinkWithFilters>
-                &nbsp; &nbsp;
-                <small>
-                  <LinkWithFilters to={`/topics/${topicInfo.topics_id}/settings`}>
-                    ( <FormattedMessage {...localMessages.settingsControlBarLink} /> )
-                  </LinkWithFilters>
-                </small>
               </b>
+              &nbsp; &nbsp;
+              <small>
+                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/settings`}>
+                  ( <FormattedMessage {...localMessages.settingsControlBarLink} /> )
+                </LinkWithFilters>
+              </small>
             </Col>
             <Col lg={4} md={4} sm={4} >
               {focusSelector}

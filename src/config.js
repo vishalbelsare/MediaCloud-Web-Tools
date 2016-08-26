@@ -7,10 +7,10 @@ export const APP_NAME = 'topics';
 /**
  * Specify which app this should run; either 'dev' or 'prod'.
  */
-export const APP_MODE = 'dev';
+export const APP_MODE = 'prod';
 
 
 /**
  * Specify a version number
  */
-export const VERSION = '0.5.0';
+export const VERSION = '0.5.1';
