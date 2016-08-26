@@ -17,6 +17,7 @@ import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
+import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -43,8 +44,9 @@ const topicRoutes = (
       </Route>
 
       <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
-
       <Route path="/topics/:topicId/foci/manage" component={ManageFocalSetsContainer} />
+
+      <Route path="/topics/:topicId/settings" component={TopicSettingsContainer} />
 
     </Route>
 

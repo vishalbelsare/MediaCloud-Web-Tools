@@ -1,0 +1,48 @@
+import React from 'react';
+import Title from 'react-title-component';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import TopicPermissions from './TopicPermissions';
+
+const localMessages = {
+  mainTitle: { id: 'settings.mainTitle', defaultMessage: 'Topic Settings' },
+};
+
+const TopicSettingsContainer = (props) => {
+  const { formatMessage } = props.intl;
+  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+  return (
+    <div className="topic-settings">
+      <Title render={titleHandler} />
+      <Grid>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+          </Col>
+        </Row>
+        <TopicPermissions />
+      </Grid>
+    </div>
+  );
+};
+
+TopicSettingsContainer.propTypes = {
+  // from context
+  intl: React.PropTypes.object.isRequired,
+  // from state
+  topicId: React.PropTypes.number,
+};
+
+const mapStateToProps = (state) => ({
+  topicId: state.topics.selected.id,
+  topic: React.PropTypes.object.isRequired,
+  topicInfo: state.topics.selected.info,
+});
+
+export default
+  injectIntl(
+    connect(mapStateToProps)(
+      TopicSettingsContainer
+    )
+  );

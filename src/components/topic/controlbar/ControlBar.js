@@ -1,11 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
 import LinkWithFilters from '../LinkWithFilters';
+
+const localMessages = {
+  settingsControlBarLink: { id: 'controlbar.settings.link', defaultMessage: 'settings' },
+};
 
 const ControlBar = (props) => {
   const { topicInfo, topicId, location, filters } = props;
@@ -22,9 +26,15 @@ const ControlBar = (props) => {
         <Grid>
           <Row>
             <Col lg={4} md={4} sm={4} className="left">
-              <b><LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>
-                {topicInfo.name}
-              </LinkWithFilters></b>
+              <b>
+                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>{topicInfo.name}</LinkWithFilters>
+                &nbsp; &nbsp;
+                <small>
+                  <LinkWithFilters to={`/topics/${topicInfo.topics_id}/settings`}>
+                    ( <FormattedMessage {...localMessages.settingsControlBarLink} /> )
+                  </LinkWithFilters>
+                </small>
+              </b>
             </Col>
             <Col lg={4} md={4} sm={4} >
               {focusSelector}
