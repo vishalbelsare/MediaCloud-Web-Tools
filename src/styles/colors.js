@@ -1,27 +1,21 @@
-import { APP_NAME } from '../config';
 
-/**
- * The primary colors for each app
- */
-const BRAND_COLORS = {
-  sources: {
-    light: '#4b9fcb',
-    dark: '#3c97bd',
-  },
-  topics: {
-    light: '#daf3ee',
-    dark: '#47c4ac',
-  },
+let appColors = {
+  light: '#990000',
+  dark: '#330000',
 };
 
+export function setAppColors(newAppColors) {
+  appColors = newAppColors;
+}
+
 export function getBrandColors() {
-  return BRAND_COLORS[APP_NAME];
+  return appColors;
 }
 
 export function getBrandDarkColor() {
-  return getBrandColors().dark;
+  return appColors.dark;
 }
 
 export function getBrandLightColor() {
-  return getBrandColors().light;
+  return appColors.light;
 }

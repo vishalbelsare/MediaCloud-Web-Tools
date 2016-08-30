@@ -1,12 +1,7 @@
-import { APP_NAME } from '../config';
 import { hasCookies } from '../lib/auth';
 
-import sourceRoutes from './sourceRoutes';
-import topicRoutes from './topicRoutes';
-
-
 // We need to restrict some routes to only users that are logged in
-export function requireAuth(nextState, replace) {
+export function requireAuth(nextState, replace) {  // eslint-disable-line import/prefer-default-export
   if (!hasCookies()) {
     replace({
       pathname: '/login',
@@ -14,19 +9,3 @@ export function requireAuth(nextState, replace) {
     });
   }
 }
-
-let appRoutes = null;
-switch (APP_NAME) {
-  case 'topics':
-    appRoutes = topicRoutes;
-    break;
-  case 'sources':
-    appRoutes = sourceRoutes;
-    break;
-  default:
-    appRoutes = null;
-}
-
-const routes = appRoutes;
-
-export default routes;

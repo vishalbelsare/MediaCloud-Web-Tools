@@ -2,7 +2,13 @@
 /**
  * Specify which app this should run; either 'topics' or 'sources'.
  */
-export const APP_NAME = 'topics';
+let appName = null;
+export function setAppName(newAppName) {
+  appName = newAppName;
+}
+export function getAppName() {
+  return appName;
+}
 
 /**
  * Specify which app this should run; either 'dev' or 'prod'.

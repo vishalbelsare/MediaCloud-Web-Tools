@@ -9,87 +9,58 @@ import Router from 'react-router/lib/Router';
 import hashHistory from 'react-router/lib/hashHistory';
 import { syncHistoryWithStore } from 'react-router-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import { hasCookies, getCookies } from './lib/auth';
 import { loginWithKey } from './actions/userActions';
-import routes from './routes/routes.js';
 import store from './store';
-import { APP_NAME } from './config';
-import { filterBySnapshot, filterByTimespan, filterByFocus } from './actions/topicActions';
 import { getBrandColors } from './styles/colors';
 
-// necessary lines for Material-UI library to work
-const injectTapEventPlugin = require('react-tap-event-plugin');
 
-injectTapEventPlugin();
+export default function initializeApp(routes) {
+  // necessary lines for Material-UI library to work
+  injectTapEventPlugin();
 
-// Create an enhanced history that syncs navigation events with the store
-const history = syncHistoryWithStore(hashHistory, store);
+  // Create an enhanced history that syncs navigation events with the store
+  const history = syncHistoryWithStore(hashHistory, store);
 
-// Grab any filters on the url and put them in the right place in the store
-switch (APP_NAME) {
-  case 'topics':
-    // check if url has any params we care about
-    const hash = window.location.hash;
-    const hashParts = hash.split('?');
-    const args = {};
-    const queryParts = hashParts[1].split('&');
-    queryParts.forEach((part) => {
-      const argParts = part.split('=');
-      args[argParts[0]] = argParts[1];
-    });
-    if ('snapshotId' in args) {
-      store.dispatch(filterBySnapshot(args.snapshotId));
-    }
-    if ('timespanId' in args) {
-      store.dispatch(filterByTimespan(args.timespanId));
-    }
-    if ('focusId' in args) {
-      store.dispatch(filterByFocus(args.focusId));
-    }
-    break;
-  case 'sources':
-    break;
-  default:
-    break;
-}
-// TODO: history.listen(location => analyticsService.track(location.pathname))
+  // TODO: history.listen(location => analyticsService.track(location.pathname))
 
+  const muiTheme = getMuiTheme({
+    fontFamily: 'Lato, sans',
+    palette: {
+      primary1Color: getBrandColors().dark,
+      accent1Color: getBrandColors().light,
+    },
+  });
 
-const muiTheme = getMuiTheme({
-  fontFamily: 'Lato, sans',
-  palette: {
-    primary1Color: getBrandColors().dark,
-    accent1Color: getBrandColors().light,
-  },
-});
+  const renderApp = () => {
+    ReactDOM.render(
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <Provider store={store}>
+          <IntlProvider locale="en">
+            <Router history={history}>
+              {routes}
+            </Router>
+          </IntlProvider>
+        </Provider>
+      </MuiThemeProvider>,
+      document.getElementById('app')
+    );
+  };
 
-const renderApp = () => {
-  ReactDOM.render(
-    <MuiThemeProvider muiTheme={muiTheme}>
-      <Provider store={store}>
-        <IntlProvider locale="en">
-          <Router history={history}>
-            {routes}
-          </Router>
-        </IntlProvider>
-      </Provider>
-    </MuiThemeProvider>,
-    document.getElementById('app')
-  );
-};
-
-// load any cookies correctly
-if (hasCookies()) {
-  const cookies = getCookies();
-  store.dispatch(loginWithKey(cookies.email, cookies.key))
-    .then((results) => {
-      if ({}.hasOwnProperty.call(results, 'status') && (results.status !== 200)) {
-        if (window.location.href.indexOf('login') === -1) {
-          window.location = '/#/login';
+  // load any cookies correctly
+  if (hasCookies()) {
+    const cookies = getCookies();
+    store.dispatch(loginWithKey(cookies.email, cookies.key))
+      .then((results) => {
+        if ({}.hasOwnProperty.call(results, 'status') && (results.status !== 200)) {
+          if (window.location.href.indexOf('login') === -1) {
+            window.location = '/#/login';
+          }
         }
-      }
-      renderApp();
-    });
-} else {
-  renderApp();
+        renderApp();
+      });
+  } else {
+    renderApp();
+  }
 }

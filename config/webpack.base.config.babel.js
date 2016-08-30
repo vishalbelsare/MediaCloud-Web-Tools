@@ -9,19 +9,10 @@ const SRC_DIR = './src';
 
 export default new Config().merge({
   entry: {
-    app_js: [
-      `${SRC_DIR}/index`,
-    ],
-    app_css: [
+    common_css: [
       `${SRC_DIR}/styles/base`,
       `${SRC_DIR}/styles/app/app`,
       `${SRC_DIR}/styles/viz/viz`,
-    ],
-    topics_css: [
-      `${SRC_DIR}/styles/topics/topics`,
-    ],
-    sources_css: [
-      `${SRC_DIR}/styles/sources/sources`,
     ],
   },
   resolve: {
