@@ -32,7 +32,7 @@ And then do a regular `npm install` to test them all out.
 Configuration
 ------------- 
 
-Copy `config/server.config.template` to `config/server.config` and fill in the required info there (your MediaCloud API key).
+Copy `config/server.config.template` to `config/server.config` and fill in the required info there.
 
 Developing
 ----------
@@ -40,7 +40,7 @@ Developing
 You will make your life easier by installing these tools to help you develop better:
  * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
  * [React Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi).
- * Setup your environment with [SublimeText](https://www.sublimetext.com) and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
+ * Set up your environment with [SublimeText](https://www.sublimetext.com) and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
  * To browse your local DB on a Mac use [MongoHub](https://github.com/bububa/MongoHub-Mac), or [MongoExpress for a web-based UI](https://github.com/mongo-express/mongo-express)
 
 Running
@@ -54,8 +54,7 @@ Releasing
 ---------
 
 1. Update the version number in `src/config.js`.
-2. Run the linting by hand to make sure you don't have any code errors: `npm run lint`.
-3. Change the server mode in `config/server.config` to `PROD`.
-4. Change the client mode in `src/config.js` to `prod`. 
-5. Build the release version of the JS and CSS: `npm run release`.
-6. Test it and then tag and commit it all.
+2. Change the server mode in `config/server.config` to `PROD`.
+3. Change the app you want to build in `config/server.config` (set the server/app variable).
+4. Build the release version of the JS and CSS: `npm run topics-release` or `npm run sources-release`.
+5. Test it and then tag and commit it all.

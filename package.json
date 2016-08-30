@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "topics-dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.dev.config.babel.js",
-    "sources-dev": "node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.sources.dev.config.babel.js",
-    "release": "NODE_ENV=production webpack --progress -p --config config/webpack.prod.config.babel.js"
+    "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
+    "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
+    "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
+    "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js"
   },
   "dependencies": {
     "babel-polyfill": "6.13.0",

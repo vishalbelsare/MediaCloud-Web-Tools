@@ -3,8 +3,9 @@ api_key: YOUR_MEDIACLOUD_API_KEY_HERE
 
 [database]
 host = localhost
-name = mm-boilerplate
+name = mediacloud-app
 
 [server]
 secret_key = A_RANDOM_STRING
 mode = DEV
+app = sources

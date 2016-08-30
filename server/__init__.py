@@ -60,10 +60,11 @@ def create_app():
     '''
     Factory method to create the app
     '''
+    prod_app = settings.get('server', 'app')
     my_app = Flask(__name__)
     webpack_config = {
         'DEBUG': isDevMode(),
-        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/manifest.json'
+        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/'+prod_app+'/manifest.json'
     }
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)

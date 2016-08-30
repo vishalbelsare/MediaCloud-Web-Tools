@@ -4,7 +4,6 @@ import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './reducers/root';
-import { APP_MODE } from './config.js';
 
 const reduxRouterMiddleware = routerMiddleware(hashHistory);
 
@@ -13,13 +12,6 @@ const middlewares = [
   reduxRouterMiddleware,
   thunkMiddleware,
 ];
-
-// only log actions in dev mode
-if (APP_MODE === 'dev') {
-//  const createLogger = require('redux-logger');
-//  const logger = createLogger();
-//  middlewares.push(logger);
-}
 
 const store = createStore(rootReducer, {}, compose(
   applyMiddleware(...middlewares),
