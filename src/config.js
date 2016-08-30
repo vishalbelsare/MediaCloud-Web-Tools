@@ -9,7 +9,6 @@ export const APP_NAME = 'topics';
  */
 export const APP_MODE = 'dev';
 
-
 /**
  * Specify a version number
  */

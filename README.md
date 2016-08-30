@@ -47,7 +47,7 @@ Running
 -------
 
 You need to open two terminal windows and run one thing in each (so the hot-reloading can work):
- * `npm start`
+ * `npm run dev`
  * `python run.py`
 
 Releasing
