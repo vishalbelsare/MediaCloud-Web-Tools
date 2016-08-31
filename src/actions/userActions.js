@@ -16,26 +16,3 @@ export const loginWithPassword = createAsyncAction(LOGIN_WITH_PASSWORD, api.prom
 export const setLoginErrorMessage = createAction(SET_LOGIN_ERROR_MESSAGE, msg => msg);
 
 export const logout = createAction(LOGOUT);
-
-/*
-export function loginWithKey(email, key) {
-  return {
-    type: LOGIN_WITH_KEY,
-    payload: {
-      promise: promiseToLoginWithKey(email, key),
-      email,
-    },
-  };
-}
-
-export function loginWithPassword(email, password, destination) {
-  return {
-    type: LOGIN_WITH_PASSWORD,
-    payload: {
-      promise: promiseToLoginWithPassword(email, password),
-      email,
-      destination,
-    },
-  };
-}
-*/
