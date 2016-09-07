@@ -3,13 +3,14 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicPermissions from './TopicPermissions';
+import TopicPermissionsContainer from './TopicPermissionsContainer';
 
 const localMessages = {
   mainTitle: { id: 'settings.mainTitle', defaultMessage: 'Topic Settings' },
 };
 
 const TopicSettingsContainer = (props) => {
+  const { topicId } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   return (
@@ -21,7 +22,7 @@ const TopicSettingsContainer = (props) => {
             <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
           </Col>
         </Row>
-        <TopicPermissions />
+        <TopicPermissionsContainer topicId={topicId} />
       </Grid>
     </div>
   );

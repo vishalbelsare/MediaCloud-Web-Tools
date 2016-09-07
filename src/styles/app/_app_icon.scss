@@ -27,6 +27,13 @@
     }
   }
   
+  &.app-icon-delete {
+    background-color: $material-orange500 !important;
+    svg {
+      margin-top: 10px;
+    }
+  }
+
   &.app-icon-help {
     width: 16px;
     height: 16px;

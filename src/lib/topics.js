@@ -111,3 +111,11 @@ export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {
 export function topicGenerateSnapshot(topicId) {
   return createPostingApiPromise(`/api/topics/${topicId}/snapshots/generate`);
 }
+
+export function topicUpdatePermission(topicId, email, permission) {
+  return createPostingApiPromise(`/api/topics/${topicId}/permissions/update`, { email, permission }, 'put');
+}
+
+export function topicListPermissions(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/permissions/list`);
+}

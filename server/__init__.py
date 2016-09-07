@@ -90,7 +90,7 @@ def index():
     logger.debug("homepage request")
     return render_template('index.html')
 
-import server.views.login
+import server.views.user
 import server.views.sources
 import server.views.topics.media
 import server.views.topics.sentences
@@ -99,3 +99,4 @@ import server.views.topics.topic
 import server.views.topics.words
 import server.views.topics.focalsets
 import server.views.topics.foci
+import server.views.topics.permissions

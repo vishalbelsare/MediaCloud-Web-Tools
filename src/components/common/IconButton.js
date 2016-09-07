@@ -6,6 +6,8 @@ import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
+import DeleteIcon from './icons/DeleteIcon';
+import AddIcon from './icons/AddIcon';
 
 /**
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
@@ -26,7 +28,7 @@ function composeIconButton(Icon, tooltipMessage) {
       const linkTarget = linkTo || formatMessage(tooltipMessage);
       const clickHandler = (onClick) ? this.handleClick : null;
       return (
-        <Link to={linkTarget} onTouchTap={clickHandler} className="icon-button-link" name={formatMessage(tooltipMessage)}>
+        <Link to={linkTarget} onClick={clickHandler} className="icon-button-link" name={formatMessage(tooltipMessage)}>
           <IconButton
             tooltip={formatMessage(tooltipMessage)}
             style={{ padding: 0, border: 0, width: 26, height: 26 }}
@@ -51,3 +53,7 @@ export const ExploreButton = composeIconButton(ExploreIcon, messages.explore);
 export const DownloadButton = composeIconButton(DownloadIcon, messages.download);
 
 export const HelpButton = composeIconButton(HelpIcon, messages.help);
+
+export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
+
+export const AddButton = composeIconButton(AddIcon, messages.delete);

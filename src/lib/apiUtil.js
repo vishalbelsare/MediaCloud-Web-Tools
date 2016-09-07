@@ -39,8 +39,9 @@ export function createApiPromise(url, params, httpMethod = 'get') {
  * Helper to create a promise that calls the API on the server with some POST'd data. Pass in the endpoint url,
  * and a data object to encode and POST, and this will return a promise to call it with the appropriate headers
  * and such.  It also parses the json response for you.
+ * TODO: rename this to createFormBasedApiPromise or something... cause it could be a POST or a PUT or whatever
  */
-export function createPostingApiPromise(url, params) {
+export function createPostingApiPromise(url, params, httpMethod = 'post') {
   const formData = new FormData();
   if (params !== undefined) {
     Object.keys(params).forEach((key) => {
@@ -50,7 +51,7 @@ export function createPostingApiPromise(url, params) {
     });
   }
   return fetch(url, {
-    method: 'post',
+    method: httpMethod,
     credentials: 'include',
     body: formData,
   }).then(

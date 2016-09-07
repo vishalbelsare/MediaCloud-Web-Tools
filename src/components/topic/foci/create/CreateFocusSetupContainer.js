@@ -11,6 +11,7 @@ import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } 
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
 import messages from '../../../../resources/messages';
 import composeAsyncContainer from '../../../common/AsyncContainer';
+import { notEmptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
@@ -176,7 +177,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 function validate(values) {
   const errors = {};
-  if (!values.focusName || values.focusName.trim() === '') {
+  if (!notEmptyString(values.focusName)) {
     errors.focusName = ('You need to name your Focus.');
   }
   return errors;

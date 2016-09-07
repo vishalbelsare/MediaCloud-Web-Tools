@@ -52,7 +52,7 @@ class SnapshotSelector extends React.Component {
     if (selected === null) {
       selected = snapshots[0];
     }
-    let selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
+    const selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
     return (
       <div className="snapshot-selector">
         <div className="label">

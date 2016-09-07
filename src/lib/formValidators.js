@@ -3,4 +3,6 @@ export function notEmptyString(value) {
   return (value !== null) && (value !== undefined) && (value.trim() !== '');
 }
 
-export const TEMP = 'TEMP';
+export function validEmail(value) {
+  return (value && /^[^@]+@[^@]+\.[^@]+$/i.test(value.email));
+}

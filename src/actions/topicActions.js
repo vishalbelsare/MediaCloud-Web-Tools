@@ -47,6 +47,8 @@ export const CREATE_FOCUS_DEFINITION = 'CREATE_FOCUS_DEFINITION';
 export const TOPIC_FILTER_BY_FOCUS = 'TOPIC_FILTER_BY_FOCUS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
+export const UPDATE_TOPIC_PERMISSION = 'UPDATE_TOPIC_PERMISSION';
+export const FETCH_TOPIC_PERMISSIONS = 'FETCH_TOPIC_PERMISSIONS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -146,3 +148,9 @@ export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHO
 
 // pass in topic Id
 export const generateSnapshot = createAsyncAction(TOPIC_GENERATE_SNAPSHOT, api.topicGenerateSnapshot);
+
+// pass in topicId, email & permission
+export const updatePermission = createAsyncAction(UPDATE_TOPIC_PERMISSION, api.topicUpdatePermission);
+
+// pass in topicId
+export const fetchPermissionsList = createAsyncAction(FETCH_TOPIC_PERMISSIONS, api.topicListPermissions);

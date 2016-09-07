@@ -1,13 +1,14 @@
 import React from 'react';
-import { reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
 import * as fetchConstants from '../../lib/fetchConstants.js';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
+import composeIntlForm from '../common/IntlForm';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
@@ -16,29 +17,21 @@ const localMessages = {
 };
 
 const LoginFormComponent = (props) => {
-  const { fields: { email, password }, handleSubmit, onSubmitLoginForm, fetchStatus, errorMessage } = props;
+  const { handleSubmit, onSubmitLoginForm, fetchStatus, renderTextField } = props;
   const { formatMessage } = props.intl;
-  let emailError = null;
-  if (errorMessage) {
-    emailError = errorMessage;
-  }
-  if (emailError === null) {
-    emailError = (email.touched && email.error) ? formatMessage(email.error) : '';
-  }
-  const passwordError = (password.touched && password.error) ? formatMessage(password.error) : '';
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
-      <TextField
-        floatingLabelText={formatMessage(messages.userEmail)}
-        errorText={emailError}
-        {...email}
+      <Field
+        name="email"
+        component={renderTextField}
+        floatingLabelText={messages.userEmail}
       />
       <br />
-      <TextField
-        floatingLabelText={formatMessage(messages.userPassword)}
+      <Field
+        name="password"
         type="password"
-        errorText={passwordError}
-        {...password}
+        component={renderTextField}
+        floatingLabelText={messages.userPassword}
       />
       <br />
       <RaisedButton
@@ -54,9 +47,9 @@ const LoginFormComponent = (props) => {
 LoginFormComponent.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
-  fields: React.PropTypes.object.isRequired,
   location: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   errorMessage: React.PropTypes.string,
@@ -107,7 +100,11 @@ const reduxFormConfig = {
 
 export default
   injectIntl(
-    reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps)(
-      LoginFormComponent
+    composeIntlForm(
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps)(
+          LoginFormComponent
+        )
+      )
     )
   );

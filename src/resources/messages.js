@@ -87,6 +87,7 @@ const messages = {
   next: { id: 'bext', defaultMessage: 'Next' },
   manage: { id: 'manage', defaultMessage: 'manage' },
   help: { id: 'help', defaultMessage: 'Help' },
+  delete: { id: 'delete', defaultMessage: 'Delete' },
   download: { id: 'download', defaultMessage: 'Download' },
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },

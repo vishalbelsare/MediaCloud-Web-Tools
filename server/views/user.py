@@ -1,5 +1,6 @@
 import logging
 from flask import jsonify, request
+import flask_login
 
 from server import app, auth
 from server.util.request import form_fields_required, json_error_response
@@ -33,3 +34,18 @@ def login_with_key():
     auth.login_user(user)
     response = {'email':username, 'key':user.get_id()}
     return jsonify(response)
+
+# TODO: put in real API method once it is ready
+@app.route('/api/permissions/user/list', methods=['GET'])
+@flask_login.login_required
+def permissions_for_user():
+    return jsonify({
+        "permissions":
+            [
+                {
+                    "email": "hroberts@cyber.law.harvard.edu",
+                    "topics_id": 1390,
+                    "permission": "admin"
+                }
+            ]
+        })

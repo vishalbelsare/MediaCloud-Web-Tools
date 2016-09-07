@@ -126,6 +126,10 @@
             focalTechnique: "string",
           },
         }
+      },
+      permissions: {
+        fetchState: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+        list: [ array of json permission objects that apply to this topic },
       }
     },
 sources: {

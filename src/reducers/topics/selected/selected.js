@@ -10,6 +10,7 @@ import mediaSource from './mediaSource/mediaSource';
 import stories from './stories';
 import story from './story/story';
 import focalSets from './focalSets/focalSets';
+import permissions from './permissions';
 
 function id(state = null, action) {
   switch (action.type) {
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   stories,
   story,
   focalSets,
+  permissions,
 });
 
 export default rootReducer;
