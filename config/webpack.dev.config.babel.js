@@ -25,7 +25,7 @@ export default new Config().extend('config/webpack.base.config.babel.js').merge(
     loaders: [
       {
         test: /\.js?$/i,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['babel'],
         exclude: /node_modules/,
         include: path.join(__dirname, '../src'),
       },
