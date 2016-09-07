@@ -9,3 +9,6 @@ name = mediacloud-app
 secret_key = A_RANDOM_STRING
 mode = DEV
 app = sources
+
+[sentry]
+dsn = https://<key>:<secret>@app.getsentry.com/<project>

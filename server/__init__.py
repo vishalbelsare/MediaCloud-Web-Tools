@@ -8,15 +8,26 @@ from flask import Flask, render_template
 from flask_webpack import Webpack
 import pymongo
 import flask_login
-import mediacloud
 from flask_cors import CORS
+from raven.conf import setup_logging
+from raven.contrib.flask import Sentry
+from raven.handlers.logging import SentryHandler
+import mediacloud
 
 SERVER_MODE_DEV = "DEV"
 SERVER_MODE_PROD = "PROD"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# load the shared settings file
+server_config_file_path = os.path.join(base_dir, 'config', 'server.config')
+settings = ConfigParser.ConfigParser()
+settings.read(server_config_file_path)
+
 # Set up some logging
+entry = Sentry(dsn=settings.get('sentry', 'dsn'))
+handler = SentryHandler(settings.get('sentry', 'dsn'))
+setup_logging(handler)
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
     logging_config['handlers']['file']['filename'] = os.path.join(base_dir, logging_config['handlers']['file']['filename'])
@@ -25,11 +36,6 @@ logger = logging.getLogger(__name__)
 logger.info("---------------------------------------------------------------------------")
 flask_login_logger = logging.getLogger('flask_login')
 flask_login_logger.setLevel(logging.DEBUG)
-
-# load the shared settings file
-server_config_file_path = os.path.join(base_dir, 'config', 'server.config')
-settings = ConfigParser.ConfigParser()
-settings.read(server_config_file_path)
 
 server_mode = settings.get('server', 'mode')
 if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
