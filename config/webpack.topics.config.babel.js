@@ -1,3 +1,4 @@
+import webpack from 'webpack';
 import Config from 'webpack-config';
 import ManifestRevisionPlugin from 'manifest-revision-webpack-plugin';
 import path from 'path';
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'production') {
     chunkFilename: '[id].[chunkhash:8].chunk.js',
   };
   appConfig.plugins = [
+    new webpack.DefinePlugin({ GA_TRACKING_CODE: JSON.stringify('UA-60744513-7') }),
     // Create the manifest file that Flask and other frameworks use.
     new ManifestRevisionPlugin(path.join('server', 'static', 'gen', 'topics', 'manifest.json'), {
       rootAssetPath: './src',
