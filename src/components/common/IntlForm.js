@@ -57,9 +57,8 @@ function composeIntlForm(Component) {
           name={name}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
-          onChange={input.onChange}
+          onChange={(event, index, value) => input.onChange(value)}
           {...intlCustom}
-          onBlur={() => input.onBlur()}
         >
          {children}
         </SelectField>
