@@ -1,5 +1,6 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
+import IndexRedirect from 'react-router/lib/IndexRedirect';
 import SourceDetailsContainer from '../components/source/mediaSource/SourceDetailsContainer';
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
 import Introduction from '../components/source/Introduction';
@@ -10,6 +11,8 @@ import SourcesApp from '../components/source/SourcesApp';
 
 const sourceRoutes = (
   <Route path="/" component={SourcesApp}>
+
+    <IndexRedirect to="/home" />
 
     {userRoutes}
 
