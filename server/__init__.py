@@ -12,6 +12,7 @@ from flask_cors import CORS
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
+from database import AppDatabase
 import mediacloud
 
 SERVER_MODE_DEV = "DEV"
@@ -25,9 +26,13 @@ settings = ConfigParser.ConfigParser()
 settings.read(server_config_file_path)
 
 # Set up some logging
-entry = Sentry(dsn=settings.get('sentry', 'dsn'))
-handler = SentryHandler(settings.get('sentry', 'dsn'))
-setup_logging(handler)
+try:
+    entry = Sentry(dsn=settings.get('sentry', 'dsn'))
+    handler = SentryHandler(settings.get('sentry', 'dsn'))
+    setup_logging(handler)
+except Exception:
+    print "no sentry logging"
+
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
     logging_config['handlers']['file']['filename'] = os.path.join(base_dir, logging_config['handlers']['file']['filename'])
@@ -51,7 +56,7 @@ logger.info("Connected to mediacloud")
 # Connect to the app's mongo DB
 db_host = settings.get('database', 'host')
 db_name = settings.get('database', 'name')
-db = pymongo.MongoClient(db_host)[db_name]
+db = AppDatabase(db_host, db_name)
 logger.info("Connected to DB: %s@%s", db_name, db_host)
 
 def isDevMode():

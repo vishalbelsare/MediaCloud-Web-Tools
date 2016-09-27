@@ -34,10 +34,10 @@ class User(flask_login.UserMixin):
             logger.debug("user %s already in db", self.name)
             return
         logger.debug("user %s created in db", self.name)
-        db.users.insert({'username':self.name})
+        db.add_user_named(self.name)
 
     def exists_in_db(self):
-        return db.users.find_one({'username':self.name}) is not None
+        return db.includes_user_named(self.name)
 
     @classmethod
     def get(cls, userid):
@@ -74,7 +74,7 @@ def create_and_cache_user(username, key):
     return user
 
 def load_from_db_by_username(username):
-    return db.users.find_one({'username':username})
+    return db.find_by_username(username)
 
 def authenticate_by_key(username, key):
     logger.debug("user %s want to log in with key", username)
