@@ -10,7 +10,7 @@ import Divider from 'material-ui/Divider';
 import messages from '../../resources/messages';
 
 const localMessages = {
-  allTopics: { id: 'menu.items.allTopics', defaultMessage: 'All Topics' },
+  home: { id: 'menu.items.home', defaultMessage: 'Explore Topics' },
   createNewTopic: { id: 'menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
@@ -49,7 +49,7 @@ class TopicsDrawer extends React.Component {
       appMenuItems = (
         <div>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
-            <FormattedMessage {...localMessages.allTopics} />
+            <FormattedMessage {...localMessages.home} />
           </MenuItem>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
             <FormattedMessage {...localMessages.createNewTopic} />
