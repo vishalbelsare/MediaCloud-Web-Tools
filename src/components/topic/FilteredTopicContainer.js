@@ -45,7 +45,7 @@ const mapStateToProps = (state) => ({
 
 export default
   injectIntl(
-    connect(mapStateToProps, null)(
+    connect(mapStateToProps)(
       FilteredTopicContainer
     )
   );
