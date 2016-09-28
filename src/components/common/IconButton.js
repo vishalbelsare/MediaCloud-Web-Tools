@@ -44,7 +44,10 @@ function composeIconButton(Icon, tooltipMessage) {
   }
   AppIconButton.propTypes = {
     onClick: React.PropTypes.func,
-    linkTo: React.PropTypes.string,
+    linkTo: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.object,
+    ]),
     intl: React.PropTypes.object.isRequired,
   };
   return injectIntl(AppIconButton);

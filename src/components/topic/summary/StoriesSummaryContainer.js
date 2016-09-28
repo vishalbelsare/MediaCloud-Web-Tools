@@ -8,6 +8,7 @@ import DataCard from '../../common/DataCard';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 import messages from '../../../resources/messages';
+import { filteredLinkTo } from '../LinkWithFilters';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
@@ -34,12 +35,12 @@ class StoriesSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, helpButton } = this.props;
+    const { stories, sort, topicId, helpButton, filters } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton linkTo={`/topics/${topicId}/stories`} />
+          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/stories`, filters)} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>

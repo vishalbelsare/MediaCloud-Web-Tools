@@ -8,6 +8,7 @@ import messages from '../../../resources/messages';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
+import { filteredLinkTo } from '../LinkWithFilters';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
@@ -41,12 +42,12 @@ class MediaSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { media, sort, topicId, helpButton } = this.props;
+    const { media, sort, topicId, helpButton, filters } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton linkTo={`/topics/${topicId}/media`} />
+          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/media`, filters)} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>

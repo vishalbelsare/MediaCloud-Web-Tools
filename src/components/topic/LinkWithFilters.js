@@ -2,6 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 
+export function filteredLinkTo(to, filters) {
+  return {
+    pathname: to,
+    query: {
+      snapshotId: filters.snapshotId,
+      timespanId: filters.timespanId,
+      focusId: filters.focusId,
+    },
+  };
+}
+
 /**
  * Use to include filters in a topic-related link by default.  Treat this as a drop-in
  * replacement for the react-router Link tag.
@@ -9,14 +20,7 @@ import Link from 'react-router/lib/Link';
 const LinkWithFilters = (props) => {
   const { to, style, children, defaultFilters, filters } = props;
   const filtersToUse = ((filters !== undefined) && (filters !== null)) ? filters : defaultFilters;
-  const linkLocation = {
-    pathname: to,
-    query: {
-      snapshotId: filtersToUse.snapshotId,
-      timespanId: filtersToUse.timespanId,
-      focusId: filtersToUse.focusId,
-    },
-  };
+  const linkLocation = filteredLinkTo(to, filtersToUse);
   return (
     <Link to={linkLocation} style={style}>{children}</Link>
   );

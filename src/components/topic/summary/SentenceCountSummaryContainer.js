@@ -9,6 +9,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { filteredLinkTo } from '../LinkWithFilters';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
@@ -40,12 +41,12 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, helpButton, topicId } = this.props;
+    const { total, counts, helpButton, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton linkTo={`/topics/${topicId}/attention`} />
+          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
