@@ -69,7 +69,7 @@ ConfirmKeywordSearchContainer.propTypes = {
   saveAndGenerateSnapshot: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   properties: state.topics.selected.focalSets.create.properties,
   formData: state.form.focusCreateSetup,
 });

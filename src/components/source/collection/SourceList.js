@@ -9,9 +9,9 @@ const SourceList = (props) => {
       <h2>{title}</h2>
       <p>{intro}</p>
       <ul>
-      {sources.map(s =>
-        <li key={s.id}><Link to={`source/${s.id}/details`}>{s.name}</Link></li>
-      )}
+        {sources.map(s =>
+          <li key={s.id}><Link to={`source/${s.id}/details`}>{s.name}</Link></li>
+        )}
       </ul>
     </DataCard>
   );

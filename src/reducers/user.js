@@ -1,7 +1,7 @@
 import { resolve, reject } from 'redux-simple-promise';
 import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT, SET_LOGIN_ERROR_MESSAGE } from '../actions/userActions';
 import { saveCookies, deleteCookies } from '../lib/auth';
-import * as fetchConstants from '../lib/fetchConstants.js';
+import * as fetchConstants from '../lib/fetchConstants';
 
 const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,

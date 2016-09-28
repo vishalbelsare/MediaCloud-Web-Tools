@@ -51,7 +51,7 @@ KeywordSearchResultsContainer.propTypes = {
   stories: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.matchingStories.fetchStatus,
   filters: state.topics.selected.filters,
   stories: state.topics.selected.focalSets.create.matchingStories.stories,

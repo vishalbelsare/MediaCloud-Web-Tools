@@ -6,7 +6,7 @@ const words = createAsyncReducer({
     list: [],
   },
   action: FETCH_MEDIA_WORDS,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     list: payload,
   }),
 });

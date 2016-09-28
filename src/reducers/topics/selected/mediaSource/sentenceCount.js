@@ -8,7 +8,7 @@ const sentenceCount = createAsyncReducer({
     counts: [],
   },
   action: FETCH_MEDIA_SENTENCE_COUNT,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.count,
     counts: cleanDateCounts(payload.split),
   }),

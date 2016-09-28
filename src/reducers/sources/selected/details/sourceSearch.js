@@ -9,7 +9,7 @@ const sourceSearch = createAsyncReducer({
   },
   action: FETCH_SOURCE_SEARCH,
   handleFetch: () => ({ list: [], total: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.total,
     list: payload.results,
   }),

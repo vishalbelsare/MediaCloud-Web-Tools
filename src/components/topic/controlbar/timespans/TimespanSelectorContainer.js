@@ -82,7 +82,7 @@ function updateTimespan(dispatch, location, snapshotId, focusId, timespanId) {
   dispatch(push(newLocation));
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.timespans.fetchStatus,
   timespans: state.topics.selected.timespans.list,
   timespanId: state.topics.selected.filters.timespanId,

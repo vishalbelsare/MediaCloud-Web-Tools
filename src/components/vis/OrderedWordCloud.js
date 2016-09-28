@@ -30,7 +30,7 @@ class OrderedWordCloud extends React.Component {
     if (typeof (words) === 'undefined') {
       return x;
     }
-    words.attr('x', d => {
+    words.attr('x', (d) => {
       const fs = this.fontSize(d, extent, sizeRange);
       canvasContext2d.font = `bold ${fs}px Roboto`;    // crazy hack for IE compat, instead of simply this.getComputedTextLength()
       const metrics = canvasContext2d.measureText(d.term);

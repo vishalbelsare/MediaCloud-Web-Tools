@@ -34,7 +34,7 @@ CollectionSentenceCountContainer.propTypes = {
   counts: React.PropTypes.array,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.fetchStatus,
   total: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.total,
   counts: state.sources.selected.details.collectionDetailsReducer.collectionSentenceCount.list,

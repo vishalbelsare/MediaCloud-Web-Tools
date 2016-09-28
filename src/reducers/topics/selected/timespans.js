@@ -4,7 +4,7 @@ import { FETCH_TOPIC_TIMESPANS_LIST, TOGGLE_TIMESPAN_CONTROLS,
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 function addJsDates(list) {
-  return list.map((timespan) => ({
+  return list.map(timespan => ({
     ...timespan,
     startDateMoment: moment(timespan.start_date),
     endDateMoment: moment(timespan.end_date),
@@ -14,7 +14,7 @@ function addJsDates(list) {
 }
 
 function getTimespanFromListById(list, id) {
-  const result = list.find((element) => element.timespans_id === id);
+  const result = list.find(element => element.timespans_id === id);
   return (result === undefined) ? null : result;
 }
 
@@ -33,8 +33,8 @@ const timespans = createAsyncReducer({
     const selected = getTimespanFromListById(list, state.selectedId);
     return { list, selected };
   },
-  [TOGGLE_TIMESPAN_CONTROLS]: (payload) => ({ isVisible: payload }),
-  [SET_TIMESPAN_VISIBLE_PERIOD]: (payload) => ({ selectedPeriod: payload }),
+  [TOGGLE_TIMESPAN_CONTROLS]: payload => ({ isVisible: payload }),
+  [SET_TIMESPAN_VISIBLE_PERIOD]: payload => ({ selectedPeriod: payload }),
   [TOPIC_FILTER_BY_TIMESPAN]: (payload, state) => {
     const selectedId = parseInt(payload, 10);
     // this might fail, in the case where the id comes from the url, before we have fetched the list

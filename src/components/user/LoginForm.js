@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
-import * as fetchConstants from '../../lib/fetchConstants.js';
+import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
@@ -57,7 +57,7 @@ LoginFormComponent.propTypes = {
   onSubmitLoginForm: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.user.fetchStatus,
   errorMessage: state.user.errorMessage,
 });

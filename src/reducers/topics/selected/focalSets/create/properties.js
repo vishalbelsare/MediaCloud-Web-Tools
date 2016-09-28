@@ -11,7 +11,7 @@ export const INITIAL_STATE = {
 
 const createFociReducer = createReducer({
   initialState: INITIAL_STATE,
-  [SET_NEW_FOCUS_PROPERTIES]: (payload) => ({ ...payload }),
+  [SET_NEW_FOCUS_PROPERTIES]: payload => ({ ...payload }),
 });
 
 export default createFociReducer;

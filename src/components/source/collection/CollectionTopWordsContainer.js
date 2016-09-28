@@ -34,7 +34,7 @@ CollectionTopWordsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.fetchStatus,
   words: state.sources.selected.details.collectionDetailsReducer.collectionTopWords.list.wordcounts,
 });

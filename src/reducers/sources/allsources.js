@@ -18,7 +18,7 @@ const allsources = createAsyncReducer({
   },
   action: FETCH_SOURCE_LIST,
   handleFetch: () => ({ list: [], total: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.results.total,
     list: arrayToDict(payload.results, 'media_id'),
   }),

@@ -32,7 +32,7 @@ CreateFocusEditContainer.propTypes = {
   properties: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   properties: state.topics.selected.focalSets.create.properties,
 });
 

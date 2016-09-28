@@ -34,7 +34,7 @@ class SourceDetailsContainer extends React.Component {
   render() {
     const { source, handleDashboardClick, handleWordCloudClick, handleCountryClick } = this.props;
     const { formatMessage } = this.props.intl;
-    const collections = source.media_source_tags.filter((c) => c.show_on_media === 1);
+    const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
     return (
       <Grid className="details source-details">
         <Row>
@@ -121,7 +121,7 @@ const mapStateToProps = (state, ownProps) => ({
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (sourceId) => {
     dispatch(select(sourceId));
     dispatch(fetchSourceDetails(sourceId));

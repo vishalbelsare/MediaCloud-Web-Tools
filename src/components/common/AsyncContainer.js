@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from '../common/LoadingSpinner';
-import * as fetchConstants from '../../lib/fetchConstants.js';
+import * as fetchConstants from '../../lib/fetchConstants';
 
 /**
  * Use this with the JS Composition pattern to make a Container do an async fetch for you.

@@ -6,7 +6,7 @@ const all = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_FOCAL_SETS_LIST,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     list: payload,
   }),
 });

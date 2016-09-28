@@ -8,7 +8,7 @@ const localMessages = {
   aboutText: { id: 'about.text', defaultMessage: 'Topic Mapper lets you analyze how online media talks about a topic.' },
 };
 
-const About = (props) => (
+const About = props => (
   <Grid>
     <Title render={props.intl.formatMessage(localMessages.aboutTitle)} />
     <Row>

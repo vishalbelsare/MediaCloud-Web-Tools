@@ -69,7 +69,7 @@ MediaInlinksContainer.propTypes = {
   inlinkedStories: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.mediaSource.inlinks.fetchStatus,
   inlinkedStories: state.topics.selected.mediaSource.inlinks.stories,
   sort: state.topics.selected.mediaSource.inlinks.sort,

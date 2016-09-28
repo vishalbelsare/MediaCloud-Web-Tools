@@ -35,7 +35,7 @@ TopicSettingsContainer.propTypes = {
   topicId: React.PropTypes.number,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
   topic: React.PropTypes.object.isRequired,
   topicInfo: state.topics.selected.info,

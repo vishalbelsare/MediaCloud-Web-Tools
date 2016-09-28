@@ -64,7 +64,7 @@ TopicPermissionsContainer.propTypes = {
   permissions: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.permissions.fetchStatus,
   permissions: state.topics.selected.permissions.list,
 });

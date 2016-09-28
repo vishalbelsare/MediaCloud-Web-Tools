@@ -11,15 +11,15 @@ const info = createReducer({
     timespanId: null,
     focusId: null,
   },
-  TOPIC_FILTER_BY_SNAPSHOT: (payload) => ({
+  TOPIC_FILTER_BY_SNAPSHOT: payload => ({
     snapshotId: parseId(payload),
     timespanId: null,
     focusId: null,
   }),
-  TOPIC_FILTER_BY_FOCUS: (payload) => ({
+  TOPIC_FILTER_BY_FOCUS: payload => ({
     focusId: parseId(payload),
   }),
-  TOPIC_FILTER_BY_TIMESPAN: (payload) => ({
+  TOPIC_FILTER_BY_TIMESPAN: payload => ({
     timespanId: parseId(payload),
   }),
 });

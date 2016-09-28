@@ -9,7 +9,7 @@ const geoTag = createAsyncReducer({
   },
   action: FETCH_SOURCE_COLLECTION_GEO,
   handleFetch: () => ({ list: [], total: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.results.geography.total,
     list: payload.results.geography,
   }),

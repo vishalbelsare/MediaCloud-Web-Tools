@@ -2,7 +2,7 @@ import { FETCH_TOPIC_FOCAL_SETS_LIST, TOPIC_FILTER_BY_FOCUS } from '../../../../
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 function getFocusFromListById(list, id) {
-  const result = list.find((element) => element.foci_id === id);
+  const result = list.find(element => element.foci_id === id);
   return (result === undefined) ? null : result;
 }
 

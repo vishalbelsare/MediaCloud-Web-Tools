@@ -76,7 +76,7 @@ InfluentialMediaContainer.propTypes = {
   previousButton: React.PropTypes.node,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.media.fetchStatus,
   sort: state.topics.selected.media.sort,
   media: state.topics.selected.media.media,

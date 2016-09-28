@@ -64,7 +64,7 @@ MediaWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.mediaSource.words.fetchStatus,
   words: state.topics.selected.mediaSource.words.list,
   filters: state.topics.selected.filters,

@@ -22,7 +22,6 @@ const ErrorTryAgain = (props) => {
 ErrorTryAgain.propTypes = {
   intl: React.PropTypes.object.isRequired,
   onTryAgain: React.PropTypes.func.isRequired,
-  padding: React.PropTypes.number,
 };
 
 export default injectIntl(ErrorTryAgain);

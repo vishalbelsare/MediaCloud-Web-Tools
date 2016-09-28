@@ -62,13 +62,13 @@ WordsSummaryContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,
   words: state.topics.selected.summary.topWords.list,
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, props.filters));
   },

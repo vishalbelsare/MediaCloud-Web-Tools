@@ -80,11 +80,11 @@ AppContainer.contextTypes = {
   store: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   feedback: state.app.feedback,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   handleSnackBarRequestClose: () => {
     dispatch(updateFeedback({ open: false, message: '' }));
   },

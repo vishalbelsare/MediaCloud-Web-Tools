@@ -1,5 +1,5 @@
 import { FETCH_TOPIC_TOP_MEDIA, SORT_TOPIC_TOP_MEDIA } from '../../../../actions/topicActions';
-import { createAsyncReducer } from '../../../../lib/reduxHelpers.js';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const topMedia = createAsyncReducer({
   initialState: {
@@ -7,7 +7,7 @@ const topMedia = createAsyncReducer({
     media: [],
   },
   action: FETCH_TOPIC_TOP_MEDIA,
-  [SORT_TOPIC_TOP_MEDIA]: (payload) => ({ sort: payload }),
+  [SORT_TOPIC_TOP_MEDIA]: payload => ({ sort: payload }),
 });
 
 export default topMedia;

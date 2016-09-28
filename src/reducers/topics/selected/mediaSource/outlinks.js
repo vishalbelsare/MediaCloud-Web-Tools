@@ -8,7 +8,7 @@ const outlinks = createAsyncReducer({
     links_ids: {},
   },
   action: FETCH_MEDIA_OUTLINKS,
-  [SORT_MEDIA_OUTLINKS]: (payload) => ({ sort: payload }),
+  [SORT_MEDIA_OUTLINKS]: payload => ({ sort: payload }),
 });
 
 export default outlinks;

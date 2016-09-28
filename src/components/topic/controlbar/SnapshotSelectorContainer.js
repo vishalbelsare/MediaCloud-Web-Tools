@@ -40,7 +40,7 @@ SnapshotSelectorContainer.propTypes = {
   snapshotId: React.PropTypes.number,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.snapshots.fetchStatus,
   snapshots: state.topics.selected.snapshots.list,
   snapshotId: state.topics.selected.filters.snapshotId,
@@ -53,7 +53,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         .then((response) => {
           if (snapshotId === null) {
             // default to first snapshot (ie. latest) if none is specified
-            const firstReadySnapshot = response.list.find((s) => s.state === 'completed');
+            const firstReadySnapshot = response.list.find(s => s.state === 'completed');
             const newSnapshotId = firstReadySnapshot.snapshots_id;
             const newLocation = filteredLocation(ownProps.location, {
               snapshotId: newSnapshotId,

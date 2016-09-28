@@ -61,7 +61,7 @@ StoryOutlinksContainer.propTypes = {
   outlinkedStories: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.outlinks.fetchStatus,
   outlinkedStories: state.topics.selected.story.outlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,

@@ -86,7 +86,7 @@ InfluentialStoriesContainer.propTypes = {
   previousButton: React.PropTypes.node,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.stories.fetchStatus,
   sort: state.topics.selected.stories.sort,
   stories: state.topics.selected.stories.stories,

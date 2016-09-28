@@ -69,7 +69,7 @@ MediaOutlinksContainer.propTypes = {
   outlinkedStories: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.mediaSource.outlinks.fetchStatus,
   outlinkedStories: state.topics.selected.mediaSource.outlinks.stories,
   sort: state.topics.selected.mediaSource.outlinks.sort,

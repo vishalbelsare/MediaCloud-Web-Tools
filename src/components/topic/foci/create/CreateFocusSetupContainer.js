@@ -138,7 +138,7 @@ CreateFocusSetupContainer.propTypes = {
   handleSubmit: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
   properties: state.topics.selected.focalSets.create.properties,

@@ -69,13 +69,13 @@ StoriesSummaryContainer.propTypes = {
   stories: React.PropTypes.array,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.stories,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     const params = {
       ...props.filters,

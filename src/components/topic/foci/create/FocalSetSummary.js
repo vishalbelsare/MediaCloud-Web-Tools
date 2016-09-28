@@ -52,7 +52,7 @@ class FocalSetSummary extends React.Component {
             />
           </p>
           <ul>
-            {focalSet.focus_definitions.map((focus) => (
+            {focalSet.focus_definitions.map(focus => (
               <li key={focus.focus_definitions_id}>
                 {focus.name} - {focus.description}
               </li>

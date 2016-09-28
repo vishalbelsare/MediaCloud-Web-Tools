@@ -6,7 +6,7 @@ const topWords = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_TOP_WORDS,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     list: payload,
   }),
 });

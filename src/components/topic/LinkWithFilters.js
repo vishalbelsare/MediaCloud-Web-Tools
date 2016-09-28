@@ -36,7 +36,7 @@ LinkWithFilters.propTypes = {
   defaultFilters: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   defaultFilters: state.topics.selected.filters,
 });
 

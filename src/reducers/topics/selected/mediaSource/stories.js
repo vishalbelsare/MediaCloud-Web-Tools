@@ -1,5 +1,5 @@
 import { FETCH_MEDIA_STORIES, SORT_MEDIA_STORIES } from '../../../../actions/topicActions';
-import { createAsyncReducer } from '../../../../lib/reduxHelpers.js';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const topStories = createAsyncReducer({
   initialState: {
@@ -8,7 +8,7 @@ const topStories = createAsyncReducer({
     links_ids: {},
   },
   action: FETCH_MEDIA_STORIES,
-  [SORT_MEDIA_STORIES]: (payload) => ({ sort: payload }),
+  [SORT_MEDIA_STORIES]: payload => ({ sort: payload }),
 });
 
 export default topStories;

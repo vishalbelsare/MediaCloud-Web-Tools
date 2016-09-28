@@ -55,7 +55,7 @@ StoryWordsContainer.propTypes = {
   words: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.words.fetchStatus,
   words: state.topics.selected.story.words.list,
 });

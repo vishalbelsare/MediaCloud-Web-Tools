@@ -9,7 +9,7 @@ const sourceDetails = createAsyncReducer({
   },
   action: FETCH_SOURCE_DETAILS,
   handleFetch: () => ({ object: null, total: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.total,
     object: payload.results,
   }),

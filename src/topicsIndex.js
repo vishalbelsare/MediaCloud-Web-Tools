@@ -1,8 +1,8 @@
-import { setAppName } from './config.js';
-import { setAppColors } from './styles/colors.js';
+import { setAppName } from './config';
+import { setAppColors } from './styles/colors';
 import routes from './routes/topicRoutes';
 import store from './store';
-import initializeApp from './index.js';
+import initializeApp from './index';
 import { filterBySnapshot, filterByTimespan, filterByFocus } from './actions/topicActions';
 
 /**

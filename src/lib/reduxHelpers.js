@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import * as fetchConstants from './fetchConstants.js';
+import * as fetchConstants from './fetchConstants';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
 export function arrayToDict(arr, keyPropertyName) {
@@ -91,7 +91,7 @@ export function createAsyncReducer(handlers) {
   // set up any async reducer handlers the user passed in
   const reducers = {  // set up some smart defaults for normal behaviour
     handleFetch: () => ({}),
-    handleSuccess: (payload) => ({ ...payload }),
+    handleSuccess: payload => ({ ...payload }),
     handleFailure: () => ({}),
   };
   Object.keys(reducers).forEach((key) => {   // override defaults with custom methods passed in

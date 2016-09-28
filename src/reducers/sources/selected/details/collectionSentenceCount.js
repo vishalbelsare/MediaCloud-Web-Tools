@@ -8,7 +8,7 @@ const collectionSentenceCount = createAsyncReducer({
     list: [],
   },
   action: FETCH_SOURCE_COLLECTION_SENTENCE_COUNT,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.results.total,
     list: cleanDateCounts(payload.results.sentenceCounts),
   }),

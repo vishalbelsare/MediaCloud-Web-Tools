@@ -76,13 +76,13 @@ MediaSummaryContainer.propTypes = {
   media: React.PropTypes.array,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topMedia.fetchStatus,
   sort: state.topics.selected.summary.topMedia.sort,
   media: state.topics.selected.summary.topMedia.media,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     const params = {
       ...props.filters,

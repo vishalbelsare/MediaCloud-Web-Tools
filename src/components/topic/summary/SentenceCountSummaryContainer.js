@@ -80,13 +80,13 @@ SentenceCountSummaryContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.sentenceCount.fetchStatus,
   total: state.topics.selected.summary.sentenceCount.total,
   counts: state.topics.selected.summary.sentenceCount.counts,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
   },

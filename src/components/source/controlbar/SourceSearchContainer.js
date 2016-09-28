@@ -47,7 +47,6 @@ class SourceSearchContainer extends React.Component {
           dataSource={searchResults}
           onUpdateInput={this.handleUpdateInput}
           onNewRequest={this.handleNewRequest}
-          onUpdateInput={this.handleUpdateInput}
           maxSearchResults={10}
           filter={this.filterResults}
         />
@@ -66,11 +65,11 @@ SourceSearchContainer.propTypes = {
   navigateToMediaSource: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   searchResults: state.sources.sourceSearch.list,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   search: (searchString) => {
     dispatch(fetchSourceSearch(searchString));
   },

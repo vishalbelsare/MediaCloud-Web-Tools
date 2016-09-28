@@ -40,7 +40,7 @@ class WordCloud extends React.Component {
     const max = d3.max(counts);
     const slope = options.maxFontSize / Math.log(max);
     // get list of all words and sizes
-    const wordList = words.map((w) => ({
+    const wordList = words.map(w => ({
       text: w.term,
       size: slope * Math.log(w.count),
     }));
@@ -49,7 +49,7 @@ class WordCloud extends React.Component {
     .words(wordList)
     .rotate(() => (~~(Math.random() * 1) * 90))
     .font('Arial')
-    .fontSize((d) => d.size)
+    .fontSize(d => d.size)
     .on('end', (wordsAsData) => {
       // Black and white
       // var fill = d3.scale.linear().domain([0,100]).range(['black','white']);
@@ -62,12 +62,12 @@ class WordCloud extends React.Component {
         .data(wordsAsData)
         .enter()
           .append('text')
-            .attr('font-size', (d) => `${d.size}px`)
+            .attr('font-size', d => `${d.size}px`)
             .attr('fill', options.textColor)
             .attr('text-anchor', 'middle')
             .attr('font-weight', 'bold')
-            .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
-            .text((d) => d.text);
+            .attr('transform', d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
+            .text(d => d.text);
     })
     .start();
     if (this.onWordClick !== undefined) {

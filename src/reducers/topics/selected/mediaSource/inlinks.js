@@ -8,7 +8,7 @@ const inlinks = createAsyncReducer({
     links_ids: {},
   },
   action: FETCH_MEDIA_INLINKS,
-  [SORT_MEDIA_INLINKS]: (payload) => ({ sort: payload }),
+  [SORT_MEDIA_INLINKS]: payload => ({ sort: payload }),
 });
 
 export default inlinks;

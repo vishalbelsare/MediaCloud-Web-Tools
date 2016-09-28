@@ -34,7 +34,7 @@ AttentionContainer.propTypes = {
   topicId: React.PropTypes.number,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
 });

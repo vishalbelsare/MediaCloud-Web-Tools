@@ -80,7 +80,7 @@ TopicSummaryContainer.propTypes = {
   topicInfo: React.PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,

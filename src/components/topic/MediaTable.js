@@ -35,7 +35,7 @@ class MediaTable extends React.Component {
         inlinkHeader = (
           <a
             href={`#${formatMessage(messages.sortByMediaInlinks)}`}
-            onClick={e => { e.preventDefault(); this.sortByInlinks(); }}
+            onClick={(e) => { e.preventDefault(); this.sortByInlinks(); }}
             title={formatMessage(messages.sortByMediaInlinks)}
           >
             <FormattedMessage {...messages.mediaInlinks} />
@@ -53,7 +53,7 @@ class MediaTable extends React.Component {
         socialHeader = (
           <a
             href={`#${formatMessage(messages.sortByBitlyClicks)}`}
-            onClick={e => { e.preventDefault(); this.sortBySocial(); }}
+            onClick={(e) => { e.preventDefault(); this.sortBySocial(); }}
             title={formatMessage(messages.sortByBitlyClicks)}
           >
             <FormattedMessage {...messages.bitlyClicks} />

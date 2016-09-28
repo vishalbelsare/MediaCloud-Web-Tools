@@ -7,11 +7,11 @@ const info = createAsyncReducer({
     id: null,
   },
   action: FETCH_STORY,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     ...payload,
     publishDateObj: moment(payload.publish_date).toDate(),
   }),
-  [SELECT_STORY]: (payload) => ({ id: payload }),
+  [SELECT_STORY]: payload => ({ id: payload }),
 });
 
 export default info;

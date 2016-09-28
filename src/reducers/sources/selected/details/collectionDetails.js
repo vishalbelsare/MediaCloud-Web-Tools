@@ -7,7 +7,7 @@ const collectionDetails = createAsyncReducer({
   },
   action: FETCH_SOURCE_COLLECTION_DETAILS,
   handleFetch: () => ({ object: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     object: payload.results,
   }),
   handleFailure: () => ({ object: null }),

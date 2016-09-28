@@ -13,7 +13,7 @@ function generateParamStr(params) {
       }
     }
   });
-  const paramStr = Object.keys(cleanedParams).map((key) => `${key}=${encodeURIComponent(cleanedParams[key])}`).join('&');
+  const paramStr = Object.keys(cleanedParams).map(key => `${key}=${encodeURIComponent(cleanedParams[key])}`).join('&');
   return paramStr;
 }
 

@@ -65,7 +65,7 @@ MediaSentenceCountContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.mediaSource.sentenceCount.fetchStatus,
   total: state.topics.selected.mediaSource.sentenceCount.total,
   counts: state.topics.selected.mediaSource.sentenceCount.counts,

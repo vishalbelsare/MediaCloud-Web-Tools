@@ -42,7 +42,7 @@ TopicListContainer.propTypes = {
   previousButton: React.PropTypes.node,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.all.fetchStatus,
   topics: state.topics.all.topics,
   links: state.topics.all.link_ids,

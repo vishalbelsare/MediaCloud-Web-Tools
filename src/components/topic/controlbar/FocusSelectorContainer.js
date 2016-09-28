@@ -75,7 +75,7 @@ FocusSelectorContainer.propTypes = {
   selectedFocus: React.PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.foci.fetchStatus,
   foci: state.topics.selected.focalSets.foci.list,
   selectedFocus: state.topics.selected.focalSets.foci.selected,

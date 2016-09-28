@@ -33,12 +33,12 @@ FavoriteTopicsContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.favorite.fetchStatus,
   topics: state.topics.favorite.topics,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
     dispatch(fetchFavoriteTopics());
   },

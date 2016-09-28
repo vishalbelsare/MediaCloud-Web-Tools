@@ -61,7 +61,7 @@ StoryInlinksContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.inlinks.fetchStatus,
   inlinkedStories: state.topics.selected.story.inlinks.stories,
   filters: state.topics.selected.filters,

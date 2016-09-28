@@ -15,22 +15,14 @@ class LoginContainer extends React.Component {
       this.context.router.push('/home');
     }
   }
-  getStyles() {
-    const styles = {
-      root: {
-        marginTop: 15,
-      },
-    };
-    return styles;
-  }
   render() {
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, isLoggedIn } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.loginTitle)} | ${parentTitle}`;
-    const styles = this.getStyles();
+    const className = `logged-in-${isLoggedIn}`;
     return (
       <Grid>
         <Row>
-          <Col lg={12} md={12} sm={12} style={styles.root}>
+          <Col lg={12} md={12} sm={12} className={className}>
             <Title render={titleHandler} />
             <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
             <LoginForm location={this.props.location} />
@@ -51,11 +43,13 @@ LoginContainer.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-export default injectIntl(connect(
-  mapStateToProps,
-  null
-)(LoginContainer));
+export default
+  injectIntl(
+    connect(mapStateToProps)(
+      LoginContainer
+    )
+  );

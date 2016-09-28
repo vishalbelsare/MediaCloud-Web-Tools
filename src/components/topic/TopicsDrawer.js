@@ -72,7 +72,7 @@ class TopicsDrawer extends React.Component {
           openSecondary
           docked={false}
           open={this.state.open}
-          onRequestChange={(open) => this.setState({ open })}
+          onRequestChange={open => this.setState({ open })}
         >
           <AppBar title={formatMessage(messages.menuTitle)} showMenuIconButton={false} />
           {appMenuItems}
@@ -96,11 +96,11 @@ TopicsDrawer.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   handleMenuItemClick: (path) => {
     dispatch(push(path));
   },

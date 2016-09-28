@@ -94,12 +94,12 @@ BrandMasthead.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
   mastheadText: state.app.mastheadText,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   navigateToHome: (event) => {
     event.preventDefault();
     dispatch(push('/home'));

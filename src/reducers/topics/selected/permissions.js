@@ -6,7 +6,7 @@ const permissions = createAsyncReducer({
     list: [],
   },
   action: FETCH_TOPIC_PERMISSIONS,
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     list: payload.permissions,
   }),
 });

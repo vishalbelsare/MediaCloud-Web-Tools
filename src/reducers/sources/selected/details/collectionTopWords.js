@@ -10,7 +10,7 @@ const collectionTopWords = createAsyncReducer({
   },
   action: FETCH_SOURCE_COLLECTION_TOP_WORDS,
   handleFetch: () => ({ list: [], total: null }),
-  handleSuccess: (payload) => ({
+  handleSuccess: payload => ({
     total: payload.total,
     list: payload.results,
   }),

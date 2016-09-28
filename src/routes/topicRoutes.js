@@ -11,7 +11,7 @@ import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
 import CreateFocusContainer from '../components/topic/foci/create/CreateFocusContainer';
 import ManageFocalSetsContainer from '../components/topic/foci/ManageFocalSetsContainer';
-import { requireAuth } from './routes.js';
+import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';

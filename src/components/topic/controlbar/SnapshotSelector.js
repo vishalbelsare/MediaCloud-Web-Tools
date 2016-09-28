@@ -48,7 +48,7 @@ class SnapshotSelector extends React.Component {
     const { formatMessage, formatDate } = this.props.intl;
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
     // default to select first if you need to
-    let selected = snapshots.find((snapshot) => (snapshot.snapshots_id === selectedId));
+    let selected = snapshots.find(snapshot => (snapshot.snapshots_id === selectedId));
     if (selected === null) {
       selected = snapshots[0];
     }

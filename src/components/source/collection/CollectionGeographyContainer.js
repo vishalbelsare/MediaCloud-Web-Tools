@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import GeoChart from '../../vis/GeoChart.js';
+import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchSourceCollectionGeo } from '../../../actions/sourceActions';
 
@@ -33,14 +33,14 @@ CollectionGeographyContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.fetchStatus,
   total: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.total,
   geolist: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.list,
   collectionId: state.sources.selected.details.collectionDetailsReducer.collectionDetails.object.id,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (collectionId) => {
     dispatch(fetchSourceCollectionGeo(collectionId));
   },
