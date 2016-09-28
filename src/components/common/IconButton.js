@@ -1,8 +1,6 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from 'material-ui/svg-icons/action/favorite';
-import FavoriteBorderIcon from 'material-ui/svg-icons/action/favorite-border';
 import { injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
@@ -10,6 +8,8 @@ import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
+import FilledStar from './icons/FilledStar';
+import EmptyStar from './icons/EmptyStar';
 
 /**
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
@@ -63,6 +63,6 @@ export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 
 export const AddButton = composeIconButton(AddIcon, messages.delete);
 
-export const FavoriteButton = composeIconButton(FavoriteIcon, messages.unfavorite);
+export const FavoriteButton = composeIconButton(FilledStar, messages.unfavorite);
 
-export const FavoriteBorderButton = composeIconButton(FavoriteBorderIcon, messages.favorite);
+export const FavoriteBorderButton = composeIconButton(EmptyStar, messages.favorite);

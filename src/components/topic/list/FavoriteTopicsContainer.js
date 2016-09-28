@@ -7,7 +7,7 @@ import { fetchFavoriteTopics } from '../../../actions/topicActions';
 import TopicList from './TopicList';
 
 const localMessages = {
-  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'Favorite Topics' },
+  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'Starred Topics' },
 };
 
 const FavoriteTopicsContainer = (props) => {

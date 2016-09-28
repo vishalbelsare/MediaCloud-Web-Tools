@@ -10,7 +10,6 @@ import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicAction
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Explore Topics' },
-  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
 };

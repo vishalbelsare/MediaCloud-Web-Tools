@@ -10,7 +10,7 @@ import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
 
 const localMessages = {
-  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
+  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Topics' },
 };
 
 const TopicListContainer = (props) => {
