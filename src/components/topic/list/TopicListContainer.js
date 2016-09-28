@@ -1,42 +1,35 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { push } from 'react-router-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import composeAsyncContainer from '../common/AsyncContainer';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import composeAsyncContainer from '../../common/AsyncContainer';
+import { fetchTopicsList } from '../../../actions/topicActions';
+import { pagedLocation } from '../../util/paging';
+import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
-import { fetchTopicsList } from '../../actions/topicActions';
-import { pagedLocation } from '../util/paging';
-import composePagedContainer from '../common/PagedContainer';
 
 const localMessages = {
   topicsListTitle: { id: 'topics.list.title', defaultMessage: 'Recent Topics' },
 };
 
 const TopicListContainer = (props) => {
-  const { topics, nextButton, previousButton } = props;
-  const { formatMessage } = props.intl;
-  const title = formatMessage(localMessages.topicsListTitle);
-  const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+  const { topics, nextButton, previousButton, onChangeFavorited } = props;
   return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h2>{title}</h2>
-            <TopicList topics={topics} />
-            { previousButton }
-            { nextButton }
-          </Col>
-        </Row>
-      </Grid>
-    </div>
+    <Row>
+      <Col lg={12} md={12} sm={12}>
+        <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
+        <TopicList topics={topics} onChangeFavorited={onChangeFavorited} />
+        { previousButton }
+        { nextButton }
+      </Col>
+    </Row>
   );
 };
 
 TopicListContainer.propTypes = {
+  // from parent
+  onChangeFavorited: React.PropTypes.func.isRequired,
   // from state
   topics: React.PropTypes.array.isRequired,
   links: React.PropTypes.object,

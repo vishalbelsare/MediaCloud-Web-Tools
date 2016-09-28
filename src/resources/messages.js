@@ -89,6 +89,8 @@ const messages = {
   help: { id: 'help', defaultMessage: 'Help' },
   delete: { id: 'delete', defaultMessage: 'Delete' },
   download: { id: 'download', defaultMessage: 'Download' },
+  favorite: { id: 'favorite', defaultMessage: 'Favorite' },
+  unfavorite: { id: 'unfavorite', defaultMessage: 'Unfavorite' },
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },

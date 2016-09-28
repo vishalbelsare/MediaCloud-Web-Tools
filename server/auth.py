@@ -97,6 +97,9 @@ def authenticate_by_password(username, password):
         logging.exception("authenticate_by_password failed for %s", username)
         return flask_login.AnonymousUserMixin()
 
+def user_name():
+    return load_user_from_request(request).name
+
 def user_mediacloud_key():
     return request.cookies[COOKIE_USER_KEY]
 

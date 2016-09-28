@@ -119,3 +119,11 @@ export function topicUpdatePermission(topicId, email, permission) {
 export function topicListPermissions(topicId) {
   return createApiPromise(`/api/topics/${topicId}/permissions/list`);
 }
+
+export function topicSetFavorite(topicId, favorite) {
+  return createPostingApiPromise(`/api/topics/${topicId}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
+}
+
+export function favoriteTopics() {
+  return createApiPromise('/api/topics/favorite');
+}

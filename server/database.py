@@ -23,4 +23,13 @@ class AppDatabase():
         return self._conn.users.insert({'username': username})
 
     def find_by_username(self, username):
-        return self._conn.users.find_one({'username':username})
+        return self._conn.users.find_one({'username': username})
+
+    def get_users_lists(self, username, list_name):
+        return self.find_by_username(username)[list_name]
+
+    def add_item_to_users_list(self, username, list_name, item):
+        return self._conn.users.update_one({'username': username}, {'$push': {list_name: item}})
+
+    def remove_item_from_users_list(self, username, list_name, item):
+        return self._conn.users.update_one({'username': username}, {'$pull': {list_name: item}})

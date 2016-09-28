@@ -49,6 +49,8 @@ export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const UPDATE_TOPIC_PERMISSION = 'UPDATE_TOPIC_PERMISSION';
 export const FETCH_TOPIC_PERMISSIONS = 'FETCH_TOPIC_PERMISSIONS';
+export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
+export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -154,3 +156,8 @@ export const updatePermission = createAsyncAction(UPDATE_TOPIC_PERMISSION, api.t
 
 // pass in topicId
 export const fetchPermissionsList = createAsyncAction(FETCH_TOPIC_PERMISSIONS, api.topicListPermissions);
+
+// pass in topicId and favorite bool
+export const setTopicFavorite = createAsyncAction(SET_TOPIC_FAVORITE, api.topicSetFavorite);
+
+export const fetchFavoriteTopics = createAsyncAction(FETCH_FAVORITE_TOPICS, api.favoriteTopics);

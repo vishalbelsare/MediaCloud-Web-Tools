@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import IconButton from 'material-ui/IconButton';
+import FavoriteIcon from 'material-ui/svg-icons/action/favorite';
+import FavoriteBorderIcon from 'material-ui/svg-icons/action/favorite-border';
 import { injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
@@ -57,3 +59,7 @@ export const HelpButton = composeIconButton(HelpIcon, messages.help);
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 
 export const AddButton = composeIconButton(AddIcon, messages.delete);
+
+export const FavoriteButton = composeIconButton(FavoriteIcon, messages.unfavorite);
+
+export const FavoriteBorderButton = composeIconButton(FavoriteBorderIcon, messages.favorite);

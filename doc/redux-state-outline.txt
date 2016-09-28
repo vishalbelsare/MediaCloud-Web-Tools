@@ -19,6 +19,10 @@
       topics: [ list of topic JSON objects ]
       link_ids: { standard links info }
     },
+    favorite: {
+      fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+      topics: [ list of topic JSON objects ]    
+    },
     selected: {
       id: [id of topic selected],
       info: {

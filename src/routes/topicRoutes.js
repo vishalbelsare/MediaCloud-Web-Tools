@@ -1,7 +1,7 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
-import TopicListContainer from '../components/topic/TopicListContainer';
+import HomeContainer from '../components/topic/HomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';
@@ -26,7 +26,7 @@ const topicRoutes = (
 
     <Route path="/about" component={About} />
 
-    <Route path="/home" component={TopicListContainer} onEnter={requireAuth} />
+    <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
 
     <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
 
