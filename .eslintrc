@@ -13,7 +13,7 @@
     "react/jsx-filename-extension": 0,
     "react/jsx-no-bind": 0,
     "react/forbid-prop-types": 0,
-    "jsx-a11y/no-static-element-interactions": 1,
+    "jsx-a11y/no-static-element-interactions": 0,
     "no-bitwise": ["error", { "allow": ["~"] }],
     "react/no-danger": 0,
     "react/no-unused-prop-types": 0,
