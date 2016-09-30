@@ -27,6 +27,12 @@
     }
   }
   
+  &.app-icon-add {
+    svg {
+      margin-top: 8px;
+    }
+  }
+
   &.app-icon-delete {
     background-color: $material-orange500 !important;
     svg {

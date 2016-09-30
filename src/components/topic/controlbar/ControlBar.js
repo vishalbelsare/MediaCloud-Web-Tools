@@ -6,6 +6,7 @@ import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
 import LinkWithFilters from '../LinkWithFilters';
+import CreateSnapshotButton from './CreateSnapshotButton';
 
 const localMessages = {
   settingsControlBarLink: { id: 'controlbar.settings.link', defaultMessage: 'settings' },
@@ -25,9 +26,9 @@ const ControlBar = (props) => {
       <div className="main">
         <Grid>
           <Row>
-            <Col lg={4} md={4} sm={4} className="left">
+            <Col lg={2} md={2} sm={2} className="left">
               <b>
-                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>{topicInfo.name}</LinkWithFilters>
+                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters> {topicInfo.name}
               </b>
               &nbsp; &nbsp;
               <small>
@@ -36,11 +37,13 @@ const ControlBar = (props) => {
                 </LinkWithFilters>
               </small>
             </Col>
-            <Col lg={4} md={4} sm={4} >
+            <Col lg={2} md={2} sm={2} >
               {focusSelector}
             </Col>
+            <Col lg={4} md={2} sm={2} />
             <Col lg={4} md={4} sm={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
+              <CreateSnapshotButton />
             </Col>
           </Row>
         </Grid>

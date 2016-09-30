@@ -40,7 +40,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
           content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
         }
         return (
-          <div className="helpful">
+          <span className="helpful">
             <ChildComponent {...this.props} helpButton={helpButton} />
             <Dialog
               title={formatMessage(contentTitleMsgId)}
@@ -51,7 +51,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
             >
               {content}
             </Dialog>
-          </div>
+          </span>
         );
       }
     }
