@@ -25,7 +25,7 @@ class SnapshotListItem extends React.Component {
     const clickHandler = (isCompleted) ? this.handleClick : null;
     const disabledClass = (isCompleted) ? '' : 'disabled';
     const selectedClass = (selected === true) ? 'selected' : '';
-    const rootClasses = `snapshot-item ${disabledClass} ${selectedClass}`;
+    const rootClasses = `popup-item snapshot-item ${disabledClass} ${selectedClass}`;
     return (
       <div className={rootClasses} onClick={clickHandler}>
         <div className="title">{ label }</div>

@@ -1,14 +1,11 @@
 import React from 'react';
 import { push } from 'react-router-redux';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import { fetchTopicFocalSetsList, filterByFocus } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { filteredLocation } from '../../util/paging';
-import LinkWithFilters from '../LinkWithFilters';
-import messages from '../../../resources/messages';
+import FocusSelector from './FocusSelector';
 
 const REMOVE_FOCUS = 0;
 
@@ -19,41 +16,15 @@ class FocusSelectorContainer extends React.Component {
       fetchData(nextProps.topicId, nextProps.snapshotId);
     }
   }
-  handleChange = (event, index, value) => {
-    const { handleFocusSelected } = this.props;
-    handleFocusSelected(value);
-  }
   render() {
-    const { foci, topicId, selectedFocus } = this.props;
-    const { formatMessage } = this.props.intl;
-    let content = null;
-    const selectedId = (selectedFocus !== null) ? selectedFocus.foci_id : null;
-    if (foci.length !== 0) {
-      content = (
-        <div>
-          <SelectField
-            value={selectedId}
-            onChange={this.handleChange}
-            hintText={formatMessage(messages.focusPick)}
-          >
-            {foci.map(f =>
-              <MenuItem key={f.foci_id} value={f.foci_id} primaryText={`${f.focalSet.name}: ${f.name}`} />
-            )}
-            <MenuItem key={REMOVE_FOCUS} value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
-          </SelectField>
-          <LinkWithFilters to={`/topics/${topicId}/foci/manage`}>
-            <FormattedMessage {...messages.manage} />
-          </LinkWithFilters>
-        </div>
-      );
-    } else {
-      content = (
-        <LinkWithFilters to={`/topics/${topicId}/foci/create`}>
-          <FormattedMessage {...messages.focusCreate} />
-        </LinkWithFilters>
-      );
-    }
-    return content;
+    const { foci, selectedFocus, handleFocusSelected } = this.props;
+    return (
+      <FocusSelector
+        selectedId={(selectedFocus) ? selectedFocus.foci_id : null}
+        foci={foci}
+        onFocusSelected={handleFocusSelected}
+      />
+    );
   }
 }
 

@@ -63,7 +63,7 @@ class SnapshotSelector extends React.Component {
     }
     const selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
     return (
-      <div className="snapshot-selector">
+      <div className="popup-selector snapshot-selector">
         <div className="label">
           {selectedDate}
         </div>
@@ -78,8 +78,8 @@ class SnapshotSelector extends React.Component {
         <Popover
           open={this.state.isPopupOpen}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
           onRequestClose={this.handlePopupRequestClose}
           animation={PopoverAnimationVertical}
           className="popup-list"

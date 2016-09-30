@@ -1,20 +1,22 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import IconButton from 'material-ui/IconButton';
 import { Popover, PopoverAnimationVertical } from 'material-ui/Popover';
-import moment from 'moment';
-import messages from '../../../resources/messages';
-import SnapshotListItem from './SnapshotListItem';
+import FocusListItem from './FocusListItem';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { getBrandDarkColor } from '../../../styles/colors';
+import { REMOVE_FOCUS } from './FocusSelectorContainer';
 
 const localMessages = {
-  helpTitle: { id: 'snapshot.selector.help.title', defaultMessage: 'About Snapshots' },
-  helpText: { id: 'snapshot.selector.help.text',
-    defaultMessage: '<p>A Snapshot is a fronzen-in-time collection of all the content in your Topic.  You can\'t change anything within a Snapshot; you can just browse and explore it.  If you want to make any changes you need to generate a new Snapshot.  They are frozen-in-time so you can use them for reproduceable research; you wouldn\'t want your changing out from under you while you are analyzing it, or once you have published a report.</p><p>Click the arrow to see a popup list of the other Snapshots within this topic.  Click one from the list that appears to switch to it.</p>',
+  pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
+  noFocus: { id: 'focus.none', defaultMessage: 'No Focus' },
+  helpTitle: { id: 'focus.selector.help.title', defaultMessage: 'About Foci' },
+  helpText: { id: 'focus.selector.help.text',
+    defaultMessage: '<p>Foci let you slice and dice your Topic.</p>',
   },
 };
 
-class SnapshotSelector extends React.Component {
+class FocusSelector extends React.Component {
 
   constructor(props) {
     super(props);
@@ -37,71 +39,78 @@ class SnapshotSelector extends React.Component {
     });
   }
 
-  handleSnapshotSelected = (snapshotId) => {
+  handleFocusSelected = (focusId) => {
     this.handlePopupRequestClose();
-    const { onSnapshotSelected } = this.props;
-    onSnapshotSelected(snapshotId);
+    const { onFocusSelected } = this.props;
+    onFocusSelected(focusId);
   }
 
   render() {
-    const { snapshots, selectedId, helpButton } = this.props;
-    const { formatMessage, formatDate } = this.props.intl;
+    const { foci, selectedId, helpButton } = this.props;
+    const { formatMessage } = this.props.intl;
     const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
-    // default to select first if you need to
-    let selected = snapshots.find(snapshot => (snapshot.snapshots_id === selectedId));
-    if (selected === null) {
-      selected = snapshots[0];
-    }
-    const selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
+    // default to none
+    const selected = foci.find(focus => (focus.foci_id === selectedId));
+    const selectedSummary = (selected) ? selected.name : <FormattedMessage {...localMessages.pickFocus} />;
     return (
-      <div className="snapshot-selector">
-        <div className="label">
-          {selectedDate} {helpButton}
-        </div>
-        <IconButton
-          iconClassName="material-icons"
-          tooltip={formatMessage(messages.snapshotChange)}
-          onClick={this.handlePopupOpenClick}
-          iconStyle={{ color: 'white' }}
-        >
-          {icon}
-        </IconButton>
-        <Popover
-          open={this.state.isPopupOpen}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          onRequestClose={this.handlePopupRequestClose}
-          animation={PopoverAnimationVertical}
-          className="popup-list"
-        >
-          {snapshots.map(snapshot =>
-            <SnapshotListItem
-              key={snapshot.snapshots_id}
-              id={snapshot.snapshots_id}
-              snapshot={snapshot}
-              selected={snapshot.snapshots_id === selectedId}
-              onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
+      <div className="focus-selector-wrapper">
+        <div className="popup-selector focus-selector">
+          <div className="label">
+            {selectedSummary}
+          </div>
+          <IconButton
+            iconClassName="material-icons"
+            tooltip={formatMessage(localMessages.pickFocus)}
+            onClick={this.handlePopupOpenClick}
+            iconStyle={{ color: getBrandDarkColor() }}
+          >
+            {icon}
+          </IconButton>
+          <Popover
+            open={this.state.isPopupOpen}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            onRequestClose={this.handlePopupRequestClose}
+            animation={PopoverAnimationVertical}
+            className="popup-list"
+          >
+            {foci.map(focus =>
+              <FocusListItem
+                key={focus.foci_id}
+                id={focus.foci_id}
+                focus={focus}
+                selected={focus.foci_id === selectedId}
+                onSelected={() => { this.handleFocusSelected(focus.foci_id); }}
+              />
+            )}
+            <FocusListItem
+              key={REMOVE_FOCUS}
+              id={REMOVE_FOCUS}
+              focus={{ foci_id: REMOVE_FOCUS, name: formatMessage(localMessages.noFocus) }}
+              selected={false}
+              onSelected={() => { this.handleFocusSelected(focus.foci_id); }}
             />
-          )}
-        </Popover>
+          </Popover>
+        </div>
+        {helpButton}
       </div>
     );
   }
 
 }
 
-SnapshotSelector.propTypes = {
-  snapshots: React.PropTypes.array.isRequired,
+FocusSelector.propTypes = {
+  foci: React.PropTypes.array.isRequired,
   selectedId: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
-  onSnapshotSelected: React.PropTypes.func,
+  onFocusSelected: React.PropTypes.func,
   helpButton: React.PropTypes.node.isRequired,
 };
 
 export default
   injectIntl(
     composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
-      SnapshotSelector
+      FocusSelector
     )
   );

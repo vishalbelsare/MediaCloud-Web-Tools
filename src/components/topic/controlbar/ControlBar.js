@@ -37,10 +37,10 @@ const ControlBar = (props) => {
                 </LinkWithFilters>
               </small>
             </Col>
-            <Col lg={2} md={2} sm={2} >
+            <Col lg={4} md={4} sm={4} >
               {focusSelector}
             </Col>
-            <Col lg={4} md={2} sm={2} />
+            <Col lg={2} md={2} sm={2} />
             <Col lg={4} md={4} sm={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
               <CreateSnapshotButton />

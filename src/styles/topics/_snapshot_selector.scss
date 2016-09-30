@@ -1,48 +1,8 @@
 @import '../constants';
 
-.snapshot-selector {
-  
-  color: $white;
-  display: block;
-  padding-left: 20px;
-  background-color: $material-grey900;
-  float: right;
-
-  .label {
-    font-size: 13px;
-    line-height: 48px;
-    display: inline-block;
-    vertical-align: center;
-  }
-
-  .popup-list {
-    max-height: 300px;
-    overflow-y: scroll;
-  }
-
-}
-
-.snapshot-item {
-  padding: 10px;
-  background-color: $material-grey900;
-  border-top: 1px solid $material-grey800;
-  color: $white;
-  font-size: 13px;
-  cursor: pointer;
-
-  &.disabled {
-    color: $material-grey500;
-    cursor: default;
-  }
-
-  &.selected {
-    color: $topics-primary;
-  }
-
-}
-
 .controlbar-topic {
   .snapshot-selector {
+	float: right;
     display: inline-block;
   }
 }
