@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
-import { filteredLinkTo } from '../LinkWithFilters';
+import { filteredLinkTo } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },

@@ -26,3 +26,14 @@ export function filteredLocation(location, filters) {
     },
   });
 }
+
+export function filteredLinkTo(to, filters) {
+  return {
+    pathname: to,
+    query: {
+      snapshotId: filters.snapshotId,
+      timespanId: filters.timespanId,
+      focusId: filters.focusId,
+    },
+  };
+}

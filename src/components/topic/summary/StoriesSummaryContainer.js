@@ -8,7 +8,7 @@ import DataCard from '../../common/DataCard';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 import messages from '../../../resources/messages';
-import { filteredLinkTo } from '../LinkWithFilters';
+import { filteredLinkTo } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },

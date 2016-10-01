@@ -10,7 +10,7 @@ import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { pagedAndSortedLocation } from '../../util/paging';
+import { pagedAndSortedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {

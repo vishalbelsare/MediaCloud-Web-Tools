@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicsList } from '../../../actions/topicActions';
-import { pagedLocation } from '../../util/paging';
+import { pagedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
 

@@ -6,7 +6,7 @@ import TimespanCollapsed from './TimespanCollapsed';
 import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import { filteredLocation } from '../../../util/paging';
+import { filteredLocation } from '../../../util/location';
 
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {

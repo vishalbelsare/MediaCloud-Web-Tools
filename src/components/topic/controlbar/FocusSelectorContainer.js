@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchTopicFocalSetsList, filterByFocus } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { filteredLocation } from '../../util/paging';
+import { filteredLocation } from '../../util/location';
 import FocusSelector from './FocusSelector';
 
 const REMOVE_FOCUS = 0;

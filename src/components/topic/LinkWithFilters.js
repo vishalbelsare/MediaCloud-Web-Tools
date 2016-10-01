@@ -1,17 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-
-export function filteredLinkTo(to, filters) {
-  return {
-    pathname: to,
-    query: {
-      snapshotId: filters.snapshotId,
-      timespanId: filters.timespanId,
-      focusId: filters.focusId,
-    },
-  };
-}
+import { filteredLinkTo } from '../util/location';
 
 /**
  * Use to include filters in a topic-related link by default.  Treat this as a drop-in
@@ -40,7 +30,7 @@ const mapStateToProps = state => ({
   defaultFilters: state.topics.selected.filters,
 });
 
-export default connect(
-  mapStateToProps,
-  null
-)(LinkWithFilters);
+export default
+  connect(mapStateToProps)(
+    LinkWithFilters
+  );

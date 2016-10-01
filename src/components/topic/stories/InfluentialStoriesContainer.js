@@ -11,7 +11,7 @@ import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { pagedAndSortedLocation } from '../../util/paging';
+import { pagedAndSortedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {
