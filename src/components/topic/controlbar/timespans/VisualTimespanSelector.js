@@ -15,9 +15,9 @@ class VisualTimespanSelector extends React.Component {
   render() {
     const { containerWidth, timespans, selectedTimespan, onTimespanSelected, startDate, endDate } = this.props;
     const horizontalPadding = 30;
-    const verticalPadding = 20;
+    const verticalPadding = 0;
     const width = containerWidth - horizontalPadding;
-    const height = 60;
+    const height = 38;
     const node = ReactFauxDOM.createElement('svg');
     const dateRange = [startDate, endDate];
     const xScale = d3.scaleUtc().domain(dateRange).range([0, width - (horizontalPadding * 2)]);

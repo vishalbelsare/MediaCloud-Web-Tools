@@ -1,7 +1,39 @@
 @import '../_constants';
 
+.timespan-selector {
+  a.greyed {
+    color: $material-grey500;
+    &:hover {
+      border-bottom: 1px dotted;
+      color: $topics-primary;
+    }
+  }
+  .center {
+    text-align: center;
+  }
+  .toggle-control {
+    float: right;
+  }
+  .timespan-period-selector {
+    a {
+      margin-right: 8px;
+      &.selected {
+        color: $topics-primary;
+      }
+    }
+  }
+}
+
+.controlbar-topic {
+  .timespan-selector {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
 .visual-timespan-selector {
-  
+  margin-top: 8px;
+
   .xaxis {
     fill: none;
     stroke: $material-grey700;
@@ -27,32 +59,6 @@
     stroke: $white;
     stroke-opacity: 0.5;
     cursor: pointer;
-  }
-
-}
-
-.controlbar-topic {
-
-  .timespan-selector {
-
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    .period-controls a {
-      margin-right: 8px;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .toggle-control {
-      float: right;
-      a {
-        color: $material-grey500;
-      }
-    }
-
   }
 
 }

@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import TimespanExpanded from './TimespanExpanded';
-import TimespanCollapsed from './TimespanCollapsed';
 import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { filteredLocation } from '../../../util/location';
+import TimespanSelector from './TimespanSelector';
 
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -21,35 +20,24 @@ class TimespanSelectorContainer extends React.Component {
     const { topicId, filters, timespanId, fetchData, selectedTimespan } = this.props;
     fetchData(topicId, filters.snapshotId, filters.focusId, timespanId, selectedTimespan);
   }
-  handleExpand = (evt) => {
-    const { setExpanded } = this.props;
-    evt.preventDefault();
-    setExpanded(true);
-  }
-  handleCollapse = (evt) => {
-    const { setExpanded } = this.props;
-    evt.preventDefault();
-    setExpanded(false);
-  }
   render() {
-    const { timespans, selectedTimespan, handleTimespanSelected, onPeriodSelected, isVisible, selectedPeriod } = this.props;
+    const { timespans, selectedTimespan, setExpanded, handleTimespanSelected, handlePeriodSelected, isVisible, selectedPeriod } = this.props;
     let content = null;
     if ((timespans.length > 0) && (selectedTimespan !== null) && (selectedTimespan !== undefined)) {
-      if (isVisible) {
-        content = (<TimespanExpanded
+      content = (
+        <TimespanSelector
           timespans={timespans}
+          isExpanded={isVisible}
+          selectedPeriod={selectedPeriod}
           selectedTimespan={selectedTimespan}
           onTimespanSelected={handleTimespanSelected}
-          selectedPeriod={selectedPeriod}
-          onPeriodSelected={onPeriodSelected}
-          onCollapse={this.handleCollapse}
-        />);
-      } else {
-        content = <TimespanCollapsed timespan={selectedTimespan} onExpand={this.handleExpand} />;
-      }
+          onPeriodSelected={handlePeriodSelected}
+          setExpanded={setExpanded}
+        />
+      );
     }
     return (
-      <div className="timespan-selector">
+      <div className="timespan-selector-wrapper">
         {content}
       </div>
     );
@@ -65,7 +53,7 @@ TimespanSelectorContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   handleTimespanSelected: React.PropTypes.func.isRequired,
   setExpanded: React.PropTypes.func.isRequired,
-  onPeriodSelected: React.PropTypes.func.isRequired,
+  handlePeriodSelected: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   timespans: React.PropTypes.array.isRequired,
@@ -92,7 +80,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onPeriodSelected: (period) => {
+  handlePeriodSelected: (period) => {
     dispatch(setTimespanVisiblePeriod(period));
   },
   setExpanded: (isExpanded) => {
