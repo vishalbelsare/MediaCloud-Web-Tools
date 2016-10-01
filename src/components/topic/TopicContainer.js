@@ -11,13 +11,13 @@ import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 class TopicContainer extends React.Component {
   componentWillMount() {
     const { topicId, selectNewTopic } = this.props;
-    console.log('componentWillMount');
+    // console.log('componentWillMount');
     selectNewTopic(topicId);
   }
   componentWillReceiveProps(nextProps) {
     const { topicId, selectNewTopic } = this.props;
     if ((nextProps.topicId !== topicId)) {
-      console.log('componentWillReceiveProps');
+      // console.log('componentWillReceiveProps');
       selectNewTopic(topicId);
     }
   }
