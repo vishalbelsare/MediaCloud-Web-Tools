@@ -9,6 +9,24 @@ import messages from '../../resources/messages';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
+  componentWillMount() {
+    const { topicId, selectNewTopic } = this.props;
+    console.log('componentWillMount');
+    selectNewTopic(topicId);
+  }
+  componentWillReceiveProps(nextProps) {
+    const { topicId, selectNewTopic } = this.props;
+    if ((nextProps.topicId !== topicId)) {
+      console.log('componentWillReceiveProps');
+      selectNewTopic(topicId);
+    }
+  }
+/*
+  shouldComponentUpdate(nextProps) {
+    const { topicId } = this.props;
+    return nextProps.topicId !== topicId;
+  }
+*/
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
@@ -40,6 +58,7 @@ TopicContainer.propTypes = {
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
+  selectNewTopic: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
@@ -56,8 +75,10 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  selectNewTopic: (topicId) => {
+    dispatch(selectTopic(topicId));
+  },
   asyncFetch: () => {
-    dispatch(selectTopic(ownProps.params.topicId));
     dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
   handleGenerateSnapshotRequest: () => {
