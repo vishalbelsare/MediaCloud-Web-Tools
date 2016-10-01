@@ -12,12 +12,13 @@ const localMessages = {
 };
 
 const CreateSnapshotButton = (props) => {
-  const { helpButton } = props;
+  const { helpButton, topicId } = props;
   const { formatMessage } = props.intl;
   return (
     <div className="create-snapshot">
       <AddButton
         tooltip={formatMessage(localMessages.createSnapshot)}
+        linkTo={`/topics/${topicId}/snapshots/build`}
       />
       <span className="message"><FormattedMessage {...localMessages.createSnapshot} /></span>
       {helpButton}
@@ -27,6 +28,7 @@ const CreateSnapshotButton = (props) => {
 
 CreateSnapshotButton.propTypes = {
   intl: React.PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   helpButton: React.PropTypes.node.isRequired,
 };
 

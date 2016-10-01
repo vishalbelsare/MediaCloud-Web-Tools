@@ -18,6 +18,7 @@ import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
+import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -42,6 +43,8 @@ const topicRoutes = (
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
       </Route>
+
+      <Route path="/topics/:topicId/snapshot/" component={SnapshotBuilder} />
 
       <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
       <Route path="/topics/:topicId/foci/manage" component={ManageFocalSetsContainer} />

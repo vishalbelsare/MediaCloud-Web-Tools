@@ -40,7 +40,7 @@ const ControlBar = (props) => {
             <Col lg={2} md={2} sm={2} />
             <Col lg={4} md={4} sm={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
-              <CreateSnapshotButton />
+              <CreateSnapshotButton topicId={topicId} />
             </Col>
           </Row>
         </Grid>
