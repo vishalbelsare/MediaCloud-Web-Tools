@@ -29,7 +29,15 @@
   
   &.app-icon-add {
     svg {
-      margin-top: 8px;
+      margin-top: 9px;
+      margin-left: 1px;
+    }
+  }
+
+  &.app-icon-settings {
+    svg {
+      margin-top: 5px;
+      margin-left: 0px;
     }
   }
 

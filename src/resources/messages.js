@@ -83,6 +83,7 @@ const messages = {
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
   search: { id: 'search', defaultMessage: 'Search' },
+  settings: { id: 'settings', defaultMessage: 'Settings' },
   searchByKeywords: { id: 'source.title.query', defaultMessage: 'Search By Keywords' },
   next: { id: 'bext', defaultMessage: 'Next' },
   manage: { id: 'manage', defaultMessage: 'manage' },

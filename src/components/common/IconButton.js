@@ -12,6 +12,7 @@ import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
 import FilledStar from './icons/FilledStar';
 import EmptyStar from './icons/EmptyStar';
+import SettingsIcon from './icons/SettingsIcon';
 
 /**
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
@@ -73,3 +74,5 @@ export const FavoriteBorderButton = composeIconButton(EmptyStar, messages.favori
 export const ArrowDropDownButton = composeIconButton(ArrowDropDownIcon, messages.open);
 
 export const ArrowDropUpButton = composeIconButton(ArrowDropUpIcon, messages.close);
+
+export const SettingsButton = composeIconButton(SettingsIcon, messages.settings);

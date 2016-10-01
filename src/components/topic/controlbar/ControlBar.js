@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
 import LinkWithFilters from '../LinkWithFilters';
+import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
-
-const localMessages = {
-  settingsControlBarLink: { id: 'controlbar.settings.link', defaultMessage: 'settings' },
-};
+import { SettingsButton } from '../../common/IconButton';
 
 const ControlBar = (props) => {
   const { topicInfo, topicId, location, filters } = props;
@@ -27,15 +25,14 @@ const ControlBar = (props) => {
         <Grid>
           <Row>
             <Col lg={2} md={2} sm={2} className="left">
+              <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
+              &nbsp;
               <b>
-                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters> {topicInfo.name}
+                {topicInfo.name}
               </b>
-              &nbsp; &nbsp;
-              <small>
-                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/settings`}>
-                  ( <FormattedMessage {...localMessages.settingsControlBarLink} /> )
-                </LinkWithFilters>
-              </small>
+              <SettingsButton
+                linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
+              />
             </Col>
             <Col lg={4} md={4} sm={4} >
               {focusSelector}
