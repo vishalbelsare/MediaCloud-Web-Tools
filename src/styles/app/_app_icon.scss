@@ -15,6 +15,12 @@
   border-radius: 13px;
   display: inline-block;
 
+  &.app-icon-medium {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+  }
+
   &.app-icon-download {
     svg {
       margin-top: 6px;
@@ -29,7 +35,7 @@
   
   &.app-icon-add {
     svg {
-      margin-top: 9px;
+      margin-top: 7px;
       margin-left: 1px;
     }
   }
@@ -42,9 +48,13 @@
   }
 
   &.app-icon-delete {
-    background-color: $material-orange500 !important;
+    background-color: $material-grey400;
     svg {
-      margin-top: 10px;
+      margin-top: 8px;
+      margin-left: 1px;
+    }
+    &:hover {
+      background-color: #fc521f !important;
     }
   }
 
@@ -56,6 +66,10 @@
     svg {
       margin-top: 4px;
     }
+  }
+
+  &.app-icon-keyword-search {
+    width: 100px;
   }
 
 }

@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
-  from '../../../../lib/focalTechniques';
+  from '../../../../../lib/focalTechniques';
 
 const localMessages = {
   title: { id: 'focus.techniquePicker.title', defaultMessage: 'Pick a Focal Technique' },

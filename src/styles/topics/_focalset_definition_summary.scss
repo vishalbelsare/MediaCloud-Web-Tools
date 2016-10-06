@@ -1,0 +1,23 @@
+@import '../constants';
+
+.focal-set-definition-summary {
+  
+  .controls {
+    .icon-button-link {
+      margin-right: 6px;
+    }
+  }
+
+  .focus-definition {
+    background-color: #efefef;
+    padding: 10px;
+    .controls {
+      float: right;
+    }
+    p {
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+  }
+
+}

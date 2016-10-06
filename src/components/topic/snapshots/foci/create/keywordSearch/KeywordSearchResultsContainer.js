@@ -2,9 +2,9 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { fetchCreateFocusKeywordStories } from '../../../../../actions/topicActions';
-import composeAsyncContainer from '../../../../common/AsyncContainer';
-import StoryTable from '../../../StoryTable';
+import { fetchCreateFocusKeywordStories } from '../../../../../../actions/topicActions';
+import composeAsyncContainer from '../../../../../common/AsyncContainer';
+import StoryTable from '../../../../StoryTable';
 
 const STORIES_TO_SHOW = 20;
 

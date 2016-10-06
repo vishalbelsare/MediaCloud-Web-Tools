@@ -18,7 +18,7 @@ const CreateSnapshotButton = (props) => {
     <div className="create-snapshot">
       <AddButton
         tooltip={formatMessage(localMessages.createSnapshot)}
-        linkTo={`/topics/${topicId}/snapshots/build`}
+        linkTo={`/topics/${topicId}/snapshot`}
       />
       <span className="message"><FormattedMessage {...localMessages.createSnapshot} /></span>
       {helpButton}

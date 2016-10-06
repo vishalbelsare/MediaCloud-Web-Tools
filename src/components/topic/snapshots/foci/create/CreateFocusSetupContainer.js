@@ -7,11 +7,11 @@ import TextField from 'material-ui/TextField';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID, FocalSetDefinitionSelector } from './FocalSetDefinitionSelector';
-import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../actions/topicActions';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
-import messages from '../../../../resources/messages';
-import composeAsyncContainer from '../../../common/AsyncContainer';
-import { notEmptyString } from '../../../../lib/formValidators';
+import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import messages from '../../../../../resources/messages';
+import composeAsyncContainer from '../../../../common/AsyncContainer';
+import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
