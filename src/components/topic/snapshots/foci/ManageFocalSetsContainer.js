@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import RaisedButton from 'material-ui/RaisedButton';
+import Link from 'react-router/lib/Link';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import ConfirmationDialog from '../../../common/ConfirmationDialog';
-import { fetchFocalSetDefinitions, deleteFocalSetDefinition, setTopicNeedsNewSnapshot, generateSnapshot }
+import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefinition, setTopicNeedsNewSnapshot, generateSnapshot }
   from '../../../../actions/topicActions';
 import { updateFeedback } from '../../../../actions/appActions';
 import messages from '../../../../resources/messages';
@@ -15,18 +17,15 @@ const localMessages = {
   focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Focal Sets' },
   focalSetsManageAbout: { id: 'focalSets.manage.about',
     defaultMessage: 'Every Focus is part of a Focal Set. All the Foci within a Focal Set share the same Focal Technique. Our tools lets you compare Foci with a Focal Set, but they don\'t let you easily compare Foci in different Focal Sets.' },
-  removeTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove It?' },
-  removeAbout: { id: 'focalSets.manage.remove.about', defaultMessage: '<p>Removing a Focal Set means that the next Snapshot you make will NOT include it.  This will NOT remove the Focal Set from this Snapshot.</p><p>Are you sure you want to remove this Focal Set? All the Foci that are part of it will be removed as well.</p>' },
+  removeFocalSetTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove this Focal Set?' },
+  removeFocalSetAbout: { id: 'focalSets.manage.remove.about', defaultMessage: '<p>Removing a Focal Set means that the next Snapshot you make will NOT include it.  This will NOT remove the Focal Set from this Snapshot.</p><p>Are you sure you want to remove this Focal Set? All the Foci that are part of it will be removed as well.</p>' },
   removeOk: { id: 'focalSets.manage.remove.ok', defaultMessage: 'Remove It' },
-  removeSucceeded: { id: 'focalSets.manage.remove.succeeded', defaultMessage: 'Removed the Focal Set' },
-  removeFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Focal Set failed :-(' },
-  focalSetsDefsListTitle: { id: 'focalSet.manage.defsList.title', defaultMessage: 'Focal Sets for the Next Snapshot' },
-  focalSetsDefsListAbout: { id: 'focalSet.manage.defsList.about',
-    defaultMessage: 'You can change the Focal Sets and Foci that will be included in the <b>next</b> Snapshot.  Here\'s a list of what will be included so far:' },
-  focalSetsListTitle: { id: 'focalSet.manage.list.title', defaultMessage: 'Focal Sets in this Snapshot' },
-  focalSetsListAbout: { id: 'focalSet.manage.list.about',
-    defaultMessage: 'You can\'t change the Focal Sets or Foci within this Snapshot.  See below to change the Focal Sets for the next Snapshot.' },
+  removeFocalSetSucceeded: { id: 'focalSets.manage.remove.succeeded', defaultMessage: 'Removed the Focal Set' },
+  removeFocalSetFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Focal Set failed :-(' },
+  removeFocusSucceeded: { id: 'focus.remove.succeeded', defaultMessage: 'Removed the Focus' },
+  removeFocusFailed: { id: 'focus.remove.failed', defaultMessage: 'Sorry, but removing the Focus failed :-(' },
   backToSnapshotBuilder: { id: 'backToSnapshotBuilder', defaultMessage: 'back to Snapshot Builder' },
+  addFocus: { id: 'focus.add', defaultMessage: 'Add a new Focus' },
 };
 
 class ManageFocalSetsContainer extends React.Component {
@@ -38,9 +37,8 @@ class ManageFocalSetsContainer extends React.Component {
     snackBarMessage: null,
   };
 
-  handleDeleteClick = (focalSet) => {
-    event.preventDefault();
-    this.setState({ removeDialogOpen: true, idToRemove: focalSet.focal_set_definitions_id });
+  handleDelete = (focalSetDef) => {
+    this.setState({ removeDialogOpen: true, idToRemove: focalSetDef.focal_set_definitions_id });
   }
 
   actuallyDelete = () => {
@@ -57,26 +55,29 @@ class ManageFocalSetsContainer extends React.Component {
     this.setState({ snackBarOpen: false, snackBarMessage: null });
   }
 
+  handleFocusDefinitionDelete = (focusDef) => {
+    const { handleFocusDefinitionDelete } = this.props;
+    handleFocusDefinitionDelete(focusDef.focus_definitions_id);
+  }
+
   render() {
     const { topicId, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
-    this.removeConfirmationDialog = (
+    const removeConfirmationDialog = (
       <ConfirmationDialog
         open={this.state.removeDialogOpen}
-        data={this.state.removeDialogData}
-        title={formatMessage(localMessages.removeTitle)}
+        title={formatMessage(localMessages.removeFocalSetTitle)}
         okText={formatMessage(localMessages.removeOk)}
         onCancel={this.doNotActuallyDelete}
         onOk={this.actuallyDelete}
       >
-        <FormattedHTMLMessage {...localMessages.removeAbout} />
+        <FormattedHTMLMessage {...localMessages.removeFocalSetAbout} />
       </ConfirmationDialog>
     );
     return (
       <div className="manage-focal-sets">
         <BackLinkingControlBar message={localMessages.backToSnapshotBuilder} linkTo={`/topics/${topicId}/snapshot`} />
         <Grid>
-
           <Row>
             <Col lg={12} md={12} sm={12}>
               <h1><FormattedMessage {...localMessages.focalSetsManageTitle} /></h1>
@@ -96,14 +97,23 @@ class ManageFocalSetsContainer extends React.Component {
                   <FocalSetDefinitionSummary
                     key={focalSetDef.focal_set_definitions_id}
                     focalSetDefinition={focalSetDef}
-                    onDeleteClick={this.handleDeleteClick}
-                    editable
+                    onDelete={this.handleDelete}
+                    onFocusDefinitionDelete={this.handleFocusDefinitionDelete}
+                    topicId={topicId}
                   />
                 )}
               </div>
             </Col>
           </Row>
+          <Row>
+            <Col lg={12}>
+              <Link to={`/topics/${topicId}/snapshot/foci/create`}>
+                <RaisedButton primary label={formatMessage(localMessages.addFocus)} />
+              </Link>
+            </Col>
+          </Row>
         </Grid>
+        {removeConfirmationDialog}
       </div>
     );
   }
@@ -121,6 +131,7 @@ ManageFocalSetsContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
   handleFocalSetDefinitionDelete: React.PropTypes.func.isRequired,
+  handleFocusDefinitionDelete: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -135,6 +146,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   removeFocalSetDefinition: (topicId, focalSetDefinitionId, succeededMessage, failedMessage) => {
     dispatch(deleteFocalSetDefinition(topicId, focalSetDefinitionId))
+      .then((results) => {
+        if (results.success === 0) {
+          dispatch(updateFeedback({ open: true, message: failedMessage }));
+        } else {
+          dispatch(updateFeedback({ open: true, message: succeededMessage }));
+          dispatch(setTopicNeedsNewSnapshot(true));
+          dispatch(fetchFocalSetDefinitions(topicId));
+        }
+      });
+  },
+  removeFocusDefinition: (topicId, focusDefinitionId, succeededMessage, failedMessage) => {
+    dispatch(deleteFocusDefinition(topicId, focusDefinitionId))
       .then((results) => {
         if (results.success === 0) {
           dispatch(updateFeedback({ open: true, message: failedMessage }));
@@ -164,8 +187,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
     handleFocalSetDefinitionDelete: (focalSetDefinitionId) => {
       dispatchProps.removeFocalSetDefinition(stateProps.topicId, focalSetDefinitionId,
-        ownProps.intl.formatMessage(localMessages.removeSucceeded),
-        ownProps.intl.formatMessage(localMessages.removeFailed)
+        ownProps.intl.formatMessage(localMessages.removeFocalSetSucceeded),
+        ownProps.intl.formatMessage(localMessages.removeFocalSetFailed)
+      );
+    },
+    handleFocusDefinitionDelete: (focusDefinitionId) => {
+      dispatchProps.removeFocusDefinition(stateProps.topicId, focusDefinitionId,
+        ownProps.intl.formatMessage(localMessages.removeFocusSucceeded),
+        ownProps.intl.formatMessage(localMessages.removeFocusFailed)
       );
     },
   });

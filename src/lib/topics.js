@@ -104,8 +104,11 @@ export function createFocusDefinition(topicId, params) {
 }
 
 export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {
-  return createApiPromise(
-    `/api/topics/${topicId}/focal-set-definitions/${focalSetDefinitionId}/delete`, null, 'delete');
+  return createApiPromise(`/api/topics/${topicId}/focal-set-definitions/${focalSetDefinitionId}/delete`, null, 'delete');
+}
+
+export function deleteFocusDefinition(topicId, focusDefinitionId) {
+  return createApiPromise(`/api/topics/${topicId}/focus-definitions/${focusDefinitionId}/delete`, null, 'delete');
 }
 
 export function topicGenerateSnapshot(topicId) {

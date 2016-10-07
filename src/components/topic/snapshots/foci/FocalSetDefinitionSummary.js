@@ -19,29 +19,21 @@ const localMessages = {
 
 class FocalSetDefinitionSummary extends React.Component {
 
-  handleOnAddClick = (event) => {
-    const { focalSetDefinition, onAddClick } = this.props;
+  handleDelete = (event) => {
+    const { focalSetDefinition, onDelete } = this.props;
     event.preventDefault();
-    if ((onAddClick !== undefined) && (onAddClick !== null)) {
-      onAddClick(focalSetDefinition);
-    }
-  }
-
-  handleOnDeleteClick = (event) => {
-    const { focalSetDefinition, onDeleteClick } = this.props;
-    event.preventDefault();
-    if ((onDeleteClick !== undefined) && (onDeleteClick !== null)) {
-      onDeleteClick(focalSetDefinition);
+    if ((onDelete !== undefined) && (onDelete !== null)) {
+      onDelete(focalSetDefinition);
     }
   }
 
   render() {
-    const { focalSetDefinition } = this.props;
+    const { focalSetDefinition, onFocusDefinitionDelete, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard className="focal-set-definition-summary">
         <Row>
-          <Col lg={9} md={9} sm={12}>
+          <Col lg={9} md={9} sm={8} xs={12}>
             <h2>
               <KeywordSearchIcon />
               <FormattedMessage
@@ -66,22 +58,26 @@ class FocalSetDefinitionSummary extends React.Component {
               />
             </p>
           </Col>
-          <Col lg={3} md={3} sm={12}>
+          <Col lg={3} md={3} sm={4} xs={12}>
             <div className="controls">
-              <AddButton onClick={this.handleOnAddClick} tooltip={formatMessage(localMessages.focalSetAdd)} />
+              <AddButton
+                tooltip={formatMessage(localMessages.focalSetAdd)}
+                linkTo={`/topics/${topicId}/snapshot/foci/create?focalSetDefId=${focalSetDefinition.focal_set_definitions_id}&focalTechnique=${focalSetDefinition.focal_technique}`}
+              />
               <FormattedMessage {...localMessages.focalSetAdd} />
               <br />
-              <DeleteButton onClick={this.handleOnDeleteClick} tooltip={formatMessage(localMessages.focalSetDelete)} />
+              <DeleteButton onClick={this.handleDelete} tooltip={formatMessage(localMessages.focalSetDelete)} />
               <FormattedMessage {...localMessages.focalSetDelete} />
             </div>
           </Col>
         </Row>
         <Row>
-          {focalSetDefinition.focus_definitions.map(focusDef => (
-            <Col lg={4} md={4} sm={12}>
+          {focalSetDefinition.focus_definitions.map((focusDef, index) => (
+            <Col lg={4} md={4} sm={6} xs={12} key={`fs-${index}`}>
               <FocusDefinition
                 key={focusDef.focus_definitions_id}
                 focusDefinition={focusDef}
+                onDelete={onFocusDefinitionDelete}
               />
             </Col>
           ))}
@@ -97,8 +93,9 @@ FocalSetDefinitionSummary.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   focalSetDefinition: React.PropTypes.object.isRequired,
-  onAddClick: React.PropTypes.func,
-  onDeleteClick: React.PropTypes.func,
+  onDelete: React.PropTypes.func.isRequired,
+  onFocusDefinitionDelete: React.PropTypes.func.isRequired,
+  topicId: React.PropTypes.number.isRequired,
 };
 
 export default

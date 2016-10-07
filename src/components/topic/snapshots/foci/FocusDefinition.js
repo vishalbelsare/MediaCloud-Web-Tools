@@ -8,11 +8,11 @@ const localMessages = {
 
 class FocusDefinition extends React.Component {
 
-  handleOnDeleteClick = (event) => {
-    const { focusDefinition, onDeleteClick } = this.props;
+  handleDelete = (event) => {
+    const { focusDefinition, onDelete } = this.props;
     event.preventDefault();
-    if ((onDeleteClick !== undefined) && (onDeleteClick !== null)) {
-      onDeleteClick(focusDefinition);
+    if ((onDelete !== undefined) && (onDelete !== null)) {
+      onDelete(focusDefinition);
     }
   }
 
@@ -22,7 +22,7 @@ class FocusDefinition extends React.Component {
     return (
       <div className="focus-definition">
         <div className="controls">
-          <DeleteButton onClick={this.handleOnDeleteClick} tooltip={formatMessage(localMessages.focusDelete)} />
+          <DeleteButton onClick={this.handleDelete} tooltip={formatMessage(localMessages.focusDelete)} />
         </div>
         <p>
           <b>{focusDefinition.name}</b>
@@ -41,7 +41,7 @@ FocusDefinition.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   focusDefinition: React.PropTypes.object.isRequired,
-  onDeleteClick: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
 };
 
 export default

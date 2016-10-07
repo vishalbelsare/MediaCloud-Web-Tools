@@ -3,9 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, fetchTopicSummary, generateSnapshot } from '../../actions/topicActions';
-import { updateFeedback } from '../../actions/appActions';
-import messages from '../../resources/messages';
+import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
@@ -32,7 +30,7 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo, needsNewSnapshot, handleGenerateSnapshotRequest } = this.props;
+    const { children, topicInfo, topicId, needsNewSnapshot } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     return (
       <div className="topic-container">
@@ -40,7 +38,7 @@ class TopicContainer extends React.Component {
           <Title render={titleHandler} />
           <NeedsNewSnapshotWarning
             needsNewSnapshot={needsNewSnapshot}
-            onGenerateSnapshotRequest={handleGenerateSnapshotRequest}
+            topicId={topicId}
           />
           {children}
         </div>
@@ -57,7 +55,6 @@ TopicContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
   selectNewTopic: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
@@ -80,16 +77,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   asyncFetch: () => {
     dispatch(fetchTopicSummary(ownProps.params.topicId));
-  },
-  handleGenerateSnapshotRequest: () => {
-    dispatch(generateSnapshot(ownProps.params.topicId))
-      .then((results) => {
-        if (results.success === 1) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
-        } else {
-          // TODO: error message!
-        }
-      });
   },
 });
 
