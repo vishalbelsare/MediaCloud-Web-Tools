@@ -1,2 +1,2 @@
-alias activate=". venv/bin/activate"
-gunicorn mediameter:app
+source venv/bin/activate
+python run.py
