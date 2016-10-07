@@ -1,18 +1,18 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContainer';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
+import ConfirmKeywordSearchContainer from './keywordSearch/ConfirmKeywordSearchContainer';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 
 const localMessages = {
-  unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
+  unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
 };
 
-const CreateFocusEditContainer = (props) => {
+const CreateFocusConfirmContainer = (props) => {
   const { topicId, properties } = props;
   let content = null;
   if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-    content = <EditKeywordSearchContainer topicId={topicId} />;
+    content = <ConfirmKeywordSearchContainer topicId={topicId} />;
   } else {
     content = <FormattedMessage {...localMessages.unimplemented} />;
   }
@@ -23,7 +23,7 @@ const CreateFocusEditContainer = (props) => {
   );
 };
 
-CreateFocusEditContainer.propTypes = {
+CreateFocusConfirmContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   // form context
@@ -39,6 +39,6 @@ const mapStateToProps = state => ({
 export default
   connect(mapStateToProps)(
     injectIntl(
-      CreateFocusEditContainer
+      CreateFocusConfirmContainer
     )
   );

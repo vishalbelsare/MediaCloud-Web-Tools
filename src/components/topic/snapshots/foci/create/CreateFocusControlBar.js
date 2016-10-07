@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import LinkWithFilters from '../../LinkWithFilters';
-import messages from '../../../../resources/messages';
+import LinkWithFilters from '../../../LinkWithFilters';
+import messages from '../../../../../resources/messages';
 
 const CreateFocusControlBar = (props) => {
   const { topicId } = props;

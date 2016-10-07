@@ -1,6 +1,7 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
+import IndexRoute from 'react-router/lib/IndexRoute';
 import HomeContainer from '../components/topic/HomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
@@ -9,8 +10,8 @@ import InfluentialMediaContainer from '../components/topic/media/InfluentialMedi
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
-import CreateFocusContainer from '../components/topic/foci/create/CreateFocusContainer';
-import ManageFocalSetsContainer from '../components/topic/foci/ManageFocalSetsContainer';
+import CreateFocusContainer from '../components/topic/snapshots/foci/create/CreateFocusContainer';
+import ManageFocalSetsContainer from '../components/topic/snapshots/foci/ManageFocalSetsContainer';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
@@ -19,6 +20,7 @@ import CreateTopicContainer from '../components/topic/create/CreateTopicContaine
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
+import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -44,10 +46,11 @@ const topicRoutes = (
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
       </Route>
 
-      <Route path="/topics/:topicId/snapshot/" component={SnapshotBuilder} />
-
-      <Route path="/topics/:topicId/foci/create" component={CreateFocusContainer} />
-      <Route path="/topics/:topicId/foci/manage" component={ManageFocalSetsContainer} />
+      <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >
+        <IndexRoute component={SnapshotHome} />
+        <Route path="/topics/:topicId/snapshot/foci" component={ManageFocalSetsContainer} />
+        <Route path="/topics/:topicId/snapshot/foci/create" component={CreateFocusContainer} />
+      </Route>
 
       <Route path="/topics/:topicId/settings" component={TopicSettingsContainer} />
 

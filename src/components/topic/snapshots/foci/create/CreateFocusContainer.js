@@ -1,11 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CreateFocusControlBar from './CreateFocusControlBar';
 import CreateFocusSetupContainer from './CreateFocusSetupContainer';
 import CreateFocusEditContainer from './CreateFocusEditContainer';
 import CreateFocusConfirmContainer from './CreateFocusConfirmContainer';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../actions/topicActions';
-import { INITIAL_STATE } from '../../../../reducers/topics/selected/focalSets/create/properties';
+import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
+import BackLinkingControlBar from '../../../BackLinkingControlBar';
+
+const localMessages = {
+  backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Foci Manager' },
+};
 
 class CreateFocusContainer extends React.Component {
 
@@ -22,9 +26,10 @@ class CreateFocusContainer extends React.Component {
       CreateFocusConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
+    console.log(currentStep);
     return (
-      <div>
-        <CreateFocusControlBar topicId={topicId} currentStep={currentStep} />
+      <div className="create-focus">
+        <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} />
         <CurrentStepComponent topicId={topicId} />
       </div>
     );

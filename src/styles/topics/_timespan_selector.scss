@@ -26,8 +26,14 @@
 
 .controlbar-topic {
   .timespan-selector {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    .timespan-period-selector {
+      margin-top: 4px;  
+    }
+    .center {
+      padding-top: 4px;
+    }
   }
 }
 

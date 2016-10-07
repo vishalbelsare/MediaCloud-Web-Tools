@@ -2,10 +2,14 @@
 
 .topic-container {
 
-	.needs-new-snapshot-warning {
-		background-color: $warning-color;
-		padding-top: 10px;
-		padding-bottom: 10px;
-	}
+  .needs-new-snapshot-warning {
+    background-color: $warning-color;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    a {
+      color: rgb(0,0,0);
+      text-decoration: underline;
+    }
+  }
 
 }

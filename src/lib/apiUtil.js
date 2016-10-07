@@ -24,7 +24,7 @@ function generateParamStr(params) {
  */
 export function createApiPromise(url, params, httpMethod = 'get') {
   let fullUrl = url;
-  if (params !== undefined) {
+  if ((params !== undefined) && (params !== null)) {
     fullUrl = `${url}?${generateParamStr(params)}`;
   }
   return fetch(fullUrl, {

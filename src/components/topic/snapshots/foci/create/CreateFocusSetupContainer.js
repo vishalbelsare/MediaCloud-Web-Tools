@@ -1,17 +1,18 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TextField from 'material-ui/TextField';
+import composeIntlForm from '../../../../common/IntlForm';
 import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID, FocalSetDefinitionSelector } from './FocalSetDefinitionSelector';
-import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../actions/topicActions';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
-import messages from '../../../../resources/messages';
-import composeAsyncContainer from '../../../common/AsyncContainer';
-import { notEmptyString } from '../../../../lib/formValidators';
+import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import messages from '../../../../../resources/messages';
+import composeAsyncContainer from '../../../../common/AsyncContainer';
+import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
@@ -36,7 +37,7 @@ class CreateFocusSetupContainer extends React.Component {
   }
 
   render() {
-    const { fields: { focusName, focusDescription }, handleSubmit, finishStep, properties, focalSetDefinitions } = this.props;
+    const { handleSubmit, renderTextField, finishStep, properties, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
     let step2Content = null;
     if (properties.focalTechnique !== null) {
@@ -54,18 +55,18 @@ class CreateFocusSetupContainer extends React.Component {
             </Row>
             <Row>
               <Col lg={4} md={4} sm={12}>
-                <TextField
-                  floatingLabelText={formatMessage(localMessages.focusName)}
-                  errorText={focusName.touched ? focusName.error : ''}
-                  {...focusName}
+                <Field
+                  name="focusName"
+                  component={renderTextField}
+                  floatingLabelText={messages.focusName}
                 />
               </Col>
               <Col lg={4} md={4} sm={12}>
-                <TextField
+                <Field
+                  name="focusDescription"
+                  component={renderTextField}
                   multiLine
                   floatingLabelText={formatMessage(localMessages.focusDescription)}
-                  errorText={focusDescription.touched ? focusDescription.error : ''}
-                  {...focusDescription}
                 />
               </Col>
               <Col lg={2} md={2} sm={0} />
@@ -121,10 +122,10 @@ class CreateFocusSetupContainer extends React.Component {
 CreateFocusSetupContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
-  // form context
+  // form composition
   intl: React.PropTypes.object.isRequired,
-  // from form helper
-  fields: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   focalSetDefinitions: React.PropTypes.array.isRequired,
@@ -134,8 +135,6 @@ CreateFocusSetupContainer.propTypes = {
   setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
-  // from LoginForm helper
-  handleSubmit: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -191,10 +190,14 @@ const reduxFormConfig = {
 };
 
 export default
-  reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps, mergeProps)(
-    composeAsyncContainer(
-      injectIntl(
-        CreateFocusSetupContainer
+  injectIntl(
+    composeIntlForm(
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+          composeAsyncContainer(
+            CreateFocusSetupContainer
+          )
+        )
       )
     )
   );

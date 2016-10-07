@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Col } from 'react-flexbox-grid/lib';
-import DeleteButton from '../../../common/DeleteButton';
+import DeleteButton from '../../../../common/DeleteButton';
 
 const localMessages = {
   focalSetDelete: { id: 'focalSets.delete', defaultMessage: 'Delete this Focal Set' },

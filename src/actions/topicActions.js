@@ -45,12 +45,13 @@ export const FETCH_FOCAL_SET_DEFINITIONS = 'FETCH_FOCAL_SET_DEFINITIONS';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const CREATE_FOCUS_DEFINITION = 'CREATE_FOCUS_DEFINITION';
 export const TOPIC_FILTER_BY_FOCUS = 'TOPIC_FILTER_BY_FOCUS';
-export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
+export const DELETE_FOCAL_SET_DEFINITION = 'DELETE_FOCAL_SET_DEFINITION';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const UPDATE_TOPIC_PERMISSION = 'UPDATE_TOPIC_PERMISSION';
 export const FETCH_TOPIC_PERMISSIONS = 'FETCH_TOPIC_PERMISSIONS';
 export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
+export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -143,7 +144,9 @@ export const fetchFocalSetDefinitions = createAsyncAction(FETCH_FOCAL_SET_DEFINI
 // pass in topicId and params (object with name, description, focal_set_definitions_id, query)
 export const createFocusDefinition = createAsyncAction(CREATE_FOCUS_DEFINITION, api.createFocusDefinition);
 // pass in topicId and focalSetDefinitionId
-export const deleteFocalSetDefinition = createAsyncAction(DELETE_FOCUS_DEFINITION, api.deleteFocalSetDefinition);
+export const deleteFocalSetDefinition = createAsyncAction(DELETE_FOCAL_SET_DEFINITION, api.deleteFocalSetDefinition);
+// pass in topicId and focusDefenitionId
+export const deleteFocusDefinition = createAsyncAction(DELETE_FOCUS_DEFINITION, api.deleteFocusDefinition);
 
 // pass in a boolean
 export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHOT, needsNewSnapshot => needsNewSnapshot);

@@ -10,8 +10,8 @@ import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
-import FilledStar from './icons/FilledStar';
-import EmptyStar from './icons/EmptyStar';
+import FilledStarIcon from './icons/FilledStarIcon';
+import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
 
 /**
@@ -67,9 +67,9 @@ export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
 
-export const FavoriteButton = composeIconButton(FilledStar, messages.unfavorite);
+export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
 
-export const FavoriteBorderButton = composeIconButton(EmptyStar, messages.favorite);
+export const FavoriteBorderButton = composeIconButton(EmptyStarIcon, messages.favorite);
 
 export const ArrowDropDownButton = composeIconButton(ArrowDropDownIcon, messages.open);
 

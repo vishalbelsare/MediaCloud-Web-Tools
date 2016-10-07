@@ -6,10 +6,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import { push } from 'react-router-redux';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties, generateSnapshot }
-  from '../../../../../actions/topicActions';
-import { updateFeedback } from '../../../../../actions/appActions';
-import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
-import messages from '../../../../../resources/messages';
+  from '../../../../../../actions/topicActions';
+import { updateFeedback } from '../../../../../../actions/appActions';
+import { INITIAL_STATE } from '../../../../../../reducers/topics/selected/focalSets/create/properties';
+import messages from '../../../../../../resources/messages';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },

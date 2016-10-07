@@ -26,7 +26,8 @@ const TimespanSelector = (props) => {
   const latestTimespanEnd = d3.max(timespans.map(t => t.endDateObj));
   let expandControl = null;
   if (isExpanded) {
-    expandControl = (<a href="#hide-timespans" className="greyed" onClick={(evt) => { evt.preventDefault(); setExpanded(false); }}>
+    // we have to set back the selected period to match the selectedTimespan's period when they collapse the UI
+    expandControl = (<a href="#hide-timespans" className="greyed" onClick={(evt) => { evt.preventDefault(); onPeriodSelected(selectedTimespan.period); setExpanded(false); }}>
       <FormattedMessage {...localMessages.timespansHide} />
     </a>);
   } else {
