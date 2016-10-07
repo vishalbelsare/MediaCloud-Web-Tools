@@ -14,7 +14,7 @@ import FocalSetDefinitionSummary from './FocalSetDefinitionSummary';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
 
 const localMessages = {
-  focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Focal Sets' },
+  focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Foci' },
   focalSetsManageAbout: { id: 'focalSets.manage.about',
     defaultMessage: 'Every Focus is part of a Focal Set. All the Foci within a Focal Set share the same Focal Technique. Our tools lets you compare Foci with a Focal Set, but they don\'t let you easily compare Foci in different Focal Sets.' },
   removeFocalSetTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove this Focal Set?' },

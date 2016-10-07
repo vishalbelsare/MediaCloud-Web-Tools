@@ -45,7 +45,7 @@ class FocalTechniqueSelector extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg={2} md={2} sm={6}>
+          <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectBooleanQuery}
               selected={selected === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
@@ -55,7 +55,7 @@ class FocalTechniqueSelector extends React.Component {
               descriptionMsg={localMessages.keywordDescription}
             />
           </Col>
-          <Col lg={2} md={2} sm={6}>
+          <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectReferenceSetUpload}
               selected={selected === FOCAL_TECHNIQUE_REFERENCE_SET}
@@ -67,7 +67,7 @@ class FocalTechniqueSelector extends React.Component {
               comingSoon
             />
           </Col>
-          <Col lg={2} md={2} sm={6}>
+          <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectCommunityDetection}
               selected={selected === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
@@ -79,7 +79,7 @@ class FocalTechniqueSelector extends React.Component {
               comingSoon
             />
           </Col>
-          <Col lg={2} md={2} sm={6}>
+          <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectAutoMatic}
               selected={selected === FOCAL_TECHNIQUE_AUTO_MAGIC}
