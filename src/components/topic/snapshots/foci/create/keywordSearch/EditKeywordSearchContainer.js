@@ -1,21 +1,24 @@
 import React from 'react';
-import { reduxForm } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import composeIntlForm from '../../../../../common/IntlForm';
 import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../../actions/topicActions';
 import messages from '../../../../../../resources/messages';
 import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
+import { notEmptyString } from '../../../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Edit Your New "{name}" Focus' },
   about: { id: 'focus.create.edit.about',
     defaultMessage: 'This Focus is driven by a keyword search.  Any stories that match to boolean query you create will be included in the Focus for analysis together.' },
+  errorNoKeywords: { id: 'focalTechnique.boolean.keywords.error', defaultMessage: 'You need to specify some keywords.' },
 };
 
 const EditKeywordSearchContainer = (props) => {
-  const { fields: { keywords }, topicId, handleSubmit, handleSearchClick, finishStep, properties } = props;
+  const { topicId, renderTextField, handleSubmit, handleSearchClick, finishStep, properties } = props;
   const { formatMessage } = props.intl;
   let previewContent = null;
   if ((properties.keywords !== null) && (properties.keywords !== undefined) && (properties.keywords.length > 0)) {
@@ -39,11 +42,10 @@ const EditKeywordSearchContainer = (props) => {
         </Row>
         <Row>
           <Col lg={8} md={8} sm={10}>
-            <TextField
-              floatingLabelText={formatMessage(messages.searchByKeywords)}
-              errorText={keywords.touched ? keywords.error : ''}
-              fullWidth
-              {...keywords}
+            <Field
+              name="keywords"
+              component={renderTextField}
+              floatingLabelText={messages.searchByKeywords}
             />
           </Col>
           <Col lg={2} md={2} sm={2}>
@@ -59,10 +61,6 @@ const EditKeywordSearchContainer = (props) => {
 EditKeywordSearchContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
-  // form context
-  intl: React.PropTypes.object.isRequired,
-  // from form helper
-  fields: React.PropTypes.object.isRequired,
   // from state
   properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
@@ -71,8 +69,10 @@ EditKeywordSearchContainer.propTypes = {
   finishStep: React.PropTypes.func.isRequired,
   handleSearchClick: React.PropTypes.func.isRequired,
   goToStep: React.PropTypes.func.isRequired,
-  // from LoginForm helper
+  // from compositional helper
+  intl: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -83,9 +83,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setProperties: (properties) => {
     dispatch(setNewFocusProperties(properties));
-  },
-  searchForStories: (keywords) => {
-    dispatch(setNewFocusProperties({ keywords }));
   },
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
@@ -102,7 +99,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.goToStep(2);
     },
     handleSearchClick: () => {
-      const keywords = stateProps.formData.keywords.value;
+      const keywords = stateProps.formData.values.keywords;
       dispatchProps.setProperties({ keywords });
     },
   });
@@ -110,22 +107,25 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 function validate(values) {
   const errors = {};
-  if (!values.keywords || values.keywords.trim() === '') {
-    errors.focusName = ('You need to specify some keywords.');
+  if (!notEmptyString(values.keywords)) {
+    errors.focusName = localMessages.errorNoKeywords;
   }
   return errors;
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup',
-  fields: ['keywords'],
+  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };
 
 export default
-  reduxForm(reduxFormConfig, mapStateToProps, mapDispatchToProps, mergeProps)(
-    injectIntl(
-      EditKeywordSearchContainer
+  injectIntl(
+    composeIntlForm(
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+          EditKeywordSearchContainer
+        )
+      )
     )
   );

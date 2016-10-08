@@ -16,8 +16,9 @@ const localMessages = {
 
 class KeywordSearchResultsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    fetchData(nextProps);
+    const { fetchData, filters } = this.props;
+    console.log(`search for ${nextProps.keywords}`);
+    fetchData(filters, nextProps.keywords);
   }
   render() {
     const { stories, topicId } = this.props;
@@ -58,12 +59,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (stateProps) => {
+  fetchData: (filters, keywords) => {
     // topicId, snapshotId, timespanId, sort, limit, linkId, q
     const params = {
-      ...stateProps.filters,
+      ...filters,
       limit: STORIES_TO_SHOW,
-      q: ownProps.keywords,
+      q: keywords,
     };
     dispatch(fetchCreateFocusKeywordStories(ownProps.topicId, params));
   },
@@ -72,7 +73,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
+      dispatchProps.fetchData(stateProps.filters, ownProps.keywords);
     },
   });
 }

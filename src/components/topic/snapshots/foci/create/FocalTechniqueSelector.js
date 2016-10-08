@@ -38,10 +38,10 @@ class FocalTechniqueSelector extends React.Component {
   render() {
     const { selected } = this.props;
     return (
-      <div>
+      <div className="focal-technique-selector">
         <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h3><FormattedMessage {...localMessages.title} /></h3>
+          <Col lg={12}>
+            <h2><FormattedMessage {...localMessages.title} /></h2>
           </Col>
         </Row>
         <Row>

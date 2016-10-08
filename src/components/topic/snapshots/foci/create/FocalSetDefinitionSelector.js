@@ -1,7 +1,8 @@
 import React from 'react';
+import { Field } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import MenuItem from 'material-ui/MenuItem';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import FocalSetSummary from './FocalSetSummary';
 
 const localMessages = {
   title: { id: 'focus.techniquePicker.title', defaultMessage: 'Pick a Focal Set' },
@@ -30,7 +31,7 @@ class FocalSetDefinitionSelector extends React.Component {
   }
 
   render() {
-    const { focalSetDefinitions, selected } = this.props;
+    const { focalSetDefinitions, selected, renderSelectField } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedId = (selected === null) ? null : selected.focal_set_definitions_id;
     return (
@@ -42,23 +43,26 @@ class FocalSetDefinitionSelector extends React.Component {
           </Col>
         </Row>
         <Row>
-          {focalSetDefinitions.map(focalSetDef =>
-            <FocalSetSummary
-              selected={(selectedId === focalSetDef.focal_set_definitions_id)}
-              key={focalSetDef.focal_set_definitions_id}
-              focalSet={focalSetDef}
-              onClick={this.handleClick}
+          <Field
+            name="focalSet"
+            onChange={this.handleSelectNew}
+            value={selectedId}
+            component={renderSelectField}
+            floatingLabelText={localMessages.title}
+          >
+            {focalSetDefinitions.map(focalSetDef =>
+              <MenuItem
+                key={focalSetDef.focal_set_definitions_id}
+                value={focalSetDef.focal_set_definitions_id}
+                primaryText={focalSetDef.name}
+              />
+            )}
+            <MenuItem
+              key={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              value={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              primaryText={formatMessage(localMessages.newFocalSetName)}
             />
-          )}
-          <FocalSetSummary
-            key={NEW_FOCAL_SET_PLACEHOLDER_ID}
-            selected={(selectedId === NEW_FOCAL_SET_PLACEHOLDER_ID)}
-            focalSet={{
-              name: formatMessage(localMessages.newFocalSetName),
-              description: formatMessage(localMessages.newFocalSetDescription),
-            }}
-            onClick={this.handleSelectNew}
-          />
+          </Field>
         </Row>
       </div>
     );
@@ -71,6 +75,7 @@ FocalSetDefinitionSelector.propTypes = {
   selected: React.PropTypes.object,
   onSelected: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
 };
 
 export default

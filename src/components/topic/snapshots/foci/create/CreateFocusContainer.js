@@ -26,7 +26,6 @@ class CreateFocusContainer extends React.Component {
       CreateFocusConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
-    console.log(currentStep);
     return (
       <div className="create-focus">
         <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} />

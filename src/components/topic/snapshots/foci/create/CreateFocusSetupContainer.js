@@ -1,34 +1,32 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
-import CreateFocalSetForm from './CreateFocalSetForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID, FocalSetDefinitionSelector } from './FocalSetDefinitionSelector';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
 import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import messages from '../../../../../resources/messages';
 import composeAsyncContainer from '../../../../common/AsyncContainer';
-import { notEmptyString } from '../../../../../lib/formValidators';
+import FocusDetailsForm from './FocusDetailsForm';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Setup Your Focus' },
   about: { id: 'focus.create.setup.about',
     defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
-  describeFocusTitle: { id: 'focus.create.describe.title', defaultMessage: 'Describe Your New {focalTechnique} Focus' },
-  describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },
-  focusName: { id: 'focus.name', defaultMessage: 'Focus Name' },
-  focusDescription: { id: 'focus.description', defaultMessage: 'Focus Description' },
 };
 
 class CreateFocusSetupContainer extends React.Component {
 
-  handleFocalSetSelected = (focalSetDefinition) => {
-    const { setProperties } = this.props;
-    setProperties({ focalSetDefinition });
+  componentWillMount() {
+    const { focalSetDefinitions, setProperties } = this.props;
+    // if there aren't any focal set defs, the user should have to create a new one
+    if (focalSetDefinitions.length === 0) {
+      setProperties({ focalSetDefinitionId: NEW_FOCAL_SET_PLACEHOLDER_ID });
+    }
   }
 
   handleFocalTechniqueSelected = (focalTechnique) => {
@@ -36,59 +34,31 @@ class CreateFocusSetupContainer extends React.Component {
     setProperties({ focalTechnique });
   }
 
+  handleFocalSetSelected = (event, index, focalSetDefinitionId) => {
+    const { setProperties } = this.props;
+    setProperties({ focalSetDefinitionId });
+  }
+
   render() {
-    const { handleSubmit, renderTextField, finishStep, properties, focalSetDefinitions } = this.props;
+    const { topicId, handleSubmit, finishStep, properties, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
     let step2Content = null;
+    // if they have picked a focal technique, then show inputs for details
     if (properties.focalTechnique !== null) {
       if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-        let focalSetContent = null;
-        if ((properties.focalSetDefinition !== null) && (properties.focalSetDefinition.focal_set_definitions_id < 0)) {
-          focalSetContent = <CreateFocalSetForm />;
-        }
-        step2Content = (
-          <div>
-            <Row>
-              <Col lg={10} md={10} sm={10}>
-                <h3><FormattedMessage {...localMessages.describeFocusTitle} values={{ focalTechnique: properties.focalTechnique }} /></h3>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={4} md={4} sm={12}>
-                <Field
-                  name="focusName"
-                  component={renderTextField}
-                  floatingLabelText={messages.focusName}
-                />
-              </Col>
-              <Col lg={4} md={4} sm={12}>
-                <Field
-                  name="focusDescription"
-                  component={renderTextField}
-                  multiLine
-                  floatingLabelText={formatMessage(localMessages.focusDescription)}
-                />
-              </Col>
-              <Col lg={2} md={2} sm={0} />
-              <Col lg={2} md={2} sm={12}>
-                <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
-              </Col>
-            </Row>
-            <FocalSetDefinitionSelector
-              focalSetDefinitions={focalSetDefinitions}
-              selected={properties.focalSetDefinition}
-              onSelected={this.handleFocalSetSelected}
-            />
-            { focalSetContent }
-          </div>
-        );
+        const initlaFocalSetId = (focalSetDefinitions.length === 0) ? NEW_FOCAL_SET_PLACEHOLDER_ID : null;
+        step2Content = (<FocusDetailsForm
+          topicId={topicId}
+          initialValues={{ focalSetId: initlaFocalSetId }}
+          focalSetDefinitions={focalSetDefinitions}
+          properties={properties}
+          onFocalSetSelected={this.handleFocalSetSelected}
+        />);
       }
     }
     let nextButtonDisabled = true;
     if ((properties.focalTechnique !== null) &&
-        (properties.focalSetDefinition !== null) &&
-        ('focal_set_definitions_id' in properties.focalSetDefinition) &&
-        (properties.focalSetDefinition.focal_set_definitions_id !== null)) {
+        (properties.focalSetDefinitionId !== null)) {
       nextButtonDisabled = false;
     }
     return (
@@ -96,7 +66,7 @@ class CreateFocusSetupContainer extends React.Component {
         <form className="focus-create-setup" name="focusCreateSetupForm" onSubmit={handleSubmit(finishStep.bind(this))}>
           <Row>
             <Col lg={10} md={10} sm={10}>
-              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <h1><FormattedMessage {...localMessages.title} /></h1>
               <p>
                 <FormattedMessage {...localMessages.about} />
               </p>
@@ -125,6 +95,7 @@ CreateFocusSetupContainer.propTypes = {
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
@@ -164,9 +135,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         name: values.focusName,
         description: values.focusDescription,
       };
-      if (stateProps.properties.focalSetDefinition.focal_set_definitions_id === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-        focusProps.focalSetName = stateProps.formData.focalSetName.value;
-        focusProps.focalSetDescription = stateProps.formData.focalSetDescription.value;
+      if (stateProps.properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+        focusProps.focalSetName = stateProps.formData.values.focalSetName;
+        focusProps.focalSetDescription = stateProps.formData.values.focalSetDescription;
       }
       dispatchProps.setProperties(focusProps);
       dispatchProps.goToStep(1);
@@ -174,17 +145,15 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
-function validate(values) {
+function validate() {
   const errors = {};
-  if (!notEmptyString(values.focusName)) {
-    errors.focusName = ('You need to name your Focus.');
-  }
+  // TODO: figure out if we need to do more validation here, because in theory the
+  // subforms components have already done it
   return errors;
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup',
-  fields: ['focusName', 'focusDescription'],
+  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };

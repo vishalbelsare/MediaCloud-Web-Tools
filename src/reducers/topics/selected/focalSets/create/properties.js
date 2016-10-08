@@ -5,7 +5,7 @@ export const INITIAL_STATE = {
   topicId: null,
   name: null,
   description: null,
-  focalSetDefinition: null,
+  focalSetDefinitionId: null,
   focalTechnique: null,
 };
 

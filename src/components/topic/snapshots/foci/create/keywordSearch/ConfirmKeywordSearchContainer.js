@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import { push } from 'react-router-redux';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties, generateSnapshot }
+import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
   from '../../../../../../actions/topicActions';
 import { updateFeedback } from '../../../../../../actions/appActions';
 import { INITIAL_STATE } from '../../../../../../reducers/topics/selected/focalSets/create/properties';
 import messages from '../../../../../../resources/messages';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocalSetDefinitionSelector';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },
@@ -17,24 +17,23 @@ const localMessages = {
   description: { id: 'focus.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
   focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Focal Technique</b>: {name}' },
   keywords: { id: 'focus.create.confirm.keywords', defaultMessage: '<b>Keywords</b>: {keywords}' },
-  generateSnapshot: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Generate Snapshot' },
   addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Focus' },
   focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Focal Set.' },
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Focus.' },
 };
 
 const ConfirmKeywordSearchContainer = (props) => {
-  const { saveAndAddAnother, saveAndGenerateSnapshot, properties } = props;
+  const { saveAndAddAnother, properties } = props;
   const { formatMessage } = props.intl;
   return (
     <Grid>
       <Row>
-        <Col lg={10} md={10} sm={10}>
+        <Col lg={12}>
           <h2><FormattedMessage {...localMessages.title} values={{ name: properties.name }} /></h2>
         </Col>
       </Row>
       <Row>
-        <Col lg={10} md={10} sm={10}>
+        <Col lg={12}>
           <ul>
             <li><FormattedHTMLMessage {...localMessages.name} values={{ name: properties.name }} /></li>
             <li><FormattedHTMLMessage {...localMessages.description} values={{ description: properties.description }} /></li>
@@ -44,11 +43,8 @@ const ConfirmKeywordSearchContainer = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={3} md={3} sm={12}>
-          <FlatButton label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
-        </Col>
-        <Col lg={3} md={3} sm={12}>
-          <RaisedButton primary label={formatMessage(localMessages.generateSnapshot)} onClick={saveAndGenerateSnapshot} />
+        <Col lg={12}>
+          <RaisedButton primary label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
         </Col>
       </Row>
     </Grid>
@@ -66,7 +62,6 @@ ConfirmKeywordSearchContainer.propTypes = {
   saveFocus: React.PropTypes.func.isRequired,
   // from mergeProps
   saveAndAddAnother: React.PropTypes.func.isRequired,
-  saveAndGenerateSnapshot: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -75,13 +70,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage, shouldGenerateSnapshot, generatingSnapshotMessage) => {
+  saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage) => {
     const newFocusDefinition = {
       name: properties.name,
       description: properties.description,
       query: properties.keywords,
     };
-    if (properties.focalSetDefinition.focal_set_definitions_id === -1) {
+    if (properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
       const newFocalSetDefinition = {
         name: properties.focalSetName,
         description: properties.focalSetDescription,
@@ -99,13 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
               dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-              if (shouldGenerateSnapshot) {
-                dispatch(generateSnapshot(ownProps.topicId))
-                  .then(() => {
-                    dispatch(updateFeedback({ open: true, message: generatingSnapshotMessage }));
-                  });
-              }
-              dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
+              dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
             });
         });
     } else {
@@ -116,13 +105,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(setNewFocusProperties(INITIAL_STATE));     // reset properties
           dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
           dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-          if (shouldGenerateSnapshot) {
-            dispatch(generateSnapshot(ownProps.topicId))
-              .then(() => {
-                dispatch(updateFeedback({ open: true, message: generatingSnapshotMessage }));
-              });
-          }
-          dispatch(push(`/topics/${ownProps.topicId}/foci/manage`)); // go back to focus management page
+          dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
         });
     }
   },
@@ -135,13 +118,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         ownProps.intl.formatMessage(localMessages.focalSetSaved),
         ownProps.intl.formatMessage(localMessages.focusSaved),
         false, ownProps.intl.formatMessage(messages.snapshotGenerating)
-      );
-    },
-    saveAndGenerateSnapshot: () => {
-      dispatchProps.saveFocus(ownProps.topicId, stateProps.properties,
-        ownProps.intl.formatMessage(localMessages.focalSetSaved),
-        ownProps.intl.formatMessage(localMessages.focusSaved),
-        true, ownProps.intl.formatMessage(messages.snapshotGenerating)
       );
     },
   });

@@ -52,6 +52,7 @@ function composeIntlForm(Component) {
 
     renderSelectField = ({ input, name, meta: { touched, error }, children, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
+      // console.log(`selectValue=${input.value}`);
       return (
         <SelectField
           name={name}
