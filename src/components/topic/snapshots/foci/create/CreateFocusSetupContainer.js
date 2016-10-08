@@ -23,9 +23,15 @@ class CreateFocusSetupContainer extends React.Component {
 
   componentWillMount() {
     const { focalSetDefinitions, setProperties } = this.props;
+    const { focalSetDefId, focalTechnique } = this.props.location.query;
     // if there aren't any focal set defs, the user should have to create a new one
     if (focalSetDefinitions.length === 0) {
       setProperties({ focalSetDefinitionId: NEW_FOCAL_SET_PLACEHOLDER_ID });
+    } else if (focalSetDefId !== undefined) {
+      setProperties({ focalSetDefinitionId: focalSetDefId });
+    }
+    if (focalTechnique !== undefined) {
+      setProperties({ focalTechnique });
     }
   }
 
@@ -46,10 +52,9 @@ class CreateFocusSetupContainer extends React.Component {
     // if they have picked a focal technique, then show inputs for details
     if (properties.focalTechnique !== null) {
       if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-        const initlaFocalSetId = (focalSetDefinitions.length === 0) ? NEW_FOCAL_SET_PLACEHOLDER_ID : null;
         step2Content = (<FocusDetailsForm
           topicId={topicId}
-          initialValues={{ focalSetId: initlaFocalSetId }}
+          initialValues={{ focalSetId: properties.focalSetDefinitionId }}
           focalSetDefinitions={focalSetDefinitions}
           properties={properties}
           onFocalSetSelected={this.handleFocalSetSelected}
@@ -92,6 +97,7 @@ class CreateFocusSetupContainer extends React.Component {
 CreateFocusSetupContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
