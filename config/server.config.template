@@ -1,5 +1,5 @@
 [mediacloud]
-api_key: 453e26d5babc0cbf5ab1809f429600b76d5de4a560ab9ba0b75fb8995bebd83f
+api_key: YOUR_MEDIACLOUD_API_KEY_HERE
 
 [database]
 host = localhost
