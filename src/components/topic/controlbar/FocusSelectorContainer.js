@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchTopicFocalSetsList, filterByFocus } from '../../../actions/topicActions';
-import { NO_SPINNER, composeAsyncContainer } from '../../common/AsyncContainer';
+import { NO_SPINNER, asyncContainerize } from '../../common/AsyncContainer';
 import { filteredLocation } from '../../util/location';
 import FocusSelector from './FocusSelector';
 
@@ -76,7 +76,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    composeAsyncContainer(
+    asyncContainerize(
       injectIntl(
         FocusSelectorContainer
       ), NO_SPINNER

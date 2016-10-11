@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import SnapshotSelector from './SnapshotSelector';
 import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';
-import { NO_SPINNER, composeAsyncContainer } from '../../common/AsyncContainer';
+import { NO_SPINNER, asyncContainerize } from '../../common/AsyncContainer';
 import { filteredLocation } from '../../util/location';
 
 class SnapshotSelectorContainer extends React.Component {
@@ -87,7 +87,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    composeAsyncContainer(
+    asyncContainerize(
       SnapshotSelectorContainer, NO_SPINNER
     )
   );

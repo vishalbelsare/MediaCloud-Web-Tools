@@ -13,7 +13,7 @@ export const NO_SPINNER = 0;
  * (via mergeProps).
  * Pass in a loadingSpinnerSize of 0 to not display it at all.
  */
-export const composeAsyncContainer = (ComposedContainer, loadingSpinnerSize) => {
+export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
   const spinnerSize = (loadingSpinnerSize !== undefined) ? loadingSpinnerSize : null;
   class ComposedAsyncContainer extends React.Component {
     componentDidMount() {
@@ -45,4 +45,7 @@ export const composeAsyncContainer = (ComposedContainer, loadingSpinnerSize) => 
   return ComposedAsyncContainer;
 };
 
+const composeAsyncContainer = asyncContainerize;  // the method can't be used as the name of the default import
+
 export default composeAsyncContainer;
+
