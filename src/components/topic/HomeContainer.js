@@ -7,6 +7,7 @@ import FavoriteTopicsContainer from './list/FavoriteTopicsContainer';
 import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
 import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicActions';
+import TopicIcon from '../common/icons/TopicIcon';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Explore Topics' },
@@ -25,7 +26,7 @@ const HomeContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <h1><FormattedMessage {...localMessages.homeTitle} /></h1>
+            <h1><TopicIcon /><FormattedMessage {...localMessages.homeTitle} /></h1>
           </Col>
         </Row>
         <FavoriteTopicsContainer onChangeFavorited={handleChangeFavorited} />
