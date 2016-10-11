@@ -18,7 +18,7 @@ import SettingsIcon from './icons/SettingsIcon';
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
  * Components in the `icons` directory, then export wrapper instances of them here.
  */
-function composeIconButton(Icon, tooltipMessage) {
+function composeIconButton(Icon, defaultTooltipMessage) {
   class AppIconButton extends React.Component {
     handleClick = (event) => {
       const { onClick } = this.props;
@@ -28,14 +28,15 @@ function composeIconButton(Icon, tooltipMessage) {
       }
     }
     render() {
-      const { linkTo, onClick, color } = this.props;
+      const { linkTo, onClick, color, tooltip } = this.props;
       const { formatMessage } = this.props.intl;
-      const linkTarget = linkTo || formatMessage(tooltipMessage);
+      const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(defaultTooltipMessage);
+      const linkTarget = linkTo || displayTooltip;
       const clickHandler = (onClick) ? this.handleClick : null;
       return (
-        <Link to={linkTarget} onClick={clickHandler} className="icon-button-link" name={formatMessage(tooltipMessage)}>
+        <Link to={linkTarget} onClick={clickHandler} className="icon-button-link" name={displayTooltip}>
           <IconButton
-            tooltip={formatMessage(tooltipMessage)}
+            tooltip={displayTooltip}
             style={{ padding: 0, border: 0, width: 26, height: 26, color }}
             tooltipStyles={{ top: 20 }}
           >
@@ -51,6 +52,7 @@ function composeIconButton(Icon, tooltipMessage) {
       React.PropTypes.string,
       React.PropTypes.object,
     ]),
+    tooltip: React.PropTypes.string,
     intl: React.PropTypes.object.isRequired,
     color: React.PropTypes.string,
   };
