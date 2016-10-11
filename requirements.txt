@@ -9,7 +9,7 @@ Werkzeug==0.11.10
 click==6.6
 gunicorn==19.4.5
 itsdangerous==0.24
-mediacloud==2.33.1
+mediacloud==2.34.0
 ndg-httpsclient==0.4.1
 pyOpenSSL==16.0.0
 pyasn1==0.1.9
@@ -18,8 +18,6 @@ requests==2.10.0
 six==1.10.0
 wsgiref==0.1.2
 HermesCache==0.6.0
-pylibmc==1.5.1
-python-memcached==1.58
 raven==5.26.0
 blinker==1.4
 redis==2.10.5
