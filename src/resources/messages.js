@@ -94,6 +94,7 @@ const messages = {
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
+  comingSoon: { id: 'comingSoon', defaultMessage: 'Coming Soon' },
 
   focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
   removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any focus' },
