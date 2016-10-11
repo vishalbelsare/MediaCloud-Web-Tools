@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
-import messages from '../../../../resources/messages';
+import ComingSoon from '../../../common/ComingSoon';
 
 const localMessages = {
   title: { id: 'timespans.manage.title', defaultMessage: 'Manage Timespans' },
@@ -20,7 +20,7 @@ const ManageTimespansContainer = props => (
         <Col lg={10}>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.about} /></p>
-          <p className="coming-soon"><FormattedMessage {...messages.comingSoon} /></p>
+          <ComingSoon />
         </Col>
       </Row>
     </Grid>

@@ -9,6 +9,7 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { generateSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
+import ComingSoon from '../../common/ComingSoon';
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Snapshot Builder' },
@@ -46,7 +47,7 @@ const SnapshotHome = props => (
           <DataCard inline>
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
-            <ul><li className="coming-soon"><FormattedMessage {...messages.comingSoon} /></li></ul>
+            <ComingSoon />
             <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
           </DataCard>
         </Col>

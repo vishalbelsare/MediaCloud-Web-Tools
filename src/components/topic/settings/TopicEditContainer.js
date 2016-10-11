@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import messages from '../../../resources/messages';
+import ComingSoon from '../../common/ComingSoon';
 
 const localMessages = {
   title: { id: 'topic.edit.title', defaultMessage: 'Details' },
@@ -15,7 +15,7 @@ const TopicEditContainer = () => (
       <Col lg={12}>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <p><FormattedMessage {...localMessages.intro} /></p>
-        <p className="coming-soon"><FormattedMessage {...messages.comingSoon} /></p>
+        <ComingSoon />
       </Col>
     </Row>
   </div>
