@@ -8,15 +8,22 @@ import TopicList from './TopicList';
 
 const localMessages = {
   favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'Starred Topics' },
+  noFavorites: { id: 'topics.favorite.none', defaultMessage: 'You don\'t have any starred Topics yet. Click the star icon next to one on the list below to add it to your list of starred Topics.' },
 };
 
 const FavoriteTopicsContainer = (props) => {
   const { topics, onChangeFavorited } = props;
+  let content = null;
+  if (topics.length === 0) {
+    content = (<i><FormattedMessage {...localMessages.noFavorites} /></i>);
+  } else {
+    content = <TopicList topics={topics} onChangeFavorited={onChangeFavorited} />;
+  }
   return (
     <Row>
       <Col lg={12} md={12} sm={12}>
         <h2><FormattedMessage {...localMessages.favTopicsTitle} /></h2>
-        <TopicList topics={topics} onChangeFavorited={onChangeFavorited} />
+        {content}
       </Col>
     </Row>
   );
