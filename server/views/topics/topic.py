@@ -18,7 +18,7 @@ def topic_list():
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
     for t in all_topics['topics']:
         t['isFavorite'] = t['topics_id'] in user_favorited
-        logger.info(str(t['topics_id'])+" - "+str(t['isFavorite']))
+        # logger.info(str(t['topics_id'])+" - "+str(t['isFavorite']))
     return jsonify(all_topics)
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
