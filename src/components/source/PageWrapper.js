@@ -5,7 +5,7 @@ import ControlBar from './controlbar/SourceControlBar';
 const PageWrapper = (props) => {
   const { children } = props;
   return (
-    <div className="controlbar controlbar-sources">
+    <div>
       <ControlBar />
       {children}
     </div>
