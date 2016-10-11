@@ -43,7 +43,7 @@ const SnapshotHome = props => (
           </Link>
         </Col>
         <Col lg={9} xs={12}>
-          <DataCard>
+          <DataCard inline>
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
             <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
