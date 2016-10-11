@@ -13,6 +13,7 @@ import AddIcon from './icons/AddIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
+import RemoveIcon from './icons/RemoveIcon';
 
 /**
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
@@ -66,6 +67,8 @@ export const DownloadButton = composeIconButton(DownloadIcon, messages.download)
 export const HelpButton = composeIconButton(HelpIcon, messages.help);
 
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
+
+export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
 

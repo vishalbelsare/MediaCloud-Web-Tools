@@ -85,6 +85,7 @@ const messages = {
   manage: { id: 'manage', defaultMessage: 'manage' },
   help: { id: 'help', defaultMessage: 'Help' },
   delete: { id: 'delete', defaultMessage: 'Delete' },
+  remove: { id: 'remove', defaultMessage: 'Remove' },
   add: { id: 'add', defaultMessage: 'Add' },
   open: { id: 'open', defaultMessage: 'Open' },
   close: { id: 'close', defaultMessage: 'Close' },

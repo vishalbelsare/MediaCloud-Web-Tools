@@ -1,6 +1,8 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
@@ -11,55 +13,106 @@ import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
 import MediaSentenceCountContainer from './MediaSentenceCountContainer';
 import MediaWordsContainer from './MediaWordsContainer';
+import messages from '../../../resources/messages';
+import { RemoveButton } from '../../common/IconButton';
+import ComingSoon from '../../common/ComingSoon';
 
 const localMessages = {
   mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Source Details: {title}' },
+  removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
+  removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If media source is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
 };
 
-const MediaContainer = (props) => {
-  const { media, topicId, mediaId } = props;
-  const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
-  return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h2><FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} /></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <MediaDetails media={media} />
-          </Col>
-          <Col lg={6} md={6} sm={12}>
-            <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <MediaInlinkContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <MediaOutlinkContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
-          </Col>
-        </Row>
-      </Grid>
-    </div>
-  );
-};
+class MediaContainer extends React.Component {
+
+  state = {
+    open: false,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.mediaId !== this.props.mediaId) {
+      const { fetchData } = this.props;
+      fetchData(nextProps.mediaId);
+    }
+  }
+
+  handleRemoveClick = () => {
+    this.setState({ open: true });
+  };
+
+  handleRemoveDialogClose = () => {
+    this.setState({ open: false });
+  };
+
+  render() {
+    const { media, topicId, mediaId } = this.props;
+    const { formatMessage } = this.props.intl;
+    const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
+    const dialogActions = [
+      <FlatButton
+        label={formatMessage(messages.ok)}
+        primary
+        onClick={this.handleRemoveDialogClose}
+      />,
+    ];
+    return (
+      <div>
+        <Title render={titleHandler} />
+        <Grid>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <h1>
+                <span className="actions">
+                  <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                </span>
+                <FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} />
+              </h1>
+            </Col>
+          </Row>
+          <Dialog
+            title={formatMessage(localMessages.removeTitle)}
+            actions={dialogActions}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.handleRemoveDialogClose}
+          >
+            <p><FormattedMessage {...localMessages.removeAbout} /></p>
+            <ComingSoon />
+          </Dialog>
+          <Row>
+            <Col lg={6} md={6} sm={12}>
+              <MediaDetails media={media} />
+            </Col>
+            <Col lg={6} md={6} sm={12}>
+              <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <MediaStoriesContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <MediaInlinkContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <MediaOutlinkContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={6} md={6} sm={12}>
+              <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
+  }
+
+}
 
 MediaContainer.propTypes = {
   // from context
@@ -68,6 +121,7 @@ MediaContainer.propTypes = {
   // from parent
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   media: React.PropTypes.object.isRequired,
@@ -88,6 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(selectMedia(ownProps.params.mediaId));    // save it to the state
     dispatch(fetchMedia(ownProps.params.topicId, ownProps.params.mediaId)); // fetch the info we need
+  },
+  fetchData: (mediaId) => {
+    dispatch(selectMedia(mediaId));    // save it to the state
+    dispatch(fetchMedia(mediaId)); // fetch the info we need
   },
 });
 

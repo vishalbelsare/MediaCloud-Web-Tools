@@ -8,16 +8,16 @@ const localMessages = {
     defaultMessage: 'Basic Info',
   },
   summary: { id: 'story.details.summary',
-    defaultMessage: '<a href="{storyUrl}">Read the original story</a>. We think this story was published on {publishDate}. ' },
+    defaultMessage: 'We think this story was published on {publishDate}. ' },
   publishedBy: { id: 'story.details.publishedBy', defaultMessage: 'It was published by ' },
   otherInfo: { id: 'story.details.otherInfo', defaultMessage: ' Some other information:' },
   socialData: { id: 'story.details.socialData', defaultMessage: 'Social Data:' },
   bitlyClicks: { id: 'story.details.bitlyClicks',
-    defaultMessage: '{count, plural,\n  =0 {no Bit.ly clicks}\n  =1 {one Bit.ly click}\n  other {# Bit.ly clicks}}' },
+    defaultMessage: '{count, plural,\n  =0 {no Bit.ly clicks}\n  =1 {one Bit.ly click}\n  other {# Bit.ly clicks}}.' },
   facebookShares: { id: 'story.details.facebookShares',
-    defaultMessage: '{count, plural,\n  =0 {no Facebook shares}\n  =1 {one Facebook share}\n  other {# Facebook shares}}' },
+    defaultMessage: '{count, plural,\n  =0 {no Facebook shares}\n  =1 {one Facebook share}\n  other {# Facebook shares}}.' },
   detectedLanguage: { id: 'story.details.detectedLanguage',
-    defaultMessage: 'We have detected that it\'s language "{detectedLanguage}"' },
+    defaultMessage: 'We have detected that it\'s language is "{detectedLanguage}".' },
   inlinkCount: { id: 'story.details.inlinkCount',
     defaultMessage: '{count, plural,\n  =0 {No stories link}\n  =1 {One story links}\n  other {# stories link}} to this one during this timespan.' },
   mediaInlinkCount: { id: 'story.details.mediaInlinkCount',
@@ -39,14 +39,16 @@ const StoryDetails = (props) => {
   );
   return (
     <DataCard>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
+      <h2>
+        <FormattedMessage {...localMessages.title} />
+      </h2>
+      <p><a href={story.url}>{story.title}</a></p>
       <p>
         <FormattedHTMLMessage
           {...localMessages.summary}
           values={{
             publishDate: formatDate(story.publishDateObj,
               { year: '2-digit', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
-            storyUrl: story.url,
             mediaName: story.media_name,
           }}
         />

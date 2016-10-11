@@ -56,6 +56,16 @@
     }
   }
 
+  &.app-icon-remove {
+    background-color: $material-grey400;
+    svg {
+      margin-top: 11px;
+    }
+    &:hover {
+      background-color: #fc521f !important;
+    }
+  }
+
   &.app-icon-help {
     width: 16px;
     height: 16px;
