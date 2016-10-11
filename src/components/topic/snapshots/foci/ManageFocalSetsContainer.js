@@ -6,10 +6,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Link from 'react-router/lib/Link';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import ConfirmationDialog from '../../../common/ConfirmationDialog';
-import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefinition, setTopicNeedsNewSnapshot, generateSnapshot }
+import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefinition, setTopicNeedsNewSnapshot }
   from '../../../../actions/topicActions';
 import { updateFeedback } from '../../../../actions/appActions';
-import messages from '../../../../resources/messages';
 import FocalSetDefinitionSummary from './FocalSetDefinitionSummary';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
 
@@ -140,7 +139,7 @@ const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (topicId) => {
     dispatch(fetchFocalSetDefinitions(topicId));
   },
@@ -165,16 +164,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateFeedback({ open: true, message: succeededMessage }));
           dispatch(setTopicNeedsNewSnapshot(true));
           dispatch(fetchFocalSetDefinitions(topicId));
-        }
-      });
-  },
-  handleGenerateSnapshotRequest: () => {
-    dispatch(generateSnapshot(ownProps.params.topicId))
-      .then((results) => {
-        if (results.success === 1) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
-        } else {
-          // TODO: error message!
         }
       });
   },

@@ -1,9 +1,14 @@
 import React from 'react';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import Link from 'react-router/lib/Link';
 import BackLinkingControlBar from '../BackLinkingControlBar';
+import DataCard from '../../common/DataCard';
+import messages from '../../../resources/messages';
+import { generateSnapshot } from '../../../actions/topicActions';
+import { updateFeedback } from '../../../actions/appActions';
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Snapshot Builder' },
@@ -11,6 +16,8 @@ const localMessages = {
   fociLink: { id: 'snapshot.builder.foci.link', defaultMessage: 'Build Foci' },
   timespanLink: { id: 'snapshot.builder.timespans.link', defaultMessage: 'Build Timespans' },
   backToTopicLink: { id: 'snapshot.builder.backToTopic.link', defaultMessage: 'back to Topic' },
+  summaryTitle: { id: 'snapshot.summary.title', defaultMessage: 'Summary of Your New Snapshot' },
+  summaryMessage: { id: 'snapshot.summary.text', defaultMessage: '<i>In the future, this will show a summary of the changes in the new Snapshot you are generating.</i>' },
 };
 
 const SnapshotHome = props => (
@@ -24,7 +31,7 @@ const SnapshotHome = props => (
         </Col>
       </Row>
       <Row>
-        <Col lg={12}>
+        <Col lg={3} xs={12}>
           <br />
           <Link to={`/topics/${props.params.topicId}/snapshot/foci`}>
             <RaisedButton label={props.intl.formatMessage(localMessages.fociLink)} primary />
@@ -35,6 +42,13 @@ const SnapshotHome = props => (
             <RaisedButton label={props.intl.formatMessage(localMessages.timespanLink)} primary />
           </Link>
         </Col>
+        <Col lg={9} xs={12}>
+          <DataCard>
+            <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
+            <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
+            <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
+          </DataCard>
+        </Col>
       </Row>
     </Grid>
   </div>
@@ -44,9 +58,32 @@ SnapshotHome.propTypes = {
   intl: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
   children: React.PropTypes.node,
+  // from state
+  topicId: React.PropTypes.number.isRequired,
+  // from dispatch
+  handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state, ownProps) => ({
+  topicId: parseInt(ownProps.params.topicId, 10),
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleGenerateSnapshotRequest: () => {
+    dispatch(generateSnapshot(ownProps.params.topicId))
+      .then((results) => {
+        if (results.success === 1) {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
+        } else {
+          // TODO: error message!
+        }
+      });
+  },
+});
 
 export default
   injectIntl(
-    SnapshotHome
+    connect(mapStateToProps, mapDispatchToProps)(
+      SnapshotHome
+    )
   );
