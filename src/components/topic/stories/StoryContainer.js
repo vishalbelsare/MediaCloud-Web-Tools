@@ -11,6 +11,8 @@ import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 import messages from '../../../resources/messages';
 
+const MAX_STORY_TITLE_LENGTH = 90;  // story titles longer than this will be trimmed and ellipses added
+
 const localMessages = {
   mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}',
   },
@@ -29,13 +31,17 @@ class StoryContainer extends React.Component {
     const { story, topicId, storiesId } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
+    let displayTitle = story.title;
+    if (story.title.length > MAX_STORY_TITLE_LENGTH) {
+      displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
+    }
     return (
       <div>
         <Title render={titleHandler} />
         <Grid>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <h2><FormattedMessage {...localMessages.mainTitle} values={{ title: story.title }} /></h2>
+              <h2><FormattedMessage {...localMessages.mainTitle} values={{ title: displayTitle }} /></h2>
             </Col>
           </Row>
           <Row>
