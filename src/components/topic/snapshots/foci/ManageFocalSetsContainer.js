@@ -128,7 +128,6 @@ ManageFocalSetsContainer.propTypes = {
   focalSetDefinitions: React.PropTypes.array.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
   handleFocalSetDefinitionDelete: React.PropTypes.func.isRequired,
   handleFocusDefinitionDelete: React.PropTypes.func.isRequired,
 };
