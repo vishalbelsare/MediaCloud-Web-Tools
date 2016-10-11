@@ -9,7 +9,8 @@ import * as fetchConstants from '../../lib/fetchConstants';
  * method will call out to a fetchData property that reads the params to use from the state
  * (via mergeProps).
  */
-export default function composeAsyncContainer(ComposedContainer) {
+export default function composeAsyncContainer(ComposedContainer, loadingSpinnerSize) {
+  const spinnerSize = (loadingSpinnerSize !== undefined) ? loadingSpinnerSize : null;
   class ComposedAsyncContainer extends React.Component {
     componentDidMount() {
       const { asyncFetch } = this.props;
@@ -26,7 +27,7 @@ export default function composeAsyncContainer(ComposedContainer) {
           content = <ErrorTryAgain onTryAgain={asyncFetch} />;
           break;
         default:
-          content = <LoadingSpinner />;
+          content = <LoadingSpinner size={spinnerSize} />;
       }
       return content;
     }

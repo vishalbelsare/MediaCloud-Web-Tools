@@ -88,6 +88,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
     composeAsyncContainer(
-      SnapshotSelectorContainer
+      SnapshotSelectorContainer, 10
     )
   );

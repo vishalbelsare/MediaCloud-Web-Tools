@@ -79,6 +79,6 @@ export default
     composeAsyncContainer(
       injectIntl(
         FocusSelectorContainer
-      )
+      ), 10
     )
   );
