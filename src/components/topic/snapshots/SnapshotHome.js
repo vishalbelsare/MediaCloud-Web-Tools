@@ -46,7 +46,7 @@ const SnapshotHome = props => (
           <DataCard inline>
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
-            <p><ul><li className="coming-soon"><FormattedMessage {...messages.comingSoon} /></li></ul></p>
+            <ul><li className="coming-soon"><FormattedMessage {...messages.comingSoon} /></li></ul>
             <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
           </DataCard>
         </Col>

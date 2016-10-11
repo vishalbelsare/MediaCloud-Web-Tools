@@ -21,6 +21,7 @@ import AttentionContainer from '../components/topic/attention/AttentionContainer
 import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
+import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -50,6 +51,7 @@ const topicRoutes = (
         <IndexRoute component={SnapshotHome} />
         <Route path="/topics/:topicId/snapshot/foci" component={ManageFocalSetsContainer} />
         <Route path="/topics/:topicId/snapshot/foci/create" component={CreateFocusContainer} />
+        <Route path="/topics/:topicId/snapshot/timespans" component={ManageTimespansContainer} />
       </Route>
 
       <Route path="/topics/:topicId/settings" component={TopicSettingsContainer} />

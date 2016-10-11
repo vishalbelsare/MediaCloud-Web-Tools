@@ -78,19 +78,19 @@ class ManageFocalSetsContainer extends React.Component {
         <BackLinkingControlBar message={localMessages.backToSnapshotBuilder} linkTo={`/topics/${topicId}/snapshot`} />
         <Grid>
           <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={12}>
               <h1><FormattedMessage {...localMessages.focalSetsManageTitle} /></h1>
             </Col>
           </Row>
           <Row>
-            <Col lg={10} md={10} sm={12}>
+            <Col lg={10} xs={12}>
               <p>
                 <FormattedMessage {...localMessages.focalSetsManageAbout} />
               </p>
             </Col>
           </Row>
           <Row>
-            <Col lg={10} md={10} sm={12}>
+            <Col lg={10} xs={12}>
               <div className="focal-set-definition-list">
                 {focalSetDefinitions.map(focalSetDef =>
                   <FocalSetDefinitionSummary
