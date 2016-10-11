@@ -3,6 +3,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import ComingSoon from '../../common/ComingSoon';
 
 const localMessages = {
   mainTitle: { id: 'attention.mainTitle', defaultMessage: 'Attention' },
@@ -18,6 +19,7 @@ const AttentionContainer = (props) => {
         <Row>
           <Col lg={12} md={12} sm={12}>
             <h2><FormattedMessage {...localMessages.mainTitle} /></h2>
+            <ComingSoon />
           </Col>
         </Row>
       </Grid>
