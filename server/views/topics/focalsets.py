@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import arguments_required
+from server.util.request import arguments_required, form_fields_required
 from server.auth import user_mediacloud_client
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def topic_focal_set_definitions_list(topics_id):
     return jsonify(user_mc.topicFocalSetDefinitionList(topics_id))
 
 @app.route('/api/topics/<topics_id>/focal-set-definitions/create', methods=['POST'])
-@arguments_required('name', 'description', 'focalTechnique')
+@form_fields_required('name', 'description', 'focalTechnique')
 @flask_login.login_required
 def topic_focal_set_definitions_create(topics_id):
     user_mc = user_mediacloud_client()

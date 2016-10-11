@@ -19,18 +19,17 @@ class CreateFocusContainer extends React.Component {
   }
 
   render() {
-    const { topicId, currentStep } = this.props;
+    const { topicId, currentStep, location } = this.props;
     const steps = [
       CreateFocusSetupContainer,
       CreateFocusEditContainer,
       CreateFocusConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
-    console.log(currentStep);
     return (
       <div className="create-focus">
         <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} />
-        <CurrentStepComponent topicId={topicId} />
+        <CurrentStepComponent topicId={topicId} location={location} />
       </div>
     );
   }
@@ -40,6 +39,7 @@ class CreateFocusContainer extends React.Component {
 CreateFocusContainer.propTypes = {
   // from context:
   topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from state
   currentStep: React.PropTypes.number.isRequired,
   // from dispatch
@@ -48,6 +48,7 @@ CreateFocusContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
+  params: ownProps.params,
   currentStep: state.topics.selected.focalSets.create.workflow.currentStep,
 });
 

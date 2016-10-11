@@ -55,16 +55,16 @@ const TimespanSelector = (props) => {
     <div className="timespan-selector">
       <Grid>
         <Row>
-          <Col lg={2} md={2} sm={0}>
+          <Col lg={2} sm={2} xs={12}>
             <TimespanPeriodSelector
               selectedPeriod={selectedPeriod}
               onPeriodSelected={(period) => { onPeriodSelected(period); setExpanded(true); }}
             />
           </Col>
-          <Col lg={8} md={8} sm={6} className="center">
+          <Col lg={8} sm={8} xs={12} className="center">
             {selectedTimespan.start_date.substr(0, 10)} to {selectedTimespan.end_date.substr(0, 10)}
           </Col>
-          <Col lg={2} md={2} sm={6} >
+          <Col lg={2} sm={2} xs={12} >
             <div className="toggle-control">
               {expandControl}
               {helpButton}

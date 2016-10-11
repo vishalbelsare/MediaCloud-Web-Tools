@@ -4,9 +4,11 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicPermissionsContainer from './TopicPermissionsContainer';
+import BackLinkingControlBar from '../BackLinkingControlBar';
 
 const localMessages = {
   mainTitle: { id: 'settings.mainTitle', defaultMessage: 'Topic Settings' },
+  backToTopicLink: { id: 'settings.backToTopic.link', defaultMessage: 'back to Topic' },
 };
 
 const TopicSettingsContainer = (props) => {
@@ -16,6 +18,7 @@ const TopicSettingsContainer = (props) => {
   return (
     <div className="topic-settings">
       <Title render={titleHandler} />
+      <BackLinkingControlBar message={localMessages.backToTopicLink} linkTo={`/topics/${topicId}/summary`} />
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
