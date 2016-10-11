@@ -17,7 +17,7 @@ const localMessages = {
   timespanLink: { id: 'snapshot.builder.timespans.link', defaultMessage: 'Build Timespans' },
   backToTopicLink: { id: 'snapshot.builder.backToTopic.link', defaultMessage: 'back to Topic' },
   summaryTitle: { id: 'snapshot.summary.title', defaultMessage: 'Summary of Your New Snapshot' },
-  summaryMessage: { id: 'snapshot.summary.text', defaultMessage: '<i>In the future, this will show a summary of the changes in the new Snapshot you are generating.</i>' },
+  summaryMessage: { id: 'snapshot.summary.text', defaultMessage: 'You have made some changes that you can only see if you generate a new Snapshot.  Here\'s a summary of those changes:' },
 };
 
 const SnapshotHome = props => (
@@ -25,7 +25,7 @@ const SnapshotHome = props => (
     <BackLinkingControlBar message={localMessages.backToTopicLink} linkTo={`/topics/${props.params.topicId}/summary`} />
     <Grid>
       <Row>
-        <Col lg={12}>
+        <Col lg={10}>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <FormattedHTMLMessage {...localMessages.aboutText} />
         </Col>
@@ -42,10 +42,11 @@ const SnapshotHome = props => (
             <RaisedButton label={props.intl.formatMessage(localMessages.timespanLink)} primary />
           </Link>
         </Col>
-        <Col lg={9} xs={12}>
+        <Col lg={7} xs={12}>
           <DataCard inline>
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
+            <p><ul><li className="coming-soon"><FormattedMessage {...messages.comingSoon} /></li></ul></p>
             <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
           </DataCard>
         </Col>
