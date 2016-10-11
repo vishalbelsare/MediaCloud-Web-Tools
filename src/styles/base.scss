@@ -17,6 +17,14 @@ p {
   font-family: $body-text-font-families;
 }
 
+h1 {
+  margin-top: 40px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
 td {
   font-family: $body-text-font-families;
 }
@@ -55,7 +63,7 @@ table tr.odd {
 }
 
 table td {
-  padding: 8px;
+  padding: 13px;
   font-size: 13px;
 }
 

@@ -10,6 +10,7 @@ Dev Installation
 Python 2.7:
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
  *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
+ * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install
  * `pip install -r requirements.txt`
 
 Node and npm:  
