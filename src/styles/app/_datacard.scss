@@ -4,7 +4,7 @@
 
   border: 1px solid $material-grey300;
   padding: 30px;
-  margin-top: 30px;
+  margin-bottom: 30px;
 
   .actions {
     float:right;
@@ -29,11 +29,6 @@
   &.unbordered {
     border: 0px;
     padding: 0px;
-  }
-
-  &.inline {
-    margin-top: 0px;
-    margin-bottom: 30px;
   }
 
 }

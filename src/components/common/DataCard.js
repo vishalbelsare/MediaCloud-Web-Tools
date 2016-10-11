@@ -5,12 +5,11 @@ import React from 'react';
  * be inside of a DataCard.
  */
 const DataCard = (props) => {
-  const { children, border, disabled, className, inline } = props;
+  const { children, border, disabled, className } = props;
   const unborderedClass = (border === false) ? 'unbordered' : '';
   const disabledClass = (disabled === true) ? 'disabled' : '';
-  const inlineClass = (inline === true) ? 'inline' : '';
   const rootClasses = `${unborderedClass} ${disabledClass}`;
-  const classes = `datacard ${rootClasses} ${className} ${inlineClass}`;
+  const classes = `datacard ${rootClasses} ${className}`;
   return (
     <div className={classes}>
       {children}
@@ -23,7 +22,6 @@ DataCard.propTypes = {
   children: React.PropTypes.node.isRequired,
   border: React.PropTypes.bool,
   disabled: React.PropTypes.bool,
-  inline: React.PropTypes.bool,
   className: React.PropTypes.string,
 };
 

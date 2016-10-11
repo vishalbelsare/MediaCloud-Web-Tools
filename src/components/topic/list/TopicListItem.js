@@ -30,7 +30,7 @@ const TopicListItem = (props) => {
   }
   return (
     <Col xs={12} sm={6} md={6} lg={6}>
-      <DataCard disabled={disable} inline >
+      <DataCard disabled={disable}>
         <div className="actions">
           {favButton}
         </div>

@@ -31,7 +31,7 @@ class FocalSetDefinitionSummary extends React.Component {
     const { focalSetDefinition, onFocusDefinitionDelete, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <DataCard className="focal-set-definition-summary" inline>
+      <DataCard className="focal-set-definition-summary">
         <Row>
           <Col lg={9} md={9} sm={8} xs={12}>
             <h2>
