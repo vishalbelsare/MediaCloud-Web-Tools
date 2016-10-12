@@ -18,21 +18,29 @@ const localMessages = {
   },
 };
 
-const CollectionGeographyContainer = (props) => {
-  const { intro, geolist } = props;
+class CollectionGeographyContainer extends React.Component {
 
-  const msg = <FormattedMessage {...messages.download} />;
-  return (
-    <DataCard>
-      <div>
-        <DownloadButton tooltip={msg} onClick={this.downloadCsv} />
-      </div>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
-      <p>{intro}</p>
-      <GeoChart data={geolist} />
-    </DataCard>
-  );
-};
+  downloadCsv = () => {
+    const { collectionId } = this.props;
+    const url = `/api/sources/${collectionId}/geography/count.csv`;
+    window.location = url;
+  }
+  render() {
+    const { intro, geolist, intl } = this.props;
+    const { formatMessage } = intl;
+    return (
+
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <p>{intro}</p>
+        <GeoChart data={geolist} />
+      </DataCard>
+    );
+  }
+}
 
 CollectionGeographyContainer.propTypes = {
   // from state
@@ -71,7 +79,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           CollectionGeographyContainer
         )
