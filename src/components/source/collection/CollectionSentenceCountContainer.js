@@ -10,6 +10,7 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },

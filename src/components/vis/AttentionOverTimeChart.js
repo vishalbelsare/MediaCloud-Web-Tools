@@ -61,7 +61,7 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { totalSentences, data, height, onDataPointClick, lineColor, health } = this.props;
+    const { total, data, height, onDataPointClick, lineColor, health } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
@@ -92,12 +92,12 @@ class AttentionOverTimeChart extends React.Component {
     config.series = allSeries;
     // show total if it is included
     let totalInfo = null;
-    if ((totalSentences !== null) && (totalSentences !== undefined)) {
+    if ((total !== null) && (total !== undefined)) {
       totalInfo = (
         <p>
           <FormattedMessage
             {...localMessages.totalCount}
-            values={{ totalSentences, formattedTotal: (<FormattedNumber value={totalSentences} />) }}
+            values={{ total, formattedTotal: (<FormattedNumber value={total} />) }}
           />
         </p>
       );
@@ -119,7 +119,7 @@ AttentionOverTimeChart.propTypes = {
   lineColor: React.PropTypes.string.isRequired,
   health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func,
-  totalSentences: React.PropTypes.number,
+  total: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
 };
 
