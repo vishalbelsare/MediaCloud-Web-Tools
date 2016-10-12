@@ -6,14 +6,27 @@ import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchSourceCollectionGeo } from '../../../actions/sourceActions';
 
+import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { DownloadButton } from '../../common/IconButton';
+
 const localMessages = {
   title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
+  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'topic.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Collection across the world.</p>',
+  },
 };
 
 const CollectionGeographyContainer = (props) => {
   const { intro, geolist } = props;
+
+  const msg = <FormattedMessage {...messages.download} />;
   return (
     <DataCard>
+      <div>
+        <DownloadButton tooltip={msg} onClick={this.downloadCsv} />
+      </div>
       <h2><FormattedMessage {...localMessages.title} /></h2>
       <p>{intro}</p>
       <GeoChart data={geolist} />
@@ -58,8 +71,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        CollectionGeographyContainer
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        composeAsyncContainer(
+          CollectionGeographyContainer
+        )
       )
     )
   );

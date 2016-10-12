@@ -25,12 +25,12 @@ class SourceSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { counts, intl } = this.props;
+    const { counts } = this.props;
+    const { formatMessage } = this.props.intl;
     const total = counts.length;
-    const { formatMessage } = intl;
     return (
       <DataCard>
-        <div>
+        <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>

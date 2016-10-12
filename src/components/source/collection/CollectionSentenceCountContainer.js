@@ -30,7 +30,7 @@ class CollectionSentenceCountContainer extends React.Component {
     const { formatMessage } = intl;
     return (
       <DataCard>
-        <div>
+        <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
