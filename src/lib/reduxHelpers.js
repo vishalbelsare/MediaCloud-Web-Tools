@@ -1,5 +1,6 @@
 import { resolve, reject } from 'redux-simple-promise';
 import * as fetchConstants from './fetchConstants';
+import { updateFeedback } from '../actions/appActions';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
 export function arrayToDict(arr, keyPropertyName) {
@@ -136,5 +137,28 @@ export function createAsyncReducer(handlers) {
         }
         return state;
     }
+  };
+}
+
+/**
+ * Report failures to user via app-level feedback mechanism.
+ */
+export function errorReportingMiddleware({ dispatch }) {
+  return next => (action) => {
+    let message = null;
+    if (action.type.endsWith('_RESOLVED') || action.type.endsWith('_REJECTED')) {
+      if ('status' in action.payload) {
+        if (action.payload.status !== 200) {
+          message = 'Sorry, we had an error';
+          if ('message' in action.payload) {
+            message = action.payload.message;
+          }
+        }
+      }
+    }
+    if (message !== null) {
+      dispatch(updateFeedback({ open: true, message }));
+    }
+    return next(action);  // Call the next dispatch method in the middleware chain.
   };
 }

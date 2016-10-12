@@ -2,6 +2,8 @@ import logging
 from functools import wraps
 from flask import jsonify, request
 
+from mediacloud.error import MCException
+
 logger = logging.getLogger(__name__)
 
 def validate_params_exist(form, params):
@@ -32,7 +34,7 @@ def arguments_required(*expected_args):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                logger.info(request.args)
+                # logger.info(request.args)
                 validate_params_exist(request.args, expected_args)
                 return func(*args, **kwargs)
             except ValueError as e:
@@ -41,7 +43,7 @@ def arguments_required(*expected_args):
         return wrapper
     return decorator
 
-def form_fields_required(*expected_args):
+def form_fields_required(*expected_form_fields):
     '''
     Handy decorator for ensuring that the form has the fields you need
     '''
@@ -49,11 +51,25 @@ def form_fields_required(*expected_args):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                logger.info(request.form)
-                validate_params_exist(request.form, expected_args)
+                # logger.info(request.form)
+                validate_params_exist(request.form, expected_form_fields)
                 return func(*args, **kwargs)
             except ValueError as e:
                 logger.exception("Missing a required form field")
                 return json_error_response(e.args[0])
         return wrapper
     return decorator
+
+def api_error_handler(func):
+    '''
+    Handy decorator for ....
+    '''
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            logger.info('API_ERROR_HANDLER!')
+            return func(*args, **kwargs)
+        except MCException as e:
+            logger.exception(e)
+            return json_error_response(e.message, e.status_code)
+    return wrapper
