@@ -13,4 +13,4 @@ export function getAppName() {
 /**
  * Specify a version number
  */
-export const VERSION = '0.5.2';
+export const VERSION = '0.6.0';
