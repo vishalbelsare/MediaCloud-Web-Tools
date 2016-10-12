@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import Link from 'react-router/lib/Link';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -49,7 +50,7 @@ const SnapshotHome = props => (
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
             <ComingSoon />
-            <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary />
+            <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary onClick={props.handleGenerateSnapshotRequest} />
           </DataCard>
         </Col>
       </Row>
@@ -77,6 +78,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((results) => {
         if (results.success === 1) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
+          dispatch(push(`/topics/${ownProps.topicId}/summary`));
         } else {
           // TODO: error message!
         }
