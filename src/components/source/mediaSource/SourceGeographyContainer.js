@@ -6,20 +6,35 @@ import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchSourceGeo } from '../../../actions/sourceActions';
 
+import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { DownloadButton } from '../../common/IconButton';
+
 const localMessages = {
   title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
+  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'topic.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Source across the world.</p>',
+  },
 };
 
-const SourceGeographyContainer = (props) => {
-  const { intro, geolist } = props;
-  return (
-    <DataCard>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
-      <p>{intro}</p>
-      <GeoChart data={geolist} />
-    </DataCard>
-  );
-};
+class SourceGeographyContainer extends React.Component {
+
+  render() {
+    const { intro, geolist } = this.props;
+    const { formatMessage } = this.props.intl;
+    return (
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <p>{intro}</p>
+        <GeoChart data={geolist} />
+      </DataCard>
+    );
+  }
+}
 
 SourceGeographyContainer.propTypes = {
   // from state
@@ -58,8 +73,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        SourceGeographyContainer
+       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+        composeAsyncContainer(
+          SourceGeographyContainer
+        )
       )
     )
   );

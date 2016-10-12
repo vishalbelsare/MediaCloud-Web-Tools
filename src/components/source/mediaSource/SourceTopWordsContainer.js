@@ -5,21 +5,34 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
+import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
+  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Top Words' },
+  helpText: { id: 'topic.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Source in words.</p>',
+  },
 };
 
-const SourceTopWordsContainer = (props) => {
-  const { intro, words, onWordClick } = props;
-  return (
-    <DataCard>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
-      <p>{ intro }</p>
-      <OrderedWordCloud words={words} onWordClick={onWordClick} />
-    </DataCard>
-  );
-};
+class SourceTopWordsContainer extends React.Component {
+  render() {
+    const { intro, words, onWordClick } = this.props;
+    const { formatMessage } = this.props.intl;
+    return (
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <p>{ intro }</p>
+        <OrderedWordCloud words={words} onWordClick={onWordClick} />
+      </DataCard>
+    );
+  }
+}
 
 SourceTopWordsContainer.propTypes = {
   // from parent
@@ -48,8 +61,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        SourceTopWordsContainer
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+        composeAsyncContainer(
+          SourceTopWordsContainer
+        )
       )
     )
   );

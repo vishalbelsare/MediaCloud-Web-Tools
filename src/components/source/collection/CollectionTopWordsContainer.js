@@ -6,20 +6,41 @@ import { fetchSourceCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 
+import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { DownloadButton } from '../../common/IconButton';
+
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
+  helpTitle: { id: 'topic.summary.topWords.help.title', defaultMessage: 'About Top Words' },
+  helpText: { id: 'topic.summary.topWords.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Collection in top words.</p>',
+  },
 };
 
-const CollectionTopWordsContainer = (props) => {
-  const { intro, words, onWordClick } = props;
-  return (
-    <DataCard>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
-      <p>{ intro }</p>
-      <OrderedWordCloud words={words} onWordClick={onWordClick} />
-    </DataCard>
-  );
-};
+class CollectionTopWordsContainer extends React.Component {
+
+  downloadCsv = () => {
+    const { collectionId } = this.props;
+    const url = `/api/sources/${collectionId}/wordcounts/count.csv`;
+    window.location = url;
+  }
+
+  render() {
+    const { intro, words, onWordClick, intl } = this.props;
+    const { formatMessage } = intl;
+    return (
+      <DataCard>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <p>{ intro }</p>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <OrderedWordCloud words={words} onWordClick={onWordClick} />
+      </DataCard>
+    );
+  }
+}
 
 CollectionTopWordsContainer.propTypes = {
   // from parent
@@ -48,8 +69,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        CollectionTopWordsContainer
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
+        composeAsyncContainer(
+          CollectionTopWordsContainer
+        )
       )
     )
   );
