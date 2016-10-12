@@ -7,6 +7,9 @@ const DEFAULT_WIDTH = 530;
 const DEFAULT_MAX_BUBBLE_RADIUS = 70;
 const DEFAULT_HEIGHT = 200;
 
+/**
+ * Draw a bubble chart with labels.  Values are mapped to area, not radius.
+ */
 class BubbleChart extends React.Component {
 
   render() {
@@ -27,9 +30,9 @@ class BubbleChart extends React.Component {
       options.maxBubbleRadius = DEFAULT_MAX_BUBBLE_RADIUS;
     }
 
-    // prep the data and some config
+    // prep the data and some config (scale by sqrt of value so we map to area, not radius)
     const maxValue = d3.max(data.map(d => d.value));
-    const radius = d3.scaleLinear().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
+    const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     const bubbleData = data.map(d => ({ ...d, r: radius(d.value) }));
     // start the packing
     const circles = d3.packSiblings(bubbleData);
