@@ -9,13 +9,14 @@ from server.views.topics import validated_sort
 import server.util.csv as csv
 from server.views.topics.sentences import split_sentence_count, stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
-from server.util.request import filters_from_args
+from server.util.request import filters_from_args, api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/media', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def topic_media(topics_id):
     user_mc = user_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
@@ -28,6 +29,7 @@ def topic_media(topics_id):
 
 @app.route('/api/topics/<topics_id>/media/<media_id>', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def media(topics_id, media_id):
     user_mc = user_mediacloud_client()
     timespans_id = request.args.get('timespanId')
@@ -36,6 +38,7 @@ def media(topics_id, media_id):
 
 @app.route('/api/topics/<topics_id>/media.csv', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
     snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
@@ -43,6 +46,7 @@ def topic_media_csv(topics_id):
         snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
+@api_error_handler
 def topic_media_sentence_count(topics_id, media_id):
     snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     return jsonify(split_sentence_count(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
@@ -56,6 +60,7 @@ def topic_media_sentence_count_csv(topics_id, media_id):
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def media_stories(topics_id, media_id):
     user_mc = user_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
@@ -72,6 +77,7 @@ def media_stories_csv(topics_id, media_id):
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/inlinks', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def media_inlinks(topics_id, media_id):
     user_mc = user_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
@@ -88,6 +94,7 @@ def media_inlinks_csv(topics_id, media_id):
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/outlinks', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def media_outlinks(topics_id, media_id):
     user_mc = user_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
@@ -130,6 +137,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/words', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def media_words(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
     word_list = _media_words(user_mediacloud_key(), topics_id, media_id, timespans_id)[:100]

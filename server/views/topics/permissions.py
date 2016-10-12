@@ -3,13 +3,14 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import form_fields_required, json_error_response
+from server.util.request import form_fields_required, json_error_response, api_error_handler
 from server.auth import user_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/permissions/list', methods=['GET'])
 @flask_login.login_required
+@api_error_handler
 def topic_permissions_list(topics_id):
     user_mc = user_mediacloud_client()
     results = user_mc.topicPermissionsList(topics_id)
@@ -18,6 +19,7 @@ def topic_permissions_list(topics_id):
 @app.route('/api/topics/<topics_id>/permissions/update', methods=['PUT'])
 @form_fields_required('email', 'permission')
 @flask_login.login_required
+@api_error_handler
 def topic_update_permission(topics_id):
     email = request.form["email"]
     permission = request.form["permission"]

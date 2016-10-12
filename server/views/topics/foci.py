@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import form_fields_required
+from server.util.request import form_fields_required, api_error_handler
 from server.auth import user_mediacloud_client
 
 logger = logging.getLogger(__name__)
@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/focus-definitions/create', methods=['POST'])
 @form_fields_required('name', 'description', 'query', 'focalSetDefinitionsId')
 @flask_login.login_required
+@api_error_handler
 def topic_focus_definition_create(topics_id):
     user_mc = user_mediacloud_client()
     name = request.form['name']
@@ -23,6 +24,7 @@ def topic_focus_definition_create(topics_id):
 
 @app.route('/api/topics/<topics_id>/focus-definitions/<foci_definition_id>/delete', methods=['DELETE'])
 @flask_login.login_required
+@api_error_handler
 def topic_focus_definition_delete(topics_id, foci_definition_id):
     user_mc = user_mediacloud_client()
     results = user_mc.topicFocusDefinitionDelete(topics_id, foci_definition_id)
