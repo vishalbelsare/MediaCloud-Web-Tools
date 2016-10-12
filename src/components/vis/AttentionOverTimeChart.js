@@ -61,16 +61,14 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, height, onDataPointClick, health, lineColor } = this.props;
+    const { total, data, height, onDataPointClick, lineColor, health } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
     config.exporting.filename = formatMessage(localMessages.chartYAxisLabel);
     if ((health !== null) && (health !== undefined)) {
-      config.xAxis = {
-        plotBands: health,
-      };
+      config.xAxis.plotBands = health;
     }
     if (onDataPointClick !== null) {
       config.plotOptions.series.point = { events: { click: onDataPointClick } };
@@ -81,7 +79,7 @@ class AttentionOverTimeChart extends React.Component {
     // turning variable time unit into days
     const intervalMs = (dates[1] - dates[0]);
     const intervalDays = intervalMs / SECS_PER_DAY;
-    const values = data.map(d => d.count / intervalDays);
+    const values = data.map(d => Math.round(d.count / intervalDays));
     const allSeries = [{
       id: 0,
       name: formatMessage(localMessages.chartYAxisLabel),

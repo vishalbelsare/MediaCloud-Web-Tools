@@ -6,6 +6,7 @@ import { fetchSourceCollectionSentenceCount } from '../../../actions/sourceActio
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getBrandDarkColor } from '../../../styles/colors';
+import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {

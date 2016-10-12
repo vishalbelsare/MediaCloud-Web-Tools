@@ -6,7 +6,9 @@ import { fetchSourceSentenceCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getBrandDarkColor } from '../../../styles/colors';
+import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
+
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
 };
@@ -18,7 +20,7 @@ class SourceSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { counts } = this.props;
+    const { counts, health } = this.props;
     const { formatMessage } = this.props.intl;
     const total = counts.length;
     return (
@@ -27,7 +29,7 @@ class SourceSentenceCountContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <AttentionOverTimeChart total={total} data={counts} height={250} lineColor={getBrandDarkColor()} />
+        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} lineColor={getBrandDarkColor()} />
       </DataCard>
     );
   }
