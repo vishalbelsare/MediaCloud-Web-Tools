@@ -67,7 +67,6 @@ def api_error_handler(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            logger.info('API_ERROR_HANDLER!')
             return func(*args, **kwargs)
         except MCException as e:
             logger.exception(e)
