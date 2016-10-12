@@ -1,6 +1,11 @@
 import cookie from 'react-cookie';
 import { createPostingApiPromise } from './apiUtil';
 
+export const PERMISSION_NONE = 'none';
+export const PERMISSION_READ = 'read';
+export const PERMISSION_WRITE = 'write';
+export const PERMISSION_ADMIN = 'admin';
+
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';
 
