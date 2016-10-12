@@ -62,7 +62,9 @@ def form_fields_required(*expected_form_fields):
 
 def api_error_handler(func):
     '''
-    Handy decorator for ....
+    Handy decorator that catches any exception from the Media Cloud API and 
+    sends it back to the browser as a nicely formatted JSON error.  The idea is
+    that the client code can catch these at a low level and display error messages.
     '''
     @wraps(func)
     def wrapper(*args, **kwargs):
