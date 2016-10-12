@@ -12,9 +12,9 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
+  title: { id: 'source.summary.sentenceCount.title', defaultMessage: 'Attention' },
+  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'source.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the coverage of this Topic over time.</p>',
   },
 };
@@ -110,3 +110,4 @@ export default
       )
     )
   );
+  

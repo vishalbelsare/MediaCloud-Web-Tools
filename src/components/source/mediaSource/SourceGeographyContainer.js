@@ -12,8 +12,8 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
+  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Geography' },
+  helpText: { id: 'source.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the coverage of this Source across the world.</p>',
   },
 };
