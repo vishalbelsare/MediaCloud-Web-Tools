@@ -2,37 +2,52 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { Col } from 'react-flexbox-grid/lib';
+import Lock from 'material-ui/svg-icons/action/lock';
+import IconButton from 'material-ui/IconButton';
 import DataCard from '../../common/DataCard';
 import { FavoriteButton, FavoriteBorderButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
+import { PERMISSION_NONE } from '../../../lib/auth';
+
+const localMessages = {
+  notPermissioned: { id: 'topic.notPermissioned', defaultMessage: 'Missing Permission' },
+};
 
 const TopicListItem = (props) => {
   const { topic, onChangeFavorited } = props;
   const { formatMessage } = props.intl;
   const disable = (topic.state !== 'ready');
   let title = null;
-  if (disable) {
+  if (disable || (topic.user_permission === PERMISSION_NONE)) {
     title = topic.name;
   } else {
     title = <Link to={`/topics/${topic.topics_id}/summary`}>{topic.name}</Link>;
   }
-  let favButton = null;
-  if (topic.isFavorite) {
-    favButton = (<FavoriteButton
-      tooltip={formatMessage(messages.unfavorite)}
-      onClick={() => onChangeFavorited(topic.topics_id, false)}
-    />);
+  let mainButton = null;
+  if (topic.user_permission !== PERMISSION_NONE) {
+    if (topic.isFavorite) {
+      mainButton = (<FavoriteButton
+        tooltip={formatMessage(messages.unfavorite)}
+        onClick={() => onChangeFavorited(topic.topics_id, false)}
+      />);
+    } else {
+      mainButton = (<FavoriteBorderButton
+        tooltip={formatMessage(messages.favorite)}
+        onClick={() => onChangeFavorited(topic.topics_id, true)}
+      />);
+    }
   } else {
-    favButton = (<FavoriteBorderButton
-      tooltip={formatMessage(messages.favorite)}
-      onClick={() => onChangeFavorited(topic.topics_id, true)}
-    />);
+    mainButton = (
+      <IconButton tooltip={formatMessage(localMessages.notPermissioned)} >
+        <Lock color="#FF8C00" />
+      </IconButton>
+    );
   }
   return (
     <Col xs={12} sm={6} md={6} lg={6}>
       <DataCard disabled={disable} inline >
         <div className="actions">
-          {favButton}
+          {mainButton}
         </div>
         <h3>{title}</h3>
         <p>{topic.description}</p>
