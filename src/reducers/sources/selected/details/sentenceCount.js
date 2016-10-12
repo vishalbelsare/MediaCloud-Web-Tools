@@ -9,7 +9,7 @@ const sentenceCount = createAsyncReducer({
   },
   action: FETCH_SOURCE_SENTENCE_COUNT,
   handleSuccess: payload => ({
-    total: payload.results.sentenceCounts.length,
+    total: payload.results.total,
     list: cleanDateCounts(payload.results.sentenceCounts),
     health: cleanCoverageGaps(payload.results.health.coverage_gaps_list),
   }),

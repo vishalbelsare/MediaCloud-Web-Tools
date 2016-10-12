@@ -5,21 +5,40 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceCollectionSentenceCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
+import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
+  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'topic.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the coverage of this Topic over time.</p>',
+  },
 };
 
-const CollectionSentenceCountContainer = (props) => {
-  const { total, counts, health } = props;
-  return (
-    <DataCard>
-      <h2><FormattedMessage {...localMessages.title} /></h2>
-      <AttentionOverTimeChart total={total} data={counts} health={health} height={250} lineColor={getBrandDarkColor()} />
-    </DataCard>
-  );
-};
+class CollectionSentenceCountContainer extends React.Component {
+
+  downloadCsv = () => {
+    const { collectionId } = this.props;
+    const url = `/api/sources/${collectionId}/sentences/count.csv`;
+    window.location = url;
+  }
+  render() {
+    const { total, counts, health, intl } = this.props;
+    const { formatMessage } = intl;
+    return (
+      <DataCard>
+        <div>
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} lineColor={getBrandDarkColor()} />
+      </DataCard>
+    );
+  }
+}
 
 CollectionSentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
@@ -50,8 +69,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        CollectionSentenceCountContainer
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        composeAsyncContainer(
+          CollectionSentenceCountContainer
+        )
       )
     )
   );
+
