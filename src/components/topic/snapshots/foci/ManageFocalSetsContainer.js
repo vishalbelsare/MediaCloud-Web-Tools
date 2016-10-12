@@ -11,6 +11,7 @@ import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefiniti
 import { updateFeedback } from '../../../../actions/appActions';
 import FocalSetDefinitionSummary from './FocalSetDefinitionSummary';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
+import FocusIcon from '../../../common/icons/FocusIcon';
 
 const localMessages = {
   focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Foci' },
@@ -79,7 +80,7 @@ class ManageFocalSetsContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12}>
-              <h1><FormattedMessage {...localMessages.focalSetsManageTitle} /></h1>
+              <h1><FocusIcon /><FormattedMessage {...localMessages.focalSetsManageTitle} /></h1>
             </Col>
           </Row>
           <Row>

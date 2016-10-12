@@ -16,6 +16,7 @@ import MediaWordsContainer from './MediaWordsContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
+import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 
 const localMessages = {
   mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Source Details: {title}' },
@@ -65,6 +66,7 @@ class MediaContainer extends React.Component {
                 <span className="actions">
                   <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                 </span>
+                <MediaSourceIcon />
                 <FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} />
               </h1>
             </Col>

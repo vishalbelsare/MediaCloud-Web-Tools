@@ -1,7 +1,7 @@
 import React from 'react';
 
 const TopicIcon = () => (
-  <div className="app-icon app-icon-topic">
+  <div className="app-icon app-icon-large app-icon-topic">
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="63.849px" height="63.928px" viewBox="0 0 63.849 63.928" enableBackground="new 0 0 63.849 63.928" xmlSpace="preserve">
       <g>
         <path d="M62.349,0.08H1.5C0.671,0.08,0,0.751,0,1.58v60.849c0,0.828,0.671,1.5,1.5,1.5h60.849c0.828,0,1.5-0.672,1.5-1.5V1.58 C63.849,0.751,63.177,0.08,62.349,0.08z M60.849,60.928H3V3.08h57.849V60.928z" />

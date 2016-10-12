@@ -21,6 +21,10 @@
     border-radius: 11px;
   }
 
+  &.app-icon-large {
+    height: 50px;
+  }
+
   &.app-icon-download {
     svg {
       margin-top: 6px;
@@ -81,6 +85,26 @@
   }
 
   &.app-icon-topic {
+    width: 70px;
+  }
+
+  &.app-icon-story {
+    width: 50px;
+  }
+
+  &.app-icon-media-source {
+    width: 80px;
+  }
+
+  &.app-icon-snapshot {
+    width: 80px;
+  }
+
+  &.app-icon-timespan {
+    width: 70px;
+  }
+
+  &.app-icon-focus {
     width: 70px;
   }
 

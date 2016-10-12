@@ -10,6 +10,7 @@ import messages from '../../../resources/messages';
 import { generateSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import ComingSoon from '../../common/ComingSoon';
+import SnapshotIcon from '../../common/icons/SnapshotIcon';
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Snapshot Builder' },
@@ -27,7 +28,7 @@ const SnapshotHome = props => (
     <Grid>
       <Row>
         <Col lg={10}>
-          <h1><FormattedMessage {...localMessages.title} /></h1>
+          <h1><SnapshotIcon /><FormattedMessage {...localMessages.title} /></h1>
           <FormattedHTMLMessage {...localMessages.aboutText} />
         </Col>
       </Row>

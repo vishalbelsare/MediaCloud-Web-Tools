@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
 import ComingSoon from '../../../common/ComingSoon';
+import TimespanIcon from '../../../common/icons/TimespanIcon';
 
 const localMessages = {
   title: { id: 'timespans.manage.title', defaultMessage: 'Manage Timespans' },
@@ -18,7 +19,7 @@ const ManageTimespansContainer = props => (
     <Grid>
       <Row>
         <Col lg={10}>
-          <h1><FormattedMessage {...localMessages.title} /></h1>
+          <h1><TimespanIcon /><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.about} /></p>
           <ComingSoon />
         </Col>

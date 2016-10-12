@@ -14,6 +14,7 @@ import StoryOutlinksContainer from './StoryOutlinksContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
+import StoryIcon from '../../common/icons/StoryIcon';
 
 const MAX_STORY_TITLE_LENGTH = 60;  // story titles longer than this will be trimmed and ellipses added
 
@@ -69,6 +70,7 @@ class StoryContainer extends React.Component {
                 <span className="actions">
                   <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                 </span>
+                <StoryIcon />
                 <FormattedMessage {...localMessages.mainTitle} values={{ title: displayTitle }} />
               </h1>
             </Col>
