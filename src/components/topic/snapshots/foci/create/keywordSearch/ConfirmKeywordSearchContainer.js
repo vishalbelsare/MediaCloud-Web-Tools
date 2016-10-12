@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             });
         });
     } else {
-      newFocusDefinition.focalSetDefinitionsId = properties.focalSetDefinition.focal_set_definitions_id;
+      newFocusDefinition.focalSetDefinitionsId = properties.focalSetDefinitionId;
       dispatch(createFocusDefinition(topicId, newFocusDefinition))
         .then(() => {
           // TODO: check results to make sure it worked before proceeding
