@@ -74,6 +74,13 @@
             end: 'YYYY-MM-DD',
             start: 'YYYY-MM-DD',
           }
+        },
+        storyTotals: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          counts: {
+            total: [number],
+            filtered: [number]
+          }
         }
       },
       media: {

@@ -9,7 +9,7 @@ const localMessages = {
   worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
 };
 
-const DEFAULT_WIDTH = 550;
+const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 24;
@@ -92,7 +92,7 @@ class OrderedWordCloud extends React.Component {
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
     // create a rollover tooltip helper
     const tooltipDiv = d3.select('body').append('div')
-      .attr('class', 'ordered-word-cloud-tooltip')
+      .attr('class', 'viz-tooltip ordered-word-cloud-tooltip')
       .style('opacity', 0);
     // start layout calculations
     const node = ReactFauxDOM.createElement('svg');

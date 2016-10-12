@@ -22,6 +22,19 @@ def story(topics_id, stories_id):
     story_info['media_url'] = user_mc.media(story_info['media_id'])['url']
     return jsonify(story_info)
 
+@app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
+@flask_login.login_required
+def story_counts(topics_id):
+    timespans_id = request.args.get('timespanId')
+    total = _story_count(user_mediacloud_key(), topics_id)
+    filtered = _story_count(user_mediacloud_key(), topics_id, timespans_id)
+    return jsonify({'counts':{'filtered': filtered['count'], 'total': total['count']}})
+
+@cache
+def _story_count(user_mc_key, topics_id, timespans_id=None):
+    user_mc = user_mediacloud_client()
+    return user_mc.topicStoryCount(topics_id, timespans_id=timespans_id) 
+
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
 @flask_login.login_required
 def story_words(topics_id, stories_id):

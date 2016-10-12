@@ -130,3 +130,8 @@ export function topicSetFavorite(topicId, favorite) {
 export function favoriteTopics() {
   return createApiPromise('/api/topics/favorite');
 }
+
+export function topicStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId']);
+  return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
+}

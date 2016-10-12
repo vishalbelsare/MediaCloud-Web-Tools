@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import d3LayoutCloud from 'd3-cloud';
 import ReactFauxDOM from 'react-faux-dom';
 
-const DEFAULT_WIDTH = 600;
+const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MAX_FONT_SIZE = 32;
 const DEFAULT_TEXT_COLOR = '#333333';

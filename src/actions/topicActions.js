@@ -52,6 +52,7 @@ export const FETCH_TOPIC_PERMISSIONS = 'FETCH_TOPIC_PERMISSIONS';
 export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
+export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -85,6 +86,8 @@ export const sortTopicTopMedia = createAction(SORT_TOPIC_TOP_MEDIA, sort => sort
 export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.topicTopWords);
 // pass in topicId, snapshotId, timespanId
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);
+// pass in topic id, filters
+export const fetchTopicStoryCounts = createAsyncAction(FETCH_TOPIC_STORY_COUNTS, api.topicStoryCounts);
 
 // pass in topicId, snapshotId, timespanId, sort, limit, linkId
 export const fetchTopicInfluentialMedia = createAsyncAction(FETCH_TOPIC_INFLUENTIAL_MEDIA, api.topicTopMedia);
