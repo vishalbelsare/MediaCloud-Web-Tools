@@ -7,6 +7,8 @@ import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getBrandDarkColor } from '../../../styles/colors';
 import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
+
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
 };
