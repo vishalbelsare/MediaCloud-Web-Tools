@@ -12,6 +12,18 @@ function gapDateToMomemt(gapDateString, strict = true) {
   return moment(gapDateString, GAP_DATE_FORMAT, strict);
 }
 
+
+// Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
+export function calcSentences(countsMap) {
+  let sentenceCount = 0;
+  Object.keys(countsMap).forEach((k) => {
+    if (k !== 'end' && k !== 'gap' && k !== 'start') {
+      const v = countsMap[k];
+      sentenceCount += v;
+    }
+  });
+  return sentenceCount;
+}
 // Helper to change solr dates (2015-12-14T00:00:00Z) into javascript date ojects
 export function cleanDateCounts(countsMap) {
   const countsArray = [];
