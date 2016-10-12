@@ -13,8 +13,8 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
+  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'source.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the coverage of this Source across the world.</p>',
   },
 };
@@ -26,9 +26,8 @@ class SourceSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { counts, health } = this.props;
+    const { total, counts, health } = this.props;
     const { formatMessage } = this.props.intl;
-    const total = counts.length;
     return (
       <DataCard>
         <div className="actions">
