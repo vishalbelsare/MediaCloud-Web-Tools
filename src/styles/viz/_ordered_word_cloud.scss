@@ -1,5 +1,18 @@
 @import '../_constants';
 
-div.ordered-word-cloud-tooltip {   
+.ordered-word-cloud {
+  svg {
+    text {
+      cursor: pointer;
+      &:hover {
+        fill: #00FF00;
+      }
+    }
+  }
+}
+
+.ordered-word-cloud-tooltip {   
 
 }
+
+
