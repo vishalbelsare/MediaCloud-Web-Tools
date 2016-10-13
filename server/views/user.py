@@ -1,7 +1,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
-
+from server.util.request import api_error_handler
 from server import app, auth
 from server.util.request import form_fields_required, json_error_response
 
@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 @app.route('/api/login', methods=['POST'])
 @form_fields_required('email', 'password')
+@api_error_handler 
 def login_with_password():
     username = request.form["email"]
     logger.debug("login request from %s", username)
@@ -23,6 +24,7 @@ def login_with_password():
 
 @app.route('/api/login-with-key', methods=['POST'])
 @form_fields_required('email', 'key')
+@api_error_handler 
 def login_with_key():
     username = request.form["email"]
     logger.debug("login request from %s", username)
@@ -37,6 +39,7 @@ def login_with_key():
 
 @app.route('/api/permissions/user/list', methods=['GET'])
 @flask_login.login_required
+@api_error_handler 
 def permissions_for_user():
     user_mc = auth.user_mediacloud_client()
     return user_mc.userPermissionsList()
