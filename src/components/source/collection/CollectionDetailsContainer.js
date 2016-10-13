@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { select, fetchSourceCollectionDetails } from '../../../actions/sourceActions';
+import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionBasicInfo from './CollectionBasicInfo';
 import SourceList from './SourceList';
@@ -118,7 +118,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(select(ownProps.params.collectionId));
-    dispatch(fetchSourceCollectionDetails(ownProps.params.collectionId));
+    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
   },
 });
 

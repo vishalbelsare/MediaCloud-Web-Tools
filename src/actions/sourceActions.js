@@ -30,22 +30,22 @@ export const select = createAction(SELECT, id => id);
 
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 
-export const fetchSourceCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.sourceCollectionList);
+export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.collectionList);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
-export const fetchSourceCollectionDetails = createAsyncAction(FETCH_COLLECTION_DETAILS, api.sourceCollectionDetails, id => id);
+export const fetchCollectionDetails = createAsyncAction(FETCH_COLLECTION_DETAILS, api.collectionDetails, id => id);
 
 export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
 
-export const fetchSourceCollectionSentenceCount = createAsyncAction(FETCH_COLLECTION_SENTENCE_COUNT, api.sourceCollectionSentenceCount, id => id);
+export const fetchCollectionSentenceCount = createAsyncAction(FETCH_COLLECTION_SENTENCE_COUNT, api.collectionSentenceCount, id => id);
 
 export const fetchSourceTopWords = createAsyncAction(FETCH_SOURCE_TOP_WORDS, api.sourceWordCount, id => id);
 
-export const fetchSourceCollectionTopWords = createAsyncAction(FETCH_COLLECTION_TOP_WORDS, api.sourceCollectionWordCount, id => id);
+export const fetchCollectionTopWords = createAsyncAction(FETCH_COLLECTION_TOP_WORDS, api.collectionWordCount, id => id);
 
 export const fetchSourceGeo = createAsyncAction(FETCH_SOURCE_GEO, api.sourceGeography, id => id);
 
-export const fetchSourceCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.sourceCollectionGeography, id => id);
+export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.collectionGeography, id => id);
 
 export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);

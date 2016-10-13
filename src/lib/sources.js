@@ -18,7 +18,7 @@ export function sourceSearch(wildcardString) {
   );
 }
 
-export function sourceCollectionList() {
+export function CollectionList() {
   return fetch('api/sources/collection/list', {
     method: 'get',
     credentials: 'include',
@@ -36,7 +36,7 @@ export function sourceDetails(mediaId) {
   );
 }
 
-export function sourceCollectionDetails(mediaId) {
+export function collectionDetails(mediaId) {
   return fetch(`/api/sources/collection/${mediaId}/details`, {
     method: 'get',
     credentials: 'include',
@@ -54,7 +54,7 @@ export function sourceSentenceCount(mediaId) {
   );
 }
 
-export function sourceCollectionSentenceCount(mediaId) {
+export function collectionSentenceCount(mediaId) {
   return fetch(`api/sources/collection/${mediaId}/sentences/count`, {
     method: 'get',
     credentials: 'include',
@@ -72,7 +72,7 @@ export function sourceGeography(mediaId) {
   );
 }
 
-export function sourceCollectionGeography(mediaId) {
+export function collectionGeography(mediaId) {
   return fetch(`api/sources/media-tag/${mediaId}/geography`, {
     method: 'get',
     credentials: 'include',
@@ -90,7 +90,7 @@ export function sourceWordCount(mediaId) {
   );
 }
 
-export function sourceCollectionWordCount(mediaId) {
+export function collectionWordCount(mediaId) {
   return fetch(`/api/sources/media-tag/${mediaId}/words`, {
     method: 'get',
     credentials: 'include',

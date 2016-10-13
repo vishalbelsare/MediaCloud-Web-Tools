@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import { fetchSourceCollectionTopWords } from '../../../actions/sourceActions';
+import { fetchCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 
@@ -31,11 +31,11 @@ class CollectionTopWordsContainer extends React.Component {
     const { formatMessage } = intl;
     return (
       <DataCard>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
-        <p>{ intro }</p>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <p>{ intro }</p>
         <OrderedWordCloud words={words} onWordClick={onWordClick} />
       </DataCard>
     );
@@ -62,7 +62,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchSourceCollectionTopWords(ownProps.collectionId));
+    dispatch(fetchCollectionTopWords(ownProps.collectionId));
   },
 });
 

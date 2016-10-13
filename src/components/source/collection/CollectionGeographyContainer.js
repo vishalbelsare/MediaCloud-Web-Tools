@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
-import { fetchSourceCollectionGeo } from '../../../actions/sourceActions';
+import { fetchCollectionGeo } from '../../../actions/sourceActions';
 
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (collectionId) => {
-    dispatch(fetchSourceCollectionGeo(collectionId));
+    dispatch(fetchCollectionGeo(collectionId));
   },
 });
 
