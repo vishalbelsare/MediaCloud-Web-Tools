@@ -14,6 +14,7 @@ const DEFAULT_HEIGHT = 300;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 24;
 const DEFAULT_TEXT_COLOR = '#333333';
+const DEFAULT_LINK_COLOR = '#ff0000';
 
 class OrderedWordCloud extends React.Component {
 
@@ -84,6 +85,9 @@ class OrderedWordCloud extends React.Component {
     if (textColor === undefined) {
       options.textColor = DEFAULT_TEXT_COLOR;
     }
+    if (linkColor === undefined) {
+      options.linkColor = DEFAULT_LINK_COLOR;
+    }
     if (showTooltips === undefined) {
       options.showTooltips = false;
     }
@@ -119,6 +123,8 @@ class OrderedWordCloud extends React.Component {
         .text(d => d.term)
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {
+          wordWrapper.select(d).attr('cursor', 'pointer');
+          this.setAttribute('cursor', 'pointer');
           if (options.showTooltips) {
             let tooltipHtml = formatMessage(localMessages.wordCloudStem, { stem: d.stem });
             tooltipHtml += '<br />';
@@ -154,7 +160,11 @@ class OrderedWordCloud extends React.Component {
     if (y < options.height) {
       svg.attr('height', y);
     }
-    return node.toReact();
+    return (
+      <div className="ordered-word-cloud">
+        {node.toReact()}
+      </div>
+    );
   }
 
 }
