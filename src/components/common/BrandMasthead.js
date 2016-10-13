@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
-import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
+import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
 
 const localMessages = {
@@ -37,9 +37,9 @@ class BrandMasthead extends React.Component {
     let loginLogoutButton = null;
     if (showLoginButton !== false) {
       if (user.isLoggedIn) {
-        loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
+        loginLogoutButton = <AppButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
       } else {
-        loginLogoutButton = <RaisedButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
+        loginLogoutButton = <AppButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
       }
     }
     const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });

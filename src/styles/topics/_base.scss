@@ -1,7 +1,21 @@
 @import '../constants';
 
 .app-topics {
+
   a {
     color: $topics-primary;
   }
+
+  .app-button {
+    &.hovering :hover {
+      background-color: $topics-darker !important;
+    }
+  }
+
+  .app-icon-button {
+    &.hovering :hover {
+      background-color: $topics-darker !important;
+    }  	
+  }
+
 }

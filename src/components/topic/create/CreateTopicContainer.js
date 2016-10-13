@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Toggle from 'material-ui/Toggle';
 import DatePicker from 'material-ui/DatePicker';
-import RaisedButton from 'material-ui/RaisedButton';
+import AppButton from '../../common/AppButton';
 import messages from '../../../resources/messages';
 import { notEmptyString } from '../../../lib/formValidators';
 
@@ -81,7 +81,7 @@ const CreateTopicContainer = (props) => {
         </Row>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <RaisedButton type="submit" label={formatMessage(localMessages.createTopic)} primary />
+            <AppButton type="submit" label={formatMessage(localMessages.createTopic)} primary />
           </Col>
         </Row>
       </form>

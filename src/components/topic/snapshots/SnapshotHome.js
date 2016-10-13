@@ -3,9 +3,9 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import Link from 'react-router/lib/Link';
 import BackLinkingControlBar from '../BackLinkingControlBar';
+import AppButton from '../../common/AppButton';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { generateSnapshot } from '../../../actions/topicActions';
@@ -37,12 +37,12 @@ const SnapshotHome = props => (
         <Col lg={3} xs={12}>
           <br />
           <Link to={`/topics/${props.params.topicId}/snapshot/foci`}>
-            <RaisedButton label={props.intl.formatMessage(localMessages.fociLink)} primary />
+            <AppButton label={props.intl.formatMessage(localMessages.fociLink)} primary />
           </Link>
           <br />
           <br />
           <Link to={`/topics/${props.params.topicId}/snapshot/timespans`}>
-            <RaisedButton label={props.intl.formatMessage(localMessages.timespanLink)} primary />
+            <AppButton label={props.intl.formatMessage(localMessages.timespanLink)} primary />
           </Link>
         </Col>
         <Col lg={7} xs={12}>
@@ -50,7 +50,7 @@ const SnapshotHome = props => (
             <h2><FormattedMessage {...localMessages.summaryTitle} /></h2>
             <p><FormattedHTMLMessage {...localMessages.summaryMessage} /></p>
             <ComingSoon />
-            <RaisedButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary onClick={props.handleGenerateSnapshotRequest} />
+            <AppButton label={props.intl.formatMessage(messages.snapshotGenerate)} primary onClick={props.handleGenerateSnapshotRequest} />
           </DataCard>
         </Col>
       </Row>

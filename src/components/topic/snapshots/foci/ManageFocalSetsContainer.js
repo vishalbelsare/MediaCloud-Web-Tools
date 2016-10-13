@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import RaisedButton from 'material-ui/RaisedButton';
 import Link from 'react-router/lib/Link';
 import composeAsyncContainer from '../../../common/AsyncContainer';
+import AppButton from '../../../common/AppButton';
 import ConfirmationDialog from '../../../common/ConfirmationDialog';
 import { fetchFocalSetDefinitions, deleteFocalSetDefinition, deleteFocusDefinition, setTopicNeedsNewSnapshot }
   from '../../../../actions/topicActions';
@@ -108,7 +108,7 @@ class ManageFocalSetsContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <Link to={`/topics/${topicId}/snapshot/foci/create`}>
-                <RaisedButton primary label={formatMessage(localMessages.addFocus)} />
+                <AppButton primary label={formatMessage(localMessages.addFocus)} />
               </Link>
             </Col>
           </Row>

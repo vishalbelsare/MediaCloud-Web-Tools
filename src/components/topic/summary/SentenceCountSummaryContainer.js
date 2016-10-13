@@ -20,21 +20,12 @@ const localMessages = {
 };
 
 class SentenceCountSummaryContainer extends React.Component {
-  state = {
-    open: false,
-  };
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId) {
       fetchData(nextProps);
     }
   }
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-  handleClose = () => {
-    this.setState({ open: false });
-  };
   downloadCsv = () => {
     const { topicId, filters } = this.props;
     const url = `/api/topics/${topicId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;

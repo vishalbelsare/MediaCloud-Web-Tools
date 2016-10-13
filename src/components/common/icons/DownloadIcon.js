@@ -1,8 +1,7 @@
 import React from 'react';
-import { getBrandDarkColor } from '../../../styles/colors';
 
-const DownloadIcon = () => (
-  <div className="app-icon app-icon-download" style={{ backgroundColor: getBrandDarkColor() }}>
+const DownloadIcon = props => (
+  <div className="app-icon app-icon-download" style={{ backgroundColor: props.backgroundColor }} >
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="12.338px" height="12.901px" viewBox="0 0 12.338 12.901" enableBackground="new 0 0 12.338 12.901" xmlSpace="preserve" >
       <g>
         <g>
@@ -17,5 +16,9 @@ const DownloadIcon = () => (
     </svg>
   </div>
 );
+
+DownloadIcon.propTypes = {
+  backgroundColor: React.PropTypes.string,
+};
 
 export default DownloadIcon;

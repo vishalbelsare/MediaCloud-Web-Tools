@@ -2,9 +2,9 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import { notEmptyString } from '../../../lib/formValidators';
+import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import { DeleteButton } from '../../common/IconButton';
 import { PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN } from '../../../lib/auth';
@@ -51,7 +51,7 @@ const PermissionForm = (props) => {
           </Field>
         </Col>
         <Col lg={2} md={2} sm={2} xs={12}>
-          <RaisedButton
+          <AppButton
             style={{ marginTop: 30 }}
             type="submit"
             disabled={pristine || submitting}

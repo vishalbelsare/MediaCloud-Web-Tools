@@ -1,11 +1,11 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
+import AppButton from '../../../../common/AppButton';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
 import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
@@ -84,7 +84,7 @@ class CreateFocusSetupContainer extends React.Component {
           { step2Content }
           <Row>
             <Col lg={12} md={12} sm={12} >
-              <RaisedButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
+              <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
             </Col>
           </Row>
         </form>

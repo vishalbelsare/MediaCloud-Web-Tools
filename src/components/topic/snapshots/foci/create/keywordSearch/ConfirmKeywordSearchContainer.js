@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
+import AppButton from '../../../../../common/AppButton';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
   from '../../../../../../actions/topicActions';
 import { updateFeedback } from '../../../../../../actions/appActions';
@@ -44,7 +44,7 @@ const ConfirmKeywordSearchContainer = (props) => {
       </Row>
       <Row>
         <Col lg={12}>
-          <RaisedButton primary label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
+          <AppButton primary label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
         </Col>
       </Row>
     </Grid>

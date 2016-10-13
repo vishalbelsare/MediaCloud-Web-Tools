@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import RaisedButton from 'material-ui/RaisedButton';
+import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
 import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../../actions/topicActions';
 import messages from '../../../../../../resources/messages';
@@ -25,7 +25,7 @@ const EditKeywordSearchContainer = (props) => {
     previewContent = (
       <div>
         <KeywordSearchResultsContainer topicId={topicId} keywords={properties.keywords} />
-        <RaisedButton type="submit" label={formatMessage(messages.next)} primary />
+        <AppButton type="submit" label={formatMessage(messages.next)} primary />
       </div>
     );
   }
@@ -49,7 +49,7 @@ const EditKeywordSearchContainer = (props) => {
             />
           </Col>
           <Col lg={2} md={2} sm={2}>
-            <RaisedButton label={formatMessage(messages.search)} style={{ marginTop: 33 }} onClick={handleSearchClick} />
+            <AppButton label={formatMessage(messages.search)} style={{ marginTop: 33 }} onClick={handleSearchClick} />
           </Col>
         </Row>
         { previewContent }

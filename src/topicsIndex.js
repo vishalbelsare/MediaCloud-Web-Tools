@@ -14,6 +14,7 @@ setAppName('topics');
 setAppColors({
   light: '#daf3ee',
   dark: '#47c4ac',
+  darker: '#448e80',
 });
 
 // check if url has any params we care about

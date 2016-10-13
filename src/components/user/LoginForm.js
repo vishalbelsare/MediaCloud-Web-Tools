@@ -2,9 +2,9 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import RaisedButton from 'material-ui/RaisedButton';
 import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
+import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
@@ -34,7 +34,7 @@ const LoginFormComponent = (props) => {
         floatingLabelText={messages.userPassword}
       />
       <br />
-      <RaisedButton
+      <AppButton
         type="submit"
         label={formatMessage(messages.userLogin)}
         primary

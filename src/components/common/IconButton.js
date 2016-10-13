@@ -14,6 +14,7 @@ import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
 import RemoveIcon from './icons/RemoveIcon';
+import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 
 /**
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
@@ -21,6 +22,15 @@ import RemoveIcon from './icons/RemoveIcon';
  */
 function composeIconButton(Icon, defaultTooltipMessage) {
   class AppIconButton extends React.Component {
+    state = {
+      backgroundColor: getBrandDarkColor(),
+    };
+    handleMouseEnter = () => {
+      this.setState({ backgroundColor: getBrandDarkerColor() });
+    }
+    handleMouseLeave = () => {
+      this.setState({ backgroundColor: getBrandDarkColor() });
+    }
     handleClick = (event) => {
       const { onClick } = this.props;
       event.preventDefault();
@@ -35,13 +45,20 @@ function composeIconButton(Icon, defaultTooltipMessage) {
       const linkTarget = linkTo || displayTooltip;
       const clickHandler = (onClick) ? this.handleClick : null;
       return (
-        <Link to={linkTarget} onClick={clickHandler} className="icon-button-link" name={displayTooltip}>
+        <Link
+          to={linkTarget}
+          onClick={clickHandler}
+          className="icon-button-link"
+          name={displayTooltip}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        >
           <IconButton
             tooltip={displayTooltip}
             style={{ padding: 0, border: 0, width: 26, height: 26, color }}
             tooltipStyles={{ top: 20 }}
           >
-            <Icon color={color} />
+            <Icon color={color} backgroundColor={this.state.backgroundColor} />
           </IconButton>
         </Link>
       );
