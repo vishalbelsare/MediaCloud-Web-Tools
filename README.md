@@ -19,12 +19,6 @@ Node and npm:
 
 MongoDB:
 [Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`
- 
-+++ Updating npm depedencies
-
-First make sure you have npm-check-updates installed: `npm install -g npm-check-updates`.
-Then to update the dependencies in our package.json, run `npm-check-updates -u`.
-And then do a regular `npm install` to test them all out.
 
 Configuration
 ------------- 
@@ -55,3 +49,17 @@ Releasing
 3. Change the app you want to build in `config/server.config` (set the server/app variable).
 4. Build the release version of the JS and CSS: `npm run topics-release` or `npm run sources-release`.
 5. Test it and then tag and commit it all.
+
+Updating npm Depedencies
+------------------------
+
+It is important to occasionally we upgrade to the latest verison of the npm libraries we use.
+This is something to do every month or so, to make sure we don't fall behind the rapid development 
+in this libraries.  
+
+To do this:
+1) First make sure you have npm-check-updates installed: `npm install -g npm-check-updates`.
+2) Update the dependencies in our `package.json`, run `npm-check-updates -u`.
+3) Do a regular `npm install` to test them all out.
+4) Run the code and fix any errors.
+4) Check in the updated `package.json`.
