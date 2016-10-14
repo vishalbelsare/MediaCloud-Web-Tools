@@ -1,5 +1,5 @@
 
-import { FETCH_SOURCE_COLLECTION_TOP_WORDS } from '../../../../actions/sourceActions';
+import { FETCH_COLLECTION_TOP_WORDS } from '../../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 
@@ -8,7 +8,7 @@ const collectionTopWords = createAsyncReducer({
     total: null,
     list: [],
   },
-  action: FETCH_SOURCE_COLLECTION_TOP_WORDS,
+  action: FETCH_COLLECTION_TOP_WORDS,
   handleFetch: () => ({ list: [], total: null }),
   handleSuccess: payload => ({
     total: payload.total,

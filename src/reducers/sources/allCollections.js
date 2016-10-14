@@ -1,4 +1,4 @@
-import { FETCH_SOURCE_COLLECTION_LIST } from '../../actions/sourceActions';
+import { FETCH_COLLECTION_LIST } from '../../actions/sourceActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
@@ -17,7 +17,7 @@ const allCollections = createAsyncReducer({
     total: null,
     list: null,
   },
-  action: FETCH_SOURCE_COLLECTION_LIST,
+  action: FETCH_COLLECTION_LIST,
   handleFetch: () => ({ list: null, total: null }),
   handleSuccess: payload => ({
     total: payload.results.total,

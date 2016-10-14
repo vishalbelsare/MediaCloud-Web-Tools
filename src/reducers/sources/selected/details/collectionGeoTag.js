@@ -1,5 +1,5 @@
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-import { FETCH_SOURCE_COLLECTION_GEO } from '../../../../actions/sourceActions';
+import { FETCH_COLLECTION_GEO } from '../../../../actions/sourceActions';
 
 
 const geoTag = createAsyncReducer({
@@ -7,7 +7,7 @@ const geoTag = createAsyncReducer({
     total: null,
     list: [],
   },
-  action: FETCH_SOURCE_COLLECTION_GEO,
+  action: FETCH_COLLECTION_GEO,
   handleFetch: () => ({ list: [], total: null }),
   handleSuccess: payload => ({
     total: payload.results.geography.total,

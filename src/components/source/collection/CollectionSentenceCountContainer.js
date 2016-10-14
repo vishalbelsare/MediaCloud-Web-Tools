@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchSourceCollectionSentenceCount } from '../../../actions/sourceActions';
+import { fetchCollectionSentenceCount } from '../../../actions/sourceActions';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchSourceCollectionSentenceCount(ownProps.collectionId));
+    dispatch(fetchCollectionSentenceCount(ownProps.collectionId));
   },
 });
 
