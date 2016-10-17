@@ -20,6 +20,9 @@ const localMessages = {
   },
 };
 
+/**
+ * Pass in "data" if you are using one series, otherwise configure them yourself and pass in "series".
+ */
 class AttentionOverTimeChart extends React.Component {
 
   getConfig() {
@@ -61,7 +64,7 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, height, onDataPointClick, lineColor, health } = this.props;
+    const { total, data, series, height, onDataPointClick, lineColor, health } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
@@ -73,22 +76,27 @@ class AttentionOverTimeChart extends React.Component {
     if (onDataPointClick !== null) {
       config.plotOptions.series.point = { events: { click: onDataPointClick } };
     }
-    config.plotOptions.series.marker.enabled = (data.length < SERIES_MARKER_THRESHOLD);
-    // clean up the data
-    const dates = data.map(d => d.date);
-    // turning variable time unit into days
-    const intervalMs = (dates[1] - dates[0]);
-    const intervalDays = intervalMs / SECS_PER_DAY;
-    const values = data.map(d => Math.round(d.count / intervalDays));
-    const allSeries = [{
-      id: 0,
-      name: formatMessage(localMessages.chartYAxisLabel),
-      color: lineColor,
-      data: values,
-      pointStart: dates[0],
-      pointInterval: intervalMs,
-      cursor: 'pointer',
-    }];
+    let allSeries = null;
+    if (data !== undefined) {
+      config.plotOptions.series.marker.enabled = (data.length < SERIES_MARKER_THRESHOLD);
+      // clean up the data
+      const dates = data.map(d => d.date);
+      // turning variable time unit into days
+      const intervalMs = (dates[1] - dates[0]);
+      const intervalDays = intervalMs / SECS_PER_DAY;
+      const values = data.map(d => Math.round(d.count / intervalDays));
+      allSeries = [{
+        id: 0,
+        name: formatMessage(localMessages.chartYAxisLabel),
+        color: lineColor,
+        data: values,
+        pointStart: dates[0],
+        pointInterval: intervalMs,
+        cursor: 'pointer',
+      }];
+    } else if (series !== undefined) {
+      allSeries = series;
+    }
     config.series = allSeries;
     // show total if it is included
     let totalInfo = null;
@@ -114,9 +122,10 @@ class AttentionOverTimeChart extends React.Component {
 }
 
 AttentionOverTimeChart.propTypes = {
-  data: React.PropTypes.array.isRequired,
+  data: React.PropTypes.array,
+  series: React.PropTypes.array,
   height: React.PropTypes.number.isRequired,
-  lineColor: React.PropTypes.string.isRequired,
+  lineColor: React.PropTypes.string,
   health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func,
   total: React.PropTypes.number,

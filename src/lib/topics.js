@@ -135,3 +135,8 @@ export function topicStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId']);
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
+
+export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId']);
+  return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);
+}

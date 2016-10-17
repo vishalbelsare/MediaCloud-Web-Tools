@@ -3,23 +3,48 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import ComingSoon from '../../common/ComingSoon';
+import FocusSetSelectorContainer from './FocusSetSelectorContainer';
+import FociAttentionComparisonContainer from './FociAttentionComparisonContainer';
+import { setAttentionFocalSetId } from '../../../actions/topicActions';
 
 const localMessages = {
   mainTitle: { id: 'attention.mainTitle', defaultMessage: 'Attention' },
 };
 
 const AttentionContainer = (props) => {
+  const { selectedFocalSetId, filters, topicId, handleFocalSetSelected } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+  let content = null;
+  if (selectedFocalSetId !== '0') {
+    content = (<FociAttentionComparisonContainer
+      topicId={topicId}
+      filters={filters}
+      selectedFocalSetId={selectedFocalSetId}
+    />);
+  }
   return (
     <div>
       <Title render={titleHandler} />
       <Grid>
         <Row>
-          <Col lg={12} md={12} sm={12}>
+          <Col lg={12}>
             <h2><FormattedMessage {...localMessages.mainTitle} /></h2>
-            <ComingSoon />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <FocusSetSelectorContainer
+              topicId={topicId}
+              snapshotId={filters.snapshotId}
+              onFocalSetSelected={handleFocalSetSelected}
+              selectedFocalSetId={selectedFocalSetId}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            {content}
           </Col>
         </Row>
       </Grid>
@@ -31,19 +56,28 @@ AttentionContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from state
-  timespan: React.PropTypes.object,
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
+  selectedFocalSetId: React.PropTypes.string,
+  // from dispatch
+  handleFocalSetSelected: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
+  selectedFocalSetId: state.topics.selected.attention.selectedFocalSetId,
+});
+
+const mapDispatchToProps = dispatch => ({
+  handleFocalSetSelected: (evt, idx, focalSetId) => {
+    dispatch(setAttentionFocalSetId(`${focalSetId}`));
+  },
 });
 
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       AttentionContainer
     )
   );

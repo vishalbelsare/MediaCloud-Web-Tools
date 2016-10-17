@@ -81,6 +81,10 @@
             total: [number],
             filtered: [number]
           }
+        },
+        attention: {
+          selectedFocalSetId: [number]
+          focalSets: [focalSet object, with foci, with sentence counts]
         }
       },
       media: {

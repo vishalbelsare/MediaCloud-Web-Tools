@@ -11,6 +11,7 @@ import stories from './stories';
 import story from './story/story';
 import focalSets from './focalSets/focalSets';
 import permissions from './permissions';
+import attention from './attention';
 
 function id(state = null, action) {
   switch (action.type) {
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   story,
   focalSets,
   permissions,
+  attention,
 });
 
 export default rootReducer;
