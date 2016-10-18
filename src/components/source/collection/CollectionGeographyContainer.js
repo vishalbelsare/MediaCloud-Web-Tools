@@ -22,7 +22,7 @@ class CollectionGeographyContainer extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/sources/${collectionId}/geography/count.csv`;
+    const url = `/api/collections/${collectionId}/geography/geography.csv`;
     window.location = url;
   }
   render() {

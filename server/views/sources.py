@@ -5,7 +5,7 @@ from operator import itemgetter
 from flask import Flask, render_template, jsonify, request, abort
 import flask_login
 from server.util.request import api_error_handler
-
+import server.util.csv as csv
 from server.cache import cache
 from server import app, mc
 
@@ -91,9 +91,24 @@ def api_media_tag_sentence_count(media_tag_id):
     return jsonify({'results':info})
 
 
+@app.route('/api/sources/<media_id>/sentences/count.csv', methods=['GET'])
+@flask_login.login_required
+@api_error_handler 
+def source_sentence_count_csv(media_id):  
+    return stream_sentence_count_csv( 'sentence-counts', media_id);
+
+def stream_sentence_count_csv(filename, media_id):
+    response = {}
+    response['sentencecounts'] = _recent_sentence_counts( ['media_id:'+str(media_id)] )  
+    clean_results = [{'date': date, 'numFound': count} for date, count in response['sentencecounts'].iteritems() if date not in ['gap', 'start', 'end']]
+    props = ['date', 'numFound']
+    return csv.stream_response(clean_results, props,"trythis")
+
+
 @app.route('/api/sources/media-source/<media_id>/sentences/count')
 @flask_login.login_required
 @api_error_handler 
+@cache
 def api_media_source_sentence_count(media_id):
     health = _get_media_source_health(media_id)
     info = {}
