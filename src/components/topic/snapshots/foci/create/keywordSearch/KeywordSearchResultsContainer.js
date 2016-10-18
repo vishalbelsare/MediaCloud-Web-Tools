@@ -17,7 +17,6 @@ const localMessages = {
 class KeywordSearchResultsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    console.log(`search for ${nextProps.keywords}`);
     fetchData(filters, nextProps.keywords);
   }
   render() {
