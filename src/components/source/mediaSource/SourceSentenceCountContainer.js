@@ -43,7 +43,7 @@ class SourceSentenceCountContainer extends React.Component {
 SourceSentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition

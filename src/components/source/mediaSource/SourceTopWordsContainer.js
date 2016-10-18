@@ -36,7 +36,7 @@ class SourceTopWordsContainer extends React.Component {
 
 SourceTopWordsContainer.propTypes = {
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   intro: React.PropTypes.string.isRequired,
   onWordClick: React.PropTypes.func,
   // from state

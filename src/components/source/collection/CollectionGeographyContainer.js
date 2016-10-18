@@ -45,7 +45,7 @@ class CollectionGeographyContainer extends React.Component {
 CollectionGeographyContainer.propTypes = {
   // from state
   geolist: React.PropTypes.array.isRequired,
-  collectionId: React.PropTypes.string.isRequired,
+  collectionId: React.PropTypes.number.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
   // from parent
@@ -58,7 +58,7 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.fetchStatus,
   total: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.total,
   geolist: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.list,
-  collectionId: state.sources.selected.details.collectionDetailsReducer.collectionDetails.object.id,
+  collectionId: parseInt(state.sources.selected.details.collectionDetailsReducer.collectionDetails.object.id, 10),
 });
 
 const mapDispatchToProps = dispatch => ({
