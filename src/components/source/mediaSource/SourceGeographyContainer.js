@@ -19,7 +19,11 @@ const localMessages = {
 };
 
 class SourceGeographyContainer extends React.Component {
-
+  downloadCsv = () => {
+    const { sourceId } = this.props;
+    const url = `/api/sources/${sourceId}/geography/geography.csv`;
+    window.location = url;
+  }
   render() {
     const { intro, geolist } = this.props;
     const { formatMessage } = this.props.intl;

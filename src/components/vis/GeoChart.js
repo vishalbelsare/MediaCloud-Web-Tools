@@ -2,10 +2,15 @@ import React from 'react';
 import ReactHighcharts from 'react-highcharts/dist/ReactHighcharts';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps';
 import highchartsExporting from 'highcharts-exporting';
+import { injectIntl } from 'react-intl';
 
 highchartsExporting(ReactHighcharts.Highcharts);
 
 const maps = require('./world-eckert3-lowres');
+
+const localMessages = {
+  tooltipTitle: { id: 'chart.geographyattention.title', defaultMessage: '{count}% of sentences that mention  {name}' },
+};
 
 class GeoChart extends React.Component {
 
@@ -16,6 +21,7 @@ class GeoChart extends React.Component {
 
   getConfig() {
     const { data } = this.props;
+    const { formatMessage, formatNumber } = this.props.intl;
 
     const config = {
       // Initiate the chart
@@ -34,13 +40,14 @@ class GeoChart extends React.Component {
         },
       },
       colorAxis: {
-        min: 0.00001,
+        min: 0.000001,
         max: 1.0,
         type: 'logarithmic',
       },
       tooltip: {
         pointFormatter: function afmtxn() {
-          const pct = `${this.count * 100}%`;
+          const rounded = formatNumber(this.count * 100);
+          const pct = formatMessage(localMessages.tooltipTitle, { count: rounded, name: this.name });
           return pct;
         },
       },
@@ -48,7 +55,7 @@ class GeoChart extends React.Component {
         data,
         mapData: maps,
         joinBy: 'iso-a2',
-        name: 'Sentence percentage',
+        name: 'Geographic percentage',
         allowPointSelect: true,
         cursor: 'pointer',
         states: {
@@ -66,6 +73,22 @@ class GeoChart extends React.Component {
           format: '{point.name} {point.count} ',
         },
       }],
+      legend: {
+        layout: 'vertical',
+        valueDecimals: 0,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        itemStyle: {
+          fontWeight: 'bold',
+          fontStyle: 'italic',
+          color: 'gray',
+          textDecoration: 'none',
+        },
+        maxHeight: 150,
+        symbolHeight: 30,
+        align: 'left',
+        verticalAlign: 'bottom',
+        floating: true,
+      },
     };
     return config;
   }
@@ -92,6 +115,7 @@ class GeoChart extends React.Component {
 GeoChart.propTypes = {
   data: React.PropTypes.array.isRequired,
   dispatchGoToDashboard: React.PropTypes.func,
+  intl: React.PropTypes.object.isRequired,
 };
 
-export default GeoChart;
+export default injectIntl(GeoChart);
