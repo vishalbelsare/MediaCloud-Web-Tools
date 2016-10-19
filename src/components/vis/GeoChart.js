@@ -84,7 +84,7 @@ class GeoChart extends React.Component {
           textDecoration: 'none',
         },
         maxHeight: 150,
-        symbolHeight: 30,
+        symbolHeight: 70,
         align: 'left',
         verticalAlign: 'bottom',
         floating: true,
