@@ -11,6 +11,7 @@ const sourceDetails = createAsyncReducer({
   handleFetch: () => ({ object: null, total: null }),
   handleSuccess: payload => ({
     total: payload.total,
+    id: payload.results.id,
     object: payload.results,
   }),
   handleFailure: () => ({ object: null, total: null }),

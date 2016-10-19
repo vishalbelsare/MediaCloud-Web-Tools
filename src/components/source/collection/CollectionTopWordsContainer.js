@@ -22,7 +22,7 @@ class CollectionTopWordsContainer extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/sources/${collectionId}/wordcounts/count.csv`;
+    const url = `/api/collections/${collectionId}/words/wordcount.csv`;
     window.location = url;
   }
 

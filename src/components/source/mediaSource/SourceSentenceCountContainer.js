@@ -22,7 +22,7 @@ const localMessages = {
 class SourceSentenceCountContainer extends React.Component {
   downloadCsv = () => {
     const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/sentences/count.csv`;
+    const url = `/api/sources/${sourceId}/sentences/sentence-count.csv`;
     window.location = url;
   }
   render() {

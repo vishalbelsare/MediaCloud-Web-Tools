@@ -18,6 +18,12 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
+
+  downloadCsv = () => {
+    const { sourceId } = this.props;
+    const url = `/api/sources/${sourceId}/words/wordcount.csv`;
+    window.location = url;
+  }
   render() {
     const { intro, words, onWordClick } = this.props;
     const { formatMessage } = this.props.intl;
