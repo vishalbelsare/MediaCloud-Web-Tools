@@ -4,8 +4,14 @@ const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
+const STORY_PUBLISH_DATE = 'YYYY-MM-DD HH:mm:ss';
+
 function solrDateToMoment(solrDateString, string = true) {
   return moment(solrDateString, SOLR_DATE_FORMAT, string);
+}
+
+export function storyPubDateToTimestamp(solrDateString, string = true) {
+  return moment(solrDateString, STORY_PUBLISH_DATE, string).valueOf();
 }
 
 function gapDateToMomemt(gapDateString, strict = true) {

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
+import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
@@ -89,11 +90,11 @@ class StoryTable extends React.Component {
                     {story.media_name}
                   </LinkWithFilters>
                 </td>
-                <td>{story.publish_date}</td>
-                <td>{story.media_inlink_count}</td>
-                <td>{story.outlink_count}</td>
-                <td>{story.bitly_click_count}</td>
-                <td>{story.facebook_share_count}</td>
+                <td><FormattedDate value={storyPubDateToTimestamp(story.publish_date)} /></td>
+                <td><FormattedNumber value={story.media_inlink_count} /></td>
+                <td><FormattedNumber value={story.outlink_count} /></td>
+                <td><FormattedNumber value={story.bitly_click_count} /></td>
+                <td><FormattedNumber value={story.facebook_share_count} /></td>
               </tr>)
             )}
           </tbody>

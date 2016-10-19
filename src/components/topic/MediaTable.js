@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
@@ -87,10 +87,10 @@ class MediaTable extends React.Component {
                     {m.name}
                   </LinkWithFilters>
                 </td>
-                <td>{m.story_count}</td>
-                <td>{m.media_inlink_count}</td>
-                <td>{m.outlink_count}</td>
-                <td>{m.bitly_click_count}</td>
+                <td><FormattedNumber value={m.story_count} /></td>
+                <td><FormattedNumber value={m.media_inlink_count} /></td>
+                <td><FormattedNumber value={m.outlink_count} /></td>
+                <td><FormattedNumber value={m.bitly_click_count} /></td>
               </tr>)
             )}
           </tbody>
