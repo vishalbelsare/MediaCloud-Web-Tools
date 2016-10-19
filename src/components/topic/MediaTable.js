@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
+import { googleFavIconUrl } from '../../lib/urlUtil';
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
@@ -69,15 +70,18 @@ class MediaTable extends React.Component {
         <table>
           <tbody>
             <tr>
+              <th />
               <th><FormattedMessage {...messages.mediaName} /></th>
               <th><FormattedMessage {...messages.storyPlural} /></th>
               <th>{inlinkHeader}</th>
               <th><FormattedMessage {...messages.outlinks} /></th>
               <th>{socialHeader}</th>
-              <th><FormattedMessage {...messages.facebookShares} /></th>
             </tr>
             {media.map((m, idx) =>
               (<tr key={m.media_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+                <td>
+                  <img src={googleFavIconUrl(m.url)} alt={m.name} />
+                </td>
                 <td>
                   <LinkWithFilters to={`/topics/${topicId}/media/${m.media_id}`}>
                     {m.name}
@@ -87,7 +91,6 @@ class MediaTable extends React.Component {
                 <td>{m.media_inlink_count}</td>
                 <td>{m.outlink_count}</td>
                 <td>{m.bitly_click_count}</td>
-                <td>{m.facebook_share_count}</td>
               </tr>)
             )}
           </tbody>
