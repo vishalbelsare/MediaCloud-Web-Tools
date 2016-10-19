@@ -95,17 +95,17 @@ def api_media_tag_sentence_count(media_tag_id):
 @flask_login.login_required
 @api_error_handler 
 def source_sentence_count_csv(media_id):  
-    return stream_sentence_count_csv( 'sentence-counts', media_id, "media_id");
+    return stream_sentence_count_csv( 'sentenceCounts-Source-'+ media_id, media_id, "media_id");
 
 @app.route('/api/collections/<media_tag_id>/sentences/sentence-count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler 
 def collection_sentence_count_csv(media_tag_id):  
-    return stream_sentence_count_csv( 'sentence-counts', media_tag_id, "media_tag_id:");
+    return stream_sentence_count_csv( 'sentenceCounts-Collection-' + media_tag_id, media_tag_id, "tags_id_media");
 
 def stream_sentence_count_csv(filename, id, which):
     response = {}
-    response['sentencecounts'] = _recent_sentence_counts( [which +str(id)] )  
+    response['sentencecounts'] = _recent_sentence_counts( [which + ":" +str(id)] )  
     clean_results = [{'date': date, 'numFound': count} for date, count in response['sentencecounts'].iteritems() if date not in ['gap', 'start', 'end']]
     props = ['date', 'numFound']
     logging.warn(response['sentencecounts'])
@@ -199,6 +199,26 @@ def geo_geography(media_tag_id):
     info['geography'] = _geotag_count('tags_id_media:'+str(media_tag_id))
     return jsonify({'results':info})
 
+@app.route('/api/sources/<media_id>/geography/geography.csv')
+@flask_login.login_required
+@api_error_handler 
+def source_geo_csv(media_id):  
+    return stream_geo_csv( 'geography-Source-' + media_id, media_id, "media_id");
+
+@app.route('/api/collections/<media_tag_id>/geography/geography.csv')
+@flask_login.login_required
+@api_error_handler 
+def collection_geo_csv(media_tag_id):  
+    return stream_geo_csv( 'geography-Collection-' + media_tag_id, media_tag_id, "tags_id_media");
+
+
+def stream_geo_csv(filename, id, which):
+    info = {}
+    info = _geotag_count(which + ":" +str(id))
+    props = ['label', 'count']
+    logger.info(info)
+    return csv.stream_response(info, props,filename)
+
 @cache
 #Helper
 def _wordcount(query):
@@ -225,16 +245,16 @@ def media_tag_words(media_tag_id):
 @flask_login.login_required
 @api_error_handler 
 def collection_wordcount_csv(media_tag_id):  
-    return stream_wordcount_csv( 'words-counts', media_tag_id, "tags_id_media:");
+    return stream_wordcount_csv( 'wordcounts-Collection-' + media_tag_id, media_tag_id, "tags_id_media");
 
 @app.route('/api/sources/<media_id>/words/wordcount.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler 
 def source_wordcount_csv(media_id):  
-    return stream_wordcount_csv( 'words-counts', media_id, "media_id:");
+    return stream_wordcount_csv( 'wordcounts-Source-' + media_id, media_id, "media_id");
 
 def stream_wordcount_csv(filename, id, which):
     response = {}
-    response = _wordcount(which + str(id))
+    response = _wordcount(which + ":" + str(id))
     props = ['count','term', 'stem']
     return csv.stream_response(response, props,filename)
