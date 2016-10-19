@@ -10,16 +10,9 @@ const localMessages = {
 
 class TimespanPeriodSelector extends React.Component {
 
-/*
-  componentWillMount = () => {
-    const { selectedPeriod } = this.props;
-    this.select(selectedPeriod);
-  }
-*/
-
   linkToPeriod = (name, msg) => (
     <a
-      href={`#see-${name}-timspans"`}
+      href={`#see-${name}-timespans"`}
       onClick={(evt) => { evt.preventDefault(); this.selectPeriod(name); }}
       className={(this.props.selectedPeriod === name) ? 'greyed selected' : 'greyed unselected'}
     >

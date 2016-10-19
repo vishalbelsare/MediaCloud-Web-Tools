@@ -64,9 +64,10 @@ TimespanSelectorContainer.propTypes = {
 };
 
 // helper to update the url and fire off event
-function updateTimespan(dispatch, location, snapshotId, focusId, timespanId) {
-  const newLocation = filteredLocation(location, { snapshotId, focusId, timespanId });
-  dispatch(filterByTimespan(timespanId));
+function updateTimespan(dispatch, location, timespan) {
+  const newLocation = filteredLocation(location,
+    { snapshotId: timespan.snapshot_id, focusId: timespan.foci_id, timespanId: timespan.timespans_id });
+  dispatch(filterByTimespan(timespan.timespans_id));
   dispatch(push(newLocation));
 }
 
@@ -101,20 +102,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
           ));
           if (matchingNewTimespan !== undefined) {
-            updateTimespan(dispatch, ownProps.location, matchingNewTimespan.snapshots_id, matchingNewTimespan.foci_id, matchingNewTimespan.timespans_id);
+            updateTimespan(dispatch, ownProps.location, matchingNewTimespan);
           } else {
             pickDefault = true;
           }
+        } else {
+          // first load - match sure selected timespan period matches the selected timespan
+          const matchingTimespan = response.list.find(ts => ts.timespans_id === timespanId);
+          dispatch(setTimespanVisiblePeriod(matchingTimespan.period));
         }
         if (pickDefault) {
-          const defaultTimespanId = response.list[0].timespans_id;
-          const newSnapshotId = response.list[0].snapshots_id;
-          updateTimespan(dispatch, ownProps.location, newSnapshotId, response.list[0].foci_id, defaultTimespanId);
+          const defaultTimespan = response.list[0]; // pick the first timespan as the default (this is the overall one)
+          updateTimespan(dispatch, ownProps.location, defaultTimespan);
         }
       });
   },
   handleTimespanSelected: (timespan) => {
-    updateTimespan(dispatch, ownProps.location, timespan.snapshots_id, timespan.foci_id, timespan.timespans_id);
+    updateTimespan(dispatch, ownProps.location, timespan);
   },
 });
 
