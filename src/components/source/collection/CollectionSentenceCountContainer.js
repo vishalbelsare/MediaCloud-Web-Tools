@@ -23,7 +23,7 @@ class CollectionSentenceCountContainer extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/sources/${collectionId}/sentences/count.csv`;
+    const url = `/api/collections/${collectionId}/sentences/sentence-count.csv`;
     window.location = url;
   }
   render() {

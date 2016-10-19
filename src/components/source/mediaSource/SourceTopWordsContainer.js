@@ -18,6 +18,12 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
+
+  downloadCsv = () => {
+    const { sourceId } = this.props;
+    const url = `/api/sources/${sourceId}/words/wordcount.csv`;
+    window.location = url;
+  }
   render() {
     const { intro, words, onWordClick } = this.props;
     const { formatMessage } = this.props.intl;
@@ -36,7 +42,7 @@ class SourceTopWordsContainer extends React.Component {
 
 SourceTopWordsContainer.propTypes = {
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   intro: React.PropTypes.string.isRequired,
   onWordClick: React.PropTypes.func,
   // from state

@@ -19,7 +19,11 @@ const localMessages = {
 };
 
 class SourceGeographyContainer extends React.Component {
-
+  downloadCsv = () => {
+    const { sourceId } = this.props;
+    const url = `/api/sources/${sourceId}/geography/geography.csv`;
+    window.location = url;
+  }
   render() {
     const { intro, geolist } = this.props;
     const { formatMessage } = this.props.intl;
@@ -39,7 +43,7 @@ class SourceGeographyContainer extends React.Component {
 SourceGeographyContainer.propTypes = {
   // from state
   geolist: React.PropTypes.array.isRequired,
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
   // from parent
@@ -52,7 +56,8 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.sourceDetailsReducer.geoTag.fetchStatus,
   total: state.sources.selected.details.sourceDetailsReducer.geoTag.total,
   geolist: state.sources.selected.details.sourceDetailsReducer.geoTag.list,
-  sourceId: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object.id,
+  sourceId: parseInt(state.sources.selected.details.sourceDetailsReducer.sourceDetails.object.id, 10),
+
 });
 
 const mapDispatchToProps = dispatch => ({

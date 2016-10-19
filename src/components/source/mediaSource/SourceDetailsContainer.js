@@ -23,84 +23,73 @@ const localMessages = {
   sourceDetailsMapInfo: { id: 'source.details.map.info',
     defaultMessage: 'Here is a heatmap of countries mentioned by {name} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {name} covers it.' },
 };
-
-class SourceDetailsContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.sourceId !== this.props.sourceId) {
-      const { fetchData } = this.props;
-      fetchData(nextProps.sourceId);
-    }
-  }
-  render() {
-    const { source, handleDashboardClick, handleWordCloudClick, handleCountryClick } = this.props;
-    const { formatMessage } = this.props.intl;
-    const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
-    return (
-      <Grid className="details source-details">
-        <Row>
-          <Col lg={8}>
-            <h1>
-              <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small className="id-number">#{source.id}</small>
-            </h1>
-          </Col>
-          <Col lg={4}>
-            <RaisedButton
-              style={{ float: 'right' }}
-              label={formatMessage(localMessages.searchNow)}
-              primary
-              onClick={handleDashboardClick}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} md={8} sm={12}>
-            <SourceBasicInfo source={source} />
-          </Col>
-          <Col lg={4} md={4} sm={12}>
-            <CollectionList
-              title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
-              intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
-                name: source.name,
-                count: collections.length,
-              })}
-              collections={collections}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <SourceSentenceCountContainer sourceId={source.id} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <SourceTopWordsContainer
-              sourceId={source.id}
-              intro={formatMessage(localMessages.sourceDetailsTopWordsInfo, { name: source.name })}
-              onWordClick={handleWordCloudClick}
-            />
-          </Col>
-          <Col lg={6} md={6} sm={12}>
-            <SourceGeographyContainer
-              sourceId={source.id}
-              intro={formatMessage(localMessages.sourceDetailsMapInfo, { name: source.name })}
-              onCountryClick={handleCountryClick}
-            />
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
-}
+const SourceDetailsContainer = (props) => {
+  const { source, sourceId, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
+  const { formatMessage } = props.intl;
+  const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+  return (
+    <Grid className="details source-details">
+      <Row>
+        <Col lg={8}>
+          <h1>
+            <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
+            <small className="id-number">#{sourceId}</small>
+          </h1>
+        </Col>
+        <Col lg={4}>
+          <RaisedButton
+            style={{ float: 'right' }}
+            label={formatMessage(localMessages.searchNow)}
+            primary
+            onClick={handleDashboardClick}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={8} md={8} sm={12}>
+          <SourceBasicInfo source={source} />
+        </Col>
+        <Col lg={4} md={4} sm={12}>
+          <CollectionList
+            title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
+            intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
+              name: source.name,
+              count: collections.length,
+            })}
+            collections={collections}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          <SourceSentenceCountContainer sourceId={sourceId} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} md={6} sm={12}>
+          <SourceTopWordsContainer
+            sourceId={sourceId}
+            intro={formatMessage(localMessages.sourceDetailsTopWordsInfo, { name: source.name })}
+            onWordClick={handleWordCloudClick}
+          />
+        </Col>
+        <Col lg={6} md={6} sm={12}>
+          <SourceGeographyContainer
+            sourceId={sourceId}
+            intro={formatMessage(localMessages.sourceDetailsMapInfo, { name: source.name })}
+            onCountryClick={handleCountryClick}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 SourceDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
-  // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   handleDashboardClick: React.PropTypes.func.isRequired,
   handleWordCloudClick: React.PropTypes.func.isRequired,
@@ -121,10 +110,11 @@ const mapStateToProps = (state, ownProps) => ({
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchData: (sourceId) => {
-    dispatch(select(sourceId));
-    dispatch(fetchSourceDetails(sourceId));
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  asyncFetch: () => {
+    dispatch(select(ownProps.params.sourceId));
+    dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 
@@ -141,9 +131,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       const { source } = stateProps;
       const searchStr = `${word.stem}*`;
       window.location = `https://dashboard.mediameter.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    },
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.params.sourceId);
     },
   });
 }

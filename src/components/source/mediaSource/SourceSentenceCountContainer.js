@@ -22,7 +22,7 @@ const localMessages = {
 class SourceSentenceCountContainer extends React.Component {
   downloadCsv = () => {
     const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/sentences/count.csv`;
+    const url = `/api/sources/${sourceId}/sentences/sentence-count.csv`;
     window.location = url;
   }
   render() {
@@ -43,7 +43,7 @@ class SourceSentenceCountContainer extends React.Component {
 SourceSentenceCountContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition

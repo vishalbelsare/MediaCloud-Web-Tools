@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 
 export function sourceList() {
-  return fetch('api/sources/source/list', {
+  return fetch('api/sources/list', {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -19,7 +19,7 @@ export function sourceSearch(wildcardString) {
 }
 
 export function CollectionList() {
-  return fetch('api/sources/collection/list', {
+  return fetch('api/collections/list', {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -28,7 +28,7 @@ export function CollectionList() {
 }
 
 export function sourceDetails(mediaId) {
-  return fetch(`/api/sources/media-source/${mediaId}/details`, {
+  return fetch(`/api/sources/${mediaId}/details`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -37,7 +37,7 @@ export function sourceDetails(mediaId) {
 }
 
 export function collectionDetails(mediaId) {
-  return fetch(`/api/sources/collection/${mediaId}/details`, {
+  return fetch(`/api/collections/${mediaId}/details`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -46,7 +46,7 @@ export function collectionDetails(mediaId) {
 }
 
 export function sourceSentenceCount(mediaId) {
-  return fetch(`api/sources/media-source/${mediaId}/sentences/count`, {
+  return fetch(`api/sources/${mediaId}/sentences/count`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -55,7 +55,7 @@ export function sourceSentenceCount(mediaId) {
 }
 
 export function collectionSentenceCount(mediaId) {
-  return fetch(`api/sources/collection/${mediaId}/sentences/count`, {
+  return fetch(`api/collections/${mediaId}/sentences/count`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -64,7 +64,7 @@ export function collectionSentenceCount(mediaId) {
 }
 
 export function sourceGeography(mediaId) {
-  return fetch(`api/sources/media-source/${mediaId}/geography`, {
+  return fetch(`api/sources/${mediaId}/geography`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -73,7 +73,7 @@ export function sourceGeography(mediaId) {
 }
 
 export function collectionGeography(mediaId) {
-  return fetch(`api/sources/media-tag/${mediaId}/geography`, {
+  return fetch(`api/collections/${mediaId}/geography`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -82,7 +82,7 @@ export function collectionGeography(mediaId) {
 }
 
 export function sourceWordCount(mediaId) {
-  return fetch(`/api/sources/media-source/${mediaId}/words`, {
+  return fetch(`/api/sources/${mediaId}/words`, {
     method: 'get',
     credentials: 'include',
   }).then(
@@ -91,7 +91,7 @@ export function sourceWordCount(mediaId) {
 }
 
 export function collectionWordCount(mediaId) {
-  return fetch(`/api/sources/media-tag/${mediaId}/words`, {
+  return fetch(`/api/collections/${mediaId}/words`, {
     method: 'get',
     credentials: 'include',
   }).then(
