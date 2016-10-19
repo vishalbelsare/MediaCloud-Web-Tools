@@ -12,6 +12,7 @@ setAppName('sources');
 setAppColors({
   light: '#4b9fcb',
   dark: '#3c97bd',
+  darker: '#1c779d',
 });
 
 initializeApp(routes);
