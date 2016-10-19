@@ -26,7 +26,7 @@ class SourceSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, health } = this.props;
+    const { total, counts, health, filename } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -34,7 +34,7 @@ class SourceSentenceCountContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} lineColor={getBrandDarkColor()} />
+        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
       </DataCard>
     );
   }
@@ -51,6 +51,7 @@ SourceSentenceCountContainer.propTypes = {
   health: React.PropTypes.array,
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
+  filename: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({

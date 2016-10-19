@@ -64,12 +64,16 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, series, height, onDataPointClick, lineColor, health } = this.props;
+    const { total, data, series, height, onDataPointClick, lineColor, health, filename } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
-    config.exporting.filename = formatMessage(localMessages.chartYAxisLabel);
+    if (filename !== undefined) {
+      config.exporting.filename = filename;
+    } else {
+      config.exporting.filename = formatMessage(localMessages.chartYAxisLabel);
+    }
     if ((health !== null) && (health !== undefined)) {
       config.xAxis.plotBands = health;
     }
@@ -130,6 +134,7 @@ AttentionOverTimeChart.propTypes = {
   onDataPointClick: React.PropTypes.func,
   total: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
+  filename: React.PropTypes.string,
 };
 
 export default injectIntl(AttentionOverTimeChart);

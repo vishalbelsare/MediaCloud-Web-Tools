@@ -27,6 +27,7 @@ const SourceDetailsContainer = (props) => {
   const { source, sourceId, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
   const { formatMessage } = props.intl;
   const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+  const filename = `SentencesOverTime-Source-${sourceId}`;
   return (
     <Grid className="details source-details">
       <Row>
@@ -62,7 +63,7 @@ const SourceDetailsContainer = (props) => {
       </Row>
       <Row>
         <Col lg={12} md={12} sm={12}>
-          <SourceSentenceCountContainer sourceId={sourceId} />
+          <SourceSentenceCountContainer sourceId={sourceId} filename={filename} />
         </Col>
       </Row>
       <Row>

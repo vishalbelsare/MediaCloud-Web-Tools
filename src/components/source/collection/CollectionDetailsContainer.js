@@ -27,6 +27,7 @@ const localMessages = {
 const CollectionDetailsContainer = (props) => {
   const { collectionId, collection, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
   const { formatMessage } = props.intl;
+  const filename = `SentencesOverTime-Collection-${collectionId}`;
   return (
     <Grid className="details collection-details">
       <Row>
@@ -54,7 +55,7 @@ const CollectionDetailsContainer = (props) => {
           </Row>
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <CollectionSentenceCountContainer collectionId={collectionId} />
+              <CollectionSentenceCountContainer collectionId={collectionId} filename={filename} />
             </Col>
           </Row>
         </Col>
