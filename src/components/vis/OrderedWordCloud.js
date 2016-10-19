@@ -123,8 +123,6 @@ class OrderedWordCloud extends React.Component {
         .text(d => d.term)
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {
-          wordWrapper.select(d).attr('cursor', 'pointer');
-          this.setAttribute('cursor', 'pointer');
           if (options.showTooltips) {
             let tooltipHtml = formatMessage(localMessages.wordCloudStem, { stem: d.stem });
             tooltipHtml += '<br />';

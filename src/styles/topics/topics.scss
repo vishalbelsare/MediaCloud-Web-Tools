@@ -11,3 +11,13 @@
 @import '_back_linking_controlbar';
 @import '_focalset_definition_summary';
 @import '_manage_focal_sets';
+
+.ordered-word-cloud {
+  svg {
+    text {
+      &:hover {
+        fill: $topics-darker;
+      }
+    }
+  }
+}

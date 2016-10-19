@@ -22,3 +22,13 @@ h1 {
     overflow-y: scroll;
   }
 }
+
+.ordered-word-cloud {
+  svg {
+    text {
+      &:hover {
+        fill: $sources-darker;
+      }
+    }
+  }
+}
