@@ -48,15 +48,12 @@ def topic_media_csv(topics_id):
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
 @api_error_handler
 def topic_media_sentence_count(topics_id, media_id):
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    return jsonify(split_sentence_count(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, timespans_id=timespans_id,
-        foci_id=foci_id, fq='media_id:'+media_id))
+    return jsonify(split_sentence_count(user_mediacloud_key(), topics_id, fq='media_id:'+media_id))
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count.csv', methods=['GET'])
 def topic_media_sentence_count_csv(topics_id, media_id):
     snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentence-counts', topics_id, snapshots_id=snapshots_id,
-        timespans_id=timespans_id, foci_id=foci_id, fq="media_id:"+media_id)
+    return stream_sentence_count_csv(user_mediacloud_key(), 'sentence-counts', topics_id, fq="media_id:"+media_id)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/stories', methods=['GET'])
 @flask_login.login_required

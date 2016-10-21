@@ -25,7 +25,6 @@ def filters_from_args(request_args):
     '''
     return request_args.get('snapshotId'), request_args.get('timespanId'), request_args.get('focusId')
 
-
 def arguments_required(*expected_args):
     '''
     Handy decorator for ensuring that request params exist
@@ -62,7 +61,7 @@ def form_fields_required(*expected_form_fields):
 
 def api_error_handler(func):
     '''
-    Handy decorator that catches any exception from the Media Cloud API and 
+    Handy decorator that catches any exception from the Media Cloud API and
     sends it back to the browser as a nicely formatted JSON error.  The idea is
     that the client code can catch these at a low level and display error messages.
     '''
