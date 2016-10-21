@@ -24,7 +24,7 @@ const ControlBar = (props) => {
       <div className="main">
         <Grid>
           <Row>
-            <Col lg={2} md={2} sm={2} className="left">
+            <Col lg={3} className="left">
               <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
               &nbsp;
               <b>
@@ -34,11 +34,11 @@ const ControlBar = (props) => {
                 linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
               />
             </Col>
-            <Col lg={4} md={4} sm={4} >
+            <Col lg={4}>
               {focusSelector}
             </Col>
-            <Col lg={2} md={2} sm={2} />
-            <Col lg={4} md={4} sm={4} className="right">
+            <Col lg={1} />
+            <Col lg={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
               <CreateSnapshotButton topicId={topicId} />
             </Col>
