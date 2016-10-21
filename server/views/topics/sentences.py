@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
+from operator import itemgetter
 
 from server import app
 import server.util.csv as csv
@@ -53,8 +54,9 @@ def _cached_split_sentence_count(user_mc_key, topics_id, **kwargs):
 def stream_sentence_count_csv(user_mc_key, filename, topics_id, **kwargs):
     results = split_sentence_count(user_mc_key, topics_id, **kwargs)
     clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
+    sorted_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'numFound']
-    return csv.stream_response(clean_results, props, filename)
+    return csv.stream_response(sorted_results, props, filename)
 
 @app.route('/api/topics/<topics_id>/sentences/focal-set/<focal_sets_id>/count', methods=['GET'])
 @flask_login.login_required
