@@ -10,7 +10,6 @@ import CollectionList from './CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { googleFavIconUrl } from '../../../lib/urlUtil';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search Now' },
@@ -35,7 +34,6 @@ const SourceDetailsContainer = (props) => {
         <Col lg={8}>
           <h1>
             <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-            <img className="app-icon" style={{ 'padding-left': 10 }} src={googleFavIconUrl(source.url)} alt={source.name} />
             <small className="id-number">#{sourceId}</small>
           </h1>
         </Col>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
+import { googleFavIconUrl } from '../../../lib/urlUtil';
 
 const localMessages = {
   sourceBasicInfoTitle: { id: 'source.basicInfo.title', defaultMessage: 'Basic Info' },
@@ -25,7 +26,8 @@ const SourceBasicInfo = (props) => {
   }
   return (
     <DataCard className="source-basic-info">
-      <h2><FormattedMessage {...localMessages.sourceBasicInfoTitle} /></h2>
+      <h2><FormattedMessage {...localMessages.sourceBasicInfoTitle} /><img className="google-icon" src={googleFavIconUrl(source.url)} alt={source.name} />
+      </h2>
       <p><FormattedMessage {...localMessages.thisSourceIs} /> <b>{healthMessage}</b>.</p>
       <ul>
         <li><FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} /></li>
