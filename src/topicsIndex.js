@@ -30,11 +30,11 @@ if (hashParts.length > 1) {
   if ('snapshotId' in args) {
     store.dispatch(filterBySnapshot(args.snapshotId));
   }
-  if ('timespanId' in args) {
-    store.dispatch(filterByTimespan(args.timespanId));
-  }
   if ('focusId' in args) {
     store.dispatch(filterByFocus(args.focusId));
+  }
+  if ('timespanId' in args) {
+    store.dispatch(filterByTimespan(args.timespanId));
   }
 }
 

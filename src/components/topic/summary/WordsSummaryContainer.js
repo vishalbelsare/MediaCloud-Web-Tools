@@ -9,6 +9,7 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -26,7 +27,7 @@ class WordsSummaryContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/words.csv?snapshot=${filters.snapshotId}&timespan=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/words.csv?snapshot=${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {

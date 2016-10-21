@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
-import { filteredLinkTo } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
@@ -28,7 +28,7 @@ class SentenceCountSummaryContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/sentences/count.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {

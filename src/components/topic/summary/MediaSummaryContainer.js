@@ -8,7 +8,7 @@ import messages from '../../../resources/messages';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
-import { filteredLinkTo } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.topMedia.title', defaultMessage: 'Top Media' },
@@ -38,7 +38,7 @@ class MediaSummaryContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters, sort } = this.props;
-    const url = `/api/topics/${topicId}/media.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
+    const url = `/api/topics/${topicId}/media.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
   }
   render() {

@@ -8,7 +8,7 @@ import DataCard from '../../common/DataCard';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 import messages from '../../../resources/messages';
-import { filteredLinkTo } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
@@ -31,7 +31,7 @@ class StoriesSummaryContainer extends React.Component {
   };
   downloadCsv = () => {
     const { filters, sort, topicId } = this.props;
-    const url = `/api/topics/${topicId}/stories.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}&sort=${sort}`;
+    const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
   }
   render() {

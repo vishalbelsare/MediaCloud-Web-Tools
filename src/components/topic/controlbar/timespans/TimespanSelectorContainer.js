@@ -66,7 +66,9 @@ TimespanSelectorContainer.propTypes = {
 // helper to update the url and fire off event
 function updateTimespan(dispatch, location, timespan) {
   const newLocation = filteredLocation(location,
-    { snapshotId: timespan.snapshot_id, focusId: timespan.foci_id, timespanId: timespan.timespans_id });
+    { snapshotId: timespan.snapshots_id, focusId: timespan.foci_id, timespanId: timespan.timespans_id });
+  console.log('updateTimestamp');
+  console.log(newLocation);
   dispatch(filterByTimespan(timespan.timespans_id));
   dispatch(push(newLocation));
 }
@@ -113,6 +115,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
         if (pickDefault) {
           const defaultTimespan = response.list[0]; // pick the first timespan as the default (this is the overall one)
+          console.log('pick default');
+          console.log(defaultTimespan);
           updateTimespan(dispatch, ownProps.location, defaultTimespan);
         }
       });
