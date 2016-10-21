@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((results) => {
         if (results.success === 1) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
-          dispatch(push(`/topics/${ownProps.topicId}/summary`));
+          dispatch(push(`/topics/${ownProps.params.topicId}/summary`));
         } else {
           // TODO: error message!
         }
