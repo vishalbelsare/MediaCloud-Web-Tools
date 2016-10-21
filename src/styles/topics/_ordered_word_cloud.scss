@@ -1,0 +1,9 @@
+.ordered-word-cloud {
+  svg {
+    text {
+      &:hover {
+        fill: $topics-darker;
+      }
+    }
+  }
+}

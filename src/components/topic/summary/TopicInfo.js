@@ -31,7 +31,7 @@ const TopicInfo = (props) => {
   }
   const bitlyMessage = (topic.process_with_bitly === '1') ? localMessages.processedWithBitly : localMessages.notProcessedWithBitly;
   return (
-    <DataCard>
+    <DataCard className="topic-info">
       <h2>
         <FormattedMessage {...localMessages.title} />
       </h2>
@@ -41,7 +41,7 @@ const TopicInfo = (props) => {
         {spiderText}
         <FormattedMessage {...bitlyMessage} />
       </p>
-      <p className="light">
+      <p className="light seed-query">
         <FormattedHTMLMessage {...localMessages.seedQuery} values={{ query: topic.solr_seed_query }} />
       </p>
     </DataCard>
