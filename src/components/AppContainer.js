@@ -21,13 +21,15 @@ const AppContainer = (props) => {
     <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
       <header>
-        <BrandToolbar backgroundColor={brandColors.light} />
+        <BrandToolbar
+          backgroundColor={brandColors.light}
+          drawer={drawer}
+        />
         <BrandMasthead
           name={title}
           description={description}
           backgroundColor={brandColors.dark}
           lightColor={brandColors.light}
-          drawer={drawer}
           showLoginButton={showLoginButton}
         />
       </header>

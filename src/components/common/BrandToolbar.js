@@ -4,14 +4,14 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 
 const BrandToolbar = (props) => {
-  const { backgroundColor } = props;
+  const { backgroundColor, drawer } = props;
   const { formatMessage } = props.intl;
   const styles = { backgroundColor };
   return (
     <div id="branding-toolbar" style={styles} >
       <Grid>
         <Row>
-          <Col lg={12}>
+          <Col lg={10}>
             <ul>
               <li className="dashboard">
                 <a
@@ -39,6 +39,11 @@ const BrandToolbar = (props) => {
               </li>
             </ul>
           </Col>
+          <Col lg={2}>
+            <div className="actions">
+              {drawer}
+            </div>
+          </Col>
         </Row>
       </Grid>
     </div>
@@ -46,8 +51,14 @@ const BrandToolbar = (props) => {
 };
 
 BrandToolbar.propTypes = {
-  backgroundColor: React.PropTypes.string.isRequired,
+  // from composition chain
   intl: React.PropTypes.object.isRequired,
+  // from parent
+  backgroundColor: React.PropTypes.string.isRequired,
+  drawer: React.PropTypes.node,
 };
 
-export default injectIntl(BrandToolbar);
+export default
+  injectIntl(
+    BrandToolbar
+  );

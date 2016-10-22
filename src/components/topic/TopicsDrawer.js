@@ -64,6 +64,7 @@ class TopicsDrawer extends React.Component {
           iconClassName="material-icons"
           tooltip={formatMessage(messages.menuOpenTooltip)}
           onTouchTap={this.handleToggle}
+          style={{ padding: 8, height: 40, width: 40 }}
         >
           menu
         </IconButton>
