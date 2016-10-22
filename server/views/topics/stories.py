@@ -28,12 +28,12 @@ def story(topics_id, stories_id):
 @api_error_handler
 def story_counts(topics_id):
     timespans_id = request.args.get('timespanId')
-    total = _story_count(user_mediacloud_key(), topics_id)
-    filtered = _story_count(user_mediacloud_key(), topics_id, timespans_id)
+    total = _cached_story_count(user_mediacloud_key(), topics_id)
+    filtered = _cached_story_count(user_mediacloud_key(), topics_id, timespans_id)
     return jsonify({'counts':{'filtered': filtered['count'], 'total': total['count']}})
 
 @cache
-def _story_count(user_mc_key, topics_id, timespans_id=None):
+def _cached_story_count(user_mc_key, topics_id, timespans_id=None):
     user_mc = user_mediacloud_client()
     return user_mc.topicStoryCount(topics_id, timespans_id=timespans_id)
 
@@ -42,19 +42,19 @@ def _story_count(user_mc_key, topics_id, timespans_id=None):
 @api_error_handler
 def story_words(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    word_list = _story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)[:100]
+    word_list = _cached_story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def story_words_csv(topics_id, stories_id):
     timespans_id = request.args.get('timespanId')
-    word_list = _story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)
+    word_list = _cached_story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)
     props = ['term', 'stem', 'count']
     return csv.stream_response(word_list, props, 'story-'+str(stories_id)+'-words')
 
 @cache
-def _story_words(user_mc_key, topics_id, stories_id, timespans_id):
+def _cached_story_words(user_mc_key, topics_id, stories_id, timespans_id):
     user_mc = user_mediacloud_client()
     return user_mc.topicWordCount(topics_id, fq='stories_id:'+stories_id, timespans_id=timespans_id)
 

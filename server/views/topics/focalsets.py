@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_focal_set_list(topics_id):
     snapshots_id = request.args.get('snapshotId')
-    focal_sets = focal_set_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
+    focal_sets = cached_focal_set_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
     return jsonify(focal_sets)
 
 @cache
-def focal_set_list(user_mc_key, topics_id, snapshots_id):
+def cached_focal_set_list(user_mc_key, topics_id, snapshots_id):
     user_mc = user_mediacloud_client()
     response = user_mc.topicFocalSetList(topics_id, snapshots_id=snapshots_id)
     return response

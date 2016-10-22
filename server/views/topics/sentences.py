@@ -8,7 +8,7 @@ import server.util.csv as csv
 from server.cache import cache
 from server.util.request import filters_from_args, api_error_handler, json_error_response
 from server.auth import user_mediacloud_key, user_mediacloud_client
-from server.views.topics.focalsets import focal_set_list
+from server.views.topics.focalsets import cached_focal_set_list
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ def stream_sentence_count_csv(user_mc_key, filename, topics_id, **kwargs):
 def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
     snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
     user_mc = user_mediacloud_client()
-    all_focal_sets = focal_set_list(user_mediacloud_key(), topics_id, snapshots_id)
+    all_focal_sets = cached_focal_set_list(user_mediacloud_key(), topics_id, snapshots_id)
     # need the timespan info, to find the appropriate timespan with each focus
     base_snapshot_timespans = user_mc.topicTimespanList(topics_id, snapshots_id=snapshots_id)
     # logger.info(base_snapshot_timespans)

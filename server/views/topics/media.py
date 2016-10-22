@@ -137,18 +137,18 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
 @api_error_handler
 def media_words(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
-    word_list = _media_words(user_mediacloud_key(), topics_id, media_id, timespans_id)[:100]
+    word_list = _cached_media_words(user_mediacloud_key(), topics_id, media_id, timespans_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def media_words_csv(topics_id, media_id):
     timespans_id = request.args.get('timespanId')
-    word_list = _media_words(user_mediacloud_key(), topics_id, media_id, timespans_id)
+    word_list = _cached_media_words(user_mediacloud_key(), topics_id, media_id, timespans_id)
     props = ['term', 'stem', 'count']
     return csv.stream_response(word_list, props, 'media-'+str(media_id)+'-words')
 
 @cache
-def _media_words(user_mc_key, topics_id, media_id, timespans_id):
+def _cached_media_words(user_mc_key, topics_id, media_id, timespans_id):
     user_mc = user_mediacloud_client()
     return user_mc.topicWordCount(topics_id, fq='media_id:'+media_id, timespans_id=timespans_id)
