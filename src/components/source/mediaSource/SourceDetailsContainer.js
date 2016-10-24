@@ -126,12 +126,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
     handleDashboardClick: () => {
       const { source } = stateProps;
-      window.location = `https://dashboard.mediameter.org/#query/["*"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+      window.location = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
     },
     handleWordCloudClick: (word) => {
       const { source } = stateProps;
       const searchStr = `${word.stem}*`;
-      window.location = `https://dashboard.mediameter.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+      window.location = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
     },
   });
 }

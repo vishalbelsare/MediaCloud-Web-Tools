@@ -15,7 +15,7 @@ const BrandToolbar = (props) => {
             <ul>
               <li className="dashboard">
                 <a
-                  href="https://dashboard.mediameter.org/"
+                  href="https://dashboard.mediacloud.org/"
                   title={formatMessage(messages.dashboardToolDescription)}
                 >
                   <FormattedMessage {...messages.dashboardToolShortName} />
