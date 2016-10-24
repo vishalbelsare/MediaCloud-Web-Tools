@@ -6,7 +6,7 @@ const localMessages = {
   title: { id: 'topic.summary.info.title',
     defaultMessage: 'About this Topic',
   },
-  notSpidered: { id: 'topic.summary.info.notSpidered', defaultMessage: 'This Topic was not spidered. ' },
+  notSpidered: { id: 'topic.summary.info.notSpidered', defaultMessage: 'This topic was not spidered. ' },
   spiderIterations: { id: 'topic.summary.info.spiderIterations',
     defaultMessage: 'It was spidered to collect stories over {iterations, plural, 0ne {iteration} other {{formattedTotal} iterations} } (out of {maxIterations, plural, 0ne {iteration} other {{formattedTotal} iterations} }). ',
   },
