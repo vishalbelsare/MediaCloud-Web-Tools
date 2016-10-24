@@ -26,14 +26,9 @@ def topic_list():
 @flask_login.login_required
 @api_error_handler
 def topic_summary(topics_id):
-    topic = _topic_summary(user_mediacloud_key(), topics_id)
-    return jsonify(topic)
-
-@cache
-def _topic_summary(user_mc_key, topics_id):
-    # this includes the user_mc_key as a first param so the cache works right
     user_mc = user_mediacloud_client()
-    return user_mc.topic(topics_id)
+    topic = user_mc.topic(topics_id)
+    return jsonify(topic)
 
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required
