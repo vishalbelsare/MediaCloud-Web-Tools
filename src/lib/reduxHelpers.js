@@ -22,6 +22,7 @@ export function createAsyncAction(type, fetcher) {
     type,
     payload: {
       promise: fetcher(...args),
+      args,  // tack on arguments pass in so we can access them directly in a reducer
     },
   });
 }
