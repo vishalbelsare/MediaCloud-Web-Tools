@@ -102,7 +102,11 @@ def index():
     return render_template('index.html')
 
 import server.views.user
-import server.views.sources
+import server.views.sources.collection
+import server.views.sources.source
+import server.views.sources.sentences
+import server.views.sources.words
+import server.views.sources.geocount
 import server.views.topics.media
 import server.views.topics.sentences
 import server.views.topics.stories

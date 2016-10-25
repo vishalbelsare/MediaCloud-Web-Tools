@@ -18,10 +18,10 @@ const sourceRoutes = (
 
     <Route component={PageWrapper} onEnter={requireAuth} >
       <Route path="/home" component={Introduction} onEnter={requireAuth} />
-      <Route path="/source" >
+      <Route path="/sources" >
         <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
       </Route>
-      <Route path="/collection" >
+      <Route path="/collections" >
         <Route path=":collectionId/details" component={CollectionDetailsContainer} onEnter={requireAuth} />
       </Route>
     </Route>
