@@ -5,8 +5,7 @@ import { Col } from 'react-flexbox-grid/lib';
 import Lock from 'material-ui/svg-icons/action/lock';
 import IconButton from 'material-ui/IconButton';
 import DataCard from '../../common/DataCard';
-import { FavoriteButton, FavoriteBorderButton } from '../../common/IconButton';
-import messages from '../../../resources/messages';
+import FavoriteToggler from '../../common/FavoriteToggler';
 import { PERMISSION_NONE } from '../../../lib/auth';
 
 const localMessages = {
@@ -25,17 +24,10 @@ const TopicListItem = (props) => {
   }
   let mainButton = null;
   if (topic.user_permission !== PERMISSION_NONE) {
-    if (topic.isFavorite) {
-      mainButton = (<FavoriteButton
-        tooltip={formatMessage(messages.unfavorite)}
-        onClick={() => onChangeFavorited(topic.topics_id, false)}
-      />);
-    } else {
-      mainButton = (<FavoriteBorderButton
-        tooltip={formatMessage(messages.favorite)}
-        onClick={() => onChangeFavorited(topic.topics_id, true)}
-      />);
-    }
+    mainButton = (<FavoriteToggler
+      isFavorited={topic.isFavorite}
+      onChangeFavorited={isFavNow => onChangeFavorited(topic.topics_id, isFavNow)}
+    />);
   } else {
     mainButton = (
       <IconButton tooltip={formatMessage(localMessages.notPermissioned)} >
@@ -46,9 +38,7 @@ const TopicListItem = (props) => {
   return (
     <Col xs={12} sm={6} md={6} lg={6}>
       <DataCard disabled={disable} inline >
-        <div className="actions">
-          {mainButton}
-        </div>
+        <div className="actions">{mainButton}</div>
         <h3>{title}</h3>
         <p>{topic.description}</p>
         <p><small>{topic.state}</small></p>
