@@ -18,12 +18,16 @@ const FavoriteToggler = (props) => {
       onClick={() => onChangeFavorited(true)}
     />);
   }
-  return mainButton;
+  return (
+    <div className="fav-toggle-button">
+      { mainButton }
+    </div>
+  );
 };
 
 FavoriteToggler.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  isFavorited: React.PropTypes.booelan.isRequired,
+  isFavorited: React.PropTypes.bool.isRequired,
   onChangeFavorited: React.PropTypes.func.isRequired,
 };
 

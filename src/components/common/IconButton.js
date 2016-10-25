@@ -45,22 +45,24 @@ function composeIconButton(Icon, defaultTooltipMessage) {
       const linkTarget = linkTo || displayTooltip;
       const clickHandler = (onClick) ? this.handleClick : null;
       return (
-        <Link
-          to={linkTarget}
-          onClick={clickHandler}
-          className="icon-button-link"
-          name={displayTooltip}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
-        >
-          <IconButton
-            tooltip={displayTooltip}
-            style={{ padding: 0, border: 0, width: 26, height: 26, color }}
-            tooltipStyles={{ top: 20 }}
+        <div className="icon-button">
+          <Link
+            to={linkTarget}
+            onClick={clickHandler}
+            className="icon-button-link"
+            name={displayTooltip}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
           >
-            <Icon color={color} backgroundColor={this.state.backgroundColor} />
-          </IconButton>
-        </Link>
+            <IconButton
+              tooltip={displayTooltip}
+              style={{ padding: 0, border: 0, width: 26, height: 26, color }}
+              tooltipStyles={{ top: 20 }}
+            >
+              <Icon color={color} backgroundColor={this.state.backgroundColor} />
+            </IconButton>
+          </Link>
+        </div>
       );
     }
   }

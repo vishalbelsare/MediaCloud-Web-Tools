@@ -96,6 +96,9 @@ const messages = {
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
 
+  topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
+  topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
+
   focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
   removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any focus' },
 

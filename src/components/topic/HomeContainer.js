@@ -8,11 +8,10 @@ import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
 import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicActions';
 import TopicIcon from '../common/icons/TopicIcon';
+import messages from '../../resources/messages';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Explore Topics' },
-  topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
-  topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
 };
 
 const HomeContainer = (props) => {
@@ -47,7 +46,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleChangeFavorited: (topicId, isFavorite) => {
     dispatch(setTopicFavorite(topicId, isFavorite))
       .then(() => {
-        const msg = (isFavorite) ? localMessages.topicFavorited : localMessages.topicUnfavorited;
+        const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
         dispatch(fetchFavoriteTopics());  // to update the list of favorites
       });

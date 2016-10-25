@@ -16,10 +16,7 @@ def topic_list():
     user_mc = user_mediacloud_client()
     link_id = request.args.get('linkId')
     all_topics = user_mc.topicList(link_id=link_id)
-    user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
-    for t in all_topics['topics']:
-        t['isFavorite'] = t['topics_id'] in user_favorited
-        # logger.info(str(t['topics_id'])+" - "+str(t['isFavorite']))
+    _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
@@ -28,7 +25,14 @@ def topic_list():
 def topic_summary(topics_id):
     user_mc = user_mediacloud_client()
     topic = user_mc.topic(topics_id)
+    _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)
+
+def _add_user_favorite_flag_to_topics(topics):
+    user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
+    for t in topics:
+        t['isFavorite'] = t['topics_id'] in user_favorited
+    return topics
 
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required

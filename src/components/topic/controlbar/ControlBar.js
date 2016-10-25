@@ -9,9 +9,14 @@ import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
 import { SettingsButton } from '../../common/IconButton';
+import { updateFeedback } from '../../../actions/appActions';
+import { setTopicFavorite } from '../../../actions/topicActions';
+import FavoriteToggler from '../../common/FavoriteToggler';
+import messages from '../../../resources/messages';
 
 const ControlBar = (props) => {
-  const { topicInfo, topicId, location, filters } = props;
+  const { topicInfo, topicId, location, filters, handleChangeFavorited } = props;
+  // const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let focusSelector = null;
   let subControls = null;
@@ -24,20 +29,25 @@ const ControlBar = (props) => {
       <div className="main">
         <Grid>
           <Row>
-            <Col lg={3} className="left">
-              <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
-              &nbsp;
-              <b>
-                {topicInfo.name}
-              </b>
+            <Col lg={4} className="left">
+              <div className="topic-name">
+                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
+                &nbsp;
+                <b>
+                  {topicInfo.name}
+                </b>
+              </div>
               <SettingsButton
                 linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
+              />
+              <FavoriteToggler
+                isFavorited={topicInfo.isFavorite}
+                onChangeFavorited={isFavNow => handleChangeFavorited(topicInfo.topics_id, isFavNow)}
               />
             </Col>
             <Col lg={4}>
               {focusSelector}
             </Col>
-            <Col lg={1} />
             <Col lg={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
               <CreateSnapshotButton topicId={topicId} />
@@ -61,6 +71,8 @@ ControlBar.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   topicInfo: React.PropTypes.object,
+  // from dispatch
+  handleChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -68,9 +80,19 @@ const mapStateToProps = state => ({
   topicInfo: state.topics.selected.info,
 });
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleChangeFavorited: (topicId, isFavorite) => {
+    dispatch(setTopicFavorite(topicId, isFavorite))
+      .then(() => {
+        const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
+      });
+  },
+});
+
 export default
-  connect(mapStateToProps)(
-    injectIntl(
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
       ControlBar
     )
   );
