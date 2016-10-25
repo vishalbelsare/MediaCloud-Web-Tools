@@ -18,8 +18,8 @@ const Introduction = () => (
           </h2>
           <p>Use the search bar above to search for things like:</p>
           <ul>
-            <li>our coverage of the <Link to="/source/1/details">New York Times</Link></li>
-            <li>the list of sources in our <Link to="/collection/8875027/details">US Mainstream Media Set</Link></li>
+            <li>our coverage of the <Link to="/sources/1/details">New York Times</Link></li>
+            <li>the list of sources in our <Link to="/collections/8875027/details">US Mainstream Media Set</Link></li>
           </ul>
         </DataCard>
       </Col>

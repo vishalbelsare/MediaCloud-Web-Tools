@@ -8,7 +8,7 @@ const SourcesApp = (props) => {
   return (
     <div>
       <AppContainer
-        name="topics"
+        name="sources"
         title={formatMessage(messages.sourcesToolName)}
         description={formatMessage(messages.sourcesToolDescription)}
       >

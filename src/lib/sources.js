@@ -18,7 +18,7 @@ export function sourceSearch(wildcardString) {
   );
 }
 
-export function CollectionList() {
+export function collectionList() {
   return fetch('api/collections/list', {
     method: 'get',
     credentials: 'include',

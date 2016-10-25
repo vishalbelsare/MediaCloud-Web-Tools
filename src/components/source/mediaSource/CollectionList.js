@@ -10,7 +10,7 @@ const CollectionList = (props) => {
       <p>{intro}</p>
       <ul>
         {collections.map(c =>
-          <li key={c.tags_id}><Link to={`collection/${c.tags_id}/details`}>{c.label}</Link></li>
+          <li key={c.tags_id}><Link to={`collections/${c.tags_id}/details`}>{c.label}</Link></li>
         )}
       </ul>
     </DataCard>
