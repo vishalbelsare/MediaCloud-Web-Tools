@@ -15,6 +15,8 @@ import messages from '../../../resources/messages';
 import { RemoveButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
+import Permissioned from '../Permissioned';
+import { PERMISSION_WRITE } from '../../../lib/auth';
 
 const MAX_STORY_TITLE_LENGTH = 60;  // story titles longer than this will be trimmed and ellipses added
 
@@ -68,7 +70,9 @@ class StoryContainer extends React.Component {
             <Col lg={12} md={12} sm={12}>
               <h1>
                 <span className="actions">
-                  <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                  <Permissioned onlyTopic={PERMISSION_WRITE}>
+                    <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                  </Permissioned>
                 </span>
                 <StoryIcon />
                 <FormattedMessage {...localMessages.mainTitle} values={{ title: displayTitle }} />

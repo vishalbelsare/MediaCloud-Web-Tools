@@ -17,6 +17,8 @@ import messages from '../../../resources/messages';
 import { RemoveButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
+import Permissioned from '../Permissioned';
+import { PERMISSION_WRITE } from '../../../lib/auth';
 
 const localMessages = {
   mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Source Details: {title}' },
@@ -64,7 +66,9 @@ class MediaContainer extends React.Component {
             <Col lg={12} md={12} sm={12}>
               <h1>
                 <span className="actions">
-                  <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                  <Permissioned onlyTopic={PERMISSION_WRITE}>
+                    <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                  </Permissioned>
                 </span>
                 <MediaSourceIcon />
                 <FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} />

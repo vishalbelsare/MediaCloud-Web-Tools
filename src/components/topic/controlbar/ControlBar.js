@@ -54,7 +54,9 @@ const ControlBar = (props) => {
             </Col>
             <Col lg={4} className="right">
               <SnapshotSelectorContainer topicId={topicId} location={location} />
-              <CreateSnapshotButton topicId={topicId} />
+              <Permissioned onlyTopic={PERMISSION_WRITE}>
+                <CreateSnapshotButton topicId={topicId} />
+              </Permissioned>
             </Col>
           </Row>
         </Grid>
