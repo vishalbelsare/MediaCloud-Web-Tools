@@ -3,9 +3,9 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.cache import cache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.auth import user_mediacloud_client, user_mediacloud_key
+from server.views.topics.apicache import topic_focal_sets
 
 logger = logging.getLogger(__name__)
 
@@ -15,14 +15,8 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_focal_set_list(topics_id):
     snapshots_id = request.args.get('snapshotId')
-    focal_sets = cached_focal_set_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
+    focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
     return jsonify(focal_sets)
-
-@cache
-def cached_focal_set_list(user_mc_key, topics_id, snapshots_id):
-    user_mc = user_mediacloud_client()
-    response = user_mc.topicFocalSetList(topics_id, snapshots_id=snapshots_id)
-    return response
 
 @app.route('/api/topics/<topics_id>/focal-set-definitions/list', methods=['GET'])
 @flask_login.login_required

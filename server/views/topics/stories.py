@@ -4,11 +4,10 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.views.topics import validated_sort
 import server.util.csv as csv
-from server.cache import cache
-from server.util.request import filters_from_args, api_error_handler
+from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
 
 logger = logging.getLogger(__name__)
 
@@ -27,42 +26,28 @@ def story(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_counts(topics_id):
-    timespans_id = request.args.get('timespanId')
-    total = _cached_story_count(user_mediacloud_key(), topics_id)
-    filtered = _cached_story_count(user_mediacloud_key(), topics_id, timespans_id)
+    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None)  # override the default behaviour, which is to pull the timespans id off the request params
+    filtered = topic_story_count(user_mediacloud_key(), topics_id)  # this will read the timespan off the query args
     return jsonify({'counts':{'filtered': filtered['count'], 'total': total['count']}})
-
-@cache
-def _cached_story_count(user_mc_key, topics_id, timespans_id=None):
-    user_mc = user_mediacloud_client()
-    return user_mc.topicStoryCount(topics_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def story_words(topics_id, stories_id):
-    timespans_id = request.args.get('timespanId')
-    word_list = _cached_story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)[:100]
+    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q='stories_id:'+stories_id)[:100]
     return jsonify(word_list)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def story_words_csv(topics_id, stories_id):
-    timespans_id = request.args.get('timespanId')
-    word_list = _cached_story_words(user_mediacloud_key(), topics_id, stories_id, timespans_id)
+    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q='stories_id:'+stories_id)
     props = ['term', 'stem', 'count']
     return csv.stream_response(word_list, props, 'story-'+str(stories_id)+'-words')
-
-@cache
-def _cached_story_words(user_mc_key, topics_id, stories_id, timespans_id):
-    user_mc = user_mediacloud_client()
-    return user_mc.topicWordCount(topics_id, fq='stories_id:'+stories_id, timespans_id=timespans_id)
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def story_inlinks(topics_id, stories_id):
-    user_mc = user_mediacloud_client()
     inlinks = topic_story_list(user_mediacloud_key(), topics_id, link_to_stories_id=stories_id)
     return jsonify(inlinks)
 
@@ -81,7 +66,6 @@ def story_outlinks(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
 @flask_login.login_required
 def story_outlinks_csv(topics_id, stories_id):
-    timespans_id = request.args.get('timespanId')
     return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id)
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
@@ -95,31 +79,6 @@ def topic_stories(topics_id):
 @flask_login.login_required
 def topic_stories_csv(topics_id):
     return stream_story_list_csv(user_mediacloud_key(), 'stories', topics_id)
-
-def topic_story_list(user_mc_key, topics_id, **kwargs):
-    '''
-    Can't cache this, because we read things form request.args
-    '''
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    merged_args = {
-        'snapshots_id': snapshots_id,
-        'timespans_id': timespans_id,
-        'foci_id': foci_id,
-        'sort': validated_sort(request.args.get('sort')),
-        'limit': request.args.get('limit'),
-        'link_id': request.args.get('linkId'),
-        'q': request.args.get('q')
-    }
-    merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
-    return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
-
-@cache
-def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
-    '''
-    Low level helper... call topic_story_list instead of this!
-    '''
-    user_mc = user_mediacloud_client()
-    return user_mc.topicStoryList(topics_id, **kwargs)
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     '''

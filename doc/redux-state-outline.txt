@@ -145,6 +145,36 @@
       permissions: {
         fetchState: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
         list: [ array of json permission objects that apply to this topic },
+      },
+      word: {
+        info: {
+          text: [a string of the word they picked to dig into]
+          stem: [a string of the stemmed word they picked to dig into]
+        },
+        stories: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of json story objects
+          sort: [ social | inlink ]
+        },
+        media: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of json story objects
+          sort: [ social | inlink ]
+        },
+        words: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          list: // list of JSON objects
+        },
+        sentenceCounts: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+          count: [int],
+          split: {
+            counts: [ // ordered list of {count,date} objects ],
+            gap: [ +1DAY | +3DAYS | +7DAYS]
+            end: 'YYYY-MM-DD',
+            start: 'YYYY-MM-DD',
+          }
+        }
       }
     },
 sources: {

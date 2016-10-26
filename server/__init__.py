@@ -12,11 +12,14 @@ from flask_cors import CORS
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
-from database import AppDatabase
 import mediacloud
+
+from server.database import AppDatabase
 
 SERVER_MODE_DEV = "DEV"
 SERVER_MODE_PROD = "PROD"
+SERVER_APP_TOPICS = "topics"
+SERVER_APP_SOURCES = "sources"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -101,17 +104,23 @@ def index():
     logger.debug("homepage request")
     return render_template('index.html')
 
+# now load in the appropriate view endpoints
+
 import server.views.user
-import server.views.sources.collection
-import server.views.sources.source
-import server.views.sources.sentences
-import server.views.sources.words
-import server.views.sources.geocount
-import server.views.topics.media
-import server.views.topics.sentences
-import server.views.topics.stories
-import server.views.topics.topic
-import server.views.topics.words
-import server.views.topics.focalsets
-import server.views.topics.foci
-import server.views.topics.permissions
+
+server_mode = settings.get('server', 'app')
+if server_mode == SERVER_APP_SOURCES:
+    import server.views.sources.collection
+    import server.views.sources.source
+    import server.views.sources.sentences
+    import server.views.sources.words
+    import server.views.sources.geocount
+elif server_mode == SERVER_APP_TOPICS:
+    import server.views.topics.media
+    import server.views.topics.sentences
+    import server.views.topics.stories
+    import server.views.topics.topic
+    import server.views.topics.words
+    import server.views.topics.focalsets
+    import server.views.topics.foci
+    import server.views.topics.permissions
