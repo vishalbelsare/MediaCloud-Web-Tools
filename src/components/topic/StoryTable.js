@@ -4,6 +4,7 @@ import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
+import { googleFavIconUrl } from '../../lib/urlUtil';
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
@@ -71,6 +72,7 @@ class StoryTable extends React.Component {
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>
+              <th>{}</th>
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
               <th>{inlinkHeader}</th>
@@ -84,6 +86,9 @@ class StoryTable extends React.Component {
                   <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
                     {story.title}
                   </LinkWithFilters>
+                </td>
+                <td>
+                  <img className="google-icon" src={googleFavIconUrl(story.url)} alt={story.name} />
                 </td>
                 <td>
                   <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
