@@ -14,6 +14,7 @@ import { setTopicFavorite } from '../../../actions/topicActions';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import messages from '../../../resources/messages';
 import Permissioned from '../Permissioned';
+import { PERMISSION_WRITE } from '../../../lib/auth';
 
 const ControlBar = (props) => {
   const { topicInfo, topicId, location, filters, handleChangeFavorited } = props;
@@ -38,7 +39,7 @@ const ControlBar = (props) => {
                   {topicInfo.name}
                 </b>
               </div>
-              <Permissioned onlyTopic="write">
+              <Permissioned onlyTopic={PERMISSION_WRITE}>
                 <SettingsButton
                   linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
                 />
