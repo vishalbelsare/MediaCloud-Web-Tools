@@ -13,6 +13,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import { setTopicFavorite } from '../../../actions/topicActions';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import messages from '../../../resources/messages';
+import Permissioned from '../Permissioned';
 
 const ControlBar = (props) => {
   const { topicInfo, topicId, location, filters, handleChangeFavorited } = props;
@@ -37,9 +38,11 @@ const ControlBar = (props) => {
                   {topicInfo.name}
                 </b>
               </div>
-              <SettingsButton
-                linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
-              />
+              <Permissioned onlyTopic="write">
+                <SettingsButton
+                  linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
+                />
+              </Permissioned>
               <FavoriteToggler
                 isFavorited={topicInfo.isFavorite}
                 onChangeFavorited={isFavNow => handleChangeFavorited(topicInfo.topics_id, isFavNow)}
