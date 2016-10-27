@@ -105,17 +105,15 @@ def index():
     return render_template('index.html')
 
 # now load in the appropriate view endpoints
-
 import server.views.user
-
-server_mode = settings.get('server', 'app')
-if server_mode == SERVER_APP_SOURCES:
+server_app = settings.get('server', 'app')
+if (server_app == SERVER_APP_SOURCES) or isProdMode():
     import server.views.sources.collection
     import server.views.sources.source
     import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
-elif server_mode == SERVER_APP_TOPICS:
+if (server_app == SERVER_APP_TOPICS) or isProdMode():
     import server.views.topics.media
     import server.views.topics.sentences
     import server.views.topics.stories
