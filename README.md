@@ -8,10 +8,12 @@ Dev Installation
 ----------------
 
 Python 2.7:
+ * python 2.7 https://www.python.org/download/releases/2.7/
+ * `pip install virtualenv` (if necessary) [also install/link pip if you don't have it (if on Mac OS, use sudo easy_install pip)]
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
  *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
- * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install
- * `pip install -r requirements.txt`
+ * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install (http://brew.sh)
+ * in MediaMeter directory>`pip install -r requirements.txt` 
 
 Node and npm:  
  * make sure your node installation is up-to-date (we work with v5.9.0 right now)
@@ -19,6 +21,9 @@ Node and npm:
 
 MongoDB:
 [Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`
+
+Redis:
+[Install Redis](http://redis.io/)  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install redis`
 
 Configuration
 ------------- 
@@ -32,6 +37,7 @@ You will make your life easier by installing these tools to help you develop bet
  * [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
  * [React Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi).
  * Set up your environment with [SublimeText](https://www.sublimetext.com) and linting following [these instructions](https://medium.com/planet-arkency/catch-mistakes-before-you-run-you-javascript-code-6e524c36f0c8#.1mela5864).
+ * - Essentially, you need to tell Sublime to install the Sublime package control manager and then you need to install the necessary packages using Sublime's command line. That's all there in the link, just make sure you follow the prompts explicity.
  * To browse your local DB on a Mac use [MongoHub](https://github.com/bububa/MongoHub-Mac), or [MongoExpress for a web-based UI](https://github.com/mongo-express/mongo-express)
 
 Running
@@ -40,6 +46,7 @@ Running
 You need to open two terminal windows and run one thing in each (so the hot-reloading can work):
  * `npm run topics-dev` or `npm run sources-dev`
  * `python run.py`
+    - if you get flask errors, run the `pip install -r requirements.txt` line again. On Mac Osx, you may need to run with --ignore-installed
 
 Releasing
 ---------
