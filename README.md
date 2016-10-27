@@ -12,8 +12,8 @@ Python 2.7:
  * `pip install virtualenv` (if necessary) [also install/link pip if you don't have it (if on Mac OS, use sudo easy_install pip)]
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
  *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
- * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install
- * `pip install -r requirements.txt` 
+ * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install (http://brew.sh)
+ * in MediaMeter directory>`pip install -r requirements.txt` 
 
 Node and npm:  
  * make sure your node installation is up-to-date (we work with v5.9.0 right now)
