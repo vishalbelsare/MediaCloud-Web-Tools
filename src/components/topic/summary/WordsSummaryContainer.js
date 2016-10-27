@@ -27,7 +27,7 @@ class WordsSummaryContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/words.csv?snapshot=${filtersAsUrlParams(filters)}`;
+    const url = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {
