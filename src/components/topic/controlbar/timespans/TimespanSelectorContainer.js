@@ -10,8 +10,6 @@ import TimespanSelector from './TimespanSelector';
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData, selectedTimespan } = this.props;
-    console.log('receiving new props!');
-    console.log(nextProps.filters);
     if (((nextProps.filters.snapshotId !== filters.snapshotId) ||
          (nextProps.filters.focusId !== filters.focusId) ||
          (nextProps.filters.timespanId !== filters.timespanId)) &&
