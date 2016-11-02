@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { replace, push } from 'react-router-redux';
 import { fetchTopicTimespansList, filterByTimespan, toggleTimespanControls, setTimespanVisiblePeriod }
   from '../../../../actions/topicActions';
 import composeAsyncContainer from '../../../common/AsyncContainer';
@@ -10,8 +10,11 @@ import TimespanSelector from './TimespanSelector';
 class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData, selectedTimespan } = this.props;
+    console.log('receiving new props!');
+    console.log(nextProps.filters);
     if (((nextProps.filters.snapshotId !== filters.snapshotId) ||
-         (nextProps.filters.focusId !== filters.focusId)) &&
+         (nextProps.filters.focusId !== filters.focusId) ||
+         (nextProps.filters.timespanId !== filters.timespanId)) &&
         (nextProps.topicId !== null) && (nextProps.filters.snapshotId !== null)) {
       fetchData(nextProps.topicId, nextProps.filters.snapshotId, nextProps.filters.focusId, nextProps.timespanId, selectedTimespan);
     }
@@ -64,13 +67,19 @@ TimespanSelectorContainer.propTypes = {
 };
 
 // helper to update the url and fire off event
-function updateTimespan(dispatch, location, timespan) {
+function updateTimespan(dispatch, location, timespan, shouldPush) {
   const newLocation = filteredLocation(location,
     { snapshotId: timespan.snapshots_id, focusId: timespan.foci_id, timespanId: timespan.timespans_id });
-  console.log('updateTimestamp');
-  console.log(newLocation);
+  // console.log('updateTimestamp');
+  // console.log(newLocation);
   dispatch(filterByTimespan(timespan.timespans_id));
-  dispatch(push(newLocation));
+  if (shouldPush) {
+    // add to history
+    dispatch(push(newLocation));
+  } else {
+    // do a replace, not a push here so the non-snapshot url isn't in the history
+    dispatch(replace(newLocation));
+  }
 }
 
 const mapStateToProps = state => ({
@@ -81,6 +90,13 @@ const mapStateToProps = state => ({
   selectedPeriod: state.topics.selected.timespans.selectedPeriod,
   selectedTimespan: state.topics.selected.timespans.selected,
 });
+
+// when you switch snapshots we need to find the matching timespan in the new snapshot
+function findMatchingTimespan(timespan, timespanList) {
+  return timespanList.list.find(ts => (
+    ((ts.period === timespan.period) && (ts.start_date === timespan.start_date) && (ts.end_date === timespan.end_date))
+  ));
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePeriodSelected: (period) => {
@@ -97,14 +113,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (timespanId === null || isNaN(timespanId)) {
           // no timespan selected so we'll default to one
           pickDefault = true;
-        } else if ((selectedTimespan !== undefined) && (selectedTimespan !== null) && (selectedTimespan.foci_id !== cleanedFocus)) {
-          // if the topic has switched, we need to figure out what the corresponding timespan is
-          // iterate through new list of timespans to find one with a matching period, start_date and end_date
-          const matchingNewTimespan = response.list.find(ts => (
-            ((ts.period === selectedTimespan.period) && (ts.start_date === selectedTimespan.start_date) && (ts.end_date === selectedTimespan.end_date))
-          ));
+        } else if ((selectedTimespan !== null) && (selectedTimespan.foci_id !== cleanedFocus)) {
+          // if the snapshot has switched, we need to figure out what the corresponding timespan is
+          const matchingNewTimespan = findMatchingTimespan(selectedTimespan, response.list);
           if (matchingNewTimespan !== undefined) {
-            updateTimespan(dispatch, ownProps.location, matchingNewTimespan);
+            updateTimespan(dispatch, ownProps.location, matchingNewTimespan, false);
           } else {
             pickDefault = true;
           }
@@ -115,14 +128,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
         if (pickDefault) {
           const defaultTimespan = response.list[0]; // pick the first timespan as the default (this is the overall one)
-          console.log('pick default');
-          console.log(defaultTimespan);
-          updateTimespan(dispatch, ownProps.location, defaultTimespan);
+          // console.log('pick default');
+          // console.log(defaultTimespan);
+          updateTimespan(dispatch, ownProps.location, defaultTimespan, false);
         }
       });
   },
   handleTimespanSelected: (timespan) => {
-    updateTimespan(dispatch, ownProps.location, timespan);
+    updateTimespan(dispatch, ownProps.location, timespan, true);
   },
 });
 

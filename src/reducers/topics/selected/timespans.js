@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { FETCH_TOPIC_TIMESPANS_LIST, TOGGLE_TIMESPAN_CONTROLS,
   SET_TIMESPAN_VISIBLE_PERIOD, TOPIC_FILTER_BY_TIMESPAN } from '../../../actions/topicActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
@@ -40,6 +41,24 @@ const timespans = createAsyncReducer({
     // this might fail, in the case where the id comes from the url, before we have fetched the list
     const selected = getTimespanFromListById(state.list, selectedId);
     return { selectedId, selected };
+  },
+  [LOCATION_CHANGE]: (payload, state) => {
+    // for some reason when the user hits the back button we need to manually re-render
+    // if the timespan has changed
+    const updates = {};
+    if (state.list.length === 0) {  // bial if we haven't fetched list from server yet (ie. page load)
+      return updates;
+    }
+    if (payload.query.timespanId !== undefined) {
+      const newTimespanId = parseInt(payload.query.timespanId, 10); // gotta intify it, since it comes from url as string
+      if (newTimespanId !== state.selected) {
+        const selected = getTimespanFromListById(state.list, newTimespanId);
+        updates.selectedId = newTimespanId;
+        updates.selected = selected;
+        updates.selectedPeriod = selected.period;
+      }
+    }
+    return updates;
   },
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { push } from 'react-router-redux';
+import { push, replace } from 'react-router-redux';
 import { connect } from 'react-redux';
 import SnapshotSelector from './SnapshotSelector';
 import { fetchTopicSnapshotsList, filterBySnapshot } from '../../../actions/topicActions';
@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               timespanId: null,
               focusId: null,
             });
-            dispatch(push(newLocation));
+            dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
             dispatch(filterBySnapshot(newSnapshotId));
           }
         });

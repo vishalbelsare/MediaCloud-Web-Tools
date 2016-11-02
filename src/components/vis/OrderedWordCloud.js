@@ -70,7 +70,6 @@ class OrderedWordCloud extends React.Component {
       maxFontSize,
       showTooltips,
     };
-    console.log(width);
     if (width === undefined) {
       options.width = DEFAULT_WIDTH;
     }

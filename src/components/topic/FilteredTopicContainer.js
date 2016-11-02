@@ -27,20 +27,22 @@ class FilteredTopicContainer extends React.Component {
 }
 
 FilteredTopicContainer.propTypes = {
-  // from context
+  // from compositional chain
   intl: React.PropTypes.object.isRequired,
   children: React.PropTypes.node,
   location: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
+  params: ownProps.params,
 });
 
 export default
