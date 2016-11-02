@@ -22,6 +22,7 @@ import TopicSettingsContainer from '../components/topic/settings/TopicSettingsCo
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
+import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -45,6 +46,7 @@ const topicRoutes = (
         <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
+        <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >

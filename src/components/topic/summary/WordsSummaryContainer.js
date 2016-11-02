@@ -7,9 +7,9 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
+import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
-import { filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -31,18 +31,26 @@ class WordsSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { words, helpButton } = this.props;
+    const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
+          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
           <FormattedMessage {...messages.topWords} />
           {helpButton}
         </h2>
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
+        <OrderedWordCloud
+          words={words}
+          textColor={getBrandDarkColor()}
+          width={width}
+          height={height}
+          maxFontSize={maxFontSize}
+          minFontSize={minFontSize}
+        />
       </DataCard>
     );
   }
@@ -55,6 +63,10 @@ WordsSummaryContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
+  width: React.PropTypes.number,
+  height: React.PropTypes.number,
+  maxFontSize: React.PropTypes.number,
+  minFontSize: React.PropTypes.number,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
