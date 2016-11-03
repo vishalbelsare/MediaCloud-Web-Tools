@@ -4,7 +4,7 @@ import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
-import { googleFavIconUrl } from '../../lib/urlUtil';
+import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
@@ -80,27 +80,31 @@ class StoryTable extends React.Component {
               <th>{socialHeader}</th>
               <th><FormattedMessage {...messages.facebookShares} /></th>
             </tr>
-            {stories.map((story, idx) =>
-              (<tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-                <td>
-                  <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
-                    {story.title}
-                  </LinkWithFilters>
-                </td>
-                <td>
-                  <img className="google-icon" src={googleFavIconUrl(story.url)} alt={story.name} />
-                </td>
-                <td>
-                  <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
-                    {story.media_name}
-                  </LinkWithFilters>
-                </td>
-                <td><FormattedDate value={storyPubDateToTimestamp(story.publish_date)} /></td>
-                <td><FormattedNumber value={story.media_inlink_count} /></td>
-                <td><FormattedNumber value={story.outlink_count} /></td>
-                <td><FormattedNumber value={story.bitly_click_count} /></td>
-                <td><FormattedNumber value={story.facebook_share_count} /></td>
-              </tr>)
+            {stories.map((story, idx) => {
+              const domain = storyDomainName(story);
+              return (
+                <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+                  <td>
+                    <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
+                      {story.title}
+                    </LinkWithFilters>
+                  </td>
+                  <td>
+                    <img className="google-icon" src={googleFavIconUrl(domain)} alt={domain} />
+                  </td>
+                  <td>
+                    <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
+                      {story.media_name}
+                    </LinkWithFilters>
+                  </td>
+                  <td><FormattedDate value={storyPubDateToTimestamp(story.publish_date)} /></td>
+                  <td><FormattedNumber value={story.media_inlink_count} /></td>
+                  <td><FormattedNumber value={story.outlink_count} /></td>
+                  <td><FormattedNumber value={story.bitly_click_count} /></td>
+                  <td><FormattedNumber value={story.facebook_share_count} /></td>
+                </tr>
+              );
+            }
             )}
           </tbody>
         </table>
