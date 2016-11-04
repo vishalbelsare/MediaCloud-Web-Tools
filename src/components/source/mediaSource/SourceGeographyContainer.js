@@ -5,16 +5,15 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchSourceGeo } from '../../../actions/sourceActions';
-
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
-  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Geography' },
+  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'Geographic Attention' },
   helpText: { id: 'source.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Source across the world.</p>',
+    defaultMessage: '<p>This is a heat map that shows you how often different countries are mentioned by this source.</p>',
   },
 };
 
@@ -25,14 +24,17 @@ class SourceGeographyContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { intro, geolist } = this.props;
+    const { intro, geolist, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <p>{intro}</p>
         <GeoChart data={geolist} />
       </DataCard>
@@ -50,6 +52,7 @@ SourceGeographyContainer.propTypes = {
   intro: React.PropTypes.string,
   // from composition
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -78,7 +81,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.heatMapHelpText])(
         composeAsyncContainer(
           SourceGeographyContainer
         )

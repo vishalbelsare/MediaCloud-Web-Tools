@@ -12,9 +12,9 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Collection across the world.</p>',
+  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Geographic Attention' },
+  helpText: { id: 'collection.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This is a heat map that shows you how often different countries are mentioned by the sources in this collection.</p>',
   },
 };
 
@@ -25,21 +25,25 @@ class CollectionGeographyContainer extends React.Component {
     const url = `/api/collections/${collectionId}/geography/geography.csv`;
     window.location = url;
   }
+
   render() {
-    const { intro, geolist, intl } = this.props;
+    const { intro, geolist, intl, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
-
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <p>{intro}</p>
         <GeoChart data={geolist} />
       </DataCard>
     );
   }
+
 }
 
 CollectionGeographyContainer.propTypes = {
@@ -52,6 +56,7 @@ CollectionGeographyContainer.propTypes = {
   intro: React.PropTypes.string,
   // from composition
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -79,7 +84,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.heatMapHelpText])(
         composeAsyncContainer(
           CollectionGeographyContainer
         )

@@ -13,9 +13,9 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
-  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
+  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
   helpText: { id: 'source.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Source across the world.</p>',
+    defaultMessage: '<p>This chart shows you the number of sentences we have collected from this source over time.</p>',
   },
 };
 
@@ -26,14 +26,17 @@ class SourceSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, health, filename } = this.props;
+    const { total, counts, health, filename, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
       </DataCard>
     );
@@ -41,17 +44,19 @@ class SourceSentenceCountContainer extends React.Component {
 }
 
 SourceSentenceCountContainer.propTypes = {
+  // from state
   fetchStatus: React.PropTypes.string.isRequired,
+  health: React.PropTypes.array,
+  total: React.PropTypes.number,
+  counts: React.PropTypes.array,
   // from parent
   sourceId: React.PropTypes.number.isRequired,
+  filename: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  health: React.PropTypes.array,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
-  filename: React.PropTypes.string,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

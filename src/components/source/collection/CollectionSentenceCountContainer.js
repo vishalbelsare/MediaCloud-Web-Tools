@@ -13,9 +13,9 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Collection across the world.</p>',
+  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
+  helpText: { id: 'collection.summary.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time.</p>',
   },
 };
 
@@ -27,14 +27,17 @@ class CollectionSentenceCountContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, health, intl, filename } = this.props;
+    const { total, counts, health, intl, filename, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
       </DataCard>
     );
@@ -42,17 +45,19 @@ class CollectionSentenceCountContainer extends React.Component {
 }
 
 CollectionSentenceCountContainer.propTypes = {
+  // from state
   fetchStatus: React.PropTypes.string.isRequired,
+  health: React.PropTypes.array,
+  total: React.PropTypes.number,
+  counts: React.PropTypes.array,
   // from parent
   collectionId: React.PropTypes.number.isRequired,
+  filename: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  health: React.PropTypes.array,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
-  filename: React.PropTypes.string,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

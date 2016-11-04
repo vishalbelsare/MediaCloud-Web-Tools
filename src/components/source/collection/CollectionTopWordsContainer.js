@@ -12,9 +12,9 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
-  helpTitle: { id: 'topic.summary.topWords.help.title', defaultMessage: 'About Top Words' },
-  helpText: { id: 'topic.summary.topWords.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Collection in top words.</p>',
+  helpTitle: { id: 'collection.summary.topWords.help.title', defaultMessage: 'About Top Words' },
+  helpText: { id: 'collection.summary.topWords.help.text',
+    defaultMessage: '<p>This visualization shows you the words used most often in this collection.</p>',
   },
 };
 
@@ -27,14 +27,17 @@ class CollectionTopWordsContainer extends React.Component {
   }
 
   render() {
-    const { intro, words, onWordClick, intl } = this.props;
-    const { formatMessage } = intl;
+    const { intro, words, onWordClick, helpButton } = this.props;
+    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
         <p>{ intro }</p>
         <OrderedWordCloud words={words} onWordClick={onWordClick} />
       </DataCard>
@@ -53,6 +56,7 @@ CollectionTopWordsContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -69,7 +73,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           CollectionTopWordsContainer
         )
