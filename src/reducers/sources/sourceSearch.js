@@ -1,20 +1,15 @@
-
 import { FETCH_SOURCE_SEARCH } from '../../actions/sourceActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
-
 
 const sourceSearch = createAsyncReducer({
   initialState: {
     list: [],
   },
   action: FETCH_SOURCE_SEARCH,
-  handleFetch: () => ({ list: [], total: null }),
   handleSuccess: payload => ({
-    total: payload.total,
-    list: payload.results,
+    // add name and id so we can display it in an autocomplete
+    list: payload.list.map(c => ({ ...c, name: c.label, id: c.media_id, type: 'mediaSource' })),
   }),
-  handleFailure: () => ({ list: [], total: null }),
 });
-
 
 export default sourceSearch;

@@ -11,9 +11,6 @@ export const SELECT = 'SELECT';
 export const SOURCE_FILTER_BY_SNAPSHOT = 'SOURCE_FILTER_BY_SNAPSHOT';
 export const SOURCE_FILTER_BY_TIMESPAN = 'SOURCE_FILTER_BY_TIMESPAN';
 export const FETCH_SOURCE_SUMMARY = 'FETCH_SOURCE_SUMMARY';
-// export const FETCH_SOURCE_TOP_STORIES = 'FETCH_SOURCE_TOP_STORIES';
-// // export const SORT_SOURCE_TOP_STORIES = 'SORT_SOURCE_TOP_STORIES';
-// export const FETCH_SOURCE_TOP_MEDIA = 'FETCH_SOURCE_TOP_MEDIA';
 export const SORT_SOURCE_DETAILS = 'SORT_SOURCE_DETAILS';
 export const SORT_COLLECTION_DETAILS = 'SORT_COLLECTION_DETAILS';
 export const FETCH_SOURCE_TOP_WORDS = 'FETCH_SOURCE_TOP_WORDS';
@@ -25,6 +22,7 @@ export const FETCH_COLLECTION_SENTENCE_COUNT = 'FETCH_COLLECTION_SENTENCE_COUNT'
 export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
+export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
 
 export const select = createAction(SELECT, id => id);
 
@@ -49,3 +47,5 @@ export const fetchSourceGeo = createAsyncAction(FETCH_SOURCE_GEO, api.sourceGeog
 export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.collectionGeography, id => id);
 
 export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);
+
+export const fetchCollectionSearch = createAsyncAction(FETCH_COLLECTION_SEARCH, api.collectionSearch, string => string);

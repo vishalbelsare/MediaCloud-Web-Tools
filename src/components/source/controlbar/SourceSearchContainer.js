@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import { push } from 'react-router-redux';
-import { fetchSourceSearch } from '../../../actions/sourceActions';
+import { fetchSourceSearch, fetchCollectionSearch } from '../../../actions/sourceActions';
 
 class SourceSearchContainer extends React.Component {
 
@@ -14,9 +14,13 @@ class SourceSearchContainer extends React.Component {
     };
   }
 
-  handleNewRequest = (mediaSource) => {
-    const { navigateToMediaSource } = this.props;
-    navigateToMediaSource(mediaSource.media_id);
+  handleNewRequest = (item) => {
+    const { navigateToMediaSource, navigateToColleciton } = this.props;
+    if (item.type === 'mediaSource') {
+      navigateToMediaSource(item.id);
+    } else if (item.type === 'collection') {
+      navigateToColleciton(item.id);
+    }
   }
 
   shouldFireSearch = (newSearchString) => {
@@ -37,14 +41,14 @@ class SourceSearchContainer extends React.Component {
   filterResults = () => true
 
   render() {
-    const { searchResults } = this.props;
+    const { sourceResults, collectionResults } = this.props;
     return (
       <div className="source-search">
         <AutoComplete
           hintText="search for media by name or URL"
           fullWidth
-          dataSourceConfig={{ text: 'name', value: 'media_id' }}
-          dataSource={searchResults}
+          dataSourceConfig={{ text: 'name', value: 'id' }}
+          dataSource={sourceResults.concat(collectionResults)}
           onUpdateInput={this.handleUpdateInput}
           onNewRequest={this.handleNewRequest}
           maxSearchResults={10}
@@ -59,22 +63,29 @@ class SourceSearchContainer extends React.Component {
 SourceSearchContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // form state
-  searchResults: React.PropTypes.array.isRequired,
+  sourceResults: React.PropTypes.array.isRequired,
+  collectionResults: React.PropTypes.array.isRequired,
   // from dispatch
   search: React.PropTypes.func.isRequired,
   navigateToMediaSource: React.PropTypes.func.isRequired,
+  navigateToColleciton: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  searchResults: state.sources.sourceSearch.list,
+  sourceResults: state.sources.sourceSearch.list,
+  collectionResults: state.sources.collectionSearch.list,
 });
 
 const mapDispatchToProps = dispatch => ({
   search: (searchString) => {
     dispatch(fetchSourceSearch(searchString));
+    dispatch(fetchCollectionSearch(searchString));
   },
-  navigateToMediaSource: (mediaId) => {
-    dispatch(push(`/source/${mediaId}/details`));
+  navigateToMediaSource: (id) => {
+    dispatch(push(`/source/${id}/details`));
+  },
+  navigateToColleciton: (id) => {
+    dispatch(push(`/collections/${id}/details`));
   },
 });
 

@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import { createApiPromise } from './apiUtil';
 
 export function sourceList() {
   return fetch('api/sources/list', {
@@ -25,6 +26,10 @@ export function collectionList() {
   }).then(
     response => response.json()
   );
+}
+
+export function collectionSearch(wildcardString) {
+  return createApiPromise(`/api/collections/${wildcardString}/search`);
 }
 
 export function sourceDetails(mediaId) {
