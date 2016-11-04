@@ -17,7 +17,8 @@ class SourceSearchContainer extends React.Component {
     };
   }
 
-  handleNewRequest = (item) => {
+  handleClick = (item) => {
+    console.log(item);
     const { navigateToMediaSource, navigateToColleciton } = this.props;
     if (item.type === 'mediaSource') {
       navigateToMediaSource(item.id);
@@ -27,7 +28,8 @@ class SourceSearchContainer extends React.Component {
   }
 
   shouldFireSearch = (newSearchString) => {
-    if ((newSearchString !== this.state.lastSearchString) &&
+    if ((newSearchString.length > 0) &&
+        (newSearchString !== this.state.lastSearchString) &&
         Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2) {
       this.setState({ lastSearchString: newSearchString });
       return true;
@@ -47,12 +49,13 @@ class SourceSearchContainer extends React.Component {
   render() {
     const { sourceResults, collectionResults } = this.props;
     const results = sourceResults.concat(collectionResults);
-    const resultsAsComponents = results.map(i => ({
-      text: i.name,
+    const resultsAsComponents = results.map(item => ({
+      text: item.name,
       value: (
         <MenuItem
-          primaryText={(i.name.length > MAX_SUGGESTION_CHARS) ? `${i.name.substr(0, MAX_SUGGESTION_CHARS)}...` : i.name}
-          secondaryText={(i.type === 'mediaSource') ? '📰' : '📁'}
+          onClick={() => this.handleClick(item)}
+          primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
+          secondaryText={(item.type === 'mediaSource') ? '📰' : '📁'}
         />
       ),
     }));
@@ -61,9 +64,9 @@ class SourceSearchContainer extends React.Component {
         <AutoComplete
           hintText="search for media by name or URL"
           fullWidth
+          openOnFocus
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
-          onNewRequest={this.handleNewRequest}
           maxSearchResults={10}
           filter={this.filterResults}
         />
@@ -95,7 +98,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchCollectionSearch(searchString));
   },
   navigateToMediaSource: (id) => {
-    dispatch(push(`/source/${id}/details`));
+    dispatch(push(`/sources/${id}/details`));
   },
   navigateToColleciton: (id) => {
     dispatch(push(`/collections/${id}/details`));
