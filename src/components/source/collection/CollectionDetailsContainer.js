@@ -15,10 +15,6 @@ import CollectionGeographyContainer from './CollectionGeographyContainer';
 const localMessages = {
   searchNow: { id: 'collection.basicInfo.searchNow', defaultMessage: 'Search Now' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
-  collectionDetailsSourcesTitle: { id: 'collection.details.sources.title', defaultMessage: 'Sources' },
-  collectionDetailsSourcesIntro: { id: 'collection.details.sources.intro',
-    defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
-  },
   collectionDetailsTopWordsInfo: { id: 'collection.details.words.info',
     defaultMessage: 'This wordcloud shows you the most commonly used words in the Collection - {name} (based on a sample of sentences). Click a word to load a Dashboard search showing you how {name} writes about it.' },
   collectionDetailsMapInfo: { id: 'collection.details.map.info',
@@ -63,14 +59,7 @@ const CollectionDetailsContainer = (props) => {
           </Row>
         </Col>
         <Col lg={4} md={4} sm={12}>
-          <SourceList
-            title={formatMessage(localMessages.collectionDetailsSourcesTitle)}
-            intro={formatMessage(localMessages.collectionDetailsSourcesIntro, {
-              name: collection.name,
-              count: collection.media.length,
-            })}
-            sources={collection.media}
-          />
+          <SourceList collectionId={collection.tags_id} sources={collection.media} />
         </Col>
       </Row>
       <Row>
