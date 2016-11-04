@@ -9,7 +9,8 @@ highchartsExporting(ReactHighcharts.Highcharts);
 const maps = require('./world-eckert3-lowres');
 
 const localMessages = {
-  tooltipTitle: { id: 'chart.geographyattention.title', defaultMessage: '{count}% of sentences that mention  {name}' },
+  seriesName: { id: 'chart.geographyAttention.series.name', defaultMessage: 'Geographic Attention' },
+  tooltipTitle: { id: 'chart.geographyAttention.title', defaultMessage: '{count}% of sentences mention {name}' },
 };
 
 class GeoChart extends React.Component {
@@ -55,7 +56,7 @@ class GeoChart extends React.Component {
         data,
         mapData: maps,
         joinBy: 'iso-a2',
-        name: 'Geographic percentage',
+        name: formatMessage(localMessages.seriesName),
         allowPointSelect: true,
         cursor: 'pointer',
         states: {
