@@ -1,12 +1,15 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
+import Title from 'react-title-component';
 import AppContainer from '../AppContainer';
 import messages from '../../resources/messages';
 
 const SourcesApp = (props) => {
   const { formatMessage } = props.intl;
+  const titleHandler = parentTitle => `${formatMessage(messages.sourcesToolShortName)} | ${parentTitle}`;
   return (
     <div>
+      <Title render={titleHandler} />
       <AppContainer
         name="sources"
         title={formatMessage(messages.sourcesToolName)}

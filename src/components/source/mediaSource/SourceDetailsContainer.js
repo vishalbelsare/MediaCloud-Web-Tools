@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import Title from 'react-title-component';
 import { select, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceBasicInfo from './SourceBasicInfo';
@@ -23,13 +24,16 @@ const localMessages = {
   sourceDetailsMapInfo: { id: 'source.details.map.info',
     defaultMessage: 'Here is a heatmap of countries mentioned by {name} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {name} covers it.' },
 };
+
 const SourceDetailsContainer = (props) => {
   const { source, sourceId, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
   const { formatMessage } = props.intl;
   const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
   const filename = `SentencesOverTime-Source-${sourceId}`;
+  const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
   return (
     <Grid className="details source-details">
+      <Title render={titleHandler} />
       <Row>
         <Col lg={8}>
           <h1>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import Title from 'react-title-component';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
@@ -28,8 +29,10 @@ const CollectionDetailsContainer = (props) => {
   const { collectionId, collection, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
   const { formatMessage } = props.intl;
   const filename = `SentencesOverTime-Collection-${collectionId}`;
+  const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
   return (
     <Grid className="details collection-details">
+      <Title render={titleHandler} />
       <Row>
         <Col lg={8}>
           <h1>
