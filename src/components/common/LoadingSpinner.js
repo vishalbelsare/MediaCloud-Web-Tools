@@ -3,7 +3,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 const LoadingSpinner = (props) => {
   const { size, padding } = props;
-  const sizeToUse = ((size !== undefined) && (size !== null)) ? (size / 50) : 0.5;
+  const sizeToUse = ((size !== undefined) && (size !== null)) ? (size) : 30;
   const customStyle = (padding !== undefined) ? { padding } : null;
   return (
     <div className="loading-spinner" style={customStyle}>

@@ -31,11 +31,11 @@ class StoryTotalsSummaryContainer extends React.Component {
     let content = null;
     if (counts !== null) {
       const data = [  // format the data for the bubble chart help
-       { label: formatMessage(localMessages.filteredLabel),
-         value: counts.filtered,
-         color: getBrandDarkColor(),
-         labelColor: 'rgb(255,255,255)' },
-       { label: formatMessage(localMessages.totalLabel), value: counts.total },
+        { label: formatMessage(localMessages.filteredLabel),
+          value: counts.filtered,
+          color: getBrandDarkColor(),
+          labelColor: 'rgb(255,255,255)' },
+        { label: formatMessage(localMessages.totalLabel), value: counts.total },
       ];
       content = <BubbleChart data={data} />;
     }

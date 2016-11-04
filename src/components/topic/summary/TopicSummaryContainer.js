@@ -14,7 +14,7 @@ import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 class TopicSummaryContainer extends React.Component {
   filtersAreSet() {
     const { filters, topicId } = this.props;
-    return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
+    return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
     const { filters, topicId, topicInfo, timespan } = this.props;
