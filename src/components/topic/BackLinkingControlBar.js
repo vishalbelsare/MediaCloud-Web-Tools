@@ -8,10 +8,13 @@ const BackLinkingControlBar = props => (
     <div className="main">
       <Grid>
         <Row>
-          <Col lg={2} md={2} sm={12} className="left">
+          <Col lg={2} md={2} xs={12} className="left">
             <Link to={props.linkTo}>
               &larr; <FormattedMessage {...props.message} />
             </Link>
+          </Col>
+          <Col lg={8} md={8} xs={12}>
+            {props.children}
           </Col>
         </Row>
       </Grid>
@@ -25,6 +28,7 @@ BackLinkingControlBar.propTypes = {
   // from parent
   linkTo: React.PropTypes.string.isRequired,
   message: React.PropTypes.object.isRequired,
+  children: React.PropTypes.node,
 };
 
 export default injectIntl(BackLinkingControlBar);

@@ -9,7 +9,6 @@ import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
-  describeFocusTitle: { id: 'focus.create.describe.title', defaultMessage: 'Describe Your New {focalTechnique} Focus' },
   describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },
   describeFocalSet: { id: 'focus.create.describeSet.about', defaultMessage: 'Your Focus has to be part of a Set, which lets you compare it to other Foci in the same Set.' },
   focusName: { id: 'focus.name', defaultMessage: 'Focus Name' },
@@ -20,73 +19,63 @@ const localMessages = {
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Focus.' },
 };
 
-class FocusDetailsForm extends React.Component {
-
-  render() {
-    const { renderTextField, renderSelectField, properties, focalSetDefinitions } = this.props;
-    const { formatMessage } = this.props.intl;
-    // if they pick "make a new focal set" then let them enter name and description
-    let focalSetContent = null;
-    if ((properties.focalSetDefinitionId !== null) && (properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID)) {
-      focalSetContent = <CreateFocalSetForm />;
-    }
-    return (
-      <div className="focus-create-details">
-        <Row>
-          <Col lg={10} md={10} sm={10}>
-            <h2><FormattedMessage {...localMessages.describeFocusTitle} values={{ focalTechnique: properties.focalTechnique }} /></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={3} xs={12}>
-            <Field
-              name="focusName"
-              component={renderTextField}
-              floatingLabelText={localMessages.focusName}
-            />
-          </Col>
-          <Col lg={3} xs={12}>
-            <Field
-              name="focusDescription"
-              component={renderTextField}
-              multiLine
-              floatingLabelText={localMessages.focusDescription}
-            />
-          </Col>
-          <Col lg={3} xs={12}>
-            <Field
-              name="focalSetId"
-              onChange={this.handleFocalSetSelected}
-              value={properties.focalSetDefinitionId}
-              component={renderSelectField}
-              floatingLabelText={localMessages.pickFocalSet}
-            >
-              {focalSetDefinitions.map(focalSetDef =>
-                <MenuItem
-                  key={focalSetDef.focal_set_definitions_id}
-                  value={focalSetDef.focal_set_definitions_id}
-                  primaryText={focalSetDef.name}
-                />
-              )}
-              <MenuItem
-                key={NEW_FOCAL_SET_PLACEHOLDER_ID}
-                value={NEW_FOCAL_SET_PLACEHOLDER_ID}
-                primaryText={formatMessage(localMessages.newFocalSetName)}
-              />
-            </Field>
-            {focalSetContent}
-          </Col>
-          <Col lg={1} sm={0} />
-          <Col lg={2} sm={12}>
-            <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
-            <p className="light"><i><FormattedMessage {...localMessages.describeFocalSet} /></i></p>
-          </Col>
-        </Row>
-      </div>
-    );
+const FocusDetailsForm = (props) => {
+  const { renderTextField, renderSelectField, properties, focalSetDefinitions, onFocalSetSelected } = props;
+  const { formatMessage } = props.intl;
+  // if they pick "make a new focal set" then let them enter name and description
+  let focalSetContent = null;
+  if ((properties.focalSetDefinitionId !== null) && (properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID)) {
+    focalSetContent = <CreateFocalSetForm />;
   }
-
-}
+  return (
+    <div className="focus-create-details">
+      <Row>
+        <Col lg={3} xs={12}>
+          <Field
+            name="focusName"
+            component={renderTextField}
+            floatingLabelText={localMessages.focusName}
+          />
+        </Col>
+        <Col lg={3} xs={12}>
+          <Field
+            name="focusDescription"
+            component={renderTextField}
+            multiLine
+            floatingLabelText={localMessages.focusDescription}
+          />
+        </Col>
+        <Col lg={3} xs={12}>
+          <Field
+            name="focalSetId"
+            component={renderSelectField}
+            onChange={onFocalSetSelected}
+            floatingLabelText={localMessages.pickFocalSet}
+          >
+            {focalSetDefinitions.map(focalSetDef =>
+              <MenuItem
+                key={focalSetDef.focal_set_definitions_id}
+                value={focalSetDef.focal_set_definitions_id}
+                primaryText={focalSetDef.name}
+              />
+            )}
+            <MenuItem
+              key={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              value={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              primaryText={formatMessage(localMessages.newFocalSetName)}
+            />
+          </Field>
+          {focalSetContent}
+        </Col>
+        <Col lg={1} sm={0} />
+        <Col lg={2} sm={12}>
+          <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
+          <p className="light"><i><FormattedMessage {...localMessages.describeFocalSet} /></i></p>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 FocusDetailsForm.propTypes = {
   // from parent

@@ -6,7 +6,6 @@ import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TEC
   from '../../../../../lib/focalTechniques';
 
 const localMessages = {
-  title: { id: 'focus.techniquePicker.title', defaultMessage: 'Pick a Focal Technique' },
   about: { id: 'focus.techniquePicker.about',
     defaultMessage: 'You can build a Focus using a variety of Focal Techniques; pick the one that best matches your awareness of the content and goals. You can\'t change this later.' },
   keywordName: { id: 'focus.technique.keyword.name', defaultMessage: 'Keyword Search' },
@@ -39,11 +38,6 @@ class FocalTechniqueSelector extends React.Component {
     const { selected } = this.props;
     return (
       <div className="focal-technique-selector">
-        <Row>
-          <Col lg={12}>
-            <h2><FormattedMessage {...localMessages.title} /></h2>
-          </Col>
-        </Row>
         <Row>
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription

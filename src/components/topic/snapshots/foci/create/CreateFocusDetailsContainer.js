@@ -4,59 +4,53 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
-import FocalTechniqueSelector from './FocalTechniqueSelector';
 import AppButton from '../../../../common/AppButton';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
+import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import messages from '../../../../../resources/messages';
+import composeAsyncContainer from '../../../../common/AsyncContainer';
+import FocusDetailsForm from './FocusDetailsForm';
 
 const localMessages = {
-  title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Pick a Technique' },
-  about: { id: 'focus.create.setup.about',
-    defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
+  title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Focus' },
 };
 
-class CreateFocusSetupContainer extends React.Component {
+class CreateFocusDetailsContainer extends React.Component {
 
-  componentWillMount() {
-    // grab any pre-filled-in props from the url and save them here
+  handleFocalSetSelected = (event, index, focalSetDefinitionId) => {
     const { setProperties } = this.props;
-    const { focalSetDefId, focalTechnique } = this.props.location.query;
-    if (focalTechnique !== undefined) {
-      setProperties({ focalTechnique });
-    }
-    // if there aren't any focal set defs, the user should have to create a new one
-    if (focalSetDefId !== undefined) {
-      setProperties({ focalSetDefinitionId: focalSetDefId });
-    }
-  }
-
-  handleFocalTechniqueSelected = (focalTechnique) => {
-    const { setProperties } = this.props;
-    setProperties({ focalTechnique });
+    setProperties({ focalSetDefinitionId });
   }
 
   render() {
-    const { handleSubmit, finishStep, properties } = this.props;
+    const { topicId, handleSubmit, finishStep, properties, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
+    let content = null;
+    // console.log(properties);
+    if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
+      content = (<FocusDetailsForm
+        topicId={topicId}
+        initialValues={{ focalSetId: properties.focalSetDefinitionId }}
+        focalSetDefinitions={focalSetDefinitions}
+        properties={properties}
+        onFocalSetSelected={this.handleFocalSetSelected}
+      />);
+    }
     let nextButtonDisabled = true;
-    if (properties.focalTechnique !== null) {
+    if ((properties.focalTechnique !== null) &&
+        (properties.focalSetDefinitionId !== null)) {
       nextButtonDisabled = false;
     }
     return (
       <Grid>
-        <form className="focus-create-setup" name="focusCreateSetupForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <form className="focus-create-details" name="focusCreateSetupForm" onSubmit={handleSubmit(finishStep.bind(this))}>
           <Row>
             <Col lg={10} md={10} sm={10}>
               <h1><FormattedMessage {...localMessages.title} /></h1>
-              <p>
-                <FormattedMessage {...localMessages.about} />
-              </p>
             </Col>
           </Row>
-          <FocalTechniqueSelector
-            selected={properties.focalTechnique}
-            onSelected={this.handleFocalTechniqueSelected}
-          />
+          { content }
           <Row>
             <Col lg={12} md={12} sm={12} >
               <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
@@ -69,41 +63,58 @@ class CreateFocusSetupContainer extends React.Component {
 
 }
 
-CreateFocusSetupContainer.propTypes = {
+CreateFocusDetailsContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
   // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  focalSetDefinitions: React.PropTypes.array.isRequired,
   properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
   // from dispatch
   setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
+  focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
+  fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
   properties: state.topics.selected.focalSets.create.properties,
   formData: state.form.focusCreateSetup,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   setProperties: (properties) => {
     dispatch(setNewFocusProperties(properties));
   },
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
   },
+  asyncFetch: () => {
+    dispatch(fetchFocalSetDefinitions(ownProps.topicId));
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: () => {
-      dispatchProps.goToStep(1);
+    finishStep: (values) => {
+      const focusProps = {
+        topicId: ownProps.topicId,
+        name: values.focusName,
+        description: values.focusDescription,
+      };
+      if (stateProps.properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+        focusProps.focalSetName = stateProps.formData.values.focalSetName;
+        focusProps.focalSetDescription = stateProps.formData.values.focalSetDescription;
+      }
+      dispatchProps.setProperties(focusProps);
+      dispatchProps.goToStep(3);
     },
   });
 }
@@ -126,7 +137,9 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          CreateFocusSetupContainer
+          composeAsyncContainer(
+            CreateFocusDetailsContainer
+          )
         )
       )
     )

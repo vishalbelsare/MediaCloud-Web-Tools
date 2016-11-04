@@ -12,7 +12,7 @@ import messages from '../../../../../../resources/messages';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocalSetDefinitionSelector';
 
 const localMessages = {
-  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Focus' },
+  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Focus' },
   name: { id: 'focus.create.confirm.name', defaultMessage: '<b>Name</b>: {name}' },
   description: { id: 'focus.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
   focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Focal Technique</b>: {name}' },

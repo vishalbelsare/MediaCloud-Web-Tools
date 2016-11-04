@@ -11,7 +11,7 @@ import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
 import { notEmptyString } from '../../../../../../lib/formValidators';
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Edit Your New "{name}" Focus' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Configure Your {technique} Focus' },
   about: { id: 'focus.create.edit.about',
     defaultMessage: 'This Focus is driven by a keyword search.  Any stories that match to boolean query you create will be included in the Focus for analysis together.' },
   errorNoKeywords: { id: 'focalTechnique.boolean.keywords.error', defaultMessage: 'You need to specify some keywords.' },
@@ -21,11 +21,12 @@ const EditKeywordSearchContainer = (props) => {
   const { topicId, renderTextField, handleSubmit, handleSearchClick, finishStep, properties } = props;
   const { formatMessage } = props.intl;
   let previewContent = null;
+  let nextButtonDisabled = true;
   if ((properties.keywords !== null) && (properties.keywords !== undefined) && (properties.keywords.length > 0)) {
+    nextButtonDisabled = false;
     previewContent = (
       <div>
         <KeywordSearchResultsContainer topicId={topicId} keywords={properties.keywords} />
-        <AppButton type="submit" label={formatMessage(messages.next)} primary />
       </div>
     );
   }
@@ -33,26 +34,32 @@ const EditKeywordSearchContainer = (props) => {
     <Grid>
       <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
         <Row>
-          <Col lg={10} md={10} sm={10}>
-            <h2><FormattedMessage {...localMessages.title} values={{ name: properties.name }} /></h2>
+          <Col lg={10}>
+            <h2><FormattedMessage {...localMessages.title} values={{ technique: properties.focalTechnique }} /></h2>
             <p>
               <FormattedMessage {...localMessages.about} />
             </p>
           </Col>
         </Row>
         <Row>
-          <Col lg={8} md={8} sm={10}>
+          <Col lg={8} xs={12}>
             <Field
               name="keywords"
               component={renderTextField}
               floatingLabelText={messages.searchByKeywords}
             />
           </Col>
-          <Col lg={2} md={2} sm={2}>
+          <Col lg={2} xs={12}>
             <AppButton label={formatMessage(messages.search)} style={{ marginTop: 33 }} onClick={handleSearchClick} />
           </Col>
         </Row>
         { previewContent }
+        <Row>
+          <Col lg={8} xs={12}>
+            <br />
+            <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
+          </Col>
+        </Row>
       </form>
     </Grid>
   );
