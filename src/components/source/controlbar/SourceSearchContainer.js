@@ -3,7 +3,10 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import { push } from 'react-router-redux';
+import MenuItem from 'material-ui/MenuItem';
 import { fetchSourceSearch, fetchCollectionSearch } from '../../../actions/sourceActions';
+
+const MAX_SUGGESTION_CHARS = 40;
 
 class SourceSearchContainer extends React.Component {
 
@@ -24,7 +27,8 @@ class SourceSearchContainer extends React.Component {
   }
 
   shouldFireSearch = (newSearchString) => {
-    if (Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2) {
+    if ((newSearchString !== this.state.lastSearchString) &&
+        Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2) {
       this.setState({ lastSearchString: newSearchString });
       return true;
     }
@@ -42,13 +46,22 @@ class SourceSearchContainer extends React.Component {
 
   render() {
     const { sourceResults, collectionResults } = this.props;
+    const results = sourceResults.concat(collectionResults);
+    const resultsAsComponents = results.map(i => ({
+      text: i.name,
+      value: (
+        <MenuItem
+          primaryText={(i.name.length > MAX_SUGGESTION_CHARS) ? `${i.name.substr(0, MAX_SUGGESTION_CHARS)}...` : i.name}
+          secondaryText={(i.type === 'mediaSource') ? '📰' : '📁'}
+        />
+      ),
+    }));
     return (
       <div className="source-search">
         <AutoComplete
           hintText="search for media by name or URL"
           fullWidth
-          dataSourceConfig={{ text: 'name', value: 'id' }}
-          dataSource={sourceResults.concat(collectionResults)}
+          dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
           onNewRequest={this.handleNewRequest}
           maxSearchResults={10}

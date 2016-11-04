@@ -8,7 +8,8 @@ const SourceControlBar = () => (
     <div className="main">
       <Grid>
         <Row>
-          <Col lg={4} md={4} sm={4} className="right">
+          <Col sm={8} xs={0} />
+          <Col lg={4} xs={12} className="right">
             <SourceSearchContainer />
           </Col>
         </Row>
