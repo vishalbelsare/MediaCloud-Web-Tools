@@ -6,16 +6,12 @@ from server import app
 from server.util.request import api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
-from server.views.sources.words import _wordcount
-from server.views.sources.words import stream_wordcount_csv
-from server.views.sources.geocount import stream_geo_csv
-from server.views.sources.geocount import _geotag_count
-from server.views.sources.sentences import _recent_sentence_counts
-from server.views.sources.sentences import stream_sentence_count_csv
+from server.views.sources.words import cached_wordcount, stream_wordcount_csv
+from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
+from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 import server.util.csv as csv
 
 logger = logging.getLogger(__name__)
-
 
 @app.route('/api/collection/list', methods=['GET'])
 @flask_login.login_required
@@ -75,39 +71,40 @@ def _cached_collection_media_list(user_mc_key, tags_id):
 @api_error_handler
 def api_collection_sentence_count(collection_id):
     info = {}
-    info['sentenceCounts'] = _recent_sentence_counts(['tags_id_media:'+str(collection_id)])
+    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(), ['tags_id_media:'+str(collection_id)])
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/sentences/sentence-count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def collection_sentence_count_csv(collection_id):
-    return stream_sentence_count_csv('sentenceCounts-Collection-' +collection_id, collection_id, "tags_id_media")
+    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Collection-' +collection_id, collection_id, "tags_id_media")
 
 @app.route('/api/collections/<collection_id>/geography')
 @flask_login.login_required
 @api_error_handler
 def geo_geography(collection_id):
     info = {}
-    info['geography'] = _geotag_count('tags_id_media:'+str(collection_id))
+    info['geography'] = cached_geotag_count(user_mediacloud_key(), 'tags_id_media:'+str(collection_id))
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/geography/geography.csv')
 @flask_login.login_required
 @api_error_handler
 def collection_geo_csv(collection_id):
-    return stream_geo_csv('geography-Collection-' + collection_id, collection_id, "tags_id_media")
+    return stream_geo_csv(user_mediacloud_key(), 'geography-Collection-' + collection_id, collection_id, "tags_id_media")
 
 @app.route('/api/collections/<collection_id>/words')
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
-    info = {}
-    info['wordcounts'] = _wordcount('tags_id_media:'+str(collection_id))
+    info = {
+        'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:'+str(collection_id))
+    }
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/words/wordcount.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    return stream_wordcount_csv('wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
