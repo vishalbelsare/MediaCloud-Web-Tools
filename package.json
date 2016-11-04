@@ -17,6 +17,7 @@
     "highcharts-exporting": "0.1.2",
     "highcharts-more": "0.1.2",
     "highcharts-offline-exporting": "0.1.2",
+    "highcharts-treemap": "^0.1.2",
     "intl": "1.2.5",
     "isomorphic-fetch": "2.2.1",
     "material-ui": "0.16.1",

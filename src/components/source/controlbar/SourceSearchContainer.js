@@ -18,7 +18,6 @@ class SourceSearchContainer extends React.Component {
   }
 
   handleClick = (item) => {
-    console.log(item);
     const { navigateToMediaSource, navigateToColleciton } = this.props;
     if (item.type === 'mediaSource') {
       navigateToMediaSource(item.id);

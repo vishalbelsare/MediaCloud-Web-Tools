@@ -23,6 +23,7 @@ export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
+export const FETCH_COLLECTION_SOURCE_STORY_COUNTS = 'FETCH_COLLECTION_SOURCE_STORY_COUNTS';
 
 export const select = createAction(SELECT, id => id);
 
@@ -49,3 +50,5 @@ export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.co
 export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);
 
 export const fetchCollectionSearch = createAsyncAction(FETCH_COLLECTION_SEARCH, api.collectionSearch, string => string);
+
+export const fetchCollectionSourceStoryCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_STORY_COUNTS, api.collectionSourceStoryCounts, id => id);

@@ -45,6 +45,33 @@ def api_collection_sources_csv(collection_id):
     filename = info['label']+" - sources.csv"
     return csv.stream_response(all_media, props, filename)
 
+@app.route('/api/collections/<collection_id>/sources/story-counts')
+@flask_login.login_required
+@api_error_handler
+def collection_source_story_counts(collection_id):
+    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    for s in sources:
+        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
+    return jsonify({'sources': sources})
+
+@app.route('/api/collections/<collection_id>/sources/story-counts.csv')
+@flask_login.login_required
+@api_error_handler
+def collection_source_story_counts_csv(collection_id):
+    user_mc = user_mediacloud_client()
+    info = user_mc.tag(collection_id)
+    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    for s in sources:
+        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
+    props = ['media_id', 'name', 'url', 'story_count']
+    filename = info['label']+" - source story counts.csv"
+    return csv.stream_response(sources, props, filename)
+
+@cache
+def _cached_story_count(user_mc_key, media_id):
+    user_mc = user_mediacloud_client()
+    return user_mc.storyCount('*', 'media_id:'+str(media_id))
+
 @cache
 def _cached_tag_set_info(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()

@@ -11,6 +11,7 @@ import SourceList from './SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
+import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 
 const localMessages = {
   searchNow: { id: 'collection.basicInfo.searchNow', defaultMessage: 'Search Now' },
@@ -46,36 +47,37 @@ const CollectionDetailsContainer = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={8} md={8} sm={12}>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <CollectionBasicInfo collection={collection} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <CollectionSentenceCountContainer collectionId={collectionId} filename={filename} />
-            </Col>
-          </Row>
+        <Col lg={6} xs={12}>
+          <CollectionBasicInfo collection={collection} />
         </Col>
-        <Col lg={4} md={4} sm={12}>
-          <SourceList collectionId={collection.tags_id} sources={collection.media} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} md={6} sm={12}>
+        <Col lg={6} xs={12}>
           <CollectionTopWordsContainer
             collectionId={collectionId}
             intro={formatMessage(localMessages.collectionDetailsTopWordsInfo, { name: collection.label })}
             onWordClick={handleWordCloudClick}
           />
         </Col>
-        <Col lg={6} md={6} sm={12}>
+      </Row>
+      <Row>
+        <Col lg={12} md={12} xs={12}>
+          <CollectionSentenceCountContainer collectionId={collectionId} filename={filename} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} xs={12}>
           <CollectionGeographyContainer
             collectionId={collectionId}
             intro={formatMessage(localMessages.collectionDetailsMapInfo, { name: collection.label })}
             onCountryClick={handleCountryClick}
           />
+        </Col>
+        <Col lg={6} xs={12}>
+          <CollectionSourceRepresentation collectionId={collectionId} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} xs={12}>
+          <SourceList collectionId={collection.tags_id} sources={collection.media} />
         </Col>
       </Row>
     </Grid>
