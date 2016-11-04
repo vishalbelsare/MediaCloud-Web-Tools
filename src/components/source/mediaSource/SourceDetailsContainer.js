@@ -39,7 +39,7 @@ const SourceDetailsContainer = (props) => {
         </Col>
         <Col lg={4}>
           <RaisedButton
-            style={{ float: 'right' }}
+            style={{ float: 'right', marginTop: 40 }}
             label={formatMessage(localMessages.searchNow)}
             primary
             onClick={handleDashboardClick}
