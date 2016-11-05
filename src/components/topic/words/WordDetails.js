@@ -28,7 +28,6 @@ WordDetails.propTypes = {
   // from parent
   term: React.PropTypes.string.isRequired,
   stem: React.PropTypes.string.isRequired,
-  count: React.PropTypes.string.isRequired,
   // from context
   intl: React.PropTypes.object.isRequired,
 };

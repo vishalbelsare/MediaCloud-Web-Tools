@@ -147,16 +147,16 @@ export function word(topicId, wordstem) {
 
 export function wordSentenceCounts(topicId, wordstem, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}/sentences/count`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/sentences/count`, acceptedParams);
 }
 
 export function wordStories(topicId, wordstem, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit']);
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}/stories`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/stories`, acceptedParams);
 }
 
 export function wordWords(topicId, wordstem) {
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}/words`);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/words`);
 }
 /*
 export function wordMedia(topicId, word, params) {

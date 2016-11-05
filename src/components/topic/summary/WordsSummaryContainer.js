@@ -52,7 +52,7 @@ class WordsSummaryContainer extends React.Component {
           height={height}
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
-          onClick={handleWordCloudClick}
+          onWordClick={handleWordCloudClick}
         />
       </DataCard>
     );
