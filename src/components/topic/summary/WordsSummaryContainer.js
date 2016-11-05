@@ -10,12 +10,8 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
-<<<<<<< Updated upstream
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
-=======
-import { filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
->>>>>>> Stashed changes
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -37,11 +33,7 @@ class WordsSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-<<<<<<< Updated upstream
-    const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize } = this.props;
-=======
-    const { words, helpButton, handleWordCloudClick } = this.props;
->>>>>>> Stashed changes
+    const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -53,7 +45,6 @@ class WordsSummaryContainer extends React.Component {
           <FormattedMessage {...messages.topWords} />
           {helpButton}
         </h2>
-<<<<<<< Updated upstream
         <OrderedWordCloud
           words={words}
           textColor={getBrandDarkColor()}
@@ -61,12 +52,9 @@ class WordsSummaryContainer extends React.Component {
           height={height}
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
+          onClick={handleWordCloudClick}
         />
-=======
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} onWordClick={handleWordCloudClick} />
->>>>>>> Stashed changes
       </DataCard>
-
     );
   }
 }

@@ -47,13 +47,10 @@ const topicRoutes = (
         <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
-<<<<<<< Updated upstream
-        <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
-=======
+        <Route path="/topics/:topicId/wordsInf" component={InfluentialWordsContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words" component={WordContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words/:word" component={WordContainer} onEnter={requireAuth} />
 
->>>>>>> Stashed changes
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >
