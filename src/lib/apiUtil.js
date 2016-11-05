@@ -3,7 +3,7 @@ import fetch from 'isomorphic-fetch';
 /**
  * Helper to stich together any defined params into a string suitable for url arg submission
  */
-function generateParamStr(params) {
+export function generateParamStr(params) {
   const cleanedParams = {};
   Object.keys(params).forEach((key) => {
     if ({}.hasOwnProperty.call(params, key)) {

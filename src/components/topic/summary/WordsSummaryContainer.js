@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
@@ -9,7 +10,12 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
+<<<<<<< Updated upstream
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+=======
+import { filtersAsUrlParams } from '../../util/location';
+import { generateParamStr } from '../../../lib/apiUtil';
+>>>>>>> Stashed changes
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -31,7 +37,11 @@ class WordsSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
+<<<<<<< Updated upstream
     const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize } = this.props;
+=======
+    const { words, helpButton, handleWordCloudClick } = this.props;
+>>>>>>> Stashed changes
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -43,6 +53,7 @@ class WordsSummaryContainer extends React.Component {
           <FormattedMessage {...messages.topWords} />
           {helpButton}
         </h2>
+<<<<<<< Updated upstream
         <OrderedWordCloud
           words={words}
           textColor={getBrandDarkColor()}
@@ -51,7 +62,11 @@ class WordsSummaryContainer extends React.Component {
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
         />
+=======
+        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} onWordClick={handleWordCloudClick} />
+>>>>>>> Stashed changes
       </DataCard>
+
     );
   }
 }
@@ -73,6 +88,7 @@ WordsSummaryContainer.propTypes = {
   // from state
   words: React.PropTypes.array,
   fetchStatus: React.PropTypes.string.isRequired,
+  handleWordCloudClick: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -81,23 +97,25 @@ const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, props.filters));
   },
+  handleWordCloudClick: (word) => {
+    const params = generateParamStr({ stem: word.stem, term: word.term });
+    let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
+    url += params;
+    window.location = url;
+    dispatch(push(url));
+  },
+  asyncFetch: () => {
+    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
+  },
 });
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps);
-    },
-  });
-}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordsSummaryContainer

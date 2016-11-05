@@ -56,6 +56,13 @@ export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
 
+export const SELECT_WORD = 'SELECT_WORD';
+export const FETCH_WORD = 'FETCH_WORD';
+export const FETCH_WORD_SENTENCE_COUNT = 'FETCH_WORD_SENTENCE_COUNT';
+export const FETCH_WORD_STORIES = 'FETCH_WORD_STORIES';
+export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
+export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
+
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
 // pass in topicId
@@ -174,3 +181,16 @@ export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, i
 
 // pass in topicId, focalSetId, filters
 export const fetchTopicFocalSetSetenceCounts = createAsyncAction(FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS, api.topicFocalSetSentenceCounts);
+
+
+export const selectWord = createAction(SELECT_WORD, id => id, word => word);
+
+export const fetchWord = createAsyncAction(FETCH_WORD, api.word);
+// pass in topic id, media id, snapshot id, timespan id
+export const fetchWordSentenceCounts = createAsyncAction(FETCH_WORD_SENTENCE_COUNT, api.wordSentenceCounts);
+// pass in topic id, media id, snapshot id, timespan id, sort, limit
+export const fetchWordStories = createAsyncAction(FETCH_WORD_STORIES, api.wordStories);
+// pass in sort
+export const sortWordStories = createAction(SORT_WORD_STORIES, sort => sort);
+// pass in topic id, media id, snapshot id, timespan id
+export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords);

@@ -18,6 +18,7 @@ import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
+import WordContainer from '../components/topic/words/WordContainer';
 import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
@@ -46,7 +47,13 @@ const topicRoutes = (
         <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
+<<<<<<< Updated upstream
         <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
+=======
+        <Route path="/topics/:topicId/words" component={WordContainer} onEnter={requireAuth} />
+        <Route path="/topics/:topicId/words/:word" component={WordContainer} onEnter={requireAuth} />
+
+>>>>>>> Stashed changes
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >

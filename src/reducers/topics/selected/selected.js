@@ -12,6 +12,7 @@ import story from './story/story';
 import focalSets from './focalSets/focalSets';
 import permissions from './permissions';
 import attention from './attention';
+import word from './word/word';
 
 function id(state = null, action) {
   switch (action.type) {
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   focalSets,
   permissions,
   attention,
+  word,
 });
 
 export default rootReducer;

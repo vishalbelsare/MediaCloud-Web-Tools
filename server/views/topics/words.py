@@ -12,6 +12,14 @@ from server.views.topics.apicache import topic_word_counts, topic_story_list, to
 
 logger = logging.getLogger(__name__)
 
+@app.route('/api/topics/<topics_id>/words/<word>', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def topic_word(topics_id, word):
+    response = topic_word_counts(user_mediacloud_key(), topics_id, q=word)[:1]
+    logger.info(response)
+    return jsonify(response)
+
 @app.route('/api/topics/<topics_id>/words', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
