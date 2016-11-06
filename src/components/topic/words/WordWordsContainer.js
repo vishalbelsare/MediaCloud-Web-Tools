@@ -9,7 +9,6 @@ import { fetchWordWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
 import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
@@ -26,7 +25,7 @@ class WordWordsContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { words, helpButton, handleWordCloudClick } = this.props;
+    const { words, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -34,10 +33,12 @@ class WordWordsContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
-          <FormattedMessage {...messages.word} />
+          <FormattedMessage {...messages.topWords} />
           {helpButton}
         </h2>
-        <OrderedWordCloud words={words} onWordClick={handleWordCloudClick} textColor={getBrandDarkColor()} showTooltips />
+        <OrderedWordCloud
+          words={words} onWordClick={handleWordCloudClick}
+        />
       </DataCard>
     );
   }
@@ -65,7 +66,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchWordWords(ownProps.topicId, ownProps.word)); // fetch the info we need
+    dispatch(fetchWordWords(ownProps.topicId, ownProps.word));
   },
   handleWordCloudClick: (word) => {
     const params = generateParamStr({ stem: word.stem, term: word.term });
@@ -75,6 +76,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(push(url));
   },
 });
+
 
 export default
   injectIntl(

@@ -155,7 +155,7 @@ class OrderedWordCloud extends React.Component {
       y = Math.max(y, leftHeight);
       sizeRange.max -= 1;
     }
-    if (y < options.height) {
+    if (y && y < options.height) {
       svg.attr('height', y);
     }
     return (

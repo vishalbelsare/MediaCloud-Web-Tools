@@ -102,8 +102,6 @@ WordContainer.propTypes = {
   fetchData: React.PropTypes.func,
   // from state
   word: React.PropTypes.string,
-  stem: React.PropTypes.string,
-  term: React.PropTypes.string,
   topicId: React.PropTypes.number.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   selectNewWord: React.PropTypes.func.isRequired,
