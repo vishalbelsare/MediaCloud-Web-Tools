@@ -49,9 +49,7 @@ def api_collection_sources_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_story_counts(collection_id):
-    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
-    for s in sources:
-        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
+    sources = _cached_collection_source_story_counts(user_mediacloud_key(), collection_id)
     return jsonify({'sources': sources})
 
 @app.route('/api/collections/<collection_id>/sources/story-counts.csv')
@@ -60,12 +58,24 @@ def collection_source_story_counts(collection_id):
 def collection_source_story_counts_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
-    for s in sources:
-        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
-    props = ['media_id', 'name', 'url', 'story_count']
+    sources = _cached_collection_source_story_counts(user_mediacloud_key(), collection_id)
+    props = ['media_id', 'name', 'url', 'story_count', 'story_pct']
     filename = info['label']+" - source story counts.csv"
     return csv.stream_response(sources, props, filename)
+
+@cache
+def _cached_collection_source_story_counts(user_mc_key, collection_id):
+    # get the list of sources
+    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    total_stories = 0
+    # get the count for each source
+    for s in sources:
+        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
+        total_stories = total_stories + s['story_count']
+    # add in percentages for each source
+    for s in sources:
+        s['story_pct'] = float(s['story_count']) / float(total_stories)
+    return sources
 
 @cache
 def _cached_story_count(user_mc_key, media_id):
@@ -87,7 +97,6 @@ def _cached_collection_media_list(user_mc_key, tags_id):
         logger.debug("last_media_id %d", max_media_id)
         media = user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
         all_media = all_media + media
-        logger.info(media)
         if len(media) > 0:
             max_media_id = media[len(media)-1]['media_id']
         more_media = len(media) != 0

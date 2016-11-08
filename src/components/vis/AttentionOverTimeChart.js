@@ -1,11 +1,9 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
-import highchartsMore from 'highcharts-more';
-import highchartsExporting from 'highcharts-exporting';
+import initHighcharts from './initHighcharts';
 
-highchartsMore(ReactHighcharts.Highcharts);
-highchartsExporting(ReactHighcharts.Highcharts);
+initHighcharts();
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 

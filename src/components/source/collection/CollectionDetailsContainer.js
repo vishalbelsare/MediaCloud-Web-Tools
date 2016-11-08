@@ -16,10 +16,6 @@ import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 const localMessages = {
   searchNow: { id: 'collection.basicInfo.searchNow', defaultMessage: 'Search Now' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
-  collectionDetailsTopWordsInfo: { id: 'collection.details.words.info',
-    defaultMessage: 'This wordcloud shows you the most commonly used words in the Collection - {name} (based on a sample of sentences). Click a word to load a Dashboard search showing you how {name} writes about it.' },
-  collectionDetailsMapInfo: { id: 'collection.details.map.info',
-    defaultMessage: 'Here is a heatmap of countries mentioned by {name} (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the {name} covers it.' },
 };
 
 const CollectionDetailsContainer = (props) => {
@@ -51,28 +47,20 @@ const CollectionDetailsContainer = (props) => {
           <CollectionBasicInfo collection={collection} />
         </Col>
         <Col lg={6} xs={12}>
-          <CollectionTopWordsContainer
-            collectionId={collectionId}
-            intro={formatMessage(localMessages.collectionDetailsTopWordsInfo, { name: collection.label })}
-            onWordClick={handleWordCloudClick}
-          />
+          <CollectionTopWordsContainer collectionId={collection.tags_id} onWordClick={handleWordCloudClick} />
         </Col>
       </Row>
       <Row>
         <Col lg={12} md={12} xs={12}>
-          <CollectionSentenceCountContainer collectionId={collectionId} filename={filename} />
+          <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
         </Col>
       </Row>
       <Row>
         <Col lg={6} xs={12}>
-          <CollectionGeographyContainer
-            collectionId={collectionId}
-            intro={formatMessage(localMessages.collectionDetailsMapInfo, { name: collection.label })}
-            onCountryClick={handleCountryClick}
-          />
+          <CollectionGeographyContainer collectionId={collection.tags_id} onCountryClick={handleCountryClick} />
         </Col>
         <Col lg={6} xs={12}>
-          <CollectionSourceRepresentation collectionId={collectionId} />
+          <CollectionSourceRepresentation collectionId={collection.tags_id} />
         </Col>
       </Row>
       <Row>
@@ -119,17 +107,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleCountryClick: () => {
-      // console.log(country);
+    handleCountryClick: (country) => {
+      console.log(country);
+      // const { collection } = stateProps;
+      // window.location = `https://dashboard.mediacloud.org/#query/["tags_id_story_sentences="]/[{"sources":[${ownProps.params.collectionId}]}]/["${collection.health.start_date.substring(0, 10)}"]/["${collection.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${collection.name}","color":"55868A"}]`;
     },
     handleDashboardClick: () => {
       const { collection } = stateProps;
-      window.location = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${ownProps.params.collectionId}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
+      window.location = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
     },
     handleWordCloudClick: (word) => {
       const { collection } = stateProps;
       const searchStr = `${word.stem}*`;
-      window.location = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.collectionId}]}]/["${collection.health.start_date.substring(0, 10)}"]/["#{collection.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${collection.name}","color":"55868A"}]`;
+      window.location = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
     },
   });
 }

@@ -31,14 +31,12 @@ def _cached_media_source_health(user_mc_key, media_id):
     return user_mc.mediaHealth(media_id)
 
 @cache
-def cached_media_source_details(user_mc_key, media_id, start_date_str=None):
+def _cached_media_source_details(user_mc_key, media_id, start_date_str=None):
     user_mc = user_mediacloud_client()
     info = user_mc.media(media_id)
     info['id'] = media_id
-    info['sentenceCounts'] = cached_recent_sentence_counts(user_mc_key, ['media_id:'+str(media_id)], start_date_str)
     info['feedCount'] = len(user_mc.feedList(media_id=media_id, rows=100))
     return info
-
 
 @app.route('/api/sources/<media_id>/details')
 @flask_login.login_required
@@ -46,7 +44,7 @@ def cached_media_source_details(user_mc_key, media_id, start_date_str=None):
 def api_media_source_details(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
     info = {}
-    info = cached_media_source_details(user_mediacloud_key(), media_id, health['start_date'][:10])
+    info = _cached_media_source_details(user_mediacloud_key(), media_id, health['start_date'][:10])
     info['health'] = health
     return jsonify({'results':info})
 

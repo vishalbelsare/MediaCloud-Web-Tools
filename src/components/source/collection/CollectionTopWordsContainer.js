@@ -11,6 +11,8 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
+  intro: { id: 'collection.summary.topWords.intro',
+    defaultMessage: 'This wordcloud shows you the most commonly used words in this collection (based on a sample of sentences). Click a word to load a Dashboard search showing you how sources in this colleciton write about it.' },
   helpTitle: { id: 'collection.summary.topWords.help.title', defaultMessage: 'About Top Words' },
   helpText: { id: 'collection.summary.topWords.help.text',
     defaultMessage: '<p>This visualization shows you the words used most often in this collection.</p>',
@@ -26,7 +28,7 @@ class CollectionTopWordsContainer extends React.Component {
   }
 
   render() {
-    const { intro, words, onWordClick, helpButton } = this.props;
+    const { words, onWordClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -37,7 +39,7 @@ class CollectionTopWordsContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <p>{ intro }</p>
+        <p><FormattedMessage {...localMessages.intro} /></p>
         <OrderedWordCloud words={words} onWordClick={onWordClick} />
       </DataCard>
     );
@@ -47,12 +49,12 @@ class CollectionTopWordsContainer extends React.Component {
 CollectionTopWordsContainer.propTypes = {
   // from parent
   collectionId: React.PropTypes.number.isRequired,
-  intro: React.PropTypes.string.isRequired,
   onWordClick: React.PropTypes.func,
+  // from dispath
+  asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
-  asyncFetch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,

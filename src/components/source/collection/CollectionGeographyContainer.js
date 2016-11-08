@@ -11,9 +11,11 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
-  helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Geographic Attention' },
-  helpText: { id: 'collection.summary.sentenceCount.help.text',
+  title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
+  intro: { id: 'collection.summary.geo.info',
+    defaultMessage: 'Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.' },
+  helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
+  helpText: { id: 'collection.summary.geo.help.text',
     defaultMessage: '<p>This is a heat map that shows you how often different countries are mentioned by the sources in this collection.</p>',
   },
 };
@@ -27,7 +29,7 @@ class CollectionGeographyContainer extends React.Component {
   }
 
   render() {
-    const { intro, geolist, intl, helpButton } = this.props;
+    const { geolist, intl, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
@@ -38,7 +40,7 @@ class CollectionGeographyContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <p>{intro}</p>
+        <p><FormattedMessage {...localMessages.intro} /></p>
         <GeoChart data={geolist} />
       </DataCard>
     );
@@ -49,11 +51,11 @@ class CollectionGeographyContainer extends React.Component {
 CollectionGeographyContainer.propTypes = {
   // from state
   geolist: React.PropTypes.array.isRequired,
-  collectionId: React.PropTypes.number.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
+  // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
   // from parent
-  intro: React.PropTypes.string,
+  collectionId: React.PropTypes.number.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
@@ -61,23 +63,21 @@ CollectionGeographyContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.fetchStatus,
-  total: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.total,
   geolist: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.list,
-  collectionId: parseInt(state.sources.selected.details.collectionDetailsReducer.collectionDetails.object.id, 10),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId) => {
     dispatch(fetchCollectionGeo(collectionId));
+  },
+  asyncFetch: () => {
+    dispatch(fetchCollectionGeo(ownProps.collectionId));
   },
 });
 
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.collectionId);
-    },
   });
 }
 
