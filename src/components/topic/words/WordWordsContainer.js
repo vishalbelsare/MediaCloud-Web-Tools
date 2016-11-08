@@ -19,11 +19,18 @@ const localMessages = {
 };
 
 class WordWordsContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { fetchData } = this.props;
+    if (nextProps.word !== this.props.word) {
+      fetchData(nextProps);
+    }
+  }
   downloadCsv = () => {
     const { word, topicId } = this.props;
     const url = `/api/topics/${topicId}/words/${word}/words.csv`;
     window.location = url;
   }
+
   render() {
     const { words, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
@@ -51,12 +58,15 @@ WordWordsContainer.propTypes = {
   // from parent
   word: React.PropTypes.string.isRequired,
   topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array.isRequired,
   handleWordCloudClick: React.PropTypes.func,
+  params: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -65,6 +75,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: () => {
+    dispatch(fetchWordWords(ownProps.topicId, ownProps.word));
+  },
   asyncFetch: () => {
     dispatch(fetchWordWords(ownProps.topicId, ownProps.word));
   },
@@ -72,8 +85,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = generateParamStr({ stem: word.stem, term: word.term });
     let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
     url += params;
-    window.location = url;
     dispatch(push(url));
+    dispatch(fetchWordWords(ownProps.topicId, word.stem));
   },
 });
 

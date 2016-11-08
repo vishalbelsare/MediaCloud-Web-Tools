@@ -21,7 +21,8 @@ const localMessages = {
 class WordSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    if (nextProps.filters.timespanId !== filters.timespanId ||
+      (nextProps.word !== this.props.word)) {
       fetchData(nextProps);
     }
   }
@@ -63,6 +64,7 @@ WordSentenceCountContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
+  params: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
