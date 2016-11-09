@@ -19,7 +19,8 @@ const localMessages = {
 class WordStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) ||
+      (nextProps.word !== this.props.word)) {
       fetchData(nextProps);
     }
   }
@@ -67,6 +68,7 @@ WordStoriesContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   inlinkedStories: React.PropTypes.array.isRequired,
+  params: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -93,7 +93,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const params = generateParamStr({ stem: word.stem, term: word.term });
     let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
     url += params;
-    window.location = url;
     dispatch(push(url));
   },
   asyncFetch: () => {

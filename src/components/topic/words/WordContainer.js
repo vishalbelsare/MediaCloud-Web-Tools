@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectWord } from '../../../actions/topicActions';
+import { fetchWord, selectWord } from '../../../actions/topicActions';
 import WordDetails from './WordDetails';
 import WordWordsContainer from './WordWordsContainer';
 import WordStoriesContainer from './WordStoriesContainer';
@@ -21,35 +21,14 @@ class WordContainer extends React.Component {
   };
 
   componentWillMount() {
-    const { selectNewWord } = this.props;
-    const { topicId } = this.props.params;
-    const { search } = this.props.location;
-
-    const hashParts = search.split('?');
-    const args = {};
-    if (hashParts.length > 1) {
-      const queryParts = hashParts[1].split('&');
-      queryParts.forEach((part) => {
-        const argParts = part.split('=');
-        args[argParts[0]] = argParts[1];
-      });
-
-      if ('term' in args) {
-        this.setState({ term: args.term });
-      }
-      if ('stem' in args) {
-        this.setState({ stem: args.stem });
-      }
-      selectNewWord(topicId, args.stem);
-    }
+    const { isolateParams } = this.props;
+    isolateParams(this.props, this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { word } = this.props.params.word;
-    this.setState({ term: word });
-    if (nextProps.word !== this.props.word) {
-      const { fetchData } = this.props;
-      fetchData(nextProps.word);
+    if (nextProps.params.word !== this.props.params.word) {
+      const { isolateParams } = nextProps;
+      isolateParams(nextProps, this);
     }
   }
 
@@ -99,18 +78,18 @@ WordContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  fetchData: React.PropTypes.func,
   // from state
   word: React.PropTypes.string,
   topicId: React.PropTypes.number.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   selectNewWord: React.PropTypes.func.isRequired,
+  isolateParams: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.word.info.fetchStatus,
   topicId: parseInt(ownProps.params.topicId, 10),
-  dirtyword: ownProps.params.dirtyword,
+  word: ownProps.params.word,
   stem: ownProps.params.stem,
   term: ownProps.params.term,
 });
@@ -119,6 +98,30 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   selectNewWord: (topicId, word) => {
     dispatch(selectWord(topicId, word));
+    dispatch(fetchWord(topicId, word));
+  },
+  isolateParams: (propsRef, thisRef) => {
+    const { topicId, selectNewWord } = propsRef;
+    const { search } = propsRef.location;
+
+    const hashParts = search.split('?');
+    const args = {};
+    if (hashParts.length > 1) {
+      const queryParts = hashParts[1].split('&');
+      queryParts.forEach((part) => {
+        const argParts = part.split('=');
+        args[argParts[0]] = argParts[1];
+      });
+
+      if ('term' in args) {
+        thisRef.setState({ term: args.term });
+        thisRef.setState({ word: args.term });
+      }
+      if ('stem' in args) {
+        thisRef.setState({ stem: args.stem });
+      }
+      selectNewWord(topicId, args.stem);
+    }
   },
 });
 
