@@ -49,7 +49,7 @@ class CollectionDetailsContainer extends React.Component {
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
               <small className="subtitle">#{collection.id} {publicMessage}</small>
             </h1>
-            <p>{collection.description}</p>
+            <p><b>{collection.description}</b></p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
           <Col lg={4} />
