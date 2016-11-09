@@ -49,5 +49,5 @@ export function collectionWordCount(id) {
 }
 
 export function collectionSourceStoryCounts(id) {
-  return createApiPromise(`api/collections/${id}/sources/story-counts`);
+  return createApiPromise(`api/collections/${id}/sources/sentences/count`);
 }

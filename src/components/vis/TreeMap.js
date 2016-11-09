@@ -6,8 +6,8 @@ import initHighcharts from './initHighcharts';
 initHighcharts();
 
 const localMessages = {
-  title: { id: 'chart.treeMap.chart.title', defaultMessage: 'Stories by Source' },
-  tooltipTitle: { id: 'chart.treeMap.tooltip.title', defaultMessage: '{count} of stories are from {name}.' },
+  title: { id: 'chart.treeMap.chart.title', defaultMessage: 'Sentences by Source' },
+  tooltipTitle: { id: 'chart.treeMap.tooltip.title', defaultMessage: '{count} of sentences are from {name}.' },
 };
 
 /**

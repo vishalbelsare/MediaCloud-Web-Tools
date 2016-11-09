@@ -3,7 +3,7 @@ import collectionDetails from './collectionDetails';
 import collectionTopWords from './collectionTopWords';
 import collectionSentenceCount from './collectionSentenceCount';
 import collectionGeoTag from './collectionGeoTag';
-import collectionSourceStoryCounts from './collectionSourceStoryCounts';
+import collectionSourceSentenceCounts from './collectionSourceSentenceCounts';
 // import sentenceCount from './sentenceCount';
 
 const collectionDetailsReducer = combineReducers({
@@ -11,7 +11,7 @@ const collectionDetailsReducer = combineReducers({
   collectionTopWords,
   collectionSentenceCount,
   collectionGeoTag,
-  collectionSourceStoryCounts,
+  collectionSourceSentenceCounts,
 });
 
 export default collectionDetailsReducer;

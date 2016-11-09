@@ -45,42 +45,45 @@ def api_collection_sources_csv(collection_id):
     filename = info['label']+" - sources.csv"
     return csv.stream_response(all_media, props, filename)
 
-@app.route('/api/collections/<collection_id>/sources/story-counts')
+@app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
 @api_error_handler
-def collection_source_story_counts(collection_id):
-    sources = _cached_collection_source_story_counts(user_mediacloud_key(), collection_id)
+def collection_source_sentence_counts(collection_id):
+    # first decide to bail if there are too many sources (cause the query takes too long)
+    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+
+    sources = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
     return jsonify({'sources': sources})
 
-@app.route('/api/collections/<collection_id>/sources/story-counts.csv')
+@app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
 @flask_login.login_required
 @api_error_handler
-def collection_source_story_counts_csv(collection_id):
+def collection_source_sentence_counts_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    sources = _cached_collection_source_story_counts(user_mediacloud_key(), collection_id)
-    props = ['media_id', 'name', 'url', 'story_count', 'story_pct']
-    filename = info['label']+" - source story counts.csv"
+    sources = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
+    props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
+    filename = info['label']+" - source sentence counts.csv"
     return csv.stream_response(sources, props, filename)
 
 @cache
-def _cached_collection_source_story_counts(user_mc_key, collection_id):
+def _cached_collection_source_sentence_counts(user_mc_key, collection_id):
     # get the list of sources
     sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
-    total_stories = 0
+    total_sentences = 0
     # get the count for each source
     for s in sources:
-        s['story_count'] = _cached_story_count(user_mediacloud_key(), s['media_id'])['count']
-        total_stories = total_stories + s['story_count']
+        s['sentence_count'] = _cached_sentences_count(user_mediacloud_key(), s['media_id'])['count']
+        total_sentences = total_sentences + s['sentence_count']
     # add in percentages for each source
     for s in sources:
-        s['story_pct'] = float(s['story_count']) / float(total_stories)
+        s['sentence_pct'] = float(s['sentence_count']) / float(total_sentences)
     return sources
 
 @cache
-def _cached_story_count(user_mc_key, media_id):
+def _cached_sentences_count(user_mc_key, media_id):
     user_mc = user_mediacloud_client()
-    return user_mc.storyCount('*', 'media_id:'+str(media_id))
+    return user_mc.sentenceCount('*', 'media_id:'+str(media_id))
 
 @cache
 def _cached_tag_set_info(user_mc_key, tag_sets_id):

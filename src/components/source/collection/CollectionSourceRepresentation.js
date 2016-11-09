@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchCollectionSourceStoryCounts } from '../../../actions/sourceActions';
+import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
@@ -23,7 +23,7 @@ class CollectionSourceRepresentation extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/sources/story-counts.csv`;
+    const url = `/api/collections/${collectionId}/sources/sentences/count.csv`;
     window.location = url;
   }
 
@@ -36,7 +36,7 @@ class CollectionSourceRepresentation extends React.Component {
   render() {
     const { helpButton, sources } = this.props;
     const { formatMessage } = this.props.intl;
-    const data = sources.map(s => ({ name: s.name, value: s.story_pct }));  // also available: story_count
+    const data = sources.map(s => ({ name: s.name, value: s.sentence_pct }));  // also available: sentence_count
     return (
       <DataCard>
         <div className="actions">
@@ -68,13 +68,13 @@ CollectionSourceRepresentation.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSourceStoryCounts.fetchStatus,
-  sources: state.sources.selected.details.collectionDetailsReducer.collectionSourceStoryCounts.sources,
+  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSourceSentenceCounts.fetchStatus,
+  sources: state.sources.selected.details.collectionDetailsReducer.collectionSourceSentenceCounts.sources,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionSourceStoryCounts(ownProps.collectionId));
+    dispatch(fetchCollectionSourceSentenceCounts(ownProps.collectionId));
   },
   navToSource: (mediaId) => {
     dispatch(push(`/sources/${mediaId}/details`));
