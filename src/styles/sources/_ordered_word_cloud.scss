@@ -1,0 +1,10 @@
+
+.ordered-word-cloud {
+  svg {
+    text {
+      &:hover {
+        fill: $sources-darker;
+      }
+    }
+  }
+}

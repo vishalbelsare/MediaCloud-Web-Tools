@@ -12,6 +12,7 @@ import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { pagedAndSortedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
+import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 
 const localMessages = {
   title: { id: 'topic.influentialMedia.title', defaultMessage: 'Influential Media' },
@@ -46,7 +47,10 @@ class InfluentialMediaContainer extends React.Component {
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
-              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <h1>
+                <MediaSourceIcon />
+                <FormattedMessage {...localMessages.title} />
+              </h1>
               <MediaTable media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
               { previousButton }
               { nextButton }

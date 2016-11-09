@@ -1,37 +1,27 @@
 @import '_base';
 @import '../_constants';
 
+@import '_source_list';
+@import '_source_collection_list';
+@import '_ordered_word_cloud';
+
 .details {
   padding-top: 15px;
 }
 
 h1 {
 
-  small.id-number {
+  small.subtitle {
     display: inline-block;
-    margin-left: 10px;
-    color: $material-grey500;
-    font-weight: normal;
+    margin-left: 20px;
+    color: $sources-primary;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
   }
 
 }
 
-.source-list { 
-  ul {
-    max-height: 430px;
-    overflow-y: scroll;
-  }
-}
-
-.ordered-word-cloud {
-  svg {
-    text {
-      &:hover {
-        fill: $sources-darker;
-      }
-    }
-  }
-}
 .google-icon {
   padding-left: 10px;
 }

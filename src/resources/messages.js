@@ -52,6 +52,7 @@ const messages = {
   sortByBitlyClicks: { id: 'common.inlinks', defaultMessage: 'sort by Bit.ly clicks' },
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
+  public: { id: 'common.public', defaultMessage: 'Public' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
   wordcloudHelpText: { id: 'wordcloud.help.text',

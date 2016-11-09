@@ -12,6 +12,7 @@ import CollectionSentenceCountContainer from './CollectionSentenceCountContainer
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   searchNow: { id: 'collection.basicInfo.searchNow', defaultMessage: 'Search Now' },
@@ -23,6 +24,7 @@ const CollectionDetailsContainer = (props) => {
   const { formatMessage } = props.intl;
   const filename = `SentencesOverTime-Collection-${collectionId}`;
   const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
+  const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
   return (
     <Grid className="details collection-details">
       <Title render={titleHandler} />
@@ -30,7 +32,7 @@ const CollectionDetailsContainer = (props) => {
         <Col lg={8}>
           <h1>
             <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-            <small className="id-number">#{collection.id}</small>
+            <small className="subtitle">#{collection.id} {publicMessage}</small>
           </h1>
         </Col>
         <Col lg={4}>

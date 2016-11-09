@@ -8,7 +8,7 @@ import FociAttentionComparisonContainer from './FociAttentionComparisonContainer
 import { setAttentionFocalSetId } from '../../../actions/topicActions';
 
 const localMessages = {
-  mainTitle: { id: 'attention.mainTitle', defaultMessage: 'Attention' },
+  mainTitle: { id: 'attention.mainTitle', defaultMessage: 'Attention Scoreboard' },
 };
 
 const AttentionContainer = (props) => {

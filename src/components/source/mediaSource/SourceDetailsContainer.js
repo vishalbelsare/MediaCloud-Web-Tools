@@ -6,11 +6,13 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { select, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import SourceBasicInfo from './SourceBasicInfo';
 import CollectionList from './CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search Now' },
@@ -31,14 +33,16 @@ const SourceDetailsContainer = (props) => {
   const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
   const filename = `SentencesOverTime-Source-${sourceId}`;
   const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
+  const publicMessage = `• ${formatMessage(messages.public)}`; // for now, every media source is public
   return (
     <Grid className="details source-details">
       <Title render={titleHandler} />
       <Row>
         <Col lg={8}>
           <h1>
+            <MediaSourceIcon />
             <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-            <small className="id-number">#{sourceId}</small>
+            <small className="subtitle">#{sourceId} {publicMessage}</small>
           </h1>
         </Col>
         <Col lg={4}>
@@ -51,10 +55,10 @@ const SourceDetailsContainer = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={8} md={8} sm={12}>
+        <Col lg={6} xs={12}>
           <SourceBasicInfo source={source} />
         </Col>
-        <Col lg={4} md={4} sm={12}>
+        <Col lg={6} xs={12}>
           <CollectionList
             title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
             intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {

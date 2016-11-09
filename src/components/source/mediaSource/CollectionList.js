@@ -1,26 +1,44 @@
 import React from 'react';
-import Link from 'react-router/lib/Link';
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
+import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 import DataCard from '../../common/DataCard';
 
 const CollectionList = (props) => {
-  const { title, intro, collections } = props;
+  const { title, intro, collections, handleTouchTap } = props;
   return (
     <DataCard className="collection-list">
       <h2>{title}</h2>
       <p>{intro}</p>
-      <ul>
+      <div className="collection-list-item-wrapper">
         {collections.map(c =>
-          <li key={c.tags_id}><Link to={`collections/${c.tags_id}/details`}>{c.label}</Link></li>
+          <Chip className="chip" key={c.tags_id} onTouchTap={() => handleTouchTap(c.tags_id)}>
+            <Avatar size={32}>📁</Avatar>
+            {c.label}
+          </Chip>
         )}
-      </ul>
+      </div>
     </DataCard>
   );
 };
 
 CollectionList.propTypes = {
+  // from parent
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string,
   collections: React.PropTypes.array.isRequired,
+  // from dispatch
+  handleTouchTap: React.PropTypes.func.isRequired,
 };
 
-export default CollectionList;
+const mapDispatchToProps = dispatch => ({
+  handleTouchTap: (collectionId) => {
+    dispatch(push(`/collections/${collectionId}/details`));
+  },
+});
+
+export default
+  connect(null, mapDispatchToProps)(
+    CollectionList
+  );
