@@ -23,7 +23,7 @@ class SourceGeographyContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { intro, geolist, helpButton } = this.props;
+    const { intro, geolist, helpButton, handleCountryClick } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -35,7 +35,7 @@ class SourceGeographyContainer extends React.Component {
           {helpButton}
         </h2>
         <p>{intro}</p>
-        <GeoChart data={geolist} />
+        <GeoChart data={geolist} onCountryClick={handleCountryClick} />
       </DataCard>
     );
   }
@@ -55,6 +55,7 @@ SourceGeographyContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
+  handleCountryClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -69,6 +70,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   asyncFetch: () => {
     dispatch(fetchSourceGeo(ownProps.source.media_id));
+  },
+  handleCountryClick: (event, geo) => {
+    const countryName = geo.name;
+    const source = ownProps.source;
+    const url = `https://dashboard.mediacloud.org/#query/["${countryName}"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+    window.open(url, '_blank');
   },
 });
 
