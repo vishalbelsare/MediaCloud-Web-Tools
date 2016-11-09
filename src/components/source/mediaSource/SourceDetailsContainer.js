@@ -30,96 +30,105 @@ const localMessages = {
 
 };
 
-const SourceDetailsContainer = (props) => {
-  const { source, sourceId, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
-  const { formatMessage, formatNumber } = props.intl;
-  const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
-  const filename = `SentencesOverTime-Source-${sourceId}`;
-  const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
-  const publicMessage = `• ${formatMessage(messages.public)}`; // for now, every media source is public
-  return (
-    <Grid className="details source-details">
-      <Title render={titleHandler} />
-      <Row>
-        <Col lg={8} xs={12}>
-          <h1>
-            <MediaSourceIcon height={32} />
-            <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-            <small className="subtitle">#{sourceId} {publicMessage}</small>
-          </h1>
-          <p>
-            <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
-            <FormattedMessage
-              {...localMessages.dateInfo}
-              values={{
-                startDate: source.health.start_date.substring(0, 10),
-                endDate: source.health.end_date.substring(0, 10),
-              }}
+class SourceDetailsContainer extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    const { sourceId, fetchData } = this.props;
+    if ((nextProps.sourceId !== sourceId)) {
+      fetchData(nextProps.sourceId);
+    }
+  }
+
+  searchOnDashboard = () => {
+    const { source } = this.props;
+    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+    window.open(dashboardUrl, '_blank');
+  }
+
+  render() {
+    const { source } = this.props;
+    const { formatMessage, formatNumber } = this.props.intl;
+    const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+    const filename = `SentencesOverTime-Source-${source.media_id}`;
+    const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
+    const publicMessage = `• ${formatMessage(messages.public)}`; // for now, every media source is public
+    return (
+      <Grid className="details source-details">
+        <Title render={titleHandler} />
+        <Row>
+          <Col lg={8} xs={12}>
+            <h1>
+              <MediaSourceIcon height={32} />
+              <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
+              <small className="subtitle">#{source.media_id} {publicMessage}</small>
+            </h1>
+            <p>
+              <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
+              <FormattedMessage
+                {...localMessages.dateInfo}
+                values={{
+                  startDate: source.health.start_date.substring(0, 10),
+                  endDate: source.health.end_date.substring(0, 10),
+                }}
+              />
+              <FormattedMessage
+                {...localMessages.contentInfo}
+                values={{
+                  storyCount: formatNumber(source.health.num_stories_w),
+                  sentenceCount: formatNumber(source.health.num_sentences_w),
+                }}
+              />
+              <FormattedHTMLMessage
+                {...localMessages.gapInfo}
+                values={{ gapCount: formatNumber(source.health.coverage_gaps) }}
+              />
+            </p>
+            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+          </Col>
+          <Col lg={4} xs={12}>
+            <HealthBadge isHealthy={source.health.is_healthy === 1} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} xs={12}>
+            <SourceTopWordsContainer source={source} />
+          </Col>
+          <Col lg={6} xs={12}>
+            <SourceSentenceCountContainer sourceId={source.media_id} filename={filename} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <SourceGeographyContainer source={source} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <CollectionList
+              title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
+              intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
+                name: source.name,
+                count: collections.length,
+              })}
+              collections={collections}
             />
-            <FormattedMessage
-              {...localMessages.contentInfo}
-              values={{
-                storyCount: formatNumber(source.health.num_stories_w),
-                sentenceCount: formatNumber(source.health.num_sentences_w),
-              }}
-            />
-            <FormattedHTMLMessage
-              {...localMessages.gapInfo}
-              values={{ gapCount: formatNumber(source.health.coverage_gaps) }}
-            />
-          </p>
-          <RaisedButton
-            label={formatMessage(localMessages.searchNow)}
-            primary
-            onClick={handleDashboardClick}
-          />
-        </Col>
-        <Col lg={4} xs={12}>
-          <HealthBadge isHealthy={source.health.isHealthy === 1} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} xs={12}>
-          <SourceTopWordsContainer onWordClick={handleWordCloudClick} source={source} />
-        </Col>
-        <Col lg={6} xs={12}>
-          <SourceSentenceCountContainer sourceId={sourceId} filename={filename} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12} md={12} sm={12}>
-          <SourceGeographyContainer
-            source={source}
-            onCountryClick={handleCountryClick}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} md={6} sm={12}>
-          <CollectionList
-            title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
-            intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
-              name: source.name,
-              count: collections.length,
-            })}
-            collections={collections}
-          />
-        </Col>
-        <Col lg={6} md={6} sm={12} />
-      </Row>
-    </Grid>
-  );
-};
+          </Col>
+          <Col lg={6} md={6} sm={12} />
+        </Row>
+      </Grid>
+    );
+  }
+
+}
 
 SourceDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
+  // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
-  handleDashboardClick: React.PropTypes.func.isRequired,
-  handleWordCloudClick: React.PropTypes.func.isRequired,
-  handleCountryClick: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   source: React.PropTypes.object,
@@ -138,32 +147,19 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (sourceId) => {
+    dispatch(select(sourceId));
+    dispatch(fetchSourceDetails(sourceId));
+  },
   asyncFetch: () => {
     dispatch(select(ownProps.params.sourceId));
     dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleCountryClick: () => {
-      // console.log(country);
-    },
-    handleDashboardClick: () => {
-      const { source } = stateProps;
-      window.location = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    },
-    handleWordCloudClick: (word) => {
-      const { source } = stateProps;
-      const searchStr = `${word.stem}*`;
-      window.location = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${ownProps.params.sourceId}]}]/["${source.health.start_date.substring(0, 10)}"]/["#{source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncContainer(
         SourceDetailsContainer
       )
