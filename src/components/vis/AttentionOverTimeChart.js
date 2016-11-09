@@ -14,7 +14,7 @@ const localMessages = {
   chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
   chartYAxisLabel: { id: 'chart.sentencesOverTime.yAxisLabel', defaultMessage: 'sentences / day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
-    defaultMessage: '{total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
+    defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },
 };
 

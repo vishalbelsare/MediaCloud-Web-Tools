@@ -54,7 +54,6 @@ class SourceSearchContainer extends React.Component {
         <MenuItem
           onClick={() => this.handleClick(item)}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
-          secondaryText={(item.type === 'mediaSource') ? '📰' : '📁'}
         />
       ),
     }));

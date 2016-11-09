@@ -11,21 +11,20 @@ import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
+  intro: { id: 'source.summary.topWords.info',
+    defaultMessage: 'This wordcloud shows you the most commonly used words in this source (based on a sample of sentences). Click a word to load a Dashboard search showing you how the this source writes about it.' },
   helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'About Top Words' },
-  helpText: { id: 'source.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This visualization shows you the words used most often in this source.</p>',
-  },
 };
 
 class SourceTopWordsContainer extends React.Component {
 
   downloadCsv = () => {
-    const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/words/wordcount.csv`;
+    const { source } = this.props;
+    const url = `/api/sources/${source.media_id}/words/wordcount.csv`;
     window.location = url;
   }
   render() {
-    const { intro, words, onWordClick, helpButton } = this.props;
+    const { words, onWordClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -36,7 +35,6 @@ class SourceTopWordsContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <p>{ intro }</p>
         <OrderedWordCloud words={words} onWordClick={onWordClick} />
       </DataCard>
     );
@@ -45,9 +43,8 @@ class SourceTopWordsContainer extends React.Component {
 
 SourceTopWordsContainer.propTypes = {
   // from parent
-  sourceId: React.PropTypes.number.isRequired,
-  intro: React.PropTypes.string.isRequired,
   onWordClick: React.PropTypes.func,
+  source: React.PropTypes.object.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
@@ -64,14 +61,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchSourceTopWords(ownProps.sourceId));
+    dispatch(fetchSourceTopWords(ownProps.source.media_id));
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText])(
         composeAsyncContainer(
           SourceTopWordsContainer
         )

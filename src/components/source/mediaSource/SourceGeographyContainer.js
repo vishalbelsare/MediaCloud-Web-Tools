@@ -10,17 +10,16 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'source.summary.geoChart.title', defaultMessage: 'Geographic Attention' },
-  helpTitle: { id: 'source.summary.sentenceCount.help.title', defaultMessage: 'Geographic Attention' },
-  helpText: { id: 'source.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This is a heat map that shows you how often different countries are mentioned by this source.</p>',
-  },
+  title: { id: 'source.summary.map.title', defaultMessage: 'Geographic Attention' },
+  helpTitle: { id: 'source.summary.map.help.title', defaultMessage: 'Geographic Attention' },
+  intro: { id: 'source.summary.map.intro',
+    defaultMessage: 'Here is a heatmap of countries mentioned by this source (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the this source covers it.' },
 };
 
 class SourceGeographyContainer extends React.Component {
   downloadCsv = () => {
-    const { sourceId } = this.props;
-    const url = `/api/sources/${sourceId}/geography/geography.csv`;
+    const { source } = this.props;
+    const url = `/api/sources/${source.media_id}/geography/geography.csv`;
     window.location = url;
   }
   render() {
@@ -43,11 +42,14 @@ class SourceGeographyContainer extends React.Component {
 }
 
 SourceGeographyContainer.propTypes = {
+  // from parent
+  source: React.PropTypes.object.isRequired,
   // from state
-  geolist: React.PropTypes.array.isRequired,
-  sourceId: React.PropTypes.number.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
+  geolist: React.PropTypes.array.isRequired,
+  // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from parent
   intro: React.PropTypes.string,
   // from composition
@@ -59,29 +61,21 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.details.sourceDetailsReducer.geoTag.fetchStatus,
   total: state.sources.selected.details.sourceDetailsReducer.geoTag.total,
   geolist: state.sources.selected.details.sourceDetailsReducer.geoTag.list,
-  sourceId: parseInt(state.sources.selected.details.sourceDetailsReducer.sourceDetails.object.id, 10),
-
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (sourceId) => {
     dispatch(fetchSourceGeo(sourceId));
   },
+  asyncFetch: () => {
+    dispatch(fetchSourceGeo(ownProps.source.media_id));
+  },
 });
-
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.sourceId);
-    },
-  });
-}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.heatMapHelpText])(
+    connect(mapStateToProps, mapDispatchToProps)(
+       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
         composeAsyncContainer(
           SourceGeographyContainer
         )
