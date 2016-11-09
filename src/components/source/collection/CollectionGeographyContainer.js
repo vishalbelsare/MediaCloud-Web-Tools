@@ -13,11 +13,8 @@ import { DownloadButton } from '../../common/IconButton';
 const localMessages = {
   title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'collection.summary.geo.info',
-    defaultMessage: 'Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
   helpTitle: { id: 'collection.summary.geo.help.title', defaultMessage: 'About Geographic Attention' },
-  helpText: { id: 'collection.summary.geo.help.text',
-    defaultMessage: '<p>This is a heat map that shows you how often different countries are mentioned by the sources in this collection.</p>',
-  },
 };
 
 class CollectionGeographyContainer extends React.Component {
@@ -40,7 +37,6 @@ class CollectionGeographyContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <p><FormattedMessage {...localMessages.intro} /></p>
         <GeoChart data={geolist} />
       </DataCard>
     );
@@ -67,24 +63,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (collectionId) => {
-    dispatch(fetchCollectionGeo(collectionId));
-  },
   asyncFetch: () => {
     dispatch(fetchCollectionGeo(ownProps.collectionId));
   },
 });
 
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.heatMapHelpText])(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.heatMapHelpText])(
         composeAsyncContainer(
           CollectionGeographyContainer
         )

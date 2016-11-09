@@ -6,7 +6,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import CollectionBasicInfo from './CollectionBasicInfo';
 import SourceList from './SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
@@ -15,64 +14,72 @@ import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import messages from '../../../resources/messages';
 
 const localMessages = {
-  searchNow: { id: 'collection.basicInfo.searchNow', defaultMessage: 'Search Now' },
+  searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
+  noHealth: { id: 'collection.details.noHealth', defaultMessage: 'Sorry, we can\'t show collection-level health yet.' },
 };
 
-const CollectionDetailsContainer = (props) => {
-  const { collectionId, collection, handleDashboardClick, handleWordCloudClick, handleCountryClick } = props;
-  const { formatMessage } = props.intl;
-  const filename = `SentencesOverTime-Collection-${collectionId}`;
-  const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
-  const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
-  return (
-    <Grid className="details collection-details">
-      <Title render={titleHandler} />
-      <Row>
-        <Col lg={8}>
-          <h1>
-            <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-            <small className="subtitle">#{collection.id} {publicMessage}</small>
-          </h1>
-        </Col>
-        <Col lg={4}>
-          <RaisedButton
-            style={{ float: 'right', marginTop: 40 }}
-            label={formatMessage(localMessages.searchNow)}
-            primary
-            onClick={handleDashboardClick}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} xs={12}>
-          <CollectionBasicInfo collection={collection} />
-        </Col>
-        <Col lg={6} xs={12}>
-          <CollectionTopWordsContainer collectionId={collection.tags_id} onWordClick={handleWordCloudClick} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12} md={12} xs={12}>
-          <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} xs={12}>
-          <CollectionGeographyContainer collectionId={collection.tags_id} onCountryClick={handleCountryClick} />
-        </Col>
-        <Col lg={6} xs={12}>
-          <CollectionSourceRepresentation collectionId={collection.tags_id} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6} xs={12}>
-          <SourceList collectionId={collection.tags_id} sources={collection.media} />
-        </Col>
-      </Row>
-    </Grid>
-  );
-};
+class CollectionDetailsContainer extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    const { collectionId, fetchData } = this.props;
+    if ((nextProps.collectionId !== collectionId)) {
+      fetchData(nextProps.collectionId);
+    }
+  }
+
+  searchOnDashboard = () => {
+    const { collection } = this.props;
+    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
+    window.open(dashboardUrl, '_blank');
+  }
+
+  render() {
+    const { collection, handleCountryClick } = this.props;
+    const { formatMessage } = this.props.intl;
+    const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
+    const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
+    const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
+    return (
+      <Grid className="details collection-details">
+        <Title render={titleHandler} />
+        <Row>
+          <Col lg={8}>
+            <h1>
+              <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
+              <small className="subtitle">#{collection.id} {publicMessage}</small>
+            </h1>
+            <p>{collection.description}</p>
+            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+          </Col>
+          <Col lg={4} />
+        </Row>
+        <Row>
+          <Col lg={6} xs={12}>
+            <CollectionTopWordsContainer collectionId={collection.tags_id} />
+          </Col>
+          <Col lg={6} xs={12}>
+            <CollectionSentenceCountContainer collectionId={collection.tags_id} filename={filename} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} xs={12}>
+            <CollectionGeographyContainer collectionId={collection.tags_id} onCountryClick={handleCountryClick} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} xs={12}>
+            <SourceList collectionId={collection.tags_id} sources={collection.media} />
+          </Col>
+          <Col lg={6} xs={12}>
+            <CollectionSourceRepresentation collectionId={collection.tags_id} />
+          </Col>
+        </Row>
+      </Grid>
+    );
+  }
+
+}
 
 CollectionDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
@@ -80,10 +87,11 @@ CollectionDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   collectionId: React.PropTypes.number.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  handleDashboardClick: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   handleWordCloudClick: React.PropTypes.func.isRequired,
   handleCountryClick: React.PropTypes.func.isRequired,
+  // from merge
+  asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   collection: React.PropTypes.object,
@@ -94,34 +102,27 @@ CollectionDetailsContainer.contextTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  // filters: state.sources.selected.filters,
   collectionId: parseInt(ownProps.params.collectionId, 10),
   fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionDetails.fetchStatus,
   collection: state.sources.selected.details.collectionDetailsReducer.collectionDetails.object,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(select(ownProps.params.collectionId));
-    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
+const mapDispatchToProps = dispatch => ({
+  fetchData: (collectionId) => {
+    dispatch(select(collectionId));
+    dispatch(fetchCollectionDetails(collectionId));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.params.collectionId);
+    },
     handleCountryClick: (country) => {
       console.log(country);
       // const { collection } = stateProps;
       // window.location = `https://dashboard.mediacloud.org/#query/["tags_id_story_sentences="]/[{"sources":[${ownProps.params.collectionId}]}]/["${collection.health.start_date.substring(0, 10)}"]/["${collection.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${collection.name}","color":"55868A"}]`;
-    },
-    handleDashboardClick: () => {
-      const { collection } = stateProps;
-      window.location = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
-    },
-    handleWordCloudClick: (word) => {
-      const { collection } = stateProps;
-      const searchStr = `${word.stem}*`;
-      window.location = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
     },
   });
 }
