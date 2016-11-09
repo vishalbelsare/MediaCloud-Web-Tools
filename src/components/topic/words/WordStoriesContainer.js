@@ -20,7 +20,7 @@ class WordStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
     if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) ||
-      (nextProps.word !== this.props.word)) {
+      (nextProps.stem !== this.props.stem)) {
       fetchData(nextProps);
     }
   }
@@ -29,8 +29,8 @@ class WordStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { word, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/words/${word}/word.csv?timespanId=${filters.timespanId}`;
+    const { term, topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/words/${term}/word.csv?timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -56,7 +56,8 @@ WordStoriesContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
   // from parent
-  word: React.PropTypes.string.isRequired,
+  stem: React.PropTypes.string.isRequired,
+  term: React.PropTypes.string.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,

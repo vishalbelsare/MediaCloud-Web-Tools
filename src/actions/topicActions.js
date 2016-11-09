@@ -183,7 +183,7 @@ export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, i
 export const fetchTopicFocalSetSetenceCounts = createAsyncAction(FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS, api.topicFocalSetSentenceCounts);
 
 
-export const selectWord = createAction(SELECT_WORD, id => id, word => word);
+export const selectWord = createAction(SELECT_WORD, payload => payload);
 
 export const fetchWord = createAsyncAction(FETCH_WORD, api.word);
 // pass in topic id, media id, snapshot id, timespan id

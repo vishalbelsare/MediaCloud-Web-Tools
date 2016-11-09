@@ -1,17 +1,12 @@
-import moment from 'moment';
-import { FETCH_WORD, SELECT_WORD } from '../../../../actions/topicActions';
-import { createAsyncReducer } from '../../../../lib/reduxHelpers';
+import { SELECT_WORD } from '../../../../actions/topicActions';
+import { createReducer } from '../../../../lib/reduxHelpers';
 
-const info = createAsyncReducer({
+const info = createReducer({
   initialState: {
-    id: null,
+    term: null,
+    stem: null,
   },
-  action: FETCH_WORD,
-  handleSuccess: payload => ({
-    ...payload,
-    publishDateObj: moment(payload.publish_date).toDate(),
-  }),
-  [SELECT_WORD]: payload => ({ id: payload }),
+  [SELECT_WORD]: payload => ({ ...payload }),
 });
 
 export default info;
