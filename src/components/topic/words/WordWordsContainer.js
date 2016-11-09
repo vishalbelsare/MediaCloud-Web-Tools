@@ -21,13 +21,13 @@ const localMessages = {
 class WordWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData } = this.props;
-    if (nextProps.word !== this.props.word) {
+    if (nextProps.term !== this.props.term) {
       fetchData(nextProps);
     }
   }
   downloadCsv = () => {
-    const { word, topicId } = this.props;
-    const url = `/api/topics/${topicId}/words/${word}/words.csv`;
+    const { term, topicId } = this.props;
+    const url = `/api/topics/${topicId}/words/${term}/words.csv`;
     window.location = url;
   }
 
@@ -56,7 +56,6 @@ WordWordsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
   // from parent
-  word: React.PropTypes.string.isRequired,
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
   // from dispatch
@@ -66,34 +65,39 @@ WordWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array.isRequired,
   handleWordCloudClick: React.PropTypes.func,
-  params: React.PropTypes.object.isRequired,
+  term: React.PropTypes.string.isRequired,
+  stem: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.words.fetchStatus,
   words: state.topics.selected.word.words.list,
+  stem: state.topics.selected.word.info.stem,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: () => {
-    dispatch(fetchWordWords(ownProps.topicId, ownProps.word));
-  },
-  asyncFetch: () => {
-    dispatch(fetchWordWords(ownProps.topicId, ownProps.word));
+  fetchData: (props) => {
+    dispatch(fetchWordWords(ownProps.topicId, props.stem));
   },
   handleWordCloudClick: (word) => {
     const params = generateParamStr({ stem: word.stem, term: word.term });
     let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
     url += params;
     dispatch(push(url));
-    dispatch(fetchWordWords(ownProps.topicId, word.stem));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps);
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordWordsContainer

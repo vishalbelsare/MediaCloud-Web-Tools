@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchWord, selectWord } from '../../../actions/topicActions';
+import { selectWord } from '../../../actions/topicActions';
 import WordDetails from './WordDetails';
 import WordWordsContainer from './WordWordsContainer';
 import WordStoriesContainer from './WordStoriesContainer';
@@ -16,26 +16,21 @@ const localMessages = {
 
 class WordContainer extends React.Component {
 
-  state = {
-    open: false,
-  };
-
+  /* not an async */
   componentWillMount() {
-    const { isolateParams } = this.props;
-    isolateParams(this.props, this);
+    const { saveParamsToStore } = this.props;
+    saveParamsToStore(this.props, this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.params.word !== this.props.params.word) {
-      const { isolateParams } = nextProps;
-      isolateParams(nextProps, this);
+      const { saveParamsToStore } = nextProps;
+      saveParamsToStore(nextProps, this);
     }
   }
 
   render() {
-    const { topicId } = this.props;
-    const term = this.state.term;
-    const stem = this.state.stem;
+    const { topicId, stem, term } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = `${formatMessage(messages.word)}`;
 
@@ -55,13 +50,13 @@ class WordContainer extends React.Component {
               <WordDetails topicId={topicId} term={term} stem={stem} />
             </Col>
             <Col lg={6} md={6} sm={12}>
-              <WordSentenceCountContainer topicId={topicId} word={stem} />
+              <WordSentenceCountContainer topicId={topicId} stem={stem} />
             </Col>
             <Col lg={12}>
-              <WordStoriesContainer topicId={topicId} word={stem} />
+              <WordStoriesContainer topicId={topicId} stem={stem} />
             </Col>
             <Col lg={6} md={6} sm={12}>
-              <WordWordsContainer topicId={topicId} word={stem} />
+              <WordWordsContainer topicId={topicId} stem={stem} term={term} />
             </Col>
           </Row>
         </Grid>
@@ -78,29 +73,25 @@ WordContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  // from state
-  word: React.PropTypes.string,
   topicId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
   selectNewWord: React.PropTypes.func.isRequired,
-  isolateParams: React.PropTypes.func.isRequired,
+  saveParamsToStore: React.PropTypes.func.isRequired,
+  // from state
+  stem: React.PropTypes.string,
+  term: React.PropTypes.string,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.topics.selected.word.info.fetchStatus,
-  topicId: parseInt(ownProps.params.topicId, 10),
-  word: ownProps.params.word,
-  stem: ownProps.params.stem,
-  term: ownProps.params.term,
+const mapStateToProps = state => ({
+  topicId: state.topics.selected.id,
+  stem: state.topics.selected.word.info.stem,
+  term: state.topics.selected.word.info.term,
 });
 
-
 const mapDispatchToProps = dispatch => ({
-  selectNewWord: (topicId, word) => {
-    dispatch(selectWord(topicId, word));
-    dispatch(fetchWord(topicId, word));
+  selectNewWord: (topicId, term, stem) => {
+    dispatch(selectWord({ term, stem }));
   },
-  isolateParams: (propsRef, thisRef) => {
+  saveParamsToStore: (propsRef) => {
     const { topicId, selectNewWord } = propsRef;
     const { search } = propsRef.location;
 
@@ -112,16 +103,10 @@ const mapDispatchToProps = dispatch => ({
         const argParts = part.split('=');
         args[argParts[0]] = argParts[1];
       });
-
-      if ('term' in args) {
-        thisRef.setState({ term: args.term });
-        thisRef.setState({ word: args.term });
-      }
-      if ('stem' in args) {
-        thisRef.setState({ stem: args.stem });
-      }
-      selectNewWord(topicId, args.stem);
     }
+    const term = args.term;
+    const stem = args.stem;
+    selectNewWord(topicId, term, stem);
   },
 });
 

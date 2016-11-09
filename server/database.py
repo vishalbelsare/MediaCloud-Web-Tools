@@ -17,7 +17,7 @@ class AppDatabase():
         self._conn = pymongo.MongoClient(db_host)[db_name]
 
     def check_connection(self):
-        return self._conn.users.find() is not None
+        return self._conn.test.insert({'dummy': 'test'})
 
     def includes_user_named(self, username):
         return self.find_by_username(username) is not None

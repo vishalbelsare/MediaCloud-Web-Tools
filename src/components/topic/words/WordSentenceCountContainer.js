@@ -22,13 +22,13 @@ class WordSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId ||
-      (nextProps.word !== this.props.word)) {
+      (nextProps.stem !== this.props.stem)) {
       fetchData(nextProps);
     }
   }
   downloadCsv = () => {
-    const { topicId, word, filters } = this.props;
-    const url = `/api/topics/${topicId}/word/${word}*/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const { topicId, term, filters } = this.props;
+    const url = `/api/topics/${topicId}/word/${term}*/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
     window.location = url;
   }
   render() {
@@ -55,8 +55,8 @@ WordSentenceCountContainer.propTypes = {
   helpButton: React.PropTypes.node.isRequired,
   // passed in
   topicId: React.PropTypes.number.isRequired,
-  word: React.PropTypes.string.isRequired,
-  // from state
+  term: React.PropTypes.string.isRequired,
+  stem: React.PropTypes.string.isRequired,  // from state
   fetchStatus: React.PropTypes.string.isRequired,
   filters: React.PropTypes.object.isRequired,
   total: React.PropTypes.number,
@@ -64,7 +64,6 @@ WordSentenceCountContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  params: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
