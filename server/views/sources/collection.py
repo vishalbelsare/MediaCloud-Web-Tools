@@ -51,9 +51,11 @@ def api_collection_sources_csv(collection_id):
 def collection_source_sentence_counts(collection_id):
     # first decide to bail if there are too many sources (cause the query takes too long)
     sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
-
-    sources = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
-    return jsonify({'sources': sources})
+    if len(sources) > 30:
+        sources_with_counts = []
+    else:
+        sources_with_counts = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
+    return jsonify({'sources': sources_with_counts})
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
 @flask_login.login_required

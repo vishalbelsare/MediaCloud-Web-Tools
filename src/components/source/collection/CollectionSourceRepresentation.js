@@ -17,6 +17,7 @@ const localMessages = {
   helpText: { id: 'collection.summary.sourceRepresentation.help.text',
     defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p>',
   },
+  cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collecton has too many sources for us to compute a map of how much content each source contributes to it.' },
 };
 
 class CollectionSourceRepresentation extends React.Component {
@@ -37,6 +38,13 @@ class CollectionSourceRepresentation extends React.Component {
     const { helpButton, sources } = this.props;
     const { formatMessage } = this.props.intl;
     const data = sources.map(s => ({ name: s.name, value: s.sentence_pct }));  // also available: sentence_count
+    let content = null;
+    // if no sources that means there were too many to compute the chart for
+    if (sources.length === 0) {
+      content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
+    } else {
+      content = <TreeMap title={formatMessage(localMessages.chartTitle)} data={data} onLeafClick={this.handleLeafClick} />;
+    }
     return (
       <DataCard>
         <div className="actions">
@@ -46,7 +54,7 @@ class CollectionSourceRepresentation extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <TreeMap title={formatMessage(localMessages.chartTitle)} data={data} onLeafClick={this.handleLeafClick} />
+        {content}
       </DataCard>
     );
   }
