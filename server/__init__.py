@@ -65,6 +65,8 @@ try:
     db.check_connection()
 except Exception as err:
     print("DB error: {0}".format(err))
+    print("Make sure Mongo is running")
+    sys.exit()
 
 logger.info("Connected to DB: %s@%s", db_name, db_host)
 
