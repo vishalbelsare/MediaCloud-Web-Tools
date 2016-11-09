@@ -35,7 +35,7 @@ class CollectionDetailsContainer extends React.Component {
   }
 
   render() {
-    const { collection, handleCountryClick } = this.props;
+    const { collection } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
@@ -64,7 +64,7 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={12} md={12} xs={12}>
-            <CollectionGeographyContainer collectionId={collection.tags_id} onCountryClick={handleCountryClick} />
+            <CollectionGeographyContainer collectionId={collection.tags_id} />
           </Col>
         </Row>
         <Row>
@@ -88,8 +88,6 @@ CollectionDetailsContainer.propTypes = {
   collectionId: React.PropTypes.number.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  handleWordCloudClick: React.PropTypes.func.isRequired,
-  handleCountryClick: React.PropTypes.func.isRequired,
   // from merge
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -118,11 +116,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
       dispatchProps.fetchData(ownProps.params.collectionId);
-    },
-    handleCountryClick: (country) => {
-      console.log(country);
-      // const { collection } = stateProps;
-      // window.location = `https://dashboard.mediacloud.org/#query/["tags_id_story_sentences="]/[{"sources":[${ownProps.params.collectionId}]}]/["${collection.health.start_date.substring(0, 10)}"]/["${collection.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${collection.name}","color":"55868A"}]`;
     },
   });
 }
