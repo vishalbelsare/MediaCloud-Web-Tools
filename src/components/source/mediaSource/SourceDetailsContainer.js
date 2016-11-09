@@ -22,9 +22,6 @@ const localMessages = {
     defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
 
-  thisSourceIs: { id: 'source.basicInfo.thisInfoIs', defaultMessage: 'This source is ' },
-  healthy: { id: 'source.basicInfo.healthy', defaultMessage: 'healthy' },
-  notHealthy: { id: 'source.basicInfo.notHealthy', defaultMessage: 'not healthy' },
   feedInfo: { id: 'source.basicInfo.feeds',
     defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}.' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
