@@ -6,32 +6,33 @@ import initHighcharts from './initHighcharts';
 initHighcharts();
 
 const localMessages = {
-  title: { id: 'chart.treeMap.chart.title', defaultMessage: 'Sentences by Source' },
-  tooltipTitle: { id: 'chart.treeMap.tooltip.title', defaultMessage: '{count} of sentences are from {name}.' },
+  tooltipText: { id: 'chart.treeMap.tooltip.text', defaultMessage: '{count} of sentences are from {name}.' },
 };
 
 /**
  * Pass in data - an array of `name`/`value` objects
  */
 const TreeMap = (props) => {
-  const { title, data, onLeafClick, color } = props;
+  const { title, data, onLeafClick } = props;
   const { formatNumber, formatMessage } = props.intl;
   const config = {
+    colorAxis: {
+      minColor: '#FF0000',
+      maxColor: '#FFFFFF',
+    },
     title: {
-      text: formatMessage(localMessages.title),
+      text: title,
     },
     series: [{
-      title,
       type: 'treemap',
       layoutAlgorithm: 'squarified',
       data,
-      color,
     }],
     tooltip: {
       pointFormatter: function afmtxn() {
         // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
         const rounded = formatNumber(this.value, { style: 'percent', maximumFractionDigits: 2 });
-        const pct = formatMessage(localMessages.tooltipTitle, { count: rounded, name: this.name });
+        const pct = formatMessage(localMessages.tooltipText, { count: rounded, name: this.name });
         return pct;
       },
     },
