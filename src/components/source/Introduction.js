@@ -12,7 +12,7 @@ const localMessages = {
 const Introduction = () => (
   <Grid>
     <Row>
-      <Col lg={10} md={10} sm={12}>
+      <Col lg={8} xs={12}>
         <h1>
           <FormattedMessage {...localMessages.title} />
         </h1>
