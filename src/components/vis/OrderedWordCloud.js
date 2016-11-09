@@ -12,7 +12,7 @@ const localMessages = {
 const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MIN_FONT_SIZE = 10;
-const DEFAULT_MAX_FONT_SIZE = 24;
+const DEFAULT_MAX_FONT_SIZE = 30;
 const DEFAULT_TEXT_COLOR = '#333333';
 const DEFAULT_LINK_COLOR = '#ff0000';
 
