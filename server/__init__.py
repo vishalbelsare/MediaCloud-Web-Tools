@@ -60,6 +60,12 @@ logger.info("Connected to mediacloud")
 db_host = settings.get('database', 'host')
 db_name = settings.get('database', 'name')
 db = AppDatabase(db_host, db_name)
+
+try:
+    db.check_connection()
+except Exception as err:
+    print("DB error: {0}".format(err))
+
 logger.info("Connected to DB: %s@%s", db_name, db_host)
 
 def isDevMode():
