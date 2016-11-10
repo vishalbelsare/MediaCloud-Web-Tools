@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import SourceList from './SourceList';
+import SourceTable from '../SourceTable';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -69,7 +69,7 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={6} xs={12}>
-            <SourceList collectionId={collection.tags_id} sources={collection.media} />
+            <SourceTable collectionId={collection.tags_id} sources={collection.media} />
           </Col>
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />

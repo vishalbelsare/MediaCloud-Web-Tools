@@ -31,7 +31,7 @@ def api_collection_details(collection_id):
     info['id'] = collection_id
     info['tag_set'] = _cached_tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = _cached_collection_media_list(user_mediacloud_key(), collection_id)
-    info['media'] = [{'id':m['media_id'], 'name':m['name']} for m in all_media]
+    info['media'] = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/sources.csv')
