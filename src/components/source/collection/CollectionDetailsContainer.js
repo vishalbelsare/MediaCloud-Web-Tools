@@ -64,7 +64,7 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={12} md={12} xs={12}>
-            <CollectionGeographyContainer collectionId={collection.tags_id} />
+            <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
           </Col>
         </Row>
         <Row>

@@ -26,7 +26,7 @@ class CollectionGeographyContainer extends React.Component {
   }
 
   render() {
-    const { geolist, intl, helpButton } = this.props;
+    const { geolist, intl, helpButton, handleCountryClick } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
@@ -37,7 +37,7 @@ class CollectionGeographyContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <GeoChart data={geolist} />
+        <GeoChart data={geolist} onCountryClick={handleCountryClick} />
       </DataCard>
     );
   }
@@ -51,10 +51,12 @@ CollectionGeographyContainer.propTypes = {
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from parent
+  collectionName: React.PropTypes.string.isRequired,
   collectionId: React.PropTypes.number.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
+  handleCountryClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -65,6 +67,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchCollectionGeo(ownProps.collectionId));
+  },
+  handleCountryClick: (event, geo) => {
+    const countryName = geo.name;
+    const collectionName = ownProps.collectionName;
+    const url = `https://dashboard.mediacloud.org/#query/["${countryName}"]/[{"collections":[${ownProps.collectionId}]}]/[{"uid":3,"name":"${collectionName}","color":"55868A"}]`;
+    window.open(url, '_blank');
   },
 });
 

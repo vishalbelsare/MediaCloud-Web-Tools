@@ -48,7 +48,6 @@ SourceGeographyContainer.propTypes = {
   fetchStatus: React.PropTypes.string,
   geolist: React.PropTypes.array.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   // from parent
   intro: React.PropTypes.string,
@@ -65,9 +64,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (sourceId) => {
-    dispatch(fetchSourceGeo(sourceId));
-  },
   asyncFetch: () => {
     dispatch(fetchSourceGeo(ownProps.source.media_id));
   },
