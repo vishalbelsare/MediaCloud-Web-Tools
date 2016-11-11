@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
+import SourceTable from '../SourceTable';
 
 const localMessages = {
   title: { id: 'collection.details.sources.title', defaultMessage: 'Sources' },
@@ -35,11 +35,7 @@ class SourceList extends React.Component {
             values={{ count: sources.length }}
           />
         </p>
-        <ul>
-          {sources.map(s =>
-            <li key={s.id}><Link to={`sources/${s.id}/details`}>{s.name}</Link></li>
-          )}
-        </ul>
+        <SourceTable sources={sources} />
       </DataCard>
     );
   }
