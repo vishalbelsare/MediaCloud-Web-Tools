@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import initHighcharts from './initHighcharts';
 
 initHighcharts();
@@ -11,6 +11,7 @@ const localMessages = {
   title: { id: 'chart.geographyAttention.chart.title', defaultMessage: 'Mentions by Country' },
   seriesName: { id: 'chart.geographyAttention.series.name', defaultMessage: 'Geographic Attention' },
   tooltipTitle: { id: 'chart.geographyAttention.title', defaultMessage: '{count} of sentences mention {name}' },
+  noData: { id: 'chart.geographyAttention.noData', defaultMessage: 'Sorry, but we don\'t have any data about the places mentioned.' },
 };
 
 class GeoChart extends React.Component {
@@ -90,26 +91,31 @@ class GeoChart extends React.Component {
   }
 
   render() {
-    const { onCountryClick } = this.props;
-    const config = this.getConfig();
-    config.exporting = true;
-    if (onCountryClick) {
-      config.plotOptions = {
-        series: {
-          cursor: 'pointer',
-          point: {
-            events: {
-              click: function handleCountryClick(event) {
-                onCountryClick(event, this);  // preserve the highcharts "this", which is the chart
+    const { onCountryClick, data } = this.props;
+    // if there is no data then show info about our geocoding
+    let content = null;
+    if (data.length === 0) {
+      content = <p><FormattedMessage {...localMessages.noData} /></p>;
+    } else {
+      const config = this.getConfig();
+      config.exporting = true;
+      if (onCountryClick) {
+        config.plotOptions = {
+          series: {
+            cursor: 'pointer',
+            point: {
+              events: {
+                click: function handleCountryClick(event) {
+                  onCountryClick(event, this);  // preserve the highcharts "this", which is the chart
+                },
               },
             },
           },
-        },
-      };
+        };
+      }
+      content = React.createElement(ReactHighmaps, { config });
     }
-    return (
-       React.createElement(ReactHighmaps, { config })
-    );
+    return content;
   }
 }
 
