@@ -30,7 +30,7 @@ def api_collection_details(collection_id):
     info = user_mc.tag(collection_id)
     info['id'] = collection_id
     info['tag_set'] = _cached_tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
-    all_media = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    all_media = collection_media_list(user_mediacloud_key(), collection_id)
     info['media'] = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
     return jsonify({'results':info})
 
@@ -40,7 +40,7 @@ def api_collection_details(collection_id):
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    all_media = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    all_media = collection_media_list(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url']
     filename = info['label']+" - sources.csv"
     return csv.stream_response(all_media, props, filename)
@@ -50,7 +50,7 @@ def api_collection_sources_csv(collection_id):
 @api_error_handler
 def collection_source_sentence_counts(collection_id):
     # first decide to bail if there are too many sources (cause the query takes too long)
-    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    sources = collection_media_list(user_mediacloud_key(), collection_id)
     if len(sources) > 30:
         sources_with_counts = []
     else:
@@ -71,7 +71,7 @@ def collection_source_sentence_counts_csv(collection_id):
 @cache
 def _cached_collection_source_sentence_counts(user_mc_key, collection_id):
     # get the list of sources
-    sources = _cached_collection_media_list(user_mediacloud_key(), collection_id)
+    sources = collection_media_list(user_mediacloud_key(), collection_id)
     total_sentences = 0
     # get the count for each source
     for s in sources:
@@ -92,20 +92,27 @@ def _cached_tag_set_info(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
 
-@cache
-def _cached_collection_media_list(user_mc_key, tags_id):
-    user_mc = user_mediacloud_client()
+def collection_media_list(user_mc_key, tags_id):
     more_media = True
     all_media = []
     max_media_id = 0
     while more_media:
         logger.debug("last_media_id %d", max_media_id)
-        media = user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
+        media = collection_media_list_page(user_mc_key, tags_id, max_media_id)
         all_media = all_media + media
         if len(media) > 0:
             max_media_id = media[len(media)-1]['media_id']
         more_media = len(media) != 0
     return sorted(all_media, key=lambda t: t['name'])
+
+@cache
+def collection_media_list_page(user_mc_key, tags_id, max_media_id):
+    '''
+    We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
+    and some of the collections have TONS of sources
+    '''
+    user_mc = user_mediacloud_client()
+    return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
 
 @app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])
 @flask_login.login_required
