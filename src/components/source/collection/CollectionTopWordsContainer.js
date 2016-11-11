@@ -68,7 +68,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleWordClick: (word) => {
     const { collectionId } = ownProps;
     const searchStr = `${word.stem}*`;
-    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
+    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
     window.open(url, '_blank');
   },
 });

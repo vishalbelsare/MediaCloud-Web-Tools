@@ -70,8 +70,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleCountryClick: (event, geo) => {
     const countryName = geo.name;
+    const countryTagId = geo.tags_id;
     const collectionName = ownProps.collectionName;
-    const url = `https://dashboard.mediacloud.org/#query/["${countryName}"]/[{"collections":[${ownProps.collectionId}]}]/[{"uid":3,"name":"${collectionName}","color":"55868A"}]`;
+    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sets":[${ownProps.collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
     window.open(url, '_blank');
   },
 });
