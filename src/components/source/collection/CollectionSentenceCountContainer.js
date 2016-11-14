@@ -20,11 +20,17 @@ const localMessages = {
 };
 
 class CollectionSentenceCountContainer extends React.Component {
-
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/sentences/sentence-count.csv`;
     window.location = url;
+  }
+  handleDataPointClick = (startDate, endDate) => {
+    const { collectionId } = this.props;
+    const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
+    const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
+    const url = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collectionId}]}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"time","color":"55868A"}]`;
+    window.open(url, '_blank');
   }
   render() {
     const { total, counts, health, intl, filename, helpButton } = this.props;
@@ -38,7 +44,15 @@ class CollectionSentenceCountContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
+        <AttentionOverTimeChart
+          total={total}
+          data={counts}
+          health={health}
+          height={250}
+          filename={filename}
+          lineColor={getBrandDarkColor()}
+          onDataPointClick={this.handleDataPointClick}
+        />
       </DataCard>
     );
   }

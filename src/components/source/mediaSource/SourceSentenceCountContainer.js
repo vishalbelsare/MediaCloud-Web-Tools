@@ -25,6 +25,13 @@ class SourceSentenceCountContainer extends React.Component {
     const url = `/api/sources/${sourceId}/sentences/sentence-count.csv`;
     window.location = url;
   }
+  handleDataPointClick = (startDate, endDate) => {
+    const { sourceId } = this.props;
+    const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
+    const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
+    const url = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${sourceId}]}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"time","color":"55868A"}]`;
+    window.open(url, '_blank');
+  }
   render() {
     const { total, counts, health, filename, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
@@ -37,7 +44,15 @@ class SourceSentenceCountContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
+        <AttentionOverTimeChart
+          total={total}
+          data={counts}
+          health={health}
+          height={250}
+          filename={filename}
+          lineColor={getBrandDarkColor()}
+          onDataPointClick={this.handleDataPointClick}
+        />
       </DataCard>
     );
   }

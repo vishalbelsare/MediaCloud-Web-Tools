@@ -17,15 +17,19 @@ const localMessages = {
 };
 
 class CollectionTopWordsContainer extends React.Component {
-
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/words/wordcount.csv`;
     window.location = url;
   }
-
+  handleWordClick = (word) => {
+    const { collectionId } = this.props;
+    const searchStr = `${word.stem}*`;
+    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
+    window.open(url, '_blank');
+  }
   render() {
-    const { words, handleWordClick, helpButton } = this.props;
+    const { words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -36,7 +40,7 @@ class CollectionTopWordsContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <OrderedWordCloud words={words} onWordClick={handleWordClick} />
+        <OrderedWordCloud words={words} onWordClick={this.handleWordClick} />
       </DataCard>
     );
   }
@@ -47,7 +51,6 @@ CollectionTopWordsContainer.propTypes = {
   collectionId: React.PropTypes.number.isRequired,
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
-  handleWordClick: React.PropTypes.func,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
@@ -64,12 +67,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchCollectionTopWords(ownProps.collectionId));
-  },
-  handleWordClick: (word) => {
-    const { collectionId } = ownProps;
-    const searchStr = `${word.stem}*`;
-    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
-    window.open(url, '_blank');
   },
 });
 

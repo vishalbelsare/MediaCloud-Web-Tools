@@ -17,14 +17,19 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
-
   downloadCsv = () => {
     const { source } = this.props;
     const url = `/api/sources/${source.media_id}/words/wordcount.csv`;
     window.location = url;
   }
+  handleWordClick = (word) => {
+    const { source } = this.props;
+    const searchStr = `${word.stem}*`;
+    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+    window.open(url, '_blank');
+  }
   render() {
-    const { words, handleWordClick, helpButton } = this.props;
+    const { words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -35,7 +40,7 @@ class SourceTopWordsContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <OrderedWordCloud words={words} onWordClick={handleWordClick} />
+        <OrderedWordCloud words={words} onWordClick={this.handleWordClick} />
       </DataCard>
     );
   }
@@ -49,7 +54,6 @@ SourceTopWordsContainer.propTypes = {
   words: React.PropTypes.array,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  handleWordClick: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
@@ -63,12 +67,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchSourceTopWords(ownProps.source.media_id));
-  },
-  handleWordClick: (word) => {
-    const { source } = ownProps;
-    const searchStr = `${word.stem}*`;
-    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    window.open(url, '_blank');
   },
 });
 

@@ -18,15 +18,20 @@ const localMessages = {
 };
 
 class CollectionGeographyContainer extends React.Component {
-
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/geography/geography.csv`;
     window.location = url;
   }
-
+  handleCountryClick = (event, geo) => {
+    const { collectionId, collectionName } = this.props;
+    const countryName = geo.name;
+    const countryTagId = geo.tags_id;
+    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
+    window.open(url, '_blank');
+  }
   render() {
-    const { geolist, intl, helpButton, handleCountryClick } = this.props;
+    const { geolist, intl, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
@@ -37,7 +42,7 @@ class CollectionGeographyContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <GeoChart data={geolist} onCountryClick={handleCountryClick} />
+        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} />
       </DataCard>
     );
   }
@@ -56,7 +61,6 @@ CollectionGeographyContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
-  handleCountryClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -67,13 +71,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchCollectionGeo(ownProps.collectionId));
-  },
-  handleCountryClick: (event, geo) => {
-    const countryName = geo.name;
-    const countryTagId = geo.tags_id;
-    const collectionName = ownProps.collectionName;
-    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sets":[${ownProps.collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
-    window.open(url, '_blank');
   },
 });
 
