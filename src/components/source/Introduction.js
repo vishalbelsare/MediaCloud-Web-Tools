@@ -41,7 +41,7 @@ const Introduction = () => (
           <h2>Global Media</h2>
           <p>We have well-maintained collections for a variety of country-specific or global media.</p>
           <ul>
-            <li><Link to="/collections/9201395/details">India (English)</Link></li>
+            <li><Link to="/collections/9201395/details">India (English media sources)</Link></li>
             <li><Link to="/collections/8877968/details">Brazil</Link></li>
             <li><Link to="/collections/9094533/details">Mexico</Link></li>
             <li><Link to="/collections/9173065/details">Nigeria</Link></li>
