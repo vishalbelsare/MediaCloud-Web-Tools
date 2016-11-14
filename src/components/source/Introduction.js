@@ -6,7 +6,7 @@ import DataCard from '../common/DataCard';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Media Cloud Sources and Collections' },
-  about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
+  about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from more than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
 };
 
 const Introduction = () => (
