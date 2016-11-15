@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
   helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time.</p>',
+    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time. Click on the line to see a summary of the content in this collection for that date.</p>',
   },
 };
 
