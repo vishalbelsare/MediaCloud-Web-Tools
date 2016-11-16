@@ -39,7 +39,6 @@ class SourceList extends React.Component {
       </DataCard>
     );
   }
-
 }
 
 SourceList.propTypes = {
