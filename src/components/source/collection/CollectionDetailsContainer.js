@@ -5,6 +5,7 @@ import Title from 'react-title-component';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
+import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
@@ -50,6 +51,7 @@ class CollectionDetailsContainer extends React.Component {
         <Row>
           <Col lg={8}>
             <h1>
+              <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
               <small className="subtitle">ID #{collection.id} {publicMessage}</small>
             </h1>

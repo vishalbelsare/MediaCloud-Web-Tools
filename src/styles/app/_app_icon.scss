@@ -101,6 +101,10 @@
     width: 40px;
   }
 
+  &.app-icon-collection {
+    width: 50px;
+  }
+
   &.app-icon-snapshot {
     width: 80px;
   }
@@ -117,5 +121,12 @@
 
 h2 {
   .app-icon-help {
+  }
+}
+
+.chip {
+  .app-icon-collection {
+    padding-top:30px;
+    padding-left: 5px;
   }
 }

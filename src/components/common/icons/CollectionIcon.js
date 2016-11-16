@@ -8,7 +8,7 @@ const MediaSourceIcon = (props) => {
   const height = props.height || DEFAULT_HEIGHT;
   const width = height * SCALE;
   return (
-    <div className="app-icon app-icon-large app-icon-media-source">
+    <div className="app-icon app-icon-large app-icon-collection">
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width={`${width}px`} height={`${height}px`} viewBox="0 0 73.645 55.91" enableBackground="new 0 0 73.645 55.91" xmlSpace="preserve">
         <g>
           <path d="M67.234,50.396h-0.713c-1.301,0-2.359-1.059-2.359-2.361v-0.433H37.613v0.433c0,1.303-1.058,2.361-2.359,2.361H34.54 c-1.3,0-2.358-1.059-2.358-2.361v-0.433h-0.492c-1.961,0-3.558-1.666-3.558-3.71l0.001-26.913c0-2.044,1.596-3.71,3.558-3.71 h38.397c1.96,0,3.557,1.666,3.557,3.71v26.913c0,2.044-1.597,3.71-3.557,3.71h-0.493v0.433 C69.595,49.337,68.536,50.396,67.234,50.396z M35.591,45.576h30.595v2.458c0,0.188,0.15,0.336,0.336,0.336h0.713 c0.187,0,0.338-0.147,0.338-0.336v-2.458h2.516c0.846,0,1.533-0.755,1.533-1.685V16.979c0-0.93-0.688-1.685-1.533-1.685H31.69 c-0.848,0-1.535,0.755-1.535,1.685v26.913c0,0.93,0.688,1.685,1.534,1.685h2.515v2.458c0,0.188,0.151,0.336,0.336,0.336h0.714 c0.187,0,0.337-0.147,0.337-0.336V45.576z" />
