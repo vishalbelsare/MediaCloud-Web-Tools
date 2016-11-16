@@ -46,13 +46,13 @@ class SourceSearchContainer extends React.Component {
   filterResults = () => true
 
   render() {
-    const { sourceResults, collectionResults } = this.props;
+    const { sourceResults, collectionResults, onClick } = this.props;
     const results = sourceResults.concat(collectionResults);
     const resultsAsComponents = results.map(item => ({
       text: item.name,
       value: (
         <MenuItem
-          onClick={() => this.handleClick(item)}
+          onClick={() => (onClick ? onClick(item) : this.handleClick(item))}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       ),
@@ -83,6 +83,7 @@ SourceSearchContainer.propTypes = {
   search: React.PropTypes.func.isRequired,
   navigateToMediaSource: React.PropTypes.func.isRequired,
   navigateToColleciton: React.PropTypes.func.isRequired,
+  onClick: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

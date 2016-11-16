@@ -8,6 +8,14 @@ import DataCard from '../common/DataCard';
 const SourceTable = (props) => {
   const sourceHeader = <FormattedMessage {...messages.sourceName} />;
   const { sources } = props;
+  const content = null;
+  if (sources === undefined) {
+    return (
+      <div>
+        { content }
+      </div>
+    );
+  }
   return (
     <DataCard>
       <div>
@@ -44,7 +52,7 @@ const SourceTable = (props) => {
 };
 
 SourceTable.propTypes = {
-  sources: React.PropTypes.array.isRequired,
+  sources: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
 };
 

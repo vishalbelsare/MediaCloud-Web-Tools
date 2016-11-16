@@ -3,6 +3,7 @@ import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
 import SourceDetailsContainer from '../components/source/mediaSource/SourceDetailsContainer';
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
+import CreateCollectionContainer from '../components/source/collection/create/CreateCollectionContainer';
 import Introduction from '../components/source/Introduction';
 import PageWrapper from '../components/source/PageWrapper';
 import { requireAuth } from './routes';
@@ -23,6 +24,7 @@ const sourceRoutes = (
       </Route>
       <Route path="/collections" >
         <Route path=":collectionId/details" component={CollectionDetailsContainer} onEnter={requireAuth} />
+        <Route path=":createCollection" component={CreateCollectionContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

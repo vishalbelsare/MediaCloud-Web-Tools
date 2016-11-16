@@ -1,9 +1,9 @@
 import logging
-from flask import jsonify
+from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import api_error_handler
+from server.util.request import form_fields_required, api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -149,3 +149,17 @@ def collection_words(collection_id):
 @api_error_handler
 def collection_wordcount_csv(collection_id):
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
+
+@app.route('/api/collections/create', methods=['POST'])
+@form_fields_required('collectionName', 'collectionDescription','static','sourceObj')
+@flask_login.login_required
+@api_error_handler
+def collection_create():
+    user_mc = user_mediacloud_client()
+    name = request.form['collectionName']
+    description = request.form['collectionDescription']
+    sources = []
+    sources = request.form['sourceObj']
+    notes = request.form['static']
+    fakenew_collection = user_mc.tagList(tag_sets_id=5, rows=100)
+    return jsonify(fakenew_collection)
