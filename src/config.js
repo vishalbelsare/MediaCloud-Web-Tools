@@ -13,4 +13,10 @@ export function getAppName() {
 /**
  * Specify a version number
  */
-export const VERSION = '0.7.0';
+let version = null;
+export function setVersion(newVersion) {
+  version = newVersion;
+}
+export function getVersion() {
+  return version;
+}

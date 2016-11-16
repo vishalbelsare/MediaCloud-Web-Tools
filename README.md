@@ -51,7 +51,7 @@ You need to open two terminal windows and run one thing in each (so the hot-relo
 Releasing
 ---------
 
-1. Update the version number in `src/config.js`.
+1. Update the version number in your app index `src/sourcesIndex.js` or `src/topicsIndex.js`.
 2. Change the server mode in `config/server.config` to `PROD`.
 3. Change the app you want to build in `config/server.config` (set the server/app variable).
 4. Build the release version of the JS and CSS: `npm run topics-release` or `npm run sources-release`.

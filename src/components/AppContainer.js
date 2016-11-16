@@ -9,7 +9,7 @@ import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
 import BrandToolbar from './common/BrandToolbar';
 import BrandMasthead from './common/BrandMasthead';
 import messages from '../resources/messages';
-import { VERSION } from '../config';
+import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 
@@ -47,7 +47,7 @@ const AppContainer = (props) => {
             <FormattedMessage {...messages.berkmanName} />
           </a>.
           <br />
-          v{VERSION}
+          v{getVersion()}
         </small>
         </p>
       </footer>

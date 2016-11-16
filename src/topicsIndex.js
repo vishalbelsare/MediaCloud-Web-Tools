@@ -1,4 +1,4 @@
-import { setAppName } from './config';
+import { setAppName, setVersion } from './config';
 import { setAppColors } from './styles/colors';
 import routes from './routes/topicRoutes';
 import store from './store';
@@ -8,6 +8,8 @@ import { filterBySnapshot, filterByTimespan, filterByFocus } from './actions/top
 /**
  * This serves as the primary entry point to the Media Cloud Topic Mapper app.
  */
+
+setVersion('1.0.0');
 
 setAppName('topics');
 
