@@ -6,7 +6,7 @@ import DataCard from '../common/DataCard';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Media Cloud Sources and Collections' },
-  about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
+  about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from more than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
 };
 
 const Introduction = () => (
@@ -41,7 +41,7 @@ const Introduction = () => (
           <h2>Global Media</h2>
           <p>We have well-maintained collections for a variety of country-specific or global media.</p>
           <ul>
-            <li><Link to="/collections/9201395/details">India (English)</Link></li>
+            <li><Link to="/collections/9201395/details">India (English media sources)</Link></li>
             <li><Link to="/collections/8877968/details">Brazil</Link></li>
             <li><Link to="/collections/9094533/details">Mexico</Link></li>
             <li><Link to="/collections/9173065/details">Nigeria</Link></li>

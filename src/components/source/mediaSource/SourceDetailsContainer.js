@@ -26,7 +26,7 @@ const localMessages = {
     defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}.' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
-  gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart), compared to the highest weekly levels we\'ve seen.' },
+  gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
 
 };
 
@@ -60,10 +60,11 @@ class SourceDetailsContainer extends React.Component {
             <h1>
               <MediaSourceIcon height={32} />
               <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small className="subtitle">#{source.media_id} {publicMessage}</small>
+              <small className="subtitle">ID #{source.media_id} {publicMessage}</small>
             </h1>
             <p>
               <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
+              &nbsp;
               <FormattedMessage
                 {...localMessages.dateInfo}
                 values={{
@@ -71,6 +72,7 @@ class SourceDetailsContainer extends React.Component {
                   endDate: source.health.end_date.substring(0, 10),
                 }}
               />
+              &nbsp;
               <FormattedMessage
                 {...localMessages.contentInfo}
                 values={{
@@ -78,6 +80,7 @@ class SourceDetailsContainer extends React.Component {
                   sentenceCount: formatNumber(source.health.num_sentences_w),
                 }}
               />
+              &nbsp;
               <FormattedHTMLMessage
                 {...localMessages.gapInfo}
                 values={{ gapCount: formatNumber(source.health.coverage_gaps) }}

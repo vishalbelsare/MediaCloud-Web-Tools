@@ -15,16 +15,22 @@ const localMessages = {
   title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
   helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time.</p>',
+    defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time. Click on the line to see a summary of the content in this collection for that date.</p>',
   },
 };
 
 class CollectionSentenceCountContainer extends React.Component {
-
   downloadCsv = () => {
     const { collectionId } = this.props;
     const url = `/api/collections/${collectionId}/sentences/sentence-count.csv`;
     window.location = url;
+  }
+  handleDataPointClick = (startDate, endDate) => {
+    const { collectionId } = this.props;
+    const startDateStr = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`;
+    const endDateStr = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
+    const url = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collectionId}]}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"time","color":"55868A"}]`;
+    window.open(url, '_blank');
   }
   render() {
     const { total, counts, health, intl, filename, helpButton } = this.props;
@@ -38,7 +44,15 @@ class CollectionSentenceCountContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <AttentionOverTimeChart total={total} data={counts} health={health} height={250} filename={filename} lineColor={getBrandDarkColor()} />
+        <AttentionOverTimeChart
+          total={total}
+          data={counts}
+          health={health}
+          height={250}
+          filename={filename}
+          lineColor={getBrandDarkColor()}
+          onDataPointClick={this.handleDataPointClick}
+        />
       </DataCard>
     );
   }

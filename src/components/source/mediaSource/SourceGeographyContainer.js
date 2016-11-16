@@ -22,8 +22,15 @@ class SourceGeographyContainer extends React.Component {
     const url = `/api/sources/${source.media_id}/geography/geography.csv`;
     window.location = url;
   }
+  handleCountryClick= (event, geo) => {
+    const { source } = this.props;
+    const countryName = geo.name;
+    const countryTagId = geo.tags_id;
+    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":1,"name":"${source.name} - ${countryName}","color":"55868A"}]`;
+    window.open(url, '_blank');
+  }
   render() {
-    const { intro, geolist, helpButton, handleCountryClick } = this.props;
+    const { intro, geolist, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -35,7 +42,7 @@ class SourceGeographyContainer extends React.Component {
           {helpButton}
         </h2>
         <p>{intro}</p>
-        <GeoChart data={geolist} onCountryClick={handleCountryClick} />
+        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} />
       </DataCard>
     );
   }
@@ -54,7 +61,6 @@ SourceGeographyContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
-  handleCountryClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -66,12 +72,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchSourceGeo(ownProps.source.media_id));
-  },
-  handleCountryClick: (event, geo) => {
-    const countryName = geo.name;
-    const source = ownProps.source;
-    const url = `https://dashboard.mediacloud.org/#query/["${countryName}"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    window.open(url, '_blank');
   },
 });
 

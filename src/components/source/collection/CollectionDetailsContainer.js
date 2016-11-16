@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import SourceTable from '../SourceTable';
+import SourceList from './SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -17,6 +17,10 @@ const localMessages = {
   searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
   noHealth: { id: 'collection.details.noHealth', defaultMessage: 'Sorry, we can\'t show collection-level health yet.' },
+  sourceTableTitle: { id: 'collection.details.sourceTable.title', defaultMessage: 'Sources' },
+  sourceTableIntro: { id: 'collection.details.sources.intro',
+    defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
+  },
 };
 
 class CollectionDetailsContainer extends React.Component {
@@ -47,7 +51,7 @@ class CollectionDetailsContainer extends React.Component {
           <Col lg={8}>
             <h1>
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">#{collection.id} {publicMessage}</small>
+              <small className="subtitle">ID #{collection.id} {publicMessage}</small>
             </h1>
             <p><b>{collection.description}</b></p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
@@ -69,7 +73,7 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={6} xs={12}>
-            <SourceTable collectionId={collection.tags_id} sources={collection.media} />
+            <SourceList collectionId={collection.tags_id} sources={collection.media} />
           </Col>
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />

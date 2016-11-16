@@ -75,8 +75,20 @@ class AttentionOverTimeChart extends React.Component {
     if ((health !== null) && (health !== undefined)) {
       config.xAxis.plotBands = health;
     }
-    if (onDataPointClick !== null) {
-      config.plotOptions.series.point = { events: { click: onDataPointClick } };
+    if (onDataPointClick) {
+      config.plotOptions.series.allowPointSelect = true;
+      config.plotOptions.series.point = {
+        events: {
+          click: function handleDataPointClick(evt) {
+            const point0 = evt.point;
+            const date0 = new Date(point0.x);
+            // handle clicking on last point
+            const point1 = (point0.index < (point0.series.data.length - 1)) ? point0.series.data[evt.point.index + 1] : point0;
+            const date1 = new Date(point1.x);
+            onDataPointClick(date0, date1, evt, this);   // preserve the highcharts "this", which is the chart
+          },
+        },
+      };
     }
     let allSeries = null;
     if (data !== undefined) {
@@ -124,15 +136,17 @@ class AttentionOverTimeChart extends React.Component {
 }
 
 AttentionOverTimeChart.propTypes = {
+  // from parent
   data: React.PropTypes.array,
   series: React.PropTypes.array,
   height: React.PropTypes.number.isRequired,
   lineColor: React.PropTypes.string,
   health: React.PropTypes.array,
-  onDataPointClick: React.PropTypes.func,
+  onDataPointClick: React.PropTypes.func, // (date0, date1, evt, chartObj)
   total: React.PropTypes.number,
-  intl: React.PropTypes.object.isRequired,
   filename: React.PropTypes.string,
+  // from composition chain
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(AttentionOverTimeChart);

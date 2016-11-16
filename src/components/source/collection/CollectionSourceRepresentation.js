@@ -17,7 +17,7 @@ const localMessages = {
   helpText: { id: 'collection.summary.sourceRepresentation.help.text',
     defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p>',
   },
-  cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collecton has too many sources for us to compute a map of how much content each source contributes to it.' },
+  cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collection has too many sources for us to compute a map of how much content each source contributes to it.' },
 };
 
 class CollectionSourceRepresentation extends React.Component {
