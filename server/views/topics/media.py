@@ -4,13 +4,13 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
+from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.util import csv
 from server.views.topics import validated_sort
-import server.util.csv as csv
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
-from server.util.request import filters_from_args, api_error_handler
-from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts
+from server.util.request import filters_from_args, api_error_handler
 
 logger = logging.getLogger(__name__)
 
