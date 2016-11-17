@@ -11,7 +11,7 @@ import WordSentenceCountContainer from './WordSentenceCountContainer';
 import messages from '../../../resources/messages';
 
 const localMessages = {
-  mainTitle: { id: 'word.details.mainTitle', defaultMessage: 'Details for the word {title}' },
+  mainTitle: { id: 'word.details.mainTitle', defaultMessage: 'Word: "{title}"' },
 };
 
 class WordContainer extends React.Component {
@@ -47,16 +47,20 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} md={6} sm={12}>
-              <WordDetails topicId={topicId} term={term} stem={stem} />
-            </Col>
-            <Col lg={6} md={6} sm={12}>
               <WordSentenceCountContainer topicId={topicId} stem={stem} />
-            </Col>
-            <Col lg={12}>
-              <WordStoriesContainer topicId={topicId} stem={stem} />
             </Col>
             <Col lg={6} md={6} sm={12}>
               <WordWordsContainer topicId={topicId} stem={stem} term={term} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <WordStoriesContainer topicId={topicId} stem={stem} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={6} md={6} sm={12}>
+              <WordDetails topicId={topicId} term={term} stem={stem} />
             </Col>
           </Row>
         </Grid>

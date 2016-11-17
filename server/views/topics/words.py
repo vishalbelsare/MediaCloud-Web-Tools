@@ -65,7 +65,7 @@ def topic_word_stories_csv(topics_id, word):
 @flask_login.login_required
 @api_error_handler
 def topic_word_associated_words(topics_id, word):
-    response = topic_word_counts(user_mediacloud_key(), topics_id, q=word)
+    response = topic_word_counts(user_mediacloud_key(), topics_id, q=word)[:100]
     return jsonify(response)
 
 @app.route('/api/topics/<topics_id>/words/<word>/words.csv', methods=['GET'])

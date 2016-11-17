@@ -14,7 +14,7 @@ import { generateParamStr } from '../../../lib/apiUtil';
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
   helpText: { id: 'word.words.help.into',
-    defaultMessage: '<p>This is a visualization showing the top words associated with this word.  Rollover a word to see the stem and how often it was used.</p>',
+    defaultMessage: '<p>This is a visualization showing the top words associated with this word.  Click a word to jump to a page about how it is used.</p>',
   },
 };
 

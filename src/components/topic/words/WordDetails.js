@@ -1,25 +1,20 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
 
 const localMessages = {
+  title: { id: 'words.title', defaultMessage: 'About' },
   info: { id: 'words.info',
-    defaultMessage: 'The term {term} has the root word of {stem}',
+    defaultMessage: 'The term "{term}" is a version of the stem "{stem}".',
   },
 };
 
 const WordDetails = (props) => {
-  const { formatMessage } = props.intl;
-  let messageTxt = '';
-  messageTxt = formatMessage(localMessages.info, {
-    term: props.term,
-    stem: props.stem,
-  });
+  const { term, stem } = props;
   return (
     <DataCard>
-      <h2>
-        { messageTxt }
-      </h2>
+      <h2><FormattedMessage {...localMessages.title} /></h2>
+      <p><FormattedMessage {...localMessages.info} values={{ term, stem }} /></p>
     </DataCard>
   );
 };
