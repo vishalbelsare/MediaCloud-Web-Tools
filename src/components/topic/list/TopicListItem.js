@@ -15,7 +15,7 @@ const localMessages = {
 const TopicListItem = (props) => {
   const { topic, onChangeFavorited } = props;
   const { formatMessage } = props.intl;
-  const disable = (topic.state !== 'ready');
+  const disable = false; // (topic.state !== 'ready');
   let title = null;
   if (disable || (topic.user_permission === PERMISSION_NONE)) {
     title = topic.name;
