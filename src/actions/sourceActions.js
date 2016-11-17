@@ -24,6 +24,10 @@ export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
 export const FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS';
+export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
+export const ADD_SOURCES_TO_COLLECTION = 'ADD_SOURCES_TO_COLLECTION';
+export const ADD_SOURCES_TO_COLLECTION_BY_CSV = 'ADD_SOURCES_TO_COLLECTION_BY_CSV';
+export const ADD_SOURCES_TO_COLLECTION_BY_COLLECTION = 'ADD_SOURCES_TO_COLLECTION_BY_COLLECTION';
 
 export const select = createAction(SELECT, id => id);
 
@@ -52,3 +56,11 @@ export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sour
 export const fetchCollectionSearch = createAsyncAction(FETCH_COLLECTION_SEARCH, api.collectionSearch, string => string);
 
 export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceStoryCounts, id => id);
+
+export const createCollection = createAsyncAction(CREATE_NEW_COLLECTION, api.createCollection, props => props);
+
+export const addSourcesToCollection = createAction(ADD_SOURCES_TO_COLLECTION, props => props);
+
+export const addSourcesToCollectionByCollection = createAction(ADD_SOURCES_TO_COLLECTION_BY_COLLECTION, api.addSourcesToCollectionByCollection, props => props);
+
+export const addSourcesToCollectionByCSV = createAsyncAction(ADD_SOURCES_TO_COLLECTION_BY_CSV, api.addSourcesToCollectionByCSV, props => props);

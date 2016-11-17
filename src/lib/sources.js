@@ -1,4 +1,4 @@
-import { createApiPromise } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
 
 export function sourceList() {
   return createApiPromise('api/sources/list');
@@ -50,4 +50,14 @@ export function collectionWordCount(id) {
 
 export function collectionSourceStoryCounts(id) {
   return createApiPromise(`api/collections/${id}/sources/sentences/count`);
+}
+
+export function createCollection(params) {
+  const acceptedParams = acceptParams(params, ['collectionName', 'collectionDescription', 'static', 'sourceObj']);
+  return createPostingApiPromise('/api/collections/create', acceptedParams);
+}
+
+export function addSourceToCollection(params) {
+  const acceptedParams = acceptParams(params, ['sourceObj']);
+  return acceptedParams;
 }

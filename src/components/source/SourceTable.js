@@ -7,6 +7,14 @@ import { googleFavIconUrl } from '../../lib/urlUtil';
 const SourceTable = (props) => {
   const sourceHeader = <FormattedMessage {...messages.sourceName} />;
   const { sources } = props;
+  const content = null;
+  if (sources === undefined) {
+    return (
+      <div>
+        { content }
+      </div>
+    );
+  }
   return (
     <div className="source-table">
       <table width="100%">
@@ -33,9 +41,7 @@ const SourceTable = (props) => {
 };
 
 SourceTable.propTypes = {
-  // from parent
-  sources: React.PropTypes.array.isRequired,
-  // from composition chain
+  sources: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
 };
 
