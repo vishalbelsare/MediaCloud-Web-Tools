@@ -138,3 +138,10 @@ def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
     user_mc = user_mediacloud_client()
     response = user_mc.topicFocalSetList(topics_id, snapshots_id=snapshots_id)
     return response
+
+@cache
+def cached_topic_timespan_list(user_mc_key, topics_id, snapshots_id, foci_id=None):
+    # this includes the user_mc_key as a first param so the cache works right
+    user_mc = user_mediacloud_client()
+    timespans = user_mc.topicTimespanList(topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
+    return timespans
