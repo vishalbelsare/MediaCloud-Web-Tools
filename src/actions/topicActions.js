@@ -55,6 +55,7 @@ export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
+export const SAVE_TOPIC_DETAILS = 'SAVE_TOPIC_DETAILS';
 
 export const SELECT_WORD = 'SELECT_WORD';
 export const FETCH_WORD = 'FETCH_WORD';
@@ -182,6 +183,8 @@ export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, i
 // pass in topicId, focalSetId, filters
 export const fetchTopicFocalSetSetenceCounts = createAsyncAction(FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS, api.topicFocalSetSentenceCounts);
 
+// pass in topicId, dictionary of properties to send to server
+export const saveTopicDetails = createAsyncAction(SAVE_TOPIC_DETAILS, api.saveTopicDetails);
 
 export const selectWord = createAction(SELECT_WORD, payload => payload);
 

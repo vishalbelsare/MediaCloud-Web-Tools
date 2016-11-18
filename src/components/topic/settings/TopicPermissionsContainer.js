@@ -32,7 +32,7 @@ const TopicPermissionsContainer = (props) => {
       </Row>
       <PermissionForm form="newPermissionForm" initialValues={{ email: null, permission: null }} onSave={handleUpdatePermission} />
       <Row>
-        <Col lg={12} md={12} sm={12}>
+        <Col md={10} sm={12}>
           <h3><FormattedMessage {...localMessages.existingTitle} /></h3>
           <p><FormattedMessage {...localMessages.existingIntro} /></p>
         </Col>

@@ -2,20 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import ComingSoon from '../../common/ComingSoon';
+import TopicDetailsForm from './TopicDetailsForm';
+import { saveTopicDetails, fetchTopicSummary } from '../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'topic.edit.title', defaultMessage: 'Details' },
-  intro: { id: 'topic.edit.intro', defaultMessage: 'You can change some of the attributes of this Topic.' },
 };
 
-const TopicEditContainer = () => (
+const TopicEditContainer = props => (
   <div className="topic-acl">
     <Row>
       <Col lg={12}>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <p><FormattedMessage {...localMessages.intro} /></p>
-        <ComingSoon />
+        <TopicDetailsForm
+          initialValues={{
+            name: props.topic.name,
+            description: props.topic.description,
+            public: props.topic.public === 1,
+          }}
+          onSave={props.handleSave}
+        />
       </Col>
     </Row>
   </div>
@@ -26,12 +32,23 @@ TopicEditContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   topicId: React.PropTypes.number,
+  // from state
+  topic: React.PropTypes.object.isRequired,
+  handleSave: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  topic: state.topics.selected.info,
 });
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleSave: (values) => {
+    dispatch(saveTopicDetails(ownProps.topicId,
+      { name: values.name, description: values.description, public: values.public })
+    ).then(() => {
+      dispatch(fetchTopicSummary(ownProps.topicId));
+    });
+  },
 });
 
 export default

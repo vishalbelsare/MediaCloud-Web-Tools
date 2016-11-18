@@ -164,3 +164,8 @@ export function wordMedia(topicId, word, params) {
   return createApiPromise(`/api/topics/${topicId}/words/${word}/media`, acceptedParams);
 }
 */
+
+export function saveTopicDetails(topicId, params) {
+  const acceptedParams = acceptParams(params, ['name', 'description', 'public']);
+  return createPostingApiPromise(`/api/topics/${topicId}/update`, acceptedParams, 'put');
+}
