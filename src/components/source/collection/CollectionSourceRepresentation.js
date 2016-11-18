@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'collection.summary.sourceRepresentation.title', defaultMessage: 'Source Representation' },
   helpTitle: { id: 'collection.summary.sourceRepresentation.help.title', defaultMessage: 'About Source Representation' },
   helpText: { id: 'collection.summary.sourceRepresentation.help.text',
-    defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p>',
+    defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p><p>For performance reasons, these percentages are based on a sample of sentences from this collection.  Our tests show that this sampling provides very accurate results.</p>',
   },
   cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collection has too many sources for us to compute a map of how much content each source contributes to it.' },
 };

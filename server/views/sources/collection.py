@@ -63,7 +63,7 @@ def collection_source_sentence_counts_csv(collection_id):
     filename = info['label']+" - source sentence counts.csv"
     return csv.stream_response(results, props, filename)
 
-
+@cache
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sample_size = 2000
     # list all sources first
