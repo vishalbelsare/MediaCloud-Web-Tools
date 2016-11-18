@@ -42,11 +42,7 @@ const AttentionContainer = (props) => {
             />
           </Col>
         </Row>
-        <Row>
-          <Col lg={12}>
-            {content}
-          </Col>
-        </Row>
+        {content}
       </Grid>
     </div>
   );

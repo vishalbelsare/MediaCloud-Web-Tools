@@ -15,6 +15,7 @@ const attention = createAsyncReducer({
       foci: payload.foci.map(focus => ({
         ...focus,
         counts: cleanDateCounts(focus.sentence_counts.split),
+        total: focus.sentence_counts.count,
       })),
     },
   }),

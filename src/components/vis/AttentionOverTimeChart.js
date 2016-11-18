@@ -106,10 +106,10 @@ class AttentionOverTimeChart extends React.Component {
         data: values,
         pointStart: dates[0],
         pointInterval: intervalMs,
-        cursor: 'pointer',
       }];
     } else if (series !== undefined) {
       allSeries = series;
+      config.plotOptions.series.marker.enabled = (series[0].data.length < SERIES_MARKER_THRESHOLD);
     }
     config.series = allSeries;
     // show total if it is included
