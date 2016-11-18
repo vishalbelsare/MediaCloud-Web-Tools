@@ -2,7 +2,7 @@ import logging
 from flask import jsonify
 import flask_login
 
-from server import app
+from server import app, mc
 from server.util.request import api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -49,13 +49,8 @@ def api_collection_sources_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_counts(collection_id):
-    # first decide to bail if there are too many sources (cause the query takes too long)
-    sources = collection_media_list(user_mediacloud_key(), collection_id)
-    if len(sources) > 30:
-        sources_with_counts = []
-    else:
-        sources_with_counts = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
-    return jsonify({'sources': sources_with_counts})
+    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
+    return jsonify({'sources': results})
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
 @flask_login.login_required
@@ -63,29 +58,26 @@ def collection_source_sentence_counts(collection_id):
 def collection_source_sentence_counts_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    sources = _cached_collection_source_sentence_counts(user_mediacloud_key(), collection_id)
+    results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
     filename = info['label']+" - source sentence counts.csv"
-    return csv.stream_response(sources, props, filename)
+    return csv.stream_response(results, props, filename)
 
-@cache
-def _cached_collection_source_sentence_counts(user_mc_key, collection_id):
-    # get the list of sources
-    sources = collection_media_list(user_mediacloud_key(), collection_id)
-    total_sentences = 0
-    # get the count for each source
-    for s in sources:
-        s['sentence_count'] = _cached_sentences_count(user_mediacloud_key(), s['media_id'])['count']
-        total_sentences = total_sentences + s['sentence_count']
-    # add in percentages for each source
-    for s in sources:
-        s['sentence_pct'] = float(s['sentence_count']) / float(total_sentences)
-    return sources
 
-@cache
-def _cached_sentences_count(user_mc_key, media_id):
-    user_mc = user_mediacloud_client()
-    return user_mc.sentenceCount('*', 'media_id:'+str(media_id))
+def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
+    sample_size = 2000
+    # list all sources first
+    sources_by_id = { c['media_id']:c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
+    sentences = mc.sentenceList('*', 'tags_id_media:'+str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
+    # sum the number of sentences per media source
+    sentence_counts = { media_id:0 for media_id in sources_by_id.keys() }
+    for sentence in sentences['response']['docs']:
+        sentence_counts[sentence['media_id']] = sentence_counts[sentence['media_id']] + 1.
+    # add in sentence count info to media info
+    for media_id in sentence_counts.keys():
+        sources_by_id[media_id]['sentence_count'] = sentence_counts[media_id]
+        sources_by_id[media_id]['sentence_pct'] = sentence_counts[media_id] / sample_size
+    return sources_by_id.values()
 
 @cache
 def _cached_tag_set_info(user_mc_key, tag_sets_id):
