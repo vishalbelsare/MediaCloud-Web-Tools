@@ -8,21 +8,25 @@ const localMessages = {
   aboutText: { id: 'about.text', defaultMessage: 'Topic Mapper lets you analyze how online media talks about a topic.' },
 };
 
-const About = props => (
-  <Grid>
-    <Title render={props.intl.formatMessage(localMessages.aboutTitle)} />
-    <Row>
-      <Col lg={6} md={6} sm={6}>
-        <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
-      </Col>
-    </Row>
-    <Row>
-      <Col lg={6} md={6} sm={6}>
-        <p><FormattedMessage {...localMessages.aboutText} /></p>
-      </Col>
-    </Row>
-  </Grid>
-);
+const About = (props) => {
+  const title = props.intl.formatMessage(localMessages.aboutTitle);
+  const titleHandler = parentTitle => `${title} | ${parentTitle}`;
+  return (
+    <Grid>
+      <Title render={titleHandler} />
+      <Row>
+        <Col lg={6} md={6} sm={6}>
+          <h1><FormattedMessage {...localMessages.aboutTitle} /></h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} md={6} sm={6}>
+          <p><FormattedMessage {...localMessages.aboutText} /></p>
+        </Col>
+      </Row>
+    </Grid>
+  );
+};
 
 
 About.propTypes = {

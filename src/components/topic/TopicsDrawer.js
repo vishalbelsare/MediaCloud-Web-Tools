@@ -10,8 +10,9 @@ import Divider from 'material-ui/Divider';
 import messages from '../../resources/messages';
 
 const localMessages = {
-  home: { id: 'menu.items.home', defaultMessage: 'Explore Topics' },
-  createNewTopic: { id: 'menu.items.newTopic', defaultMessage: 'Create a New Topic' },
+  menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
+  home: { id: 'topics.menu.items.home', defaultMessage: 'Explore Topics' },
+  createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
 class TopicsDrawer extends React.Component {
@@ -75,7 +76,7 @@ class TopicsDrawer extends React.Component {
           open={this.state.open}
           onRequestChange={open => this.setState({ open })}
         >
-          <AppBar title={formatMessage(messages.menuTitle)} showMenuIconButton={false} />
+          <AppBar title={formatMessage(localMessages.menuTitle)} showMenuIconButton={false} />
           {appMenuItems}
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
