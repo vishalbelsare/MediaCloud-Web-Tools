@@ -9,6 +9,9 @@ import PageWrapper from '../components/source/PageWrapper';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
 import SourcesApp from '../components/source/SourcesApp';
+import About from '../components/source/About';
+import SearchContainer from '../components/source/search/SearchContainer';
+import CreateSourceContainer from '../components/source/mediaSource/create/CreateSourceContainer';
 
 const sourceRoutes = (
   <Route path="/" component={SourcesApp}>
@@ -18,13 +21,16 @@ const sourceRoutes = (
     {userRoutes}
 
     <Route component={PageWrapper} onEnter={requireAuth} >
+      <Route path="/about" component={About} />
       <Route path="/home" component={Introduction} onEnter={requireAuth} />
+      <Route path="/search" component={SearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
         <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
+        <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >
         <Route path=":collectionId/details" component={CollectionDetailsContainer} onEnter={requireAuth} />
-        <Route path=":createCollection" component={CreateCollectionContainer} onEnter={requireAuth} />
+        <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

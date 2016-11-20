@@ -5,8 +5,8 @@ import Link from 'react-router/lib/Link';
 import SourceSearchContainer from './SourceSearchContainer';
 
 const localMessages = {
-  addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create New Collection' },
-  addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add New Source' },
+  addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create a Collection' },
+  addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
 const SourceControlBar = () => (
@@ -15,12 +15,12 @@ const SourceControlBar = () => (
       <Grid>
         <Row>
           <Col lg={4} xs={4} className="left">
-            <Link to="collections/createCollection">
+            <Link to="collections/create">
               <FormattedMessage {...localMessages.addCollection} />
             </Link>
           </Col>
           <Col lg={4} xs={4} className="left">
-            <Link to="sources/createSource">
+            <Link to="sources/create">
               <FormattedMessage {...localMessages.addSource} />
             </Link>
           </Col>

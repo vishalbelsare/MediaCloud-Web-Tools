@@ -110,7 +110,7 @@ const messages = {
 
   menuOpenTooltip: { id: 'menu.open.tooltip', defaultMessage: 'Open Main Menu' },
   menuTitle: { id: 'menu.title', defaultMessage: 'Main Menu' },
-  menuAbout: { id: 'menu.about', defaultMessage: 'About Topic Mapper' },
+  menuAbout: { id: 'menu.about', defaultMessage: 'About' },
 
   userEmail: { id: 'user.email', defaultMessage: 'Email' },
   userPassword: { id: 'user.password', defaultMessage: 'Password' },
