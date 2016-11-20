@@ -15,7 +15,22 @@ const localMessages = {
 
 const sourceAddMetaForm = (props) => {
   const { renderSelectField, meta, countries } = props;
+  let content = {};
 
+  if (countries !== undefined && countries !== null) {
+    content =
+      (<Col lg={2} md={2} sm={2}>
+        <Field name="countryA" component={renderSelectField} floatingLabelText={localMessages.country}>
+          {countries.map(country =>
+            <MenuItem
+              key={country.key}
+              value={country.hc}
+              primaryText={country.name}
+            />
+        )}
+        </Field>
+      </Col>);
+  }
   return (
     <div>
       <Row>
@@ -36,38 +51,16 @@ const sourceAddMetaForm = (props) => {
           </Field>
         </Col>
       </Row>
-      if (countries){
-        <Row>
-          <Col lg={4} md={4} sm={4}>
-            <h3><FormattedMessage {...localMessages.country} /></h3>
-          </Col>
-          <Col lg={2} md={2} sm={2}>
-            <Field name="countryA" component={renderSelectField} floatingLabelText={localMessages.country}>
-              {countries.map(country =>
-                <MenuItem
-                  key={country.key}
-                  value={country.hc}
-                  primaryText={country.name}
-                />
-            )}
-            </Field>
-          </Col>
-          <Col lg={4} md={4} sm={4}>
-            <h3><FormattedMessage {...localMessages.country} /></h3>
-          </Col>
-          <Col lg={2} md={2} sm={2}>
-            <Field name="countryB" component={renderSelectField} floatingLabelText={localMessages.country}>
-              {countries.map(country =>
-                <MenuItem
-                  key={country.key}
-                  value={country.hc}
-                  primaryText={country.name}
-                />
-            )}
-            </Field>
-          </Col>
-        </Row>
-      }
+      <Row>
+        <Col lg={4} md={4} sm={4}>
+          <h3><FormattedMessage {...localMessages.country} /></h3>
+        </Col>
+        {content}
+        <Col lg={4} md={4} sm={4}>
+          <h3><FormattedMessage {...localMessages.country} /></h3>
+        </Col>
+        {content}
+      </Row>
       <Row>
         <Col lg={4} md={4} sm={4}>
           <h3><FormattedMessage {...localMessages.location} /></h3>
