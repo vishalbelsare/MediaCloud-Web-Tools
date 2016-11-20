@@ -22,6 +22,7 @@ const allCollections = createAsyncReducer({
   handleSuccess: payload => ({
     total: payload.results.total,
     list: arrayToDict(payload.results, 'tags_id'),
+    array: payload.results,
   }),
   handleFailure: () => ({ list: null, total: null }),
 });

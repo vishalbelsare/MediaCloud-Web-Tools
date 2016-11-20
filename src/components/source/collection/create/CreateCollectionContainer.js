@@ -119,8 +119,8 @@ const reduxFormConfig = {
 
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.create.sourceSearch.fetchStatus,
-  sources: state.sources.selected.details.create.attachedSources.sources,
+  fetchStatus: state.sources.selected.details.collection.collectionCreate.sourceSearch.fetchStatus,
+  sources: state.sources.selected.details.collectionCreate.attachedSources.sources,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -128,7 +128,7 @@ const mapDispatchToProps = dispatch => ({
     const newVals = Object.assign({}, values, {
       sourceObj: [{ name: values.sourceName, url: values.sourceUrl }] });
     dispatch(createCollection(newVals));
-   // .then(() => dispatch(fetchCreateCollection(ownProps.collectionId)));
+   // .then(() => dispatch(createCollection(ownProps.collectionId)));
   },
   extHandleClick: (item) => {
     dispatch(addSourcesToCollection(item));

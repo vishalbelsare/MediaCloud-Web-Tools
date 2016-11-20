@@ -28,6 +28,10 @@ export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
 export const ADD_SOURCES_TO_COLLECTION = 'ADD_SOURCES_TO_COLLECTION';
 export const ADD_SOURCES_TO_COLLECTION_BY_CSV = 'ADD_SOURCES_TO_COLLECTION_BY_CSV';
 export const ADD_SOURCES_TO_COLLECTION_BY_COLLECTION = 'ADD_SOURCES_TO_COLLECTION_BY_COLLECTION';
+export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
+export const ADD_THIS_SOURCE_TO_COLLECTION = 'ADD_THIS_SOURCE_TO_COLLECTION';
+export const FETCH_SOURCE_METADATA = 'FETCH_SOURCE_METADATA';
+export const FETCH_COUNTRY_LIST = 'FETCH_COUNTRY_LIST';
 
 export const select = createAction(SELECT, id => id);
 
@@ -64,3 +68,13 @@ export const addSourcesToCollection = createAction(ADD_SOURCES_TO_COLLECTION, pr
 export const addSourcesToCollectionByCollection = createAction(ADD_SOURCES_TO_COLLECTION_BY_COLLECTION, api.addSourcesToCollectionByCollection, props => props);
 
 export const addSourcesToCollectionByCSV = createAsyncAction(ADD_SOURCES_TO_COLLECTION_BY_CSV, api.addSourcesToCollectionByCSV, props => props);
+
+export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSource, props => props);
+
+export const addThisSourceToCollection = createAction(ADD_THIS_SOURCE_TO_COLLECTION, id => id);
+
+export const fetchSourceMetadata = createAsyncAction(FETCH_SOURCE_METADATA, api.sourceMetadata);
+
+
+export const fetchCountryList = createAsyncAction(FETCH_COUNTRY_LIST, api.countryList);
+

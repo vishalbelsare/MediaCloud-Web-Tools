@@ -2,12 +2,14 @@ import logging
 from flask import jsonify
 import flask_login
 from server import app
-from server.util.request import api_error_handler
+from server.util.request import form_fields_required, api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+
+from server.views.sources.geoutil import country_list
 
 logger = logging.getLogger(__name__)
 
@@ -93,3 +95,32 @@ def media_source_words(media_id):
         'wordcounts': cached_wordcount(user_mediacloud_key(), 'media_id:'+str(media_id))
     }
     return jsonify({'results':info})
+
+@app.route('/api/sources/create', methods=['POST'])
+@form_fields_required('sourceName', 'sourceDescription','notes','collectionObj')
+@flask_login.login_required
+@api_error_handler
+def source_create():
+    user_mc = user_mediacloud_client()
+    name = request.form['sourceName']
+    description = request.form['sourceDescription']
+    sources = []
+    sources = request.form['collectionObj']
+    notes = request.form['notes']
+    fakenew_source = user_mc.media(1)
+    return jsonify(fakenew_source)
+
+@app.route('/api/sources/metadata')
+@flask_login.login_required
+@api_error_handler
+def api_media_source_metadata():
+    info = {}
+    info = {"language":"eng","country":"US", "location":"Boston"}
+    return jsonify({'results':info})
+
+@app.route('/api/sources/countrylist')
+@api_error_handler
+def api_media_source_countrylist():
+    info = {}
+    info = country_list()
+    return jsonify(info)

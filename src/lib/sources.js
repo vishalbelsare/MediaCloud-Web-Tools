@@ -9,7 +9,7 @@ export function sourceSearch(searchStr) {
 }
 
 export function collectionList() {
-  return createApiPromise('api/collections/list');
+  return createApiPromise('api/collection/list');
 }
 
 export function collectionSearch(searchStr) {
@@ -60,4 +60,12 @@ export function createCollection(params) {
 export function addSourceToCollection(params) {
   const acceptedParams = acceptParams(params, ['sourceObj']);
   return acceptedParams;
+}
+
+export function sourceMetadata() {
+  return createApiPromise('api/sources/metadata');
+}
+
+export function countryList() {
+  return createApiPromise('api/sources/countrylist');
 }
