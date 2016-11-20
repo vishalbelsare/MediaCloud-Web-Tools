@@ -12,7 +12,6 @@ import userRoutes from './userRoutes';
 import SourcesApp from '../components/source/SourcesApp';
 import About from '../components/source/About';
 import SearchContainer from '../components/source/search/SearchContainer';
-import CreateSourceContainer from '../components/source/mediaSource/create/CreateSourceContainer';
 
 const sourceRoutes = (
   <Route path="/" component={SourcesApp}>
@@ -27,11 +26,7 @@ const sourceRoutes = (
       <Route path="/search" component={SearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
         <Route path=":sourceId/details" component={SourceDetailsContainer} onEnter={requireAuth} />
-<<<<<<< Updated upstream
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
-=======
-        <Route path=":createSource" component={CreateSourceContainer} onEnter={requireAuth} />
->>>>>>> Stashed changes
       </Route>
       <Route path="/collections" >
         <Route path=":collectionId/details" component={CollectionDetailsContainer} onEnter={requireAuth} />
