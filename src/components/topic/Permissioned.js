@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN } from '../../lib/auth';
+import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN } from '../../lib/auth';
 
 /**
  * Use this to restrict who is allowed to see what.
@@ -8,19 +8,19 @@ import { PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN } from '../../lib/a
 const Permissioned = (props) => {
   const { children, onlyTopic, userTopicPermission } = props;
   let allowed = false;
-  if (![PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN].includes(onlyTopic)) {
+  if (![PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN].includes(onlyTopic)) {
     const error = { message: `Invalid topic permission (${onlyTopic})` };
     throw error;
   }
   switch (onlyTopic) {
-    case PERMISSION_READ:
-      allowed = [PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN].includes(userTopicPermission);
+    case PERMISSION_TOPIC_READ:
+      allowed = [PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN].includes(userTopicPermission);
       break;
-    case PERMISSION_WRITE:
-      allowed = [PERMISSION_WRITE, PERMISSION_ADMIN].includes(userTopicPermission);
+    case PERMISSION_TOPIC_WRITE:
+      allowed = [PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN].includes(userTopicPermission);
       break;
-    case PERMISSION_ADMIN:
-      allowed = (PERMISSION_ADMIN === userTopicPermission);
+    case PERMISSION_TOPIC_ADMIN:
+      allowed = (PERMISSION_TOPIC_ADMIN === userTopicPermission);
       break;
     default:
       allowed = false;

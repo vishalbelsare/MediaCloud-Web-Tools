@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import PermissionForm from './PermissionForm';
 import { fetchPermissionsList, updatePermission } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { PERMISSION_NONE } from '../../../lib/auth';
+import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const localMessages = {
   title: { id: 'topic.permissions.title', defaultMessage: 'Permissions' },
@@ -77,7 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then(() => dispatch(fetchPermissionsList(ownProps.topicId)));
   },
   handleDelete: (email) => {
-    dispatch(updatePermission(ownProps.topicId, email, PERMISSION_NONE))
+    dispatch(updatePermission(ownProps.topicId, email, PERMISSION_TOPIC_NONE))
       .then(() => dispatch(fetchPermissionsList(ownProps.topicId)));
   },
   asyncFetch: () => {

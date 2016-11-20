@@ -6,7 +6,7 @@ import Lock from 'material-ui/svg-icons/action/lock';
 import IconButton from 'material-ui/IconButton';
 import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
-import { PERMISSION_NONE } from '../../../lib/auth';
+import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const localMessages = {
   notPermissioned: { id: 'topic.notPermissioned', defaultMessage: 'Missing Permission' },
@@ -17,13 +17,13 @@ const TopicListItem = (props) => {
   const { formatMessage } = props.intl;
   const disable = false; // (topic.state !== 'ready');
   let title = null;
-  if (disable || (topic.user_permission === PERMISSION_NONE)) {
+  if (disable || (topic.user_permission === PERMISSION_TOPIC_NONE)) {
     title = topic.name;
   } else {
     title = <Link to={`/topics/${topic.topics_id}/summary`}>{topic.name}</Link>;
   }
   let mainButton = null;
-  if (topic.user_permission !== PERMISSION_NONE) {
+  if (topic.user_permission !== PERMISSION_TOPIC_NONE) {
     mainButton = (<FavoriteToggler
       isFavorited={topic.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(topic.topics_id, isFavNow)}

@@ -7,7 +7,7 @@ import { notEmptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import { DeleteButton } from '../../common/IconButton';
-import { PERMISSION_READ, PERMISSION_WRITE, PERMISSION_ADMIN } from '../../../lib/auth';
+import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 
 const localMessages = {
   emailFieldHint: { id: 'topic.permissions.email.hint', defaultMessage: 'Enter someone\'s email' },
@@ -45,9 +45,9 @@ const PermissionForm = (props) => {
         </Col>
         <Col lg={3} md={3} sm={3} xs={12}>
           <Field name="permission" component={renderSelectField} floatingLabelText={localMessages.permission}>
-            <MenuItem key={PERMISSION_READ} value={PERMISSION_READ} primaryText={formatMessage(localMessages.read)} />
-            <MenuItem key={PERMISSION_WRITE} value={PERMISSION_WRITE} primaryText={formatMessage(localMessages.write)} />
-            <MenuItem key={PERMISSION_ADMIN} value={PERMISSION_ADMIN} primaryText={formatMessage(localMessages.admin)} />
+            <MenuItem key={PERMISSION_TOPIC_READ} value={PERMISSION_TOPIC_READ} primaryText={formatMessage(localMessages.read)} />
+            <MenuItem key={PERMISSION_TOPIC_WRITE} value={PERMISSION_TOPIC_WRITE} primaryText={formatMessage(localMessages.write)} />
+            <MenuItem key={PERMISSION_TOPIC_ADMIN} value={PERMISSION_TOPIC_ADMIN} primaryText={formatMessage(localMessages.admin)} />
           </Field>
         </Col>
         <Col lg={2} md={2} sm={2} xs={12}>
