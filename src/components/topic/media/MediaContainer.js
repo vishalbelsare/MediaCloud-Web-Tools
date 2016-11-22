@@ -7,23 +7,23 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMedia, fetchMedia } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import MediaDetails from './MediaDetails';
 import MediaInlinkContainer from './MediaInlinkContainer';
 import MediaOutlinkContainer from './MediaOutlinkContainer';
 import MediaStoriesContainer from './MediaStoriesContainer';
 import MediaSentenceCountContainer from './MediaSentenceCountContainer';
 import MediaWordsContainer from './MediaWordsContainer';
 import messages from '../../../resources/messages';
-import { RemoveButton } from '../../common/IconButton';
+import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import Permissioned from '../Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import StatBar from '../../common/statbar/StatBar';
 
 const localMessages = {
-  mainTitle: { id: 'media.details.mainTitle', defaultMessage: 'Media Source Details: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If media source is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
+  storyCount: { id: 'media.details.storyCount', defaultMessage: 'Stories in timespan' },
 };
 
 class MediaContainer extends React.Component {
@@ -47,9 +47,14 @@ class MediaContainer extends React.Component {
     this.setState({ open: false });
   };
 
+  handleReadItClick = () => {
+    const { media } = this.props;
+    window.open(media.url, '_blank');
+  }
+
   render() {
     const { media, topicId, mediaId } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
     const dialogActions = [
       <FlatButton
@@ -66,12 +71,13 @@ class MediaContainer extends React.Component {
             <Col lg={12} md={12} sm={12}>
               <h1>
                 <span className="actions">
+                  <ReadItNowButton onClick={this.handleReadItClick} />
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
                 </span>
-                <MediaSourceIcon />
-                <FormattedMessage {...localMessages.mainTitle} values={{ title: media.name }} />
+                <MediaSourceIcon height={32} />
+                {media.name}
               </h1>
             </Col>
           </Row>
@@ -87,7 +93,16 @@ class MediaContainer extends React.Component {
           </Dialog>
           <Row>
             <Col lg={6} md={6} sm={12}>
-              <MediaDetails media={media} />
+              <StatBar
+                stats={[
+                  { message: messages.mediaInlinks, data: formatNumber(media.media_inlink_count) },
+                  { message: messages.inlinks, data: formatNumber(media.inlink_count) },
+                  { message: messages.outlinks, data: formatNumber(media.outlink_count) },
+                  { message: messages.facebookShares, data: formatNumber(media.facebook_share_count) },
+                  { message: messages.bitlyClicks, data: formatNumber(media.bitly_click_count) },
+                  { message: localMessages.storyCount, data: formatNumber(media.story_count) },
+                ]}
+              />
             </Col>
             <Col lg={6} md={6} sm={12}>
               <MediaSentenceCountContainer topicId={topicId} mediaId={mediaId} />

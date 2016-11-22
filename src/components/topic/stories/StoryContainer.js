@@ -19,7 +19,7 @@ import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 // import StoryDetails from './StoryDetails';
 import StatBar from '../../common/statbar/StatBar';
 
-const MAX_STORY_TITLE_LENGTH = 60;  // story titles longer than this will be trimmed and ellipses added
+const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
 const localMessages = {
   mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
