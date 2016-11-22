@@ -4,6 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import { injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropUpIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
+import OpenInNew from 'material-ui/svg-icons/action/open-in-new';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -100,3 +101,5 @@ export const ArrowDropDownButton = composeIconButton(ArrowDropDownIcon, messages
 export const ArrowDropUpButton = composeIconButton(ArrowDropUpIcon, messages.close);
 
 export const SettingsButton = composeIconButton(SettingsIcon, messages.settings);
+
+export const ReadItNowButton = composeIconButton(OpenInNew, messages.readItNow);

@@ -1,0 +1,17 @@
+@import '../_constants';
+
+div.stat {
+  small {
+    display: block;
+    color: $material-grey900;
+    font-size: 12px;
+    font-weight: bold;
+    padding-bottom: 5px;
+  }
+  em {
+    display: block;
+    color: $material-grey900;
+    font-size: 30px;
+    font-style: normal;
+  }
+}

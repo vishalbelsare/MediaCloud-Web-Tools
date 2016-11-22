@@ -54,6 +54,7 @@ const messages = {
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
+  language: { id: 'common.language', defaultMessage: 'Language' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
   wordcloudHelpText: { id: 'wordcloud.help.text',
@@ -101,6 +102,7 @@ const messages = {
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
+  readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },

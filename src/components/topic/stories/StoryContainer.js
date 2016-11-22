@@ -7,16 +7,17 @@ import FlatButton from 'material-ui/FlatButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import StoryDetails from './StoryDetails';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
 import messages from '../../../resources/messages';
-import { RemoveButton } from '../../common/IconButton';
+import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+// import StoryDetails from './StoryDetails';
+import StatBar from '../../common/statbar/StatBar';
 
 const MAX_STORY_TITLE_LENGTH = 60;  // story titles longer than this will be trimmed and ellipses added
 
@@ -47,9 +48,14 @@ class StoryContainer extends React.Component {
     this.setState({ open: false });
   };
 
+  handleReadItClick = () => {
+    const { story } = this.props;
+    window.open(story.url, '_blank');
+  }
+
   render() {
     const { story, topicId, storiesId } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
     let displayTitle = story.title;
     if (story.title.length > MAX_STORY_TITLE_LENGTH) {
@@ -67,43 +73,49 @@ class StoryContainer extends React.Component {
         <Title render={titleHandler} />
         <Grid>
           <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={12}>
               <h1>
                 <span className="actions">
+                  <ReadItNowButton onClick={this.handleReadItClick} />
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
                 </span>
-                <StoryIcon />
-                <FormattedMessage {...localMessages.mainTitle} values={{ title: displayTitle }} />
+                <StoryIcon height={32} />
+                {displayTitle}
               </h1>
+              <Dialog
+                title={formatMessage(localMessages.removeTitle)}
+                actions={dialogActions}
+                modal={false}
+                open={this.state.open}
+                onRequestClose={this.handleRemoveDialogClose}
+              >
+                <p><FormattedMessage {...localMessages.removeAbout} /></p>
+                <ComingSoon />
+              </Dialog>
             </Col>
           </Row>
-          <Dialog
-            title={formatMessage(localMessages.removeTitle)}
-            actions={dialogActions}
-            modal={false}
-            open={this.state.open}
-            onRequestClose={this.handleRemoveDialogClose}
-          >
-            <p><FormattedMessage {...localMessages.removeAbout} /></p>
-            <ComingSoon />
-          </Dialog>
           <Row>
-            <Col lg={6} md={6} sm={12}>
-              <StoryDetails topicId={topicId} story={story} />
+            <Col lg={6} xs={12} >
+              <StatBar
+                stats={[
+                  { message: messages.mediaInlinks, data: formatNumber(story.media_inlink_count) },
+                  { message: messages.inlinks, data: formatNumber(story.inlink_count) },
+                  { message: messages.outlinks, data: formatNumber(story.outlink_count) },
+                  { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
+                  { message: messages.bitlyClicks, data: formatNumber(story.bitly_click_count) },
+                  { message: messages.language, data: story.language },
+                ]}
+              />
             </Col>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={6} xs={12} >
               <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={12}>
               <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={12}>
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
           </Row>
