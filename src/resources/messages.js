@@ -98,6 +98,7 @@ const messages = {
   add: { id: 'add', defaultMessage: 'Add' },
   open: { id: 'open', defaultMessage: 'Open' },
   close: { id: 'close', defaultMessage: 'Close' },
+  none: { id: 'none', defaultMessage: 'None' },
   download: { id: 'download', defaultMessage: 'Download' },
   favorite: { id: 'favorite', defaultMessage: 'Favorite' },
   unfavorite: { id: 'unfavorite', defaultMessage: 'Unfavorite' },

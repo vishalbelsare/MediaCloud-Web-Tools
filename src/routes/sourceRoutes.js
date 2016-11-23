@@ -27,15 +27,15 @@ const sourceRoutes = (
       <Route path="/home" component={Introduction} onEnter={requireAuth} />
       <Route path="/search" component={SearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
+        <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
         <Route path=":sourceId" component={SourceDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":sourceId/details" to=":sourceId" />
-        <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >
         <Route path="all" component={AllCollectionsContainer} encodeURI={requireAuth} />
+        <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
         <Route path=":collectionId" component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":collectionId/details" to=":collectionId" />
-        <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

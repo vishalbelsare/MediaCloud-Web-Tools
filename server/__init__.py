@@ -122,6 +122,7 @@ if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.words
     import server.views.sources.geocount
     import server.views.sources.search
+    import server.views.sources.metadata
 if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.media
     import server.views.topics.sentences

@@ -177,7 +177,8 @@
         }
       }
     },
-sources: {
+
+  sources: {
     all: {
       fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
       list: {
@@ -206,12 +207,14 @@ sources: {
         },
       },
     },
- 
-
-
   }
-
-
+  metadata: {
+    detectedLanguage: {
+      fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED | FETCH_FAILED ],
+      [tag set properties]
+      tags: [list of tag json objects]
+    }
+  },
 
   form: {
     //managed by form helper library

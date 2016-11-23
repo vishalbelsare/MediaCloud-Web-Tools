@@ -109,18 +109,3 @@ def source_create():
     notes = request.form['notes']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
-
-@app.route('/api/sources/metadata')
-@flask_login.login_required
-@api_error_handler
-def api_media_source_metadata():
-    info = {}
-    info = {"language":"eng","country":"US", "location":"Boston"}
-    return jsonify({'results':info})
-
-@app.route('/api/sources/countrylist')
-@api_error_handler
-def api_media_source_countrylist():
-    info = {}
-    info = country_list()
-    return jsonify(info)

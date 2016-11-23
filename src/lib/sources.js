@@ -62,10 +62,6 @@ export function addSourceToCollection(params) {
   return acceptedParams;
 }
 
-export function sourceMetadata() {
-  return createApiPromise('api/sources/metadata');
-}
-
-export function countryList() {
-  return createApiPromise('api/sources/countrylist');
+export function metadataValues(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
 }

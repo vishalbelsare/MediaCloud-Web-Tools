@@ -1,5 +1,4 @@
 import React from 'react';
-import langs from 'langs';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
@@ -15,9 +14,6 @@ const localMessages = {
 const StoryDetails = (props) => {
   const { topicId, story } = props;
   const { formatDate } = props.intl;
-  console.log(langs.all());
-  console.log(story.language);
-  console.log(langs.where('2', story.language));
   return (
     <DataCard>
       <h2>
