@@ -19,9 +19,9 @@ class SourceSearchContainer extends React.Component {
   handleClick = (item) => {
     const { onMediaSourceSelected, onCollectionSelected } = this.props;
     if (item.type === 'mediaSource') {
-      if (onMediaSourceSelected) onMediaSourceSelected(item.id);
+      if (onMediaSourceSelected) onMediaSourceSelected(item);
     } else if (item.type === 'collection') {
-      if (onCollectionSelected) onCollectionSelected(item.id);
+      if (onCollectionSelected) onCollectionSelected(item);
     }
   }
 

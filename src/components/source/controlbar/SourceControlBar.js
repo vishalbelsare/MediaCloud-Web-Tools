@@ -52,11 +52,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleMediaSourceSelected: (id) => {
-    dispatch(push(`/sources/${id}`));
+  handleMediaSourceSelected: (item) => {
+    dispatch(push(`/sources/${item.id}`));
   },
-  handleCollectionSelected: (id) => {
-    dispatch(push(`/collections/${id}`));
+  handleCollectionSelected: (item) => {
+    dispatch(push(`/collections/${item.id}`));
   },
 });
 
