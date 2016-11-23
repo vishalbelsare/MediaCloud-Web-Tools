@@ -1,13 +1,15 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
-import { createSource, addThisSourceToCollection } from '../../../../actions/sourceActions';
+import { createSource } from '../../../../actions/sourceActions';
 import AppButton from '../../../common/AppButton';
 import SourceDetailsForm from './SourceDetailsForm';
 import SourceMetadataForm from './SourceMetadataForm';
+import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New source' },
@@ -15,32 +17,35 @@ const localMessages = {
 };
 
 const CreateSourceContainer = (props) => {
-  const { handleSave } = props;
+  const { pristine, submitting, handleSubmit, handleSave } = props;
   const { formatMessage } = props.intl;
   const titleHandler = formatMessage(localMessages.mainTitle);
   const buttonLabel = formatMessage(localMessages.addButton);
   return (
     <div>
       <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-          </Col>
-        </Row>
-        <SourceDetailsForm onSave={handleSave} />
-        <SourceMetadataForm />
-        <Row>
-          <Col lg={12}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              type="submit"
-              label={buttonLabel}
-              primary
-            />
-          </Col>
-        </Row>
-      </Grid>
+      <form className="source-details-form" name="sourcesSourceDetailsForm" onSubmit={handleSubmit(handleSave.bind(this))}>
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+            </Col>
+          </Row>
+          <SourceDetailsForm />
+          <SourceMetadataForm />
+          <Row>
+            <Col lg={12}>
+              <AppButton
+                style={{ marginTop: 30 }}
+                type="submit"
+                label={buttonLabel}
+                disabled={pristine || submitting}
+                primary
+              />
+            </Col>
+          </Row>
+        </Grid>
+      </form>
     </div>
   );
 };
@@ -48,12 +53,15 @@ const CreateSourceContainer = (props) => {
 CreateSourceContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
-  handleSave: React.PropTypes.func.isRequired,
-  extHandleClick: React.PropTypes.func.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   collections: React.PropTypes.array,
-  // from state
+  // from dispatch
+  handleSave: React.PropTypes.func.isRequired,
+  // from form healper
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = () => ({
@@ -66,16 +74,32 @@ const mapDispatchToProps = dispatch => ({
     dispatch(createSource(newVals));
    // .then(() => dispatch(createSource(ownProps.sourceId)));
   },
-  extHandleClick: (item) => {
-    dispatch(addThisSourceToCollection(item));
-  },
 });
+
+function validate(values) {
+  console.log(values.name);
+  const errors = {};
+  if (emptyString(values.name)) {
+    errors.email = localMessages.nameError;
+  }
+  if (emptyString(values.url)) {
+    errors.permission = localMessages.urlError;
+  }
+  return errors;
+}
+
+const reduxFormConfig = {
+  form: 'sourceDetailsForm',
+  validate,
+};
 
 export default
   injectIntl(
     composeIntlForm(
-      connect(mapStateToProps, mapDispatchToProps)(
-        CreateSourceContainer
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps)(
+          CreateSourceContainer
+        ),
       ),
     ),
   );

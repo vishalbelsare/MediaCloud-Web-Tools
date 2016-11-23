@@ -2,7 +2,6 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { notEmptyString } from '../../../../lib/formValidators';
 import composeIntlForm from '../../../common/IntlForm';
 
 const localMessages = {
@@ -14,9 +13,9 @@ const localMessages = {
 };
 
 const SourceDetailsForm = (props) => {
-  const { handleSubmit, onSave, renderTextField } = props;
+  const { renderTextField } = props;
   return (
-    <form className="source-details-form" name="sourcesSourceDetailsForm" onSubmit={handleSubmit(onSave.bind(this))}>
+    <div className="source-details-form">
       <Row>
         <Col lg={12}>
           <Field
@@ -45,7 +44,7 @@ const SourceDetailsForm = (props) => {
           />
         </Col>
       </Row>
-    </form>
+    </div>
   );
 };
 
@@ -53,31 +52,10 @@ SourceDetailsForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
-  // from form helper
-  handleSubmit: React.PropTypes.func,
-  fields: React.PropTypes.array.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
-  // from parent
-  onSave: React.PropTypes.func.isRequired,
-  initialValues: React.PropTypes.object,
 };
-
-function validate(values) {
-  const errors = {};
-  if (!notEmptyString(values.name)) {
-    errors.email = localMessages.nameError;
-  }
-  if (!notEmptyString(values.url)) {
-    errors.permission = localMessages.urlError;
-  }
-  return errors;
-}
 
 const reduxFormConfig = {
   form: 'sourceDetailsForm',
-  fields: ['name', 'url', 'notes'],
-  validate,
 };
 
 export default
