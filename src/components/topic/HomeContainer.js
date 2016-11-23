@@ -25,7 +25,7 @@ const HomeContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <h1><TopicIcon /><FormattedMessage {...localMessages.homeTitle} /></h1>
+            <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
           </Col>
         </Row>
         <FavoriteTopicsContainer onChangeFavorited={handleChangeFavorited} />
