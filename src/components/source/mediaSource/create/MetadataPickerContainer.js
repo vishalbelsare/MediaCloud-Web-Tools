@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 const reduxFormConfig = {
-  form: 'sourceCreateForm', // make sure this matches the sub-components and other wizard steps
+  form: 'sourceCreateForm',
 };
 
 export default

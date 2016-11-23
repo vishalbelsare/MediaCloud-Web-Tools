@@ -9,6 +9,7 @@ import { createSource } from '../../../../actions/sourceActions';
 import AppButton from '../../../common/AppButton';
 import SourceDetailsForm from './SourceDetailsForm';
 import SourceMetadataForm from './SourceMetadataForm';
+import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
@@ -33,6 +34,7 @@ const CreateSourceContainer = (props) => {
           </Row>
           <SourceDetailsForm />
           <SourceMetadataForm />
+          <SourceCollectionsForm />
           <Row>
             <Col lg={12}>
               <AppButton
@@ -77,7 +79,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 function validate(values) {
-  console.log(values.name);
   const errors = {};
   if (emptyString(values.name)) {
     errors.email = localMessages.nameError;

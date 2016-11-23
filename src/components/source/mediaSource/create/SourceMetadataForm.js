@@ -4,7 +4,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from './MetadataPickerContainer';
 
 const localMessages = {
-  title: { id: 'source.add.title', defaultMessage: 'Source Metadata' },
+  title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
 };
 
 const SourceMetadataForm = () => (

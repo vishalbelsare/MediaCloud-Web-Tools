@@ -1,7 +1,20 @@
 @import '../_constants';
 
+.source-collection-form,
 .source-metadata-form {
   border-top: 1px solid $material-grey500;
   margin-top: 30px;
   padding-top: 10px;
+
+  span.label {
+    font-size: 16px;
+    font-weight: bold;
+    &.chip-label {
+      line-height: 30px;
+    }
+    &.field-label {
+      line-height: 50px;
+    }
+  }
+
 }
