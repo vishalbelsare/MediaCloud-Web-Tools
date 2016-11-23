@@ -29,7 +29,7 @@ const SourceTable = (props) => {
                 <img className="google-icon" src={googleFavIconUrl(source.url)} alt={source.name} />
               </td>
               <td>
-                <Link to={`/sources/${source.id}/details`}>{source.name}</Link>
+                <Link to={`/sources/${source.id}`}>{source.name}</Link>
               </td>
             </tr>
             )

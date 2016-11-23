@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchCollectionSourceSentenceCounts(ownProps.collectionId));
   },
   navToSource: (mediaId) => {
-    dispatch(push(`/sources/${mediaId}/details`));
+    dispatch(push(`/sources/${mediaId}`));
   },
 });
 

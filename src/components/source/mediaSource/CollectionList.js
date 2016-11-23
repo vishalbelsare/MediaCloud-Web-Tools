@@ -35,7 +35,7 @@ CollectionList.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   handleTouchTap: (collectionId) => {
-    dispatch(push(`/collections/${collectionId}/details`));
+    dispatch(push(`/collections/${collectionId}`));
   },
 });
 

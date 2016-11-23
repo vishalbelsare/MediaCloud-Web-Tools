@@ -97,10 +97,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchCollectionSearch(searchString));
   },
   navigateToMediaSource: (id) => {
-    dispatch(push(`/sources/${id}/details`));
+    dispatch(push(`/sources/${id}`));
   },
   navigateToColleciton: (id) => {
-    dispatch(push(`/collections/${id}/details`));
+    dispatch(push(`/collections/${id}`));
   },
 });
 

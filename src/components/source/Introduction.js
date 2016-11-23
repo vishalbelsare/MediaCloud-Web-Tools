@@ -25,14 +25,14 @@ const Introduction = () => (
           <h2>U.S. Media</h2>
           <p>Explore variety of curated collections full of U.S. media sources.</p>
           <ul>
-            <li><Link to="/collections/8875027/details">Mainstream Media</Link></li>
-            <li><Link to="/collections/2453107/details">Regional Media</Link></li>
-            <li><Link to="/collections/9139487/details">Top Online</Link></li>
-            <li><Link to="/collections/9139458/details">Top Digital Native</Link></li>
-            <li><Link to="/collections/8875108/details">Political Blogs</Link></li>
-            <li><Link to="/collections/8878293/details">Liberal Blogs</Link></li>
-            <li><Link to="/collections/8878292/details">Conservative Blogs</Link></li>
-            <li><Link to="/collections/8878294/details">Liberatarian Blogs</Link></li>
+            <li><Link to="/collections/8875027">Mainstream Media</Link></li>
+            <li><Link to="/collections/2453107">Regional Media</Link></li>
+            <li><Link to="/collections/9139487">Top Online</Link></li>
+            <li><Link to="/collections/9139458">Top Digital Native</Link></li>
+            <li><Link to="/collections/8875108">Political Blogs</Link></li>
+            <li><Link to="/collections/8878293">Liberal Blogs</Link></li>
+            <li><Link to="/collections/8878292">Conservative Blogs</Link></li>
+            <li><Link to="/collections/8878294">Liberatarian Blogs</Link></li>
           </ul>
         </DataCard>
       </Col>
@@ -41,12 +41,12 @@ const Introduction = () => (
           <h2>Global Media</h2>
           <p>We have well-maintained collections for a variety of country-specific or global media.</p>
           <ul>
-            <li><Link to="/collections/9201395/details">India (English media sources)</Link></li>
-            <li><Link to="/collections/8877968/details">Brazil</Link></li>
-            <li><Link to="/collections/9094533/details">Mexico</Link></li>
-            <li><Link to="/collections/9173065/details">Nigeria</Link></li>
-            <li><Link to="/collections/8876474/details">European Media Monitor</Link></li>
-            <li><Link to="/collections/8876987/details">cited by Global Voices</Link></li>
+            <li><Link to="/collections/9201395">India (English media sources)</Link></li>
+            <li><Link to="/collections/8877968">Brazil</Link></li>
+            <li><Link to="/collections/9094533">Mexico</Link></li>
+            <li><Link to="/collections/9173065">Nigeria</Link></li>
+            <li><Link to="/collections/8876474">European Media Monitor</Link></li>
+            <li><Link to="/collections/8876987">cited by Global Voices</Link></li>
           </ul>
         </DataCard>
       </Col>
@@ -55,7 +55,7 @@ const Introduction = () => (
           <h2>Topic Specific</h2>
           <p>For some topics we have created collections for sources that focus on them.</p>
           <ul>
-            <li><Link to="/collections/8878332/details">Sexual Health and Reproductive Rights</Link></li>
+            <li><Link to="/collections/8878332">Sexual Health and Reproductive Rights</Link></li>
           </ul>
         </DataCard>
       </Col>
