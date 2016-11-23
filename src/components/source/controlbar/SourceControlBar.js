@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
 import Link from 'react-router/lib/Link';
 import SourceSearchContainer from './SourceSearchContainer';
 
@@ -9,7 +11,7 @@ const localMessages = {
   addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
-const SourceControlBar = () => (
+const SourceControlBar = props => (
   <div className="controlbar controlbar-sources">
     <div className="main">
       <Grid>
@@ -25,7 +27,10 @@ const SourceControlBar = () => (
             </Link>
           </Col>
           <Col lg={4} xs={12} className="right">
-            <SourceSearchContainer />
+            <SourceSearchContainer
+              onMediaSourceSelected={props.handleMediaSourceSelected}
+              onCollectionSelected={props.handleCollectionSelected}
+            />
           </Col>
         </Row>
       </Grid>
@@ -36,10 +41,29 @@ const SourceControlBar = () => (
 SourceControlBar.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
+  // from dispatch
+  handleMediaSourceSelected: React.PropTypes.func.isRequired,
+  handleCollectionSelected: React.PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  sourceResults: state.sources.sourceSearch.list,
+  collectionResults: state.sources.collectionSearch.list,
+});
+
+const mapDispatchToProps = dispatch => ({
+  handleMediaSourceSelected: (id) => {
+    dispatch(push(`/sources/${id}`));
+  },
+  handleCollectionSelected: (id) => {
+    dispatch(push(`/collections/${id}`));
+  },
+});
 
 export default
   injectIntl(
-    SourceControlBar
+    connect(mapStateToProps, mapDispatchToProps)(
+      SourceControlBar
+    )
   );
 
