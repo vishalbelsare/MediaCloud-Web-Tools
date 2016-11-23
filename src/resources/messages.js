@@ -43,6 +43,8 @@ const messages = {
   timespan: { id: 'common.timespan', defaultMessage: 'Timespan' },
 
   collectionName: { id: 'collection.title.default', defaultMessage: 'Collection' },
+  collectionNameProp: { id: 'collection.prop.name', defaultMessage: 'Name' },
+  collectionDescriptionProp: { id: 'collection.prop.description', defaultMessage: 'Description' },
 
   inlinks: { id: 'common.inlinks', defaultMessage: 'Inlinks' },
   sortByMediaInlinks: { id: 'common.inlinks', defaultMessage: 'sort by media inlinks' },

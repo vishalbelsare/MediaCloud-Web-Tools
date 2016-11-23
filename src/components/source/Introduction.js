@@ -3,13 +3,15 @@ import { Link } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../common/DataCard';
+import AppButton from '../common/AppButton';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Media Cloud Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from more than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
+  browse: { id: 'sources.intro.browse', defaultMessage: 'Browse our Collections' },
 };
 
-const Introduction = () => (
+const Introduction = props => (
   <Grid>
     <Row>
       <Col lg={8} xs={12}>
@@ -17,6 +19,13 @@ const Introduction = () => (
           <FormattedMessage {...localMessages.title} />
         </h1>
         <p><FormattedMessage {...localMessages.about} /></p>
+      </Col>
+    </Row>
+    <Row>
+      <Col lg={12}>
+        <Link to="/collections/all">
+          <AppButton label={props.intl.formatMessage(localMessages.browse)} primary />
+        </Link>
       </Col>
     </Row>
     <Row>

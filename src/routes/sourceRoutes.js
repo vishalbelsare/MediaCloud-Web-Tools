@@ -7,6 +7,7 @@ import CollectionDetailsContainer from '../components/source/collection/Collecti
 import CreateCollectionContainer from '../components/source/collection/create/CreateCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/create/CreateSourceContainer';
 import Introduction from '../components/source/Introduction';
+import AllCollectionsContainer from '../components/source/collection/AllCollectionsContainer';
 import PageWrapper from '../components/source/PageWrapper';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
@@ -31,6 +32,7 @@ const sourceRoutes = (
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >
+        <Route path="all" component={AllCollectionsContainer} encodeURI={requireAuth} />
         <Route path=":collectionId" component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":collectionId/details" to=":collectionId" />
         <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />

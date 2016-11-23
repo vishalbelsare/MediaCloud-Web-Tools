@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
+from operator import itemgetter
 
 from server import app, mc
 from server.util.request import form_fields_required, api_error_handler
@@ -10,17 +11,24 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 import server.util.csv as csv
+from server.views.sources import COLLECTIONS_TAG_SET_ID
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/collection/list', methods=['GET'])
+@app.route('/api/collections/all', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def api_get_collection_list():
+def api_all_collections():
     user_mc = user_mediacloud_client()
-    tag_list = user_mc.tagList(tag_sets_id=5, rows=100)
-    #tag_list = sorted(tag_list, key=lambda ts: ts['label'])
+    tag_list = _cached_public_collection_list(user_mediacloud_key())
     return jsonify({'results':tag_list})
+
+@cache
+def _cached_public_collection_list(user_mc_key):
+    user_mc = user_mediacloud_client()
+    collection_list = user_mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, rows=100, public_only=True)
+    collection_list = sorted(collection_list, key=itemgetter('label'))
+    return collection_list
 
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required

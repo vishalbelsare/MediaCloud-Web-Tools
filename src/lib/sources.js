@@ -9,7 +9,7 @@ export function sourceSearch(searchStr) {
 }
 
 export function collectionList() {
-  return createApiPromise('api/collection/list');
+  return createApiPromise('api/collections/all');
 }
 
 export function collectionSearch(searchStr) {

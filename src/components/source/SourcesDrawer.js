@@ -11,7 +11,8 @@ import messages from '../../resources/messages';
 
 const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
-  home: { id: 'sources.menu.items.home', defaultMessage: 'Explore' },
+  home: { id: 'sources.menu.items.home', defaultMessage: 'Home' },
+  all: { id: 'sources.menu.items.all', defaultMessage: 'All Collections' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
 };
@@ -53,6 +54,9 @@ class SourcesDrawer extends React.Component {
         <div>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/all'); }}>
+            <FormattedMessage {...localMessages.all} />
           </MenuItem>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/search'); }}>
             <FormattedMessage {...messages.search} />
