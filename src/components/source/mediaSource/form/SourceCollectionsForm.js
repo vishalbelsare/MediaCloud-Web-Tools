@@ -75,7 +75,7 @@ SourceCollectionsForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'sourceCreateForm',
+  form: 'sourceForm',
 };
 
 export default

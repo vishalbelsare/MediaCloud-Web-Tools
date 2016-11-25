@@ -15,7 +15,7 @@ const localMessages = {
   feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
 };
 
-const CreateSourceForm = (props) => {
+const SourceForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
   return (
     <div className="sourceForm">
@@ -39,7 +39,7 @@ const CreateSourceForm = (props) => {
   );
 };
 
-CreateSourceForm.propTypes = {
+SourceForm.propTypes = {
   // from parent
   onSave: React.PropTypes.func.isRequired,
   buttonLabel: React.PropTypes.string.isRequired,
@@ -67,7 +67,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'sourceCreateForm',
+  form: 'sourceForm',
   validate,
 };
 
@@ -75,7 +75,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        CreateSourceForm
+        SourceForm
       ),
     ),
   );
