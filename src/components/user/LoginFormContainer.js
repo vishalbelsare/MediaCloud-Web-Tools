@@ -21,13 +21,13 @@ class LoginContainer extends React.Component {
     const className = `logged-in-${isLoggedIn}`;
     return (
       <Grid>
+        <Title render={titleHandler} />
         <Row>
           <Col lg={12} md={12} sm={12} className={className}>
-            <Title render={titleHandler} />
             <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
-            <LoginForm location={this.props.location} />
           </Col>
         </Row>
+        <LoginForm location={this.props.location} />
       </Grid>
     );
   }

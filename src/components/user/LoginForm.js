@@ -1,19 +1,25 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import FlatButton from 'material-ui/FlatButton';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
 import AppButton from '../common/AppButton';
+import { getAppName } from '../../config';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { notEmptyString } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 
+const MEDIACLOUD_REGISTER_URL = 'https://core.mediacloud.org/login/register';
+
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
   missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
+  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
 };
 
 const LoginFormComponent = (props) => {
@@ -21,25 +27,46 @@ const LoginFormComponent = (props) => {
   const { formatMessage } = props.intl;
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
-      <Field
-        name="email"
-        component={renderTextField}
-        floatingLabelText={messages.userEmail}
-      />
-      <br />
-      <Field
-        name="password"
-        type="password"
-        component={renderTextField}
-        floatingLabelText={messages.userPassword}
-      />
-      <br />
-      <AppButton
-        type="submit"
-        label={formatMessage(messages.userLogin)}
-        primary
-        disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
-      />
+      <Row>
+        <Col lg={12}>
+          <Field
+            name="email"
+            component={renderTextField}
+            floatingLabelText={messages.userEmail}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          <Field
+            name="password"
+            type="password"
+            component={renderTextField}
+            floatingLabelText={messages.userPassword}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          <br />
+          <AppButton
+            type="submit"
+            label={formatMessage(messages.userLogin)}
+            primary
+            disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          <br />
+          <a href={`${MEDIACLOUD_REGISTER_URL}?from=${getAppName()}`}>
+            <FlatButton
+              label={formatMessage(localMessages.signUpNow)}
+            />
+          </a>
+        </Col>
+      </Row>
     </form>
   );
 };
