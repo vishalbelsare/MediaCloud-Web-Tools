@@ -8,6 +8,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import { createSource } from '../../../../actions/sourceActions';
 import AppButton from '../../../common/AppButton';
 import SourceDetailsForm from './SourceDetailsForm';
+import { updateFeedback } from '../../../../actions/appActions';
 import SourceMetadataForm from './SourceMetadataForm';
 import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
@@ -15,6 +16,7 @@ import { emptyString } from '../../../../lib/formValidators';
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New source' },
   addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New source' },
+  feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
 };
 
 const CreateSourceContainer = (props) => {
@@ -69,12 +71,16 @@ CreateSourceContainer.propTypes = {
 const mapStateToProps = () => ({
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const newVals = Object.assign({}, values, {
-      sourceObj: [{ name: values.sourceName, url: values.sourceUrl }] });
-    dispatch(createSource(newVals));
-   // .then(() => dispatch(createSource(ownProps.sourceId)));
+    // try to save it
+    dispatch(createSource(values))
+      .then(() => {
+        // let them know it worked
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+        // TODO: redirect to new source detail page
+        dispatch(createSource(results.sourceId);
+      });
   },
 });
 
@@ -90,7 +96,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'sourceDetailsForm',
+  form: 'sourceCreateForm',
   validate,
 };
 

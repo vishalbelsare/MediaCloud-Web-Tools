@@ -65,3 +65,9 @@ export function addSourceToCollection(params) {
 export function metadataValues(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
+
+export function createSource(params) {
+  const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'detectedLanguage']);
+  acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
+  return createPostingApiPromise('/api/sources/create', acceptedParams);
+}

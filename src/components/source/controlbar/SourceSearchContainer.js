@@ -74,8 +74,9 @@ class SourceSearchContainer extends React.Component {
 SourceSearchContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
-  searchSources: React.PropTypes.bool,
-  searchCollections: React.PropTypes.bool,
+  searchSources: React.PropTypes.bool,      // include source results?
+  searchCollections: React.PropTypes.bool,  // include collection results?
+  searchStaticCollections: React.PropTypes.bool,  // inclue static collecton results?
   onMediaSourceSelected: React.PropTypes.func,
   onCollectionSelected: React.PropTypes.func,
   // from state
@@ -92,6 +93,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   search: (searchString) => {
+    // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
     if ((ownProps.searchCollections === undefined) || (ownProps.searchCollections === true)) {
       dispatch(fetchCollectionSearch(searchString));
     }

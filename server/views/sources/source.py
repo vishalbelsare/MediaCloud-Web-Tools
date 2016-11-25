@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify
+from flask import request, jsonify
 import flask_login
 from server import app
 from server.util.request import form_fields_required, api_error_handler
@@ -97,15 +97,16 @@ def media_source_words(media_id):
     return jsonify({'results':info})
 
 @app.route('/api/sources/create', methods=['POST'])
-@form_fields_required('sourceName', 'sourceDescription','notes','collectionObj')
+@form_fields_required('name', 'url','notes')
 @flask_login.login_required
 @api_error_handler
 def source_create():
     user_mc = user_mediacloud_client()
-    name = request.form['sourceName']
-    description = request.form['sourceDescription']
-    sources = []
-    sources = request.form['collectionObj']
+    name = request.form['name']
+    url = request.form['url']
     notes = request.form['notes']
+    collection_ids = request.form.getlist('collections[]')
+    notes = request.form['notes']
+    detected_language = request.form['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)

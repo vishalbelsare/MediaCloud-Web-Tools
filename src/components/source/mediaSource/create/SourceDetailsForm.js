@@ -67,7 +67,7 @@ SourceDetailsForm.propTypes = {
 };
 
 const reduxFormConfig = {
-  form: 'sourceDetailsForm',
+  form: 'sourceCreateForm',
 };
 
 export default
