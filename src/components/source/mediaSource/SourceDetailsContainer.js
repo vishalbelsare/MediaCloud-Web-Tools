@@ -52,7 +52,15 @@ class SourceDetailsContainer extends React.Component {
     const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
-    const publicMessage = `• ${formatMessage(messages.public)} `; // for now, every media source is public
+    const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
+    const editMessage = ( // TODO: permissions around this
+      <span className="source-edit-link">
+        •&nbsp;
+        <Link to={`/sources/${source.media_id}/edit`} >
+          <FormattedMessage {...messages.edit} />
+        </Link>
+      </span>
+    );
     return (
       <Grid className="details source-details">
         <Title render={titleHandler} />
@@ -64,10 +72,7 @@ class SourceDetailsContainer extends React.Component {
               <small className="subtitle">
                 ID #{source.media_id}
                 {publicMessage}
-                •
-                <Link to={`/sources/${source.media_id}/edit`} >
-                  <FormattedMessage {...messages.edit} />
-                </Link>
+                {editMessage}
               </small>
             </h1>
             <p>
