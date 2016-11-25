@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
@@ -51,7 +52,7 @@ class SourceDetailsContainer extends React.Component {
     const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
-    const publicMessage = `• ${formatMessage(messages.public)}`; // for now, every media source is public
+    const publicMessage = `• ${formatMessage(messages.public)} `; // for now, every media source is public
     return (
       <Grid className="details source-details">
         <Title render={titleHandler} />
@@ -60,7 +61,14 @@ class SourceDetailsContainer extends React.Component {
             <h1>
               <MediaSourceIcon height={32} />
               <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small className="subtitle">ID #{source.media_id} {publicMessage}</small>
+              <small className="subtitle">
+                ID #{source.media_id}
+                {publicMessage}
+                •
+                <Link to={`/sources/${source.media_id}/edit`} >
+                  <FormattedMessage {...messages.edit} />
+                </Link>
+              </small>
             </h1>
             <p>
               <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
