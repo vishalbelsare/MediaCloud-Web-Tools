@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const renderCollectionSelector = ({ fields, meta: { error } }) => (
-  <div>
+  <div className="form-section source-collections-form">
     <Row>
       <Col sm={4} xs={12}>
         <span className="label chip-label"><FormattedMessage {...localMessages.existing} /></span>

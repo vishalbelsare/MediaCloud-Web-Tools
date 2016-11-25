@@ -18,24 +18,22 @@ const localMessages = {
 const SourceForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
   return (
-    <div className="sourceForm">
-      <form className="source-form" name="sourceForm" onSubmit={handleSubmit(onSave.bind(this))}>
-        <SourceDetailsForm initialValues={initialValues} />
-        <SourceMetadataForm initialValues={initialValues} />
-        <SourceCollectionsForm initialValues={initialValues} />
-        <Row>
-          <Col lg={12}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              type="submit"
-              label={buttonLabel}
-              disabled={pristine || submitting}
-              primary
-            />
-          </Col>
-        </Row>
-      </form>
-    </div>
+    <form className="app-form source-form" name="sourceForm" onSubmit={handleSubmit(onSave.bind(this))}>
+      <SourceDetailsForm initialValues={initialValues} />
+      <SourceMetadataForm initialValues={initialValues} />
+      <SourceCollectionsForm initialValues={initialValues} />
+      <Row>
+        <Col lg={12}>
+          <AppButton
+            style={{ marginTop: 30 }}
+            type="submit"
+            label={buttonLabel}
+            disabled={pristine || submitting}
+            primary
+          />
+        </Col>
+      </Row>
+    </form>
   );
 };
 
