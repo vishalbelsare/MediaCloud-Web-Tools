@@ -71,3 +71,9 @@ export function createSource(params) {
   acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
 }
+
+export function updateSource(params) {
+  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'notes', 'detectedLanguage']);
+  acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
+  return createPostingApiPromise(`/api/sources/${acceptedParams.id}/update`, acceptedParams);
+}

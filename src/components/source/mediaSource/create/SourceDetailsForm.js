@@ -64,6 +64,7 @@ SourceDetailsForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 const reduxFormConfig = {

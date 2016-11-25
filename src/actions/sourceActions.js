@@ -29,6 +29,7 @@ export const ADD_SOURCES_TO_COLLECTION = 'ADD_SOURCES_TO_COLLECTION';
 export const ADD_SOURCES_TO_COLLECTION_BY_CSV = 'ADD_SOURCES_TO_COLLECTION_BY_CSV';
 export const ADD_SOURCES_TO_COLLECTION_BY_COLLECTION = 'ADD_SOURCES_TO_COLLECTION_BY_COLLECTION';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
+export const UPDATE_SOURCE = 'UPDATE_SOURCE';
 export const ADD_THIS_SOURCE_TO_COLLECTION = 'ADD_THIS_SOURCE_TO_COLLECTION';
 export const FETCH_METADATA_VALUES = 'FETCH_METADATA_VALUES';
 
@@ -69,6 +70,8 @@ export const addSourcesToCollectionByCollection = createAction(ADD_SOURCES_TO_CO
 export const addSourcesToCollectionByCSV = createAsyncAction(ADD_SOURCES_TO_COLLECTION_BY_CSV, api.addSourcesToCollectionByCSV, props => props);
 
 export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSource, props => props);
+
+export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, props => props);
 
 export const addThisSourceToCollection = createAction(ADD_THIS_SOURCE_TO_COLLECTION, id => id);
 

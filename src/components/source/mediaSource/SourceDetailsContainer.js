@@ -142,7 +142,6 @@ SourceDetailsContainer.contextTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  // filters: state.sources.selected.filters,
   sourceId: parseInt(ownProps.params.sourceId, 10),
   fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,

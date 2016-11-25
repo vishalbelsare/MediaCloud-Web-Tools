@@ -6,6 +6,7 @@ import SourceDetailsContainer from '../components/source/mediaSource/SourceDetai
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
 import CreateCollectionContainer from '../components/source/collection/create/CreateCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/create/CreateSourceContainer';
+import EditSourceContainer from '../components/source/mediaSource/create/EditSourceContainer';
 import Introduction from '../components/source/Introduction';
 import AllCollectionsContainer from '../components/source/collection/AllCollectionsContainer';
 import PageWrapper from '../components/source/PageWrapper';
@@ -30,6 +31,7 @@ const sourceRoutes = (
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
         <Route path=":sourceId" component={SourceDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":sourceId/details" to=":sourceId" />
+        <Route path=":sourceId/edit" component={EditSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >
         <Route path="all" component={AllCollectionsContainer} encodeURI={requireAuth} />

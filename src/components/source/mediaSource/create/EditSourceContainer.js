@@ -6,25 +6,32 @@ import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
-import { createSource } from '../../../../actions/sourceActions';
+import { updateSource, select, fetchSourceDetails } from '../../../../actions/sourceActions';
 import AppButton from '../../../common/AppButton';
 import SourceDetailsForm from './SourceDetailsForm';
 import { updateFeedback } from '../../../../actions/appActions';
 import SourceMetadataForm from './SourceMetadataForm';
 import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
+import composeAsyncContainer from '../../../common/AsyncContainer';
 
 const localMessages = {
-  mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
-  addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New Source' },
-  feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
+  mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },
+  addButton: { id: 'source.add.saveAll', defaultMessage: 'Update Source' },
+  feedback: { id: 'source.add.feedback', defaultMessage: 'We updated this source' },
 };
 
-const CreateSourceContainer = (props) => {
-  const { pristine, submitting, handleSubmit, handleSave } = props;
+const EditSourceContainer = (props) => {
+  const { pristine, submitting, handleSubmit, handleSave, source } = props;
   const { formatMessage } = props.intl;
   const titleHandler = formatMessage(localMessages.mainTitle);
   const buttonLabel = formatMessage(localMessages.addButton);
+  const intialValues = {
+    ...source,
+    collections: source.media_source_tags
+      .map(t => ({ ...t, name: t.label }))
+      .filter(t => (t.tag_sets_id === 5) && (t.show_on_media === 1)),
+  };
   return (
     <div>
       <Title render={titleHandler} />
@@ -35,9 +42,9 @@ const CreateSourceContainer = (props) => {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          <SourceDetailsForm />
+          <SourceDetailsForm initialValues={intialValues} />
           <SourceMetadataForm />
-          <SourceCollectionsForm />
+          <SourceCollectionsForm initialValues={intialValues} />
           <Row>
             <Col lg={12}>
               <AppButton
@@ -55,7 +62,7 @@ const CreateSourceContainer = (props) => {
   );
 };
 
-CreateSourceContainer.propTypes = {
+EditSourceContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
@@ -63,25 +70,36 @@ CreateSourceContainer.propTypes = {
   collections: React.PropTypes.array,
   // from dispatch
   handleSave: React.PropTypes.func.isRequired,
-  // from form healper
+  // from form helper
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
+  // form state
+  sourceId: React.PropTypes.number.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  source: React.PropTypes.object,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state, ownProps) => ({
+  sourceId: parseInt(ownProps.params.sourceId, 10),
+  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
+  source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     // try to save it
-    dispatch(createSource(values))
-      .then((results) => {
+    dispatch(updateSource(values))
+      .then(() => {
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         // TODO: redirect to new source detail page
-        dispatch(push(`/sources/${results.media_id}`));
+        dispatch(push(`/sources/${ownProps.sourceId}`));
       });
+  },
+  asyncFetch: () => {
+    dispatch(select(ownProps.params.sourceId));
+    dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 
@@ -106,7 +124,9 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
-          CreateSourceContainer
+          composeAsyncContainer(
+            EditSourceContainer
+          ),
         ),
       ),
     ),
