@@ -86,6 +86,7 @@ const messages = {
   },
   word: { id: 'word', defaultMessage: 'Word Source' },
   ok: { id: 'ok', defaultMessage: 'OK' },
+  cancel: { id: 'cancel', defaultMessage: 'Cancel' },
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
   search: { id: 'search', defaultMessage: 'Search' },

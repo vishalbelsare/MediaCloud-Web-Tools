@@ -29,6 +29,7 @@ export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
 export const FETCH_METADATA_VALUES = 'FETCH_METADATA_VALUES';
+export const FETCH_COLLECTION_TO_COPY = 'FETCH_COLLECTION_TO_COPY';
 
 export const select = createAction(SELECT, id => id);
 
@@ -39,6 +40,8 @@ export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
 export const fetchCollectionDetails = createAsyncAction(FETCH_COLLECTION_DETAILS, api.collectionDetails, id => id);
+
+export const fetchCollectionToCopy = createAsyncAction(FETCH_COLLECTION_TO_COPY, api.collectionDetails, id => id);
 
 export const fetchSourceSentenceCount = createAsyncAction(FETCH_SOURCE_SENTENCE_COUNT, api.sourceSentenceCount, id => id);
 

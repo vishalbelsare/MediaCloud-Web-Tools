@@ -1,12 +1,8 @@
 import { combineReducers } from 'redux';
-import attachedSources from './attachedSources';
-import properties from './properties';
-import sourceSearch from './sourceSearch';
+import toCopy from './toCopy';
 
-const createCollectionReducer = combineReducers({
-  attachedSources,
-  properties,
-  sourceSearch,
+const create = combineReducers({
+  toCopy,
 });
 
-export default createCollectionReducer;
+export default create;

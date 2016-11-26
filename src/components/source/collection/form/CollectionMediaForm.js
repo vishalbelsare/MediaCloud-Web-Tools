@@ -10,6 +10,7 @@ import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 import { googleFavIconUrl } from '../../../../lib/urlUtil';
 import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
+import CollectionCopyConfirmer from './CollectionCopyConfirmer';
 
 const localMessages = {
   title: { id: 'collection.media.title', defaultMessage: 'Add Media Sources' },
@@ -22,105 +23,134 @@ const localMessages = {
   sourceUrlHint: { id: 'collection.media.addURLs.hint', defaultMessage: 'Type in the URLs of each media source, one per line.' },
 };
 
-const renderSourceSelector = ({ fields, meta: { error } }) => (
-  <div className="collection-media-form">
+class SourceSelectionRenderer extends React.Component {
 
-    <div className="form-section collection-media-form-inputs">
-      <Row>
-        <Col lg={12}>
-          <h2><FormattedMessage {...localMessages.title} /></h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={10}>
-          <Tabs>
-            <Tab label={<FormattedMessage {...localMessages.tabSource} />} >
-              <h3><FormattedMessage {...localMessages.tabSource} /></h3>
-              <SourceSearchContainer
-                searchCollections={false}
-                onMediaSourceSelected={item => fields.unshift(item)}
-              />
-            </Tab>
-            <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
-              <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
-              <SourceSearchContainer
-                searchSources={false}
-                onCollectionSelected={(c) => {
-                  console.log(c);
-                  // query to server for collection info
-                  // iterate over media sources, adding them all to fields
-                }}
-              />
-            </Tab>
-            <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
-              <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
-              <ComingSoon />
-            </Tab>
-            <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
-              <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
-              <ComingSoon />
-            </Tab>
-          </Tabs>
-        </Col>
-      </Row>
-    </div>
+  state = {
+    collectionId: null, // the id of a collection to copy
+  };
 
-    <div className="form-section collection-media-form-list">
-      <Row>
-        <Col lg={12}>
-          <h2><FormattedMessage {...localMessages.sourcesToInclude} /></h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={10}>
-          <table width="100%">
-            <tbody>
-              <tr>
-                <th />
-                <th><FormattedMessage {...messages.sourceNameProp} /></th>
-                <th><FormattedMessage {...messages.sourceUrlProp} /></th>
-                <th />
-              </tr>
-              {fields.map((source, idx) =>
-                <Field
-                  key={`c${idx}`}
-                  name={source}
-                  component={info => (
-                    <tr key={source.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-                      <td>
-                        <img className="google-icon" src={googleFavIconUrl(info.input.value.url)} alt={info.input.value.name} />
-                      </td>
-                      <td>
-                        <Link to={`/sources/${info.input.value.id}`}>{info.input.value.name}</Link>
-                      </td>
-                      <td>
-                        <a href="{source.url}" target="_new">{info.input.value.url}</a>
-                      </td>
-                      <td>
-                        <RemoveButton onClick={() => fields.remove(idx)} />
-                      </td>
-                    </tr>
+  resetCollectionId = () => this.setState({ collectionId: null });
+
+  pickCollectionToCopy = (collectionId) => {
+    this.setState({ collectionId });
+  }
+
+  copyCollection = (collection) => {
+    const { fields } = this.props;
+    collection.media.forEach(m => fields.unshift(m));
+  }
+
+  render() {
+    const { fields, meta: { error } } = this.props;
+    let copyConfirmation = null;
+    if (this.state.collectionId) {
+      copyConfirmation = (
+        <CollectionCopyConfirmer
+          collectionId={this.state.collectionId}
+          onConfirm={this.copyCollection}
+          onCancel={this.resetCollectionId}
+        />
+      );
+    }
+    return (
+      <div className="collection-media-form">
+
+        <div className="form-section collection-media-form-inputs">
+          <Row>
+            <Col lg={12}>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={10}>
+              <Tabs>
+                <Tab label={<FormattedMessage {...localMessages.tabSource} />} >
+                  <h3><FormattedMessage {...localMessages.tabSource} /></h3>
+                  <SourceSearchContainer
+                    searchCollections={false}
+                    onMediaSourceSelected={item => fields.unshift(item)}
+                  />
+                </Tab>
+                <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
+                  <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
+                  <SourceSearchContainer
+                    searchSources={false}
+                    onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
+                  />
+                  {copyConfirmation}
+                </Tab>
+                <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
+                  <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
+                  <ComingSoon />
+                </Tab>
+                <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
+                  <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
+                  <ComingSoon />
+                </Tab>
+              </Tabs>
+            </Col>
+          </Row>
+        </div>
+
+        <div className="form-section collection-media-form-list">
+          <Row>
+            <Col lg={12}>
+              <h2><FormattedMessage {...localMessages.sourcesToInclude} /></h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={10}>
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <th />
+                    <th><FormattedMessage {...messages.sourceNameProp} /></th>
+                    <th><FormattedMessage {...messages.sourceUrlProp} /></th>
+                    <th />
+                  </tr>
+                  {fields.map((source, idx) =>
+                    <Field
+                      key={`c${idx}`}
+                      name={source}
+                      component={info => (
+                        <tr key={source.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+                          <td>
+                            <img className="google-icon" src={googleFavIconUrl(info.input.value.url)} alt={info.input.value.name} />
+                          </td>
+                          <td>
+                            <Link to={`/sources/${info.input.value.id}`}>{info.input.value.name}</Link>
+                          </td>
+                          <td>
+                            <a href="{source.url}" target="_new">{info.input.value.url}</a>
+                          </td>
+                          <td>
+                            <RemoveButton onClick={() => fields.remove(idx)} />
+                          </td>
+                        </tr>
+                      )}
+                    />
                   )}
-                />
-              )}
-            </tbody>
-          </table>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={10}>
-          {error && <div className="error">{error}</div>}
-        </Col>
-      </Row>
-    </div>
-  </div>
-);
-renderSourceSelector.propTypes = {
+                </tbody>
+              </table>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={10}>
+              {error && <div className="error">{error}</div>}
+            </Col>
+          </Row>
+        </div>
+      </div>
+    );
+  }
+}
+
+SourceSelectionRenderer.propTypes = {
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
 };
 
-const CollectionMediaForm = () => <FieldArray name="sources" component={renderSourceSelector} />;
+const CollectionMediaForm = () => <FieldArray name="sources" component={SourceSelectionRenderer} />;
 
 CollectionMediaForm.propTypes = {
   // from compositional chain

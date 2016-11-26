@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
@@ -7,25 +7,17 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchMetadataValues } from '../../../../actions/sourceActions';
 import composeIntlForm from '../../../common/IntlForm';
 
-class MetadataPickerContainer extends Component {
-
-  state = {
-    value: null,
-  };
-
-  render() {
-    const { label, name, tags, renderSelectField } = this.props;
-    return (
-      <div>
-        <Field name={name} component={renderSelectField} floatingLabelText={label}>
-          <MenuItem value={null} primaryText={''} />
-          {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
-        </Field>
-      </div>
-    );
-  }
-
-}
+const MetadataPickerContainer = (props) => {
+  const { label, name, tags, renderSelectField } = props;
+  return (
+    <div>
+      <Field name={name} component={renderSelectField} floatingLabelText={label}>
+        <MenuItem value={null} primaryText={''} />
+        {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
+      </Field>
+    </div>
+  );
+};
 
 MetadataPickerContainer.propTypes = {
   // from parent
