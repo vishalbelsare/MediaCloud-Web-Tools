@@ -25,12 +25,9 @@ export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
 export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
 export const FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS';
 export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
-export const ADD_SOURCES_TO_COLLECTION = 'ADD_SOURCES_TO_COLLECTION';
-export const ADD_SOURCES_TO_COLLECTION_BY_CSV = 'ADD_SOURCES_TO_COLLECTION_BY_CSV';
-export const ADD_SOURCES_TO_COLLECTION_BY_COLLECTION = 'ADD_SOURCES_TO_COLLECTION_BY_COLLECTION';
+export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
-export const ADD_THIS_SOURCE_TO_COLLECTION = 'ADD_THIS_SOURCE_TO_COLLECTION';
 export const FETCH_METADATA_VALUES = 'FETCH_METADATA_VALUES';
 
 export const select = createAction(SELECT, id => id);
@@ -63,16 +60,10 @@ export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLE
 
 export const createCollection = createAsyncAction(CREATE_NEW_COLLECTION, api.createCollection, props => props);
 
-export const addSourcesToCollection = createAction(ADD_SOURCES_TO_COLLECTION, props => props);
-
-export const addSourcesToCollectionByCollection = createAction(ADD_SOURCES_TO_COLLECTION_BY_COLLECTION, api.addSourcesToCollectionByCollection, props => props);
-
-export const addSourcesToCollectionByCSV = createAsyncAction(ADD_SOURCES_TO_COLLECTION_BY_CSV, api.addSourcesToCollectionByCSV, props => props);
+export const updateCollection = createAsyncAction(UPDATE_COLLECTION, api.updateCollection, props => props);
 
 export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSource, props => props);
 
 export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, props => props);
-
-export const addThisSourceToCollection = createAction(ADD_THIS_SOURCE_TO_COLLECTION, id => id);
 
 export const fetchMetadataValues = createAsyncAction(FETCH_METADATA_VALUES, api.metadataValues);

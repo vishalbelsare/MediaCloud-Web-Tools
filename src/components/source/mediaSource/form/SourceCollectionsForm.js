@@ -33,7 +33,7 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
             )}
           />
         )}
-        {error && <li className="error">{error}</li>}
+        {error && <div className="error">{error}</div>}
       </Col>
     </Row>
     <Row>

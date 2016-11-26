@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Title from 'react-title-component';
+import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
@@ -45,6 +46,14 @@ class CollectionDetailsContainer extends React.Component {
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
+    const editMessage = ( // TODO: permissions around this
+      <span className="collection-edit-link">
+        •&nbsp;
+        <Link to={`/collections/${collection.tags_id}/edit`} >
+          <FormattedMessage {...messages.edit} />
+        </Link>
+      </span>
+    );
     return (
       <Grid className="details collection-details">
         <Title render={titleHandler} />
@@ -53,7 +62,7 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">ID #{collection.id} {publicMessage}</small>
+              <small className="subtitle">ID #{collection.id} {publicMessage} {editMessage}</small>
             </h1>
             <p><b>{collection.description}</b></p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />

@@ -38,6 +38,8 @@ const messages = {
   snapshotGenerating: { id: 'topic.snapshot.generating', defaultMessage: 'We are generating a new Snapshot; it could take a few minutes.' },
 
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
+  sourceNameProp: { id: 'source.prop.name', defaultMessage: 'Name' },
+  sourceUrlProp: { id: 'source.prop.url', defaultMessage: 'URL' },
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
 
   timespan: { id: 'common.timespan', defaultMessage: 'Timespan' },

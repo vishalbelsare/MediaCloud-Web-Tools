@@ -4,7 +4,8 @@ import Redirect from 'react-router/lib/Redirect';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
 import SourceDetailsContainer from '../components/source/mediaSource/SourceDetailsContainer';
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
-import CreateCollectionContainer from '../components/source/collection/create/CreateCollectionContainer';
+import CreateCollectionContainer from '../components/source/collection/CreateCollectionContainer';
+import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import Introduction from '../components/source/Introduction';
@@ -38,6 +39,7 @@ const sourceRoutes = (
         <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
         <Route path=":collectionId" component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":collectionId/details" to=":collectionId" />
+        <Route path=":collectionId/edit" component={EditCollectionContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 
