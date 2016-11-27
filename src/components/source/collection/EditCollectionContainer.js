@@ -64,9 +64,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     const infoToSave = {
       id: ownProps.collectionId,
-      label: values.name,
+      name: values.name,
       description: values.description,
-      media: values.sources.map(s => s.id),
+      sources: values.sources.map(s => s.id),
       static: values.static,
     };
     // try to save it

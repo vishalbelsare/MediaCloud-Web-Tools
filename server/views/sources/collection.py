@@ -158,15 +158,15 @@ def collection_wordcount_csv(collection_id):
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
 
 @app.route('/api/collections/create', methods=['POST'])
-@form_fields_required('collectionName', 'collectionDescription','static','sourceObj')
+@form_fields_required('name', 'description','static')
 @flask_login.login_required
 @api_error_handler
 def collection_create():
     user_mc = user_mediacloud_client()
-    name = request.form['collectionName']
-    description = request.form['collectionDescription']
+    name = request.form['name']
+    description = request.form['description']
     sources = []
-    sources = request.form['sourceObj']
+    sources = request.form['sources']
     notes = request.form['static']
     fakenew_collection = user_mc.tagList(tag_sets_id=5, rows=100)
     return jsonify(fakenew_collection)

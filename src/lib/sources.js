@@ -54,13 +54,13 @@ export function collectionSourceStoryCounts(id) {
 
 export function createCollection(params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'static']);
-  acceptedParams['media[]'] = params.media.map(c => c.tags_id);
+  acceptedParams['sources[]'] = params.sources.map(c => c.tags_id);
   return createPostingApiPromise('/api/collections/create', acceptedParams);
 }
 
 export function updateCollection(params) {
   const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static']);
-  acceptedParams['media[]'] = params.media.map(c => c.tags_id);
+  acceptedParams['sources[]'] = params.sources.map(c => c.tags_id);
   return createPostingApiPromise(`/api/collections/${acceptedParams.id}/update`, acceptedParams);
 }
 
