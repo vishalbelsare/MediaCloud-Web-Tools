@@ -165,8 +165,6 @@ def collection_create():
     user_mc = user_mediacloud_client()
     name = request.form['name']
     description = request.form['description']
-    sources = []
-    sources = request.form['sources']
     notes = request.form['static']
-    fakenew_collection = user_mc.tagList(tag_sets_id=5, rows=100)
-    return jsonify(fakenew_collection)
+    dummyCollection = user_mc.tag(COLLECTIONS_TAG_SET_ID)
+    return jsonify(dummyCollection)
