@@ -41,6 +41,9 @@ const sourceRoutes = (
         <Redirect from=":collectionId/details" to=":collectionId" />
         <Route path=":collectionId/edit" component={EditCollectionContainer} onEnter={requireAuth} />
       </Route>
+      <Route path="/media-tag" >
+        <Redirect from=":collectionId/details" to="/collections/:collectionId" />
+      </Route>
     </Route>
 
   </Route>
