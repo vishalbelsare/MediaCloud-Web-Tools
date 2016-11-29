@@ -22,7 +22,9 @@ export const FETCH_COLLECTION_SENTENCE_COUNT = 'FETCH_COLLECTION_SENTENCE_COUNT'
 export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
 export const FETCH_SOURCE_SEARCH = 'FETCH_SOURCE_SEARCH';
+export const RESET_SOURCE_SEARCH = 'RESET_SOURCE_SEARCH';
 export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
+export const RESET_COLLECTION_SEARCH = 'RESET_COLLECTION_SEARCH';
 export const FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS';
 export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
 export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
@@ -57,7 +59,11 @@ export const fetchCollectionGeo = createAsyncAction(FETCH_COLLECTION_GEO, api.co
 
 export const fetchSourceSearch = createAsyncAction(FETCH_SOURCE_SEARCH, api.sourceSearch, string => string);
 
+export const resetSourceSearch = createAction(RESET_SOURCE_SEARCH);
+
 export const fetchCollectionSearch = createAsyncAction(FETCH_COLLECTION_SEARCH, api.collectionSearch, string => string);
+
+export const resetCollectionSearch = createAction(RESET_COLLECTION_SEARCH);
 
 export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceStoryCounts, id => id);
 

@@ -106,7 +106,6 @@ def source_create():
     url = request.form['url']
     notes = request.form['notes']
     collection_ids = request.form.getlist('collections[]')
-    notes = request.form['notes']
     detected_language = request.form['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
