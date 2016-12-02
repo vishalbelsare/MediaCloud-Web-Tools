@@ -47,6 +47,7 @@ const EditKeywordSearchContainer = (props) => {
               name="keywords"
               component={renderTextField}
               floatingLabelText={messages.searchByKeywords}
+              fullWidth
             />
           </Col>
           <Col lg={2} xs={12}>
