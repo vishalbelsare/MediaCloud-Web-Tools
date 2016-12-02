@@ -7,11 +7,6 @@ import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
-  componentWillMount() {
-    const { topicId, selectNewTopic } = this.props;
-    // console.log('componentWillMount');
-    selectNewTopic(topicId);
-  }
   componentWillReceiveProps(nextProps) {
     const { topicId, selectNewTopic } = this.props;
     if ((nextProps.topicId !== topicId)) {
@@ -76,6 +71,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(selectTopic(topicId));
   },
   asyncFetch: () => {
+    dispatch(selectTopic(ownProps.params.topicId));
     dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
 });

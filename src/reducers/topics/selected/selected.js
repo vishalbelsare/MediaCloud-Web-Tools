@@ -32,7 +32,7 @@ function needsNewSnapshot(state = false, action) {
   }
 }
 
-const rootReducer = combineReducers({
+const selected = combineReducers({
   id,
   needsNewSnapshot,
   info,
@@ -49,5 +49,16 @@ const rootReducer = combineReducers({
   attention,
   word,
 });
+
+const rootReducer = (state, action) => {
+  let modifiedState = state;
+  if (action.type === 'SELECT_TOPIC') {
+    // when the switch topics re-initialize the whole state tree, to make sure
+    // we don't get any weird artifacts from the previuos topic
+    // @see: http://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store
+    modifiedState = undefined;
+  }
+  return selected(modifiedState, action);
+};
 
 export default rootReducer;
