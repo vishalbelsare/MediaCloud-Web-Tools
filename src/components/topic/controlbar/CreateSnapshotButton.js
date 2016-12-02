@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { AddButton } from '../../common/IconButton';
@@ -20,7 +21,9 @@ const CreateSnapshotButton = (props) => {
         tooltip={formatMessage(localMessages.createSnapshot)}
         linkTo={`/topics/${topicId}/snapshot`}
       />
-      <span className="message"><FormattedMessage {...localMessages.createSnapshot} /></span>
+      <Link to={`/topics/${topicId}/snapshot`}>
+        <span className="message"><FormattedMessage {...localMessages.createSnapshot} /></span>
+      </Link>
       {helpButton}
     </div>
   );
