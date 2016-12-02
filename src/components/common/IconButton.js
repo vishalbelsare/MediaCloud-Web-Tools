@@ -21,7 +21,7 @@ import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
  * Components in the `icons` directory, then export wrapper instances of them here.
  */
-function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor) {
+function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = true) {
   class AppIconButton extends React.Component {
     state = {
       backgroundColor: getBrandDarkColor(),
@@ -47,7 +47,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor) {
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
       if (useBackgroundColor === true) {
-        otherProps.backgroundcolor = this.state.backgroundColor;
+        otherProps.backgroundColor = this.state.backgroundColor;
       }
       return (
         <div className="icon-button">
