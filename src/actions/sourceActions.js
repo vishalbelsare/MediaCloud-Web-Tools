@@ -32,6 +32,10 @@ export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
 export const FETCH_METADATA_VALUES = 'FETCH_METADATA_VALUES';
 export const FETCH_COLLECTION_TO_COPY = 'FETCH_COLLECTION_TO_COPY';
+export const FETCH_SOURCE_BY_METADATA = 'FETCH_SOURCE_BY_METADATA';
+export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
+export const SELECT_ADVANCED_SEARCH_SOURCE = 'SELECT_ADVANCED_SEARCH_SOURCE';
+export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECTION';
 
 export const select = createAction(SELECT, id => id);
 
@@ -76,3 +80,12 @@ export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSourc
 export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, props => props);
 
 export const fetchMetadataValues = createAsyncAction(FETCH_METADATA_VALUES, api.metadataValues);
+
+export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceList);
+
+export const fetchCollectionByMetadata = createAsyncAction(FETCH_COLLECTION_BY_METADATA, api.collectionList);
+
+export const selectAdvancedSearchSource = createAsyncAction(SELECT_ADVANCED_SEARCH_SOURCE, payload => payload);
+
+export const selectAdvancedSearchCollection = createAsyncAction(SELECT_ADVANCED_SEARCH_COLLECTION, payload => payload);
+

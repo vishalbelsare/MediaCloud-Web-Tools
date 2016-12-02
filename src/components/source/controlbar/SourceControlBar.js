@@ -8,6 +8,7 @@ import SourceSearchContainer from './SourceSearchContainer';
 
 const localMessages = {
   addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create a Collection' },
+  advancedSearch: { id: 'source.controlbar.advancedSearch', defaultMessage: 'Advanced Search' },
   addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
@@ -19,6 +20,11 @@ const SourceControlBar = props => (
           <Col lg={4} xs={4} className="left">
             <Link to="collections/create">
               <FormattedMessage {...localMessages.addCollection} />
+            </Link>
+          </Col>
+          <Col lg={4} xs={4} className="left">
+            <Link to="collections/create/advancedSearch">
+              <FormattedMessage {...localMessages.advancedSearch} />
             </Link>
           </Col>
           <Col lg={4} xs={4} className="left">

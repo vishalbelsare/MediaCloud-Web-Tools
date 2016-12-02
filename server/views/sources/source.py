@@ -13,7 +13,7 @@ from server.views.sources.geoutil import country_list
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/sources/source/list', methods=['GET'])
+@app.route('/api/sources/all', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_media_source_list():
