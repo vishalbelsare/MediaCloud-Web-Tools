@@ -9,7 +9,7 @@ import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefiniti
 import { updateFeedback } from '../../../../../../actions/appActions';
 import { INITIAL_STATE } from '../../../../../../reducers/topics/selected/focalSets/create/properties';
 import messages from '../../../../../../resources/messages';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocalSetDefinitionSelector';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocusDetailsForm';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Focus' },

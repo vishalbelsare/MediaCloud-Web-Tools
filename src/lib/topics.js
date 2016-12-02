@@ -169,3 +169,8 @@ export function saveTopicDetails(topicId, params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'public']);
   return createPostingApiPromise(`/api/topics/${topicId}/update`, acceptedParams, 'put');
 }
+
+export function topicMapFiles(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  return createApiPromise(`/api/topics/${topicId}/map-files`, acceptedParams);
+}

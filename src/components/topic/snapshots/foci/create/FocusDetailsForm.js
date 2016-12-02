@@ -5,8 +5,9 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../../../common/IntlForm';
 import CreateFocalSetForm from './CreateFocalSetForm';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
 import { notEmptyString } from '../../../../../lib/formValidators';
+
+export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
 const localMessages = {
   describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },

@@ -10,6 +10,7 @@ import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import TopicTimespanInfo from './TopicTimespanInfo';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
+import DownloadMapContainer from './DownloadMapContainer';
 
 class TopicSummaryContainer extends React.Component {
   filtersAreSet() {
@@ -49,7 +50,9 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={6} xs={12}>
               <TopicInfo topic={topicInfo} />
             </Col>
-            <Col lg={6} xs={12} />
+            <Col lg={6} xs={12}>
+              <DownloadMapContainer topicId={topicId} filters={filters} />
+            </Col>
           </Row>
         </Grid>
       );

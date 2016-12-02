@@ -5,12 +5,11 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
+import FocusDetailsForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDetailsForm';
 import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import messages from '../../../../../resources/messages';
 import composeAsyncContainer from '../../../../common/AsyncContainer';
-import FocusDetailsForm from './FocusDetailsForm';
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Focus' },

@@ -10,3 +10,6 @@ build/messages/*.*
 logs/*.log.*
 config/server.config
 *.log
+data/map-files/*.lock
+data/map-files/*.gefx
+

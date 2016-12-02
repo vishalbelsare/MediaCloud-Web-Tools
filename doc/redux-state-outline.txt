@@ -85,6 +85,11 @@
         attention: {
           selectedFocalSetId: [number]
           focalSets: [focalSet object, with foci, with sentence counts]
+        },
+        mapFiles: {
+          fetchStatus: [ FETCH_INVALID | FETCH_ONGOING | FETCH_SUCCEEDED |    FETCH_FAILED ],
+          linkMap: ['unrequested' | 'rendered' | 'generating'],
+          wordMap: ['unrequested' | 'rendered' | 'generating'],
         }
       },
       media: {
