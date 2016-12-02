@@ -12,6 +12,7 @@ const localMessages = {
   title: { id: 'focus.create.keyword.results.title', defaultMessage: 'Some Matching Stories' },
   about: { id: 'focus.create.keyword.results.about',
     defaultMessage: 'Here is a preview of the top stores in the Timespan of the Topic you are investigating.  Look over these results to make sure they are the types of stories you are hoping this Focus will focus in on.' },
+  noResults: { id: 'focus.create.keywords.results.none', defaultMessage: 'We didn\'t find any matches!  Please check your query and try it again.' },
 };
 
 class KeywordSearchResultsContainer extends React.Component {
@@ -21,17 +22,29 @@ class KeywordSearchResultsContainer extends React.Component {
   }
   render() {
     const { stories, topicId } = this.props;
-    return (
-      <Row>
-        <Col lg={10} md={10} sm={12}>
-          <h3><FormattedMessage {...localMessages.title} /></h3>
-          <StoryTable stories={stories} topicId={topicId} />
-        </Col>
-        <Col lg={2} md={2} sm={12}>
-          <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>
-        </Col>
-      </Row>
-    );
+    let content = null;
+    if (stories.length === 0) {
+      content = (
+        <Row>
+          <Col lg={12}>
+            <span className="warning"><FormattedMessage {...localMessages.noResults} /></span>
+          </Col>
+        </Row>
+      );
+    } else {
+      content = (
+        <Row>
+          <Col lg={10} md={10} sm={12}>
+            <h3><FormattedMessage {...localMessages.title} /></h3>
+            <StoryTable stories={stories} topicId={topicId} />
+          </Col>
+          <Col lg={2} md={2} sm={12}>
+            <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>
+          </Col>
+        </Row>
+      );
+    }
+    return content;
   }
 }
 
