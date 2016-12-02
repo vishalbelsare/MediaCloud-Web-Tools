@@ -7,7 +7,7 @@ import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN,
  * Use this to restrict who is allowed to see what.
  **/
 const Permissioned = (props) => {
-  const { children, onlyTopic, onlyRole, userTopicPermission } = props;
+  const { children, onlyTopic, onlyRole, userTopicPermission, userRolePermissions } = props;
   let allowed = false;
   if (onlyTopic) {
     // check topic-level permissions
@@ -34,18 +34,18 @@ const Permissioned = (props) => {
       const error = { message: `Invalid permission (${onlyRole})` };
       throw error;
     }
-    if (userTopicPermission.includes(PERMISSION_ADMIN)) {
+    if (userRolePermissions.includes(PERMISSION_ADMIN)) {
       allowed = true; // because admins are allowed to do anything
     } else {
       switch (onlyRole) {
         case PERMISSION_ADMIN:
-          allowed = userTopicPermission.includes(PERMISSION_ADMIN);
+          allowed = userRolePermissions.includes(PERMISSION_ADMIN);
           break;
         case PERMISSION_MEDIA_EDIT:
-          allowed = userTopicPermission.includes(PERMISSION_MEDIA_EDIT);
+          allowed = userRolePermissions.includes(PERMISSION_MEDIA_EDIT);
           break;
         case PERMISSION_STORY_EDIT:
-          allowed = userTopicPermission.includes(PERMISSION_STORY_EDIT);
+          allowed = userRolePermissions.includes(PERMISSION_STORY_EDIT);
           break;
         default:
           allowed = false;
@@ -72,7 +72,7 @@ Permissioned.propTypes = {
   onlyTopic: React.PropTypes.string,
   onlyRole: React.PropTypes.string,
   // from state
-  userTopicPermission: React.PropTypes.string.isRequired,
+  userTopicPermission: React.PropTypes.string,
   userRolePermissions: React.PropTypes.array.isRequired,
 };
 
