@@ -1,13 +1,13 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
-import CollectionIcon from '../common/icons/CollectionIcon';
 import SourcesAndCollectionsList from './SourcesAndCollectionsList';
 import AppButton from '../common/AppButton';
 import { selectAdvancedSearchSource, selectAdvancedSearchCollection } from '../../actions/sourceActions';
-
+import { generateParamStr } from '../../lib/apiUtil';
 
 const localMessages = {
   title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
@@ -19,15 +19,26 @@ const localMessages = {
 class SourcesAndCollectionsContainer extends React.Component {
   addToSelectedSources= (mediaId) => {
     const { dispatchSourceSelection, queriedSources } = this.props;
-    dispatchSourceSelection(queriedSources, mediaId);
+    dispatchSourceSelection(queriedSources, [mediaId]);
   };
   addToSelectedCollections = (tagId) => {
     const { dispatchCollectionSelection, queriedCollections } = this.props;
-    dispatchCollectionSelection(queriedCollections, tagId);
+    dispatchCollectionSelection(queriedCollections, [tagId]);
+  };
+  addOrRemoveAllSelected = (values, checked) => {
+    const { queriedSources, queriedCollections, dispatchSourceSelection, dispatchCollectionSelection } = this.props;
+    dispatchSourceSelection(queriedSources, [], checked);
+    dispatchCollectionSelection(queriedCollections, [], checked);
+    // dispatch a click to all the checkboxes to checked somehow
+  };
+  pushToCreateCollectionPage = () => {
+    const { queriedSources, queriedCollections, dispatchToCreate } = this.props;
+    dispatchToCreate(queriedSources, queriedCollections);
+    // dispatch a click to all the checkboxes to checked somehow
   };
   render() {
     const { queriedSources, queriedCollections,
-      pristine, submitting, addToCreateSet, addOrRemoveAllSelected } = this.props;
+      pristine, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const content = null;
     if (queriedSources === undefined || queriedCollections === undefined) {
@@ -41,29 +52,21 @@ class SourcesAndCollectionsContainer extends React.Component {
       <div className="all-collections">
         <Grid>
           <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h2>
-                <CollectionIcon height={32} />
-                <FormattedMessage {...localMessages.title} />
-              </h2>
-            </Col>
-          </Row>
-          <Row>
             <Col lg={12}>
               <AppButton
-                style={{ marginTop: 30 }}
+                style={{ marginLeft: 200, marginTop: 30 }}
                 type="submit"
                 label={formatMessage(localMessages.send)}
                 disabled={pristine || submitting}
                 primary
-                onClick={addToCreateSet}
+                onClick={this.pushToCreateCollectionPage}
               />
             </Col>
           </Row>
           <SourcesAndCollectionsList
             queriedSources={queriedSources}
             queriedCollections={queriedCollections}
-            addRemoveAll={addOrRemoveAllSelected}
+            addRemoveAll={this.addOrRemoveAllSelected}
             addToSelectedSources={this.addToSelectedSources}
             addToSelectedCollections={this.addToSelectedCollections}
           />
@@ -82,8 +85,7 @@ SourcesAndCollectionsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  addToCreateSet: React.PropTypes.func.isRequired,
-  addOrRemoveAllSelected: React.PropTypes.func.isRequired,
+  dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
   // from form healper
@@ -110,15 +112,28 @@ const mapDispatchToProps = dispatch => ({
   dispatchCollectionSelection: (queried, tagId) => {
     dispatch(selectAdvancedSearchCollection(queried, tagId));
   },
-  addOrRemoveAllSelected: (mediaId, tagId) => {
-    const { queriedSources, queriedCollections } = this.props;
-    dispatch(selectAdvancedSearchSource(queriedSources, mediaId));
-    dispatch(selectAdvancedSearchCollection(queriedCollections, tagId));
-    // dispatch a click to all the checkboxes to checked somehow
-  },
-  addToCreateSet: () => {
+  dispatchToCreate: (sources, collections) => {
     // get all ids and push them into url params
     // dispatch push url
+
+    const srcIdArray = sources.map((s) => {
+      if (s.selected === true) {
+        return s.media_id;
+      }
+      return null;
+    }).filter(i => i !== null);
+
+    const collIdArray = collections.map((s) => {
+      if (s.selected === true) {
+        return s.tag_sets_id;
+      }
+      return null;
+    }).filter(i => i !== null);
+
+    const params = generateParamStr({ src: srcIdArray, coll: collIdArray });
+    let url = '/sources/create?';
+    url += params;
+    dispatch(push(url));
   },
 });
 

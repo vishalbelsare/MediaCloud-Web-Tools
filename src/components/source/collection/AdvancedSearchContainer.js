@@ -50,9 +50,11 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  requerySourcesAndCollections: () => {
-    dispatch(fetchSourceByMetadata());
-    dispatch(fetchCollectionByMetadata());
+  requerySourcesAndCollections: (values) => {
+    const searchString = values.advancedSearchQueryString;
+    // once we have the hookup, this naming might change a bit
+    dispatch(fetchSourceByMetadata(searchString));
+    dispatch(fetchCollectionByMetadata(searchString));
   },
 });
 

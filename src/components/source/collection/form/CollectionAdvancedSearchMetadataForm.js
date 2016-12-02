@@ -18,10 +18,19 @@ const CollectionAdvancedSearchMetadataForm = (props) => {
   return (
     <form className="advancedQueryForm" onSubmit={handleSubmit(requerySourcesAndCollections.bind(this))}>
       <Row>
-        <Col lg={3}>
+        <Col lg={6}>
           <Field
-            name="advancedSearchText"
+            name="advancedSearchQueryString"
             component={renderTextField}
+          />
+        </Col>
+        <Col lg={6}>
+          <AppButton
+            style={{ marginTop: 30 }}
+            type="submit"
+            label={buttonLabel}
+            disabled={pristine || submitting}
+            primary
           />
         </Col>
       </Row>
@@ -37,18 +46,6 @@ const CollectionAdvancedSearchMetadataForm = (props) => {
         </Col>
         <Col lg={3}>
           <MetadataPickerContainer id={123} name={'detectedLanguage'} label={<FormattedMessage {...localMessages.audienceLabel} />} />
-        </Col>
-      </Row>
-
-      <Row>
-        <Col lg={12}>
-          <AppButton
-            style={{ marginTop: 30 }}
-            type="submit"
-            label={buttonLabel}
-            disabled={pristine || submitting}
-            primary
-          />
         </Col>
       </Row>
     </form>

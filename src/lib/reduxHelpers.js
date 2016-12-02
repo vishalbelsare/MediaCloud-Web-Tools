@@ -11,16 +11,21 @@ export function arrayToDict(arr, keyPropertyName) {
   return dict;
 }
 
-export function selectItemInArray(arr, id, idField) {
+export function selectItemInArray(arr, idArr, idField) {
   const updateWithNewlySelected = [];
   arr.forEach((item) => {
-    const newItem = item;
-    if (item[idField] === id) {
-      newItem.selected = true;
-    } else {
-      newItem.selected = false;
-    }
-    updateWithNewlySelected.push(newItem);
+    idArr.forEach((id) => {
+      const newItem = item;
+      if (item[idField] === id) {
+        newItem.selected = true;
+      } else {
+        newItem.selected = item.selected;
+        if (item.selected === undefined) {
+          newItem.selected = false;
+        }
+      }
+      updateWithNewlySelected.push(newItem);
+    });
   });
   return updateWithNewlySelected;
 }
