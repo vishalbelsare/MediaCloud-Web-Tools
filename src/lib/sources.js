@@ -1,7 +1,7 @@
 import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
 
 export function sourceList() {
-  return createApiPromise('api/sources/list');
+  return createApiPromise('api/sources/all');
 }
 
 export function sourceSearch(searchStr) {

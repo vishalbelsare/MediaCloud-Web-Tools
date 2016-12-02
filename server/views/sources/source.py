@@ -13,7 +13,7 @@ from server.views.sources.geoutil import country_list
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/sources/source/list', methods=['GET'])
+@app.route('/api/sources/all', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_media_source_list():
@@ -106,7 +106,6 @@ def source_create():
     url = request.form['url']
     notes = request.form['notes']
     collection_ids = request.form.getlist('collections[]')
-    notes = request.form['notes']
     detected_language = request.form['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)

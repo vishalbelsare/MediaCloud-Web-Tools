@@ -3,6 +3,8 @@ import { SELECT } from '../../../actions/sourceActions';
 import details from './details/details';
 import sourceInfo from './sourceInfo';
 import collectionInfo from './collectionInfo';
+import sourcesByMetadata from './sourcesByMetadata';
+import collectionsByMetadata from './collectionsByMetadata';
 
 const INITIAL_STATE = null;
 
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   sourceInfo,
   collectionInfo,
   details,
+  sourcesByMetadata,
+  collectionsByMetadata,
 });
 
 export default rootReducer;

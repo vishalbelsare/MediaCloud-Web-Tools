@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchSourceSearch, fetchCollectionSearch } from '../../../actions/sourceActions';
+import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
 const MAX_SUGGESTION_CHARS = 40;
 
@@ -26,13 +26,35 @@ class SourceSearchContainer extends React.Component {
   }
 
   shouldFireSearch = (newSearchString) => {
-    if ((newSearchString.length > 0) &&
-        (newSearchString !== this.state.lastSearchString) &&
-        Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2) {
+    if (((newSearchString.length > 0) &&
+        (newSearchString !== this.state.lastSearchString)) ||
+        ((newSearchString === this.state.lastSearchString) &&
+          (Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2))) {
       this.setState({ lastSearchString: newSearchString });
       return true;
     }
     return false;
+  }
+
+  resetIfRequested = () => {
+    const { sourceResults, collectionResults, searchSources, searchCollections } = this.props;
+    let results = [];
+    if (searchSources || searchSources === undefined) {
+      results = results.concat(sourceResults);
+    }
+    if (searchCollections || searchCollections === undefined) {
+      results = results.concat(collectionResults);
+    }
+    const resultsAsComponents = results.map(item => ({
+      text: item.name,
+      value: (
+        <MenuItem
+          onClick={() => this.handleClick(item)}
+          primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
+        />
+      ),
+    }));
+    return resultsAsComponents;
   }
 
   handleUpdateInput = (searchString) => {
@@ -43,23 +65,14 @@ class SourceSearchContainer extends React.Component {
   }
 
   render() {
-    const { sourceResults, collectionResults } = this.props;
-    const results = sourceResults.concat(collectionResults);
-    const resultsAsComponents = results.map(item => ({
-      text: item.name,
-      value: (
-        <MenuItem
-          onClick={() => this.handleClick(item)}
-          primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
-        />
-      ),
-    }));
+    const resultsAsComponents = this.resetIfRequested();
     return (
       <div className="source-search">
         <AutoComplete
           hintText="search for media by name or URL"
           fullWidth
           openOnFocus
+          onClick={this.resetIfRequested}
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
           maxSearchResults={10}
@@ -95,9 +108,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   search: (searchString) => {
     // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
     if ((ownProps.searchCollections === undefined) || (ownProps.searchCollections === true)) {
+      dispatch(resetSourceSearch());
       dispatch(fetchCollectionSearch(searchString));
     }
     if ((ownProps.searchSources === undefined) || (ownProps.searchSources === true)) {
+      dispatch(resetCollectionSearch());
       dispatch(fetchSourceSearch(searchString));
     }
   },
