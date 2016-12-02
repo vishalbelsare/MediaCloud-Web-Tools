@@ -13,7 +13,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import { setTopicFavorite } from '../../../actions/topicActions';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import messages from '../../../resources/messages';
-import Permissioned from '../Permissioned';
+import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const ControlBar = (props) => {

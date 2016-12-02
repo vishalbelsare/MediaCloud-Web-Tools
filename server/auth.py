@@ -18,6 +18,10 @@ class User(flask_login.UserMixin):
         self.id = key
         self.active = active
         self.created = datetime.datetime.now()
+        self.profile = None
+
+    def set_profile(self, profile):
+        self.profile = profile
 
     def is_active(self):
         return self.active
@@ -38,6 +42,13 @@ class User(flask_login.UserMixin):
 
     def exists_in_db(self):
         return db.includes_user_named(self.name)
+
+    def get_properties(self):
+        return {
+            'email': self.name,
+            'key': self.id,
+            'profile': self.profile
+        }
 
     @classmethod
     def get(cls, userid):
@@ -81,6 +92,7 @@ def authenticate_by_key(username, key):
     user_mc = mediacloud.MediaCloud(key)
     if user_mc.verifyAuthToken():
         user = create_and_cache_user(username, key)
+        user.set_profile(_get_user_profile(key))
         logger.debug("  succeeded - got a key (user.is_anonymous=%s)", user.is_anonymous)
         return user
     logger.debug("failed")
@@ -92,10 +104,21 @@ def authenticate_by_password(username, password):
         key = mc.userAuthToken(username, password)
         user = create_and_cache_user(username, key)
         logger.debug("  succeeded - got a key (user.is_anonymous=%s)", user.is_anonymous)
+        user.set_profile(_get_user_profile(key))
         return user
     except Exception:
         logging.exception("authenticate_by_password failed for %s", username)
         return flask_login.AnonymousUserMixin()
+
+def _get_user_profile(key):
+    user_mc = mediacloud.api.MediaCloud(key)
+    # profile = user_mc.userProfile()
+    profile = {
+        "email": "fakeemail@mediacloud.org",
+        "non_public_api": 0,
+        "auth_roles": [ "media-edit", "stories-edit"]
+    }
+    return profile
 
 def user_name():
     return load_user_from_request(request).name

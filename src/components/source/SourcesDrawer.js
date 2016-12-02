@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import messages from '../../resources/messages';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../lib/auth';
 
 const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
@@ -49,7 +51,6 @@ class SourcesDrawer extends React.Component {
     // only show app actions if they are logged in
     let appMenuItems = null;
     if (user.isLoggedIn) {
-      // TODO: Permissioned check based on role
       appMenuItems = (
         <div>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
@@ -61,12 +62,14 @@ class SourcesDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/search'); }}>
             <FormattedMessage {...messages.search} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
-            <FormattedMessage {...localMessages.newSource} />
-          </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/create'); }}>
-            <FormattedMessage {...localMessages.newCollection} />
-          </MenuItem>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
+              <FormattedMessage {...localMessages.newSource} />
+            </MenuItem>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/create'); }}>
+              <FormattedMessage {...localMessages.newCollection} />
+            </MenuItem>
+          </Permissioned>
         </div>
       );
     }

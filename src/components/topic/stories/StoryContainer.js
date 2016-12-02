@@ -14,7 +14,7 @@ import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
-import Permissioned from '../Permissioned';
+import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 // import StoryDetails from './StoryDetails';
 import StatBar from '../../common/statbar/StatBar';

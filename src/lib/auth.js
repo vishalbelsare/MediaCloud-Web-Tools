@@ -6,6 +6,13 @@ export const PERMISSION_TOPIC_READ = 'read';
 export const PERMISSION_TOPIC_WRITE = 'write';
 export const PERMISSION_TOPIC_ADMIN = 'admin';
 
+// can do anything
+export const PERMISSION_ADMIN = 'admin';
+// can add and remove tags from media
+export const PERMISSION_MEDIA_EDIT = 'media-edit';
+// can add and remove tags from stories
+export const PERMISSION_STORY_EDIT = 'media-edit';
+
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';
 

@@ -19,8 +19,7 @@ def login_with_password():
         logger.debug("  login failed (%s)", user.is_anonymous)
         return json_error_response("Login failed", 401)
     auth.login_user(user)
-    response = {'email':username, 'key':user.get_id()}
-    return jsonify(response)
+    return jsonify(user.get_properties())
 
 @app.route('/api/login-with-key', methods=['POST'])
 @form_fields_required('email', 'key')
@@ -34,8 +33,7 @@ def login_with_key():
         logger.debug("  login failed (%s)", user.is_anonymous)
         return json_error_response("Login failed", 401)
     auth.login_user(user)
-    response = {'email':username, 'key':user.get_id()}
-    return jsonify(response)
+    return jsonify(user.get_properties())
 
 @app.route('/api/permissions/user/list', methods=['GET'])
 @flask_login.login_required
