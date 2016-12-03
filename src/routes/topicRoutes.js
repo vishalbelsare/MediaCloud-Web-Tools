@@ -10,7 +10,8 @@ import InfluentialMediaContainer from '../components/topic/media/InfluentialMedi
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
-import CreateFocusContainer from '../components/topic/snapshots/foci/create/CreateFocusContainer';
+import CreateFocusContainer from '../components/topic/snapshots/foci/CreateFocusContainer';
+import EditFocusContainer from '../components/topic/snapshots/foci/EditFocusContainer';
 import ManageFocalSetsContainer from '../components/topic/snapshots/foci/ManageFocalSetsContainer';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
@@ -56,6 +57,7 @@ const topicRoutes = (
         <IndexRoute component={SnapshotHome} />
         <Route path="/topics/:topicId/snapshot/foci" component={ManageFocalSetsContainer} />
         <Route path="/topics/:topicId/snapshot/foci/create" component={CreateFocusContainer} />
+        <Route path="/topics/:topicId/snapshot/:focusId/edit" component={EditFocusContainer} />
         <Route path="/topics/:topicId/snapshot/timespans" component={ManageTimespansContainer} />
       </Route>
 

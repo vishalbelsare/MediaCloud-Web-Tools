@@ -12,7 +12,7 @@ const localMessages = {
   errorNoDescription: { id: 'focalSet.description.error', defaultMessage: 'You need a description.' },
 };
 
-const CreateFocalSetForm = (props) => {
+const FocalSetForm = (props) => {
   const { renderTextField } = props;
   return (
     <div className="new-focal-set">
@@ -32,9 +32,12 @@ const CreateFocalSetForm = (props) => {
   );
 };
 
-CreateFocalSetForm.propTypes = {
+FocalSetForm.propTypes = {
+  // form compositinal chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
+  // from parent
+  initialValues: React.PropTypes.object,
 };
 
 function validate(values) {
@@ -49,7 +52,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };
@@ -58,7 +61,7 @@ export default
   composeIntlForm(
     reduxForm(reduxFormConfig)(
       injectIntl(
-        CreateFocalSetForm
+        FocalSetForm
       )
     )
   );

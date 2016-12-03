@@ -10,3 +10,7 @@ export function emptyString(value) {
 export function validEmail(value) {
   return (value && /^[^@]+@[^@]+\.[^@]+$/i.test(value.email));
 }
+
+export function nullOrUndefined(value) {
+  return (value === null) || (value === undefined);
+}

@@ -16,24 +16,35 @@ export const NO_SPINNER = 0;
 export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
   const spinnerSize = (loadingSpinnerSize !== undefined) ? loadingSpinnerSize : null;
   class ComposedAsyncContainer extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        asyncFetchResult: undefined,
+      };
+    }
     componentDidMount() {
       const { asyncFetch } = this.props;
-      asyncFetch();
+      const asyncFetchResult = asyncFetch();
+      this.state = { asyncFetchResult };
     }
     render() {
       const { fetchStatus, asyncFetch } = this.props;
       let content = null;
-      switch (fetchStatus) {
-        case fetchConstants.FETCH_SUCCEEDED:
-          content = <ComposedContainer {...this.props} />;
-          break;
-        case fetchConstants.FETCH_FAILED:
-          content = <ErrorTryAgain onTryAgain={asyncFetch} />;
-          break;
-        default:
-          if (loadingSpinnerSize !== 0) {
-            content = <LoadingSpinner size={spinnerSize} />;
-          }
+      if (this.state.asyncFetchResult === 'hide') {
+        content = null;
+      } else {
+        switch (fetchStatus) {
+          case fetchConstants.FETCH_SUCCEEDED:
+            content = <ComposedContainer {...this.props} />;
+            break;
+          case fetchConstants.FETCH_FAILED:
+            content = <ErrorTryAgain onTryAgain={asyncFetch} />;
+            break;
+          default:
+            if (loadingSpinnerSize !== 0) {
+              content = <LoadingSpinner size={spinnerSize} />;
+            }
+        }
       }
       return content;
     }

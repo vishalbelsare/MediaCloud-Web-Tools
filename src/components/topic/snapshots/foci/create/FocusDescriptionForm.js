@@ -1,12 +1,14 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../../../common/IntlForm';
-import CreateFocalSetForm from './CreateFocalSetForm';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
-import { notEmptyString } from '../../../../../lib/formValidators';
+import FocalSetForm from './FocalSetForm';
+import { emptyString, nullOrUndefined } from '../../../../../lib/formValidators';
+
+export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
 const localMessages = {
   describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },
@@ -17,15 +19,18 @@ const localMessages = {
   newFocalSetName: { id: 'focus.techniquePicker.new.name', defaultMessage: 'Create a New Focal Set' },
   newFocalSetDescription: { id: 'focus.techniquePicker.new.description', defaultMessage: 'Pick this if you want to make a new Focal Set for this Focus.  Any Foci you add to it will be based on keyword searches.' },
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Focus.' },
+  errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Focal Set.' },
 };
 
-const FocusDetailsForm = (props) => {
-  const { renderTextField, renderSelectField, properties, focalSetDefinitions, onFocalSetSelected } = props;
+const formSelector = formValueSelector('snapshotFocus');
+
+const FocusDescriptionForm = (props) => {
+  const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, focalSetId } = props;
   const { formatMessage } = props.intl;
   // if they pick "make a new focal set" then let them enter name and description
   let focalSetContent = null;
-  if ((properties.focalSetDefinitionId !== null) && (properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID)) {
-    focalSetContent = <CreateFocalSetForm />;
+  if (focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+    focalSetContent = <FocalSetForm initialValues={initialValues} />;
   }
   return (
     <div className="focus-create-details">
@@ -49,7 +54,6 @@ const FocusDetailsForm = (props) => {
           <Field
             name="focalSetId"
             component={renderSelectField}
-            onChange={onFocalSetSelected}
             floatingLabelText={localMessages.pickFocalSet}
           >
             {focalSetDefinitions.map(focalSetDef =>
@@ -77,29 +81,38 @@ const FocusDetailsForm = (props) => {
   );
 };
 
-FocusDetailsForm.propTypes = {
+FocusDescriptionForm.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   initialValues: React.PropTypes.object.isRequired,
   focalSetDefinitions: React.PropTypes.array.isRequired,
   properties: React.PropTypes.object.isRequired,
-  onFocalSetSelected: React.PropTypes.func.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
+  // from state
+  focalSetId: React.PropTypes.number,
 };
+
+const mapStateToProps = state => ({
+  // pull the focal set id out of the form so we know when to show the focal set create sub form
+  focalSetId: parseInt(formSelector(state, 'focalSetId'), 10),
+});
 
 function validate(values) {
   const errors = {};
-  if (!notEmptyString(values.focusName)) {
+  if (emptyString(values.focusName)) {
     errors.focusName = localMessages.errorNameYourFocus;
+  }
+  if (nullOrUndefined(values.focalSetId)) {
+    errors.focalSetId = localMessages.errorPickASet;
   }
   return errors;
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };
@@ -108,7 +121,9 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        FocusDetailsForm
+        connect(mapStateToProps)(
+          FocusDescriptionForm
+        )
       )
     )
   );

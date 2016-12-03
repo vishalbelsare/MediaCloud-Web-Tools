@@ -5,8 +5,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../../actions/topicActions';
 import messages from '../../../../../../resources/messages';
+import { setNewFocusProperties } from '../../../../../../actions/topicActions';
 import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
 import { notEmptyString } from '../../../../../../lib/formValidators';
 
@@ -69,14 +69,14 @@ const EditKeywordSearchContainer = (props) => {
 EditKeywordSearchContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
+  onFinishStep: React.PropTypes.func.isRequired,
   // from state
   properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
   // from dispatch
-  setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
   handleSearchClick: React.PropTypes.func.isRequired,
-  goToStep: React.PropTypes.func.isRequired,
   // from compositional helper
   intl: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
@@ -85,27 +85,23 @@ EditKeywordSearchContainer.propTypes = {
 
 const mapStateToProps = state => ({
   properties: state.topics.selected.focalSets.create.properties,
-  formData: state.form.focusCreateSetup,
+  formData: state.form.snapshotFocus,
 });
 
-const mapDispatchToProps = dispatch => ({
-  setProperties: (properties) => {
-    dispatch(setNewFocusProperties(properties));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  finishStep: (values) => {
+    const customProps = {
+      keywords: values.keywords,
+    };
+    ownProps.onFinishStep(customProps);
   },
-  goToStep: (step) => {
-    dispatch(goToCreateFocusStep(step));
+  setProperties: (customProperties) => {
+    dispatch(setNewFocusProperties(customProperties));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      const focusProps = {
-        keywords: values.keywords,
-      };
-      dispatchProps.setProperties(focusProps);
-      dispatchProps.goToStep(2);
-    },
     handleSearchClick: () => {
       const keywords = stateProps.formData.values.keywords;
       dispatchProps.setProperties({ keywords });
@@ -122,7 +118,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };

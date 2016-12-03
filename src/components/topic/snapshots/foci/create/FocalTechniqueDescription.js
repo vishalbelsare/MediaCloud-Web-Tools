@@ -26,6 +26,7 @@ const FocalTechniqueDescription = (props) => {
 };
 
 FocalTechniqueDescription.propTypes = {
+  // from parent
   id: React.PropTypes.string.isRequired,
   image: React.PropTypes.string.isRequired,
   nameMsg: React.PropTypes.object.isRequired,

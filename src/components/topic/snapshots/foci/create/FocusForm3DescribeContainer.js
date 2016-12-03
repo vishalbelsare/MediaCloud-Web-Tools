@@ -1,22 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocalSetDefinitionSelector';
+import FocusDescriptionForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
 import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import messages from '../../../../../resources/messages';
 import composeAsyncContainer from '../../../../common/AsyncContainer';
-import FocusDetailsForm from './FocusDetailsForm';
+
+const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Focus' },
 };
 
-class CreateFocusDetailsContainer extends React.Component {
+class FocusForm3DescribeContainer extends React.Component {
 
   handleFocalSetSelected = (event, index, focalSetDefinitionId) => {
     const { setProperties } = this.props;
@@ -24,36 +24,31 @@ class CreateFocusDetailsContainer extends React.Component {
   }
 
   render() {
-    const { topicId, handleSubmit, finishStep, properties, focalSetDefinitions } = this.props;
+    const { topicId, handleSubmit, finishStep, properties, initialValues, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
-    let content = null;
-    // console.log(properties);
-    if (properties.focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
-      content = (<FocusDetailsForm
-        topicId={topicId}
-        initialValues={{ focalSetId: properties.focalSetDefinitionId }}
-        focalSetDefinitions={focalSetDefinitions}
-        properties={properties}
-        onFocalSetSelected={this.handleFocalSetSelected}
-      />);
-    }
-    let nextButtonDisabled = true;
-    if ((properties.focalTechnique !== null) &&
-        (properties.focalSetDefinitionId !== null)) {
-      nextButtonDisabled = false;
+    // figure out a which focal set ot default to
+    if (focalSetDefinitions.length === 0) {
+      initialValues.focalSetId = NEW_FOCAL_SET_PLACEHOLDER_ID;
+    } else {
+      initialValues.focalSetId = focalSetDefinitions[0].focal_set_definitions_id;
     }
     return (
       <Grid>
-        <form className="focus-create-details" name="focusCreateSetupForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <form className="focus-create-details" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
           <Row>
             <Col lg={10} md={10} sm={10}>
               <h1><FormattedMessage {...localMessages.title} /></h1>
             </Col>
           </Row>
-          { content }
+          <FocusDescriptionForm
+            topicId={topicId}
+            initialValues={initialValues}
+            focalSetDefinitions={focalSetDefinitions}
+            properties={properties}
+          />
           <Row>
             <Col lg={12} md={12} sm={12} >
-              <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
+              <AppButton type="submit" label={formatMessage(messages.next)} primary />
             </Col>
           </Row>
         </form>
@@ -63,9 +58,10 @@ class CreateFocusDetailsContainer extends React.Component {
 
 }
 
-CreateFocusDetailsContainer.propTypes = {
+FocusForm3DescribeContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
@@ -86,7 +82,7 @@ const mapStateToProps = state => ({
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
   properties: state.topics.selected.focalSets.create.properties,
-  formData: state.form.focusCreateSetup,
+  formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -108,10 +104,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         topicId: ownProps.topicId,
         name: values.focusName,
         description: values.focusDescription,
+        focalSetDefinitionId: values.focalSetId,
       };
-      if (stateProps.properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-        focusProps.focalSetName = stateProps.formData.values.focalSetName;
-        focusProps.focalSetDescription = stateProps.formData.values.focalSetDescription;
+      if (values.focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+        // for a new focal set we need the name and descripton to save them
+        focusProps.focalSetName = values.focalSetName;
+        focusProps.focalSetDescription = values.focalSetDescription;
       }
       dispatchProps.setProperties(focusProps);
       dispatchProps.goToStep(3);
@@ -127,7 +125,7 @@ function validate() {
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };
@@ -138,7 +136,7 @@ export default
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
           composeAsyncContainer(
-            CreateFocusDetailsContainer
+            FocusForm3DescribeContainer
           )
         )
       )

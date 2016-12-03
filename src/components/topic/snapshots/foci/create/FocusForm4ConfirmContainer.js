@@ -1,47 +1,39 @@
 import React from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
-import AppButton from '../../../../../common/AppButton';
+import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import AppButton from '../../../../common/AppButton';
+import messages from '../../../../../resources/messages';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
-  from '../../../../../../actions/topicActions';
-import { updateFeedback } from '../../../../../../actions/appActions';
-import { INITIAL_STATE } from '../../../../../../reducers/topics/selected/focalSets/create/properties';
-import messages from '../../../../../../resources/messages';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocalSetDefinitionSelector';
+  from '../../../../../actions/topicActions';
+import { updateFeedback } from '../../../../../actions/appActions';
+import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
+import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
 
 const localMessages = {
-  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Focus' },
-  name: { id: 'focus.create.confirm.name', defaultMessage: '<b>Name</b>: {name}' },
-  description: { id: 'focus.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
-  focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Focal Technique</b>: {name}' },
-  keywords: { id: 'focus.create.confirm.keywords', defaultMessage: '<b>Keywords</b>: {keywords}' },
+  unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
   addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Focus' },
   focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Focal Set.' },
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Focus.' },
 };
 
-const ConfirmKeywordSearchContainer = (props) => {
-  const { saveAndAddAnother, properties } = props;
+const FocusForm4ConfirmContainer = (props) => {
+  const { topicId, properties, initialValues, saveAndAddAnother } = props;
   const { formatMessage } = props.intl;
+  let content = null;
+  switch (properties.focalTechnique) {
+    case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
+      content = <KeywordSearchSummary topicId={topicId} properties={properties} initialValues={initialValues} />;
+      break;
+    default:
+      content = <FormattedMessage {...localMessages.unimplemented} />;
+  }
   return (
     <Grid>
-      <Row>
-        <Col lg={12}>
-          <h2><FormattedMessage {...localMessages.title} values={{ name: properties.name }} /></h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <ul>
-            <li><FormattedHTMLMessage {...localMessages.name} values={{ name: properties.name }} /></li>
-            <li><FormattedHTMLMessage {...localMessages.description} values={{ description: properties.description }} /></li>
-            <li><FormattedHTMLMessage {...localMessages.focalTechnique} values={{ name: properties.focalTechnique }} /></li>
-            <li><FormattedHTMLMessage {...localMessages.keywords} values={{ keywords: properties.keywords }} /></li>
-          </ul>
-        </Col>
-      </Row>
+      { content }
       <Row>
         <Col lg={12}>
           <AppButton primary label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
@@ -51,22 +43,20 @@ const ConfirmKeywordSearchContainer = (props) => {
   );
 };
 
-ConfirmKeywordSearchContainer.propTypes = {
+FocusForm4ConfirmContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
   // form context
   intl: React.PropTypes.object.isRequired,
   // from state
   properties: React.PropTypes.object.isRequired,
   // from dispatch
-  saveFocus: React.PropTypes.func.isRequired,
-  // from mergeProps
   saveAndAddAnother: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   properties: state.topics.selected.focalSets.create.properties,
-  formData: state.form.focusCreateSetup,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -126,6 +116,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      ConfirmKeywordSearchContainer
+      FocusForm4ConfirmContainer
     )
   );

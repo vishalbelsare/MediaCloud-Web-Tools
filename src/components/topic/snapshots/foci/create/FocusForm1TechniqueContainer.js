@@ -15,7 +15,7 @@ const localMessages = {
     defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
 };
 
-class CreateFocusSetupContainer extends React.Component {
+class FocusForm1TechniqueContainer extends React.Component {
 
   componentWillMount() {
     // grab any pre-filled-in props from the url and save them here
@@ -44,7 +44,7 @@ class CreateFocusSetupContainer extends React.Component {
     }
     return (
       <Grid>
-        <form className="focus-create-setup" name="focusCreateSetupForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <form className="focus-create-setup" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
           <Row>
             <Col lg={10} md={10} sm={10}>
               <h1><FormattedMessage {...localMessages.title} /></h1>
@@ -69,10 +69,11 @@ class CreateFocusSetupContainer extends React.Component {
 
 }
 
-CreateFocusSetupContainer.propTypes = {
+FocusForm1TechniqueContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   location: React.PropTypes.object.isRequired,
+  initialValues: React.PropTypes.object,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
@@ -80,7 +81,6 @@ CreateFocusSetupContainer.propTypes = {
   handleSubmit: React.PropTypes.func.isRequired,
   // from state
   properties: React.PropTypes.object.isRequired,
-  formData: React.PropTypes.object,
   // from dispatch
   setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
@@ -88,7 +88,6 @@ CreateFocusSetupContainer.propTypes = {
 
 const mapStateToProps = state => ({
   properties: state.topics.selected.focalSets.create.properties,
-  formData: state.form.focusCreateSetup,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -116,7 +115,7 @@ function validate() {
 }
 
 const reduxFormConfig = {
-  form: 'focusCreateSetup', // make sure this matches the sub-components and other wizard steps
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
   validate,
 };
@@ -126,7 +125,7 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          CreateFocusSetupContainer
+          FocusForm1TechniqueContainer
         )
       )
     )

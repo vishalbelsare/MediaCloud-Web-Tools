@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { DeleteButton } from '../../../common/IconButton';
+import { DeleteButton, EditButton } from '../../../common/IconButton';
 
 const localMessages = {
   focusDelete: { id: 'focusDefinition.delete', defaultMessage: 'Delete this Focus' },
@@ -17,11 +17,12 @@ class FocusDefinition extends React.Component {
   }
 
   render() {
-    const { focusDefinition } = this.props;
+    const { focusDefinition, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div className="focus-definition">
         <div className="controls">
+          <EditButton linkTo={`/topics/${topicId}/snapshot/foci/${focusDefinition.focus_definitions_id}/edit`} />
           <DeleteButton onClick={this.handleDelete} tooltip={formatMessage(localMessages.focusDelete)} />
         </div>
         <p>
@@ -40,6 +41,7 @@ FocusDefinition.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
   // from parent
+  topicId: React.PropTypes.number.isRequired,
   focusDefinition: React.PropTypes.object.isRequired,
   onDelete: React.PropTypes.func,
 };

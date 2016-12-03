@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import CreateFocusSetupContainer from './CreateFocusSetupContainer';
-import CreateFocusEditContainer from './CreateFocusEditContainer';
-import CreateFocusDetailsContainer from './CreateFocusDetailsContainer';
-import CreateFocusConfirmContainer from './CreateFocusConfirmContainer';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
-import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
-import BackLinkingControlBar from '../../../BackLinkingControlBar';
+import FocusForm1TechniqueContainer from './create/FocusForm1TechniqueContainer';
+import FocusForm2ConfigureContainer from './create/FocusForm2ConfigureContainer';
+import FocusForm3DescribeContainer from './create/FocusForm3DescribeContainer';
+import FocusForm4ConfirmContainer from './create/FocusForm4ConfirmContainer';
+import { setNewFocusProperties, goToCreateFocusStep } from '../../../../actions/topicActions';
+import { INITIAL_STATE } from '../../../../reducers/topics/selected/focalSets/create/properties';
+import BackLinkingControlBar from '../../BackLinkingControlBar';
 
 const localMessages = {
   backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Foci Manager' },
@@ -28,13 +28,14 @@ class CreateFocusContainer extends React.Component {
   render() {
     const { topicId, currentStep, location } = this.props;
     const steps = [
-      CreateFocusSetupContainer,
-      CreateFocusEditContainer,
-      CreateFocusDetailsContainer,
-      CreateFocusConfirmContainer,
+      FocusForm1TechniqueContainer,
+      FocusForm2ConfigureContainer,
+      FocusForm3DescribeContainer,
+      FocusForm4ConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
     const stepLabelStyle = { height: 45 };
+    const initialValues = { };
     return (
       <div className="create-focus">
         <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} >
@@ -53,7 +54,7 @@ class CreateFocusContainer extends React.Component {
             </Step>
           </Stepper>
         </BackLinkingControlBar>
-        <CurrentStepComponent topicId={topicId} location={location} />
+        <CurrentStepComponent topicId={topicId} location={location} initialValues={initialValues} />
       </div>
     );
   }
@@ -75,7 +76,6 @@ const mapStateToProps = (state, ownProps) => ({
   params: ownProps.params,
   currentStep: state.topics.selected.focalSets.create.workflow.currentStep,
 });
-
 
 const mapDispatchToProps = dispatch => ({
   handleUnmount: () => {
