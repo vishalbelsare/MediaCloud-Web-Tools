@@ -41,7 +41,7 @@ class SourceSelectionRenderer extends React.Component {
   }
 
   render() {
-    const { fields, meta: { error } } = this.props;
+    const { goToASearch, fields, meta: { error } } = this.props;
     let copyConfirmation = null;
     if (this.state.collectionId) {
       copyConfirmation = (
@@ -68,6 +68,7 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
                   <SourceSearchContainer
                     searchCollections={false}
+                    goToAdvancedSearch={goToASearch}
                     onMediaSourceSelected={item => fields.unshift(item)}
                   />
                 </Tab>
@@ -75,6 +76,7 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
                   <SourceSearchContainer
                     searchSources={false}
+                    goToAdvancedSearch={goToASearch}
                     onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
                   />
                   {copyConfirmation}
@@ -148,15 +150,22 @@ class SourceSelectionRenderer extends React.Component {
 SourceSelectionRenderer.propTypes = {
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
+  goToASearch: React.PropTypes.func.isRequired,
 };
 
-const CollectionMediaForm = () => <FieldArray name="sources" component={SourceSelectionRenderer} />;
+const CollectionMediaForm = (props) => {
+  const { goToASearch } = props;
+  return (
+    <FieldArray name="sources" component={SourceSelectionRenderer} goToASearch={goToASearch} />
+  );
+};
 
 CollectionMediaForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   initialValues: React.PropTypes.object,
+  goToASearch: React.PropTypes.func.isRequired,
   // from form helper
   // from parent
 };

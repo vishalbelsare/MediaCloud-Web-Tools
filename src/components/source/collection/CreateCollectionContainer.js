@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const CreateCollectionContainer = (props) => {
-  const { handleSave } = props;
+  const { handleSave, goToAdvancedSearch } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   return (
@@ -30,6 +30,7 @@ const CreateCollectionContainer = (props) => {
         <CollectionForm
           buttonLabel={formatMessage(localMessages.addButton)}
           onSave={handleSave}
+          goToAdvancedSearch={goToAdvancedSearch}
         />
       </Grid>
     </div>
@@ -41,6 +42,7 @@ CreateCollectionContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   handleSave: React.PropTypes.func.isRequired,
+  goToAdvancedSearch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({
@@ -61,6 +63,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         // TODO: redirect to new source detail page
         dispatch(push(`/collections/${results.tags_id}`));
       });
+  },
+  goToAdvancedSearch: (values) => {
+    dispatch(push(`/collections/create/advancedSearch?${values}`));
   },
 });
 

@@ -7,6 +7,11 @@ import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetColle
 
 const MAX_SUGGESTION_CHARS = 40;
 
+const localMessages = {
+  advancedSearch: { id: 'sourceCollectionList.search', defaultMessage: 'Advanced Search...' },
+};
+
+
 class SourceSearchContainer extends React.Component {
 
   constructor(props) {
@@ -37,7 +42,8 @@ class SourceSearchContainer extends React.Component {
   }
 
   resetIfRequested = () => {
-    const { sourceResults, collectionResults, searchSources, searchCollections } = this.props;
+    const { sourceResults, collectionResults, searchSources, searchCollections, goToAdvancedSearch } = this.props;
+    const { formatMessage } = this.props.intl;
     let results = [];
     if (searchSources || searchSources === undefined) {
       results = results.concat(sourceResults);
@@ -54,6 +60,15 @@ class SourceSearchContainer extends React.Component {
         />
       ),
     }));
+
+    resultsAsComponents.push({
+      text: 'Advanced Search',
+      value: <MenuItem
+        value={formatMessage(localMessages.advancedSearch)}
+        onClick={() => goToAdvancedSearch(this.state.lastSearchString)}
+        primaryText={formatMessage(localMessages.advancedSearch)}
+      /> });
+
     return resultsAsComponents;
   }
 
@@ -97,6 +112,7 @@ SourceSearchContainer.propTypes = {
   collectionResults: React.PropTypes.array.isRequired,
   // from dispatch
   search: React.PropTypes.func.isRequired,
+  goToAdvancedSearch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

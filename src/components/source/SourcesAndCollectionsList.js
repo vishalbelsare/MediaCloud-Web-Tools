@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Checkbox from 'material-ui/Checkbox';
+import { SelectField, Checkbox, MenuItem } from 'material-ui';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionIcon from '../common/icons/CollectionIcon';
 import SourceIcon from '../common/icons/MediaSourceIcon';
@@ -10,10 +10,14 @@ import SourceIcon from '../common/icons/MediaSourceIcon';
 const localMessages = {
   sourceHeader: { id: 'sourceCollectionList.source', defaultMessage: 'Source: {name}' },
   collectionHeader: { id: 'sourceCollectionList.collection', defaultMessage: 'Collection: {name}' },
+  checkAllFirstPage: { id: 'sourceCollectionList.checkAllFirstPage', defaultMessage: 'Select All On This Page' },
+  unCheckAll: { id: 'sourceCollectionList.collection.unCheckAll', defaultMessage: 'Unselect All' },
+  checkAllPages: { id: 'sourceCollectionList.checkAllPages', defaultMessage: 'Select All Results' },
 };
 
 const SourcesAndCollectionsList = (props) => {
   const { queriedSources, queriedCollections, addToSelectedSources, addToSelectedCollections, addRemoveAll } = props;
+  const { formatMessage } = props.intl;
   const content = null;
   const titleHandler = parentTitle => `${queriedCollections.label} | ${parentTitle}`;
   if (queriedSources === undefined || queriedCollections === undefined) {
@@ -25,10 +29,23 @@ const SourcesAndCollectionsList = (props) => {
   }
   return (
     <Grid>
-      <Checkbox
-        name="chkSelectAll"
-        onCheck={addRemoveAll}
-      />
+      <Col lg={12}>
+        <SelectField name="allOrNone">
+          <MenuItem primaryText={formatMessage(localMessages.checkAllFirstPage)}>
+            <Checkbox
+              name="chkSelectAllFirstPage"
+              onCheck={addRemoveAll}
+            />
+          </MenuItem>
+          <MenuItem primaryText={formatMessage(localMessages.unCheckAll)} />
+          <MenuItem primaryText={formatMessage(localMessages.checkAllPages)}>
+            <Checkbox
+              name="chkSelectAllPages"
+              onCheck={addRemoveAll}
+            />
+          </MenuItem>
+        </SelectField>
+      </Col>
       <Col lg={12}>
         <Title render={titleHandler} />
         {queriedSources.map(source => (

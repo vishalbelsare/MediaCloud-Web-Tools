@@ -12,29 +12,38 @@ const localMessages = {
   addButton: { id: 'collection.add.save', defaultMessage: 'Search' },
 };
 
-const AdvancedSearchContainer = (props) => {
-  const { queriedSources, queriedCollections, requerySourcesAndCollections, initialValues } = props;
-  const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-  return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-          </Col>
-        </Row>
-        <CollectionAdvancedSearchMetadataForm
-          initialValues={initialValues}
-          buttonLabel={formatMessage(localMessages.addButton)}
-          requerySourcesAndCollections={requerySourcesAndCollections}
-        />
-        <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
-      </Grid>
-    </div>
-  );
-};
+class AdvancedSearchContainer extends React.Component {
+  componentWillMount() {
+    // const { search } = this.props.location;
+
+    // const hashParts = search.split('?');
+    // const searchString = hashParts[1];
+    // how to get this from here into initialValues? state or store
+  }
+  render() {
+    const { queriedSources, queriedCollections, requerySourcesAndCollections, initialValues } = this.props;
+    const { formatMessage } = this.props.intl;
+    const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+    return (
+      <div>
+        <Title render={titleHandler} />
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+            </Col>
+          </Row>
+          <CollectionAdvancedSearchMetadataForm
+            initialValues={initialValues}
+            buttonLabel={formatMessage(localMessages.addButton)}
+            requerySourcesAndCollections={requerySourcesAndCollections}
+          />
+          <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
+        </Grid>
+      </div>
+    );
+  }
+}
 
 AdvancedSearchContainer.propTypes = {
   // from context
@@ -44,15 +53,18 @@ AdvancedSearchContainer.propTypes = {
   queriedSources: React.PropTypes.array,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
+  location: React.PropTypes.object,
 };
 
 const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  requerySourcesAndCollections: () => {
-    dispatch(fetchSourceByMetadata());
-    dispatch(fetchCollectionByMetadata());
+  requerySourcesAndCollections: (values) => {
+    const searchString = values.advancedSearchQueryString;
+    // once we have the hookup, this naming might change a bit
+    dispatch(fetchSourceByMetadata(searchString));
+    dispatch(fetchCollectionByMetadata(searchString));
   },
 });
 
