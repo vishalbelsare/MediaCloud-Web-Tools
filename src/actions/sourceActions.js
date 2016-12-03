@@ -36,6 +36,7 @@ export const FETCH_SOURCE_BY_METADATA = 'FETCH_SOURCE_BY_METADATA';
 export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
 export const SELECT_ADVANCED_SEARCH_SOURCE = 'SELECT_ADVANCED_SEARCH_SOURCE';
 export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECTION';
+export const SELECT_ADVANCED_SEARCH_STRING = 'SELECT_ADVANCED_SEARCH_STRING';
 
 export const select = createAction(SELECT, id => id);
 
@@ -89,3 +90,4 @@ export const selectAdvancedSearchSource = createAsyncAction(SELECT_ADVANCED_SEAR
 
 export const selectAdvancedSearchCollection = createAsyncAction(SELECT_ADVANCED_SEARCH_COLLECTION, payload => payload);
 
+export const selectAdvancedSearchString = createAction(SELECT_ADVANCED_SEARCH_STRING, string => string);

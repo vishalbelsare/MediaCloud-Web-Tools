@@ -10,7 +10,7 @@ const collectionsByMetadata = createAsyncReducer({
     results: payload.results,
   }),
   [SELECT_ADVANCED_SEARCH_COLLECTION]: payload => ({
-    list: selectItemInArray(payload.args[0], payload.args[1], 'tag_sets_id'),
+    list: selectItemInArray(payload.args[0], payload.args[1], 'tags_id'),
   }),
 });
 

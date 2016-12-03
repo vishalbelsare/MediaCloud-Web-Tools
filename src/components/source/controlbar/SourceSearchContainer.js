@@ -22,11 +22,18 @@ class SourceSearchContainer extends React.Component {
   }
 
   handleClick = (item) => {
-    const { onMediaSourceSelected, onCollectionSelected } = this.props;
-    if (item.type === 'mediaSource') {
-      if (onMediaSourceSelected) onMediaSourceSelected(item);
-    } else if (item.type === 'collection') {
-      if (onCollectionSelected) onCollectionSelected(item);
+    const { onMediaSourceSelected, onCollectionSelected, onAdvancedSearchSelected } = this.props;
+    const { formatMessage } = this.props.intl;
+    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
+
+    if (item) {
+      if (item.type === 'mediaSource') {
+        if (onMediaSourceSelected) onMediaSourceSelected(item);
+      } else if (item.type === 'collection') {
+        if (onCollectionSelected) onCollectionSelected(item);
+      } else if (item === advancedSearchTitle) {
+        if (onAdvancedSearchSelected) onAdvancedSearchSelected(this.state.lastSearchString);
+      }
     }
   }
 
@@ -42,9 +49,10 @@ class SourceSearchContainer extends React.Component {
   }
 
   resetIfRequested = () => {
-    const { sourceResults, collectionResults, searchSources, searchCollections, goToAdvancedSearch } = this.props;
+    const { sourceResults, collectionResults, searchSources, searchCollections } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
+    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
     if (searchSources || searchSources === undefined) {
       results = results.concat(sourceResults);
     }
@@ -59,13 +67,12 @@ class SourceSearchContainer extends React.Component {
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       ),
-    }));
-
-    resultsAsComponents.push({
+    })).concat({
       text: 'Advanced Search',
+      key: 'Advanced Search',
       value: <MenuItem
-        value={formatMessage(localMessages.advancedSearch)}
-        onClick={() => goToAdvancedSearch(this.state.lastSearchString)}
+        value={advancedSearchTitle}
+        onClick={() => this.handleClick(advancedSearchTitle)}
         primaryText={formatMessage(localMessages.advancedSearch)}
       /> });
 
@@ -107,12 +114,12 @@ SourceSearchContainer.propTypes = {
   searchStaticCollections: React.PropTypes.bool,  // inclue static collecton results?
   onMediaSourceSelected: React.PropTypes.func,
   onCollectionSelected: React.PropTypes.func,
+  onAdvancedSearchSelected: React.PropTypes.func,
   // from state
   sourceResults: React.PropTypes.array.isRequired,
   collectionResults: React.PropTypes.array.isRequired,
   // from dispatch
   search: React.PropTypes.func.isRequired,
-  goToAdvancedSearch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

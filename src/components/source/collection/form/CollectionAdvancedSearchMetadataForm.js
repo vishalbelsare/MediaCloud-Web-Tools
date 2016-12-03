@@ -14,13 +14,14 @@ const localMessages = {
 };
 
 const CollectionAdvancedSearchMetadataForm = (props) => {
-  const { renderTextField, handleSubmit, buttonLabel, pristine, submitting, requerySourcesAndCollections } = props;
+  const { searchString, renderTextField, handleSubmit, buttonLabel, pristine, submitting, requerySourcesAndCollections } = props;
   return (
     <form className="advancedQueryForm" onSubmit={handleSubmit(requerySourcesAndCollections.bind(this))}>
       <Row>
         <Col lg={6}>
           <Field
             name="advancedSearchQueryString"
+            value={searchString}
             component={renderTextField}
           />
         </Col>
@@ -63,6 +64,7 @@ CollectionAdvancedSearchMetadataForm.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   // from parent
   requerySourcesAndCollections: React.PropTypes.func.isRequired,
+  searchString: React.PropTypes.string,
 };
 
 const reduxFormConfig = {
