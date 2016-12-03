@@ -55,6 +55,7 @@ CollectionAdvancedSearchMetadataForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   // from form healper
+  initialValues: React.PropTypes.object,
   buttonLabel: React.PropTypes.string.isRequired,
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
