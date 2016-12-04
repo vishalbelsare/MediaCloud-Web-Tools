@@ -65,6 +65,10 @@
     stroke: $white;
     stroke-opacity: 0.5;
     cursor: pointer;
+    &:hover {
+      fill-opacity: 1.0;
+      fill: $topics-primary;
+    }
   }
 
 }
