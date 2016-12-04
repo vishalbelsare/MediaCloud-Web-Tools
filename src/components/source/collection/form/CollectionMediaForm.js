@@ -68,7 +68,7 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
                   <SourceSearchContainer
                     searchCollections={false}
-                    goToAdvancedSearch={goToASearch}
+                    onAdvancedSearchSelected={goToASearch}
                     onMediaSourceSelected={item => fields.unshift(item)}
                   />
                 </Tab>
@@ -76,7 +76,7 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
                   <SourceSearchContainer
                     searchSources={false}
-                    goToAdvancedSearch={goToASearch}
+                    onAdvancedSearchSelected={goToASearch}
                     onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
                   />
                   {copyConfirmation}

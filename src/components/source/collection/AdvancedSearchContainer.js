@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionAdvancedSearchMetadataForm from './form/CollectionAdvancedSearchMetadataForm';
 import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
-import { fetchSourceByMetadata, fetchCollectionByMetadata } from '../../../actions/sourceActions';
+import { selectAdvancedSearchString, fetchSourceByMetadata, fetchCollectionByMetadata } from '../../../actions/sourceActions';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Search' },
@@ -14,16 +14,27 @@ const localMessages = {
 
 class AdvancedSearchContainer extends React.Component {
   componentWillMount() {
-    // const { search } = this.props.location;
-
-    // const hashParts = search.split('?');
-    // const searchString = hashParts[1];
+    const { location, dispatchAdvancedSearchStringSelected } = this.props;
+    if (!location) return;
+    const hashParts = location.search.split('?');
+    const searchString = hashParts[1];
     // how to get this from here into initialValues? state or store
+    dispatchAdvancedSearchStringSelected(searchString);
   }
   render() {
-    const { queriedSources, queriedCollections, requerySourcesAndCollections, initialValues } = this.props;
+    const { searchString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+    let content = null;
+    if (searchString) {
+      content = (
+        <CollectionAdvancedSearchMetadataForm
+          initialValues={{ advancedSearchQueryString: searchString }}
+          buttonLabel={formatMessage(localMessages.addButton)}
+          requerySourcesAndCollections={requerySourcesAndCollections}
+        />
+      );
+    }
     return (
       <div>
         <Title render={titleHandler} />
@@ -33,11 +44,7 @@ class AdvancedSearchContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          <CollectionAdvancedSearchMetadataForm
-            initialValues={initialValues}
-            buttonLabel={formatMessage(localMessages.addButton)}
-            requerySourcesAndCollections={requerySourcesAndCollections}
-          />
+          {content}
           <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
         </Grid>
       </div>
@@ -51,12 +58,16 @@ AdvancedSearchContainer.propTypes = {
   fetchStatus: React.PropTypes.string,
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
+  dispatchAdvancedSearchStringSelected: React.PropTypes.func,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
   location: React.PropTypes.object,
+  // from params
+  searchString: React.PropTypes.string,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  searchString: state.sources.selected.advancedSearchString,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -65,6 +76,9 @@ const mapDispatchToProps = dispatch => ({
     // once we have the hookup, this naming might change a bit
     dispatch(fetchSourceByMetadata(searchString));
     dispatch(fetchCollectionByMetadata(searchString));
+  },
+  dispatchAdvancedSearchStringSelected: (searchString) => {
+    dispatch(selectAdvancedSearchString(searchString));
   },
 });
 

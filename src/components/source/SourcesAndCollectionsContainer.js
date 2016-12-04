@@ -125,7 +125,7 @@ const mapDispatchToProps = dispatch => ({
 
     const collIdArray = collections.map((s) => {
       if (s.selected === true) {
-        return s.tag_sets_id;
+        return s.tags_id;
       }
       return null;
     }).filter(i => i !== null);

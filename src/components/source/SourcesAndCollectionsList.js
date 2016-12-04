@@ -73,12 +73,12 @@ const SourcesAndCollectionsList = (props) => {
           )
         )}
         {queriedCollections.map(collection => (
-          <Row key={`clxn_${collection.tag_sets_id}`} name={`clxn_${collection.tag_sets_id}`}>
+          <Row key={`clxn_${collection.tags_id}`} name={`clxn_${collection.tags_id}`}>
             <Col lg={2}>
               <Checkbox
-                key={collection.tag_sets_id}
-                name={`clxn_${collection.tag_sets_id}`}
-                onCheck={() => addToSelectedCollections(collection.tag_sets_id)}
+                key={collection.tags_id}
+                name={`clxn_${collection.tags_id}`}
+                onCheck={() => addToSelectedCollections(collection.tags_id)}
               />
             </Col>
             <Col lg={6}>
@@ -89,7 +89,7 @@ const SourcesAndCollectionsList = (props) => {
               </h5>
             </Col>
             <Col lg={2}>
-              <Link to={`/collections/${collection.tag_sets_id}`}>{collection.description}</Link>
+              <Link to={`/collections/${collection.tags_id}`}>{collection.description}</Link>
             </Col>
           </Row>
           )
