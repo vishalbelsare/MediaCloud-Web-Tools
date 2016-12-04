@@ -33,7 +33,7 @@ export function topicTimespansList(topicId, snapshotId, params) {
 }
 
 export function topicSentenceCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/sentences/count`, acceptedParams);
 }
 

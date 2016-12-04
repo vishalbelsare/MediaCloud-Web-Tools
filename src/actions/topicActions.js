@@ -39,6 +39,7 @@ export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
+export const FETCH_CREATE_FOCUS_KEYWORD_ATTENTION = 'FETCH_CREATE_FOCUS_KEYWORD_ATTENTION';
 export const CREATE_FOCAL_SET_DEFINITION = 'CREATE_FOCAL_SET_DEFINITION';
 export const FETCH_FOCAL_SET_DEFINITIONS = 'FETCH_FOCAL_SET_DEFINITIONS';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
@@ -145,8 +146,11 @@ export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD
 
 // pass in the number of the step to go to
 export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);
-// pass in topicId, snapshotId, timespanId, q
+// pass in topicId, limit, q
 export const fetchCreateFocusKeywordStories = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_STORIES, api.topicTopStories);
+// pass in topicId, q
+export const fetchCreateFocusKeywordAttention = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_ATTENTION, api.topicSentenceCounts);
+
 // pass in topicId and params (object with name, description, and focalTechnique attributes)
 export const createFocalSetDefinition = createAsyncAction(CREATE_FOCAL_SET_DEFINITION, api.createFocalSetDefinition);
 // pass in the topicId
