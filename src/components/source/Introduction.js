@@ -23,7 +23,7 @@ const Introduction = props => (
     </Row>
     <Row>
       <Col lg={12}>
-        <Link to="/collections/all">
+        <Link to="/collections/media-cloud">
           <AppButton label={props.intl.formatMessage(localMessages.browse)} primary />
         </Link>
       </Col>
