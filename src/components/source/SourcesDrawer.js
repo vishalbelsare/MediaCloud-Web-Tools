@@ -14,7 +14,9 @@ import { PERMISSION_MEDIA_EDIT } from '../../lib/auth';
 const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
   home: { id: 'sources.menu.items.home', defaultMessage: 'Home' },
-  all: { id: 'sources.menu.items.all', defaultMessage: 'All Collections' },
+  mc: { id: 'sources.menu.items.all', defaultMessage: 'Collections: Media Cloud' },
+  gv: { id: 'sources.menu.items.all', defaultMessage: 'Collections: Global Voices' },
+  emm: { id: 'sources.menu.items.all', defaultMessage: 'Collections: European Media Monitor' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
 };
@@ -56,12 +58,20 @@ class SourcesDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/all'); }}>
-            <FormattedMessage {...localMessages.all} />
-          </MenuItem>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/search'); }}>
             <FormattedMessage {...messages.search} />
           </MenuItem>
+          <Divider />
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
+            <FormattedMessage {...localMessages.mc} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
+            <FormattedMessage {...localMessages.gv} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/european-media-monitor'); }}>
+            <FormattedMessage {...localMessages.emm} />
+          </MenuItem>
+          <Divider />
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
               <FormattedMessage {...localMessages.newSource} />
@@ -93,10 +103,10 @@ class SourcesDrawer extends React.Component {
         >
           <AppBar title={formatMessage(localMessages.menuTitle)} showMenuIconButton={false} />
           {appMenuItems}
+          <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
           </MenuItem>
-          <Divider />
           {loginLogoutMenuItem}
         </Drawer>
       </div>

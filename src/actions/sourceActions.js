@@ -42,7 +42,7 @@ export const select = createAction(SELECT, id => id);
 
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 
-export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.collectionList);
+export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.collectionList, id => id);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 

@@ -5,15 +5,15 @@ export function sourceList() {
 }
 
 export function sourceSearch(searchStr) {
-  return createApiPromise(`/api/sources/${searchStr}/search`);
+  return createApiPromise(`/api/sources/search/${searchStr}`);
 }
 
-export function collectionList() {
-  return createApiPromise('api/collections/all');
+export function collectionList(id) {
+  return createApiPromise(`api/collections/set/${id}`);
 }
 
 export function collectionSearch(searchStr) {
-  return createApiPromise(`/api/collections/${searchStr}/search`);
+  return createApiPromise(`/api/collections/search/${searchStr}`);
 }
 
 export function sourceDetails(id) {

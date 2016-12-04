@@ -10,7 +10,9 @@ import EditCollectionContainer from '../components/source/collection/EditCollect
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import Introduction from '../components/source/Introduction';
-import AllCollectionsContainer from '../components/source/collection/AllCollectionsContainer';
+import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
+import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
+import EMMCollectionListContainer from '../components/source/collection/list/EMMCollectionListContainer';
 import PageWrapper from '../components/source/PageWrapper';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
@@ -25,9 +27,9 @@ const sourceRoutes = (
 
     {userRoutes}
 
-    <Route component={PageWrapper} onEnter={requireAuth} >
+    <Route component={PageWrapper}>
       <Route path="/about" component={About} />
-      <Route path="/home" component={Introduction} onEnter={requireAuth} />
+      <Route path="/home" component={Introduction} />
       <Route path="/search" component={SearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
@@ -36,7 +38,9 @@ const sourceRoutes = (
         <Route path=":sourceId/edit" component={EditSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >
-        <Route path="all" component={AllCollectionsContainer} encodeURI={requireAuth} />
+        <Route path="media-cloud" component={MCCollectionListContainer} encodeURI={requireAuth} />
+        <Route path="global-voices" component={GVCollectionListContainer} encodeURI={requireAuth} />
+        <Route path="european-media-monitor" component={EMMCollectionListContainer} encodeURI={requireAuth} />
         <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
         <Route path="create/advancedSearch" component={AdvancedSearchContainer} onEnter={requireAuth} />
         <Route path=":collectionId" component={CollectionDetailsContainer} onEnter={requireAuth} />

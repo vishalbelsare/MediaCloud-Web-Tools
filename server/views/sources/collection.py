@@ -15,20 +15,25 @@ from server.views.sources import COLLECTIONS_TAG_SET_ID
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/collections/all', methods=['GET'])
+@app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def api_all_collections():
+def api_collection_set(tag_sets_id):
     user_mc = user_mediacloud_client()
-    tag_list = _cached_public_collection_list(user_mediacloud_key())
-    return jsonify({'results':tag_list})
+    info = _cached_public_collection_list(user_mediacloud_key(), tag_sets_id)
+    return jsonify(info)
 
 @cache
-def _cached_public_collection_list(user_mc_key):
+def _cached_public_collection_list(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
-    collection_list = user_mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, rows=100, public_only=True)
+    tag_set = user_mc.tagSet(tag_sets_id)
+    collection_list = user_mc.tagList(tag_sets_id=tag_sets_id, rows=100, public_only=True)
     collection_list = sorted(collection_list, key=itemgetter('label'))
-    return collection_list
+    return {
+        'name': tag_set['label'],
+        'description': tag_set['description'],
+        'collections': collection_list
+    }
 
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required

@@ -8,7 +8,12 @@ const collectionSearch = createAsyncReducer({
   action: FETCH_COLLECTION_SEARCH,
   handleSuccess: payload => ({
     // add name and id so we can display it in an autocomplete
-    list: payload.list.map(c => ({ ...c, name: c.label, id: c.tags_id, type: 'collection' })),
+    list: payload.list.map(c => ({
+      ...c,
+      name: `${c.tag_set_label}: ${c.label}`,
+      id: c.tags_id,
+      type: 'collection',
+    })),
   }),
   [RESET_COLLECTION_SEARCH]: () => ({ list: [] }),
 });

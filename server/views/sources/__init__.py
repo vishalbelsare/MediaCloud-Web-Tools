@@ -1,3 +1,5 @@
 
-# the magic tag set that has collection tags in it
+# some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
+GV_TAG_SET_ID = 556
+EMM_TAG_SET_ID = 597
