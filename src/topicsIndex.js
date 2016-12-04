@@ -9,7 +9,7 @@ import { filterBySnapshot, filterByTimespan, filterByFocus } from './actions/top
  * This serves as the primary entry point to the Media Cloud Topic Mapper app.
  */
 
-setVersion('1.0.0');
+setVersion('1.1.0');
 
 setAppName('topics');
 
