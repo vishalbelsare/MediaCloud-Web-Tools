@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import FocalTechniqueSelector from './FocalTechniqueSelector';
 import AppButton from '../../../../common/AppButton';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import messages from '../../../../../resources/messages';
 
 const localMessages = {
@@ -15,59 +15,37 @@ const localMessages = {
     defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
 };
 
-class FocusForm1TechniqueContainer extends React.Component {
+const formSelector = formValueSelector('snapshotFocus');
 
-  componentWillMount() {
-    // grab any pre-filled-in props from the url and save them here
-    const { setProperties } = this.props;
-    const { focalSetDefId, focalTechnique } = this.props.location.query;
-    if (focalTechnique !== undefined) {
-      setProperties({ focalTechnique });
-    }
-    // if there aren't any focal set defs, the user should have to create a new one
-    if (focalSetDefId !== undefined) {
-      setProperties({ focalSetDefinitionId: focalSetDefId });
-    }
-  }
-
-  handleFocalTechniqueSelected = (focalTechnique) => {
-    const { setProperties } = this.props;
-    setProperties({ focalTechnique });
-  }
-
-  render() {
-    const { handleSubmit, finishStep, properties } = this.props;
-    const { formatMessage } = this.props.intl;
-    let nextButtonDisabled = true;
-    if (properties.focalTechnique !== null) {
-      nextButtonDisabled = false;
-    }
-    return (
-      <Grid>
-        <form className="focus-create-setup" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
-          <Row>
-            <Col lg={10} md={10} sm={10}>
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-              <p>
-                <FormattedMessage {...localMessages.about} />
-              </p>
-            </Col>
-          </Row>
-          <FocalTechniqueSelector
-            selected={properties.focalTechnique}
-            onSelected={this.handleFocalTechniqueSelected}
-          />
-          <Row>
-            <Col lg={12} md={12} sm={12} >
-              <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
-            </Col>
-          </Row>
-        </form>
-      </Grid>
-    );
-  }
-
-}
+const FocusForm1TechniqueContainer = (props) => {
+  const { handleSubmit, finishStep, submitting, currentFocalTechnique } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <Grid>
+      <form className="focus-create-setup" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <Row>
+          <Col lg={10} md={10} sm={10}>
+            <h1><FormattedMessage {...localMessages.title} /></h1>
+            <p>
+              <FormattedMessage {...localMessages.about} />
+            </p>
+          </Col>
+        </Row>
+        <FocalTechniqueSelector />
+        <Row>
+          <Col lg={12} md={12} sm={12} >
+            <AppButton
+              disabled={(currentFocalTechnique === undefined) || submitting}
+              type="submit"
+              label={formatMessage(messages.next)}
+              primary
+            />
+          </Col>
+        </Row>
+      </form>
+    </Grid>
+  );
+};
 
 FocusForm1TechniqueContainer.propTypes = {
   // from parent
@@ -79,21 +57,20 @@ FocusForm1TechniqueContainer.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
   // from state
-  properties: React.PropTypes.object.isRequired,
+  currentFocalTechnique: React.PropTypes.string,
   // from dispatch
-  setProperties: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  properties: state.topics.selected.focalSets.create.properties,
+  // pull the focal set id out of the form so we know when to show the focal set create sub form
+  currentFocalTechnique: formSelector(state, 'focalTechnique'),
 });
 
 const mapDispatchToProps = dispatch => ({
-  setProperties: (properties) => {
-    dispatch(setNewFocusProperties(properties));
-  },
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
   },

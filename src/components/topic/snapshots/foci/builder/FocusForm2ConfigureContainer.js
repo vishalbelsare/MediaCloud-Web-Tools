@@ -1,18 +1,21 @@
 import React from 'react';
+import { formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContainer';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 
 const localMessages = {
   unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
 };
 
+const formSelector = formValueSelector('snapshotFocus');
+
 const FocusForm2ConfigureContainer = (props) => {
-  const { topicId, properties, initialValues, handleNextStep, handlePreviousStep } = props;
+  const { topicId, initialValues, handleNextStep, currentFocalTechnique, handlePreviousStep } = props;
   let content = null;
-  switch (properties.focalTechnique) {
+  switch (currentFocalTechnique) {
     case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
       content = (<EditKeywordSearchContainer
         topicId={topicId}
@@ -37,23 +40,22 @@ FocusForm2ConfigureContainer.propTypes = {
   initialValues: React.PropTypes.object,
   // form context
   intl: React.PropTypes.object.isRequired,
-  // from state
-  properties: React.PropTypes.object.isRequired,
   // from dipatch
   handlePreviousStep: React.PropTypes.func.isRequired,
   handleNextStep: React.PropTypes.func.isRequired,
+  // from state:
+  currentFocalTechnique: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  properties: state.topics.selected.focalSets.create.properties,
+  currentFocalTechnique: formSelector(state, 'focalTechnique'),
 });
 
 const mapDispatchToProps = dispatch => ({
   handlePreviousStep: () => {
     dispatch(goToCreateFocusStep(0));
   },
-  handleNextStep: (additionalProperties) => {
-    dispatch(setNewFocusProperties(additionalProperties));
+  handleNextStep: () => {
     dispatch(goToCreateFocusStep(2));
   },
 });

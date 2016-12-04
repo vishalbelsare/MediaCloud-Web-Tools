@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
 import FocusDescriptionForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
-import { setNewFocusProperties, goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
 import messages from '../../../../../resources/messages';
 import composeAsyncContainer from '../../../../common/AsyncContainer';
 
@@ -16,49 +16,39 @@ const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Focus' },
 };
 
-class FocusForm3DescribeContainer extends React.Component {
-
-  handleFocalSetSelected = (event, index, focalSetDefinitionId) => {
-    const { setProperties } = this.props;
-    setProperties({ focalSetDefinitionId });
+const FocusForm3DescribeContainer = (props) => {
+  const { topicId, handleSubmit, finishStep, goToStep, initialValues, focalSetDefinitions } = props;
+  const { formatMessage } = props.intl;
+  // figure out a which focal set ot default to
+  if (focalSetDefinitions.length === 0) {
+    initialValues.focalSetId = NEW_FOCAL_SET_PLACEHOLDER_ID;
+  } else {
+    initialValues.focalSetId = focalSetDefinitions[0].focal_set_definitions_id;
   }
-
-  render() {
-    const { topicId, handleSubmit, finishStep, goToStep, properties, initialValues, focalSetDefinitions } = this.props;
-    const { formatMessage } = this.props.intl;
-    // figure out a which focal set ot default to
-    if (focalSetDefinitions.length === 0) {
-      initialValues.focalSetId = NEW_FOCAL_SET_PLACEHOLDER_ID;
-    } else {
-      initialValues.focalSetId = focalSetDefinitions[0].focal_set_definitions_id;
-    }
-    return (
-      <Grid>
-        <form className="focus-create-details" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
-          <Row>
-            <Col lg={10} md={10} sm={10}>
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-            </Col>
-          </Row>
-          <FocusDescriptionForm
-            topicId={topicId}
-            initialValues={initialValues}
-            focalSetDefinitions={focalSetDefinitions}
-            properties={properties}
-          />
-          <Row>
-            <Col lg={12} md={12} sm={12} >
-              <AppButton label={formatMessage(messages.previous)} onClick={() => goToStep(1)} />
-              &nbsp; &nbsp;
-              <AppButton type="submit" label={formatMessage(messages.next)} primary />
-            </Col>
-          </Row>
-        </form>
-      </Grid>
-    );
-  }
-
-}
+  return (
+    <Grid>
+      <form className="focus-create-details" name="snapshotFocusForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <Row>
+          <Col lg={10} md={10} sm={10}>
+            <h1><FormattedMessage {...localMessages.title} /></h1>
+          </Col>
+        </Row>
+        <FocusDescriptionForm
+          topicId={topicId}
+          initialValues={initialValues}
+          focalSetDefinitions={focalSetDefinitions}
+        />
+        <Row>
+          <Col lg={12} md={12} sm={12} >
+            <AppButton label={formatMessage(messages.previous)} onClick={() => goToStep(1)} />
+            &nbsp; &nbsp;
+            <AppButton type="submit" label={formatMessage(messages.next)} primary />
+          </Col>
+        </Row>
+      </form>
+    </Grid>
+  );
+};
 
 FocusForm3DescribeContainer.propTypes = {
   // from parent
@@ -72,10 +62,8 @@ FocusForm3DescribeContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   focalSetDefinitions: React.PropTypes.array.isRequired,
-  properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
   // from dispatch
-  setProperties: React.PropTypes.func.isRequired,
   goToStep: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
@@ -84,14 +72,10 @@ FocusForm3DescribeContainer.propTypes = {
 const mapStateToProps = state => ({
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
-  properties: state.topics.selected.focalSets.create.properties,
   formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  setProperties: (properties) => {
-    dispatch(setNewFocusProperties(properties));
-  },
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
   },
@@ -102,19 +86,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      const focusProps = {
-        topicId: ownProps.topicId,
-        focusName: values.focusName,
-        focusDescription: values.focusDescription,
-        focalSetDefinitionId: values.focalSetId,
-      };
-      if (values.focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-        // for a new focal set we need the name and descripton to save them
-        focusProps.focalSetName = values.focalSetName;
-        focusProps.focalSetDescription = values.focalSetDescription;
-      }
-      dispatchProps.setProperties(focusProps);
+    finishStep: () => {
       dispatchProps.goToStep(3);
     },
   });

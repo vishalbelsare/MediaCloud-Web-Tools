@@ -3,17 +3,10 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import { fetchFocalSetDefinitions, setNewFocusProperties } from '../../../../actions/topicActions';
+import { fetchFocalSetDefinitions } from '../../../../actions/topicActions';
 
 
 class EditFocusContainer extends React.Component {
-
-  componentWillMount() {
-    const { setProperties, focusDefinition } = this.props;
-    if (focusDefinition) {
-      setProperties(this.getInitialValues());
-    }
-  }
 
   getInitialValues = () => {
     const { topicId, focusDefinition } = this.props;
@@ -50,7 +43,6 @@ EditFocusContainer.propTypes = {
   // from state
   focusDefinition: React.PropTypes.object.isRequired,
   // from dispatch
-  setProperties: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
@@ -77,7 +69,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setProperties: properties => dispatch(setNewFocusProperties(properties)),
   fetchData: topicId => dispatch(fetchFocalSetDefinitions(topicId)),
 });
 

@@ -25,11 +25,11 @@ const localMessages = {
 const formSelector = formValueSelector('snapshotFocus');
 
 const FocusDescriptionForm = (props) => {
-  const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, focalSetId } = props;
+  const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, currentFocalSetDefinitionId } = props;
   const { formatMessage } = props.intl;
   // if they pick "make a new focal set" then let them enter name and description
   let focalSetContent = null;
-  if (focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+  if (currentFocalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
     focalSetContent = <FocalSetForm initialValues={initialValues} />;
   }
   return (
@@ -52,7 +52,7 @@ const FocusDescriptionForm = (props) => {
         </Col>
         <Col lg={3} xs={12}>
           <Field
-            name="focalSetId"
+            name="focalSetDefinitionId"
             component={renderSelectField}
             floatingLabelText={localMessages.pickFocalSet}
           >
@@ -86,18 +86,17 @@ FocusDescriptionForm.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   initialValues: React.PropTypes.object.isRequired,
   focalSetDefinitions: React.PropTypes.array.isRequired,
-  properties: React.PropTypes.object.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   // from state
-  focalSetId: React.PropTypes.number,
+  currentFocalSetDefinitionId: React.PropTypes.number,
 };
 
 const mapStateToProps = state => ({
   // pull the focal set id out of the form so we know when to show the focal set create sub form
-  focalSetId: parseInt(formSelector(state, 'focalSetId'), 10),
+  currentFocalSetDefinitionId: parseInt(formSelector(state, 'focalSetDefinitionId'), 10),
 });
 
 function validate(values) {

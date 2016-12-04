@@ -2,13 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
 import BackLinkingControlBar from '../../../BackLinkingControlBar';
 import FocusForm1TechniqueContainer from './FocusForm1TechniqueContainer';
 import FocusForm2ConfigureContainer from './FocusForm2ConfigureContainer';
 import FocusForm3DescribeContainer from './FocusForm3DescribeContainer';
 import FocusForm4ConfirmContainer from './FocusForm4ConfirmContainer';
-import { setNewFocusProperties, goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 
 const localMessages = {
   backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Foci Manager' },
@@ -88,7 +87,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleUnmount: () => {
     dispatch(goToCreateFocusStep(0));
-    dispatch(setNewFocusProperties(INITIAL_STATE));
   },
 });
 

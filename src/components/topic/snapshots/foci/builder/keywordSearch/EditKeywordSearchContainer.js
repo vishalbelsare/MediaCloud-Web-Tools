@@ -1,14 +1,15 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
 import messages from '../../../../../../resources/messages';
-import { setNewFocusProperties } from '../../../../../../actions/topicActions';
 import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
 import { notEmptyString } from '../../../../../../lib/formValidators';
+
+const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
   title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Configure Your {technique} Focus' },
@@ -17,56 +18,70 @@ const localMessages = {
   errorNoKeywords: { id: 'focalTechnique.boolean.keywords.error', defaultMessage: 'You need to specify some keywords.' },
 };
 
-const EditKeywordSearchContainer = (props) => {
-  const { topicId, renderTextField, handleSubmit, handleSearchClick, onPreviousStep, finishStep, properties } = props;
-  const { formatMessage } = props.intl;
-  let previewContent = null;
-  let nextButtonDisabled = true;
-  if ((properties.keywords !== null) && (properties.keywords !== undefined) && (properties.keywords.length > 0)) {
-    nextButtonDisabled = false;
-    previewContent = (
-      <div>
-        <KeywordSearchResultsContainer topicId={topicId} keywords={properties.keywords} />
-      </div>
+
+class EditKeywordSearchContainer extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { keywords: null };
+  }
+
+  render() {
+    const { topicId, renderTextField, currentKeywords, currentFocalTechnique, handleSubmit, onPreviousStep, finishStep } = this.props;
+    const { formatMessage } = this.props.intl;
+    let previewContent = null;
+    let nextButtonDisabled = true;
+    if ((this.state.keywords !== null) && (this.state.keywords !== undefined) && (this.state.keywords.length > 0)) {
+      nextButtonDisabled = false;
+      previewContent = (
+        <div>
+          <KeywordSearchResultsContainer topicId={topicId} keywords={this.state.keywords} />
+        </div>
+      );
+    }
+    return (
+      <Grid>
+        <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+          <Row>
+            <Col lg={10}>
+              <h2><FormattedMessage {...localMessages.title} values={{ technique: currentFocalTechnique }} /></h2>
+              <p>
+                <FormattedMessage {...localMessages.about} />
+              </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={8} xs={12}>
+              <Field
+                name="keywords"
+                component={renderTextField}
+                floatingLabelText={messages.searchByKeywords}
+                fullWidth
+              />
+            </Col>
+            <Col lg={2} xs={12}>
+              <AppButton
+                label={formatMessage(messages.search)}
+                style={{ marginTop: 33 }}
+                onClick={() => this.setState({ keywords: currentKeywords })}
+              />
+            </Col>
+          </Row>
+          { previewContent }
+          <Row>
+            <Col lg={8} xs={12}>
+              <br />
+              <AppButton onClick={onPreviousStep} label={formatMessage(messages.previous)} />
+              &nbsp; &nbsp;
+              <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
+            </Col>
+          </Row>
+        </form>
+      </Grid>
     );
   }
-  return (
-    <Grid>
-      <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
-        <Row>
-          <Col lg={10}>
-            <h2><FormattedMessage {...localMessages.title} values={{ technique: properties.focalTechnique }} /></h2>
-            <p>
-              <FormattedMessage {...localMessages.about} />
-            </p>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} xs={12}>
-            <Field
-              name="keywords"
-              component={renderTextField}
-              floatingLabelText={messages.searchByKeywords}
-              fullWidth
-            />
-          </Col>
-          <Col lg={2} xs={12}>
-            <AppButton label={formatMessage(messages.search)} style={{ marginTop: 33 }} onClick={handleSearchClick} />
-          </Col>
-        </Row>
-        { previewContent }
-        <Row>
-          <Col lg={8} xs={12}>
-            <br />
-            <AppButton onClick={onPreviousStep} label={formatMessage(messages.previous)} />
-            &nbsp; &nbsp;
-            <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
-          </Col>
-        </Row>
-      </form>
-    </Grid>
-  );
-};
+
+}
 
 EditKeywordSearchContainer.propTypes = {
   // from parent
@@ -75,11 +90,11 @@ EditKeywordSearchContainer.propTypes = {
   onPreviousStep: React.PropTypes.func.isRequired,
   onNextStep: React.PropTypes.func.isRequired,
   // from state
-  properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
+  currentKeywords: React.PropTypes.string,
+  currentFocalTechnique: React.PropTypes.string,
   // from dispatch
   finishStep: React.PropTypes.func.isRequired,
-  handleSearchClick: React.PropTypes.func.isRequired,
   // from compositional helper
   intl: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
@@ -87,8 +102,9 @@ EditKeywordSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  properties: state.topics.selected.focalSets.create.properties,
   formData: state.form.snapshotFocus,
+  currentKeywords: formSelector(state, 'keywords'),
+  currentFocalTechnique: formSelector(state, 'focalTechnique'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -98,19 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     ownProps.onNextStep(customProps);
   },
-  setProperties: (customProperties) => {
-    dispatch(setNewFocusProperties(customProperties));
-  },
 });
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleSearchClick: () => {
-      const keywords = stateProps.formData.values.keywords;
-      dispatchProps.setProperties({ keywords });
-    },
-  });
-}
 
 function validate(values) {
   const errors = {};
@@ -130,7 +134,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        connect(mapStateToProps, mapDispatchToProps)(
           EditKeywordSearchContainer
         )
       )

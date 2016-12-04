@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { reduxForm, formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
@@ -22,6 +24,8 @@ const localMessages = {
     defaultMessage: 'When you aren\'t sure what is going on, we can use an algorithm to detect communities of sub-conversations within the Topic for you, creating a Focus for each.' },
 };
 
+const formSelector = formValueSelector('snapshotFocus');
+
 class FocalTechniqueSelector extends React.Component {
 
   selectBooleanQuery = () => { this.handleSelection(FOCAL_TECHNIQUE_BOOLEAN_QUERY); }
@@ -30,19 +34,19 @@ class FocalTechniqueSelector extends React.Component {
   selectAutoMatic = () => { this.handleSelection(FOCAL_TECHNIQUE_AUTO_MAGIC); }
 
   handleSelection = (focalTechniqueName) => {
-    const { onSelected } = this.props;
-    onSelected(focalTechniqueName);
+    const { change } = this.props;
+    change('focalTechnique', focalTechniqueName);
   }
 
   render() {
-    const { selected } = this.props;
+    const { currentFocalTechnique } = this.props;
     return (
       <div className="focal-technique-selector">
         <Row>
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectBooleanQuery}
-              selected={selected === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
               id="Boolean Query"
               image="/static/img/focal-technique-keywords-2x.png"
               nameMsg={localMessages.keywordName}
@@ -52,7 +56,7 @@ class FocalTechniqueSelector extends React.Component {
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectReferenceSetUpload}
-              selected={selected === FOCAL_TECHNIQUE_REFERENCE_SET}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_REFERENCE_SET}
               id="Reference Set Upload"
               image="/static/img/focal-technique-reference-2x.png"
               nameMsg={localMessages.referenceName}
@@ -64,7 +68,7 @@ class FocalTechniqueSelector extends React.Component {
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectCommunityDetection}
-              selected={selected === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
               id="Community Selection"
               image="/static/img/focal-technique-manual-2x.png"
               nameMsg={localMessages.manualName}
@@ -76,7 +80,7 @@ class FocalTechniqueSelector extends React.Component {
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={this.selectAutoMatic}
-              selected={selected === FOCAL_TECHNIQUE_AUTO_MAGIC}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_AUTO_MAGIC}
               id="AutoMagic Community Detection"
               image="/static/img/focal-technique-automagic-2x.png"
               nameMsg={localMessages.automagicName}
@@ -97,12 +101,36 @@ class FocalTechniqueSelector extends React.Component {
 }
 
 FocalTechniqueSelector.propTypes = {
-  selected: React.PropTypes.string,
-  onSelected: React.PropTypes.func.isRequired,
+  // from parent
+  // from componsition chain
   intl: React.PropTypes.object.isRequired,
+  change: React.PropTypes.func.isRequired,
+  // from state
+  currentFocalTechnique: React.PropTypes.string,
 };
+
+const mapStateToProps = state => ({
+  // pull the focal set id out of the form so we know when to show the focal set create sub form
+  currentFocalTechnique: formSelector(state, 'focalTechnique'),
+});
+
+function validate() {
+  const errors = {};
+  return errors;
+}
+
+const reduxFormConfig = {
+  form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
+  destroyOnUnmount: false,  // so the wizard works
+  validate,
+};
+
 
 export default
   injectIntl(
-    FocalTechniqueSelector
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps)(
+        FocalTechniqueSelector
+      )
+    )
   );
