@@ -68,14 +68,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage) => {
     const newFocusDefinition = {
-      name: properties.name,
-      description: properties.description,
-      query: properties.keywords,
+      focusName: properties.focusName,
+      focusDescription: properties.focusDescription,
+      keywords: properties.keywords,
     };
     if (properties.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
       const newFocalSetDefinition = {
-        name: properties.focalSetName,
-        description: properties.focalSetDescription,
+        focalSetName: properties.focalSetName,
+        focalSetDescription: properties.focalSetDescription,
         focalTechnique: properties.focalTechnique,
       };
       // save the focal definition

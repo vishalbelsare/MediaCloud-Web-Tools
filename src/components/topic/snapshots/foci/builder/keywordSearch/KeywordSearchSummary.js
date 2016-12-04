@@ -22,8 +22,8 @@ const KeywordSearchSummary = (props) => {
       <Row>
         <Col lg={12}>
           <ul>
-            <li><FormattedHTMLMessage {...localMessages.name} values={{ name: properties.name }} /></li>
-            <li><FormattedHTMLMessage {...localMessages.description} values={{ description: properties.description }} /></li>
+            <li><FormattedHTMLMessage {...localMessages.name} values={{ name: properties.focusName }} /></li>
+            <li><FormattedHTMLMessage {...localMessages.description} values={{ description: properties.focusDescription }} /></li>
             <li><FormattedHTMLMessage {...localMessages.focalTechnique} values={{ name: properties.focalTechnique }} /></li>
             <li><FormattedHTMLMessage {...localMessages.keywords} values={{ keywords: properties.keywords }} /></li>
           </ul>

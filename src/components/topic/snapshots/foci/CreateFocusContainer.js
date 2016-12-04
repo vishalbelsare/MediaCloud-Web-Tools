@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import FocusBuilderWizard from './create/FocusBuilderWizard';
+import FocusBuilderWizard from './builder/FocusBuilderWizard';
 
 const CreateFocusContainer = (props) => {
   const { topicId, location } = props;

@@ -90,7 +90,7 @@ export function topicFocalSetsList(topicId, snapshotId) {
 }
 
 export function createFocalSetDefinition(topicId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'focalTechnique']);
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'focalTechnique']);
   return createPostingApiPromise(`api/topics/${topicId}/focal-set-definitions/create`, acceptedParams);
 }
 
@@ -99,7 +99,7 @@ export function listFocalSetDefinitions(topicId) {
 }
 
 export function createFocusDefinition(topicId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'focalSetDefinitionsId', 'query']);
+  const acceptedParams = acceptParams(params, ['focusName', 'focusDescription', 'focalSetDefinitionsId', 'keywords']);
   return createPostingApiPromise(`/api/topics/${topicId}/focus-definitions/create`, acceptedParams);
 }
 

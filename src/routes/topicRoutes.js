@@ -57,7 +57,7 @@ const topicRoutes = (
         <IndexRoute component={SnapshotHome} />
         <Route path="/topics/:topicId/snapshot/foci" component={ManageFocalSetsContainer} />
         <Route path="/topics/:topicId/snapshot/foci/create" component={CreateFocusContainer} />
-        <Route path="/topics/:topicId/snapshot/:focusId/edit" component={EditFocusContainer} />
+        <Route path="/topics/:topicId/snapshot/foci/:focusDefId/edit" component={EditFocusContainer} />
         <Route path="/topics/:topicId/snapshot/timespans" component={ManageTimespansContainer} />
       </Route>
 

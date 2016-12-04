@@ -31,7 +31,7 @@ class FocusBuilderWizard extends React.Component {
   }
 
   render() {
-    const { topicId, currentStep, location } = this.props;
+    const { topicId, currentStep, location, initialValues } = this.props;
     const steps = [
       FocusForm1TechniqueContainer,
       FocusForm2ConfigureContainer,
@@ -40,7 +40,6 @@ class FocusBuilderWizard extends React.Component {
     ];
     const CurrentStepComponent = steps[currentStep];
     const stepLabelStyle = { height: 45 };
-    const initialValues = { };
     return (
       <div className="focus-builder-wizard">
         <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={`/topics/${topicId}/snapshot/foci`} >

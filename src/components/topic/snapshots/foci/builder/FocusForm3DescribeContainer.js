@@ -105,8 +105,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     finishStep: (values) => {
       const focusProps = {
         topicId: ownProps.topicId,
-        name: values.focusName,
-        description: values.focusDescription,
+        focusName: values.focusName,
+        focusDescription: values.focusDescription,
         focalSetDefinitionId: values.focalSetId,
       };
       if (values.focalSetId === NEW_FOCAL_SET_PLACEHOLDER_ID) {

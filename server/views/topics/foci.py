@@ -9,14 +9,14 @@ from server.auth import user_mediacloud_client
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/focus-definitions/create', methods=['POST'])
-@form_fields_required('name', 'description', 'query', 'focalSetDefinitionsId')
+@form_fields_required('focusName', 'focusDescription', 'keywords', 'focalSetDefinitionsId')
 @flask_login.login_required
 @api_error_handler
 def topic_focus_definition_create(topics_id):
     user_mc = user_mediacloud_client()
-    name = request.form['name']
-    description = request.form['description']
-    query = request.form['query']
+    name = request.form['focusName']
+    description = request.form['focusDescription']
+    query = request.form['keywords']
     focal_set_definitions_id = request.form['focalSetDefinitionsId']
     new_focal_set = user_mc.topicFocusDefinitionCreate(topics_id,
         name=name, description=description, query=query, focal_set_definitions_id=focal_set_definitions_id)

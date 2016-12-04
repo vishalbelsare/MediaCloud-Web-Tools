@@ -3,8 +3,8 @@ import { createReducer } from '../../../../../lib/reduxHelpers';
 
 export const INITIAL_STATE = {
   topicId: null,
-  name: null,
-  description: null,
+  focusName: null,
+  focusDescription: null,
   focalSetDefinitionId: null,
   focalTechnique: null,
 };
