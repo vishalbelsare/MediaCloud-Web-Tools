@@ -37,6 +37,14 @@ const BrandToolbar = (props) => {
                   <FormattedMessage {...messages.topicsToolShortName} />
                 </a>
               </li>
+              <li className="blog">
+                <a
+                  href="http://mediacloud.org/"
+                  title={formatMessage(messages.blogToolDescription)}
+                >
+                  <FormattedMessage {...messages.blogToolShortName} />
+                </a>
+              </li>
             </ul>
           </Col>
           <Col lg={2}>

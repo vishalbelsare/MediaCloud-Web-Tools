@@ -3,6 +3,9 @@ const messages = {
 
   suiteName: { id: 'suite.name', defaultMessage: 'Media Cloud' },
 
+  blogToolShortName: { id: 'tool.blog.name.short', defaultMessage: 'Blog' },
+  blogToolName: { id: 'tool.blog.name', defaultMessage: 'Blog' },
+  blogToolDescription: { id: 'tool.blog.description', defaultMessage: 'visit our homepage for updates' },
   dashboardToolShortName: { id: 'tool.dashboard.name.short', defaultMessage: 'Dashboard' },
   dashboardToolName: { id: 'tool.dashboard.name', defaultMessage: 'Dashboard' },
   dashboardToolDescription: { id: 'tool.dashboard.description', defaultMessage: 'examine how much attention online media gives a topic' },
