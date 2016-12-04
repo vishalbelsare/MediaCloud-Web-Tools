@@ -10,14 +10,15 @@ const localMessages = {
 };
 
 const FocusForm2ConfigureContainer = (props) => {
-  const { topicId, properties, initialValues, handleFinishStep } = props;
+  const { topicId, properties, initialValues, handleNextStep, handlePreviousStep } = props;
   let content = null;
   switch (properties.focalTechnique) {
     case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
       content = (<EditKeywordSearchContainer
         topicId={topicId}
         initialValues={initialValues}
-        onFinishStep={handleFinishStep}
+        onPreviousStep={handlePreviousStep}
+        onNextStep={handleNextStep}
       />);
       break;
     default:
@@ -39,7 +40,8 @@ FocusForm2ConfigureContainer.propTypes = {
   // from state
   properties: React.PropTypes.object.isRequired,
   // from dipatch
-  handleFinishStep: React.PropTypes.func.isRequired,
+  handlePreviousStep: React.PropTypes.func.isRequired,
+  handleNextStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -47,7 +49,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleFinishStep: (additionalProperties) => {
+  handlePreviousStep: () => {
+    dispatch(goToCreateFocusStep(0));
+  },
+  handleNextStep: (additionalProperties) => {
     dispatch(setNewFocusProperties(additionalProperties));
     dispatch(goToCreateFocusStep(2));
   },

@@ -24,7 +24,7 @@ class FocusForm3DescribeContainer extends React.Component {
   }
 
   render() {
-    const { topicId, handleSubmit, finishStep, properties, initialValues, focalSetDefinitions } = this.props;
+    const { topicId, handleSubmit, finishStep, goToStep, properties, initialValues, focalSetDefinitions } = this.props;
     const { formatMessage } = this.props.intl;
     // figure out a which focal set ot default to
     if (focalSetDefinitions.length === 0) {
@@ -48,6 +48,8 @@ class FocusForm3DescribeContainer extends React.Component {
           />
           <Row>
             <Col lg={12} md={12} sm={12} >
+              <AppButton label={formatMessage(messages.previous)} onClick={() => goToStep(1)} />
+              &nbsp; &nbsp;
               <AppButton type="submit" label={formatMessage(messages.next)} primary />
             </Col>
           </Row>
@@ -74,6 +76,7 @@ FocusForm3DescribeContainer.propTypes = {
   formData: React.PropTypes.object,
   // from dispatch
   setProperties: React.PropTypes.func.isRequired,
+  goToStep: React.PropTypes.func.isRequired,
   finishStep: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
 };

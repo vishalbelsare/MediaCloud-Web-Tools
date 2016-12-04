@@ -18,7 +18,7 @@ const localMessages = {
 };
 
 const EditKeywordSearchContainer = (props) => {
-  const { topicId, renderTextField, handleSubmit, handleSearchClick, finishStep, properties } = props;
+  const { topicId, renderTextField, handleSubmit, handleSearchClick, onPreviousStep, finishStep, properties } = props;
   const { formatMessage } = props.intl;
   let previewContent = null;
   let nextButtonDisabled = true;
@@ -58,6 +58,8 @@ const EditKeywordSearchContainer = (props) => {
         <Row>
           <Col lg={8} xs={12}>
             <br />
+            <AppButton onClick={onPreviousStep} label={formatMessage(messages.previous)} />
+            &nbsp; &nbsp;
             <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
           </Col>
         </Row>
@@ -70,7 +72,8 @@ EditKeywordSearchContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   initialValues: React.PropTypes.object,
-  onFinishStep: React.PropTypes.func.isRequired,
+  onPreviousStep: React.PropTypes.func.isRequired,
+  onNextStep: React.PropTypes.func.isRequired,
   // from state
   properties: React.PropTypes.object.isRequired,
   formData: React.PropTypes.object,
@@ -93,7 +96,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const customProps = {
       keywords: values.keywords,
     };
-    ownProps.onFinishStep(customProps);
+    ownProps.onNextStep(customProps);
   },
   setProperties: (customProperties) => {
     dispatch(setNewFocusProperties(customProperties));

@@ -7,7 +7,7 @@ import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties }
+import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, setNewFocusProperties, goToCreateFocusStep }
   from '../../../../../actions/topicActions';
 import { updateFeedback } from '../../../../../actions/appActions';
 import { INITIAL_STATE } from '../../../../../reducers/topics/selected/focalSets/create/properties';
@@ -21,7 +21,7 @@ const localMessages = {
 };
 
 const FocusForm4ConfirmContainer = (props) => {
-  const { topicId, properties, initialValues, saveAndAddAnother } = props;
+  const { topicId, properties, initialValues, handlePreviousStep, saveAndAddAnother } = props;
   const { formatMessage } = props.intl;
   let content = null;
   switch (properties.focalTechnique) {
@@ -36,6 +36,8 @@ const FocusForm4ConfirmContainer = (props) => {
       { content }
       <Row>
         <Col lg={12}>
+          <AppButton label={formatMessage(messages.previous)} onClick={handlePreviousStep} />
+          &nbsp; &nbsp;
           <AppButton primary label={formatMessage(localMessages.addAnotherFocus)} onClick={saveAndAddAnother} />
         </Col>
       </Row>
@@ -53,6 +55,7 @@ FocusForm4ConfirmContainer.propTypes = {
   properties: React.PropTypes.object.isRequired,
   // from dispatch
   saveAndAddAnother: React.PropTypes.func.isRequired,
+  handlePreviousStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -60,6 +63,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  handlePreviousStep: () => {
+    dispatch(goToCreateFocusStep(2));
+  },
   saveFocus: (topicId, properties, focalSetSavedMessage, focusSavedMessage) => {
     const newFocusDefinition = {
       name: properties.name,

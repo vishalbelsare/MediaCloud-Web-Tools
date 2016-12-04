@@ -35,7 +35,7 @@ class KeywordSearchResultsContainer extends React.Component {
       content = (
         <Row>
           <Col lg={10} md={10} sm={12}>
-            <h3><FormattedMessage {...localMessages.title} /></h3>
+            <h2><FormattedMessage {...localMessages.title} /></h2>
             <StoryTable stories={stories} topicId={topicId} />
           </Col>
           <Col lg={2} md={2} sm={12}>
