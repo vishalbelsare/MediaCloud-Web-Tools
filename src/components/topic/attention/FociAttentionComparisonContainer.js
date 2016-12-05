@@ -36,7 +36,7 @@ class FociAttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { selectedFocalSetId, filters, fetchData } = this.props;
     if ((nextProps.selectedFocalSetId !== selectedFocalSetId) || (nextProps.filters.timespanId !== filters.timespanId)) {
-      fetchData(nextProps.topicId, nextProps.selectedFocalSetId, filters);
+      fetchData(nextProps.topicId, nextProps.selectedFocalSetId, nextProps.filters);
     }
   }
   render() {
