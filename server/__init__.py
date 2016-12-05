@@ -16,8 +16,8 @@ import mediacloud
 
 from server.database import AppDatabase
 
-SERVER_MODE_DEV = "DEV"
-SERVER_MODE_PROD = "PROD"
+SERVER_MODE_DEV = "dev"
+SERVER_MODE_PROD = "prod"
 SERVER_APP_TOPICS = "topics"
 SERVER_APP_SOURCES = "sources"
 
@@ -45,7 +45,7 @@ logger.info("-------------------------------------------------------------------
 flask_login_logger = logging.getLogger('flask_login')
 flask_login_logger.setLevel(logging.DEBUG)
 
-server_mode = settings.get('server', 'mode')
+server_mode = settings.get('server', 'mode').lower()
 if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
     logger.error("Unknown server mode '%s', set a mode in the `config/server.config` file", server_mode)
     sys.exit(1)
