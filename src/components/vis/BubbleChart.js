@@ -7,9 +7,15 @@ const DEFAULT_WIDTH = 530;
 const DEFAULT_MAX_BUBBLE_RADIUS = 70;
 const DEFAULT_HEIGHT = 200;
 
-const PLACEMENT_AUTO = 'auto';
-const PLACEMENT_HORIZONTAL = 'horizontal';
+// options for bubble `placement`
+export const PLACEMENT_AUTO = 'PLACEMENT_AUTO';
+export const PLACEMENT_HORIZONTAL = 'PLACEMENT_HORIZONTAL';
 const DEFAULT_PLACEMENT = PLACEMENT_AUTO;
+
+// options for `textPlacement`
+export const TEXT_PLACEMENT_ABOVE = 'TEXT_ABOVE';
+export const TEXT_PLACEMENT_CENTER = 'TEXT_CENTER';
+const DEFAULT_TEXT_PLACEMENT = TEXT_PLACEMENT_CENTER;
 
 /**
  * Draw a bubble chart with labels.  Values are mapped to area, not radius.
@@ -17,7 +23,7 @@ const DEFAULT_PLACEMENT = PLACEMENT_AUTO;
 class BubbleChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, placement } = this.props;
+    const { data, width, height, maxBubbleRadius, placement, textPlacement, domId } = this.props;
     const { formatNumber } = this.props.intl;
     const options = {
       width,
@@ -37,13 +43,16 @@ class BubbleChart extends React.Component {
     if ((placement === null) || (placement === undefined)) {
       options.placement = DEFAULT_PLACEMENT;
     }
+    if ((textPlacement === null) || (textPlacement === undefined)) {
+      options.textPlacement = DEFAULT_TEXT_PLACEMENT;
+    }
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
     const maxValue = d3.max(data.map(d => d.value));
     const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     let circles = null;
     switch (options.placement) {
-      case PLACEMENT_HORIZONTAL:
+      case PLACEMENT_HORIZONTAL:      // EXPERIMENTAL
         circles = data.map((d, idx, list) => {
           const preceeding = list.slice(0, idx);
           const diameters = preceeding.map(d2 => (radius(d2.value) + 5) * 2);
@@ -67,8 +76,10 @@ class BubbleChart extends React.Component {
     let content = null;
     if (circles) {
       // render it all
-      const node = ReactFauxDOM.createElement('svg');
-      const svg = d3.select(node)
+      const node = ReactFauxDOM.createElement('div');
+      const div = d3.select(node).append('div').attr('id', 'bubble-chart-wrapper');
+      const svg = div.append('svg:svg');
+      svg.attr('id', domId)
         .attr('width', options.width)
         .attr('height', options.height)
         .attr('class', 'bubble-chart');
@@ -85,15 +96,25 @@ class BubbleChart extends React.Component {
         .attr('cy', d => d.y)
         .style('fill', d => d.color || '');
       // format the text for each bubble
+      let textYPlacement = null;
+      switch (textPlacement) {
+        case TEXT_PLACEMENT_ABOVE:
+          textYPlacement = d => d.y - d.r - 12;
+          break;
+        case TEXT_PLACEMENT_CENTER:
+        default:
+          textYPlacement = d => d.y;
+          break;
+      }
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => d.y - d.r - 18)
+        .attr('y', d => textYPlacement(d) - 6)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.labelColor} !important` || '')
         .text(d => d.label);
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => d.y - d.r - 5)
+        .attr('y', d => textYPlacement(d) + 7)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.labelColor} !important` || '')
         .text(d => formatNumber(d.value));
@@ -108,9 +129,11 @@ class BubbleChart extends React.Component {
 BubbleChart.propTypes = {
   intl: React.PropTypes.object.isRequired,
   data: React.PropTypes.array.isRequired, // [ {'label': string, 'value': number, 'color': string(optional), 'labelColor': string(optional)}, ... ]
+  domId: React.PropTypes.string.isRequired,  // to make download work
   width: React.PropTypes.number,
   height: React.PropTypes.number,
-  placement: React.PropTypes.string,  // [ 'auto' | 'horiztonal' ]
+  placement: React.PropTypes.string,
+  textPlacement: React.PropTypes.string,
   maxBubbleRadius: React.PropTypes.number,
 };
 

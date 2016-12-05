@@ -29,11 +29,7 @@ const AttentionContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <h2><FormattedMessage {...localMessages.mainTitle} /></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
+            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             <FocusSetSelectorContainer
               topicId={topicId}
               snapshotId={filters.snapshotId}

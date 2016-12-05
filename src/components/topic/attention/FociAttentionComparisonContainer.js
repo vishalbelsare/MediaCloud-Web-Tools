@@ -7,7 +7,10 @@ import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import BubbleChart from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
+import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
+import { domElementToSvgString } from '../../util/svg';
 
 const localMessages = {
   overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Overall' },
@@ -17,6 +20,7 @@ const localMessages = {
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 const COLORS = d3.schemeCategory10;
+const BUBBLE_CHART_DOM_ID = 'total-attention-bubble-chart';
 
 function dataAsSeries(data) {
   // clean up the data
@@ -73,16 +77,27 @@ class FociAttentionComparisonContainer extends React.Component {
         <Row>
           <Col lg={12}>
             <DataCard>
-              <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
-              <BubbleChart data={bubbleData} placement={'horizontal'} />
+              <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
+              <AttentionOverTimeChart series={series} height={300} />
             </DataCard>
           </Col>
         </Row>
         <Row>
-          <Col lg={12}>
+          <Col lg={6} xs={12}>
             <DataCard>
-              <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
-              <AttentionOverTimeChart series={series} height={300} />
+              <div className="actions">
+                <DownloadButton
+                  tooltip={formatMessage(messages.download)}
+                  onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
+                />
+              </div>
+              <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
+              <BubbleChart
+                data={bubbleData}
+                placement={PLACEMENT_AUTO}
+                height={400}
+                domId={BUBBLE_CHART_DOM_ID}
+              />
             </DataCard>
           </Col>
         </Row>

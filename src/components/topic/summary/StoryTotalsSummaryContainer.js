@@ -5,8 +5,13 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchTopicStoryCounts } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
-import BubbleChart from '../../vis/BubbleChart';
+import BubbleChart, { TEXT_PLACEMENT_ABOVE } from '../../vis/BubbleChart';
+import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
+import messages from '../../../resources/messages';
+import { domElementToSvgString } from '../../util/svg';
+
+const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
 const localMessages = {
   title: { id: 'topic.summary.storyTotals.title', defaultMessage: 'Story Totals' },
@@ -37,10 +42,20 @@ class StoryTotalsSummaryContainer extends React.Component {
           labelColor: 'rgb(255,255,255)' },
         { label: formatMessage(localMessages.totalLabel), value: counts.total },
       ];
-      content = <BubbleChart data={data} />;
+      content = (<BubbleChart
+        data={data}
+        domId={BUBBLE_CHART_DOM_ID}
+        textPlacement={TEXT_PLACEMENT_ABOVE}
+      />);
     }
     return (
       <DataCard>
+        <div className="actions">
+          <DownloadButton
+            tooltip={formatMessage(messages.download)}
+            onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
+          />
+        </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}
