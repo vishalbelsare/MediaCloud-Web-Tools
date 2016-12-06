@@ -1,0 +1,14 @@
+@import '../_constants';
+
+#error-list {
+
+  background-color: $material-grey300;  
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .error-message {
+	padding-bottom: 10px;
+	font-size: 18px;
+  }
+
+}

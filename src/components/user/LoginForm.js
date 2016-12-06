@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import FlatButton from 'material-ui/FlatButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -61,7 +60,8 @@ const LoginFormComponent = (props) => {
         <Col lg={12}>
           <br />
           <a href={`${MEDIACLOUD_REGISTER_URL}?from=${getAppName()}`}>
-            <FlatButton
+            <AppButton
+              flat
               label={formatMessage(localMessages.signUpNow)}
             />
           </a>

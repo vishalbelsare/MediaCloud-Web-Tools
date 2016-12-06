@@ -1,4 +1,7 @@
-import { SET_BRAND_MASTHEAD_TEXT, UPDATE_FEEDBACK } from '../actions/appActions';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import { SET_BRAND_MASTHEAD_TEXT, UPDATE_FEEDBACK,
+  DISMISS_ERRORS, ADD_ERROR } from '../actions/appActions';
+import { createReducer } from '../lib/reduxHelpers';
 
 const INITIAL_STATE = {
   mastheadText: null,
@@ -6,22 +9,16 @@ const INITIAL_STATE = {
     open: false,
     message: '',
   },
+  errors: [],
 };
 
-export default function user(state = INITIAL_STATE, action) {
-  switch (action.type) {
+const app = createReducer({
+  initialState: INITIAL_STATE,
+  [SET_BRAND_MASTHEAD_TEXT]: payload => ({ mastheadText: payload }),
+  [UPDATE_FEEDBACK]: payload => ({ feedback: payload }),
+  [ADD_ERROR]: (payload, state) => ({ errors: [...state.errors, payload] }),
+  [DISMISS_ERRORS]: () => ({ errors: [] }),
+  [LOCATION_CHANGE]: () => ({ errors: [] }),  // empty out errors when the user switches pages
+});
 
-    case SET_BRAND_MASTHEAD_TEXT:
-      return Object.assign({}, state, {
-        mastheadText: action.payload,
-      });
-
-    case UPDATE_FEEDBACK:
-      return Object.assign({}, state, {
-        feedback: action.payload,
-      });
-
-    default:
-      return state;
-  }
-}
+export default app;

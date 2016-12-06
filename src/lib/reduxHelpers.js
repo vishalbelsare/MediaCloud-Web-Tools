@@ -1,6 +1,6 @@
 import { resolve, reject } from 'redux-simple-promise';
 import * as fetchConstants from './fetchConstants';
-import { updateFeedback } from '../actions/appActions';
+import { addError } from '../actions/appActions';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
 export function arrayToDict(arr, keyPropertyName) {
@@ -57,10 +57,6 @@ export function createReducer(handlers) {
   if ('initialState' in handlers) {
     desiredInitialState = handlers.initialState;
   }
-  const initialState = {
-    fetchStatus: fetchConstants.FETCH_INVALID,
-    ...desiredInitialState,
-  };
   // set up a lookup table for any things the user passed in
   const actionLookup = {};
   Object.keys(handlers).forEach((key) => {
@@ -69,7 +65,7 @@ export function createReducer(handlers) {
     }
   });
   // and now set up the reducer method
-  return (state = initialState, action) => {
+  return (state = desiredInitialState, action) => {
     if (action.type in actionLookup) {
       return Object.assign({}, state, {
         ...state,
@@ -177,7 +173,7 @@ export function errorReportingMiddleware({ dispatch }) {
       }
     }
     if (message !== null) {
-      dispatch(updateFeedback({ open: true, message }));
+      dispatch(addError({ message }));
     }
     return next(action);  // Call the next dispatch method in the middleware chain.
   };

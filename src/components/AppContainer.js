@@ -12,6 +12,7 @@ import messages from '../resources/messages';
 import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
+import ErrorListContainer from './common/ErrorListContainer';
 
 const AppContainer = (props) => {
   const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
@@ -33,6 +34,7 @@ const AppContainer = (props) => {
           showLoginButton={showLoginButton}
         />
       </header>
+      <ErrorListContainer />
       <div id="content">
         {children}
       </div>

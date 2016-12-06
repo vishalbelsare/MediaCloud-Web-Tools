@@ -6,6 +6,7 @@ import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import ArrowDropUpIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import OpenInNew from 'material-ui/svg-icons/action/open-in-new';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -110,3 +111,5 @@ export const SettingsButton = composeIconButton(SettingsIcon, messages.settings)
 export const ReadItNowButton = composeIconButton(OpenInNew, messages.readItNow, false);
 
 export const EditButton = composeIconButton(ModeEdit, messages.edit, false);
+
+export const ErrorButton = composeIconButton(ErrorIcon, messages.error, false);

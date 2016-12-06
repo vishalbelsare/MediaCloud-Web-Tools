@@ -1,5 +1,6 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 /**
  * Simple wrapper so we can style all the button the same.  Use this instead of
@@ -24,12 +25,21 @@ class AppButton extends React.Component {
   }
 
   render() {
-    return (<RaisedButton
-      className={`app-button ${this.state.hoverClass}`}
-      onMouseEnter={this.handleMouseEnter}
-      onMouseLeave={this.handleMouseLeave}
-      {...this.props}
-    />);
+    const { flat } = this.props;
+    const buttonProps = {
+      className: `app-button ${this.state.hoverClass}`,
+      onMouseEnter: this.handleMouseEnter,
+      onMouseLeave: this.handleMouseLeave,
+      ...this.props,
+    };
+    let content = null;
+    if (flat) {
+      delete buttonProps.flat;
+      content = <FlatButton {...buttonProps} />;
+    } else {
+      content = <RaisedButton {...buttonProps} />;
+    }
+    return content;
   }
 
 }
@@ -37,6 +47,7 @@ class AppButton extends React.Component {
 AppButton.propTypes = {
   // from parent
   disabled: React.PropTypes.bool,
+  flat: React.PropTypes.bool,
 };
 
 export default AppButton;
