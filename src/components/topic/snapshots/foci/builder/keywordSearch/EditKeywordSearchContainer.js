@@ -74,7 +74,7 @@ class EditKeywordSearchContainer extends React.Component {
           <Row>
             <Col lg={8} xs={12}>
               <br />
-              <AppButton onClick={onPreviousStep} label={formatMessage(messages.previous)} />
+              <AppButton flat onClick={onPreviousStep} label={formatMessage(messages.previous)} />
               &nbsp; &nbsp;
               <AppButton disabled={nextButtonDisabled} type="submit" label={formatMessage(messages.next)} primary />
             </Col>

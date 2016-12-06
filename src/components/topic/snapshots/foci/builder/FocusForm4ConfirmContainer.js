@@ -72,7 +72,7 @@ const FocusForm4ConfirmContainer = (props) => {
         <Row>
           <Col lg={12}>
             <br /><br />
-            <AppButton label={formatMessage(messages.previous)} onClick={handlePreviousStep} />
+            <AppButton flat label={formatMessage(messages.previous)} onClick={handlePreviousStep} />
             &nbsp; &nbsp;
             <AppButton primary label={formatMessage(localMessages.addAnotherFocus)} type="submit" />
           </Col>
