@@ -4,12 +4,23 @@ export function sourceList() {
   return createApiPromise('api/sources/all');
 }
 
+export function sourcesByIds(params) {
+  const acceptedParams = acceptParams(params, ['src']);
+  acceptedParams['src[]'] = params.map(c => c);
+  return createApiPromise('api/sources/list', acceptedParams);
+}
+
 export function sourceSearch(searchStr) {
   return createApiPromise(`/api/sources/search/${searchStr}`);
 }
 
 export function collectionList(id) {
   return createApiPromise(`api/collections/set/${id}`);
+}
+
+export function collectionsByIds(idArray) {
+  const acceptedParams = idArray.map(c => c);
+  return createApiPromise(`api/collections/list/${acceptedParams}`);
 }
 
 export function collectionSearch(searchStr) {

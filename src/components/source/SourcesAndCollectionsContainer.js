@@ -7,7 +7,6 @@ import composeAsyncContainer from '../common/AsyncContainer';
 import SourcesAndCollectionsList from './SourcesAndCollectionsList';
 import AppButton from '../common/AppButton';
 import { selectAdvancedSearchSource, selectAdvancedSearchCollection } from '../../actions/sourceActions';
-import { generateParamStr } from '../../lib/apiUtil';
 
 const localMessages = {
   title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
@@ -17,16 +16,18 @@ const localMessages = {
 };
 
 class SourcesAndCollectionsContainer extends React.Component {
-  addToSelectedSources= (mediaId) => {
+  addOrRemoveToSelectedSources= (mediaId, checked) => {
     const { dispatchSourceSelection, queriedSources } = this.props;
-    dispatchSourceSelection(queriedSources, [mediaId]);
+    dispatchSourceSelection(queriedSources, [mediaId], checked);
   };
-  addToSelectedCollections = (tagId) => {
+  addOrRemoveToSelectedCollections = (tagId, checked) => {
     const { dispatchCollectionSelection, queriedCollections } = this.props;
-    dispatchCollectionSelection(queriedCollections, [tagId]);
+    dispatchCollectionSelection(queriedCollections, [tagId], checked);
   };
   addOrRemoveAllSelected = (values, checked) => {
     const { queriedSources, queriedCollections, dispatchSourceSelection, dispatchCollectionSelection } = this.props;
+    this.state.set({ allOrNoneCheck: values });
+    // if values == SELECT_ALL_ON_PAGE, UNSELECT_ALL, SELECT_ALL
     dispatchSourceSelection(queriedSources, [], checked);
     dispatchCollectionSelection(queriedCollections, [], checked);
     // dispatch a click to all the checkboxes to checked somehow
@@ -67,8 +68,8 @@ class SourcesAndCollectionsContainer extends React.Component {
             queriedSources={queriedSources}
             queriedCollections={queriedCollections}
             addRemoveAll={this.addOrRemoveAllSelected}
-            addToSelectedSources={this.addToSelectedSources}
-            addToSelectedCollections={this.addToSelectedCollections}
+            addOrRemoveToSelectedSources={this.addOrRemoveToSelectedSources}
+            addOrRemoveToSelectedCollections={this.addOrRemoveToSelectedCollections}
           />
         </Grid>
       </div>
@@ -98,19 +99,19 @@ SourcesAndCollectionsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.collectionsByMetadata.fetchStatus,
-  queriedCollections: state.sources.selected.collectionsByMetadata.results,
-  queriedSources: state.sources.selected.sourcesByMetadata.results,
+  queriedSources: state.sources.selected.sourcesByMetadata.list,
+  queriedCollections: state.sources.selected.collectionsByMetadata.list,
 });
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
   },
   // I don't know why but the scope won't give me the queriedSources... so I have to pass in
-  dispatchSourceSelection: (queried, mediaId) => {
-    dispatch(selectAdvancedSearchSource(queried, mediaId));
+  dispatchSourceSelection: (queried, mediaId, checked) => {
+    dispatch(selectAdvancedSearchSource(queried, mediaId, checked));
   },
-  dispatchCollectionSelection: (queried, tagId) => {
-    dispatch(selectAdvancedSearchCollection(queried, tagId));
+  dispatchCollectionSelection: (queried, tagId, checked) => {
+    dispatch(selectAdvancedSearchCollection(queried, tagId, checked));
   },
   dispatchToCreate: (sources, collections) => {
     // get all ids and push them into url params
@@ -130,9 +131,10 @@ const mapDispatchToProps = dispatch => ({
       return null;
     }).filter(i => i !== null);
 
-    const params = generateParamStr({ src: srcIdArray, coll: collIdArray });
-    let url = '/sources/create?';
-    url += params;
+    const params = srcIdArray.join(',');
+    const collparams = collIdArray.join(',');
+    let url = '/collections/create?';
+    url += `${params}&${collparams}`;
     dispatch(push(url));
   },
 });

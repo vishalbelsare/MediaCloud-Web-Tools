@@ -11,13 +11,13 @@ export function arrayToDict(arr, keyPropertyName) {
   return dict;
 }
 
-export function selectItemInArray(arr, idArr, idField) {
+export function selectItemInArray(arr, idArr, idField, checked) {
   const updateWithNewlySelected = [];
   arr.forEach((item) => {
     idArr.forEach((id) => {
       const newItem = item;
       if (item[idField] === id) {
-        newItem.selected = true;
+        newItem.selected = checked;
       } else {
         newItem.selected = item.selected;
         if (item.selected === undefined) {

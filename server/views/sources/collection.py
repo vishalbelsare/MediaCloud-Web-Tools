@@ -35,6 +35,16 @@ def _cached_public_collection_list(user_mc_key, tag_sets_id):
         'collections': collection_list
     }
 
+@app.route('/api/collections/list/', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_collections_by_ids(idArray):
+    sourceIdArray = request.form['src']
+    user_mc = user_mediacloud_client()
+    tag_list = _cached_public_collection_list(user_mediacloud_key(), sourceIdArray)
+    return jsonify({'results':tag_list})
+
+
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required
 @api_error_handler

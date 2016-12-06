@@ -20,7 +20,7 @@ function id(state = INITIAL_STATE, action) {
 function advancedSearchString(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_ADVANCED_SEARCH_STRING:
-      return action.payload;
+      return (action.payload ? action.payload : null);
     default:
       return state;
   }

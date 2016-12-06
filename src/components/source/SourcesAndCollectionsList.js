@@ -16,7 +16,7 @@ const localMessages = {
 };
 
 const SourcesAndCollectionsList = (props) => {
-  const { queriedSources, queriedCollections, addToSelectedSources, addToSelectedCollections, addRemoveAll } = props;
+  const { queriedSources, queriedCollections, addOrRemoveToSelectedSources, addOrRemoveToSelectedCollections, addRemoveAll } = props;
   const { formatMessage } = props.intl;
   const content = null;
   const titleHandler = parentTitle => `${queriedCollections.label} | ${parentTitle}`;
@@ -54,7 +54,10 @@ const SourcesAndCollectionsList = (props) => {
               <Checkbox
                 key={source.media_id}
                 name={`src_${source.media_id}`}
-                onCheck={() => addToSelectedSources(source.media_id)}
+                onCheck={function getVals(...args) {
+                  return addOrRemoveToSelectedSources(source.media_id, args[1]);
+                }
+              }
               />
             </Col>
             <Col lg={6}>
@@ -78,7 +81,7 @@ const SourcesAndCollectionsList = (props) => {
               <Checkbox
                 key={collection.tags_id}
                 name={`clxn_${collection.tags_id}`}
-                onCheck={() => addToSelectedCollections(collection.tags_id)}
+                onCheck={() => addOrRemoveToSelectedCollections(collection.tags_id, arguments[1])}
               />
             </Col>
             <Col lg={6}>
@@ -103,8 +106,8 @@ SourcesAndCollectionsList.propTypes = {
   queriedSources: React.PropTypes.array,
   queriedCollections: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
-  addToSelectedSources: React.PropTypes.func,
-  addToSelectedCollections: React.PropTypes.func,
+  addOrRemoveToSelectedSources: React.PropTypes.func,
+  addOrRemoveToSelectedCollections: React.PropTypes.func,
   addRemoveAll: React.PropTypes.func.isRequired,
 };
 

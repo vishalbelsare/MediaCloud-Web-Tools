@@ -7,10 +7,10 @@ const sourcesByMetadata = createAsyncReducer({
   },
   action: FETCH_SOURCE_BY_METADATA,
   handleSuccess: payload => ({
-    results: payload.results,
+    list: payload.list,
   }),
   [SELECT_ADVANCED_SEARCH_SOURCE]: payload => ({
-    results: selectItemInArray(payload.args[0], payload.args[1], 'media_id'),
+    results: selectItemInArray(payload.args[0], payload.args[1], 'media_id', payload.args[2]),
   }),
 });
 

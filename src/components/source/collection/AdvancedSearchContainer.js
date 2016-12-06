@@ -15,7 +15,7 @@ const localMessages = {
 class AdvancedSearchContainer extends React.Component {
   componentWillMount() {
     const { location, dispatchAdvancedSearchStringSelected } = this.props;
-    if (!location) return;
+    if (!location.search) return;
     const hashParts = location.search.split('?');
     const searchString = hashParts[1];
     // how to get this from here into initialValues? state or store
@@ -26,15 +26,13 @@ class AdvancedSearchContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     let content = null;
-    if (searchString) {
-      content = (
-        <CollectionAdvancedSearchMetadataForm
-          initialValues={{ advancedSearchQueryString: searchString }}
-          buttonLabel={formatMessage(localMessages.addButton)}
-          requerySourcesAndCollections={requerySourcesAndCollections}
-        />
-      );
-    }
+    content = (
+      <CollectionAdvancedSearchMetadataForm
+        initialValues={{ searchString }}
+        buttonLabel={formatMessage(localMessages.addButton)}
+        requerySourcesAndCollections={requerySourcesAndCollections}
+      />
+    );
     return (
       <div>
         <Title render={titleHandler} />
@@ -68,14 +66,19 @@ AdvancedSearchContainer.propTypes = {
 
 const mapStateToProps = state => ({
   searchString: state.sources.selected.advancedSearchString,
+  queriedSources: state.sources.selected.sourcesByMetadata.list,
+  queriedCollections: state.sources.selected.collectionsByMetadata.list,
 });
 
-const mapDispatchToProps = dispatch => ({
-  requerySourcesAndCollections: (values) => {
-    const searchString = values.advancedSearchQueryString;
-    // once we have the hookup, this naming might change a bit
-    dispatch(fetchSourceByMetadata(searchString));
-    dispatch(fetchCollectionByMetadata(searchString));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  requerySourcesAndCollections: (formValues) => {
+    let searchStr = formValues.advancedSearchQueryString;
+    if (!formValues.advancedSearchQueryString) {
+      searchStr = ownProps.searchString;
+    }
+    // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
+    dispatch(fetchSourceByMetadata(searchStr));
+    dispatch(fetchCollectionByMetadata(searchStr));
   },
   dispatchAdvancedSearchStringSelected: (searchString) => {
     dispatch(selectAdvancedSearchString(searchString));
