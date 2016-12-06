@@ -35,7 +35,7 @@ const topicRoutes = (
 
     <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
 
-    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
+    <Route path="/topics/suggest" component={CreateTopicContainer} onEnter={requireAuth} />
 
     {userRoutes}
 

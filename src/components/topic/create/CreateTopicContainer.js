@@ -1,17 +1,21 @@
 import React from 'react';
+import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import ComingSoon from '../../common/ComingSoon';
+import SuggestTopicForm from './SuggestTopicForm';
+import { updateFeedback } from '../../../actions/appActions';
+import { suggestTopic } from '../../../actions/topicActions';
 
 const localMessages = {
-  createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
+  createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Suggest a New Topic' },
   createTopicText: { id: 'topic.create.text', defaultMessage: 'You can suggest a new Topic to add to the MediaCloud system.' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
 };
 
 const CreateTopicContainer = (props) => {
+  const { handleSuggestion } = props;
   const { formatMessage } = props.intl;
   return (
     <Grid>
@@ -24,7 +28,7 @@ const CreateTopicContainer = (props) => {
       </Row>
       <Row>
         <Col lg={12}>
-          <ComingSoon />
+          <SuggestTopicForm onSaveSuggestion={handleSuggestion} />
         </Col>
       </Row>
     </Grid>
@@ -34,13 +38,19 @@ const CreateTopicContainer = (props) => {
 CreateTopicContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
+  // from dispatch
+  handleSuggestion: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({
 });
 
-const mapDispatchToProps = () => ({
-  onSubmitCreateTopicForm: () => {
+const mapDispatchToProps = dispatch => ({
+  handleSuggestion: (values) => {
+    dispatch(suggestTopic(values)).then(() => {
+      dispatch(push('/home'));
+      dispatch(updateFeedback({ open: true, message: ' We\'ll fire fire off an email asking our back-end team to review your suggestion.' }));
+    });
   },
 });
 

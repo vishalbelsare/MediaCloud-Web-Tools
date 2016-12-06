@@ -3,6 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, db
+from server.util.mail import send_email
 from server.util.request import form_fields_required, api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
 from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
@@ -88,3 +89,11 @@ def favorite_topics():
 @api_error_handler
 def topic_update(topics_id):
     return topic_summary(topics_id) # give them back new data, so they can update the client
+
+@app.route('/api/topics/suggest', methods=['PUT'])
+@flask_login.login_required
+@form_fields_required('name', 'description', 'seedQuery', 'reason', 'spidered')
+@api_error_handler
+def topic_suggest():
+    send_email('topics@mediacloud.org', 'rahulbot@gmail.com', 'Hi', 'test msg')
+    return jsonify({'success': 1})

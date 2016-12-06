@@ -6,6 +6,7 @@ import json
 import sys
 from flask import Flask, render_template
 from flask_webpack import Webpack
+from flask_mail import Mail
 import pymongo
 import flask_login
 from flask_cors import CORS
@@ -77,6 +78,7 @@ def isProdMode():
     return server_mode == SERVER_MODE_PROD
 
 webpack = Webpack()
+mail = Mail()
 
 def create_app():
     '''
@@ -90,6 +92,7 @@ def create_app():
     }
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
+    mail.init_app(my_app)
     return my_app
 
 app = create_app()

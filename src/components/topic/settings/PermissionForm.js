@@ -94,7 +94,6 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  fields: ['email', 'permission'],
   validate,
 };
 

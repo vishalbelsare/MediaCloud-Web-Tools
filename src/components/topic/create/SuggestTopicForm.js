@@ -1,24 +1,28 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { notEmptyString } from '../../../lib/formValidators';
+import { emptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import messages from '../../../resources/messages';
 
 const localMessages = {
   name: { id: 'topic.name', defaultMessage: 'Name' },
-  description: { id: 'topic.description', defaultMessage: 'Description' },
   nameError: { id: 'topic.name.error', defaultMessage: 'Your topic needs a name.' },
+  description: { id: 'topic.description', defaultMessage: 'Description' },
   descriptionError: { id: 'topic.desciption.error', defaultMessage: 'Your topic need a descriptino.' },
+  reason: { id: 'topic.reason', defaultMessage: 'Reason' },
+  reasonError: { id: 'topic.reason.error', defaultMessage: 'You have to tell us why we should make create this Topic.' },
+  seedQuery: { id: 'topic.seedQuery', defaultMessage: 'Seed Query' },
+  seedQueryError: { id: 'topic.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
+  spidered: { id: 'topic.spidered', defaultMessage: 'Spidered?' },
 };
 
-const TopicDetailsForm = (props) => {
-  const { handleSubmit, onSave, pristine, submitting, renderTextField, renderCheckbox } = props;
+const SuggestTopicForm = (props) => {
+  const { onSaveSuggestion, handleSubmit, pristine, submitting, renderTextField, renderCheckbox } = props;
   const { formatMessage } = props.intl;
   return (
-    <form className="update-topic" name="updateTopicForm" onSubmit={handleSubmit(onSave.bind(this))}>
+    <form className="create-topic" name="createTopicForm" onSubmit={handleSubmit(onSaveSuggestion.bind(this))}>
       <Row>
         <Col lg={10}>
           <Field
@@ -41,10 +45,30 @@ const TopicDetailsForm = (props) => {
       <Row>
         <Col lg={10}>
           <Field
-            name="public"
+            name="seedQuery"
+            component={renderTextField}
+            fullWidth
+            floatingLabelText={localMessages.seedQuery}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10}>
+          <Field
+            name="reason"
+            component={renderTextField}
+            fullWidth
+            floatingLabelText={localMessages.reason}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10}>
+          <Field
+            name="spidered"
             component={renderCheckbox}
             fullWidth
-            label={messages.topicPublicProp}
+            label={localMessages.spidered}
           />
         </Col>
       </Row>
@@ -63,42 +87,45 @@ const TopicDetailsForm = (props) => {
   );
 };
 
-TopicDetailsForm.propTypes = {
+SuggestTopicForm.propTypes = {
+  // from parent
+  onSaveSuggestion: React.PropTypes.func.isRequired,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderCheckbox: React.PropTypes.func.isRequired,
   initialValues: React.PropTypes.object,
   // from form helper
-  handleSubmit: React.PropTypes.func,
+  handleSubmit: React.PropTypes.func.isRequired,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
-  // from parent
-  onSave: React.PropTypes.func.isRequired,
 };
 
 function validate(values) {
   const errors = {};
-  if (!notEmptyString(values.name)) {
+  if (emptyString(values.name)) {
     errors.name = localMessages.nameError;
   }
-  if (!notEmptyString(values.description)) {
+  if (emptyString(values.description)) {
     errors.description = localMessages.descriptionError;
+  }
+  if (emptyString(values.seedQuery)) {
+    errors.seedQuery = localMessages.seedQueryError;
+  }
+  if (emptyString(values.reason)) {
+    errors.reason = localMessages.reasonError;
   }
   return errors;
 }
 
 const reduxFormConfig = {
-  form: 'topicDetails',
-  fields: ['name', 'description', 'public'],
+  form: 'createTopic',
   validate,
 };
 
 export default
-  injectIntl(
-    composeIntlForm(
-      reduxForm(reduxFormConfig)(
-        TopicDetailsForm
-      )
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      SuggestTopicForm
     )
   );
