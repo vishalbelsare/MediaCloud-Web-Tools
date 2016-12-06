@@ -11,8 +11,7 @@ class TimespanSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData, selectedTimespan } = this.props;
     if (((nextProps.filters.snapshotId !== filters.snapshotId) ||
-         (nextProps.filters.focusId !== filters.focusId) ||
-         (nextProps.filters.timespanId !== filters.timespanId)) &&
+         (nextProps.filters.focusId !== filters.focusId)) &&
         (nextProps.topicId !== null) && (nextProps.filters.snapshotId !== null)) {
       fetchData(nextProps.topicId, nextProps.filters.snapshotId, nextProps.filters.focusId, nextProps.timespanId, selectedTimespan);
     }

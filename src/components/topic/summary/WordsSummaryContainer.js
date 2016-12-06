@@ -8,9 +8,9 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import { ExploreButton, DownloadButton } from '../../common/IconButton';
+import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
@@ -23,7 +23,7 @@ const localMessages = {
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    if ((nextProps.filters.timespanId) && (nextProps.filters.timespanId !== filters.timespanId)) {
       fetchData(nextProps);
     }
   }
@@ -33,12 +33,11 @@ class WordsSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
+    const { helpButton, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <div className="actions">
-          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
@@ -96,7 +95,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(push(url));
   },
   asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
+    if (ownProps.filters.timespanId) {
+      dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
+    }
   },
 });
 

@@ -7,7 +7,7 @@ import ControlBar from './controlbar/ControlBar';
 class FilteredTopicContainer extends React.Component {
   filtersAreSet() {
     const { filters, topicId } = this.props;
-    return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
+    return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
     const { children, topicInfo, location, topicId } = this.props;

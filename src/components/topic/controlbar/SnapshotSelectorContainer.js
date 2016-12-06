@@ -72,8 +72,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       timespanId: null,
       focusId: null,
     });
-    dispatch(push(newLocation));
     dispatch(filterBySnapshot(snapshotId));
+    dispatch(push(newLocation));
   },
 });
 

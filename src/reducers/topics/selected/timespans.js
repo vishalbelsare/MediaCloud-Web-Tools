@@ -1,7 +1,8 @@
 import moment from 'moment';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { FETCH_TOPIC_TIMESPANS_LIST, TOGGLE_TIMESPAN_CONTROLS,
-  SET_TIMESPAN_VISIBLE_PERIOD, TOPIC_FILTER_BY_TIMESPAN } from '../../../actions/topicActions';
+import { FETCH_TOPIC_TIMESPANS_LIST, TOGGLE_TIMESPAN_CONTROLS, TOPIC_FILTER_BY_FOCUS,
+  SET_TIMESPAN_VISIBLE_PERIOD, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_SNAPSHOT }
+  from '../../../actions/topicActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 function addJsDates(list) {
@@ -19,14 +20,16 @@ function getTimespanFromListById(list, id) {
   return (result === undefined) ? null : result;
 }
 
+const initialState = {
+  list: [],
+  isVisible: false,
+  selectedPeriod: 'overall',
+  selectedId: null, // annoying that I have to keep this here too... topic.filters should be the one true source of this info :-(
+  selected: null,
+};
+
 const timespans = createAsyncReducer({
-  initialState: {
-    list: [],
-    isVisible: false,
-    selectedPeriod: 'overall',
-    selectedId: null, // annoying that I have to keep this here too... topic.filters should be the one true source of this info :-(
-    selected: null,
-  },
+  initialState,
   action: FETCH_TOPIC_TIMESPANS_LIST,
   handleSuccess: (payload, state) => {
     // this needs to update the selected info, in case the seleceted id came from the url
@@ -34,6 +37,8 @@ const timespans = createAsyncReducer({
     const selected = getTimespanFromListById(list, state.selectedId);
     return { list, selected };
   },
+  [TOPIC_FILTER_BY_SNAPSHOT]: () => initialState,  // when snapshot changes reset these
+  [TOPIC_FILTER_BY_FOCUS]: () => initialState,  // when focus changes reset these
   [TOGGLE_TIMESPAN_CONTROLS]: payload => ({ isVisible: payload }),
   [SET_TIMESPAN_VISIBLE_PERIOD]: payload => ({ selectedPeriod: payload }),
   [TOPIC_FILTER_BY_TIMESPAN]: (payload, state) => {
@@ -46,10 +51,10 @@ const timespans = createAsyncReducer({
     // for some reason when the user hits the back button we need to manually re-render
     // if the timespan has changed
     const updates = {};
-    if (state.list.length === 0) {  // bial if we haven't fetched list from server yet (ie. page load)
+    if (state.list.length === 0) {  // bail if we haven't fetched list from server yet (ie. page load)
       return updates;
     }
-    if (payload.query.timespanId !== undefined) {
+    if (payload.query.timespanId) {
       const newTimespanId = parseInt(payload.query.timespanId, 10); // gotta intify it, since it comes from url as string
       if (newTimespanId !== state.selected) {
         const selected = getTimespanFromListById(state.list, newTimespanId);
