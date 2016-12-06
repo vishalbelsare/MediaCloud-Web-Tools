@@ -5,10 +5,12 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import ControlBar from './controlbar/ControlBar';
 
 class FilteredTopicContainer extends React.Component {
+
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return (topicId && filters.snapshotId && filters.timespanId);
   }
+
   render() {
     const { children, topicInfo, location, topicId } = this.props;
     let subContent = <div />;
@@ -24,6 +26,7 @@ class FilteredTopicContainer extends React.Component {
       </div>
     );
   }
+
 }
 
 FilteredTopicContainer.propTypes = {
