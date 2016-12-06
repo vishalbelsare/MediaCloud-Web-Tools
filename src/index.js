@@ -31,7 +31,7 @@ export default function initializeApp(routes) {
   const history = syncHistoryWithStore(hashHistory, store);
 
   // Track hits by listening for changes to the current location. The listener is called once immediately.
-  history.listen(location => ga('send', location.pathname));
+  history.listen(location => ga('send', location));
 
   const muiTheme = getMuiTheme({
     fontFamily: 'Lato, sans',
