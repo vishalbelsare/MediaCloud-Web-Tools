@@ -132,7 +132,7 @@ export function favoriteTopics() {
 }
 
 export function topicStoryCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['timespanId']);
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 

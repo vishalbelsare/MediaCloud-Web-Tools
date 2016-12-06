@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
 import messages from '../../../../../../resources/messages';
-import KeywordSearchResultsContainer from './KeywordSearchResultsContainer';
+import KeywordSearchPreview from './KeywordSearchPreview';
 import { notEmptyString } from '../../../../../../lib/formValidators';
 
 const formSelector = formValueSelector('snapshotFocus');
@@ -22,6 +22,9 @@ const localMessages = {
 class EditKeywordSearchContainer extends React.Component {
 
   constructor(props) {
+    // Track this in local React state because we don't need it anywhere else.
+    // We can't read out of the form state becase we need to know when they click "search",
+    // but that is updated live as they type.
     super(props);
     this.state = { keywords: null };
   }
@@ -35,7 +38,7 @@ class EditKeywordSearchContainer extends React.Component {
       nextButtonDisabled = false;
       previewContent = (
         <div>
-          <KeywordSearchResultsContainer topicId={topicId} keywords={this.state.keywords} />
+          <KeywordSearchPreview topicId={topicId} keywords={this.state.keywords} />
         </div>
       );
     }

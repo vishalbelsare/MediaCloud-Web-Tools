@@ -1,0 +1,48 @@
+import React from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import KeywordStoryCountPreviewContainer from './KeywordStoryCountPreviewContainer';
+import KeywordSentenceCountPreviewContainer from './KeywordSentenceCountPreviewContainer';
+import KeywordStoryPreviewContainer from './KeywordStoryPreviewContainer';
+
+const localMessages = {
+  about: { id: 'focus.create.keyword.results.about',
+    defaultMessage: 'Here is a preview of the top stores in the Timespan of the Topic you are investigating.  Look over these results to make sure they are the types of stories you are hoping this Focus will focus in on.' },
+};
+
+const KeywordSearchPreview = (props) => {
+  const { topicId, keywords } = props;
+  return (
+    <div className="focal-create-boolean-keyword-preview">
+      <Row>
+        <Col lg={4} xs={12}>
+          <KeywordStoryCountPreviewContainer topicId={topicId} keywords={keywords} />
+        </Col>
+        <Col lg={6} xs={12}>
+          <KeywordSentenceCountPreviewContainer topicId={topicId} keywords={keywords} />
+        </Col>
+        <Col lg={2} md={2} xs={12}>
+          <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10} md={10} xs={12}>
+          <KeywordStoryPreviewContainer topicId={topicId} keywords={keywords} />
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+KeywordSearchPreview.propTypes = {
+  // from context
+  intl: React.PropTypes.object.isRequired,
+  // from parent
+  keywords: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+};
+
+export default
+  injectIntl(
+    KeywordSearchPreview
+  );
