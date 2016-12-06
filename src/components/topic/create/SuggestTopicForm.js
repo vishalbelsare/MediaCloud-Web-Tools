@@ -4,7 +4,6 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { emptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
-import messages from '../../../resources/messages';
 
 const localMessages = {
   name: { id: 'topic.name', defaultMessage: 'Name' },
@@ -16,6 +15,7 @@ const localMessages = {
   seedQuery: { id: 'topic.seedQuery', defaultMessage: 'Seed Query' },
   seedQueryError: { id: 'topic.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   spidered: { id: 'topic.spidered', defaultMessage: 'Spidered?' },
+  suggest: { id: 'topic.suggest', defaultMessage: 'Suggest' },
 };
 
 const SuggestTopicForm = (props) => {
@@ -78,7 +78,7 @@ const SuggestTopicForm = (props) => {
             style={{ marginTop: 30 }}
             type="submit"
             disabled={pristine || submitting}
-            label={formatMessage(messages.save)}
+            label={formatMessage(localMessages.suggest)}
             primary
           />
         </Col>
