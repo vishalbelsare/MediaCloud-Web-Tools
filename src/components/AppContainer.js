@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
 // polyfill for Safari :-(
@@ -13,6 +13,10 @@ import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import ErrorListContainer from './common/ErrorListContainer';
+
+const localMessages = {
+  supportEmail: { id: 'app.supportEmail', defaultMessage: 'Problems? email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>' },
+};
 
 const AppContainer = (props) => {
   const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
@@ -48,6 +52,8 @@ const AppContainer = (props) => {
           <a href="https://cyber.law.harvard.edu">
             <FormattedMessage {...messages.berkmanName} />
           </a>.
+          <br />
+          <FormattedHTMLMessage {...localMessages.supportEmail} />
           <br />
           v{getVersion()}
         </small>
