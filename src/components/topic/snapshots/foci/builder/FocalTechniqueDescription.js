@@ -6,16 +6,22 @@ const localMessages = {
 };
 
 const FocalTechniqueDescription = (props) => {
-  const { selected, disabled, nameMsg, descriptionMsg, image, onClick, comingSoon } = props;
+  const { selected, disabled, nameMsg, descriptionMsg, image, icon, onClick, comingSoon } = props;
   const { formatMessage } = props.intl;
   const disabledClass = (disabled === true) ? 'disabled' : '';
   const selectedClass = (selected === true) ? 'selected' : '';
   const rootClasses = `focal-technique-description ${disabledClass} ${selectedClass}`;
   const clickHandler = (disabled === true) ? null : onClick;
   const comingSoonContent = (comingSoon === true) ? <span style={{ color: '#FFD700' }}><FormattedMessage {...localMessages.comingSoon} /></span> : null;
+  let visualContent = null;
+  if (image) {
+    visualContent = <img alt={formatMessage(nameMsg)} src={image} width={136} height={136} onClick={clickHandler} />;
+  } else if (icon) {
+    visualContent = <div className="focal-technique-icon" onClick={clickHandler}>{icon()}</div>;
+  }
   return (
     <div className={rootClasses}>
-      <img alt={formatMessage(nameMsg)} src={image} width={136} height={136} onClick={clickHandler} />
+      {visualContent}
       <p><b><FormattedMessage {...nameMsg} /></b></p>
       <p>
         {comingSoonContent}
@@ -28,7 +34,8 @@ const FocalTechniqueDescription = (props) => {
 FocalTechniqueDescription.propTypes = {
   // from parent
   id: React.PropTypes.string.isRequired,
-  image: React.PropTypes.string.isRequired,
+  image: React.PropTypes.string,
+  icon: React.PropTypes.func,
   nameMsg: React.PropTypes.object.isRequired,
   descriptionMsg: React.PropTypes.object.isRequired,
   selected: React.PropTypes.bool,

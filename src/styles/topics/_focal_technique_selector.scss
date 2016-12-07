@@ -1,0 +1,49 @@
+@import '../_constants';
+
+.focal-technique-selector {
+
+  .focal-technique-description {
+
+    .focal-technique-icon {
+      cursor: pointer;
+      position: relative;
+      width: 136px;
+      height: 136px;
+      background-color: $material-grey300;
+      .app-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      &:hover {
+        background-color: $topics-primary;
+      }
+    }
+
+    img {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      img {
+        filter: grayscale(100%);
+        opacity: 0.25;
+        -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+        cursor: default;
+      }
+      p {
+        color: $material-grey400;
+      }
+    }
+
+    &.selected {
+      border-bottom: 4px solid $black;
+      .focal-technique-icon {
+        background-color: $topics-darker;
+      }
+    }
+
+  }
+
+}

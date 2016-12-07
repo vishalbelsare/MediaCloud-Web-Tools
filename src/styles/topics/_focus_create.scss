@@ -10,26 +10,6 @@ form.focus-create-setup {
     padding-right: 5px;
   }
 
-  .focal-technique-description {
-    img {
-      cursor: pointer;
-    }
-    &.disabled {
-      img {
-        filter: grayscale(100%);
-        opacity: 0.5;
-        -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
-        cursor: default;
-      }
-      p {
-        color: $material-grey500;
-      }
-    }
-    &.selected {
-      border-bottom: 4px solid $black;
-    }
-  }
-
   .focal-set-summary {
     cursor: pointer;
     &.selected {

@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
+import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
   from '../../../../../lib/focalTechniques';
@@ -48,7 +49,7 @@ class FocalTechniqueSelector extends React.Component {
               onClick={this.selectBooleanQuery}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
               id="Boolean Query"
-              image="/static/img/focal-technique-keywords-2x.png"
+              icon={KeywordSearchIcon}
               nameMsg={localMessages.keywordName}
               descriptionMsg={localMessages.keywordDescription}
             />
