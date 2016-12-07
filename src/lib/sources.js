@@ -18,9 +18,10 @@ export function collectionList(id) {
   return createApiPromise(`api/collections/set/${id}`);
 }
 
-export function collectionsByIds(idArray) {
-  const acceptedParams = idArray.map(c => c);
-  return createApiPromise(`api/collections/list/${acceptedParams}`);
+export function collectionsByIds(params) {
+  const acceptedParams = acceptParams(params, ['coll']);
+  acceptedParams['coll[]'] = params;
+  return createApiPromise('api/collections/list', acceptedParams);
 }
 
 export function collectionSearch(searchStr) {

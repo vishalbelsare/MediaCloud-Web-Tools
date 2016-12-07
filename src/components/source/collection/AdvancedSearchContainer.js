@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionAdvancedSearchMetadataForm from './form/CollectionAdvancedSearchMetadataForm';
 import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
-import { selectAdvancedSearchString, fetchSourceByMetadata, fetchCollectionByMetadata } from '../../../actions/sourceActions';
+import { selectAdvancedSearchString, fetchSourceByMetadata, fetchCollectionByMetadata, resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Search' },
@@ -14,8 +14,11 @@ const localMessages = {
 
 class AdvancedSearchContainer extends React.Component {
   componentWillMount() {
-    const { location, dispatchAdvancedSearchStringSelected } = this.props;
-    if (!location.search) return;
+    const { location, dispatchAdvancedSearchStringSelected, dispatchReset } = this.props;
+    if (!location.search || location.search === '?') {
+      dispatchReset();
+      return;
+    }
     const hashParts = location.search.split('?');
     const searchString = hashParts[1];
     // how to get this from here into initialValues? state or store
@@ -57,6 +60,7 @@ AdvancedSearchContainer.propTypes = {
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
   dispatchAdvancedSearchStringSelected: React.PropTypes.func,
+  dispatchReset: React.PropTypes.func,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
   location: React.PropTypes.object,
@@ -82,6 +86,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dispatchAdvancedSearchStringSelected: (searchString) => {
     dispatch(selectAdvancedSearchString(searchString));
+  },
+  dispatchReset() {
+    dispatch(resetAdvancedSearchSource());
+    dispatch(resetAdvancedSearchCollection());
   },
 });
 

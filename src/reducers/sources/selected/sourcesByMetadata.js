@@ -1,4 +1,4 @@
-import { FETCH_SOURCE_BY_METADATA, SELECT_ADVANCED_SEARCH_SOURCE } from '../../../actions/sourceActions';
+import { FETCH_SOURCE_BY_METADATA, SELECT_ADVANCED_SEARCH_SOURCE, RESET_ADVANCED_SEARCH_SOURCE } from '../../../actions/sourceActions';
 import { selectItemInArray, createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const sourcesByMetadata = createAsyncReducer({
@@ -12,6 +12,7 @@ const sourcesByMetadata = createAsyncReducer({
   [SELECT_ADVANCED_SEARCH_SOURCE]: payload => ({
     results: selectItemInArray(payload.args[0], payload.args[1], 'media_id', payload.args[2]),
   }),
+  [RESET_ADVANCED_SEARCH_SOURCE]: () => ({ list: [] }),
 });
 
 export default sourcesByMetadata;

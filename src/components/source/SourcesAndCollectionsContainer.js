@@ -89,6 +89,7 @@ SourcesAndCollectionsContainer.propTypes = {
   dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
+  dispatchReset: React.PropTypes.func,
   // from form healper
   buttonLabel: React.PropTypes.string,
   initialValues: React.PropTypes.object,
@@ -133,8 +134,13 @@ const mapDispatchToProps = dispatch => ({
 
     const params = srcIdArray.join(',');
     const collparams = collIdArray.join(',');
-    let url = '/collections/create?';
-    url += `${params}&${collparams}`;
+    let url = '/collections/create';
+    if (srcIdArray.length > 0) {
+      url += `?src=${params}`;
+    }
+    if (collIdArray.length > 0) {
+      url += `&coll=${collparams}`;
+    }
     dispatch(push(url));
   },
 });

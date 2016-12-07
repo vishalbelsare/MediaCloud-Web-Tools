@@ -1,4 +1,4 @@
-import { FETCH_COLLECTION_BY_METADATA, SELECT_ADVANCED_SEARCH_COLLECTION } from '../../../actions/sourceActions';
+import { FETCH_COLLECTION_BY_METADATA, SELECT_ADVANCED_SEARCH_COLLECTION, RESET_ADVANCED_SEARCH_COLLECTION } from '../../../actions/sourceActions';
 import { selectItemInArray, createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const collectionsByMetadata = createAsyncReducer({
@@ -12,6 +12,7 @@ const collectionsByMetadata = createAsyncReducer({
   [SELECT_ADVANCED_SEARCH_COLLECTION]: payload => ({
     list: selectItemInArray(payload.args[0], payload.args[1], 'tags_id', payload.args[2]),
   }),
+  [RESET_ADVANCED_SEARCH_COLLECTION]: () => ({ list: [] }),
 });
 
 export default collectionsByMetadata;

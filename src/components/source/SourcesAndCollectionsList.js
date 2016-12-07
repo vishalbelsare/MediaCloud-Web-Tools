@@ -81,7 +81,10 @@ const SourcesAndCollectionsList = (props) => {
               <Checkbox
                 key={collection.tags_id}
                 name={`clxn_${collection.tags_id}`}
-                onCheck={() => addOrRemoveToSelectedCollections(collection.tags_id, arguments[1])}
+                onCheck={function getVals(...args) {
+                  return addOrRemoveToSelectedCollections(collection.tags_id, args[1]);
+                }
+              }
               />
             </Col>
             <Col lg={6}>

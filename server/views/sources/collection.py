@@ -4,7 +4,7 @@ import flask_login
 from operator import itemgetter
 
 from server import app, mc
-from server.util.request import form_fields_required, api_error_handler
+from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -35,14 +35,19 @@ def _cached_public_collection_list(user_mc_key, tag_sets_id):
         'collections': collection_list
     }
 
-@app.route('/api/collections/list/', methods=['GET'])
+@app.route('/api/collections/list', methods=['GET'])
+@arguments_required('coll[]')
 @flask_login.login_required
 @api_error_handler
-def api_collections_by_ids(idArray):
-    sourceIdArray = request.form['src']
-    user_mc = user_mediacloud_client()
-    tag_list = _cached_public_collection_list(user_mediacloud_key(), sourceIdArray)
-    return jsonify({'results':tag_list})
+def api_collections_by_ids():
+    collIdArray = request.args['coll[]'].split(',')
+    sources_list = []
+    for tagsId in collIdArray:
+        info = {}
+        all_media = collection_media_list(user_mediacloud_key(), tagsId)
+        info = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+        sources_list += info;
+    return jsonify({'results':sources_list})
 
 
 @app.route('/api/collections/<collection_id>/details')

@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { createCollection, fetchSourcesByIds, fetchCollectionsByIds } from '../../../actions/sourceActions';
+import { createCollection, fetchSourcesByIds, fetchCollectionsByIds,
+  resetAdvancedSearchSource, resetAdvancedSearchCollection, resetSourcesByIds, resetCollectionsByIds } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 
@@ -16,11 +17,14 @@ const localMessages = {
 
 class CreateCollectionContainer extends React.Component {
   componentWillMount() {
-    const { location, dispatchMetadataSelections } = this.props;
-    if (!location.search) return;
+    const { location, dispatchMetadataSelections, dispatchReset } = this.props;
+    if (!location.search || location.search === '?') {
+      dispatchReset();
+      return;
+    }
     const hashParts = location.search.split('?');
-    const sourcesIdArray = hashParts[1].split('&')[0];
-    const collectionsIdArray = hashParts[1].split('&')[1];
+    const sourcesIdArray = hashParts[1].split('&')[0] ? hashParts[1].split('&')[0].split('=')[1] : null;
+    const collectionsIdArray = hashParts[1].split('&')[1] ? hashParts[1].split('&')[1].split('=')[1] : null;
     // how to get this from here into initialValues? state or store
     dispatchMetadataSelections(sourcesIdArray, collectionsIdArray);
   }
@@ -59,6 +63,7 @@ CreateCollectionContainer.propTypes = {
   handleSave: React.PropTypes.func.isRequired,
   goToAdvancedSearch: React.PropTypes.func.isRequired,
   dispatchMetadataSelections: React.PropTypes.func.isRequired,
+  dispatchReset: React.PropTypes.func,
   sourceAdvancedResults: React.PropTypes.array,
   collectionAdvancedResults: React.PropTypes.array,
   initialValues: React.PropTypes.object.isRequired,
@@ -93,6 +98,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(push(`/collections/create/advancedSearch?${values}`));
   },
   dispatchMetadataSelections: (sourceIdArray, collectionIdArray) => {
+    dispatch(resetSourcesByIds());
+    dispatch(resetCollectionsByIds());
     // fields of sources will come back and will be integrated into the media form fields
     if (collectionIdArray && collectionIdArray.length > 0) {
       dispatch(fetchCollectionsByIds(collectionIdArray.split(',')));
@@ -100,6 +107,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     if (sourceIdArray && sourceIdArray.length > 0) {
       dispatch(fetchSourcesByIds(sourceIdArray.split(',')));
     }
+  },
+  dispatchReset() {
+    dispatch(resetAdvancedSearchSource());
+    dispatch(resetAdvancedSearchCollection());
   },
 });
 

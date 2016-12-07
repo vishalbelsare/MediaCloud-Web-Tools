@@ -6,7 +6,9 @@ import * as api from '../lib/sources';
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
 export const FETCH_SOURCES_BY_IDS = 'FETCH_SOURCES_BY_IDS';
+export const RESET_SOURCES_BY_IDS = 'RESET_SOURCES_BY_IDS';
 export const FETCH_COLLECTIONS_BY_IDS = 'FETCH_COLLECTIONS_BY_IDS';
+export const RESET_COLLECTIONS_BY_IDS = 'RESET_COLLECTIONS_BY_IDS';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_COLLECTION_DETAILS = 'FETCH_COLLECTION_DETAILS';
 export const SELECT = 'SELECT';
@@ -39,6 +41,9 @@ export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
 export const SELECT_ADVANCED_SEARCH_SOURCE = 'SELECT_ADVANCED_SEARCH_SOURCE';
 export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECTION';
 export const SELECT_ADVANCED_SEARCH_STRING = 'SELECT_ADVANCED_SEARCH_STRING';
+export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTION';
+export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
+
 
 export const select = createAction(SELECT, id => id);
 
@@ -48,7 +53,11 @@ export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.
 
 export const fetchSourcesByIds = createAsyncAction(FETCH_SOURCES_BY_IDS, api.sourcesByIds, props => props);
 
+export const resetSourcesByIds = createAction(RESET_SOURCES_BY_IDS);
+
 export const fetchCollectionsByIds = createAsyncAction(FETCH_COLLECTIONS_BY_IDS, api.collectionsByIds, props => props);
+
+export const resetCollectionsByIds = createAction(RESET_COLLECTIONS_BY_IDS);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
@@ -97,3 +106,8 @@ export const selectAdvancedSearchSource = createAsyncAction(SELECT_ADVANCED_SEAR
 export const selectAdvancedSearchCollection = createAsyncAction(SELECT_ADVANCED_SEARCH_COLLECTION, payload => payload);
 
 export const selectAdvancedSearchString = createAction(SELECT_ADVANCED_SEARCH_STRING, string => string);
+
+export const resetAdvancedSearchSource = createAction(RESET_ADVANCED_SEARCH_SOURCE);
+
+export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_COLLECTION);
+
