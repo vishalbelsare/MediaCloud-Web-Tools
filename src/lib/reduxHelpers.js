@@ -102,7 +102,8 @@ export function createAsyncReducer(handlers) {
     desiredInitialState = handlers.initialState;
   }
   const initialState = {
-    fetchStatus: fetchConstants.FETCH_INVALID,
+    fetchStatus: fetchConstants.FETCH_INVALID,  // invalid, succeeded, or failed
+    lastFetchSuccess: null, // null or a Date object of the last successful fetch
     ...desiredInitialState,
   };
   // set up any async reducer handlers the user passed in
@@ -130,18 +131,21 @@ export function createAsyncReducer(handlers) {
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_ONGOING,
+          lastFetchSuccess: null,
           ...reducers.handleFetch(action.payload, state),
         });
       case resolve(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_SUCCEEDED,
+          lastFetchSuccess: new Date(),
           ...reducers.handleSuccess(action.payload, state),
         });
       case reject(handlers.action):
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_FAILED,
+          lastFetchSuccess: null,
           ...reducers.handleFailure(action.payload, state),
         });
       default:
