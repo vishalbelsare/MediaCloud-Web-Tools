@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 from flask import jsonify, request
 import flask_login
@@ -92,8 +93,41 @@ def topic_update(topics_id):
 
 @app.route('/api/topics/suggest', methods=['PUT'])
 @flask_login.login_required
-@form_fields_required('name', 'description', 'seedQuery', 'reason', 'spidered')
+@form_fields_required('name', 'description', 'seedQuery', 'reason')
 @api_error_handler
 def topic_suggest():
-    send_email('topics@mediacloud.org', 'rahulbot@gmail.com', 'Hi', 'test msg')
+    spidered = False
+    if 'spidered' in request.form:
+        spidered = request.form['spidered'] is '1'
+    content = """
+Hi,
+
+{username} just requested a new Topic be created with the following info:
+
+Name: {name}
+
+Description: {description}
+
+Seed Query: {seedQuery}
+
+Reason: {reason}
+
+Spidered?: {spidered}
+
+Sincerely,
+
+Your friendly MIT Topic Mapper server
+🎓👓
+    """
+    send_email('topics@mediacloud.org',
+        ['rahulbot@gmail.com'],
+        'New Topic Request: '+request.form['name'],
+        content.format(
+            username=user_name(),
+            name=request.form['name'],
+            description=request.form['description'],
+            seedQuery=request.form['seedQuery'],
+            reason=request.form['reason'],
+            spidered=spidered
+        ))
     return jsonify({'success': 1})

@@ -12,3 +12,11 @@ app = sources
 
 [sentry]
 dsn = https://<key>:<secret>@app.getsentry.com/<project>
+
+[stmp]
+enabled = 0
+server = mail.your_server.suffix
+port = 22
+use_ssl = 1
+username = me_the_user
+password = my_passowrd

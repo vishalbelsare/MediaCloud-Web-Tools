@@ -86,13 +86,31 @@ def create_app():
     '''
     prod_app = settings.get('server', 'app')
     my_app = Flask(__name__)
+    # set up webpack
     webpack_config = {
         'DEBUG': isDevMode(),
         'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/'+prod_app+'/manifest.json'
     }
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
-    mail.init_app(my_app)
+    # set up mail sending
+    if settings.has_option('smtp', 'enabled'):
+        mail_enabled = settings.get('smtp', 'enabled')
+        if mail_enabled is '1':
+            mail_config = {     # @see https://pythonhosted.org/Flask-Mail/
+                'MAIL_SERVER': settings.get('smtp', 'server'),
+                'MAIL_PORT': settings.get('smtp', 'port'),
+                'MAIL_USE_SSL': settings.get('smtp', 'use_ssl'),
+                'MAIL_USERNAME': settings.get('smtp', 'username'),
+                'MAIL_PASSWORD': settings.get('smtp', 'password'),
+            }
+            my_app.config.update(mail_config)
+            mail.init_app(my_app)
+            logger.info('Mailing from '+settings.get('smtp', 'username')+' via '+settings.get('smtp', 'server'))
+        else:
+            logger.info("Mail configured, but not enabled")
+    else: 
+        logger.info("No mail configured")
     return my_app
 
 app = create_app()

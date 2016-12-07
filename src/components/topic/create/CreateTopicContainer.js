@@ -28,7 +28,7 @@ const CreateTopicContainer = (props) => {
       </Row>
       <Row>
         <Col lg={12}>
-          <SuggestTopicForm onSaveSuggestion={handleSuggestion} />
+          <SuggestTopicForm onSaveSuggestion={handleSuggestion} initialValues={{ spidered: true }} />
         </Col>
       </Row>
     </Grid>
