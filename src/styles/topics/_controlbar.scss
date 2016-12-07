@@ -2,30 +2,30 @@
 
 .controlbar {
 
-	&.controlbar-topic {
+  &.controlbar-topic {
 
-	  .topic-name {
-	  	display: inline-block;
-	  	float: left;
-	  	margin-top: 7px;
-	  }
+    .topic-name {
+      display: inline-block;
+      float: left;
+      margin-top: 7px;
+    }
 
-	  .fav-toggle-button {
-	    display: inline-block;
-	    margin-left: 13px;
-	    float: left;
-	  }
+    .fav-toggle-button {
+      display: inline-block;
+      margin-left: 13px;
+      float: left;
+    }
 
-	  .main {
-		  .left {
-		  	vertical-align:middle;
-		  	padding-bottom: 0px;
-		  	.app-icon-settings {
-		      margin-left: 13px;
-		    }
-		  }
-	  }
-	
-	}
+    .main {
+      .left {
+        vertical-align:middle;
+        padding-bottom: 0px;
+        .app-icon-settings {
+          margin-left: 13px;
+        }
+      }
+    }
+  
+  }
 
 }
