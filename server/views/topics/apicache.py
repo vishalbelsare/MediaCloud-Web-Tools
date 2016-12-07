@@ -1,9 +1,12 @@
+import logging
 from flask import request
+
 from server.cache import cache
 from server.auth import user_mediacloud_client
-
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort
+
+logger = logging.getLogger(__name__)
 
 def topic_media_list(user_mc_key, topics_id, **kwargs):
     '''
@@ -42,6 +45,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
         'q': request.args.get('q')
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
+    logger.info("!!!!!"+str(merged_args['timespans_id']))
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 @cache
