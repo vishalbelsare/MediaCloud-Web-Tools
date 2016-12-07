@@ -25,13 +25,10 @@ class CreateCollectionContainer extends React.Component {
     dispatchMetadataSelections(sourcesIdArray, collectionsIdArray);
   }
   render() {
-    const { handleSave, goToAdvancedSearch, sourceAdvancedResults, collectionAdvancedResults } = this.props;
+    const { handleSave, goToAdvancedSearch, initialValues } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-    const initialValues = {
-      queriedSources: sourceAdvancedResults,
-      queriedCollecitons: collectionAdvancedResults,
-    };
+
     return (
       <div>
         <Title render={titleHandler} />
@@ -42,10 +39,10 @@ class CreateCollectionContainer extends React.Component {
             </Col>
           </Row>
           <CollectionForm
+            initialValues={initialValues}
             buttonLabel={formatMessage(localMessages.addButton)}
             onSave={handleSave}
             goToAdvancedSearch={goToAdvancedSearch}
-            intialValues={initialValues}
           />
         </Grid>
       </div>
@@ -64,11 +61,16 @@ CreateCollectionContainer.propTypes = {
   dispatchMetadataSelections: React.PropTypes.func.isRequired,
   sourceAdvancedResults: React.PropTypes.array,
   collectionAdvancedResults: React.PropTypes.array,
+  initialValues: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   sourceAdvancedResults: state.sources.sourceSearchByIds.list,
   collectionAdvancedResults: state.sources.collectionSearchByIds.list,
+  initialValues: {
+    sourceAdvancedResults: state.sources.sourceSearchByIds.list,
+    collectionAdvancedResults: state.sources.collectionSearchByIds.list,
+  },
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

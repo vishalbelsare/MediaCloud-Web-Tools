@@ -34,6 +34,7 @@ const SourceControlBar = props => (
           </Col>
           <Col lg={4} xs={12} className="right">
             <SourceSearchContainer
+              onAdvancedSearchSelected={props.onAdvancedSearchSelected}
               onMediaSourceSelected={props.handleMediaSourceSelected}
               onCollectionSelected={props.handleCollectionSelected}
             />
@@ -50,6 +51,7 @@ SourceControlBar.propTypes = {
   // from dispatch
   handleMediaSourceSelected: React.PropTypes.func.isRequired,
   handleCollectionSelected: React.PropTypes.func.isRequired,
+  onAdvancedSearchSelected: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

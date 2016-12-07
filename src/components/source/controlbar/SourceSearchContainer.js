@@ -49,7 +49,7 @@ class SourceSearchContainer extends React.Component {
   }
 
   resetIfRequested = () => {
-    const { sourceResults, collectionResults, searchSources, searchCollections } = this.props;
+    const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
     const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
@@ -59,7 +59,7 @@ class SourceSearchContainer extends React.Component {
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults);
     }
-    const resultsAsComponents = results.map(item => ({
+    let resultsAsComponents = results.map(item => ({
       text: item.name,
       value: (
         <MenuItem
@@ -67,15 +67,19 @@ class SourceSearchContainer extends React.Component {
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       ),
-    })).concat({
-      text: 'Advanced Search',
-      key: 'Advanced Search',
-      value: <MenuItem
-        value={advancedSearchTitle}
-        onClick={() => this.handleClick(advancedSearchTitle)}
-        primaryText={formatMessage(localMessages.advancedSearch)}
-      /> });
+    }));
 
+    if (onAdvancedSearchSelected !== undefined) {
+      resultsAsComponents = resultsAsComponents.concat({
+        text: 'Advanced Search',
+        key: 'Advanced Search',
+        value: <MenuItem
+          value={advancedSearchTitle}
+          onClick={() => this.handleClick(advancedSearchTitle)}
+          primaryText={formatMessage(localMessages.advancedSearch)}
+        />,
+      });
+    }
     return resultsAsComponents;
   }
 

@@ -6,7 +6,7 @@ export function sourceList() {
 
 export function sourcesByIds(params) {
   const acceptedParams = acceptParams(params, ['src']);
-  acceptedParams['src[]'] = params.map(c => c);
+  acceptedParams['src[]'] = params;
   return createApiPromise('api/sources/list', acceptedParams);
 }
 

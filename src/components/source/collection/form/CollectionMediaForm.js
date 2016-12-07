@@ -29,6 +29,16 @@ class SourceSelectionRenderer extends React.Component {
     collectionId: null, // the id of a collection to copy
   };
 
+  componentWillReceiveProps = (nextProps) => {
+    const { initialValues } = this.props;
+    if ((nextProps.initialValues !== initialValues)) {
+      if (nextProps.initialValues.sourceAdvancedResults || nextProps.initialValues.collectionAdvancedResults) {
+        this.mergeSourcesFromCollectionsOrSearch(nextProps.initialValues.sourceAdvancedResults);
+        this.mergeSourcesFromCollectionsOrSearch(nextProps.initialValues.collectionAdvancedResults);
+      }
+    }
+  }
+
   resetCollectionId = () => this.setState({ collectionId: null });
 
   pickCollectionToCopy = (collectionId) => {
@@ -40,8 +50,14 @@ class SourceSelectionRenderer extends React.Component {
     collection.media.forEach(m => fields.unshift(m));
   }
 
+  mergeSourcesFromCollectionsOrSearch = (searchResults) => {
+    const { fields } = this.props;
+    if (searchResults) {
+      searchResults.forEach(m => fields.unshift(m));
+    }
+  }
   render() {
-    const { goToASearch, fields, meta: { error } } = this.props;
+    const { fields, meta: { error } } = this.props;
     let copyConfirmation = null;
     if (this.state.collectionId) {
       copyConfirmation = (
@@ -68,7 +84,6 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
                   <SourceSearchContainer
                     searchCollections={false}
-                    onAdvancedSearchSelected={goToASearch}
                     onMediaSourceSelected={item => fields.unshift(item)}
                   />
                 </Tab>
@@ -76,7 +91,6 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
                   <SourceSearchContainer
                     searchSources={false}
-                    onAdvancedSearchSelected={goToASearch}
                     onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
                   />
                   {copyConfirmation}
@@ -150,13 +164,13 @@ class SourceSelectionRenderer extends React.Component {
 SourceSelectionRenderer.propTypes = {
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
-  goToASearch: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 const CollectionMediaForm = (props) => {
-  const { goToASearch } = props;
+  const { initialValues } = props;
   return (
-    <FieldArray name="sources" component={SourceSelectionRenderer} goToASearch={goToASearch} />
+    <FieldArray name="sources" component={SourceSelectionRenderer} initialValues={initialValues} />
   );
 };
 
@@ -165,7 +179,6 @@ CollectionMediaForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   initialValues: React.PropTypes.object,
-  goToASearch: React.PropTypes.func.isRequired,
   // from form helper
   // from parent
 };
