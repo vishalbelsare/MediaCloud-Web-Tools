@@ -26,8 +26,8 @@ def story(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_counts(topics_id):
-    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # override the default behaviour, which is to pull the timespans id off the request params
-    filtered = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None)  # this will read the timespan off the query args
+    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
+    filtered = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None)  # force a count with just the query
     return jsonify({'counts':{'filtered': filtered['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
