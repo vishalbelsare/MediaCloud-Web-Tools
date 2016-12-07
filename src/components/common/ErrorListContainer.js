@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import { dismissErrors } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
-import { ErrorButton } from '../common/IconButton';
+import ErrorItem from './ErrorItem';
 
 const localMessages = {
   dismiss: { id: 'errors.dismiss', defaultMessage: 'dismiss' },
@@ -20,13 +20,7 @@ const ErrorListContainer = (props) => {
         <Grid>
           <Row>
             <Col lgOffset={3} lg={6}>
-              {errors.map((error, idx) => (
-                <div key={idx} className="error-message">
-                  <ErrorButton color="#ff0000" />
-                  &nbsp;
-                  {error.message}
-                </div>
-              ))}
+              {errors.map((error, idx) => <ErrorItem key={idx} error={error} />)}
             </Col>
           </Row>
           <Row>

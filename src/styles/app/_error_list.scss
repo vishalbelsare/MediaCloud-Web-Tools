@@ -9,6 +9,14 @@
   .error-message {
 	padding-bottom: 10px;
 	font-size: 18px;
+
+	small {
+	  color: $material-grey700;
+	  font-size: 12px;
+	  line-height: 17px;
+	  display: block;
+	  margin-left: 30px;
+	}
   }
 
 }
