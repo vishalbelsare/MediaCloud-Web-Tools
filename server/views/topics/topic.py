@@ -119,8 +119,8 @@ Sincerely,
 Your friendly MIT Topic Mapper server
 🎓👓
     """
-    send_email('topics@mediacloud.org',
-        ['rahulbot@gmail.com'],
+    send_email('system@mediacloud.org',
+        [user_name(),'topic-request@mediacloud.org'],
         'New Topic Request: '+request.form['name'],
         content.format(
             username=user_name(),
