@@ -3,7 +3,6 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
 import { connect } from 'react-redux';
-import FlatButton from 'material-ui/FlatButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -16,8 +15,8 @@ import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
-// import StoryDetails from './StoryDetails';
 import StatBar from '../../common/statbar/StatBar';
+import AppButton from '../../common/AppButton';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -62,10 +61,10 @@ class StoryContainer extends React.Component {
       displayTitle = `${story.title.substr(0, MAX_STORY_TITLE_LENGTH)}...`;
     }
     const dialogActions = [
-      <FlatButton
+      <AppButton
         label={formatMessage(messages.ok)}
         primary
-        onClick={this.handleRemoveDialogClose}
+        onTouchTap={this.handleRemoveDialogClose}
       />,
     ];
     return (
