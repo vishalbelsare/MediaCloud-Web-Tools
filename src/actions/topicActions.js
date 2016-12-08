@@ -93,7 +93,7 @@ export const sortTopicTopStories = createAction(SORT_TOPIC_TOP_STORIES, sort => 
 export const fetchTopicTopMedia = createAsyncAction(FETCH_TOPIC_TOP_MEDIA, api.topicTopMedia);
 // pass in sort
 export const sortTopicTopMedia = createAction(SORT_TOPIC_TOP_MEDIA, sort => sort);
-// pass in topicId, snapshotId, timespanId, sort
+// pass in topicId, snapshotId, timespanId, sort, withTotals
 export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.topicTopWords);
 // pass in topicId, snapshotId, timespanId
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);

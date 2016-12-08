@@ -9,8 +9,9 @@ const localMessages = {
   worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
 };
 
+const DEFAULT_WORD_COUNT = 100;
 const DEFAULT_WIDTH = 530;
-const DEFAULT_HEIGHT = 300;
+const DEFAULT_HEIGHT = 320;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 30;
 const DEFAULT_TEXT_COLOR = '#333333';
@@ -58,7 +59,7 @@ class OrderedWordCloud extends React.Component {
   }
 
   render() {
-    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips } = this.props;
+    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips, alreadyNormalized, fullExtent } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const options = {
       width,
@@ -69,6 +70,8 @@ class OrderedWordCloud extends React.Component {
       minFontSize,
       maxFontSize,
       showTooltips,
+      alreadyNormalized,
+      fullExtent,
     };
     if (width === undefined) {
       options.width = DEFAULT_WIDTH;
@@ -91,16 +94,23 @@ class OrderedWordCloud extends React.Component {
     if (showTooltips === undefined) {
       options.showTooltips = false;
     }
+    if (alreadyNormalized === undefined) {
+      options.alreadyNormalized = false;
+    }
     // add in tf normalization
     const allSum = d3.sum(words, term => parseInt(term.count, 10));
-    words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
+    if (!options.alreadyNormalized) {
+      words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
+    }
     // create a rollover tooltip helper
     const tooltipDiv = d3.select('body').append('div')
       .attr('class', 'viz-tooltip ordered-word-cloud-tooltip')
       .style('opacity', 0);
     // start layout calculations
     const node = ReactFauxDOM.createElement('svg');
-    const fullExtent = d3.extent(words, d => d.tfnorm);
+    if (options.fullExtent === undefined) {
+      options.fullExtent = d3.extent(words, d => d.tfnorm);
+    }
     const innerWidth = options.width - (2 * options.padding);
     const svg = d3.select(node)
         .attr('height', options.height)
@@ -114,12 +124,12 @@ class OrderedWordCloud extends React.Component {
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
       // Create words
       wordNodes = wordWrapper.selectAll('.word')
-        .data(words, d => d.stem)
+        .data(words.slice(0, DEFAULT_WORD_COUNT), d => d.stem)
         .enter()
         .append('text')
           .classed('word', true)
           .classed('left', true)
-        .attr('font-size', d => this.fontSize(d, fullExtent, sizeRange))
+        .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {
@@ -151,7 +161,7 @@ class OrderedWordCloud extends React.Component {
         });
       // Layout
       y = 0;
-      const leftHeight = this.listCloudLayout(wordNodes, innerWidth, fullExtent, sizeRange);
+      const leftHeight = this.listCloudLayout(wordNodes, innerWidth, options.fullExtent, sizeRange);
       y = Math.max(y, leftHeight);
       sizeRange.max -= 1;
     }
@@ -178,6 +188,8 @@ OrderedWordCloud.propTypes = {
   linkColor: React.PropTypes.string,
   showTooltips: React.PropTypes.bool,
   intl: React.PropTypes.object.isRequired,
+  alreadyNormalized: React.PropTypes.bool,
+  fullExtent: React.PropTypes.array,
 };
 
 export default injectIntl(OrderedWordCloud);

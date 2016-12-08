@@ -19,7 +19,7 @@ export function topicTopMedia(topicId, params) {
 }
 
 export function topicTopWords(topicId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'withTotals']);
   return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
 }
 

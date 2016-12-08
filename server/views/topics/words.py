@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify
+from flask import request, jsonify
 import flask_login
 
 from server import app
@@ -24,7 +24,17 @@ def topic_word(topics_id, word):
 @flask_login.login_required
 @api_error_handler
 def topic_words(topics_id):
-    response = topic_word_counts(user_mediacloud_key(), topics_id)[:100]
+    results = topic_word_counts(user_mediacloud_key(), topics_id)[:200]
+    totals = [] # important so that these get reset on the client when they aren't requested
+    logger.info(request.args)
+    if ('withTotals' in request.args) and (request.args['withTotals'] == "true"):
+        # handle requests to return these results
+        # and also data to compare it to for the whole topic focus
+        totals = topic_word_counts(user_mediacloud_key(), topics_id, timespans_id=None, q=None)
+    response = {
+        'list': results,
+        'totals': totals
+    }
     return jsonify(response)
 
 @app.route('/api/topics/<topics_id>/words.csv', methods=['GET'])
