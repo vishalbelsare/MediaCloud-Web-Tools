@@ -3,7 +3,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { ErrorButton } from '../common/IconButton';
 
 const localMessages = {
-  internalError: { id: 'errors.internal', defaultMessage: 'Internal Error 💥💣💥💣💥💣' },
+  internalError: { id: 'errors.internal', defaultMessage: 'Internal Error 💣' },
+  notLoggedIn: { id: 'errors.notLoggedIn', defaultMessage: 'You need to login' },
   details: { id: 'errors.internal.details', defaultMessage: 'details' },
 };
 
@@ -20,7 +21,11 @@ class ErrorItem extends React.Component {
     let messageContent = message;
     let detailsContent = null;
     if (isLowLevelError) {
-      messageContent = <FormattedMessage {...localMessages.internalError} />;
+      if (message.includes('Invalid API key or authentication cookie')) {
+        messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+      } else {
+        messageContent = <FormattedMessage {...localMessages.internalError} />;
+      }
       let smallContent = null;
       if (this.state.showDetails) {
         smallContent = <div><small>{message}</small></div>;
