@@ -85,38 +85,29 @@ WordContainer.propTypes = {
   term: React.PropTypes.string,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   topicId: state.topics.selected.id,
-  stem: state.topics.selected.word.info.stem,
-  term: state.topics.selected.word.info.term,
+  stem: ownProps.location.query.stem,
+  term: ownProps.location.query.term,
 });
 
 const mapDispatchToProps = dispatch => ({
-  selectNewWord: (topicId, term, stem) => {
+  selectNewWord: (term, stem) => {
     dispatch(selectWord({ term, stem }));
-  },
-  saveParamsToStore: (propsRef) => {
-    const { topicId, selectNewWord } = propsRef;
-    const { search } = propsRef.location;
-
-    const hashParts = search.split('?');
-    const args = {};
-    if (hashParts.length > 1) {
-      const queryParts = hashParts[1].split('&');
-      queryParts.forEach((part) => {
-        const argParts = part.split('=');
-        args[argParts[0]] = argParts[1];
-      });
-    }
-    const term = args.term;
-    const stem = args.stem;
-    selectNewWord(topicId, term, stem);
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    saveParamsToStore: () => {
+      dispatchProps.selectNewWord(stateProps.stem, stateProps.term);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       WordContainer
     )
   );
