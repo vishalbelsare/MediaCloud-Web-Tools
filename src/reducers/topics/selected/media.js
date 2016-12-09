@@ -5,7 +5,7 @@ const influentialMedia = createAsyncReducer({
   initialState: {
     media: [],
     link_ids: {},
-    sort: 'social',
+    sort: 'inlink',
   },
   action: FETCH_TOPIC_INFLUENTIAL_MEDIA,
   [SORT_TOPIC_INFLUENTIAL_MEDIA]: payload => ({ sort: payload }),

@@ -3,7 +3,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const topStories = createAsyncReducer({
   initialState: {
-    sort: 'social',
+    sort: 'inlink',
     stories: [],
     links_ids: {},
   },

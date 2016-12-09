@@ -5,7 +5,7 @@ const influentialStories = createAsyncReducer({
   initialState: {
     stories: [],
     link_ids: {},
-    sort: 'social',
+    sort: 'inlink',
   },
   action: FETCH_TOPIC_INFLUENTIAL_STORIES,
   [SORT_TOPIC_INFLUENTIAL_STORIES]: payload => ({ sort: payload }),

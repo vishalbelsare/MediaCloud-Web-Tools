@@ -3,7 +3,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const topMedia = createAsyncReducer({
   initialState: {
-    sort: 'social',
+    sort: 'inlink',
     media: [],
   },
   action: FETCH_TOPIC_TOP_MEDIA,

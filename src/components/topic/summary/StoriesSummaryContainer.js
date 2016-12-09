@@ -92,7 +92,11 @@ const mapDispatchToProps = dispatch => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps);
+      dispatchProps.fetchData({
+        topicId: ownProps.topicId,
+        filters: ownProps.filters,
+        sort: stateProps.sort,
+      });
     },
   });
 }
