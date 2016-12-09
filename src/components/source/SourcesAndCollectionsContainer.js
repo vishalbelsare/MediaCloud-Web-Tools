@@ -53,9 +53,12 @@ class SourcesAndCollectionsContainer extends React.Component {
     // dispatch a click to all the checkboxes to checked somehow
   };
   pushToCreateCollectionPage = () => {
-    const { queriedSources, queriedCollections, dispatchToCreate } = this.props;
-    dispatchToCreate(queriedSources, queriedCollections);
-    // dispatch a click to all the checkboxes to checked somehow
+    const { searchString, queriedSources, queriedCollections, dispatchToCreate, dispatchToCreateWithSearch } = this.props;
+    if (this.state && this.state.allOrNoneCheck === ADD_ALL_PAGES) {
+      dispatchToCreateWithSearch(searchString);
+    } else {
+      dispatchToCreate(queriedSources, queriedCollections);
+    }
   };
   render() {
     const { queriedSources, queriedCollections,
@@ -110,11 +113,13 @@ SourcesAndCollectionsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   // from context
   intl: React.PropTypes.object.isRequired,
+  searchString: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
+  dispatchToCreateWithSearch: React.PropTypes.func.isRequired,
   dispatchReset: React.PropTypes.func,
   // from form healper
   buttonLabel: React.PropTypes.string,
@@ -133,19 +138,19 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
   },
-  // depending on checked value, all or page or none items are to be selected
+  // depending on checked value, all or page or a selected set or no items are to be selected
   dispatchSourceSelection: (mediaId, checked) => {
     dispatch(selectAdvancedSearchSource({ ids: mediaId.length > 0 ? mediaId : [], checked }));
   },
   dispatchCollectionSelection: (tagId, checked) => {
     dispatch(selectAdvancedSearchCollection({ ids: tagId.length > 0 ? tagId : [], checked }));
   },
+  dispatchToCreateWithSearch: (searchStr) => {
+    const url = `/collections/create?search=${searchStr}`;
+    dispatch(push(url));
+  },
   dispatchToCreate: (sources, collections) => {
     // get all ids and push them into url params
-    // dispatch push url
-
-    // TODO add in search parameter if ADD_ALL_PAGES
-
     const srcIdArray = sources.map((s) => {
       if (s.selected === true) {
         return s.media_id;

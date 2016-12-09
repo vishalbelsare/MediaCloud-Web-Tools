@@ -15,15 +15,14 @@ const localMessages = {
 
 class AdvancedSearchContainer extends React.Component {
   componentWillMount() {
-    const { location, dispatchAdvancedSearchStringSelected, dispatchReset } = this.props;
-    if (!location.search || location.search === '?') {
-      dispatchReset();
-      return;
+    const { saveParamsToStore } = this.props;
+    saveParamsToStore(this.props, this);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params.searchStr !== this.props.params.searchStr) {
+      const { saveParamsToStore } = nextProps;
+      saveParamsToStore(nextProps, this);
     }
-    const hashParts = location.search.split('?');
-    const searchString = hashParts[1].split('=')[1];
-    // how to get this from here into initialValues? state or store
-    dispatchAdvancedSearchStringSelected(searchString);
   }
   render() {
     const { searchString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
@@ -48,7 +47,7 @@ class AdvancedSearchContainer extends React.Component {
           </Row>
           {content}
           <Divider />
-          <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
+          <SourcesAndCollectionsContainer searchString={searchString} queriedSources={queriedSources} queriedCollections={queriedCollections} />
         </Grid>
       </div>
     );
@@ -58,6 +57,9 @@ class AdvancedSearchContainer extends React.Component {
 AdvancedSearchContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object,
+
   fetchStatus: React.PropTypes.string,
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
@@ -65,15 +67,16 @@ AdvancedSearchContainer.propTypes = {
   dispatchReset: React.PropTypes.func,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
-  location: React.PropTypes.object,
-  // from params
+  saveParamsToStore: React.PropTypes.func,
+  // from state (params)
   searchString: React.PropTypes.string,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   searchString: state.sources.selected.advancedSearchString,
   queriedSources: state.sources.selected.sourcesByMetadata.list,
   queriedCollections: state.sources.selected.collectionsByMetadata.list,
+  searchStrParam: ownProps.location.query.search,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -96,9 +99,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    saveParamsToStore: () => {
+      if (stateProps.searchStrParam) {
+        dispatchProps.dispatchAdvancedSearchStringSelected(stateProps.searchStrParam);
+      }
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       AdvancedSearchContainer
     ),
   );
