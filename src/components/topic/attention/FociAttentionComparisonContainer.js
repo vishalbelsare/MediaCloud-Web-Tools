@@ -13,7 +13,7 @@ import messages from '../../../resources/messages';
 import { domElementToSvgString } from '../../util/svg';
 
 const localMessages = {
-  overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Overall' },
+  overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Whole Topic' },
   bubbleChartTitle: { id: 'topic.attention.bubbleChart.title', defaultMessage: 'Total Attention' },
   lineChartTitle: { id: 'topic.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
 };
