@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def story(topics_id, stories_id):
     user_mc = user_mediacloud_client()
-    story_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
-    # TODO: remove this when these get added to the results of the query
-    story_info['media_name'] = user_mc.media(story_info['media_id'])['name']
-    story_info['media_url'] = user_mc.media(story_info['media_id'])['url']
-    return jsonify(story_info)
+    story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
+    story_info = user_mc.story(stories_id)  # add in other fields from regular call
+    for k in story_info.keys():
+        if k not in story_topic_info.keys():
+            story_topic_info[k] = story_info[k]
+    return jsonify(story_topic_info)
 
 @app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
 @flask_login.login_required

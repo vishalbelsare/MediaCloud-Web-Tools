@@ -17,6 +17,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
+import StoryDetails from './StoryDetails';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -116,6 +117,9 @@ class StoryContainer extends React.Component {
             </Col>
             <Col lg={12}>
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
+            </Col>
+            <Col lg={6}>
+              <StoryDetails topicId={topicId} story={story} />
             </Col>
           </Row>
         </Grid>

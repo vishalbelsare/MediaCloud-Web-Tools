@@ -1,41 +1,59 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
-import LinkWithFilters from '../LinkWithFilters';
 
 const localMessages = {
   title: { id: 'story.details.title',
-    defaultMessage: 'Basic Info',
+    defaultMessage: 'About this Story',
   },
-  meta: { id: 'story.details.meta', defaultMessage: 'It was published in {language}, on {publishDate}, by {source}.' },
-  readItNow: { id: 'story.details.otherInfo', defaultMessage: 'Read it now.' },
+  publisher: { id: 'story.details.publisher', defaultMessage: '<b>Published by</b>: <a href="{url}">{name}</a>' },
+  extractorVersion: { id: 'story.details.extractorVersion', defaultMessage: '<b>Extractor Version</b>: {version}' },
+  dateGuessMethod: { id: 'story.details.dateGuess', defaultMessage: '<b>Date Guessed From</b>: {method}' },
+  apSyndicated: { id: 'story.details.apSyndicated', defaultMessage: '<b>AP Story?</b> {apSyndicated}' },
+  wordCount: { id: 'story.details.wordCount', defaultMessage: '<b>Word Count</b>: {wordCount}' },
+  unknown: { id: 'story.details.unknown', defaultMessage: 'Unknown' },
 };
 
 const StoryDetails = (props) => {
-  const { topicId, story } = props;
-  const { formatDate } = props.intl;
+  const { story } = props;
+  const { formatMessage } = props.intl;
   return (
     <DataCard>
       <h2>
         <FormattedMessage {...localMessages.title} />
       </h2>
-      <p>
-        <FormattedMessage
-          {...localMessages.meta}
-          values={{
-            language: story.language,
-            source: (
-              <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
-                {story.media_name}
-              </LinkWithFilters>
-            ),
-            publishDate: formatDate(story.publishDateObj,
-              { year: '2-digit', month: 'numeric', day: 'numeric' }),
-          }}
-        />
-        &nbsp;
-        <a href={story.url}><FormattedMessage {...localMessages.readItNow} /></a>
-      </p>
+      <ul>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.publisher}
+            values={{ url: story.media_url, name: story.media_name }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.extractorVersion}
+            values={{ version: story.extractorVersion || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.dateGuessMethod}
+            values={{ method: story.dateGuessMethod || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.apSyndicated}
+            values={{ apSyndicated: story.ap_syndicated || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.wordCount}
+            values={{ wordCount: story.word_count || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+      </ul>
     </DataCard>
   );
 };
@@ -48,4 +66,6 @@ StoryDetails.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(StoryDetails);
+export default injectIntl(
+  StoryDetails
+);
