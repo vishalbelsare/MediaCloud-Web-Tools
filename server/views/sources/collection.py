@@ -183,8 +183,9 @@ def collection_wordcount_csv(collection_id):
 @api_error_handler
 def collection_create():
     user_mc = user_mediacloud_client()
-    name = request.form['name']
-    description = request.form['description']
-    notes = request.form['static']
+    name = request.args['name']
+    description = request.args['description']
+    notes = request.args['static']
+    sources = request.args['sources[]']
     dummyCollection = user_mc.tag(COLLECTIONS_TAG_SET_ID)
     return jsonify(dummyCollection)

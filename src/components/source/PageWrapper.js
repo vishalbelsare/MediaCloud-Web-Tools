@@ -21,7 +21,7 @@ PageWrapper.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   goToAdvancedSearch: (values) => {
-    dispatch(push(`/collections/create/advancedSearch?${values}`));
+    dispatch(push(`/collections/create/advancedSearch?search=${values}`));
   },
 });
 

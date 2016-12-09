@@ -11,21 +11,22 @@ export function arrayToDict(arr, keyPropertyName) {
   return dict;
 }
 
+// if all rows should be selected, or only page rows, or none, checked will tell us
+// arr contains only a chunk of rows at a time... TODO
 export function selectItemInArray(arr, idArr, idField, checked) {
   const updateWithNewlySelected = [];
   arr.forEach((item) => {
+    const newItem = item;
     idArr.forEach((id) => {
-      const newItem = item;
       if (item[idField] === id) {
-        newItem.selected = checked;
-      } else {
-        newItem.selected = item.selected;
-        if (item.selected === undefined) {
+        if (checked) {
+          newItem.selected = true;
+        } else {
           newItem.selected = false;
         }
       }
-      updateWithNewlySelected.push(newItem);
     });
+    updateWithNewlySelected.push(newItem);
   });
   return updateWithNewlySelected;
 }

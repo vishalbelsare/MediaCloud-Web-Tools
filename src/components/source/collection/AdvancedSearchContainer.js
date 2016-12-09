@@ -3,9 +3,10 @@ import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import Divider from 'material-ui/Divider';
 import CollectionAdvancedSearchMetadataForm from './form/CollectionAdvancedSearchMetadataForm';
 import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
-import { selectAdvancedSearchString, fetchSourceByMetadata, fetchCollectionByMetadata, resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
+import { fetchSourceByMetadata, fetchCollectionByMetadata, resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Search' },
@@ -20,7 +21,7 @@ class AdvancedSearchContainer extends React.Component {
       return;
     }
     const hashParts = location.search.split('?');
-    const searchString = hashParts[1];
+    const searchString = hashParts[1].split('=')[1];
     // how to get this from here into initialValues? state or store
     dispatchAdvancedSearchStringSelected(searchString);
   }
@@ -46,6 +47,7 @@ class AdvancedSearchContainer extends React.Component {
             </Col>
           </Row>
           {content}
+          <Divider />
           <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
         </Grid>
       </div>
@@ -85,7 +87,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchCollectionByMetadata(searchStr));
   },
   dispatchAdvancedSearchStringSelected: (searchString) => {
-    dispatch(selectAdvancedSearchString(searchString));
+    dispatch(fetchSourceByMetadata(searchString));
+    dispatch(fetchCollectionByMetadata(searchString));
   },
   dispatchReset() {
     dispatch(resetAdvancedSearchSource());

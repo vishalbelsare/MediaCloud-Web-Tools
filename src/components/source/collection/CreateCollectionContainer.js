@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { createCollection, fetchSourcesByIds, fetchCollectionsByIds,
+import { createCollection, fetchSourcesByIds, fetchCollectionSourcesByIds,
   resetAdvancedSearchSource, resetAdvancedSearchCollection, resetSourcesByIds, resetCollectionsByIds } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(resetCollectionsByIds());
     // fields of sources will come back and will be integrated into the media form fields
     if (collectionIdArray && collectionIdArray.length > 0) {
-      dispatch(fetchCollectionsByIds(collectionIdArray.split(',')));
+      dispatch(fetchCollectionSourcesByIds(collectionIdArray.split(',')));
     }
     if (sourceIdArray && sourceIdArray.length > 0) {
       dispatch(fetchSourcesByIds(sourceIdArray.split(',')));
