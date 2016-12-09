@@ -97,20 +97,23 @@ const mapStateToProps = state => ({
   totalWordCounts: state.topics.selected.summary.topWords.totals, // for the whole snapshot/focus
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, { ...props.filters, withTotals: true }));
   },
-  handleWordCloudClick: (word) => {
-    const params = generateParamStr({ stem: word.stem, term: word.term });
-    let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
-    url += params;
+  goToUrl: (url) => {
     dispatch(push(url));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleWordCloudClick: (word) => {
+      const params = generateParamStr({ stem: word.stem, term: word.term });
+      let url = `/topics/${stateProps.topicId}/words/${word.stem}*?`;
+      url += params;
+      dispatchProps.goToUrl(url);
+    },
     asyncFetch: () => {
       dispatchProps.fetchData({
         filters: stateProps.filters,
