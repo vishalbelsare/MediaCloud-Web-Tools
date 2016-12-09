@@ -25,8 +25,13 @@ def topic_media(topics_id):
 @flask_login.login_required
 @api_error_handler
 def media(topics_id, media_id):
-    media_info = topic_media_list(user_mediacloud_key(), topics_id, media_id=media_id)['media'][0]
-    return jsonify(media_info)
+    user_mc = user_mediacloud_client()
+    combined_media_info = topic_media_list(user_mediacloud_key(), topics_id, media_id=media_id)['media'][0]
+    media_info = user_mc.media(media_id)
+    for key in media_info.keys():
+        if key not in combined_media_info.keys():
+            combined_media_info[key] = media_info[key]
+    return jsonify(combined_media_info)
 
 @app.route('/api/topics/<topics_id>/media.csv', methods=['GET'])
 @flask_login.login_required

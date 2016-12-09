@@ -3,18 +3,18 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import DataCard from '../../common/DataCard';
-import CollectionIcon from '../../common/icons/CollectionIcon';
+import DataCard from './DataCard';
+import CollectionIcon from './icons/CollectionIcon';
 
 const CollectionList = (props) => {
-  const { title, intro, collections, handleTouchTap } = props;
+  const { title, intro, collections, handleClick } = props;
   return (
     <DataCard className="collection-list">
       <h2>{title}</h2>
       <p>{intro}</p>
       <div className="collection-list-item-wrapper">
         {collections.map(c =>
-          <Chip className="chip" key={c.tags_id} onTouchTap={() => handleTouchTap(c.tags_id)}>
+          <Chip className="chip" key={c.tags_id} onTouchTap={() => handleClick(c.tags_id)}>
             <Avatar size={32}><CollectionIcon height={15} /></Avatar>
             {c.label}
           </Chip>
@@ -29,13 +29,18 @@ CollectionList.propTypes = {
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string,
   collections: React.PropTypes.array.isRequired,
+  linkToFullUrl: React.PropTypes.bool,
   // from dispatch
-  handleTouchTap: React.PropTypes.func.isRequired,
+  handleClick: React.PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  handleTouchTap: (collectionId) => {
-    dispatch(push(`/collections/${collectionId}`));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleClick: (collectionId) => {
+    if (ownProps.linkToFullUrl) {
+      window.open(`https://sources.mediacloud.org/#/collections/${collectionId}/details`);
+    } else {
+      dispatch(push(`/collections/${collectionId}`));
+    }
   },
 });
 

@@ -45,7 +45,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
         'q': request.args.get('q')
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
-    logger.info("!!!!!"+str(merged_args['timespans_id']))
+    # logger.info("!!!!!"+str(merged_args['timespans_id']))
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 @cache

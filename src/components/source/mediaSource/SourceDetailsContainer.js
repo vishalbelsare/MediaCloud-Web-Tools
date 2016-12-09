@@ -8,7 +8,7 @@ import Title from 'react-title-component';
 import { select, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
-import CollectionList from './CollectionList';
+import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';

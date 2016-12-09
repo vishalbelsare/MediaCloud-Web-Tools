@@ -19,11 +19,14 @@ import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
+import CollectionList from '../../common/CollectionList';
 
 const localMessages = {
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If media source is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   storyCount: { id: 'media.details.storyCount', defaultMessage: 'Stories in timespan' },
+  collectionTitle: { id: 'media.details.collections.title', defaultMessage: 'Collections' },
+  collectionIntro: { id: 'media.details.collections.info', defaultMessage: 'This source is in the following collections.' },
 };
 
 class MediaContainer extends React.Component {
@@ -56,6 +59,7 @@ class MediaContainer extends React.Component {
     const { media, topicId, mediaId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
+    const collections = media.media_source_tags.filter(c => c.show_on_media === 1);
     const dialogActions = [
       <FlatButton
         label={formatMessage(messages.ok)}
@@ -126,6 +130,14 @@ class MediaContainer extends React.Component {
           <Row>
             <Col lg={6} md={6} sm={12}>
               <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
+            </Col>
+            <Col lg={6} xs={12}>
+              <CollectionList
+                title={formatMessage(localMessages.collectionTitle)}
+                intro={formatMessage(localMessages.collectionIntro)}
+                collections={collections}
+                linkToFullUrl
+              />
             </Col>
           </Row>
         </Grid>
