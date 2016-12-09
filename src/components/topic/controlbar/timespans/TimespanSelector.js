@@ -9,7 +9,7 @@ import TimespanPeriodSelector from './TimespanPeriodSelector';
 const localMessages = {
   timespansHelpTitle: { id: 'timespans.help.title', defaultMessage: 'About Timespans' },
   timespansHelpText: { id: 'timespans.help.text',
-    defaultMessage: '<p>Timespans let you look at just the stories published within your topic during a certain timeframe.  We\'ve set up monthly and weekly Timesans for you, but you can also define your own while creating a new Snapshot.</p><p>Click "Show Timespans" to see your options.  The Timespan you are currently lokoing at is highlighted as a green box on the timeline. You\'ll see controls for flipping between the various Timespans in this Topic on the left.  When you see a Timespan you want to dig into, click the box on the visual timeline to switch into it.</p><p>You can return to look at the whole Topic by selecting the "overall" Timespan.</p>',
+    defaultMessage: '<p>Timespans let you look at just the stories published within your topic during a certain timeframe.  We\'ve set up monthly and weekly Timesans for you, but you can also define your own while creating a new Snapshot.</p><p>Click "Show Timespans" to see your options.  The Timespan you are currently looking at is highlighted as a green box on the timeline. You\'ll see controls for flipping between the various Timespans in this Topic on the left.  When you see a Timespan you want to dig into, click the box on the visual timeline to switch into it.</p><p>You can return to look at the whole Topic by selecting the "overall" Timespan.</p>',
   },
   timespansHide: { id: 'timespans.hide', defaultMessage: 'Hide Timespans' },
   timespansShow: { id: 'timespans.show', defaultMessage: 'Show Timespans' },
