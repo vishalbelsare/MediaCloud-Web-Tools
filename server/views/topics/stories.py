@@ -79,7 +79,9 @@ def topic_stories(topics_id):
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def topic_stories_csv(topics_id):
-    return stream_story_list_csv(user_mediacloud_key(), 'stories', topics_id)
+    user_mc = user_mediacloud_client()
+    topic = user_mc.topic(topics_id)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     '''
@@ -99,7 +101,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
                 more_stories = True
             else:
                 more_stories = False
-        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id',
+        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id', 'media_name',
             'media_inlink_count', 'inlink_count',
             'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
         return csv.stream_response(all_stories, props, filename)
