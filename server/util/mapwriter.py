@@ -1,14 +1,8 @@
 from networkx.readwrite import json_graph
 import networkx as nx
-import community
-import pandas as pd
-import numpy as np
-import datetime
-import requests
-import mediacloud
+#import community
 import json
 import os
-import copy
 import logging
 
 from server import mc, base_dir
@@ -142,9 +136,7 @@ def remove_media_source(remove_name, media_sources):
     return media_sources
 
 # TODO: Enable media source range based on significance, and allow selection of social or inlink, 
-def generate_network_of_frames(topics_id, timespans_id, num_of_sources, out_name=None, remove_media_list=None, remove_word_list=[], generate_word_lists=False, include_media_list=None, media_attribs=None, num_words=None):
-    if(out_name == None):
-        out_name = 'network_of_frames-%s' % datetime.datetime.now().isoformat()
+def generate_network_of_frames(topics_id, timespans_id, num_of_sources, out_name, remove_media_list=None, remove_word_list=[], generate_word_lists=False, include_media_list=None, media_attribs=None, num_words=None):
     
     if(remove_media_list == None):
         remove_media_list = []
@@ -172,7 +164,7 @@ def generate_network_of_frames(topics_id, timespans_id, num_of_sources, out_name
     export_d3_network(frame_network, '%s' % out_name)
     
     if(generate_word_lists == True):
-        with open('%s-word-usage.txt' % out_name, 'wb') as wl:
+        with open('%s.txt' % out_name, 'wb') as wl:
             all_words = []
             media_sources = {ms['media_id']: ms['name'] for ms in media_sources_md}
             counts = {}

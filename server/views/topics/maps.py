@@ -15,7 +15,7 @@ MAP_TYPES = ['wordMap', 'linkMap']
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/map-files', methods=['GET'])
-#@flask_login.login_required
+@flask_login.login_required
 @arguments_required('snapshotId','timespanId')
 @api_error_handler
 def map_files(topics_id):
@@ -42,6 +42,13 @@ def map_files(topics_id):
         status = 'generating'
     files[map_type] = status
     return jsonify(files)
+
+@app.route('/api/topics/<topics_id>/map-files/<map_type>.<map_format>', methods=['GET'])
+@arguments_required('timespanId')
+@flask_login.login_required
+def map_files_download(topics_id, map_type, map_format):
+    filename = request.args[map_type]+"-"+topics_id+"-"+request.args['timespanId']+"."+map_format
+    return send_from_directory(directory=DATA_DIR, filename=filename)
 
 '''
 @app.route('/api/topics/<topics_id>/map-files/<map_type>/generate', methods=['GET'])
