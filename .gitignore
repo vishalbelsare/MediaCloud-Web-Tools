@@ -11,5 +11,6 @@ logs/*.log.*
 config/server.config
 *.log
 data/map-files/*.lock
-data/map-files/*.gefx
-
+data/map-files/*.gexf
+data/map-files/*.json
+data/map-files/*.txt
