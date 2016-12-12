@@ -23,17 +23,13 @@ const SourceControlBar = props => (
             </Link>
           </Col>
           <Col lg={4} xs={4} className="left">
-            <Link to="collections/create/advancedSearch">
-              <FormattedMessage {...localMessages.advancedSearch} />
-            </Link>
-          </Col>
-          <Col lg={4} xs={4} className="left">
             <Link to="sources/create">
               <FormattedMessage {...localMessages.addSource} />
             </Link>
           </Col>
           <Col lg={4} xs={12} className="right">
             <SourceSearchContainer
+              onAdvancedSearchSelected={props.onAdvancedSearchSelected}
               onMediaSourceSelected={props.handleMediaSourceSelected}
               onCollectionSelected={props.handleCollectionSelected}
             />
@@ -50,6 +46,7 @@ SourceControlBar.propTypes = {
   // from dispatch
   handleMediaSourceSelected: React.PropTypes.func.isRequired,
   handleCollectionSelected: React.PropTypes.func.isRequired,
+  onAdvancedSearchSelected: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

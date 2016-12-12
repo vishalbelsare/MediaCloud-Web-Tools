@@ -16,10 +16,13 @@ const localMessages = {
 };
 
 const SourcesAndCollectionsList = (props) => {
-  const { queriedSources, queriedCollections, addToSelectedSources, addToSelectedCollections, addRemoveAll } = props;
+  const { queriedSources, queriedCollections, addOrRemoveToSelectedSources,
+    addOrRemoveToSelectedCollections, addRemoveAll,
+    ADD_ALL_THIS_PAGE, REMOVE_ALL, ADD_ALL_PAGES } = props;
   const { formatMessage } = props.intl;
   const content = null;
   const titleHandler = parentTitle => `${queriedCollections.label} | ${parentTitle}`;
+
   if (queriedSources === undefined || queriedCollections === undefined) {
     return (
       <div>
@@ -29,21 +32,31 @@ const SourcesAndCollectionsList = (props) => {
   }
   return (
     <Grid>
-      <Col lg={12}>
-        <SelectField name="allOrNone">
-          <MenuItem primaryText={formatMessage(localMessages.checkAllFirstPage)}>
-            <Checkbox
-              name="chkSelectAllFirstPage"
-              onCheck={addRemoveAll}
-            />
-          </MenuItem>
-          <MenuItem primaryText={formatMessage(localMessages.unCheckAll)} />
-          <MenuItem primaryText={formatMessage(localMessages.checkAllPages)}>
-            <Checkbox
-              name="chkSelectAllPages"
-              onCheck={addRemoveAll}
-            />
-          </MenuItem>
+      <Col lg={5}>
+        <SelectField name="allOrNone" fullWidth >
+          <MenuItem
+            name="chkSelectAllFirstPage"
+            onClick={function getVals(...args) {
+              return addRemoveAll(ADD_ALL_THIS_PAGE, args[1]);
+            }
+            }
+            primaryText={formatMessage(localMessages.checkAllFirstPage)}
+          />
+          <MenuItem
+            primaryText={formatMessage(localMessages.unCheckAll)}
+            onClick={function getVals(...args) {
+              return addRemoveAll(REMOVE_ALL, args[1]);
+            }
+            }
+          />
+          <MenuItem
+            name="chkSelectAllPages"
+            onClick={function getVals(...args) {
+              return addRemoveAll(ADD_ALL_PAGES, args[1]);
+            }
+            }
+            primaryText={formatMessage(localMessages.checkAllPages)}
+          />
         </SelectField>
       </Col>
       <Col lg={12}>
@@ -52,9 +65,13 @@ const SourcesAndCollectionsList = (props) => {
           <Row key={`src_${source.media_id}`} name={`src_${source.media_id}`}>
             <Col lg={2}>
               <Checkbox
+                checked={source.selected}
                 key={source.media_id}
                 name={`src_${source.media_id}`}
-                onCheck={() => addToSelectedSources(source.media_id)}
+                onCheck={function getVals(...args) {
+                  return addOrRemoveToSelectedSources(source.media_id, args[1]);
+                }
+              }
               />
             </Col>
             <Col lg={6}>
@@ -76,9 +93,13 @@ const SourcesAndCollectionsList = (props) => {
           <Row key={`clxn_${collection.tags_id}`} name={`clxn_${collection.tags_id}`}>
             <Col lg={2}>
               <Checkbox
+                checked={collection.selected}
                 key={collection.tags_id}
                 name={`clxn_${collection.tags_id}`}
-                onCheck={() => addToSelectedCollections(collection.tags_id)}
+                onCheck={function getVals(...args) {
+                  return addOrRemoveToSelectedCollections(collection.tags_id, args[1]);
+                }
+              }
               />
             </Col>
             <Col lg={6}>
@@ -103,9 +124,13 @@ SourcesAndCollectionsList.propTypes = {
   queriedSources: React.PropTypes.array,
   queriedCollections: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
-  addToSelectedSources: React.PropTypes.func,
-  addToSelectedCollections: React.PropTypes.func,
+  addOrRemoveToSelectedSources: React.PropTypes.func,
+  addOrRemoveToSelectedCollections: React.PropTypes.func,
   addRemoveAll: React.PropTypes.func.isRequired,
+  allOrNoneCheck: React.PropTypes.bool,
+  ADD_ALL_THIS_PAGE: React.PropTypes.number,
+  REMOVE_ALL: React.PropTypes.number,
+  ADD_ALL_PAGES: React.PropTypes.number,
 };
 
 export default injectIntl(SourcesAndCollectionsList);

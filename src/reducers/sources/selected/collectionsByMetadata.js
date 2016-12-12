@@ -1,4 +1,4 @@
-import { FETCH_COLLECTION_BY_METADATA, SELECT_ADVANCED_SEARCH_COLLECTION } from '../../../actions/sourceActions';
+import { FETCH_COLLECTION_BY_METADATA, SELECT_ADVANCED_SEARCH_COLLECTION, RESET_ADVANCED_SEARCH_COLLECTION } from '../../../actions/sourceActions';
 import { selectItemInArray, createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const collectionsByMetadata = createAsyncReducer({
@@ -7,11 +7,16 @@ const collectionsByMetadata = createAsyncReducer({
   },
   action: FETCH_COLLECTION_BY_METADATA,
   handleSuccess: payload => ({
-    results: payload.results,
+    list: payload.list,
+    total: payload.list.length,
   }),
-  [SELECT_ADVANCED_SEARCH_COLLECTION]: payload => ({
-    list: selectItemInArray(payload.args[0], payload.args[1], 'tags_id'),
+  [SELECT_ADVANCED_SEARCH_COLLECTION]: (payload, state) => ({
+    // if the second argument is empty, this means we select all the items in the array
+    // note, not sure how to do this for paged results
+    total: payload.ids.length,
+    list: selectItemInArray(state.list, payload.ids.length > 0 ? payload.ids : state.list.map(c => c.tags_id), 'tags_id', payload.checked),
   }),
+  [RESET_ADVANCED_SEARCH_COLLECTION]: () => ({ list: [] }),
 });
 
 export default collectionsByMetadata;

@@ -4,12 +4,24 @@ export function sourceList() {
   return createApiPromise('api/sources/all');
 }
 
+export function sourcesByIds(params) {
+  const acceptedParams = acceptParams(params, ['src']);
+  acceptedParams['src[]'] = params;
+  return createApiPromise('api/sources/list', acceptedParams);
+}
+
 export function sourceSearch(searchStr) {
   return createApiPromise(`/api/sources/search/${searchStr}`);
 }
 
 export function collectionList(id) {
   return createApiPromise(`api/collections/set/${id}`);
+}
+
+export function collectionsByIds(params) {
+  const acceptedParams = acceptParams(params, ['coll']);
+  acceptedParams['coll[]'] = params;
+  return createApiPromise('api/collections/list', acceptedParams);
 }
 
 export function collectionSearch(searchStr) {
@@ -54,13 +66,13 @@ export function collectionSourceStoryCounts(id) {
 
 export function createCollection(params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'static']);
-  acceptedParams['sources[]'] = params.sources.map(c => c.tags_id);
+  acceptedParams['sources[]'] = params.sources.map(c => c.id);
   return createPostingApiPromise('/api/collections/create', acceptedParams);
 }
 
 export function updateCollection(params) {
   const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static']);
-  acceptedParams['sources[]'] = params.sources.map(c => c.tags_id);
+  acceptedParams['sources[]'] = params.sources.map(c => c.id);
   return createPostingApiPromise(`/api/collections/${acceptedParams.id}/update`, acceptedParams);
 }
 

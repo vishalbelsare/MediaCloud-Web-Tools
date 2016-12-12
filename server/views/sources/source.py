@@ -2,7 +2,7 @@ import logging
 from flask import request, jsonify
 import flask_login
 from server import app
-from server.util.request import form_fields_required, api_error_handler
+from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -26,6 +26,20 @@ def _cached_media_source_list(user_mc_key):
     source_list = user_mc.mediaList(last_media_id=0, rows=100)
     #source_list = sorted(source_list, key=lambda ts: ts['label'])
     return source_list
+
+@app.route('/api/sources/list', methods=['GET'])
+@arguments_required('src[]')
+@flask_login.login_required
+@api_error_handler
+def api_media_sources_by_ids():
+    source_list = []
+    sourceIdArray = request.args['src[]'].split(',')
+    for mediaId in sourceIdArray:
+        info = {}
+        info = _cached_media_source_details(user_mediacloud_key(), mediaId)
+        source_list.append(info);
+    return jsonify({'results':source_list})
+
 
 @cache
 def _cached_media_source_health(user_mc_key, media_id):

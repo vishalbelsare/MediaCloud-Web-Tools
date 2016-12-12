@@ -5,6 +5,10 @@ import * as api from '../lib/sources';
 // export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
+export const FETCH_SOURCES_BY_IDS = 'FETCH_SOURCES_BY_IDS';
+export const RESET_SOURCES_BY_IDS = 'RESET_SOURCES_BY_IDS';
+export const FETCH_COLLECTION_SOURCES_BY_IDS = 'FETCH_COLLECTION_SOURCES_BY_IDS';
+export const RESET_COLLECTIONS_BY_IDS = 'RESET_COLLECTIONS_BY_IDS';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_COLLECTION_DETAILS = 'FETCH_COLLECTION_DETAILS';
 export const SELECT = 'SELECT';
@@ -37,12 +41,23 @@ export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
 export const SELECT_ADVANCED_SEARCH_SOURCE = 'SELECT_ADVANCED_SEARCH_SOURCE';
 export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECTION';
 export const SELECT_ADVANCED_SEARCH_STRING = 'SELECT_ADVANCED_SEARCH_STRING';
+export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTION';
+export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
+
 
 export const select = createAction(SELECT, id => id);
 
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 
 export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.collectionList, id => id);
+
+export const fetchSourcesByIds = createAsyncAction(FETCH_SOURCES_BY_IDS, api.sourcesByIds, props => props);
+
+export const resetSourcesByIds = createAction(RESET_SOURCES_BY_IDS);
+
+export const fetchCollectionSourcesByIds = createAsyncAction(FETCH_COLLECTION_SOURCES_BY_IDS, api.collectionsByIds, props => props);
+
+export const resetCollectionsByIds = createAction(RESET_COLLECTIONS_BY_IDS);
 
 export const fetchSourceDetails = createAsyncAction(FETCH_SOURCE_DETAILS, api.sourceDetails, id => id);
 
@@ -82,12 +97,17 @@ export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, p
 
 export const fetchMetadataValues = createAsyncAction(FETCH_METADATA_VALUES, api.metadataValues);
 
-export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceList);
+export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceSearch, string => string);
 
-export const fetchCollectionByMetadata = createAsyncAction(FETCH_COLLECTION_BY_METADATA, api.collectionList);
+export const fetchCollectionByMetadata = createAsyncAction(FETCH_COLLECTION_BY_METADATA, api.collectionSearch, string => string);
 
-export const selectAdvancedSearchSource = createAsyncAction(SELECT_ADVANCED_SEARCH_SOURCE, payload => payload);
+export const selectAdvancedSearchSource = createAction(SELECT_ADVANCED_SEARCH_SOURCE, payload => payload);
 
-export const selectAdvancedSearchCollection = createAsyncAction(SELECT_ADVANCED_SEARCH_COLLECTION, payload => payload);
+export const selectAdvancedSearchCollection = createAction(SELECT_ADVANCED_SEARCH_COLLECTION, payload => payload);
 
 export const selectAdvancedSearchString = createAction(SELECT_ADVANCED_SEARCH_STRING, string => string);
+
+export const resetAdvancedSearchSource = createAction(RESET_ADVANCED_SEARCH_SOURCE);
+
+export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_COLLECTION);
+

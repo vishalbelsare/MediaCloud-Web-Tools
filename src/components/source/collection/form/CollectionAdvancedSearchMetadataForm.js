@@ -21,7 +21,7 @@ const CollectionAdvancedSearchMetadataForm = (props) => {
         <Col lg={6}>
           <Field
             name="advancedSearchQueryString"
-            value={searchString}
+            initialValues={searchString}
             component={renderTextField}
           />
         </Col>

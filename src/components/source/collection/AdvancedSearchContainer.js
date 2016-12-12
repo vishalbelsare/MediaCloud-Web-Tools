@@ -3,9 +3,10 @@ import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import Divider from 'material-ui/Divider';
 import CollectionAdvancedSearchMetadataForm from './form/CollectionAdvancedSearchMetadataForm';
 import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
-import { selectAdvancedSearchString, fetchSourceByMetadata, fetchCollectionByMetadata } from '../../../actions/sourceActions';
+import { fetchSourceByMetadata, fetchCollectionByMetadata, resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Search' },
@@ -14,27 +15,27 @@ const localMessages = {
 
 class AdvancedSearchContainer extends React.Component {
   componentWillMount() {
-    const { location, dispatchAdvancedSearchStringSelected } = this.props;
-    if (!location) return;
-    const hashParts = location.search.split('?');
-    const searchString = hashParts[1];
-    // how to get this from here into initialValues? state or store
-    dispatchAdvancedSearchStringSelected(searchString);
+    const { saveParamsToStore } = this.props;
+    saveParamsToStore(this.props, this);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.params.searchStr !== this.props.params.searchStr) {
+      const { saveParamsToStore } = nextProps;
+      saveParamsToStore(nextProps, this);
+    }
   }
   render() {
     const { searchString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     let content = null;
-    if (searchString) {
-      content = (
-        <CollectionAdvancedSearchMetadataForm
-          initialValues={{ advancedSearchQueryString: searchString }}
-          buttonLabel={formatMessage(localMessages.addButton)}
-          requerySourcesAndCollections={requerySourcesAndCollections}
-        />
-      );
-    }
+    content = (
+      <CollectionAdvancedSearchMetadataForm
+        initialValues={{ searchString }}
+        buttonLabel={formatMessage(localMessages.addButton)}
+        requerySourcesAndCollections={requerySourcesAndCollections}
+      />
+    );
     return (
       <div>
         <Title render={titleHandler} />
@@ -45,7 +46,8 @@ class AdvancedSearchContainer extends React.Component {
             </Col>
           </Row>
           {content}
-          <SourcesAndCollectionsContainer queriedSources={queriedSources} queriedCollections={queriedCollections} />
+          <Divider />
+          <SourcesAndCollectionsContainer searchString={searchString} queriedSources={queriedSources} queriedCollections={queriedCollections} />
         </Grid>
       </div>
     );
@@ -55,36 +57,61 @@ class AdvancedSearchContainer extends React.Component {
 AdvancedSearchContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object,
+
   fetchStatus: React.PropTypes.string,
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
   dispatchAdvancedSearchStringSelected: React.PropTypes.func,
+  dispatchReset: React.PropTypes.func,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
-  location: React.PropTypes.object,
-  // from params
+  saveParamsToStore: React.PropTypes.func,
+  // from state (params)
   searchString: React.PropTypes.string,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   searchString: state.sources.selected.advancedSearchString,
+  queriedSources: state.sources.selected.sourcesByMetadata.list,
+  queriedCollections: state.sources.selected.collectionsByMetadata.list,
+  searchStrParam: ownProps.location.query.search,
 });
 
-const mapDispatchToProps = dispatch => ({
-  requerySourcesAndCollections: (values) => {
-    const searchString = values.advancedSearchQueryString;
-    // once we have the hookup, this naming might change a bit
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  requerySourcesAndCollections: (formValues) => {
+    let searchStr = formValues.advancedSearchQueryString;
+    if (!formValues.advancedSearchQueryString) {
+      searchStr = ownProps.searchString;
+    }
+    // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
+    dispatch(fetchSourceByMetadata(searchStr));
+    dispatch(fetchCollectionByMetadata(searchStr));
+  },
+  dispatchAdvancedSearchStringSelected: (searchString) => {
     dispatch(fetchSourceByMetadata(searchString));
     dispatch(fetchCollectionByMetadata(searchString));
   },
-  dispatchAdvancedSearchStringSelected: (searchString) => {
-    dispatch(selectAdvancedSearchString(searchString));
+  dispatchReset() {
+    dispatch(resetAdvancedSearchSource());
+    dispatch(resetAdvancedSearchCollection());
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    saveParamsToStore: () => {
+      if (stateProps.searchStrParam) {
+        dispatchProps.dispatchAdvancedSearchStringSelected(stateProps.searchStrParam);
+      }
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       AdvancedSearchContainer
     ),
   );

@@ -7,7 +7,6 @@ import composeAsyncContainer from '../common/AsyncContainer';
 import SourcesAndCollectionsList from './SourcesAndCollectionsList';
 import AppButton from '../common/AppButton';
 import { selectAdvancedSearchSource, selectAdvancedSearchCollection } from '../../actions/sourceActions';
-import { generateParamStr } from '../../lib/apiUtil';
 
 const localMessages = {
   title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
@@ -16,31 +15,57 @@ const localMessages = {
     defaultMessage: 'This is a list of all of our curated collections of media sources.  Collections are our primary way of organizing media sources; almost every media source in our system is a member of one or more of these curated collections.  Some collections are manually curated, and others are generated using quantitative metrics.  Some are historical, while others are actively maintained and updated.' },
 };
 
+const ADD_ALL_THIS_PAGE = 1;
+const REMOVE_ALL = 0;
+const ADD_ALL_PAGES = 2;
+
+// TODO when paging is implemented, we'll have to set these booleans...
+const FIRST_PAGE = true;
+
 class SourcesAndCollectionsContainer extends React.Component {
-  addToSelectedSources= (mediaId) => {
-    const { dispatchSourceSelection, queriedSources } = this.props;
-    dispatchSourceSelection(queriedSources, [mediaId]);
+  componentDidMount = () => {
+    this.setState({ allOrNoneCheck: false });
+  }
+  addOrRemoveToSelectedSources= (mediaId, checked) => {
+    const { dispatchSourceSelection } = this.props;
+    dispatchSourceSelection([mediaId], checked);
   };
-  addToSelectedCollections = (tagId) => {
-    const { dispatchCollectionSelection, queriedCollections } = this.props;
-    dispatchCollectionSelection(queriedCollections, [tagId]);
+  addOrRemoveToSelectedCollections = (tagId, checked) => {
+    const { dispatchCollectionSelection } = this.props;
+    dispatchCollectionSelection([tagId], checked);
   };
-  addOrRemoveAllSelected = (values, checked) => {
-    const { queriedSources, queriedCollections, dispatchSourceSelection, dispatchCollectionSelection } = this.props;
-    dispatchSourceSelection(queriedSources, [], checked);
-    dispatchCollectionSelection(queriedCollections, [], checked);
+  evalStateAndPage = () => {
+    if (this.state &&
+      (this.state.allOrNoneCheck === ADD_ALL_PAGES ||
+      (this.state.allOrNoneCheck === ADD_ALL_THIS_PAGE && FIRST_PAGE))) {
+      return true;
+    }
+    return false;
+  };
+  addOrRemoveAllSelected = (values) => {
+    const { dispatchSourceSelection, dispatchCollectionSelection } = this.props;
+    this.setState({ allOrNoneCheck: values });
+    // if values == ADD_ALL_THIS_PAGE, REMOVE_ALL, ADD_ALL_PAGES
+
+    // values ADD_ALL_THIS_PAGE or ADD_ALL_PAGES will select appropriate
+    dispatchSourceSelection([], values);
+    dispatchCollectionSelection([], values);
     // dispatch a click to all the checkboxes to checked somehow
   };
   pushToCreateCollectionPage = () => {
-    const { queriedSources, queriedCollections, dispatchToCreate } = this.props;
-    dispatchToCreate(queriedSources, queriedCollections);
-    // dispatch a click to all the checkboxes to checked somehow
+    const { searchString, queriedSources, queriedCollections, dispatchToCreate, dispatchToCreateWithSearch } = this.props;
+    if (this.state && this.state.allOrNoneCheck === ADD_ALL_PAGES) {
+      dispatchToCreateWithSearch(searchString);
+    } else {
+      dispatchToCreate(queriedSources, queriedCollections);
+    }
   };
   render() {
     const { queriedSources, queriedCollections,
       pristine, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const content = null;
+
     if (queriedSources === undefined || queriedCollections === undefined) {
       return (
         <div>
@@ -52,9 +77,10 @@ class SourcesAndCollectionsContainer extends React.Component {
       <div className="all-collections">
         <Grid>
           <Row>
-            <Col lg={12}>
+            <Col lg={6} />
+            <Col lg={6}>
               <AppButton
-                style={{ marginLeft: 200, marginTop: 30 }}
+                style={{ marginTop: 30 }}
                 type="submit"
                 label={formatMessage(localMessages.send)}
                 disabled={pristine || submitting}
@@ -67,8 +93,12 @@ class SourcesAndCollectionsContainer extends React.Component {
             queriedSources={queriedSources}
             queriedCollections={queriedCollections}
             addRemoveAll={this.addOrRemoveAllSelected}
-            addToSelectedSources={this.addToSelectedSources}
-            addToSelectedCollections={this.addToSelectedCollections}
+            ADD_ALL_THIS_PAGE={ADD_ALL_THIS_PAGE}
+            REMOVE_ALL={REMOVE_ALL}
+            ADD_ALL_PAGES={ADD_ALL_PAGES}
+            allOrNoneCheck={this.evalStateAndPage()}
+            addOrRemoveToSelectedSources={this.addOrRemoveToSelectedSources}
+            addOrRemoveToSelectedCollections={this.addOrRemoveToSelectedCollections}
           />
         </Grid>
       </div>
@@ -83,11 +113,14 @@ SourcesAndCollectionsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   // from context
   intl: React.PropTypes.object.isRequired,
+  searchString: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
+  dispatchToCreateWithSearch: React.PropTypes.func.isRequired,
+  dispatchReset: React.PropTypes.func,
   // from form healper
   buttonLabel: React.PropTypes.string,
   initialValues: React.PropTypes.object,
@@ -98,24 +131,26 @@ SourcesAndCollectionsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.selected.collectionsByMetadata.fetchStatus,
-  queriedCollections: state.sources.selected.collectionsByMetadata.results,
-  queriedSources: state.sources.selected.sourcesByMetadata.results,
+  queriedSources: state.sources.selected.sourcesByMetadata.list,
+  queriedCollections: state.sources.selected.collectionsByMetadata.list,
 });
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
   },
-  // I don't know why but the scope won't give me the queriedSources... so I have to pass in
-  dispatchSourceSelection: (queried, mediaId) => {
-    dispatch(selectAdvancedSearchSource(queried, mediaId));
+  // depending on checked value, all or page or a selected set or no items are to be selected
+  dispatchSourceSelection: (mediaId, checked) => {
+    dispatch(selectAdvancedSearchSource({ ids: mediaId.length > 0 ? mediaId : [], checked }));
   },
-  dispatchCollectionSelection: (queried, tagId) => {
-    dispatch(selectAdvancedSearchCollection(queried, tagId));
+  dispatchCollectionSelection: (tagId, checked) => {
+    dispatch(selectAdvancedSearchCollection({ ids: tagId.length > 0 ? tagId : [], checked }));
+  },
+  dispatchToCreateWithSearch: (searchStr) => {
+    const url = `/collections/create?search=${searchStr}`;
+    dispatch(push(url));
   },
   dispatchToCreate: (sources, collections) => {
     // get all ids and push them into url params
-    // dispatch push url
-
     const srcIdArray = sources.map((s) => {
       if (s.selected === true) {
         return s.media_id;
@@ -130,9 +165,15 @@ const mapDispatchToProps = dispatch => ({
       return null;
     }).filter(i => i !== null);
 
-    const params = generateParamStr({ src: srcIdArray, coll: collIdArray });
-    let url = '/sources/create?';
-    url += params;
+    const params = srcIdArray.join(',');
+    const collparams = collIdArray.join(',');
+    let url = '/collections/create';
+    if (srcIdArray.length > 0) {
+      url += `?src=${params}`;
+    }
+    if (collIdArray.length > 0) {
+      url += `&coll=${collparams}`;
+    }
     dispatch(push(url));
   },
 });
