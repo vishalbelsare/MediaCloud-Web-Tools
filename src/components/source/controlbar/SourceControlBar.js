@@ -5,6 +5,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import Link from 'react-router/lib/Link';
 import SourceSearchContainer from './SourceSearchContainer';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
   addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create a Collection' },
@@ -18,14 +20,18 @@ const SourceControlBar = props => (
       <Grid>
         <Row>
           <Col lg={4} xs={4} className="left">
-            <Link to="collections/create">
-              <FormattedMessage {...localMessages.addCollection} />
-            </Link>
+            <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+              <Link to="collections/create">
+                <FormattedMessage {...localMessages.addCollection} />
+              </Link>
+            </Permissioned>
           </Col>
           <Col lg={4} xs={4} className="left">
-            <Link to="sources/create">
-              <FormattedMessage {...localMessages.addSource} />
-            </Link>
+            <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+              <Link to="sources/create">
+                <FormattedMessage {...localMessages.addSource} />
+              </Link>
+            </Permissioned>
           </Col>
           <Col lg={4} xs={12} className="right">
             <SourceSearchContainer

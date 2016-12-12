@@ -116,7 +116,7 @@ def _get_user_profile(key):
     profile = {
         "email": "fakeemail@mediacloud.org",
         "non_public_api": 0,
-        "auth_roles": [ "media-edit", "stories-edit"]
+        "auth_roles": [] #[ "media-edit", "stories-edit"]
     }
     return profile
 
