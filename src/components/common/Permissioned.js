@@ -7,7 +7,12 @@ import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN,
  * Use this to restrict who is allowed to see what.
  **/
 const Permissioned = (props) => {
-  const { children, onlyTopic, onlyRole, userTopicPermission, userRolePermissions } = props;
+  const { children, onlyTopic, onlyRole, userTopicPermission, user } = props;
+  let userRolePermissions = [];
+  if (('profile' in user) && ('auth_roles' in user.profile)) {
+    // need to check this carefully because if they aren't logged in these sub-objects won't exist
+    userRolePermissions = user.profile.auth_roles;
+  }
   let allowed = false;
   if (onlyTopic) {
     // check topic-level permissions
@@ -73,12 +78,12 @@ Permissioned.propTypes = {
   onlyRole: React.PropTypes.string,
   // from state
   userTopicPermission: React.PropTypes.string,
-  userRolePermissions: React.PropTypes.array.isRequired,
+  user: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   userTopicPermission: state.topics.selected.info.user_permission,
-  userRolePermissions: state.user.profile.auth_roles,
+  user: state.user,
 });
 
 export default
