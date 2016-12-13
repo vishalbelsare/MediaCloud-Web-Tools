@@ -8,6 +8,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.feeds import cached_feed, stream_feed_csv, source_feed_list
 
 from server.views.sources.geoutil import country_list
 
@@ -40,26 +41,6 @@ def api_media_sources_by_ids():
         source_list.append(info);
     return jsonify({'results':source_list})
 
-@cache
-def source_feed_list(media_id):
-    more_feeds = True
-    all_feeds = []
-    max_feed_id = 0
-    while more_feeds:
-        logger.debug("last_feeds_id %d", max_feed_id)
-        feed = source_feed_list_page(media_id, max_feed_id)
-        all_feeds = all_feeds + feed
-        if len(feed) > 0:
-            max_feed_id = feed[len(feed)-1]['feeds_id']
-        logger.debug("max_feed_id %d and length of feed is %d", max_feed_id, len(feed))
-        more_feeds = len(feed) > 99 
-    return sorted(all_feeds, key=lambda t: t['name'])
-
-@cache
-def source_feed_list_page(media_id, max_feed_id):
-    user_mc = user_mediacloud_client()
-    return user_mc.feedList(media_id=media_id, rows=100)
-
 @app.route('/api/sources/<media_id>/feeds', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -67,6 +48,12 @@ def api_source_feed(media_id):
     feed_list = source_feed_list(media_id)
     feed_count = len(feed_list)
     return jsonify({'results':feed_list, 'count':feed_count})
+
+@app.route('/api/sources/<media_id>/feeds/feeds.csv', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def source_feed_csv(media_id):
+    return stream_feed_csv('feeds-Source-'+ media_id, media_id)
 
 @cache
 def _cached_media_source_health(user_mc_key, media_id):
