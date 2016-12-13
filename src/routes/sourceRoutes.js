@@ -9,6 +9,7 @@ import AdvancedSearchContainer from '../components/source/collection/AdvancedSea
 import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
+import SourceFeedContainer from '../components/source/mediaSource/SourceFeedContainer';
 import Introduction from '../components/source/Introduction';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
 import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
@@ -35,6 +36,7 @@ const sourceRoutes = (
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
         <Route path=":sourceId" component={SourceDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":sourceId/details" to=":sourceId" />
+        <Route path=":sourceId/feeds" component={SourceFeedContainer} onEnter={requireAuth} />
         <Route path=":sourceId/edit" component={EditSourceContainer} onEnter={requireAuth} />
       </Route>
       <Route path="/collections" >

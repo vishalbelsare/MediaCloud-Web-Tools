@@ -25,6 +25,7 @@ const localMessages = {
 
   feedInfo: { id: 'source.basicInfo.feeds',
     defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}.' },
+  feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
   gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
@@ -77,6 +78,9 @@ class SourceDetailsContainer extends React.Component {
             </h1>
             <p>
               <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
+              <Link to={`/sources/${source.media_id}/feeds`} >
+                <FormattedMessage {...localMessages.feedLink} />
+              </Link>
               &nbsp;
               <FormattedMessage
                 {...localMessages.dateInfo}

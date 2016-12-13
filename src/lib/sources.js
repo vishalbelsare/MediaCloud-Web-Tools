@@ -96,3 +96,7 @@ export function updateSource(params) {
   acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
   return createPostingApiPromise(`/api/sources/${acceptedParams.id}/update`, acceptedParams);
 }
+
+export function sourceFeeds(id) {
+  return createApiPromise(`api/sources/${id}/feeds`);
+}
