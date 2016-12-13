@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
+import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary } from '../../actions/topicActions';
 import NeedsNewSnapshotWarning from './NeedsNewSnapshotWarning';
 
 class TopicContainer extends React.Component {
@@ -72,6 +72,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
+    // select any filters that are there
+    const query = ownProps.location.query;
+    if (ownProps.location.query.snapshotId) {
+      dispatch(filterBySnapshot(query.snapshotId));
+    }
+    if (ownProps.location.query.focusId) {
+      dispatch(filterByFocus(query.focusId));
+    }
+    if (ownProps.location.query.timespanId) {
+      dispatch(filterByTimespan(query.timespanId));
+    }
     dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
 });
