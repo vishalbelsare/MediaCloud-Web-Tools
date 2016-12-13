@@ -93,8 +93,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: () => {
-
+  fetchData: (props) => {
+    dispatch(fetchTopicMapFiles(props.topicId, props.filters));
   },
   asyncFetch: () => {
     dispatch(fetchTopicMapFiles(ownProps.topicId, ownProps.filters));
