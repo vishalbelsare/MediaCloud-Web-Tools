@@ -7,7 +7,7 @@ import initializeApp from './index';
  * This serves as the primary entry point to the Media Cloud Topic Mapper app.
  */
 
-setVersion('1.1.1');
+setVersion('1.1.2');
 
 setAppName('topics');
 
