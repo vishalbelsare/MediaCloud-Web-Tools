@@ -2,6 +2,7 @@ import logging
 from flask import jsonify, request, send_from_directory
 import flask_login
 import os
+from multiprocessing import Process
 
 from server import app, base_dir
 import server.util.csv as csv
@@ -63,12 +64,15 @@ def _start_generating_map_file(map_type, topics_id, timespans_id):
     file_prefix = _get_file_prefix(map_type, topics_id, timespans_id)
     # create map file
     lock_filename = file_prefix+'.lock'
-    open(os.path.join(DATA_DIR,lock_filename), 'a').close()
+    lock_filepath = os.path.join(DATA_DIR,lock_filename)
+    open(lock_filepath, 'a').close()
     # generate maps
     file_path = os.path.join(DATA_DIR, file_prefix)
-    mapwriter.create_word_map_files(topics_id, timespans_id, file_path)
+    p = Process(target=mapwriter.create_word_map_files, args=(topics_id, timespans_id, file_path))
+    p.start()
+    # mapwriter.create_word_map_files(topics_id, timespans_id, file_path)
     # remove lock file
-    os.remove(lock_filename)
+    os.remove(lock_filepath)
 
 def _get_file_prefix(map_type, topics_id, timespans_id):
     return map_type+"-"+str(topics_id)+"-"+str(timespans_id)
