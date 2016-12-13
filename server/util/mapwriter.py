@@ -194,4 +194,3 @@ def create_word_map_files(topics_id, timespans_id, filepath):
     remove_words = []
     nof = generate_network_of_frames(topics_id, timespans_id, num_of_sources, filepath, 
         remove_media_sources, remove_words, generate_word_lists=True, num_words=100)
-    return out_file
