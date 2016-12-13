@@ -69,11 +69,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId) => {
-    console.log('fetch!');
     dispatch(fetchCollectionToCopy(collectionId));
   },
   asyncFetch: () => {
-    console.log('asyncfetch!');
     if (ownProps.collectionId) {
       dispatch(fetchCollectionToCopy(ownProps.collectionId));
     }
