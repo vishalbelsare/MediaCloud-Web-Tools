@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, send_from_directory
 import flask_login
 import os
 
@@ -47,22 +47,17 @@ def map_files(topics_id):
 @arguments_required('timespanId')
 @flask_login.login_required
 def map_files_download(topics_id, map_type, map_format):
-    filename = request.args[map_type]+"-"+topics_id+"-"+request.args['timespanId']+"."+map_format
-    return send_from_directory(directory=DATA_DIR, filename=filename)
-
-'''
-@app.route('/api/topics/<topics_id>/map-files/<map_type>/generate', methods=['GET'])
-#@flask_login.login_required
-@arguments_required('snapshotId','timespanId')
-@api_error_handler
-def request_map_file(topics_id, map_type):
-    if map_type not in MAP_TYPES:
-        raise ValueError('Invalid map type '+map_type)
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    _start_generating_map_file(map_type,topics_id,snapshots_id, foci_id, timespans_id)
-    # TODO: make a request to generate the map file
-    return jsonify({'success': 1})
-'''
+    logger.info(map_type+":"+map_format)
+    mime_type = "text/plain"
+    if map_format == "json":
+        mime_type = "application/json"
+    elif map_format == "gexf":
+        mime_type = "application/octet-stream"
+    else:
+        mime_type = "text/plain"
+    filename = map_type+"-"+topics_id+"-"+request.args['timespanId']+"."+map_format
+    return send_from_directory(directory=DATA_DIR, filename=filename, 
+        mimetype=mime_type, as_attachment=True)
 
 def _start_generating_map_file(map_type, topics_id, timespans_id):
     file_prefix = _get_file_prefix(map_type, topics_id, timespans_id)
