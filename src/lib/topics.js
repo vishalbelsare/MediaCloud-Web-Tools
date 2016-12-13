@@ -173,6 +173,7 @@ export function saveTopicDetails(topicId, params) {
 export function suggestTopic(params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'seedQuery', 'reason', 'spidered']);
   return createPostingApiPromise('/api/topics/suggest', acceptedParams, 'put');
+}
 
 export function topicMapFiles(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
