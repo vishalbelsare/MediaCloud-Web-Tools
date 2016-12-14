@@ -137,3 +137,19 @@ def source_create():
     detected_language = request.form['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
+
+@app.route('/api/sources/suggest', methods=['POST'])
+@form_fields_required('sourceurl','feedurl',)
+@flask_login.login_required
+@api_error_handler
+def source_suggest():
+    user_mc = user_mediacloud_client()
+    name = request.form['name']
+    url = request.form['sourceurl']
+    feedurl = request.form['feedurl']
+    notes = request.form['reason']
+    collection_ids = request.form.getlist('collections[]')
+    fakenew_source = user_mc.suggestions()
+    return jsonify(fakenew_source)
+
+

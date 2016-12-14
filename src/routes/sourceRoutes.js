@@ -10,6 +10,7 @@ import EditCollectionContainer from '../components/source/collection/EditCollect
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import SourceFeedContainer from '../components/source/mediaSource/SourceFeedContainer';
+import SuggestSourceContainer from '../components/source/mediaSource/SuggestSourceContainer';
 import Introduction from '../components/source/Introduction';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
 import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
@@ -34,6 +35,7 @@ const sourceRoutes = (
       <Route path="/search" component={SearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
+        <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
         <Route path=":sourceId" component={SourceDetailsContainer} onEnter={requireAuth} />
         <Redirect from=":sourceId/details" to=":sourceId" />
         <Route path=":sourceId/feeds" component={SourceFeedContainer} onEnter={requireAuth} />

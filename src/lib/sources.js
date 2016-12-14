@@ -100,3 +100,9 @@ export function updateSource(params) {
 export function sourceFeeds(id) {
   return createApiPromise(`api/sources/${id}/feeds`);
 }
+
+export function suggestSource(params) {
+  const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reasons', 'collections']);
+  acceptedParams['collections[]'] = params.collections;
+  return createPostingApiPromise('/api/sources/suggestions', acceptedParams);
+}

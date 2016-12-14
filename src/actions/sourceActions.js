@@ -44,6 +44,7 @@ export const SELECT_ADVANCED_SEARCH_STRING = 'SELECT_ADVANCED_SEARCH_STRING';
 export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTION';
 export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
 export const FETCH_SOURCE_FEEDS = 'FETCH_SOURCE_FEEDS';
+export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
 
 export const select = createAction(SELECT, id => id);
 
@@ -112,4 +113,6 @@ export const resetAdvancedSearchSource = createAction(RESET_ADVANCED_SEARCH_SOUR
 export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_COLLECTION);
 
 export const fetchSourceFeeds = createAsyncAction(FETCH_SOURCE_FEEDS, api.sourceFeeds, id => id);
+
+export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource, props => props);
 

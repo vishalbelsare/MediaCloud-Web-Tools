@@ -74,14 +74,10 @@ SourceCollectionsForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-const reduxFormConfig = {
-  form: 'sourceForm',
-};
-
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm(reduxFormConfig)(
+      reduxForm({ form: 'sourceForm' })(
         SourceCollectionsForm
       )
     )
