@@ -130,26 +130,26 @@ def media_source_words(media_id):
 @api_error_handler
 def source_create():
     user_mc = user_mediacloud_client()
-    name = request.form['name']
-    url = request.form['url']
-    notes = request.form['notes']
-    collection_ids = request.form.getlist('collections[]')
-    detected_language = request.form['detectedLanguage']
+    name = request.args['name']
+    url = request.args['url']
+    #notes = request.args['notes']
+    #collection_ids = request.args.getlist('collections[]')
+    #detected_language = request.args['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
 
-@app.route('/api/sources/suggest', methods=['POST'])
-@form_fields_required('sourceurl','feedurl',)
+@app.route('/api/sources/suggestions/submit', methods=['POST'])
+@form_fields_required('url','feedurl')
 @flask_login.login_required
 @api_error_handler
 def source_suggest():
     user_mc = user_mediacloud_client()
-    name = request.form['name']
-    url = request.form['sourceurl']
-    feedurl = request.form['feedurl']
-    notes = request.form['reason']
-    collection_ids = request.form.getlist('collections[]')
-    fakenew_source = user_mc.suggestions()
-    return jsonify(fakenew_source)
+    name = request.args['name']
+    url = request.args['url']
+    feedurl = request.args['feedurl']
+    notes = request.args['reason']
+    #collection_ids = request.args.getlist('collections[]')
+    fakenew_suggestion = user_mc.media(1)
+    return jsonify(fakenew_suggestion)
 
 

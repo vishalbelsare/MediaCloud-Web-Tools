@@ -66,7 +66,7 @@ export function collectionSourceStoryCounts(id) {
 
 export function createCollection(params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'static']);
-  acceptedParams['sources[]'] = params.sources.map(c => c.id);
+  acceptedParams['sources[]'] = params.sources ? params.source.map(c => c.id) : [];
   return createPostingApiPromise('/api/collections/create', acceptedParams);
 }
 
@@ -87,7 +87,7 @@ export function metadataValues(id) {
 
 export function createSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'detectedLanguage']);
-  acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
+  acceptedParams['collections[]'] = params.collections ? params.collections.map(c => c.tags_id) : [];
   return createPostingApiPromise('/api/sources/create', acceptedParams);
 }
 
@@ -102,7 +102,7 @@ export function sourceFeeds(id) {
 }
 
 export function suggestSource(params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reasons', 'collections']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reasons']);
   acceptedParams['collections[]'] = params.collections;
-  return createPostingApiPromise('/api/sources/suggestions', acceptedParams);
+  return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);
 }
