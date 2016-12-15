@@ -3,7 +3,7 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { FieldArray, Field, reduxForm } from 'redux-form';
+import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../../../common/IntlForm';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
@@ -69,6 +69,7 @@ const SourceCollectionsForm = () => (
   </div>
 );
 
+
 SourceCollectionsForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
@@ -77,7 +78,7 @@ SourceCollectionsForm.propTypes = {
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm({ form: 'sourceForm' })(
+      reduxForm({ propTypes })(
         SourceCollectionsForm
       )
     )

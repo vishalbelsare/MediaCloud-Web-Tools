@@ -28,7 +28,7 @@ const SuggestSourceContainer = (props) => {
       <Title render={titleHandler} />
       <form className="source-suggestion-form" name="suggestionForm" onSubmit={handleSubmit(handleSave.bind(this))}>
         <SourceSuggestionForm initialValues={initialValues} />
-        <SourceCollectionsForm initialValues={initialValues} />
+        <SourceCollectionsForm form="suggestionForm" />
         <Row>
           <Col lg={12}>
             <AppButton
