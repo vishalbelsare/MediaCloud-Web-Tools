@@ -92,7 +92,7 @@ export const createCollection = createAsyncAction(CREATE_NEW_COLLECTION, api.cre
 
 export const updateCollection = createAsyncAction(UPDATE_COLLECTION, api.updateCollection, props => props);
 
-export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSource, props => props);
+export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSource);
 
 export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, props => props);
 

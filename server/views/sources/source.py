@@ -127,12 +127,12 @@ def media_source_words(media_id):
 @app.route('/api/sources/create', methods=['POST'])
 @form_fields_required('name', 'url','notes')
 @flask_login.login_required
-@api_error_handler
+@api_error_handler  
 def source_create():
     user_mc = user_mediacloud_client()
-    name = request.args['name']
-    url = request.args['url']
-    #notes = request.args['notes']
+    name = request.form['name']
+    url = request.form['url']
+    notes = request.form['notes']
     #collection_ids = request.args.getlist('collections[]')
     #detected_language = request.args['detectedLanguage']
     fakenew_source = user_mc.media(1)
@@ -144,10 +144,10 @@ def source_create():
 @api_error_handler
 def source_suggest():
     user_mc = user_mediacloud_client()
-    name = request.args['name']
-    url = request.args['url']
-    feedurl = request.args['feedurl']
-    notes = request.args['reason']
+    # name = request.form['name'] how do we get non-required fields without throwign an exception here?
+    url = request.form['url']
+    feedurl = request.form['feedurl']
+    # notes = request.form['reason','']
     #collection_ids = request.args.getlist('collections[]')
     fakenew_suggestion = user_mc.media(1)
     return jsonify(fakenew_suggestion)

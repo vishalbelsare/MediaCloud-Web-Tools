@@ -48,8 +48,14 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
+    const infoToSave = {
+      url: values.url,
+      name: values.name,
+      notes: values.notes,
+      collections: values.collections ? values.collections.map(s => s.id) : [],
+    };
     // try to save it
-    dispatch(createSource(values))
+    dispatch(createSource(infoToSave))
       .then((results) => {
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
