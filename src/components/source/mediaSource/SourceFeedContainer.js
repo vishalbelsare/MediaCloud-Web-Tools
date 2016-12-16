@@ -44,7 +44,7 @@ class SourceFeedContainer extends React.Component {
       <Grid className="details source-details">
         <Title render={titleHandler} />
         <Row>
-          <Col lg={8} xs={12}>
+          <Col lg={11} xs={11}>
             <h1>
               <MediaSourceIcon height={32} />
               <Link to={`/sources/${sourceId}/details`} >
@@ -52,11 +52,13 @@ class SourceFeedContainer extends React.Component {
               </Link>
             </h1>
           </Col>
+          <Col lg={1} xs={1}>
+            <div className="actions" style={{ marginTop: 40 }} >
+              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            </div>
+          </Col>
         </Row>
         <Row>
-          <div className="actions">
-            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-          </div>
           <Col lg={6} xs={12}>
             <SourceFeedTable feeds={feeds} />
           </Col>

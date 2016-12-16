@@ -1,10 +1,8 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../resources/messages';
+import { injectIntl } from 'react-intl';
 
 const SourceFeedTable = (props) => {
-  const feedsHeader = <FormattedMessage {...messages.sourceName} />;
   const { feeds } = props;
   const content = null;
   if (feeds === undefined) {
@@ -18,10 +16,6 @@ const SourceFeedTable = (props) => {
     <div className="source-feed-table">
       <table width="100%">
         <tbody>
-          <tr>
-            <th />
-            <th>{feedsHeader}</th>
-          </tr>
           {feeds.map((feed, idx) =>
             (<tr key={feeds.feeds_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
               <td>
