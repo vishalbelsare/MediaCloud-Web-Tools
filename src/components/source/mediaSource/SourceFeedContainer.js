@@ -47,7 +47,7 @@ class SourceFeedContainer extends React.Component {
           <Col lg={11} xs={11}>
             <h1>
               <MediaSourceIcon height={32} />
-              <Link to={`/sources/${sourceId}/details`} >
+              <Link to={`/sources/${sourceId}`} >
                 <FormattedMessage {...localMessages.sourceFeedsTitle} values={{ name: sourceName }} />
               </Link>
             </h1>

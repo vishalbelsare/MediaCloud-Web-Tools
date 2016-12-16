@@ -23,7 +23,7 @@ const SourceFeedTable = (props) => {
             <th><FormattedMessage {...messages.feedDescription} /></th>
           </tr>
           {feeds.map((feed, idx) =>
-            (<tr key={feeds.feeds_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+            (<tr key={feed.feeds_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
               <td>
                 {feed.name}
               </td>
