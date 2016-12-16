@@ -5,7 +5,6 @@ import messages from '../../resources/messages';
 import { googleFavIconUrl } from '../../lib/urlUtil';
 
 const SourceTable = (props) => {
-  const sourceHeader = <FormattedMessage {...messages.sourceName} />;
   const { sources } = props;
   const content = null;
   if (sources === undefined) {
@@ -20,8 +19,8 @@ const SourceTable = (props) => {
       <table width="100%">
         <tbody>
           <tr>
-            <th />
-            <th>{sourceHeader}</th>
+            <th><FormattedMessage {...messages.sourceIcon} /></th>
+            <th><FormattedMessage {...messages.sourceName} /></th>
           </tr>
           {sources.map((source, idx) =>
             (<tr key={source.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
