@@ -14,14 +14,14 @@ const localMessages = {
 };
 
 const CollectionAdvancedSearchMetadataForm = (props) => {
-  const { searchString, renderTextField, handleSubmit, buttonLabel, pristine, submitting, requerySourcesAndCollections } = props;
+  const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, requerySourcesAndCollections } = props;
   return (
     <form className="advancedQueryForm" onSubmit={handleSubmit(requerySourcesAndCollections.bind(this))}>
       <Row>
         <Col lg={6}>
           <Field
             name="advancedSearchQueryString"
-            initialValues={searchString}
+            value={initialValues}
             component={renderTextField}
           />
         </Col>

@@ -19,23 +19,28 @@ class AdvancedSearchContainer extends React.Component {
     saveParamsToStore(this.props, this);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.searchStr !== this.props.params.searchStr) {
+    if (nextProps.advancedSearchQueryString !== this.props.advancedSearchQueryString) {
       const { saveParamsToStore } = nextProps;
       saveParamsToStore(nextProps, this);
     }
   }
   render() {
-    const { searchString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
+    const { searchString, advancedSearchQueryString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-    let content = null;
-    content = (
+    const searchContent = (
       <CollectionAdvancedSearchMetadataForm
-        initialValues={{ searchString }}
+        initialValues={{ advancedSearchQueryString }}
         buttonLabel={formatMessage(localMessages.addButton)}
         requerySourcesAndCollections={requerySourcesAndCollections}
       />
     );
+    let resultsContent = null;
+    if (queriedSources != null || queriedCollections != null) {
+      resultsContent = (
+        <SourcesAndCollectionsContainer searchString={searchString} queriedSources={queriedSources} queriedCollections={queriedCollections} />
+      );
+    }
     return (
       <div>
         <Title render={titleHandler} />
@@ -45,9 +50,9 @@ class AdvancedSearchContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          {content}
+          {searchContent}
           <Divider />
-          <SourcesAndCollectionsContainer searchString={searchString} queriedSources={queriedSources} queriedCollections={queriedCollections} />
+          {resultsContent}
         </Grid>
       </div>
     );
@@ -70,13 +75,15 @@ AdvancedSearchContainer.propTypes = {
   saveParamsToStore: React.PropTypes.func,
   // from state (params)
   searchString: React.PropTypes.string,
+  // from url
+  advancedSearchQueryString: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   searchString: state.sources.selected.advancedSearchString,
   queriedSources: state.sources.selected.sourcesByMetadata.list,
   queriedCollections: state.sources.selected.collectionsByMetadata.list,
-  searchStrParam: ownProps.location.query.search,
+  advancedSearchQueryString: ownProps.location.query.search,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -102,8 +109,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     saveParamsToStore: () => {
-      if (stateProps.searchStrParam) {
-        dispatchProps.dispatchAdvancedSearchStringSelected(stateProps.searchStrParam);
+      if (stateProps.advancedSearchQueryString) {
+        dispatchProps.dispatchAdvancedSearchStringSelected(stateProps.advancedSearchQueryString);
       }
     },
   });
