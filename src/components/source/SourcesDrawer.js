@@ -17,7 +17,6 @@ const localMessages = {
   mc: { id: 'sources.menu.items.mc', defaultMessage: 'Collections: Media Cloud' },
   gv: { id: 'sources.menu.items.gv', defaultMessage: 'Collections: Global Voices' },
   emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
-  profile: { id: 'sources.menu.items.profile', defaultMessage: 'Profile' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
 };
@@ -40,9 +39,14 @@ class SourcesDrawer extends React.Component {
     let loginLogoutMenuItem = null;
     if (user.isLoggedIn) {
       loginLogoutMenuItem = (
-        <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/logout'); }}>
-          <FormattedMessage {...messages.userLogout} />
-        </MenuItem>
+        <div>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/user/profile'); }}>
+            <FormattedMessage {...messages.userProfile} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/logout'); }}>
+            <FormattedMessage {...messages.userLogout} />
+          </MenuItem>
+        </div>
       );
     } else {
       loginLogoutMenuItem = (
@@ -104,9 +108,6 @@ class SourcesDrawer extends React.Component {
           <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
-          </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/user/profile'); }}>
-            <FormattedMessage {...localMessages.profile} />
           </MenuItem>
           {loginLogoutMenuItem}
         </Drawer>

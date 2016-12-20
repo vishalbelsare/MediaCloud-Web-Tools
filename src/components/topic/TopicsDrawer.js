@@ -33,9 +33,14 @@ class TopicsDrawer extends React.Component {
     let loginLogoutMenuItem = null;
     if (user.isLoggedIn) {
       loginLogoutMenuItem = (
-        <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/logout'); }}>
-          <FormattedMessage {...messages.userLogout} />
-        </MenuItem>
+        <div>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/user/profile'); }}>
+            <FormattedMessage {...messages.userProfile} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/logout'); }}>
+            <FormattedMessage {...messages.userLogout} />
+          </MenuItem>
+        </div>
       );
     } else {
       loginLogoutMenuItem = (
@@ -78,10 +83,10 @@ class TopicsDrawer extends React.Component {
         >
           <AppBar title={formatMessage(localMessages.menuTitle)} showMenuIconButton={false} />
           {appMenuItems}
+          <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
           </MenuItem>
-          <Divider />
           {loginLogoutMenuItem}
         </Drawer>
       </div>
