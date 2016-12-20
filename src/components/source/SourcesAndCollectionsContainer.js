@@ -3,14 +3,13 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../common/AsyncContainer';
 import SourcesAndCollectionsList from './SourcesAndCollectionsList';
 import AppButton from '../common/AppButton';
 import { selectAdvancedSearchSource, selectAdvancedSearchCollection } from '../../actions/sourceActions';
 
 const localMessages = {
   title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
-  send: { id: 'sources.collections.all.title', defaultMessage: 'Add To Set' },
+  send: { id: 'sources.collections.all.title', defaultMessage: 'Add Selected Items To Collection' },
   intro: { id: 'sources.collections.all.intro',
     defaultMessage: 'This is a list of all of our curated collections of media sources.  Collections are our primary way of organizing media sources; almost every media source in our system is a member of one or more of these curated collections.  Some collections are manually curated, and others are generated using quantitative metrics.  Some are historical, while others are actively maintained and updated.' },
 };
@@ -66,7 +65,8 @@ class SourcesAndCollectionsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const content = null;
 
-    if (queriedSources === undefined || queriedCollections === undefined) {
+    if (queriedSources === undefined || queriedSources.length === 0 ||
+      queriedCollections === undefined || queriedCollections.length === 0) {
       return (
         <div>
           { content }
@@ -115,7 +115,6 @@ SourcesAndCollectionsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   searchString: React.PropTypes.string,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
   dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
@@ -136,8 +135,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  asyncFetch: () => {
-  },
   // depending on checked value, all or page or a selected set or no items are to be selected
   dispatchSourceSelection: (mediaId, checked) => {
     dispatch(selectAdvancedSearchSource({ ids: mediaId.length > 0 ? mediaId : [], checked }));
@@ -170,9 +167,12 @@ const mapDispatchToProps = dispatch => ({
     let url = '/collections/create';
     if (srcIdArray.length > 0) {
       url += `?src=${params}`;
+      if (collIdArray.length > 0) {
+        url += `&coll=${collparams}`;
+      }
     }
-    if (collIdArray.length > 0) {
-      url += `&coll=${collparams}`;
+    if (srcIdArray.length === 0 && collIdArray.length > 0) {
+      url += `?coll=${collparams}`;
     }
     dispatch(push(url));
   },
@@ -181,8 +181,6 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        SourcesAndCollectionsContainer
-      )
+      SourcesAndCollectionsContainer
     )
   );

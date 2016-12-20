@@ -29,16 +29,6 @@ class SourceSelectionRenderer extends React.Component {
     collectionId: null, // the id of a collection to copy
   };
 
-  componentWillReceiveProps = (nextProps) => {
-    const { initialValues } = this.props;
-    if ((nextProps.initialValues !== initialValues)) {
-      if (nextProps.initialValues.sourceAdvancedResults || nextProps.initialValues.collectionAdvancedResults) {
-        this.mergeSourcesFromCollectionsOrSearch(nextProps.initialValues.sourceAdvancedResults);
-        this.mergeSourcesFromCollectionsOrSearch(nextProps.initialValues.collectionAdvancedResults);
-      }
-    }
-  }
-
   resetCollectionId = () => this.setState({ collectionId: null });
 
   pickCollectionToCopy = (collectionId) => {
@@ -167,12 +157,12 @@ SourceSelectionRenderer.propTypes = {
   initialValues: React.PropTypes.object,
 };
 
-const CollectionMediaForm = (props) => {
-  const { initialValues } = props;
-  return (
-    <FieldArray name="sources" component={SourceSelectionRenderer} initialValues={initialValues} />
-  );
-};
+const CollectionMediaForm = () => (
+  <div>
+    <FieldArray name="sources" component={SourceSelectionRenderer} />
+  </div>
+);
+
 
 CollectionMediaForm.propTypes = {
   // from compositional chain
