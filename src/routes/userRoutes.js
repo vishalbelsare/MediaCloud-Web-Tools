@@ -1,6 +1,7 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import LoginFormContainer from '../components/user/LoginFormContainer';
+import UserProfileContainer from '../components/user/UserProfileContainer';
 import store from '../store';
 import { logout } from '../actions/userActions';
 
@@ -12,6 +13,7 @@ function onEnterLogout(nextState, replaceState) {
 
 const userRoutes = (
   <Route path="/user" >
+    <Route path="profile" component={UserProfileContainer} />
     <Route path="/login" component={LoginFormContainer} />
     <Route path="/logout" onEnter={onEnterLogout} />
   </Route>

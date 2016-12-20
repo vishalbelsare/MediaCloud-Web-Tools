@@ -112,12 +112,7 @@ def authenticate_by_password(username, password):
 
 def _get_user_profile(key):
     user_mc = mediacloud.api.MediaCloud(key)
-    # profile = user_mc.userProfile()
-    profile = {
-        "email": "fakeemail@mediacloud.org",
-        "non_public_api": 0,
-        "auth_roles": [] #[ "media-edit", "stories-edit"]
-    }
+    profile = user_mc.userProfile()
     return profile
 
 def user_name():

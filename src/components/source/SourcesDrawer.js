@@ -14,9 +14,10 @@ import { PERMISSION_MEDIA_EDIT } from '../../lib/auth';
 const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
   home: { id: 'sources.menu.items.home', defaultMessage: 'Home' },
-  mc: { id: 'sources.menu.items.all', defaultMessage: 'Collections: Media Cloud' },
-  gv: { id: 'sources.menu.items.all', defaultMessage: 'Collections: Global Voices' },
-  emm: { id: 'sources.menu.items.all', defaultMessage: 'Collections: European Media Monitor' },
+  mc: { id: 'sources.menu.items.mc', defaultMessage: 'Collections: Media Cloud' },
+  gv: { id: 'sources.menu.items.gv', defaultMessage: 'Collections: Global Voices' },
+  emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
+  profile: { id: 'sources.menu.items.profile', defaultMessage: 'Profile' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
 };
@@ -103,6 +104,9 @@ class SourcesDrawer extends React.Component {
           <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
+          </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/user/profile'); }}>
+            <FormattedMessage {...localMessages.profile} />
           </MenuItem>
           {loginLogoutMenuItem}
         </Drawer>
