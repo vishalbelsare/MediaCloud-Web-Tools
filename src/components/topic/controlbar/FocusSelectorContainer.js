@@ -58,9 +58,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(fetchTopicFocalSetsList(topicId, snapshotId));
     }
   },
-  handleFocusSelected: (focusId) => {
-    const selectedFocusId = (focusId === REMOVE_FOCUS) ? null : focusId;
-    const newLocation = filteredLocation(ownProps.location, { focusId: selectedFocusId });
+  handleFocusSelected: (focus) => {
+    const selectedFocusId = (focus.foci_id === REMOVE_FOCUS) ? null : focus.foci_id;
+    const newLocation = filteredLocation(ownProps.location, { focusId: selectedFocusId, timespanId: null });
     dispatch(push(newLocation));
     dispatch(filterByFocus(selectedFocusId));
   },

@@ -5,8 +5,8 @@ class FocusListItem extends React.Component {
 
   handleClick = (evt) => {
     evt.preventDefault();
-    const { id, onSelected } = this.props;
-    onSelected(id);
+    const { focus, onSelected } = this.props;
+    onSelected(focus);
   }
 
   render() {
@@ -15,7 +15,7 @@ class FocusListItem extends React.Component {
     const rootClasses = `popup-item focus-item ${selectedClass}`;
     const subtitle = ('focalSet' in focus) ? <small>{focus.focalSet.name}</small> : null;
     return (
-      <div className={rootClasses} onClick={this.handleClick}>
+      <div className={rootClasses} onClick={this.handleClick} id={`focus-${focus.foci_id}`}>
         <div className="title">{focus.name}</div>
         {subtitle}
       </div>
@@ -26,7 +26,6 @@ class FocusListItem extends React.Component {
 
 FocusListItem.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  id: React.PropTypes.number.isRequired,
   focus: React.PropTypes.object.isRequired,
   onSelected: React.PropTypes.func.isRequired,
   selected: React.PropTypes.bool,

@@ -39,10 +39,10 @@ class FocusSelector extends React.Component {
     });
   }
 
-  handleFocusSelected = (focusId) => {
+  handleFocusSelected = (focus) => {
     this.handlePopupRequestClose();
     const { onFocusSelected } = this.props;
-    onFocusSelected(focusId);
+    onFocusSelected(focus);
   }
 
   render() {
@@ -78,18 +78,16 @@ class FocusSelector extends React.Component {
             {foci.map(focus =>
               <FocusListItem
                 key={focus.foci_id}
-                id={focus.foci_id}
                 focus={focus}
                 selected={focus.foci_id === selectedId}
-                onSelected={() => { this.handleFocusSelected(focus.foci_id); }}
+                onSelected={() => { this.handleFocusSelected(focus); }}
               />
             )}
             <FocusListItem
               key={REMOVE_FOCUS}
-              id={REMOVE_FOCUS}
               focus={{ foci_id: REMOVE_FOCUS, name: formatMessage(localMessages.noFocus) }}
               selected={false}
-              onSelected={() => { this.handleFocusSelected(focus.foci_id); }}
+              onSelected={() => { this.handleFocusSelected(focus); }}
             />
           </Popover>
         </div>
