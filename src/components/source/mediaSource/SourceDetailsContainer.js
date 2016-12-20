@@ -5,8 +5,6 @@ import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
-import { select, fetchSourceDetails } from '../../../actions/sourceActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
@@ -25,6 +23,7 @@ const localMessages = {
 
   feedInfo: { id: 'source.basicInfo.feeds',
     defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}.' },
+  feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
   gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
@@ -32,13 +31,6 @@ const localMessages = {
 };
 
 class SourceDetailsContainer extends React.Component {
-
-  componentWillReceiveProps(nextProps) {
-    const { sourceId, fetchData } = this.props;
-    if ((nextProps.sourceId !== sourceId)) {
-      fetchData(nextProps.sourceId);
-    }
-  }
 
   searchOnDashboard = () => {
     const { source } = this.props;
@@ -77,6 +69,9 @@ class SourceDetailsContainer extends React.Component {
             </h1>
             <p>
               <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
+              <Link to={`/sources/${source.media_id}/feeds`} >
+                <FormattedMessage {...localMessages.feedLink} />
+              </Link>
               &nbsp;
               <FormattedMessage
                 {...localMessages.dateInfo}
@@ -139,9 +134,6 @@ class SourceDetailsContainer extends React.Component {
 
 SourceDetailsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
@@ -150,33 +142,18 @@ SourceDetailsContainer.propTypes = {
   source: React.PropTypes.object,
 };
 
-SourceDetailsContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
   source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
 });
 
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (sourceId) => {
-    dispatch(select(sourceId));
-    dispatch(fetchSourceDetails(sourceId));
-  },
-  asyncFetch: () => {
-    dispatch(select(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId));
-  },
+const mapDispatchToProps = () => ({
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        SourceDetailsContainer
-      )
+      SourceDetailsContainer
     )
   );

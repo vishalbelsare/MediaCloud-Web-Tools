@@ -8,6 +8,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.feeds import cached_feed, stream_feed_csv, source_feed_list
 
 from server.views.sources.geoutil import country_list
 
@@ -40,6 +41,19 @@ def api_media_sources_by_ids():
         source_list.append(info);
     return jsonify({'results':source_list})
 
+@app.route('/api/sources/<media_id>/feeds', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_source_feed(media_id):
+    feed_list = source_feed_list(media_id)
+    feed_count = len(feed_list)
+    return jsonify({'results':feed_list, 'count':feed_count})
+
+@app.route('/api/sources/<media_id>/feeds/feeds.csv', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def source_feed_csv(media_id):
+    return stream_feed_csv('feeds-Source-'+ media_id, media_id)
 
 @cache
 def _cached_media_source_health(user_mc_key, media_id):
@@ -113,13 +127,29 @@ def media_source_words(media_id):
 @app.route('/api/sources/create', methods=['POST'])
 @form_fields_required('name', 'url','notes')
 @flask_login.login_required
-@api_error_handler
+@api_error_handler  
 def source_create():
     user_mc = user_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
     notes = request.form['notes']
-    collection_ids = request.form.getlist('collections[]')
-    detected_language = request.form['detectedLanguage']
+    #collection_ids = request.args.getlist('collections[]')
+    #detected_language = request.args['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
+
+@app.route('/api/sources/suggestions/submit', methods=['POST'])
+@form_fields_required('url','feedurl')
+@flask_login.login_required
+@api_error_handler
+def source_suggest():
+    user_mc = user_mediacloud_client()
+    # name = request.form['name'] how do we get non-required fields without throwign an exception here?
+    url = request.form['url']
+    feedurl = request.form['feedurl']
+    # notes = request.form['reason','']
+    #collection_ids = request.args.getlist('collections[]')
+    fakenew_suggestion = user_mc.media(1)
+    return jsonify(fakenew_suggestion)
+
+

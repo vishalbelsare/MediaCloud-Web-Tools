@@ -4,9 +4,8 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateSource, select, fetchSourceDetails } from '../../../actions/sourceActions';
+import { updateSource } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceForm from './form/SourceForm';
 
 const localMessages = {
@@ -69,20 +68,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         // TODO: redirect to new source detail page
-        dispatch(push(`/sources/${ownProps.sourceId}`));
+        dispatch(push(`/sources/${ownProps.params.sourceId}`));
       });
-  },
-  asyncFetch: () => {
-    dispatch(select(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        EditSourceContainer
-      ),
+      EditSourceContainer
     ),
   );

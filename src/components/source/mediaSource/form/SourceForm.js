@@ -21,7 +21,7 @@ const SourceForm = (props) => {
     <form className="app-form source-form" name="sourceForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <SourceDetailsForm initialValues={initialValues} />
       <SourceMetadataForm initialValues={initialValues} />
-      <SourceCollectionsForm initialValues={initialValues} />
+      <SourceCollectionsForm initialValues={initialValues} form="sourceForm" />
       <Row>
         <Col lg={12}>
           <AppButton

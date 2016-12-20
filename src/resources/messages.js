@@ -43,7 +43,14 @@ const messages = {
   sourceName: { id: 'source.title.default', defaultMessage: 'Media Source' },
   sourceNameProp: { id: 'source.prop.name', defaultMessage: 'Name' },
   sourceUrlProp: { id: 'source.prop.url', defaultMessage: 'URL' },
+  sourceDescription: { id: 'source.description.default', defaultMessage: 'Description' },
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
+  sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
+
+  feedName: { id: 'feed.name', defaultMessage: 'Name' },
+  feedUrl: { id: 'feed.url', defaultMessage: 'URL' },
+  feedDescription: { id: 'feed.description.default', defaultMessage: 'Description' },
+  feedType: { id: 'feed.type.default', defaultMessage: 'Type' },
 
   timespan: { id: 'common.timespan', defaultMessage: 'Timespan' },
 
