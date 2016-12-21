@@ -6,6 +6,8 @@ export const TAGS_SET_EMM_ID = 556;
 export const TAGS_SET_GV_ID = 597;
 const VALID_COLLECTION_IDS = [TAGS_SET_EMM_ID, TAGS_SET_GV_ID, TAGS_SET_MC_ID];
 
+export const TAG_SET_PUBLICATION_COUNTRY = 1935;
+
 export function isCollectionTagSet(tagSetsId) {
   return VALID_COLLECTION_IDS.includes(tagSetsId);
 }
@@ -101,7 +103,7 @@ export function createSource(params) {
 }
 
 export function updateSource(params) {
-  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'notes']);
+  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'notes', 'publicationCountry']);
   acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
   return createPostingApiPromise(`/api/sources/${acceptedParams.id}/update`, acceptedParams);
 }

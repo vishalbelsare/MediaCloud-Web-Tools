@@ -10,6 +10,7 @@ class SelectSourceContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { sourceId, fetchData } = this.props;
+    console.log(location);
     if ((nextProps.sourceId !== sourceId)) {
       fetchData(nextProps.sourceId);
     }
@@ -40,6 +41,7 @@ SelectSourceContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   // from context
+  location: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
   children: React.PropTypes.node.isRequired,

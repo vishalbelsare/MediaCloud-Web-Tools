@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import detectedLanguage from './detectedLanguage';
+import publicationCountry from './publicationCountry';
 
 const rootReducer = combineReducers({
-  detectedLanguage,
+  publicationCountry,
 });
 
 export default rootReducer;

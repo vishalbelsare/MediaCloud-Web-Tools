@@ -2,8 +2,10 @@ import logging
 from flask import jsonify
 import flask_login
 
-from server import app
+from server import app, mc
 from server.util.request import  api_error_handler
+from server.cache import cache
+from server.auth import user_mediacloud_key, user_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
@@ -15,19 +17,23 @@ def api_metadata_values(tag_sets_id):
     Source metadata is encoded in varous tag sets - this returns the set and the list of
     available tags you can use
     '''
-    values = [
-        {'label': 'English', 'tag': 'ENG', 'tags_id': 211, 'tag_sets_id': int(tag_sets_id)},
-        {'label': 'Spanish', 'tag': 'SPA', 'tags_id': 212, 'tag_sets_id': int(tag_sets_id)},
-        {'label': 'Portuguese', 'tag': 'POR', 'tags_id': 213, 'tag_sets_id': int(tag_sets_id)},
-        {'label': 'Hindi', 'tag': 'HIN', 'tags_id': 214, 'tag_sets_id': int(tag_sets_id)},
-    ]
-    tag_set = {
-        'description': 'Fake languages ones',
-        'label': u'Language Used',
-        'name': u'language-used',
-        'show_on_media': 0,
-        'show_on_stories': None,
-        'tag_sets_id': int(tag_sets_id),
-        'tags': values,
-    }
+    user_mc = user_mediacloud_client()
+    tag_set = user_mc.tagSet(tag_sets_id)
+    tag_set['tags'] = _cached_tags_in_tag_set(tag_sets_id)
     return jsonify(tag_set)
+
+@cache
+def _cached_tags_in_tag_set(tag_sets_id):
+    '''
+    This is cached at the app level, so it doesn't need a user key.  This is because
+    the list of tags here shouldn't change (ie. metadata values don't change within a category)
+    '''
+    all_tags = []
+    last_id = 0
+    more = True
+    while more:
+        current_list = mc.tagList(tag_sets_id=tag_sets_id, rows=100, last_tags_id=last_id)
+        last_id = current_list[-1]['tags_id']
+        more = (len(current_list) == 100) and (len(current_list) != 0)
+        all_tags = all_tags + current_list
+    return all_tags

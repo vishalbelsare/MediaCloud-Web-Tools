@@ -4,10 +4,10 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateSource } from '../../../actions/sourceActions';
+import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
-import { isCollectionTagSet } from '../../../lib/sources';
+import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/sources';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },
@@ -19,11 +19,13 @@ const EditSourceContainer = (props) => {
   const { handleSave, source } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+  const pubCountry = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_COUNTRY);
   const intialValues = {
     ...source,
     collections: source.media_source_tags
       .map(t => ({ ...t, name: t.label }))
       .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
+    publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
   };
   return (
     <div>
@@ -69,8 +71,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (result.success === 1) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          // redirect to new source detail page
-          dispatch(push(`/sources/${ownProps.params.sourceId}`));
+          // need to fetch it again because something may have changed
+          dispatch(fetchSourceDetails(ownProps.params.sourceId))
+            .then(() =>
+              dispatch(push(`/sources/${ownProps.params.sourceId}`))
+            );
         }
       });
   },
