@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { createCollection, fetchSourcesByIds, fetchCollectionSourcesByIds,
-  resetAdvancedSearchSource, resetAdvancedSearchCollection, resetSourcesByIds, resetCollectionsByIds } from '../../../actions/sourceActions';
+  resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 
@@ -22,18 +22,39 @@ class CreateCollectionContainer extends React.Component {
     saveParamsToStore(this.props, this);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.src !== this.props.params.src ||
-      nextProps.params.coll !== this.props.params.coll ||
-      nextProps.params.search !== this.props.params.search) {
+    if (nextProps.location.query.src !== this.props.location.query.src ||
+      nextProps.location.query.coll !== this.props.location.query.coll ||
+      nextProps.location.query.search !== this.props.location.query.search) {
       const { saveParamsToStore } = nextProps;
       saveParamsToStore(nextProps, this);
     }
   }
+  componentWillUnmount() {
+    const { dispatchReset } = this.props;
+    dispatchReset();
+  }
   render() {
-    const { handleSave, goToAdvancedSearch, initialValues } = this.props;
+    const { handleSave, goToAdvancedSearch, srcIdsToAddArray, collIdsToAddArray, sourcesToPrefill, collectionsToPrefill } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-
+    let content = null;
+    const initialValues = {};
+    if ((srcIdsToAddArray || collIdsToAddArray) &&
+      ((sourcesToPrefill && sourcesToPrefill.length > 0) ||
+      (collectionsToPrefill && collectionsToPrefill.length > 0))) {
+      initialValues.sources = sourcesToPrefill || collectionsToPrefill;
+      if (sourcesToPrefill && collectionsToPrefill) {
+        initialValues.sources = sourcesToPrefill.concat(collectionsToPrefill);
+      }
+      content = (
+        <CollectionForm
+          initialValues={initialValues}
+          buttonLabel={formatMessage(localMessages.addButton)}
+          onSave={handleSave}
+          goToAdvancedSearch={goToAdvancedSearch}
+        />
+      );
+    }
     return (
       <div>
         <Title render={titleHandler} />
@@ -43,12 +64,7 @@ class CreateCollectionContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          <CollectionForm
-            initialValues={initialValues}
-            buttonLabel={formatMessage(localMessages.addButton)}
-            onSave={handleSave}
-            goToAdvancedSearch={goToAdvancedSearch}
-          />
+          {content}
         </Grid>
       </div>
     );
@@ -67,21 +83,18 @@ CreateCollectionContainer.propTypes = {
   dispatchAddAllSourcesByString: React.PropTypes.func.isRequired,
   dispatchReset: React.PropTypes.func,
   saveParamsToStore: React.PropTypes.func.isRequired,
-  sourceAdvancedResults: React.PropTypes.array,
-  collectionAdvancedResults: React.PropTypes.array,
-  initialValues: React.PropTypes.object.isRequired,
+  sourcesToPrefill: React.PropTypes.array,
+  collectionsToPrefill: React.PropTypes.array,
+  srcIdsToAddArray: React.PropTypes.string,
+  collIdsToAddArray: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  sourceAdvancedResults: state.sources.sourceSearchByIds.list,
-  collectionAdvancedResults: state.sources.collectionSearchByIds.list,
-  initialValues: {
-    sourceAdvancedResults: state.sources.sourceSearchByIds.list,
-    collectionAdvancedResults: state.sources.collectionSearchByIds.list,
-  },
+  sourcesToPrefill: state.sources.sourceSearchByIds.list,
+  collectionsToPrefill: state.sources.collectionSearchByIds.list,
   srcIdsToAddArray: ownProps.location.query.src,
   collIdsToAddArray: ownProps.location.query.coll,
-  searchStrToAddArray: ownProps.location.query.search,
+  searchStrToAdd: ownProps.location.query.search,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -104,8 +117,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(push(`/collections/create/advancedSearch?${values}`));
   },
   dispatchMetadataSelections: (sourceIdArray, collectionIdArray) => {
-    dispatch(resetSourcesByIds());
-    dispatch(resetCollectionsByIds());
+    // dispatch(resetSourcesByIds());
+    // dispatch(resetCollectionsByIds());
     // fields of sources will come back and will be integrated into the media form fields
     if (collectionIdArray && collectionIdArray.length > 0) {
       dispatch(fetchCollectionSourcesByIds(collectionIdArray.length > 1 ? collectionIdArray.split(',') : collectionIdArray));

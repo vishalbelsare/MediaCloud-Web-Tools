@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Divider from 'material-ui/Divider';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionAdvancedSearchMetadataForm from './form/CollectionAdvancedSearchMetadataForm';
 import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
 import { fetchSourceByMetadata, fetchCollectionByMetadata, resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
@@ -14,15 +15,16 @@ const localMessages = {
 };
 
 class AdvancedSearchContainer extends React.Component {
-  componentWillMount() {
-    const { saveParamsToStore } = this.props;
-    saveParamsToStore(this.props, this);
-  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.advancedSearchQueryString !== this.props.advancedSearchQueryString) {
-      const { saveParamsToStore } = nextProps;
-      saveParamsToStore(nextProps, this);
+      const { searchOrReset } = nextProps;
+      searchOrReset(nextProps.advancedSearchQueryString, this);
     }
+  }
+  componentWillUnmount() {
+    const { searchOrReset } = this.props;
+    searchOrReset();
   }
   render() {
     const { searchString, advancedSearchQueryString, queriedSources, queriedCollections, requerySourcesAndCollections } = this.props;
@@ -36,7 +38,8 @@ class AdvancedSearchContainer extends React.Component {
       />
     );
     let resultsContent = null;
-    if (queriedSources != null || queriedCollections != null) {
+    if ((queriedSources !== undefined && queriedSources.length > 0) ||
+      (queriedCollections !== undefined && queriedCollections.length > 0)) {
       resultsContent = (
         <SourcesAndCollectionsContainer searchString={searchString} queriedSources={queriedSources} queriedCollections={queriedCollections} />
       );
@@ -65,6 +68,8 @@ AdvancedSearchContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   location: React.PropTypes.object,
 
+  // from dispatch
+  asyncFetch: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string,
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
@@ -72,7 +77,7 @@ AdvancedSearchContainer.propTypes = {
   dispatchReset: React.PropTypes.func,
   requerySourcesAndCollections: React.PropTypes.func,
   initialValues: React.PropTypes.array,
-  saveParamsToStore: React.PropTypes.func,
+  searchOrReset: React.PropTypes.func,
   // from state (params)
   searchString: React.PropTypes.string,
   // from url
@@ -80,11 +85,19 @@ AdvancedSearchContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
+  fetchStatus: state.sources.selected.sourcesByMetadata.fetchStatus,
+  resetResult: state.sources.selected.sourcesByMetadata.reset,
   searchString: state.sources.selected.advancedSearchString,
   queriedSources: state.sources.selected.sourcesByMetadata.list,
   queriedCollections: state.sources.selected.collectionsByMetadata.list,
   advancedSearchQueryString: ownProps.location.query.search,
 });
+
+// helper to fire off event
+function dispatchAdvancedSearchStringSelected(dispatch, searchString) {
+  dispatch(fetchSourceByMetadata(searchString));
+  dispatch(fetchCollectionByMetadata(searchString));
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   requerySourcesAndCollections: (formValues) => {
@@ -93,25 +106,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       searchStr = ownProps.searchString;
     }
     // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
-    dispatch(fetchSourceByMetadata(searchStr));
-    dispatch(fetchCollectionByMetadata(searchStr));
+    dispatchAdvancedSearchStringSelected(dispatch, searchStr);
   },
-  dispatchAdvancedSearchStringSelected: (searchString) => {
-    dispatch(fetchSourceByMetadata(searchString));
-    dispatch(fetchCollectionByMetadata(searchString));
-  },
-  dispatchReset() {
-    dispatch(resetAdvancedSearchSource());
-    dispatch(resetAdvancedSearchCollection());
+  searchOrReset: (searchStr) => {
+    // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
+    if (searchStr) {
+      dispatchAdvancedSearchStringSelected(dispatch, searchStr);
+    } else {
+      dispatch(resetAdvancedSearchSource());
+      dispatch(resetAdvancedSearchCollection());
+    }
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    saveParamsToStore: () => {
-      if (stateProps.advancedSearchQueryString) {
-        dispatchProps.dispatchAdvancedSearchStringSelected(stateProps.advancedSearchQueryString);
-      }
+    asyncFetch: () => {
+      dispatchProps.searchOrReset(ownProps.advancedSearchQueryString ? ownProps.advancedSearchQueryString : ownProps.location.query.search);
     },
   });
 }
@@ -119,6 +130,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      AdvancedSearchContainer
+      composeAsyncContainer(
+        AdvancedSearchContainer
+      )
     ),
   );

@@ -1,6 +1,6 @@
 import { FETCH_SOURCE_BY_METADATA, SELECT_ADVANCED_SEARCH_SOURCE, RESET_ADVANCED_SEARCH_SOURCE } from '../../../actions/sourceActions';
 import { selectItemInArray, createAsyncReducer } from '../../../lib/reduxHelpers';
-
+import * as fetchConstants from '../../../lib/fetchConstants';
 
 const sourcesByMetadata = createAsyncReducer({
   initialState: {
@@ -19,7 +19,9 @@ const sourcesByMetadata = createAsyncReducer({
     list: selectItemInArray(state.list, payload.ids.length > 0 ? payload.ids : state.list.map(c => c.media_id), 'media_id', payload.checked),
 
   }),
-  [RESET_ADVANCED_SEARCH_SOURCE]: () => ({ list: [] }),
+  [RESET_ADVANCED_SEARCH_SOURCE]: () => ({
+    fetchStatus: fetchConstants.FETCH_SUCCEEDED,
+    list: [] }),
 });
 
 export default sourcesByMetadata;
