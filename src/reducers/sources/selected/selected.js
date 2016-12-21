@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SELECT, SELECT_ADVANCED_SEARCH_STRING } from '../../../actions/sourceActions';
+import { SELECT } from '../../../actions/sourceActions';
 import details from './details/details';
 import sourceInfo from './sourceInfo';
 import collectionInfo from './collectionInfo';
@@ -17,21 +17,11 @@ function id(state = INITIAL_STATE, action) {
   }
 }
 
-function advancedSearchString(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case SELECT_ADVANCED_SEARCH_STRING:
-      return (action.payload ? action.payload : null);
-    default:
-      return state;
-  }
-}
-
 const rootReducer = combineReducers({
   id,
   sourceInfo,
   collectionInfo,
   details,
-  advancedSearchString,
   sourcesByMetadata,
   collectionsByMetadata,
 });

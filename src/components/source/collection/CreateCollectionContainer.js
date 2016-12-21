@@ -35,7 +35,7 @@ class CreateCollectionContainer extends React.Component {
     dispatchReset();
   }
   render() {
-    const { handleSave, goToAdvancedSearch, prefillSrcIds, prefillCollectionIds, sourcesToPrefill, collectionsToPrefill } = this.props;
+    const { handleSave, prefillSrcIds, prefillCollectionIds, sourcesToPrefill, collectionsToPrefill } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     const initialValues = {};
@@ -60,7 +60,6 @@ class CreateCollectionContainer extends React.Component {
           initialValues={initialValues}
           buttonLabel={formatMessage(localMessages.addButton)}
           onSave={handleSave}
-          goToAdvancedSearch={goToAdvancedSearch}
         />
       );
     }
@@ -87,7 +86,6 @@ CreateCollectionContainer.propTypes = {
   location: React.PropTypes.object.isRequired,
   // from dispatch
   handleSave: React.PropTypes.func.isRequired,
-  goToAdvancedSearch: React.PropTypes.func.isRequired,
   dispatchMetadataSelections: React.PropTypes.func.isRequired,
   dispatchAddAllSourcesByString: React.PropTypes.func.isRequired,
   dispatchReset: React.PropTypes.func,
@@ -130,9 +128,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
       });
-  },
-  goToAdvancedSearch: (values) => {
-    dispatch(push(`/collections/create/advancedSearch?${values}`));
   },
   dispatchReset() {
     dispatch(resetAdvancedSearchSource());

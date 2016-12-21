@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../../common/AsyncContainer';
-import { fetchMetadataValues } from '../../../../actions/sourceActions';
-import composeIntlForm from '../../../common/IntlForm';
+import composeAsyncContainer from './AsyncContainer';
+import { fetchMetadataValues } from '../../actions/sourceActions';
+import composeIntlForm from './IntlForm';
 
 const MetadataPickerContainer = (props) => {
   const { label, name, tags, renderSelectField } = props;
@@ -47,15 +47,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-const reduxFormConfig = {
-  form: 'sourceForm',
-};
-
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeIntlForm(
-        reduxForm(reduxFormConfig)(
+        reduxForm()(
           composeAsyncContainer(
             MetadataPickerContainer
           )

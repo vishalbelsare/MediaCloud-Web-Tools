@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import MetadataPickerContainer from './MetadataPickerContainer';
+import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
 import { TAG_SET_PUBLICATION_COUNTRY } from '../../../../lib/sources';
 
 const localMessages = {
@@ -17,7 +17,11 @@ const SourceMetadataForm = () => (
     </Row>
     <Row>
       <Col lg={12} md={12} sm={12}>
-        <MetadataPickerContainer id={TAG_SET_PUBLICATION_COUNTRY} name={'publicationCountry'} />
+        <MetadataPickerContainer
+          id={TAG_SET_PUBLICATION_COUNTRY}
+          name={'publicationCountry'}
+          form="sourceForm"
+        />
       </Col>
     </Row>
   </div>

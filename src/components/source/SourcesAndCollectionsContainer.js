@@ -3,9 +3,11 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
+import composeAsyncContainer from '../common/AsyncContainer';
 import SourcesAndCollectionsList from './SourcesAndCollectionsList';
 import AppButton from '../common/AppButton';
-import { selectAdvancedSearchSource, selectAdvancedSearchCollection } from '../../actions/sourceActions';
+import { fetchSourceByMetadata, fetchCollectionByMetadata,
+  selectAdvancedSearchCollection, selectAdvancedSearchSource } from '../../actions/sourceActions';
 
 const localMessages = {
   title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
@@ -24,6 +26,12 @@ const FIRST_PAGE = true;
 class SourcesAndCollectionsContainer extends React.Component {
   componentDidMount = () => {
     this.setState({ allOrNoneCheck: false });
+  }
+  componentWillReceiveProps(nextProps) {
+    const { searchString, fetchData } = this.props;
+    if (nextProps.searchString !== searchString) {
+      fetchData(nextProps.searchString);
+    }
   }
   addOrRemoveToSelectedSources= (mediaId, checked) => {
     const { dispatchSourceSelection } = this.props;
@@ -60,19 +68,8 @@ class SourcesAndCollectionsContainer extends React.Component {
     }
   };
   render() {
-    const { queriedSources, queriedCollections,
-      pristine, submitting } = this.props;
+    const { queriedSources, queriedCollections, pristine, submitting } = this.props;
     const { formatMessage } = this.props.intl;
-    const content = null;
-
-    if (queriedSources === undefined || queriedSources.length === 0 ||
-      queriedCollections === undefined || queriedCollections.length === 0) {
-      return (
-        <div>
-          { content }
-        </div>
-      );
-    }
     return (
       <div className="all-collections">
         <Grid>
@@ -120,6 +117,8 @@ SourcesAndCollectionsContainer.propTypes = {
   dispatchCollectionSelection: React.PropTypes.func.isRequired,
   dispatchToCreateWithSearch: React.PropTypes.func.isRequired,
   dispatchReset: React.PropTypes.func,
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from form healper
   buttonLabel: React.PropTypes.string,
   initialValues: React.PropTypes.object,
@@ -134,7 +133,15 @@ const mapStateToProps = state => ({
   queriedCollections: state.sources.selected.collectionsByMetadata.list,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (searchStr) => {
+    dispatch(fetchSourceByMetadata(searchStr));
+    dispatch(fetchCollectionByMetadata(searchStr));
+  },
+  asyncFetch: () => {
+    dispatch(fetchSourceByMetadata(ownProps.searchString));
+    dispatch(fetchCollectionByMetadata(ownProps.searchString));
+  },
   // depending on checked value, all or page or a selected set or no items are to be selected
   dispatchSourceSelection: (mediaId, checked) => {
     dispatch(selectAdvancedSearchSource({ ids: mediaId.length > 0 ? mediaId : [], checked }));
@@ -181,6 +188,8 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SourcesAndCollectionsContainer
+      composeAsyncContainer(
+        SourcesAndCollectionsContainer
+      )
     )
   );
