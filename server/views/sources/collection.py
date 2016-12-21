@@ -2,6 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from operator import itemgetter
+from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
 from server import app, mc
 from server.util.request import arguments_required, form_fields_required, api_error_handler
@@ -178,14 +179,26 @@ def collection_wordcount_csv(collection_id):
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
 
 @app.route('/api/collections/create', methods=['POST'])
-@form_fields_required('name', 'description','static')
+@form_fields_required('name', 'description')
 @flask_login.login_required
 @api_error_handler
 def collection_create():
     user_mc = user_mediacloud_client()
-    name = request.args['name']
-    description = request.args['description']
-    notes = request.args['static']
-    sources = request.args['sources[]']
-    dummyCollection = user_mc.tag(COLLECTIONS_TAG_SET_ID)
-    return jsonify(dummyCollection)
+    name = request.form['name']
+    description = request.form['description']
+    static = request.form['static'] if 'static' in request.form else None
+    show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
+    show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
+    sources = request.form['sources[]'].split(',')
+    # first create the collection
+    logging.info('~~~~~~~~~')
+    logging.info(sources)
+    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
+        is_static=(static=='true'),
+        show_on_stories=(show_on_stories=='true'),
+        show_on_media=(show_on_media=='true'))
+    # then go through and tag all the sources specified with the new collection id
+    tags = [ MediaTag(sid, tags_id=new_collection['tag']['tags_id'], action=TAG_ACTION_ADD) for sid in sources ]
+    if len(tags) > 0:
+        user_mc.tagMedia(tags)
+    return jsonify(new_collection['tag'])

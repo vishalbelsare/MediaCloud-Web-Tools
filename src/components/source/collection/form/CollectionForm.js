@@ -16,22 +16,15 @@ const localMessages = {
 
 const CollectionForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, goToAdvancedSearch } = props;
-  let resultContent = null;
-
-  if (initialValues && initialValues.sources && initialValues.sources.length > 0) {
-    resultContent = (
-      <CollectionMediaForm
-        initialValues={initialValues}
-        goToASearch={goToAdvancedSearch}
-      />
-    );
-  }
   return (
     <form className="app-form collection-form" name="collectionForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <CollectionDetailsForm
         initialValues={initialValues}
       />
-      { resultContent }
+      <CollectionMediaForm
+        initialValues={initialValues}
+        goToASearch={goToAdvancedSearch}
+      />
       <Row>
         <Col lg={12}>
           <AppButton

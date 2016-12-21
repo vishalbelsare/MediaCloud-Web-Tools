@@ -13,6 +13,7 @@ const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Create New Collection' },
   addButton: { id: 'collection.add.save', defaultMessage: 'Save New Collection' },
   feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new Collection' },
+  failed: { id: 'source.add.feedback.failed', defaultMessage: 'Something went wrong :(' },
 };
 
 class CreateCollectionContainer extends React.Component {
@@ -34,16 +35,34 @@ class CreateCollectionContainer extends React.Component {
     dispatchReset();
   }
   render() {
-    const { handleSave, goToAdvancedSearch, srcIdsToAddArray, collIdsToAddArray, sourcesToPrefill, collectionsToPrefill } = this.props;
+    const { handleSave, goToAdvancedSearch, prefillSrcIds, prefillCollectionIds, sourcesToPrefill, collectionsToPrefill } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     const initialValues = {};
-    if ((srcIdsToAddArray || collIdsToAddArray) &&
-      (sourcesToPrefill || collectionsToPrefill)) {
-      initialValues.sources = sourcesToPrefill || collectionsToPrefill;
-      if (sourcesToPrefill && collectionsToPrefill) {
-        initialValues.sources = sourcesToPrefill.concat(collectionsToPrefill);
+    let readyToShowForm = false;
+    if ((prefillSrcIds || prefillCollectionIds)) {
+      // if there is anything to prefill, spin until data is recieved, then show form
+      if ((sourcesToPrefill.length + collectionsToPrefill.length) > 0) {
+        const combinedPrefill = [];
+        if (sourcesToPrefill) combinedPrefill.concat(sourcesToPrefill);
+        if (collectionsToPrefill) combinedPrefill.concat(collectionsToPrefill);
+        initialValues.sources = combinedPrefill;
+        readyToShowForm = true;
       }
+    } else {
+      // nothign to prefill, so show the form
+      readyToShowForm = true;
+    }
+    let formContent = null;
+    if (readyToShowForm) {
+      formContent = (
+        <CollectionForm
+          initialValues={initialValues}
+          buttonLabel={formatMessage(localMessages.addButton)}
+          onSave={handleSave}
+          goToAdvancedSearch={goToAdvancedSearch}
+        />
+      );
     }
     return (
       <div>
@@ -54,12 +73,7 @@ class CreateCollectionContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          <CollectionForm
-            initialValues={initialValues}
-            buttonLabel={formatMessage(localMessages.addButton)}
-            onSave={handleSave}
-            goToAdvancedSearch={goToAdvancedSearch}
-          />
+          {formContent}
         </Grid>
       </div>
     );
@@ -80,15 +94,15 @@ CreateCollectionContainer.propTypes = {
   saveParamsToStore: React.PropTypes.func.isRequired,
   sourcesToPrefill: React.PropTypes.array,
   collectionsToPrefill: React.PropTypes.array,
-  srcIdsToAddArray: React.PropTypes.string,
-  collIdsToAddArray: React.PropTypes.string,
+  prefillSrcIds: React.PropTypes.string,
+  prefillCollectionIds: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourcesToPrefill: state.sources.sourceSearchByIds.list,
   collectionsToPrefill: state.sources.collectionSearchByIds.list,
-  srcIdsToAddArray: ownProps.location.query.src,
-  collIdsToAddArray: ownProps.location.query.coll,
+  prefillSrcIds: ownProps.location.query.src,
+  prefillCollectionIds: ownProps.location.query.coll,
   searchStrToAdd: ownProps.location.query.search,
 });
 
@@ -97,15 +111,20 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const infoToSave = {
       name: values.name,
       description: values.description,
-      sources: values.sources.map(s => s.id),
+      'sources[]': values.sources.map(s => s.id),
       static: values.static,
+      showOnMedia: values.showOnMedia,
+      showOnStories: values.showOnStories,
     };
     dispatch(createCollection(infoToSave))
       .then((results) => {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        // TODO: redirect to new source detail page
-        dispatch(push(`/collections/${results.tags_id}`));
+        if (results.tags_id) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(push(`/collections/${results.tags_id}`));
+        } else {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+        }
       });
   },
   goToAdvancedSearch: (values) => {
@@ -134,8 +153,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     saveParamsToStore: () => {
-      if (stateProps.srcIdsToAddArray || stateProps.collIdsToAddArray) {
-        dispatchProps.dispatchMetadataSelections(stateProps.srcIdsToAddArray, stateProps.collIdsToAddArray);
+      if (stateProps.prefillSrcIds || stateProps.prefillCollectionIds) {
+        dispatchProps.dispatchMetadataSelections(stateProps.prefillSrcIds, stateProps.prefillCollectionIds);
       } else {
         dispatchProps.dispatchAddAllSourcesByString(stateProps.searchStr);
       }
