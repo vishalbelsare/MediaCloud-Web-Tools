@@ -111,11 +111,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const infoToSave = {
       name: values.name,
       description: values.description,
-      'sources[]': values.sources.map(s => s.id),
       static: values.static,
       showOnMedia: values.showOnMedia,
       showOnStories: values.showOnStories,
     };
+    if ('sources' in values) {
+      infoToSave['sources[]'] = values.sources.map(s => s.id);
+    } else {
+      infoToSave['sources[]'] = [];
+    }
     dispatch(createCollection(infoToSave))
       .then((results) => {
         if (results.tags_id) {

@@ -188,14 +188,16 @@ def collection_create():
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
-    sources = request.form['sources[]'].split(',')
+    source_ids = []
+    if len(request.form['sources[]']) > 0:
+        source_ids = request.form['sources[]'].split(',')
     # first create the collection
     new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
         is_static=(static=='true'),
         show_on_stories=(show_on_stories=='true'),
         show_on_media=(show_on_media=='true'))
     # then go through and tag all the sources specified with the new collection id
-    tags = [ MediaTag(sid, tags_id=new_collection['tag']['tags_id'], action=TAG_ACTION_ADD) for sid in sources ]
+    tags = [ MediaTag(sid, tags_id=new_collection['tag']['tags_id'], action=TAG_ACTION_ADD) for sid in source_ids ]
     if len(tags) > 0:
         user_mc.tagMedia(tags)
     return jsonify(new_collection['tag'])
@@ -211,7 +213,9 @@ def collection_update(collection_id):
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
-    source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
+    source_ids = []
+    if len(request.form['sources[]']) > 0:
+        source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
     # first update the collection
     updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
         is_static=(static=='true'),

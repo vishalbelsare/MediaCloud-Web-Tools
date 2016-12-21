@@ -69,11 +69,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       id: ownProps.params.collectionId,
       name: values.name,
       description: values.description,
-      'sources[]': values.sources.map(s => s.id),
       static: values.static,
       showOnMedia: values.showOnMedia,
       showOnStories: values.showOnStories,
     };
+    if ('sources' in values) {
+      infoToSave['sources[]'] = values.sources.map(s => s.id);
+    } else {
+      infoToSave['sources[]'] = [];
+    }
     // try to save it
     dispatch(updateCollection(infoToSave))
       .then(() => {
