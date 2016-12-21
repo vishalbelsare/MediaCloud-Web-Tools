@@ -35,6 +35,7 @@ const SourceControlBar = props => (
           </Col>
           <Col lg={4} xs={12} className="right">
             <SourceSearchContainer
+              onAdvancedSearchSelected={props.onAdvancedSearchSelected}
               onMediaSourceSelected={props.handleMediaSourceSelected}
               onCollectionSelected={props.handleCollectionSelected}
             />

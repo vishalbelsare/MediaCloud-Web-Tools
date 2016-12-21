@@ -63,6 +63,9 @@ class SourcesDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/search'); }}>
+            <FormattedMessage {...messages.search} />
+          </MenuItem>
           <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
             <FormattedMessage {...localMessages.mc} />
