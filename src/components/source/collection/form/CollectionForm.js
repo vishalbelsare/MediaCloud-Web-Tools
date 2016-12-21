@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const CollectionForm = (props) => {
-  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, goToAdvancedSearch } = props;
+  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
   return (
     <form className="app-form collection-form" name="collectionForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <CollectionDetailsForm
@@ -23,7 +23,6 @@ const CollectionForm = (props) => {
       />
       <CollectionMediaForm
         initialValues={initialValues}
-        goToASearch={goToAdvancedSearch}
       />
       <Row>
         <Col lg={12}>
@@ -54,7 +53,6 @@ CollectionForm.propTypes = {
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
-  goToAdvancedSearch: React.PropTypes.func.isRequired,
 };
 
 function validate(values) {

@@ -11,7 +11,7 @@ const INITIAL_STATE = null;
 function id(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT:
-      return parseInt(action.payload.id, 10);
+      return action.payload ? parseInt(action.payload.id, 10) : state;
     default:
       return state;
   }

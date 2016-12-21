@@ -23,6 +23,9 @@ const EditCollectionContainer = (props) => {
     ...collection,
     name: collection.label,
     sources: collection.media,
+    static: collection.is_static === 1,
+    showOnMedia: collection.show_on_media === 1,
+    showOnStories: collection.show_on_stories === 1,
   };
   return (
     <div>
@@ -63,11 +66,13 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     const infoToSave = {
-      id: ownProps.collectionId,
+      id: ownProps.params.collectionId,
       name: values.name,
       description: values.description,
-      sources: values.sources.map(s => s.id),
+      'sources[]': values.sources.map(s => s.id),
       static: values.static,
+      showOnMedia: values.showOnMedia,
+      showOnStories: values.showOnStories,
     };
     // try to save it
     dispatch(updateCollection(infoToSave))
@@ -75,12 +80,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         // TODO: redirect to new source detail page
-        dispatch(push(`/collections/${ownProps.collectionId}`));
+        dispatch(push(`/collections/${ownProps.params.collectionId}`));
       });
   },
   asyncFetch: () => {
-    dispatch(select(ownProps.collectionId));
-    dispatch(fetchCollectionDetails(ownProps.collectionId));
+    dispatch(select(ownProps.params.collectionId));
+    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
   },
 });
 

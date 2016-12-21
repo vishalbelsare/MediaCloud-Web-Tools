@@ -10,7 +10,6 @@ class SelectSourceContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { sourceId, fetchData } = this.props;
-    console.log(location);
     if ((nextProps.sourceId !== sourceId)) {
       fetchData(nextProps.sourceId);
     }
