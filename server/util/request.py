@@ -33,7 +33,7 @@ def arguments_required(*expected_args):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                logger.info(request.args)
+                logger.debug(request.args)
                 validate_params_exist(request.args, expected_args)
                 return func(*args, **kwargs)
             except ValueError as e:
@@ -50,7 +50,7 @@ def form_fields_required(*expected_form_fields):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                logger.info(request.form)
+                logger.debug(request.form)
                 validate_params_exist(request.form, expected_form_fields)
                 return func(*args, **kwargs)
             except ValueError as e:

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
 import CollectionList from './CollectionList';
+import { TAGS_SET_EMM_ID } from '../../../../lib/sources';
 
 const EMMCollectionListContainer = (props) => {
   const { name, description, collections } = props;
@@ -39,7 +40,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionList(556));
+    dispatch(fetchCollectionList(TAGS_SET_EMM_ID));
   },
 });
 

@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
+import { isCollectionTagSet } from '../../../lib/sources';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },
@@ -22,7 +23,7 @@ const EditSourceContainer = (props) => {
     ...source,
     collections: source.media_source_tags
       .map(t => ({ ...t, name: t.label }))
-      .filter(t => (t.tag_sets_id === 5) && (t.show_on_media === 1)),
+      .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
   };
   return (
     <div>
@@ -64,11 +65,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     // try to save it
     dispatch(updateSource(values))
-      .then(() => {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        // TODO: redirect to new source detail page
-        dispatch(push(`/sources/${ownProps.params.sourceId}`));
+      .then((result) => {
+        if (result.success === 1) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          // redirect to new source detail page
+          dispatch(push(`/sources/${ownProps.params.sourceId}`));
+        }
       });
   },
 });

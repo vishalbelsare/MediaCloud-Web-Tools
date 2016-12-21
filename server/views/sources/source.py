@@ -1,10 +1,12 @@
 import logging
 from flask import request, jsonify
 import flask_login
+from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from server import app
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -60,7 +62,6 @@ def _cached_media_source_health(user_mc_key, media_id):
     user_mc = user_mediacloud_client()
     return user_mc.mediaHealth(media_id)
 
-@cache
 def _cached_media_source_details(user_mc_key, media_id, start_date_str=None):
     user_mc = user_mediacloud_client()
     info = user_mc.media(media_id)
@@ -137,6 +138,30 @@ def source_create():
     #detected_language = request.args['detectedLanguage']
     fakenew_source = user_mc.media(1)
     return jsonify(fakenew_source)
+
+@app.route('/api/sources/<media_id>/update', methods=['POST'])
+@form_fields_required('name', 'url')
+@flask_login.login_required
+@api_error_handler  
+def source_update(media_id):
+    user_mc = user_mediacloud_client()
+    # update the basic info
+    name = request.form['name']
+    url = request.form['url']
+    notes = request.form['notes'] if 'notes' in request.form else None # this is optional
+    result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=notes)
+    # now we need to update the collections separately, because they are tags on the media source
+    source = user_mc.media(media_id)
+    existing_tag_ids = [ t['tags_id'] for t in source['media_source_tags']
+        if t['tag_sets_id'] in [COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID]]
+    tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+    tag_ids_to_remove = list(set(existing_tag_ids) - set(tag_ids_to_add))
+    tags_to_add = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_ADD) for cid in tag_ids_to_add]
+    tags_to_remove = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_REMOVE) for cid in tag_ids_to_remove]
+    tags = tags_to_add + tags_to_remove
+    user_mc.tagMedia(tags=tags)
+    #detected_language = request.args['detectedLanguage']
+    return jsonify(result)
 
 @app.route('/api/sources/suggestions/submit', methods=['POST'])
 @form_fields_required('url','feedurl')

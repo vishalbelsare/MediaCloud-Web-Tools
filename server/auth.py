@@ -126,5 +126,5 @@ def user_mediacloud_client():
     Return a mediacloud client for the logged in user
     '''
     user_mc_key = user_mediacloud_key()
-    user_mc = mediacloud.api.MediaCloud(user_mc_key)
+    user_mc = mediacloud.api.AdminMediaCloud(user_mc_key)
     return user_mc
