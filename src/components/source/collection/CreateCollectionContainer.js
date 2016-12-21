@@ -37,23 +37,13 @@ class CreateCollectionContainer extends React.Component {
     const { handleSave, goToAdvancedSearch, srcIdsToAddArray, collIdsToAddArray, sourcesToPrefill, collectionsToPrefill } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-    let content = null;
     const initialValues = {};
     if ((srcIdsToAddArray || collIdsToAddArray) &&
-      ((sourcesToPrefill && sourcesToPrefill.length > 0) ||
-      (collectionsToPrefill && collectionsToPrefill.length > 0))) {
+      (sourcesToPrefill || collectionsToPrefill)) {
       initialValues.sources = sourcesToPrefill || collectionsToPrefill;
       if (sourcesToPrefill && collectionsToPrefill) {
         initialValues.sources = sourcesToPrefill.concat(collectionsToPrefill);
       }
-      content = (
-        <CollectionForm
-          initialValues={initialValues}
-          buttonLabel={formatMessage(localMessages.addButton)}
-          onSave={handleSave}
-          goToAdvancedSearch={goToAdvancedSearch}
-        />
-      );
     }
     return (
       <div>
@@ -64,7 +54,12 @@ class CreateCollectionContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          {content}
+          <CollectionForm
+            initialValues={initialValues}
+            buttonLabel={formatMessage(localMessages.addButton)}
+            onSave={handleSave}
+            goToAdvancedSearch={goToAdvancedSearch}
+          />
         </Grid>
       </div>
     );
@@ -116,9 +111,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   goToAdvancedSearch: (values) => {
     dispatch(push(`/collections/create/advancedSearch?${values}`));
   },
+  dispatchReset() {
+    dispatch(resetAdvancedSearchSource());
+    dispatch(resetAdvancedSearchCollection());
+  },
   dispatchMetadataSelections: (sourceIdArray, collectionIdArray) => {
-    // dispatch(resetSourcesByIds());
-    // dispatch(resetCollectionsByIds());
+    dispatch(resetAdvancedSearchSource());
+    dispatch(resetAdvancedSearchCollection());
     // fields of sources will come back and will be integrated into the media form fields
     if (collectionIdArray && collectionIdArray.length > 0) {
       dispatch(fetchCollectionSourcesByIds(collectionIdArray.length > 1 ? collectionIdArray.split(',') : collectionIdArray));
@@ -129,10 +128,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dispatchAddAllSourcesByString() {
     // not currently implemented, but creation of collection should add all media sources by searchStr and metadata...
-  },
-  dispatchReset() {
-    dispatch(resetAdvancedSearchSource());
-    dispatch(resetAdvancedSearchCollection());
   },
 });
 
