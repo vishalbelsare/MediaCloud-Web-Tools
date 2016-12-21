@@ -43,9 +43,9 @@ class CreateCollectionContainer extends React.Component {
     if ((prefillSrcIds || prefillCollectionIds)) {
       // if there is anything to prefill, spin until data is recieved, then show form
       if ((sourcesToPrefill.length + collectionsToPrefill.length) > 0) {
-        const combinedPrefill = [];
-        if (sourcesToPrefill) combinedPrefill.concat(sourcesToPrefill);
-        if (collectionsToPrefill) combinedPrefill.concat(collectionsToPrefill);
+        let combinedPrefill = [];
+        if (sourcesToPrefill) combinedPrefill = combinedPrefill.concat(sourcesToPrefill);
+        if (collectionsToPrefill) combinedPrefill = combinedPrefill.concat(collectionsToPrefill);
         initialValues.sources = combinedPrefill;
         readyToShowForm = true;
       }
