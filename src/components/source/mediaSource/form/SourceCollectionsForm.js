@@ -10,12 +10,12 @@ import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 
 const localMessages = {
   title: { id: 'source.add.collections.title', defaultMessage: 'Collections' },
-  existing: { id: 'source.add.collections.existing', defaultMessage: 'This Source is in the following Collections:' },
-  add: { id: 'source.add.collections.add', defaultMessage: 'Add this Source to an existing Collection:' },
+  existing: { id: 'source.add.collections.existing', defaultMessage: 'This source is in the following collections:' },
+  add: { id: 'source.add.collections.add', defaultMessage: 'Add it to another collection:' },
 };
 
 const renderCollectionSelector = ({ fields, meta: { error } }) => (
-  <div className="form-section source-collections-form">
+  <div>
     <Row>
       <Col sm={4} xs={12}>
         <span className="label chip-label"><FormattedMessage {...localMessages.existing} /></span>
@@ -40,10 +40,10 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
       <Col xs={12}>&nbsp;</Col>
     </Row>
     <Row>
-      <Col sm={4} xs={12}>
+      <Col sm={4} xs={6}>
         <span className="label field-label"><FormattedMessage {...localMessages.add} /></span>
       </Col>
-      <Col sm={6} xs={12}>
+      <Col sm={6} xs={6}>
         <SourceSearchContainer
           searchSources={false}
           searchStaticCollections={false}
@@ -59,7 +59,7 @@ renderCollectionSelector.propTypes = {
 };
 
 const SourceCollectionsForm = () => (
-  <div className="source-collection-form">
+  <div className="form-section source-collection-form">
     <Row>
       <Col lg={12} md={12} sm={12}>
         <h2><FormattedMessage {...localMessages.title} /></h2>

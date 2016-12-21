@@ -8,7 +8,8 @@ import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetColle
 const MAX_SUGGESTION_CHARS = 40;
 
 const localMessages = {
-  advancedSearch: { id: 'sourceCollectionList.search', defaultMessage: 'Advanced Search...' },
+  advancedSearch: { id: 'sources.search.advanced', defaultMessage: 'Advanced Search...' },
+  searchHint: { id: 'sources.search.hint', defaultMessage: 'Search by name or URL' },
 };
 
 
@@ -92,10 +93,11 @@ class SourceSearchContainer extends React.Component {
 
   render() {
     const resultsAsComponents = this.resetIfRequested();
+    const { formatMessage } = this.props.intl;
     return (
       <div className="source-search">
         <AutoComplete
-          hintText="search for media by name or URL"
+          hintText={formatMessage(localMessages.searchHint)}
           fullWidth
           openOnFocus
           onClick={this.resetIfRequested}
