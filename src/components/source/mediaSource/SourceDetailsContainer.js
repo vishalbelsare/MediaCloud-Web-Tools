@@ -5,6 +5,7 @@ import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
+import DataCard from '../../common/DataCard';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
@@ -12,6 +13,8 @@ import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
 import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
+import { isMetaDataTagSet } from '../../../lib/sources';
+
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -27,6 +30,8 @@ const localMessages = {
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
   gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
+  metadataLabel: { id: 'source.basicInfo.metadata', defaultMessage: 'Metadata' },
+  metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
 
 };
 
@@ -42,6 +47,7 @@ class SourceDetailsContainer extends React.Component {
     const { source } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+    const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
@@ -100,6 +106,17 @@ class SourceDetailsContainer extends React.Component {
             <HealthBadge isHealthy={source.health.is_healthy === 1} />
           </Col>
         </Row>
+        <DataCard>
+          <h2>
+            <FormattedMessage {...localMessages.metadataLabel} />
+          </h2>
+          <ul>{ metadata.map(item =>
+            <li>
+              <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
+            </li>
+          )}
+          </ul>
+        </DataCard>
         <Row>
           <Col lg={6} xs={12}>
             <SourceTopWordsContainer source={source} />
