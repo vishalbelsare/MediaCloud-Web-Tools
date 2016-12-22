@@ -101,7 +101,7 @@ export function metadataValues(id) {
 }
 
 export function createSource(params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'notes']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
 }
 

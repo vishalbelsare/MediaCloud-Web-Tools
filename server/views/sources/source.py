@@ -126,18 +126,40 @@ def media_source_words(media_id):
     return jsonify({'results':info})
 
 @app.route('/api/sources/create', methods=['POST'])
-@form_fields_required('name', 'url','notes')
+@form_fields_required('name', 'url')
 @flask_login.login_required
 @api_error_handler  
 def source_create():
     user_mc = user_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
-    notes = request.form['notes']
-    #collection_ids = request.args.getlist('collections[]')
-    #detected_language = request.args['detectedLanguage']
-    fakenew_source = user_mc.media(1)
-    return jsonify(fakenew_source)
+    notes = request.form['notes'] if 'notes' in request.form else None # this is optional
+    tag_ids_to_add = []
+    if len(request.form['collections[]']) > 0:
+        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+    # metadata_tag_id = []
+    # metadata tags are stored along with collection tags, so push them all at once
+    # if len(request.form[metadata_item['form_key']]) > 0:
+    #    metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
+    #   tags_ids_to_add += metadata_tag_id
+    new_source = user_mc.mediaCreate(name=name, url=url, editor_notes=notes, tags_ids=tag_ids_to_add)
+    # now we need to update the collections separately, because they are tags on the media source
+    # source = user_mc.media(new_source.media_id)
+    logger.info("~~~~~~~~~~~~~~~~~~~")
+    logger.info("think we created?")
+    
+    # now update the metadata too
+    valid_metadata = [
+        { 'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY }
+    ]
+    for metadata_item in valid_metadata:
+        metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
+        if metadata_tag_id:
+            tag = MediaTag(new_source.media_id, tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
+            user_mc.tagMedia([tag])
+    # result the success of the media update call - would be better to catch errors in any of these calls...
+
+    return jsonify(new_source['media_id'])
 
 @app.route('/api/sources/<media_id>/update', methods=['POST'])
 @form_fields_required('name', 'url')

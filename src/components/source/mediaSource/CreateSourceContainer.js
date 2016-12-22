@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { createSource } from '../../../actions/sourceActions';
+import { createSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 
@@ -52,15 +52,25 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       url: values.url,
       name: values.name,
       notes: values.notes,
-      collections: values.collections ? values.collections.map(s => s.id) : [],
+      // metadata save here
     };
+    if ('collections' in values) {
+      infoToSave['collections[]'] = values.collections.map(s => s.id);
+    } else {
+      infoToSave['collections[]'] = [];
+    }
     // try to save it
     dispatch(createSource(infoToSave))
-      .then((results) => {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        // TODO: redirect to new source detail page
-        dispatch(push(`/sources/${results.media_id}`));
+      .then((result) => {
+        if (result.success === 1) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          // need to fetch it again because something may have changed
+          dispatch(fetchSourceDetails(result.media_id))
+            .then(() =>
+              dispatch(push(`/sources/${result.media_id}`))
+            );
+        }
       });
   },
 });
