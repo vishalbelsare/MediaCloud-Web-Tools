@@ -142,7 +142,8 @@ def source_create():
     # if len(request.form[metadata_item['form_key']]) > 0:
     #    metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
     #   tags_ids_to_add += metadata_tag_id
-    new_source = user_mc.mediaCreate(name=name, url=url, editor_notes=notes, tags_ids=tag_ids_to_add)
+    sourceToCreate = { 'name': name, 'url': url, 'editor_notes': notes, 'tags_ids': tag_ids_to_add }
+    new_source = user_mc.mediaCreate([sourceToCreate])
     # now we need to update the collections separately, because they are tags on the media source
     # source = user_mc.media(new_source.media_id)
     logger.info("~~~~~~~~~~~~~~~~~~~")
