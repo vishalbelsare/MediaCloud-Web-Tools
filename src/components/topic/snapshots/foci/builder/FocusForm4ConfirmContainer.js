@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, reset } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import composeIntlForm from '../../../../common/IntlForm';
@@ -28,7 +28,7 @@ const localMessages = {
 };
 
 const FocusForm4ConfirmContainer = (props) => {
-  const { topicId, formValues, initialValues, handlePreviousStep, handleSubmit, finishStep } = props;
+  const { topicId, formValues, initialValues, handlePreviousStep, handleSubmit, finishStep, submitting } = props;
   const { formatMessage } = props.intl;
   let content = null;
   switch (formValues.focalTechnique) {
@@ -74,7 +74,12 @@ const FocusForm4ConfirmContainer = (props) => {
             <br /><br />
             <AppButton flat label={formatMessage(messages.previous)} onClick={handlePreviousStep} />
             &nbsp; &nbsp;
-            <AppButton primary label={formatMessage(localMessages.addAnotherFocus)} type="submit" />
+            <AppButton
+              disabled={submitting}
+              primary
+              label={formatMessage(localMessages.addAnotherFocus)}
+              type="submit"
+            />
           </Col>
         </Row>
       </Grid>
@@ -89,6 +94,7 @@ FocusForm4ConfirmContainer.propTypes = {
   // form context
   intl: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func.isRequired,
+  submitting: React.PropTypes.bool,
   // from state
   formValues: React.PropTypes.object.isRequired,
   // from dispatch
@@ -128,6 +134,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
               dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
               dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+              dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
             });
         });
     } else {
@@ -138,6 +145,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
           dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
           dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+          dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
         });
     }
   },
