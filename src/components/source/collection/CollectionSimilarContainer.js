@@ -16,25 +16,17 @@ const localMessages = {
   },
 };
 
-class CollectionSimilarContainer extends React.Component {
-  downloadCsv = () => {
-    const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/similar/arewedoingthis.csv`;
-    window.location = url;
-  }
-  render() {
-    const { similarCollections, intl, helpButton } = this.props;
-    const { formatMessage } = intl;
-    return (
-      <CollectionList
-        title={formatMessage(localMessages.similarCollectionsTitle)}
-        collections={similarCollections}
-        helpButton={helpButton}
-        onDownload={this.downloadCsv}
-      />
-    );
-  }
-}
+const CollectionSimilarContainer = (props) => {
+  const { similarCollections, helpButton } = props;
+  const { formatMessage } = props.intl;
+  return (
+    <CollectionList
+      title={formatMessage(localMessages.similarCollectionsTitle)}
+      collections={similarCollections}
+      helpButton={helpButton}
+    />
+  );
+};
 
 CollectionSimilarContainer.propTypes = {
   // from state
