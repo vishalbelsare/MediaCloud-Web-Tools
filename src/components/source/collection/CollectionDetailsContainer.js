@@ -104,15 +104,11 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={6} xs={12}>
-            <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
+            <SourceList collectionId={collection.tags_id} sources={collection.media} />
           </Col>
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} xs={12}>
-            <SourceList collectionId={collection.tags_id} sources={collection.media} />
+            <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
           </Col>
         </Row>
       </Grid>

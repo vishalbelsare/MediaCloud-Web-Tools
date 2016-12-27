@@ -9,10 +9,10 @@ import CollectionList from '../../common/CollectionList';
 const localMessages = {
   similarCollectionsTitle: { id: 'collections.similar.title', defaultMessage: 'Similar Collections' },
   helpTitle: { id: 'collection.summary.similar.help.text.title',
-    defaultMessage: '<p>This list of collections has similar collections of sources.</p>',
+    defaultMessage: 'Similar Collections',
   },
   helpText: { id: 'collection.summary.similar.help.text',
-    defaultMessage: 'Click on a chip to view the details of the similar collection.</p>',
+    defaultMessage: 'Here is a list of similar collections, based on how many sources they have in common. This can be a great way to discover other collecitons you might want to be using. Click one to explore it.',
   },
 };
 
@@ -23,12 +23,14 @@ class CollectionSimilarContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { similarCollections, intl } = this.props;
+    const { similarCollections, intl, helpButton } = this.props;
     const { formatMessage } = intl;
     return (
       <CollectionList
         title={formatMessage(localMessages.similarCollectionsTitle)}
         collections={similarCollections}
+        helpButton={helpButton}
+        onDownload={this.downloadCsv}
       />
     );
   }
