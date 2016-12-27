@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import PermissionForm from './PermissionForm';
 import { fetchPermissionsList, updatePermission } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import { updateFeedback } from '../../../actions/appActions';
 import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const localMessages = {
@@ -13,6 +14,7 @@ const localMessages = {
   existingTitle: { id: 'topic.permissions.existing.title', defaultMessage: 'Current Permissions' },
   existingIntro: { id: 'topic.permissions.existing.intro', defaultMessage: 'Here is a list of the current users and what they are allowed to do.' },
   addTitle: { id: 'topic.permissions.add', defaultMessage: 'Add Someone to this Topic' },
+  invalidEmail: { id: 'topic.permissions.email.invalid', defaultMessage: '⚠️ We don\'t recognize that email!' },
 };
 
 const TopicPermissionsContainer = (props) => {
@@ -74,7 +76,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleUpdatePermission: (values) => {
     // save and then update the list of existing permissions
     dispatch(updatePermission(ownProps.topicId, values.email, values.permission))
-      .then(() => dispatch(fetchPermissionsList(ownProps.topicId)));
+      .then((response) => {
+        if (response.success === 0) {
+          dispatch(updateFeedback({
+            open: true,
+            message: ownProps.intl.formatMessage(localMessages.invalidEmail),
+          }));
+        } else {
+          dispatch(fetchPermissionsList(ownProps.topicId));
+        }
+      });
   },
   handleDelete: (email) => {
     dispatch(updatePermission(ownProps.topicId, email, PERMISSION_TOPIC_NONE))

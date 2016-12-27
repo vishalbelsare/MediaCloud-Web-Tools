@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import logging
 from flask import jsonify, request
 import flask_login
+from mediacloud.error import MCException
 
 from server import app
 from server.util.request import form_fields_required, json_error_response, api_error_handler
@@ -26,5 +28,10 @@ def topic_update_permission(topics_id):
     if permission not in ['read', 'write', 'admin', 'none']:
         return json_error_response('Invalid permission value')
     user_mc = user_mediacloud_client()
-    results = user_mc.topicPermissionsUpdate(topics_id, email, permission)
-    return jsonify(results)
+    try:
+        results = user_mc.topicPermissionsUpdate(topics_id, email, permission)
+    except MCException as e:
+        # show a nice error if they type the email wrong
+        if 'Unknown email' in e.message:
+            return jsonify({'success': 0, 'results': e.message})
+    return jsonify({'success': 1, 'results': results})

@@ -73,7 +73,6 @@ PermissionForm.propTypes = {
   initialValues: React.PropTypes.object,
   // from form helper
   handleSubmit: React.PropTypes.func,
-  fields: React.PropTypes.array.isRequired,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
   // from parent
