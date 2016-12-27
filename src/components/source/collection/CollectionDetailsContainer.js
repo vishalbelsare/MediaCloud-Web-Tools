@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import Title from 'react-title-component';
 import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
+import Lock from 'material-ui/svg-icons/action/lock';
+import Unlock from 'material-ui/svg-icons/action/lock-open';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
@@ -15,6 +17,7 @@ import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import messages from '../../../resources/messages';
 
+
 const localMessages = {
   searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
   collectionDetailsTitle: { id: 'collection.details.title', defaultMessage: 'Collection: {name}' },
@@ -23,6 +26,10 @@ const localMessages = {
   sourceTableIntro: { id: 'collection.details.sources.intro',
     defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
   },
+  collectionThis: { id: 'collection.details.this', defaultMessage: 'This collection' },
+  collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'is {shows, plural,\n =0 {not} \n} static.' },
+  collectionShowOnMedia: { id: 'collection.details.showOnMedia', defaultMessage: '{shows, plural,\n =0 {does not show}\n =1 {shows}\n} up on media.' },
+  collectionShowOnStories: { id: 'collection.details.showOnStories', defaultMessage: '{shows, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
 };
 
 class CollectionDetailsContainer extends React.Component {
@@ -54,6 +61,7 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
+    const lockIcon = (collection.is_static === 1) ? <Lock /> : <Unlock />;
     return (
       <Grid className="details collection-details">
         <Title render={titleHandler} />
@@ -62,10 +70,21 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">ID #{collection.id} {publicMessage} {editMessage}</small>
+              <small className="subtitle">ID #{collection.id} {publicMessage} {editMessage} {lockIcon} </small>
             </h1>
             <p><b>{collection.description}</b></p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+          </Col>
+          <Col lg={4} />
+        </Row>
+        <Row>
+          <Col lg={8}>
+            <FormattedMessage {...localMessages.collectionThis} />
+            <ul>
+              <li><FormattedMessage {...localMessages.collectionIsStatic} values={{ shows: collection.is_static }} /></li>
+              <li><FormattedMessage {...localMessages.collectionShowOnMedia} values={{ shows: collection.show_on_media }} /></li>
+              <li><FormattedMessage {...localMessages.collectionShowOnStories} values={{ shows: collection.show_on_stories }} /></li>
+            </ul>
           </Col>
           <Col lg={4} />
         </Row>
