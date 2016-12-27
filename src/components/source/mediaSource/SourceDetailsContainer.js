@@ -32,6 +32,7 @@ const localMessages = {
   gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in red</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
   metadataLabel: { id: 'source.basicInfo.metadata', defaultMessage: 'Metadata' },
   metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
+  metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
 
 };
 
@@ -59,6 +60,18 @@ class SourceDetailsContainer extends React.Component {
         </Link>
       </span>
     );
+    let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />
+;
+    if (metadata.length > 0) {
+      metadataContent = (
+        <ul>{ metadata.map(item =>
+          <li>
+            <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
+          </li>
+          )}
+        </ul>
+      );
+    }
     return (
       <Grid className="details source-details">
         <Title render={titleHandler} />
@@ -106,17 +119,6 @@ class SourceDetailsContainer extends React.Component {
             <HealthBadge isHealthy={source.health.is_healthy === 1} />
           </Col>
         </Row>
-        <DataCard>
-          <h2>
-            <FormattedMessage {...localMessages.metadataLabel} />
-          </h2>
-          <ul>{ metadata.map(item =>
-            <li>
-              <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
-            </li>
-          )}
-          </ul>
-        </DataCard>
         <Row>
           <Col lg={6} xs={12}>
             <SourceTopWordsContainer source={source} />
@@ -141,7 +143,14 @@ class SourceDetailsContainer extends React.Component {
               collections={collections}
             />
           </Col>
-          <Col lg={6} md={6} sm={12} />
+          <Col lg={6} md={6} sm={12} >
+            <DataCard>
+              <h2>
+                <FormattedMessage {...localMessages.metadataLabel} />
+              </h2>
+              {metadataContent}
+            </DataCard>
+          </Col>
         </Row>
       </Grid>
     );
