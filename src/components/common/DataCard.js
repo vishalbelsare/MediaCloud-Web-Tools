@@ -10,7 +10,7 @@ const DataCard = (props) => {
   const disabledClass = (disabled === true) ? 'disabled' : '';
   const inlineClass = (inline === true) ? 'inline' : '';
   const rootClasses = `${unborderedClass} ${disabledClass}`;
-  const classes = `datacard ${rootClasses} ${className} ${inlineClass}`;
+  const classes = `datacard ${rootClasses || ''} ${className || ''} ${inlineClass || ''}`;
   return (
     <div className={classes}>
       {children}

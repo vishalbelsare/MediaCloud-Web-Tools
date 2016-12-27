@@ -5,11 +5,9 @@ import DataCard from '../DataCard';
 
 const Stat = props => (
   <Col lg={4}>
-    <DataCard>
-      <div className="stat">
-        <small><FormattedMessage {...props.message} /></small>
-        <em>{props.data}</em>
-      </div>
+    <DataCard className="stat">
+      <small><FormattedMessage {...props.message} /></small>
+      <em>{props.data}</em>
     </DataCard>
   </Col>
 );
