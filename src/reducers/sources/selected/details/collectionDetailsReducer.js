@@ -4,6 +4,7 @@ import collectionTopWords from './collectionTopWords';
 import collectionSentenceCount from './collectionSentenceCount';
 import collectionGeoTag from './collectionGeoTag';
 import collectionSourceSentenceCounts from './collectionSourceSentenceCounts';
+import collectionSimilar from './collectionSimilar';
 // import sentenceCount from './sentenceCount';
 
 const collectionDetailsReducer = combineReducers({
@@ -12,6 +13,7 @@ const collectionDetailsReducer = combineReducers({
   collectionSentenceCount,
   collectionGeoTag,
   collectionSourceSentenceCounts,
+  collectionSimilar,
 });
 
 export default collectionDetailsReducer;

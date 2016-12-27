@@ -77,6 +77,10 @@ export function collectionWordCount(id) {
   return createApiPromise(`api/collections/${id}/words`);
 }
 
+export function similarCollections(id) {
+  return createApiPromise(`api/collections/${id}/similarCollections`);
+}
+
 export function collectionSourceStoryCounts(id) {
   return createApiPromise(`api/collections/${id}/sources/sentences/count`);
 }

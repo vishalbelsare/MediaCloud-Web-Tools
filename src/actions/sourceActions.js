@@ -44,6 +44,7 @@ export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTIO
 export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
 export const FETCH_SOURCE_FEEDS = 'FETCH_SOURCE_FEEDS';
 export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
+export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
 
 export const select = createAction(SELECT, id => id);
 
@@ -112,4 +113,6 @@ export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_
 export const fetchSourceFeeds = createAsyncAction(FETCH_SOURCE_FEEDS, api.sourceFeeds, id => id);
 
 export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource, props => props);
+
+export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIONS, api.similarCollections, id => id);
 

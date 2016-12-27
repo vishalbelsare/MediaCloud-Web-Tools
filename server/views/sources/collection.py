@@ -36,6 +36,7 @@ def _cached_public_collection_list(user_mc_key, tag_sets_id):
         'collections': collection_list
     }
 
+# seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
 @arguments_required('coll[]')
 @flask_login.login_required
@@ -176,6 +177,16 @@ def collection_words(collection_id):
 @api_error_handler
 def collection_wordcount_csv(collection_id):
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
+
+@app.route('/api/collections/<collection_id>/similarCollections', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def similarCollections(collection_id):
+    info = {}
+    info['similarCollections'] = mc.tagList(similar_tags_id=collection_id)
+    return jsonify({'results':info})
+  
+
 
 @app.route('/api/collections/create', methods=['POST'])
 @form_fields_required('name', 'description')
