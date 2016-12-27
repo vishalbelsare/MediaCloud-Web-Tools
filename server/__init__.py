@@ -14,6 +14,7 @@ from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
 import mediacloud
+from mediameter.cliff import Cliff
 
 from server.database import AppDatabase
 
@@ -56,6 +57,9 @@ else:
 # Connect to MediaCloud
 mc = mediacloud.api.AdminMediaCloud(settings.get('mediacloud', 'api_key'))
 logger.info("Connected to mediacloud")
+
+# Connect to CLIFF
+cliff = Cliff(settings.get('cliff', 'host'), settings.get('cliff', 'port'))
 
 # Connect to the app's mongo DB
 db_host = settings.get('database', 'host')

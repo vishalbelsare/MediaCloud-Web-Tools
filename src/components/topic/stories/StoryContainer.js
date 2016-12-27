@@ -18,6 +18,7 @@ import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import StoryDetails from './StoryDetails';
+import StoryPlaces from './StoryPlaces';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -120,6 +121,9 @@ class StoryContainer extends React.Component {
             </Col>
             <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
+            </Col>
+            <Col lg={6}>
+              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === 1011)} />
             </Col>
           </Row>
         </Grid>

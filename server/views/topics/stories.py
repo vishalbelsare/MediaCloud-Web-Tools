@@ -3,13 +3,16 @@ import json
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, cliff
+from server.cache import cache
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
 
 logger = logging.getLogger(__name__)
+
+GEONAMES_TAG_SET_ID = 1011
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 @flask_login.login_required
@@ -21,7 +24,15 @@ def story(topics_id, stories_id):
     for k in story_info.keys():
         if k not in story_topic_info.keys():
             story_topic_info[k] = story_info[k]
+    for tag in story_info['story_tags']:
+        if tag['tag_sets_id'] == GEONAMES_TAG_SET_ID:
+            geonames_id = int(tag['tag'][9:])
+            tag['geoname'] = _cached_geoname(geonames_id)
     return jsonify(story_topic_info)
+
+@cache
+def _cached_geoname(geonames_id):
+    return cliff.geonamesLookup(geonames_id)
 
 @app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
 @flask_login.login_required

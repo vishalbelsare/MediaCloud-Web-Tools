@@ -4,6 +4,7 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const TAG_SET_DATE_GUESS_METHOD = 508;
 const TAG_SET_EXTRACTOR_VERSION = 1354;
+const TAG_SET_GEOCODER_VERSION = 1937;
 
 // returns undefined if it is not found
 function tagWithTagSetsId(tags, tagSetsId) {
@@ -21,6 +22,7 @@ const info = createAsyncReducer({
     publishDateObj: moment(payload.publish_date).toDate(),
     dateGuessMethod: tagWithTagSetsId(payload.story_tags, TAG_SET_DATE_GUESS_METHOD),
     extractorVersion: tagWithTagSetsId(payload.story_tags, TAG_SET_EXTRACTOR_VERSION),
+    geocoderVersion: tagWithTagSetsId(payload.story_tags, TAG_SET_GEOCODER_VERSION),
   }),
   [SELECT_STORY]: payload => ({ id: payload }),
 });

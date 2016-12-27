@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
 
@@ -6,8 +7,9 @@ const localMessages = {
   title: { id: 'story.details.title',
     defaultMessage: 'About this Story',
   },
-  publisher: { id: 'story.details.publisher', defaultMessage: '<b>Published by</b>: <a href="{url}">{name}</a>' },
+  publisher: { id: 'story.details.publisher', defaultMessage: '<b>Published by</b>: ' },
   extractorVersion: { id: 'story.details.extractorVersion', defaultMessage: '<b>Extractor Version</b>: {version}' },
+  geocoderVersion: { id: 'story.details.geocoderVersion', defaultMessage: '<b>Geocoder Version</b>: {version}' },
   dateGuessMethod: { id: 'story.details.dateGuess', defaultMessage: '<b>Date Guessed From</b>: {method}' },
   apSyndicated: { id: 'story.details.apSyndicated', defaultMessage: '<b>AP Story?</b> {apSyndicated}' },
   wordCount: { id: 'story.details.wordCount', defaultMessage: '<b>Word Count</b>: {wordCount}' },
@@ -24,15 +26,19 @@ const StoryDetails = (props) => {
       </h2>
       <ul>
         <li>
-          <FormattedHTMLMessage
-            {...localMessages.publisher}
-            values={{ url: story.media_url, name: story.media_name }}
-          />
+          <FormattedHTMLMessage {...localMessages.publisher} />
+          <Link to={`/topics/${props.topicId}/media/${story.media_id}`}>{story.media_name}</Link>
         </li>
         <li>
           <FormattedHTMLMessage
             {...localMessages.extractorVersion}
             values={{ version: story.extractorVersion || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.geocoderVersion}
+            values={{ version: story.geocoderVersion || formatMessage(localMessages.unknown) }}
           />
         </li>
         <li>
