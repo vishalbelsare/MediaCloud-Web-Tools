@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-import { TAG_SET_PUBLICATION_COUNTRY } from '../../../../lib/sources';
+import { TAG_SET_PUBLICATION_COUNTRY } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },

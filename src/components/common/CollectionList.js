@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import CollectionIcon from './icons/CollectionIcon';
-import { isCollectionTagSet } from '../../lib/sources';
+import { isCollectionTagSet } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
 

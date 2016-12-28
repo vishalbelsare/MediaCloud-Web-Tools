@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
-import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/sources';
+import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },

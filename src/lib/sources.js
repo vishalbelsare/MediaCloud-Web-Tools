@@ -1,22 +1,5 @@
 import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
 
-// these are the tag sets that hold collections we want to show to the user
-export const TAGS_SET_MC_ID = 5;
-export const TAGS_SET_EMM_ID = 556;
-export const TAGS_SET_GV_ID = 597;
-const VALID_COLLECTION_IDS = [TAGS_SET_EMM_ID, TAGS_SET_GV_ID, TAGS_SET_MC_ID];
-
-export const TAG_SET_PUBLICATION_COUNTRY = 1935;
-const VALID_METADATA_IDS = [TAG_SET_PUBLICATION_COUNTRY];
-
-export function isMetaDataTagSet(metadataTagSetsId) {
-  return VALID_METADATA_IDS.includes(metadataTagSetsId);
-}
-
-export function isCollectionTagSet(tagSetsId) {
-  return VALID_COLLECTION_IDS.includes(tagSetsId);
-}
-
 export function sourceList() {
   return createApiPromise('api/sources/all');
 }

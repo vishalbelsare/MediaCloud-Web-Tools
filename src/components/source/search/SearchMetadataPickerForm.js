@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import AppButton from '../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/sources';
+import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
 
 const localMessages = {
   searchSuggestion: { id: 'search.advanced.suggestion', defaultMessage: 'Search by name of a source or collection' },

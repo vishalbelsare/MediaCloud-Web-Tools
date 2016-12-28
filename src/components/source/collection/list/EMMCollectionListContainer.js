@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
 import CollectionList from './CollectionList';
-import { TAGS_SET_EMM_ID } from '../../../../lib/sources';
+import { TAGS_SET_EMM_ID } from '../../../../lib/tagUtil';
 
 const EMMCollectionListContainer = (props) => {
   const { name, description, collections } = props;

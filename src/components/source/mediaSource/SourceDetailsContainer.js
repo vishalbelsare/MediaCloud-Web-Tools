@@ -13,7 +13,7 @@ import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
 import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
-import { isMetaDataTagSet } from '../../../lib/sources';
+import { isMetaDataTagSet } from '../../../lib/tagUtil';
 
 
 const localMessages = {

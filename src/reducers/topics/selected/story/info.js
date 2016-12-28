@@ -1,10 +1,7 @@
 import moment from 'moment';
 import { FETCH_STORY, SELECT_STORY } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-
-const TAG_SET_DATE_GUESS_METHOD = 508;
-const TAG_SET_EXTRACTOR_VERSION = 1354;
-const TAG_SET_GEOCODER_VERSION = 1937;
+import { TAG_SET_DATE_GUESS_METHOD, TAG_SET_EXTRACTOR_VERSION, TAG_SET_GEOCODER_VERSION } from '../../../../lib/tagUtil';
 
 // returns undefined if it is not found
 function tagWithTagSetsId(tags, tagSetsId) {
