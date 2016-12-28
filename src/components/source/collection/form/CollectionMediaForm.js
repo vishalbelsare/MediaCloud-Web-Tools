@@ -1,9 +1,11 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
-import { FieldArray, Field, reduxForm } from 'redux-form';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FieldArray, Field, reduxForm, formValueSelector } from 'redux-form';
+import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import { updateFeedback } from '../../../../actions/appActions';
 import composeIntlForm from '../../../common/IntlForm';
 import ComingSoon from '../../../common/ComingSoon';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
@@ -12,15 +14,19 @@ import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
 import CollectionCopyConfirmer from './CollectionCopyConfirmer';
 
+const formSelector = formValueSelector('collectionForm');
+
 const localMessages = {
   title: { id: 'collection.media.title', defaultMessage: 'Add Media Sources' },
   sourcesToInclude: { id: 'collection.media.sources', defaultMessage: 'Sources To Include' },
-
   tabSource: { id: 'collection.media.addSource', defaultMessage: 'Add Existing Source' },
   tabCollection: { id: 'collection.media.addCollection', defaultMessage: 'Copy From Collection' },
   tabUpload: { id: 'collection.media.addSpreadsheet', defaultMessage: 'Upload a Spreadsheet' },
   tabUrls: { id: 'collection.media.addURLs', defaultMessage: 'Add URLs Manually' },
   sourceUrlHint: { id: 'collection.media.addURLs.hint', defaultMessage: 'Type in the URLs of each media source, one per line.' },
+  sourcesAddedFeedback: { id: 'collection.media.sources.addedFeedback',
+    defaultMessage: 'Added {sourceCount, plural,\n =0 {nothing}\n =1 {one source}\n other {# sources}}',
+  },
 };
 
 class SourceSelectionRenderer extends React.Component {
@@ -36,14 +42,27 @@ class SourceSelectionRenderer extends React.Component {
   }
 
   copyCollection = (collection) => {
-    const { fields } = this.props;
-    collection.media.forEach(m => fields.unshift(m));
+    this.addSources(collection.media);
+    this.setState({ collectionId: null });
+  }
+
+  // make sure we don't add sources that are already on the list
+  addSources = (sources) => {
+    const { fields, currentSources, onSourcesAdded } = this.props;
+    const existingSourceIds = currentSources ? currentSources.map(source => source.media_id) : [];
+    let countAdded = 0;
+    sources.forEach((m) => {
+      if (!existingSourceIds.includes(m.id)) {
+        fields.unshift(m);
+        countAdded += 1;
+      }
+    });
+    onSourcesAdded(countAdded);
   }
 
   mergeSourcesFromCollectionsOrSearch = (searchResults) => {
-    const { fields } = this.props;
     if (searchResults) {
-      searchResults.forEach(m => fields.unshift(m));
+      this.addSources(searchResults);
     }
   }
   render() {
@@ -74,7 +93,7 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
                   <SourceSearchContainer
                     searchCollections={false}
-                    onMediaSourceSelected={item => fields.unshift(item)}
+                    onMediaSourceSelected={item => this.addSources([item])}
                   />
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
@@ -152,14 +171,23 @@ class SourceSelectionRenderer extends React.Component {
 }
 
 SourceSelectionRenderer.propTypes = {
+  // from form heper
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
   initialValues: React.PropTypes.object,
+  // from parent
+  currentSources: React.PropTypes.array,
+  onSourcesAdded: React.PropTypes.func.isRequired,
 };
 
-const CollectionMediaForm = () => (
+const CollectionMediaForm = props => (
   <div>
-    <FieldArray name="sources" component={SourceSelectionRenderer} />
+    <FieldArray
+      name="sources"
+      component={SourceSelectionRenderer}
+      currentSources={props.currentSources}
+      onSourcesAdded={props.handleSourceAdded}
+    />
   </div>
 );
 
@@ -171,11 +199,25 @@ CollectionMediaForm.propTypes = {
   initialValues: React.PropTypes.object,
   // from form helper
   // from parent
+  // from state
+  currentSources: React.PropTypes.array,
+  // from dispatch
+  handleSourceAdded: React.PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  currentSources: formSelector(state, 'sources'),
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleSourceAdded: (sourceCount) => {
+    const message = ownProps.intl.formatMessage(localMessages.sourcesAddedFeedback, { sourceCount });
+    dispatch(updateFeedback({ open: true, message }));
+  },
+});
 
 function validate() {
   const errors = {};
-  errors.error = "don't know yet";
   return errors;
 }
 
@@ -185,9 +227,9 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    composeIntlForm(
-      reduxForm(reduxFormConfig)(
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps)(
         CollectionMediaForm
       )
     )
