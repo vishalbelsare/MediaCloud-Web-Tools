@@ -21,6 +21,7 @@ const SourceMetadataForm = () => (
           id={TAG_SET_PUBLICATION_COUNTRY}
           name={'publicationCountry'}
           form="sourceForm"
+          autocomplete
         />
       </Col>
     </Row>

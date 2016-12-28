@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
+import AutoComplete from 'material-ui/AutoComplete';
 
 /**
  * Helpful compositional wrapper for forms that want to use Material-UI, react-intl and redux-form.
@@ -52,7 +53,6 @@ function composeIntlForm(Component) {
 
     renderSelectField = ({ input, name, meta: { touched, error }, children, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
-      // console.log(`selectValue=${input.value}`);
       return (
         <SelectField
           name={name}
@@ -66,11 +66,30 @@ function composeIntlForm(Component) {
       );
     }
 
+    renderAutoComplete = ({ input, meta: { touched, error }, onNewRequest: onNewRequestFunc, ...custom }) => {
+      const intlCustom = this.intlCustomProps(custom);
+      return (
+        <AutoComplete
+          {...input}
+          errorText={touched && (error ? this.intlIfObject(error) : null)}
+          onNewRequest={(currentValue) => {
+            input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
+            if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
+              onNewRequestFunc(currentValue);
+            }
+          }}
+          {...intlCustom}
+          filter={AutoComplete.fuzzyFilter}
+        />
+      );
+    }
+
     render() {
       const helpers = {
         renderTextField: this.renderTextField,
         renderCheckbox: this.renderCheckbox,
         renderSelectField: this.renderSelectField,
+        renderAutoComplete: this.renderAutoComplete,
       };
       return (
         <Component {...this.props} {...helpers} />
