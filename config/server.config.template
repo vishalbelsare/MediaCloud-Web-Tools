@@ -20,3 +20,7 @@ port = 22
 use_ssl = 1
 username = me_the_user
 password = my_passowrd
+
+[cliff]
+host = http://www.localhost
+port = 8080
