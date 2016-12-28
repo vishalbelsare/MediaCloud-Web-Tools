@@ -3,6 +3,8 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
+import LoadingSpinner from '../../common/LoadingSpinner';
+import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
 const MAX_SUGGESTION_CHARS = 40;
@@ -92,10 +94,14 @@ class SourceSearchContainer extends React.Component {
   }
 
   render() {
-    const resultsAsComponents = this.resetIfRequested();
+    const { sourceFetchStatus, collectionFetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
+    const resultsAsComponents = this.resetIfRequested();
+    const isFetching = (sourceFetchStatus === FETCH_ONGOING) || (collectionFetchStatus === FETCH_ONGOING);
+    const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="source-search">
+        <div className="fetching">{fetchingStatus}</div>
         <AutoComplete
           hintText={formatMessage(localMessages.searchHint)}
           fullWidth
@@ -122,6 +128,8 @@ SourceSearchContainer.propTypes = {
   onCollectionSelected: React.PropTypes.func,
   onAdvancedSearchSelected: React.PropTypes.func,
   // from state
+  sourceFetchStatus: React.PropTypes.array.isRequired,
+  collectionFetchStatus: React.PropTypes.array.isRequired,
   sourceResults: React.PropTypes.array.isRequired,
   collectionResults: React.PropTypes.array.isRequired,
   // from dispatch
@@ -129,6 +137,8 @@ SourceSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  sourceFetchStatus: state.sources.sourceSearch.fetchStatus,
+  collectionFetchStatus: state.sources.collectionSearch.fetchStatus,
   sourceResults: state.sources.sourceSearch.list,
   collectionResults: state.sources.collectionSearch.list,
 });
