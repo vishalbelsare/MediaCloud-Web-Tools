@@ -25,12 +25,13 @@ class CollectionCopyConfirmer extends Component {
     const { collection, onConfirm, onCancel } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <div>
-        <FormattedMessage
-          {...localMessages.confirm}
-          values={{ name: collection.label, count: collection.media.length }}
-        />
-        <br />
+      <div className="collection-copy-confirm">
+        <p>
+          <FormattedMessage
+            {...localMessages.confirm}
+            values={{ name: collection.label, count: collection.media.length }}
+          />
+        </p>
         <AppButton
           label={formatMessage(messages.cancel)}
           onClick={onCancel}
