@@ -43,6 +43,7 @@ export function createAsyncAction(type, fetcher) {
     payload: {
       promise: fetcher(...args),
       args,  // tack on arguments pass in so we can access them directly in a reducer
+      uid: Math.random(), // track this request with a random id, to avoid race conditions in reducer
     },
   });
 }
@@ -105,6 +106,7 @@ export function createAsyncReducer(handlers) {
   const initialState = {
     fetchStatus: fetchConstants.FETCH_INVALID,  // invalid, succeeded, or failed
     lastFetchSuccess: null, // null or a Date object of the last successful fetch
+    fetchUid: null, // set this to a random id so we know which request is returning async, to avoid race conditions
     ...desiredInitialState,
   };
   // set up any async reducer handlers the user passed in
@@ -127,28 +129,42 @@ export function createAsyncReducer(handlers) {
   });
   // now alter the state appropriately
   return (state = initialState, action) => {
+    // only do something if this hasn't been superceeded by another aysnc request before this one returned
+    let isValid = true;
+    if (action.meta) {
+      isValid = action.meta.uid === state.fetchUid;
+    }
     switch (action.type) {
       case handlers.action:
         return Object.assign({}, state, {
           ...state,
           fetchStatus: fetchConstants.FETCH_ONGOING,
           lastFetchSuccess: null,
+          fetchUid: action.payload.uid,
           ...reducers.handleFetch(action.payload, state),
         });
       case resolve(handlers.action):
-        return Object.assign({}, state, {
-          ...state,
-          fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-          lastFetchSuccess: new Date(),
-          ...reducers.handleSuccess(action.payload, state),
-        });
+        if (isValid) {
+          return Object.assign({}, state, {
+            ...state,
+            fetchStatus: fetchConstants.FETCH_SUCCEEDED,
+            lastFetchSuccess: new Date(),
+            ...reducers.handleSuccess(action.payload, state),
+          });
+        }
+        // another request happened after this one, so don't do anything!
+        return state;
       case reject(handlers.action):
-        return Object.assign({}, state, {
-          ...state,
-          fetchStatus: fetchConstants.FETCH_FAILED,
-          lastFetchSuccess: null,
-          ...reducers.handleFailure(action.payload, state),
-        });
+        if (isValid) {
+          return Object.assign({}, state, {
+            ...state,
+            fetchStatus: fetchConstants.FETCH_FAILED,
+            lastFetchSuccess: null,
+            ...reducers.handleFailure(action.payload, state),
+          });
+        }
+        // another request happened after this one, so don't do anything!
+        return state;
       default:
         if (action.type in extraActionLookup) {
           return Object.assign({}, state, {
