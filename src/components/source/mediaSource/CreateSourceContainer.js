@@ -11,7 +11,8 @@ import SourceForm from './form/SourceForm';
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
   addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New Source' },
-  feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
+  feedback: { id: 'source.add.feedback.worked', defaultMessage: 'We saved your new source' },
+  saveFailed: { id: 'source.add.feedback.failed', defaultMessage: 'Sorry, your request failed for some reason' },
 };
 
 const CreateSourceContainer = (props) => {
@@ -48,28 +49,38 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
+    const metadataTagFormKeys = ['publicationCountry'];
     const infoToSave = {
       url: values.url,
       name: values.name,
       notes: values.notes,
-      // metadata save here
     };
-    if ('collections' in values) {
+    metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
+      if (key in values) {
+        infoToSave[key] = values[key];
+      }
+    });
+    if ('collections' in values) {  // the collections are a FieldArray on the form
       infoToSave['collections[]'] = values.collections.map(s => s.id);
     } else {
       infoToSave['collections[]'] = [];
     }
-    // try to save it
+    // save it
     dispatch(createSource(infoToSave))
       .then((result) => {
-        if (result.success === 1) {
+        if (result.errors.length === 0) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
-          dispatch(fetchSourceDetails(result.media_id))
+          const mediaId = result.media[0].media_id;
+          dispatch(fetchSourceDetails(mediaId))
             .then(() =>
-              dispatch(push(`/sources/${result.media_id}`))
+              dispatch(push(`/sources/${mediaId}`))
             );
+        } else {
+          // let them know it didn't work
+          const message = ownProps.intl.formatMessage(localMessages.saveFailed);
+          dispatch(updateFeedback({ open: true, message }));
         }
       });
   },
