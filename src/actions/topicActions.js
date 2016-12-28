@@ -54,6 +54,8 @@ export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
+export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
+export const FETCH_TOPIC_ENGLISH_STORY_COUNTS = 'FETCH_TOPIC_ENGLISH_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
 export const SAVE_TOPIC_DETAILS = 'SAVE_TOPIC_DETAILS';
@@ -100,6 +102,10 @@ export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.t
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);
 // pass in topic id, filters
 export const fetchTopicStoryCounts = createAsyncAction(FETCH_TOPIC_STORY_COUNTS, api.topicStoryCounts);
+// pass in topic id, filters
+export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);
+// pass in topic id, filters
+export const fetchTopicEnglishStoryCounts = createAsyncAction(FETCH_TOPIC_ENGLISH_STORY_COUNTS, api.topicEnglishStoryCounts);
 
 // pass in topicId, snapshotId, timespanId, sort, limit, linkId
 export const fetchTopicInfluentialMedia = createAsyncAction(FETCH_TOPIC_INFLUENTIAL_MEDIA, api.topicTopMedia);

@@ -136,6 +136,16 @@ export function topicStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 
+export function topicGeocodedStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/stories/geocoded-counts`, acceptedParams);
+}
+
+export function topicEnglishStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/stories/english-counts`, acceptedParams);
+}
+
 export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId']);
   return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);

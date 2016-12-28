@@ -42,7 +42,7 @@ class TopicSummaryContainer extends React.Component {
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
-              <TopicTimespanInfo timespan={timespan} />
+              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
               <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>

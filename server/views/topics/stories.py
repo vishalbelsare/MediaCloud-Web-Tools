@@ -13,6 +13,7 @@ from server.views.topics.apicache import topic_story_count, topic_story_list, to
 logger = logging.getLogger(__name__)
 
 GEONAMES_TAG_SET_ID = 1011
+CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 @flask_login.login_required
@@ -40,7 +41,25 @@ def _cached_geoname(geonames_id):
 def story_counts(topics_id):
     total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
     filtered = topic_story_count(user_mediacloud_key(), topics_id)  # force a count with just the query
-    return jsonify({'counts':{'filtered': filtered['count'], 'total': total['count']}})
+    return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
+
+@app.route('/api/topics/<topics_id>/stories/geocoded-counts', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def story_geocoded_counts(topics_id):
+    q = "tags_id_stories:"+str(CLIFF_CLAVIN_2_3_0_TAG_ID)
+    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
+    filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the filters
+    return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
+
+@app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def story_english_counts(topics_id):
+    q = "language:en"
+    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
+    filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the filters
+    return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
 @flask_login.login_required
