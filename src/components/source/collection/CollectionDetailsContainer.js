@@ -6,6 +6,7 @@ import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import Lock from 'material-ui/svg-icons/action/lock';
 import Unlock from 'material-ui/svg-icons/action/lock-open';
+import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
@@ -27,10 +28,10 @@ const localMessages = {
   sourceTableIntro: { id: 'collection.details.sources.intro',
     defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
   },
-  collectionThis: { id: 'collection.details.this', defaultMessage: 'This collection' },
-  collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'is {shows, plural,\n =0 {not} \n} static.' },
-  collectionShowOnMedia: { id: 'collection.details.showOnMedia', defaultMessage: '{shows, plural,\n =0 {does not show}\n =1 {shows}\n} up on media.' },
-  collectionShowOnStories: { id: 'collection.details.showOnStories', defaultMessage: '{shows, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
+  collectionIsOrIsnt: { id: 'collection.details.isOrIsnt', defaultMessage: 'This is a {shows, plural,\n =0 {dynamic collection; sources can be added and removed from it}\n =1 {static collection; the sources that are part of it will not change}\n}.' },
+  collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
+  collectionIsNotStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
+  collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =1 {shows}\n} up on media and {onStories, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
 };
 
 class CollectionDetailsContainer extends React.Component {
@@ -62,7 +63,7 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    const lockIcon = (collection.is_static === 1) ? <Lock /> : <Unlock />;
+    const lockIcon = (collection.is_static === 1) ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> : <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
     return (
       <Grid className="details collection-details">
         <Title render={titleHandler} />
@@ -71,21 +72,14 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">ID #{collection.id} {publicMessage} {editMessage} {lockIcon} </small>
+              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
             </h1>
             <p><b>{collection.description}</b></p>
+            <p>
+              <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
+              <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media, onStories: collection.show_on_stories }} /></li>
+            </p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
-          </Col>
-          <Col lg={4} />
-        </Row>
-        <Row>
-          <Col lg={8}>
-            <FormattedMessage {...localMessages.collectionThis} />
-            <ul>
-              <li><FormattedMessage {...localMessages.collectionIsStatic} values={{ shows: collection.is_static }} /></li>
-              <li><FormattedMessage {...localMessages.collectionShowOnMedia} values={{ shows: collection.show_on_media }} /></li>
-              <li><FormattedMessage {...localMessages.collectionShowOnStories} values={{ shows: collection.show_on_stories }} /></li>
-            </ul>
           </Col>
           <Col lg={4} />
         </Row>
