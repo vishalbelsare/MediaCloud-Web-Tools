@@ -2,7 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { reduxForm } from 'redux-form';
 // import { push } from 'react-router-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
@@ -22,26 +22,33 @@ const localMessages = {
 const SuggestSourceContainer = (props) => {
   const { initialValues, pristine, submitting, handleSubmit, handleSave } = props;
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
+  const titleHandler = formatMessage(localMessages.mainTitle);
   return (
-    <Grid>
+    <div>
       <Title render={titleHandler} />
-      <form className="source-suggestion-form" name="suggestionForm" onSubmit={handleSubmit(handleSave.bind(this))}>
-        <SourceSuggestionForm initialValues={initialValues} />
-        <SourceCollectionsForm form="suggestionForm" />
+      <Grid>
         <Row>
           <Col lg={12}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              type="submit"
-              label={formatMessage(localMessages.addButton)}
-              disabled={pristine || submitting}
-              primary
-            />
+            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
           </Col>
         </Row>
-      </form>
-    </Grid>
+        <form name="suggestionForm" onSubmit={handleSubmit(handleSave.bind(this))}>
+          <SourceSuggestionForm initialValues={initialValues} />
+          <SourceCollectionsForm form="suggestionForm" />
+          <Row>
+            <Col lg={12}>
+              <AppButton
+                style={{ marginTop: 30 }}
+                type="submit"
+                label={formatMessage(localMessages.addButton)}
+                disabled={pristine || submitting}
+                primary
+              />
+            </Col>
+          </Row>
+        </form>
+      </Grid>
+    </div>
   );
 };
 

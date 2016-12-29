@@ -17,9 +17,9 @@ const localMessages = {
 const SourceSuggestionForm = (props) => {
   const { renderTextField } = props;
   return (
-    <div className="form-section source-suggestion-form">
+    <div className="app-form">
       <Row>
-        <Col md={2}>
+        <Col md={3}>
           <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.urlLabel} />
           </span>
@@ -32,7 +32,7 @@ const SourceSuggestionForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md={2}>
+        <Col md={3}>
           <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.nameLabel} />
           </span>
@@ -45,7 +45,7 @@ const SourceSuggestionForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md={2}>
+        <Col md={3}>
           <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.feedUrlLabel} />
           </span>
@@ -58,12 +58,12 @@ const SourceSuggestionForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md={2}>
+        <Col md={3}>
           <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.reasonLabel} />
           </span>
         </Col>
-        <Col md={8}>
+        <Col md={7}>
           <Field
             name="reason"
             component={renderTextField}
