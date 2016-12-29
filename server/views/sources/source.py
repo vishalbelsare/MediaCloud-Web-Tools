@@ -198,17 +198,21 @@ def source_update(media_id):
     return jsonify(result)
 
 @app.route('/api/sources/suggestions/submit', methods=['POST'])
-@form_fields_required('url','feedurl')
+@form_fields_required('url')
 @flask_login.login_required
 @api_error_handler
 def source_suggest():
     user_mc = user_mediacloud_client()
     # name = request.form['name'] how do we get non-required fields without throwign an exception here?
     url = request.form['url']
-    feedurl = request.form['feedurl']
-    # notes = request.form['reason','']
-    #collection_ids = request.args.getlist('collections[]')
-    fakenew_suggestion = user_mc.media(1)
-    return jsonify(fakenew_suggestion)
+    feedurl = request.form['feedurl'] if 'feedurl' in request.form else None
+    name = request.form['name'] if 'name' in request.form else None
+    reason = request.form['reason'] if 'reason' in request.form else None
+    tag_ids_to_add = []
+    if len(request.form['collections[]']) > 0:
+        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+
+    new_suggestion = user_mc.mediaSuggest(url=url,name=name,feed_url=feedurl,reason=reason, collections=tag_ids_to_add)
+    return jsonify(new_suggestion)
 
 

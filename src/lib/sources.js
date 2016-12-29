@@ -103,7 +103,6 @@ export function sourceFeeds(id) {
 }
 
 export function suggestSource(params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reasons']);
-  // acceptedParams['collections[]'] = params.collections;
+  const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reason', 'collections[]']);
   return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);
 }

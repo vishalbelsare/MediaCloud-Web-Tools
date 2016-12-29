@@ -112,7 +112,7 @@ export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_
 
 export const fetchSourceFeeds = createAsyncAction(FETCH_SOURCE_FEEDS, api.sourceFeeds, id => id);
 
-export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource, props => props);
+export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource);
 
 export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIONS, api.similarCollections, id => id);
 

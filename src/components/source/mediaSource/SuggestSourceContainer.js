@@ -1,7 +1,7 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { reduxForm } from 'redux-form';
-import { push } from 'react-router-redux';
+// import { push } from 'react-router-redux';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -80,15 +80,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       name: values.name,
       feedurl: values.feedurl,
       reason: values.reason,
-      collections: values.collections ? values.collections.map(s => s.id) : [],
     };
-    // try to save it
+    if ('collections' in values) {  // the collections are a FieldArray on the form
+      infoToSave['collections[]'] = values.collections.map(s => s.id);
+    } else {
+      infoToSave['collections[]'] = [];
+    }// try to save it
     dispatch(suggestSource(infoToSave))
-      .then((results) => {
+      .then(() => {
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
         // TODO: redirect to new source detail page
-        dispatch(push(`/sources/${results.media_id}`));
+        // dispatch(push(`/sources/${results.media_id}`));
       });
   },
 });
