@@ -12,7 +12,7 @@ const SERIES_MARKER_THRESHOLD = 30;
 
 const localMessages = {
   chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
-  chartYAxisLabel: { id: 'chart.sentencesOverTime.yAxisLabel', defaultMessage: 'sentences / day' },
+  chartYAxisLabel: { id: 'chart.sentencesOverTime.yAxisLabel', defaultMessage: ' {count} sentences / day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },
@@ -24,7 +24,7 @@ const localMessages = {
 class AttentionOverTimeChart extends React.Component {
 
   getConfig() {
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     const config = {
       title: formatMessage(localMessages.chartTitle),
       chart: {
@@ -51,9 +51,16 @@ class AttentionOverTimeChart extends React.Component {
           year: '%Y',
         },
       },
+      tooltip: {
+        pointFormatter: function afmtxn() {
+          // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
+          const rounded = formatNumber(this.plotY, { style: 'decimal', format: { maximumFractionDigits: 2 } });
+          const val = formatMessage(localMessages.chartYAxisLabel, { count: rounded, name: this.name });
+          return val;
+        },
+      },
       yAxis: {
         min: 0,
-        title: formatMessage(localMessages.chartYAxisLabel),
       },
       exporting: {
       },
@@ -98,13 +105,9 @@ class AttentionOverTimeChart extends React.Component {
       // turning variable time unit into days
       const intervalMs = (dates[1] - dates[0]);
       const intervalDays = intervalMs / SECS_PER_DAY;
-      const maxCount = Math.max(...data.map(d => d.count));
-      const minCount = Math.min(...data.map(d => d.count));
-      // handle small sample size
-      const values = data.map(d => (((d.count - minCount) / (maxCount - minCount)) / intervalDays));
+      const values = data.map(d => (d.count / intervalDays));
       allSeries = [{
         id: 0,
-        name: formatMessage(localMessages.chartYAxisLabel),
         color: lineColor,
         data: values,
         pointStart: dates[0],
