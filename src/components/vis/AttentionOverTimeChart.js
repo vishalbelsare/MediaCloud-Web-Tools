@@ -98,7 +98,10 @@ class AttentionOverTimeChart extends React.Component {
       // turning variable time unit into days
       const intervalMs = (dates[1] - dates[0]);
       const intervalDays = intervalMs / SECS_PER_DAY;
-      const values = data.map(d => Math.round(d.count / intervalDays));
+      const maxCount = Math.max(...data.map(d => d.count));
+      const minCount = Math.min(...data.map(d => d.count));
+      // handle small sample size
+      const values = data.map(d => (((d.count - minCount) / (maxCount - minCount)) / intervalDays));
       allSeries = [{
         id: 0,
         name: formatMessage(localMessages.chartYAxisLabel),

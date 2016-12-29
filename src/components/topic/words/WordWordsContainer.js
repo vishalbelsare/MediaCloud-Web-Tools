@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleWordCloudClick: (word) => {
     const params = generateParamStr({ stem: word.stem, term: word.term });
-    let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
+    let url = `/topics/${ownProps.topicId}/words/${word.term}*?`;
     url += params;
     dispatch(push(url));
   },
