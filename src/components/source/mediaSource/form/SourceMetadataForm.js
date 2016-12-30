@@ -8,7 +8,7 @@ const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
 };
 
-const SourceMetadataForm = () => (
+const SourceMetadataForm = props => (
   <div className="form-section source-metadata-form">
     <Row>
       <Col lg={12} md={12} sm={12}>
@@ -22,6 +22,7 @@ const SourceMetadataForm = () => (
           name={'publicationCountry'}
           form="sourceForm"
           autocomplete
+          initialValues={props.initialValues}
         />
       </Col>
     </Row>
@@ -30,6 +31,7 @@ const SourceMetadataForm = () => (
 
 SourceMetadataForm.propTypes = {
   // from compositional chain
+  initialValues: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
 };
 

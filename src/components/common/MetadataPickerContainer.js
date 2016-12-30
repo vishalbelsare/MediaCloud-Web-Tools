@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
 import { fetchMetadataValues } from '../../actions/sourceActions';
@@ -14,7 +14,7 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete } = props;
+  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
@@ -28,8 +28,17 @@ const MetadataPickerContainer = (props) => {
       );
       break;
     case MODE_AUTOCOMPLETE:
+      // need to figure out autocomplete text to prepopulate here
+      let initialText = null;
+      if ((initialValues[name]) && (tags.length > 0)) {
+        const matchingItem = tags.find(t => t.tags_id === initialValues[name]);
+        if (matchingItem) {
+          initialText = matchingItem.label;
+        }
+      }
       content = (
         <Field
+          searchText={initialText}
           name={name}
           component={renderAutoComplete}
           hintText={formatMessage(localMessages.hintText, { label })}
@@ -81,10 +90,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   connect(mapStateToProps, mapDispatchToProps)(
     composeIntlForm(
-      reduxForm()(
-        composeAsyncContainer(
-          MetadataPickerContainer
-        )
+      composeAsyncContainer(
+        MetadataPickerContainer
       )
     )
   );
