@@ -2,26 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import TopicDetailsForm from './TopicDetailsForm';
+// import TopicDetailsForm from './TopicDetailsForm';
 import { saveTopicDetails, fetchTopicSummary } from '../../../actions/topicActions';
+import ComingSoon from '../../common/ComingSoon';
 
 const localMessages = {
   title: { id: 'topic.edit.title', defaultMessage: 'Details' },
 };
 
-const TopicEditContainer = props => (
+const TopicEditContainer = () => (
   <div className="topic-acl">
     <Row>
       <Col lg={12}>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <TopicDetailsForm
+        <ComingSoon />
+        {/* <TopicDetailsForm
           initialValues={{
             name: props.topic.name,
             description: props.topic.description,
             public: props.topic.public === 1,
           }}
           onSave={props.handleSave}
-        />
+        />*/}
       </Col>
     </Row>
   </div>
