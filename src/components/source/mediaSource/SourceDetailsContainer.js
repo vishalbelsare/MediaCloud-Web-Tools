@@ -25,7 +25,7 @@ const localMessages = {
   },
 
   feedInfo: { id: 'source.basicInfo.feeds',
-    defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}.' },
+    defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}. {feedListLink}.' },
   feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
@@ -33,14 +33,20 @@ const localMessages = {
   metadataLabel: { id: 'source.basicInfo.metadata', defaultMessage: 'Metadata' },
   metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
   metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
-
+  unknown: { id: 'source.basicInfo.health.unknown', defaultMessage: '(unknown)' },
 };
 
 class SourceDetailsContainer extends React.Component {
 
   searchOnDashboard = () => {
     const { source } = this.props;
-    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
+    let dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/`;
+    if (source.health) {
+      dashboardUrl += `["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/`;
+    } else {
+      dashboardUrl += '[""]/[""]/';
+    }
+    dashboardUrl += `[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
     window.open(dashboardUrl, '_blank');
   }
 
@@ -65,7 +71,7 @@ class SourceDetailsContainer extends React.Component {
     if (metadata.length > 0) {
       metadataContent = (
         <ul>{ metadata.map(item =>
-          <li>
+          <li key={`metadata-${item.label}`}>
             <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
           </li>
           )}
@@ -87,36 +93,43 @@ class SourceDetailsContainer extends React.Component {
               </small>
             </h1>
             <p>
-              <FormattedMessage {...localMessages.feedInfo} values={{ feedCount: source.feedCount }} />
-              <Link to={`/sources/${source.media_id}/feeds`} >
-                <FormattedMessage {...localMessages.feedLink} />
-              </Link>
+              <FormattedMessage
+                {...localMessages.feedInfo}
+                values={{
+                  feedCount: source.feedCount,
+                  feedListLink: (
+                    <Link to={`/sources/${source.media_id}/feeds`} >
+                      <FormattedMessage {...localMessages.feedLink} />
+                    </Link>
+                  ),
+                }}
+              />
               &nbsp;
               <FormattedMessage
                 {...localMessages.dateInfo}
                 values={{
-                  startDate: source.health.start_date.substring(0, 10),
-                  endDate: source.health.end_date.substring(0, 10),
+                  startDate: (source.health) ? source.health.start_date.substring(0, 10) : formatMessage(localMessages.unknown),
+                  endDate: (source.health) ? source.health.end_date.substring(0, 10) : formatMessage(localMessages.unknown),
                 }}
               />
               &nbsp;
               <FormattedMessage
                 {...localMessages.contentInfo}
                 values={{
-                  storyCount: formatNumber(source.health.num_stories_w),
-                  sentenceCount: formatNumber(source.health.num_sentences_w),
+                  storyCount: (source.health) ? formatNumber(source.health.num_stories_w) : formatMessage(localMessages.unknown),
+                  sentenceCount: (source.health) ? formatNumber(source.health.num_sentences_w) : formatMessage(localMessages.unknown),
                 }}
               />
               &nbsp;
               <FormattedHTMLMessage
                 {...localMessages.gapInfo}
-                values={{ gapCount: formatNumber(source.health.coverage_gaps) }}
+                values={{ gapCount: (source.health) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
               />
             </p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
           <Col lg={4} xs={12}>
-            <HealthBadge isHealthy={source.health.is_healthy === 1} />
+            <HealthBadge isHealthy={(source.health) ? source.health.is_healthy === 1 : true} />
           </Col>
         </Row>
         <Row>

@@ -1,7 +1,10 @@
 import logging
 from flask import request, jsonify
 import flask_login
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
+
 from server import app
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.cache import cache
@@ -11,7 +14,6 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.feeds import cached_feed, stream_feed_csv, source_feed_list
-
 from server.views.sources.geoutil import country_list
 
 logger = logging.getLogger(__name__)
@@ -60,7 +62,12 @@ def source_feed_csv(media_id):
 @cache
 def _cached_media_source_health(user_mc_key, media_id):
     user_mc = user_mediacloud_client()
-    return user_mc.mediaHealth(media_id)
+    results = None
+    try:
+        results = user_mc.mediaHealth(media_id)
+    except Exception as e:
+        logger.exception(e)
+    return results
 
 def _cached_media_source_details(user_mc_key, media_id, start_date_str=None):
     user_mc = user_mediacloud_client()
@@ -69,13 +76,24 @@ def _cached_media_source_details(user_mc_key, media_id, start_date_str=None):
     info['feedCount'] = len(user_mc.feedList(media_id=media_id, rows=100))
     return info
 
+def _safely_get_health_start_date(health):
+    '''
+    The health might be empty, so call this to default to 1 year ago if it is
+    '''
+    if health is None:  # maybe no health exists yet, go with one year ago
+        one_year_ago = datetime.now() - relativedelta(years=1)
+        start_date = "{0}-{1}-{2}".format(one_year_ago.year, one_year_ago.month, one_year_ago.day)
+    else:
+        start_date = health['start_date'][:10]
+
+
 @app.route('/api/sources/<media_id>/details')
 @flask_login.login_required
 @api_error_handler
 def api_media_source_details(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    info = {}
-    info = _cached_media_source_details(user_mediacloud_key(), media_id, health['start_date'][:10])
+    info = _cached_media_source_details(user_mediacloud_key(), media_id, 
+        _safely_get_health_start_date(health))
     info['health'] = health
     return jsonify({'results':info})
 
@@ -92,7 +110,9 @@ def api_media_source_sentence_count(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
     info = {}
     info['health'] = health
-    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(), ['media_id:'+str(media_id)], health['start_date'][:10])
+    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(),
+        ['media_id:'+str(media_id)],
+        _safely_get_health_start_date(health))
     return jsonify({'results':info})
 
 @app.route('/api/sources/<media_id>/geography')

@@ -11,7 +11,7 @@ const sentenceCount = createAsyncReducer({
   handleSuccess: payload => ({
     total: calcSentences(payload.results.sentenceCounts),
     list: cleanDateCounts(payload.results.sentenceCounts),
-    health: cleanCoverageGaps(payload.results.health.coverage_gaps_list),
+    health: cleanCoverageGaps((payload.results.health) ? payload.results.health.coverage_gaps_list : null),
   }),
 });
 export default sentenceCount;
