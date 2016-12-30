@@ -62,7 +62,7 @@ const AppContainer = (props) => {
       <Snackbar
         open={feedback.open}
         message={feedback.message}
-        autoHideDuration={4000}
+        autoHideDuration={8000}
         onRequestClose={handleSnackBarRequestClose}
       />
     </div>
