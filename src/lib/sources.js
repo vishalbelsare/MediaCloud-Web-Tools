@@ -87,6 +87,10 @@ export function metadataValues(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
 
+export const CREATE_SOURCE_STATUS_NEW = 'new';
+export const CREATE_SOURCE_STATUS_EXISTING = null;  // TODO: update this to 'existing' when server bug updated
+export const CREATE_SOURCE_STATUS_ERROR = 'error';
+
 export function createSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'publicationCountry', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);

@@ -135,25 +135,29 @@ def source_create():
     url = request.form['url']
     notes = request.form['notes'] if 'notes' in request.form else None # this is optional
     # parse out any tag to add (ie. collections and metadata)
-    # now update the metadata too
     tag_ids_to_add = []
     if len(request.form['collections[]']) > 0:
         tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
     valid_metadata = [
         { 'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY }
     ]
-    for metadata_item in valid_metadata:
-        metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
-        if metadata_tag_id:
-            tag_ids_to_add.append(metadata_tag_id)
     sourceToCreate = {
         'name': name,
         'url': url,
         'editor_notes': notes,
         'tags_ids': tag_ids_to_add
     }
-    results = user_mc.mediaCreate([sourceToCreate])
-    return jsonify(results)
+    result = user_mc.mediaCreate([sourceToCreate])[0] # need just the first entry, since we only create one thing here
+    if result['status'] != "error":
+        # if it worked, update any metadata, because we need to remove the other tags in each set
+        for metadata_item in valid_metadata:
+            metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
+            if metadata_tag_id:
+                user_mc.tagMedia(
+                    tags=[MediaTag(result['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
+                    clear_others=True) # make sure to clear any other values set in this metadata tag set
+                tag_ids_to_add.append(metadata_tag_id)
+    return jsonify(result)
 
 @app.route('/api/sources/<media_id>/update', methods=['POST'])
 @form_fields_required('name', 'url')

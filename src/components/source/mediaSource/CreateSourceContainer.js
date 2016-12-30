@@ -5,14 +5,16 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { createSource, fetchSourceDetails } from '../../../actions/sourceActions';
+import { CREATE_SOURCE_STATUS_ERROR, CREATE_SOURCE_STATUS_NEW, CREATE_SOURCE_STATUS_EXISTING } from '../../../lib/sources';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
   addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New Source' },
-  feedback: { id: 'source.add.feedback.worked', defaultMessage: 'We saved your new source' },
-  saveFailed: { id: 'source.add.feedback.failed', defaultMessage: 'Sorry, your request failed for some reason' },
+  savedNew: { id: 'source.add.feedback.new', defaultMessage: 'We saved your new source' },
+  updatedExisting: { id: 'source.add.feedback.existing', defaultMessage: 'We updated this existing source' },
+  saveFailed: { id: 'source.add.feedback.error', defaultMessage: 'Sorry, your request failed for some reason' },
 };
 
 const CreateSourceContainer = (props) => {
@@ -68,19 +70,27 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     // save it
     dispatch(createSource(infoToSave))
       .then((result) => {
-        if (result.errors.length === 0) {
-          // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          // need to fetch it again because something may have changed
-          const mediaId = result.media[0].media_id;
-          dispatch(fetchSourceDetails(mediaId))
-            .then(() =>
-              dispatch(push(`/sources/${mediaId}`))
-            );
-        } else {
-          // let them know it didn't work
-          const message = ownProps.intl.formatMessage(localMessages.saveFailed);
-          dispatch(updateFeedback({ open: true, message }));
+        let resultMediaId = null;
+        switch (result.status) {
+          case CREATE_SOURCE_STATUS_NEW:
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.savedNew) }));
+            // need to fetch it again because something may have changed
+            resultMediaId = result.media_id;
+            dispatch(fetchSourceDetails(resultMediaId))
+              .then(() =>
+                dispatch(push(`/sources/${resultMediaId}`)));
+            break;
+          case CREATE_SOURCE_STATUS_EXISTING:
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.updatedExisting) }));
+            resultMediaId = result.media_id;
+            dispatch(push(`/sources/${resultMediaId}`));
+            break;
+          case CREATE_SOURCE_STATUS_ERROR:
+          default:
+            // let them know it didn't work
+            const message = ownProps.intl.formatMessage(localMessages.saveFailed);
+            dispatch(updateFeedback({ open: true, message }));
+            break;
         }
       });
   },
