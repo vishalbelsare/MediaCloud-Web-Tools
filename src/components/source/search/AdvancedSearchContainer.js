@@ -11,7 +11,7 @@ import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
 // const formSelector = formValueSelector('advancedQueryForm');
 
 const localMessages = {
-  mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Search' },
+  mainTitle: { id: 'collection.maintitle', defaultMessage: 'Advanced Source/Collection Search' },
   addButton: { id: 'collection.add.save', defaultMessage: 'Search' },
 };
 
@@ -20,13 +20,13 @@ class AdvancedSearchContainer extends React.Component {
   constructor(props) {
     super(props);
     const defaultQueryStr = (props.urlQueryString) ? props.urlQueryString : null;
-    this.state = { queryStr: defaultQueryStr };
+    this.state = { queryStr: defaultQueryStr, tags: [] };
   }
 
   componentWillReceiveProps(nextProps) {
     const { urlQueryString } = this.props;
     if (nextProps.urlQueryString !== urlQueryString) {
-      this.state = { queryStr: nextProps.urlQueryString };
+      this.state = { queryStr: nextProps.urlQueryString, tags: [] };
     }
   }
 
@@ -34,8 +34,8 @@ class AdvancedSearchContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     let resultsContent = null;
-    if ((this.state.queryStr !== null) && (this.state.queryStr !== undefined) && (this.state.queryStr.length > 0)) {
-      resultsContent = <SourcesAndCollectionsContainer searchString={this.state.queryStr} />;
+    if ((this.state.queryStr) || (this.state.tags.length > 0)) {
+      resultsContent = <SourcesAndCollectionsContainer searchString={this.state.queryStr} tags={this.state.tags} />;
     }
     return (
       <div>
@@ -49,8 +49,18 @@ class AdvancedSearchContainer extends React.Component {
           <SearchMetadataPickerForm
             initialValues={{ advancedSearchQueryString: this.state.queryStr }}
             buttonLabel={formatMessage(localMessages.addButton)}
-            onSearch={values => this.setState({ queryStr: values.advancedSearchQueryString })}
+            onSearch={(values) => {
+              const info = {
+                queryStr: values.advancedSearchQueryString,
+                tags: [],
+              };
+              if ('publicationCountry' in values) {
+                info.tags.push(values.publicationCountry);
+              }
+              this.setState(info);
+            }}
           />
+          <br />
           <Divider />
           {resultsContent}
         </Grid>

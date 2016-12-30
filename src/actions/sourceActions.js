@@ -98,7 +98,7 @@ export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, p
 
 export const fetchMetadataValues = createAsyncAction(FETCH_METADATA_VALUES, api.metadataValues);
 
-export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceSearch, string => string);
+export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceAdvancedSearch, payload => payload);
 
 export const fetchCollectionByMetadata = createAsyncAction(FETCH_COLLECTION_BY_METADATA, api.collectionSearch, string => string);
 

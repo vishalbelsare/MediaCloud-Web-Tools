@@ -1,4 +1,4 @@
-import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from './apiUtil';
 
 export function sourceList() {
   return createApiPromise('api/sources/all');
@@ -12,6 +12,13 @@ export function sourcesByIds(params) {
 
 export function sourceSearch(searchStr) {
   return createApiPromise(`/api/sources/search/${searchStr}`);
+}
+
+export function sourceAdvancedSearch(params) {
+  const acceptedParams = acceptParams(params, ['searchString', 'tags']);
+  const paramStr = generateParamStr({ 'tags[]': acceptedParams.tags });
+  const searchStr = acceptedParams.searchString || '*';
+  return createApiPromise(`/api/sources/search/${searchStr}?${paramStr}`);
 }
 
 export function collectionList(id) {

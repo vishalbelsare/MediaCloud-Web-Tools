@@ -8,7 +8,8 @@ import AppButton from '../../common/AppButton';
 import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
 
 const localMessages = {
-  searchSuggestion: { id: 'search.advanced.suggestion', defaultMessage: 'Search by name of a source or collection' },
+  searchSuggestion: { id: 'search.advanced.searchTip', defaultMessage: 'match these words' },
+  pubCountrySuggestion: { id: 'search.advanced.pubCountryTip', defaultMessage: 'published in' },
 };
 
 const SearchMetadataPickerForm = (props) => {
@@ -22,7 +23,7 @@ const SearchMetadataPickerForm = (props) => {
             name="advancedSearchQueryString"
             value={initialValues}
             component={renderTextField}
-            hintText={formatMessage(localMessages.searchSuggestion)}
+            floatingLabelText={formatMessage(localMessages.searchSuggestion)}
             fullWidth
           />
         </Col>
@@ -33,6 +34,8 @@ const SearchMetadataPickerForm = (props) => {
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
             form="advancedQueryForm"
+            floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
+            autocomplete
           />
         </Col>
       </Row>

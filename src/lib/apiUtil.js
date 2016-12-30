@@ -9,7 +9,11 @@ export function generateParamStr(params) {
     if ({}.hasOwnProperty.call(params, key)) {
       const value = params[key];
       if ((value !== null) && (value !== undefined)) {
-        cleanedParams[key] = value;
+        let valueStr = value;
+        if (value instanceof Array) {
+          valueStr = value.join(',');
+        }
+        cleanedParams[key] = valueStr;
       }
     }
   });

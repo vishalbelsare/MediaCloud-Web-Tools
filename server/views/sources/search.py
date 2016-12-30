@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify
+from flask import jsonify, request
 import flask_login
 
 from server import app
@@ -14,13 +14,20 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def media_search(search_str):
-    source_list = _cached_media_search(search_str)[:5]
+    tags = None
+    cleaned_search_str = None if search_str == '*' else search_str
+    if 'tags[]' in request.args:
+        tags = request.args['tags[]'].split(',')
+    if tags is None:
+        source_list = _cached_media_search(cleaned_search_str)[:10]
+    else:
+        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:10]
     return jsonify({'list':source_list})
 
 @cache
-def _cached_media_search(search_str):
+def _cached_media_search(search_str, tags_id=None):
     mc = user_mediacloud_client()
-    return mc.mediaList(name_like=search_str)
+    return mc.mediaList(name_like=search_str, tags_id=tags_id)
 
 @app.route('/api/collections/search/<search_str>', methods=['GET'])
 @flask_login.login_required

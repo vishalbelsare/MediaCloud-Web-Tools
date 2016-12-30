@@ -28,9 +28,9 @@ class SourcesAndCollectionsContainer extends React.Component {
     this.setState({ allOrNoneCheck: false });
   }
   componentWillReceiveProps(nextProps) {
-    const { searchString, fetchData } = this.props;
-    if (nextProps.searchString !== searchString) {
-      fetchData(nextProps.searchString);
+    const { searchString, tags, fetchData } = this.props;
+    if ((nextProps.searchString !== searchString) || (nextProps.tags !== tags)) {
+      fetchData(nextProps.searchString, nextProps.tags);
     }
   }
   addOrRemoveToSelectedSources= (mediaId, checked) => {
@@ -110,7 +110,9 @@ SourcesAndCollectionsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   // from context
   intl: React.PropTypes.object.isRequired,
+  // form parent
   searchString: React.PropTypes.string,
+  tags: React.PropTypes.array,
   // from dispatch
   dispatchToCreate: React.PropTypes.func.isRequired,
   dispatchSourceSelection: React.PropTypes.func.isRequired,
@@ -134,12 +136,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (searchStr) => {
-    dispatch(fetchSourceByMetadata(searchStr));
-    dispatch(fetchCollectionByMetadata(searchStr));
+  fetchData: (searchString, tags) => {
+    dispatch(fetchSourceByMetadata({ searchString, tags }));
+    dispatch(fetchCollectionByMetadata(searchString));
   },
   asyncFetch: () => {
-    dispatch(fetchSourceByMetadata(ownProps.searchString));
+    dispatch(fetchSourceByMetadata({ searchString: ownProps.searchString, tags: ownProps.tags }));
     dispatch(fetchCollectionByMetadata(ownProps.searchString));
   },
   // depending on checked value, all or page or a selected set or no items are to be selected

@@ -14,14 +14,14 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues } = props;
+  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues, floatingLabelText } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
   switch (mode) {
     case MODE_SELECT:
       content = (
-        <Field name={name} component={renderSelectField} floatingLabelText={label}>
+        <Field name={name} component={renderSelectField} floatingLabelText={floatingLabelText || label}>
           <MenuItem value={null} primaryText={''} />
           {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
         </Field>
@@ -29,8 +29,8 @@ const MetadataPickerContainer = (props) => {
       break;
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
-      let initialText = null;
-      if ((initialValues[name]) && (tags.length > 0)) {
+      let initialText = '';
+      if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
         const matchingItem = tags.find(t => t.tags_id === initialValues[name]);
         if (matchingItem) {
           initialText = matchingItem.label;
@@ -42,7 +42,7 @@ const MetadataPickerContainer = (props) => {
           name={name}
           component={renderAutoComplete}
           hintText={formatMessage(localMessages.hintText, { label })}
-          floatingLabelText={label}
+          floatingLabelText={floatingLabelText || label}
           openOnFocus
           dataSource={tags}
           dataSourceConfig={{ text: 'label', value: 'tags_id' }}
@@ -63,6 +63,7 @@ MetadataPickerContainer.propTypes = {
   name: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
   autocomplete: React.PropTypes.bool,
+  floatingLabelText: React.PropTypes.string,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
