@@ -68,7 +68,7 @@ class CollectionDetailsContainer extends React.Component {
       <Grid className="details collection-details">
         <Title render={titleHandler} />
         <Row>
-          <Col lg={8}>
+          <Col lg={12}>
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
@@ -81,7 +81,6 @@ class CollectionDetailsContainer extends React.Component {
             </p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
-          <Col lg={4} />
         </Row>
         <Row>
           <Col lg={6} xs={12}>
