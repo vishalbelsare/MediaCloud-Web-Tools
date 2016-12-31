@@ -95,7 +95,7 @@ export function metadataValues(id) {
 }
 
 export const CREATE_SOURCE_STATUS_NEW = 'new';
-export const CREATE_SOURCE_STATUS_EXISTING = null;  // TODO: update this to 'existing' when server bug updated
+export const CREATE_SOURCE_STATUS_EXISTING = 'existing';
 export const CREATE_SOURCE_STATUS_ERROR = 'error';
 
 export function createSource(params) {
