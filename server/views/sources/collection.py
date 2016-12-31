@@ -97,13 +97,14 @@ def collection_source_sentence_counts_csv(collection_id):
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sample_size = 2000
     # list all sources first
-    sources_by_id = { c['media_id']:c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
+    sources_by_id = { int(c['media_id']):c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
     sentences = mc.sentenceList('*', 'tags_id_media:'+str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
     # sum the number of sentences per media source
-    sentence_counts = { media_id:0 for media_id in sources_by_id.keys() }
+    sentence_counts = { int(media_id):0 for media_id in sources_by_id.keys() }
     if 'docs' in sentences['response']:
         for sentence in sentences['response']['docs']:
-            sentence_counts[sentence['media_id']] = sentence_counts[sentence['media_id']] + 1.
+            if int(sentence['media_id']) in sentence_counts: # safety check
+                sentence_counts[int(sentence['media_id'])] = sentence_counts[int(sentence['media_id'])] + 1.
     # add in sentence count info to media info
     for media_id in sentence_counts.keys():
         sources_by_id[media_id]['sentence_count'] = sentence_counts[media_id]
@@ -119,7 +120,7 @@ def collection_media_list(user_mc_key, tags_id):
     all_media = []
     max_media_id = 0
     while more_media:
-        logger.debug("last_media_id %d", max_media_id)
+        logger.debug("last_media_id %s", str(max_media_id))
         media = collection_media_list_page(user_mc_key, tags_id, max_media_id)
         all_media = all_media + media
         if len(media) > 0:
