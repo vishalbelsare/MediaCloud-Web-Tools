@@ -12,7 +12,8 @@ const SERIES_MARKER_THRESHOLD = 30;
 
 const localMessages = {
   chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
-  chartYAxisLabel: { id: 'chart.sentencesOverTime.yAxisLabel', defaultMessage: '{count} {count, plural, =1 {sentence} other {sentences} }/day' },
+  tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'average {count} {count, plural, =1 {sentence} other {sentences} }/day' },
+  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'sentences/day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },
@@ -54,14 +55,14 @@ class AttentionOverTimeChart extends React.Component {
       tooltip: {
         pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
-          const rounded = formatNumber(this.y, { style: 'decimal', format: { maximumFractionDigits: 2 } });
-          const val = formatMessage(localMessages.chartYAxisLabel, { count: rounded });
+          const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
+          const val = formatMessage(localMessages.tooltipText, { count: rounded });
           return val;
         },
       },
       yAxis: {
         min: 0,
-        title: formatMessage(localMessages.chartYAxisLabel),
+        title: formatMessage(localMessages.seriesTitle),
       },
       exporting: {
       },
@@ -78,7 +79,7 @@ class AttentionOverTimeChart extends React.Component {
     if (filename !== undefined) {
       config.exporting.filename = filename;
     } else {
-      config.exporting.filename = formatMessage(localMessages.chartYAxisLabel);
+      config.exporting.filename = formatMessage(localMessages.seriesTitle);
     }
     if ((health !== null) && (health !== undefined)) {
       config.xAxis.plotLines = health;
@@ -109,7 +110,7 @@ class AttentionOverTimeChart extends React.Component {
       const values = data.map(d => (d.count / intervalDays));
       allSeries = [{
         id: 0,
-        name: formatMessage(localMessages.chartYAxisLabel),
+        name: formatMessage(localMessages.seriesTitle),
         color: lineColor,
         data: values,
         pointStart: dates[0],
