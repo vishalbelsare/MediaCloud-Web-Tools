@@ -48,7 +48,7 @@ class InfluentialMediaContainer extends React.Component {
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
               <h1>
-                <MediaSourceIcon />
+                <MediaSourceIcon height={32} />
                 <FormattedMessage {...localMessages.title} />
               </h1>
               <MediaTable media={media} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
@@ -100,7 +100,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(fetchTopicInfluentialMedia(props.topicId, params))
       .then((results) => {
-        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
+        dispatch(push(pagedAndSortedLocation(
+          ownProps.location,
+          results.link_ids.current,
+          props.sort,
+          props.filters,
+        )));
       });
   },
   sortData: (sort) => {
