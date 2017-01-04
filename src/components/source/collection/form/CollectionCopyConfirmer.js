@@ -64,8 +64,8 @@ CollectionCopyConfirmer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.collection.create.toCopy.fetchStatus,
-  collection: state.sources.selected.details.collection.create.toCopy.results,
+  fetchStatus: state.sources.collections.form.toCopy.fetchStatus,
+  collection: state.sources.collections.form.toCopy.results,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

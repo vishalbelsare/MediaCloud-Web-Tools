@@ -1,6 +1,6 @@
-import { FETCH_SOURCES_BY_IDS, RESET_SOURCES_BY_IDS } from '../../actions/sourceActions';
-import { createAsyncReducer } from '../../lib/reduxHelpers';
-import * as fetchConstants from '../../lib/fetchConstants';
+import { FETCH_SOURCES_BY_IDS, RESET_SOURCES_BY_IDS } from '../../../../actions/sourceActions';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
+import * as fetchConstants from '../../../../lib/fetchConstants';
 
 const sourceSearch = createAsyncReducer({
   initialState: {

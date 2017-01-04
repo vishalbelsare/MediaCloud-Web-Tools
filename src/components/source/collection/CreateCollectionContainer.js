@@ -97,8 +97,8 @@ CreateCollectionContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  sourcesToPrefill: state.sources.sourceSearchByIds.list,
-  collectionsToPrefill: state.sources.collectionSearchByIds.list,
+  sourcesToPrefill: state.sources.collections.form.seedSources.list,
+  collectionsToPrefill: state.sources.collections.form.seedCollections.list,
   prefillSrcIds: ownProps.location.query.src,
   prefillCollectionIds: ownProps.location.query.coll,
   searchStrToAdd: ownProps.location.query.search,
