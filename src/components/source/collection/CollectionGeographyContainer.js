@@ -64,8 +64,8 @@ CollectionGeographyContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.fetchStatus,
-  geolist: state.sources.selected.details.collectionDetailsReducer.collectionGeoTag.list,
+  fetchStatus: state.sources.collections.selected.collectionGeoTag.fetchStatus,
+  geolist: state.sources.collections.selected.collectionGeoTag.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

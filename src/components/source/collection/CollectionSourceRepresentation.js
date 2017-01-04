@@ -76,8 +76,8 @@ CollectionSourceRepresentation.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSourceSentenceCounts.fetchStatus,
-  sources: state.sources.selected.details.collectionDetailsReducer.collectionSourceSentenceCounts.sources,
+  fetchStatus: state.sources.collections.selected.collectionSourceSentenceCounts.fetchStatus,
+  sources: state.sources.collections.selected.collectionSourceSentenceCounts.sources,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

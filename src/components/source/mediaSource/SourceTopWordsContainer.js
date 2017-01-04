@@ -60,8 +60,8 @@ SourceTopWordsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.topWords.fetchStatus,
-  words: state.sources.selected.details.sourceDetailsReducer.topWords.list.wordcounts,
+  fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
+  words: state.sources.sources.selected.topWords.list.wordcounts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

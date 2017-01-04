@@ -8,7 +8,7 @@ import Lock from 'material-ui/svg-icons/action/lock';
 import Unlock from 'material-ui/svg-icons/action/lock-open';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { select, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
@@ -130,13 +130,13 @@ CollectionDetailsContainer.contextTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionDetails.fetchStatus,
-  collection: state.sources.selected.details.collectionDetailsReducer.collectionDetails.object,
+  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
+  collection: state.sources.collections.selected.collectionDetails.object,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (collectionId) => {
-    dispatch(select(collectionId));
+    dispatch(selectCollection(collectionId));
     dispatch(fetchCollectionDetails(collectionId));
   },
 });

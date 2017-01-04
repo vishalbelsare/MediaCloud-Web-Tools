@@ -11,7 +11,8 @@ export const FETCH_COLLECTION_SOURCES_BY_IDS = 'FETCH_COLLECTION_SOURCES_BY_IDS'
 export const RESET_COLLECTIONS_BY_IDS = 'RESET_COLLECTIONS_BY_IDS';
 export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_COLLECTION_DETAILS = 'FETCH_COLLECTION_DETAILS';
-export const SELECT = 'SELECT';
+export const SELECT_COLLECTION = 'SELECT_COLLECTION';
+export const SELECT_SOURCE = 'SELECT_SOURCE';
 export const SOURCE_FILTER_BY_SNAPSHOT = 'SOURCE_FILTER_BY_SNAPSHOT';
 export const SOURCE_FILTER_BY_TIMESPAN = 'SOURCE_FILTER_BY_TIMESPAN';
 export const FETCH_SOURCE_SUMMARY = 'FETCH_SOURCE_SUMMARY';
@@ -46,7 +47,9 @@ export const FETCH_SOURCE_FEEDS = 'FETCH_SOURCE_FEEDS';
 export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
 export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
 
-export const select = createAction(SELECT, id => id);
+export const selectCollection = createAction(SELECT_COLLECTION, id => id);
+
+export const selectSource = createAction(SELECT_SOURCE, id => id);
 
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 

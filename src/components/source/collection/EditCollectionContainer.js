@@ -59,8 +59,8 @@ EditCollectionContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionDetails.fetchStatus,
-  collection: state.sources.selected.details.collectionDetailsReducer.collectionDetails.object,
+  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
+  collection: state.sources.collections.selected.collectionDetails.object,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

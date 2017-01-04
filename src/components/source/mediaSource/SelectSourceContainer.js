@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
-import { select, fetchSourceDetails } from '../../../actions/sourceActions';
+import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 class SelectSourceContainer extends React.Component {
@@ -55,18 +55,18 @@ SelectSourceContainer.contextTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
-  source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
+  fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
+  source: state.sources.sources.selected.sourceDetails.object,
 });
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (sourceId) => {
-    dispatch(select(sourceId));
+    dispatch(selectSource(sourceId));
     dispatch(fetchSourceDetails(sourceId));
   },
   asyncFetch: () => {
-    dispatch(select(ownProps.params.sourceId));
+    dispatch(selectSource(ownProps.params.sourceId));
     dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });

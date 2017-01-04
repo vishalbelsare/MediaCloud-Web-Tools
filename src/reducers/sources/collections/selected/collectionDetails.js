@@ -6,11 +6,9 @@ const collectionDetails = createAsyncReducer({
     object: null,
   },
   action: FETCH_COLLECTION_DETAILS,
-  handleFetch: () => ({ object: null }),
   handleSuccess: payload => ({
     object: payload.results,
   }),
-  handleFailure: () => ({ object: null }),
 });
 
 

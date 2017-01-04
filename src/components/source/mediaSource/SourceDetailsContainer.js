@@ -183,8 +183,8 @@ SourceDetailsContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
-  fetchStatus: state.sources.selected.details.sourceDetailsReducer.sourceDetails.fetchStatus,
-  source: state.sources.selected.details.sourceDetailsReducer.sourceDetails.object,
+  fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
+  source: state.sources.sources.selected.sourceDetails.object,
 });
 
 const mapDispatchToProps = () => ({

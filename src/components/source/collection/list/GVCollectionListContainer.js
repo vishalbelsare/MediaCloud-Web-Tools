@@ -32,10 +32,10 @@ GVCollectionListContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.allCollections.fetchStatus,
-  name: state.sources.allCollections.name,
-  description: state.sources.allCollections.description,
-  collections: state.sources.allCollections.collections,
+  fetchStatus: state.sources.collections.all.fetchStatus,
+  name: state.sources.collections.all.name,
+  description: state.sources.collections.all.description,
+  collections: state.sources.collections.all.collections,
 });
 
 const mapDispatchToProps = dispatch => ({

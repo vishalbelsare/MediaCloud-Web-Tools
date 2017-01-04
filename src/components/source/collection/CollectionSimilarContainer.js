@@ -43,8 +43,8 @@ CollectionSimilarContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.details.collectionDetailsReducer.collectionSimilar.fetchStatus,
-  similarCollections: state.sources.selected.details.collectionDetailsReducer.collectionSimilar.list,
+  fetchStatus: state.sources.collections.selected.collectionSimilar.fetchStatus,
+  similarCollections: state.sources.collections.selected.collectionSimilar.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
