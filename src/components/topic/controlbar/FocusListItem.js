@@ -15,7 +15,14 @@ class FocusListItem extends React.Component {
     const rootClasses = `popup-item focus-item ${selectedClass}`;
     const subtitle = ('focalSet' in focus) ? <small>{focus.focalSet.name}</small> : null;
     return (
-      <div className={rootClasses} onClick={this.handleClick} id={`focus-${focus.foci_id}`}>
+      <div
+        className={rootClasses}
+        onClick={this.handleClick}
+        id={`focus-${focus.foci_id}`}
+        onKeyPress={this.handleClick}
+        role="button"
+        tabIndex={0}
+      >
         <div className="title">{focus.name}</div>
         {subtitle}
       </div>

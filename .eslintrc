@@ -1,12 +1,17 @@
 {
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:jsx-a11y/recommended"
+  ],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
     "es6": true,
     "commonjs": true
   },
-  "plugins": ["react"],
+  "plugins": [
+    "react"
+  ],
   "rules": {
     "max-len": 0,
     "no-case-declarations": 0,
@@ -17,5 +22,12 @@
     "no-bitwise": ["error", { "allow": ["~"] }],
     "react/no-danger": 0,
     "react/no-unused-prop-types": 0,
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore",
+    }]
  }
 }

@@ -71,10 +71,10 @@ export function acceptParams(params, acceptableKeys) {
     return '';
   }
   const accepted = {};
-  for (const key of Object.keys(params)) {
+  Object.keys(params).forEach((key) => {
     if (acceptableKeys.includes(key)) {
       accepted[key] = params[key];
     }
-  }
+  });
   return accepted;
 }

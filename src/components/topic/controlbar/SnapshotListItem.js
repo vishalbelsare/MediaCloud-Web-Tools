@@ -27,7 +27,7 @@ class SnapshotListItem extends React.Component {
     const selectedClass = (selected === true) ? 'selected' : '';
     const rootClasses = `popup-item snapshot-item ${disabledClass} ${selectedClass}`;
     return (
-      <div className={rootClasses} onClick={clickHandler}>
+      <div className={rootClasses} onClick={clickHandler} onKeyPress={clickHandler} role="button" tabIndex={0}>
         <div className="title">{ label }</div>
         <small>{ stateMessage }</small>
         <small><FormattedMessage {...messages.snapshotAge} values={{ age: moment(date).fromNow() }} /></small>

@@ -15,9 +15,9 @@ const FocalTechniqueDescription = (props) => {
   const comingSoonContent = (comingSoon === true) ? <span style={{ color: '#FFD700' }}><FormattedMessage {...localMessages.comingSoon} /></span> : null;
   let visualContent = null;
   if (image) {
-    visualContent = <img alt={formatMessage(nameMsg)} src={image} width={136} height={136} onClick={clickHandler} />;
+    visualContent = <img alt={formatMessage(nameMsg)} tabIndex={0} src={image} width={136} height={136} role="button" onKeyPress={clickHandler} onClick={clickHandler} />;
   } else if (icon) {
-    visualContent = <div className="focal-technique-icon" onClick={clickHandler}>{icon()}</div>;
+    visualContent = <div className="focal-technique-icon" tabIndex={0} role="button" onKeyPress={clickHandler} onClick={clickHandler}>{icon()}</div>;
   }
   return (
     <div className={rootClasses}>
