@@ -3,6 +3,11 @@ from flask import jsonify, request
 import flask_login
 from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
+from werkzeug import secure_filename
+import csv as pycsv
+import os
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
+
 
 from server import app, mc
 from server.util.request import arguments_required, form_fields_required, api_error_handler
@@ -15,6 +20,95 @@ import server.util.csv as csv
 from server.views.sources import COLLECTIONS_TAG_SET_ID
 
 logger = logging.getLogger(__name__)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ['csv']
+
+@app.route('/api/collections/uploadSourceListFromTemplate', methods=['POST'])
+def upload_file():
+    logger.debug("inside upload");
+    logger.debug("request is %s", request.method)
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return ''
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('No selected file')
+            return ''
+        if file and allowed_file(file.filename):
+            props = ['URL','NAME','PUBLICATION-COUNTRY','ID']
+            filename = secure_filename(file.filename)
+            # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
+            file.save(os.path.join('', filename))
+            with open(file.filename, 'r') as f:
+                reader = pycsv.DictReader(f)
+                reader.fieldnames = props
+                newOrUpdated = []
+                newOrUpdatedWithMeta = []
+                reader.next()
+                for line in reader:
+                    try:
+                        # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore'): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
+                        newline = {k.lower():v for k, v in newline.items() if v !=''}
+                        newOrUpdatedWithMeta.append(newline)
+                        withoutMeta = {k.lower():v for k, v in newline.items() if k !='publication-country'}
+                        newOrUpdated.append(withoutMeta)
+                    except Exception as e:
+                        logger.error("Couldn't process a CSV row: "+str(e))
+                createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMeta)
+
+    return {'temp'}
+
+def createSourceFromTemplate(sourceList, sourceListWithMeta):
+    user_mc = user_mediacloud_client()
+
+    valid_metadata = [
+        { 'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY }
+    ]
+    
+    # for metadata_item in valid_metadata:
+           # metadata_tag = if metadata_item['form_key'] in newOrUpdated else None # this is optional
+    print sourceListWithMeta
+    result = user_mc.mediaCreate(sourceList)
+    # status, media_id, url, error in result
+
+
+    mergedLists = []
+    mergedLists = sourceListWithMeta
+    for r in result:
+        for i in mergedLists:
+            i.update(r.items())
+
+
+    print mergedLists
+    for source in mergedLists:
+        if source['status'] != 'error':
+                metadata_tag_id = source['publication-country'] if source['publication-country'] else None # this is optional
+                if metadata_tag_id != None:
+                    print 'found metadata'
+                    if source['status'] == 'new':
+                        print 'found new'
+                        tag = MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
+                        user_mc.tagMedia([tag])
+                    # more complicated b/c we have to remove any pre-existing
+                    if source['status'] == 'existing':
+                        print 'found existing'
+                        # do I have to go fetch this metadata or can I just replace it
+                        # existing_tag_ids = [ t['tags_id'] for t in source['media_source_tags']
+                        # if t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY]
+                        tag = MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
+                        user_mc.tagMedia([tag], clear_others=True)
+    # with the results, combine ids with metadata tag list
+
+
+        
+    # if it worked, update any metadata, because we need to remove the other tags in each set 
+    return jsonify(result)
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required

@@ -117,3 +117,8 @@ export function suggestSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reason', 'collections[]']);
   return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);
 }
+
+export function collectionUploadSourceListFromTemplate(params) {
+  const acceptedParams = acceptParams(params, ['file']);
+  return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
+}

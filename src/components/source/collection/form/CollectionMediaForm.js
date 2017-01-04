@@ -13,6 +13,7 @@ import { googleFavIconUrl } from '../../../../lib/urlUtil';
 import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
 import CollectionCopyConfirmer from './CollectionCopyConfirmer';
+import { uploadSourceListFromTemplate } from '../../../../actions/sourceActions';
 
 const formSelector = formValueSelector('collectionForm');
 
@@ -44,6 +45,12 @@ class SourceSelectionRenderer extends React.Component {
   copyCollection = (collection) => {
     this.addSources(collection.media);
     this.setState({ collectionId: null });
+  }
+
+  uploadCSV = () => {
+    const { uploadCSVFile } = this.props;
+    const fd = this.textInput.files[0];
+    uploadCSVFile(fd);
   }
 
   // make sure we don't add sources that are already on the list
@@ -106,7 +113,7 @@ class SourceSelectionRenderer extends React.Component {
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
                   <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
-                  <ComingSoon />
+                  <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} />
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
                   <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
@@ -178,6 +185,7 @@ SourceSelectionRenderer.propTypes = {
   // from parent
   currentSources: React.PropTypes.array,
   onSourcesAdded: React.PropTypes.func.isRequired,
+  uploadCSVFile: React.PropTypes.func.isRequired,
 };
 
 const CollectionMediaForm = props => (
@@ -187,6 +195,7 @@ const CollectionMediaForm = props => (
       component={SourceSelectionRenderer}
       currentSources={props.currentSources}
       onSourcesAdded={props.handleSourceAdded}
+      uploadCSVFile={props.uploadCSVFile}
     />
   </div>
 );
@@ -203,6 +212,7 @@ CollectionMediaForm.propTypes = {
   currentSources: React.PropTypes.array,
   // from dispatch
   handleSourceAdded: React.PropTypes.func.isRequired,
+  uploadCSVFile: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -213,6 +223,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSourceAdded: (sourceCount) => {
     const message = ownProps.intl.formatMessage(localMessages.sourcesAddedFeedback, { sourceCount });
     dispatch(updateFeedback({ open: true, message }));
+  },
+  uploadCSVFile: (csvFile) => {
+    dispatch(uploadSourceListFromTemplate({ file: csvFile }));
   },
 });
 
