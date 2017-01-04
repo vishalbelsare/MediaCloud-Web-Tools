@@ -106,7 +106,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(fetchTopicInfluentialStories(props.topicId, params))
       .then((results) => {
-        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
+        // only update the url if it has changed
+        if ((results.link_ids.current.toString() !== ownProps.location.query.linkId) ||
+            (props.sort !== ownProps.location.query.sort)) {
+          dispatch(push(pagedAndSortedLocation(
+            ownProps.location,
+            results.link_ids.current,
+            props.sort,
+            props.filters
+          )));
+        }
       });
   },
   sortData: (sort) => {
