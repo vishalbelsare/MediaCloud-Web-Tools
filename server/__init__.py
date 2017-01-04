@@ -7,7 +7,6 @@ import sys
 from flask import Flask, render_template
 from flask_webpack import Webpack
 from flask_mail import Mail
-import pymongo
 import flask_login
 from flask_cors import CORS
 from raven.conf import setup_logging
