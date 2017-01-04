@@ -6,7 +6,8 @@
     "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
     "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
     "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
-    "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js"
+    "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js",
+    "test-acceptance": "react-scripts test --env=jsdom test/acceptance"
   },
   "dependencies": {
     "babel-polyfill": "6.20.0",
@@ -70,6 +71,7 @@
     "if-env": "1.0.0",
     "image-webpack-loader": "3.1.0",
     "manifest-revision-webpack-plugin": "0.3.0",
+    "nightmare": "2.9.1",
     "node-sass": "4.1.1",
     "postcss-loader": "1.2.1",
     "react-hot-loader": "3.0.0-beta.6",
