@@ -13,6 +13,7 @@ const localMessages = {
   checkAllFirstPage: { id: 'sourceCollectionList.checkAllFirstPage', defaultMessage: 'Select All On This Page' },
   unCheckAll: { id: 'sourceCollectionList.collection.unCheckAll', defaultMessage: 'Unselect All' },
   checkAllPages: { id: 'sourceCollectionList.checkAllPages', defaultMessage: 'Select All Results' },
+  exploreInvite: { id: 'sourceCollectionList.explore', defaultMessage: 'Explore {name}' },
 };
 
 const SourcesAndCollectionsList = (props) => {
@@ -79,12 +80,12 @@ const SourcesAndCollectionsList = (props) => {
                 <SourceIcon height={32} />
                 <FormattedMessage {...localMessages.sourceHeader} values={{ name: source.name }} />
               </h2>
-              <h5>
-                <FormattedMessage {...localMessages.sourceHeader} values={{ name: source.url }} />
-              </h5>
+              <p>{source.url}</p>
             </Col>
             <Col lg={2}>
-              <Link to={`/sources/${source.media_id}`}>Explore {source.name}</Link>
+              <Link to={`/sources/${source.media_id}`}>
+                <FormattedMessage {...localMessages.exploreInvite} values={{ name: source.name }} />
+              </Link>
             </Col>
           </Row>
           )
@@ -103,14 +104,16 @@ const SourcesAndCollectionsList = (props) => {
               />
             </Col>
             <Col lg={6}>
-              <CollectionIcon height={32} />
-              <h2><FormattedMessage {...localMessages.collectionHeader} values={{ name: collection.description }} /></h2>
-              <h5>
-                <FormattedMessage {...localMessages.sourceHeader} values={{ name: collection.name }} />
-              </h5>
+              <h2>
+                <CollectionIcon height={32} />
+                <FormattedMessage {...localMessages.collectionHeader} values={{ name: collection.label }} />
+              </h2>
+              <p>{collection.description}</p>
             </Col>
             <Col lg={2}>
-              <Link to={`/collections/${collection.tags_id}`}>{collection.description}</Link>
+              <Link to={`/collections/${collection.tags_id}`}>
+                <FormattedMessage {...localMessages.exploreInvite} values={{ name: collection.label }} />
+              </Link>
             </Col>
           </Row>
           )
