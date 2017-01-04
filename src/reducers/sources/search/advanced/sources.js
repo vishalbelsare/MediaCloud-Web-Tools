@@ -1,6 +1,6 @@
-import { FETCH_SOURCE_BY_METADATA, SELECT_ADVANCED_SEARCH_SOURCE, RESET_ADVANCED_SEARCH_SOURCE } from '../../../actions/sourceActions';
-import { selectItemInArray, createAsyncReducer } from '../../../lib/reduxHelpers';
-import * as fetchConstants from '../../../lib/fetchConstants';
+import { FETCH_SOURCE_BY_METADATA, SELECT_ADVANCED_SEARCH_SOURCE, RESET_ADVANCED_SEARCH_SOURCE } from '../../../../actions/sourceActions';
+import { selectItemInArray, createAsyncReducer } from '../../../../lib/reduxHelpers';
+import * as fetchConstants from '../../../../lib/fetchConstants';
 
 const sourcesByMetadata = createAsyncReducer({
   initialState: {

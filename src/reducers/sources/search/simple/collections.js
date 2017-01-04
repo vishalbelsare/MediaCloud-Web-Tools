@@ -1,5 +1,5 @@
-import { FETCH_COLLECTION_SEARCH, RESET_COLLECTION_SEARCH } from '../../actions/sourceActions';
-import { createAsyncReducer } from '../../lib/reduxHelpers';
+import { FETCH_COLLECTION_SEARCH, RESET_COLLECTION_SEARCH } from '../../../../actions/sourceActions';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const collectionSearch = createAsyncReducer({
   initialState: {

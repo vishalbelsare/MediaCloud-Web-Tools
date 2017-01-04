@@ -1,5 +1,5 @@
-import { FETCH_SOURCE_SEARCH, RESET_SOURCE_SEARCH } from '../../actions/sourceActions';
-import { createAsyncReducer } from '../../lib/reduxHelpers';
+import { FETCH_SOURCE_SEARCH, RESET_SOURCE_SEARCH } from '../../../../actions/sourceActions';
+import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const sourceSearch = createAsyncReducer({
   initialState: {

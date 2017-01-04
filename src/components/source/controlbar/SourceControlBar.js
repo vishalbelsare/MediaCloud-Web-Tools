@@ -55,9 +55,7 @@ SourceControlBar.propTypes = {
   onAdvancedSearchSelected: React.PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  sourceResults: state.sources.sourceSearch.list,
-  collectionResults: state.sources.collectionSearch.list,
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({

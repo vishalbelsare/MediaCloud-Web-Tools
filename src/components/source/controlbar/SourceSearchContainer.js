@@ -137,22 +137,27 @@ SourceSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  sourceFetchStatus: state.sources.sourceSearch.fetchStatus,
-  collectionFetchStatus: state.sources.collectionSearch.fetchStatus,
-  sourceResults: state.sources.sourceSearch.list,
-  collectionResults: state.sources.collectionSearch.list,
+  sourceFetchStatus: state.sources.search.simple.sources.fetchStatus,
+  collectionFetchStatus: state.sources.search.simple.collections.fetchStatus,
+  sourceResults: state.sources.search.simple.sources.list,
+  collectionResults: state.sources.search.simple.collections.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   search: (searchString) => {
     // TODO: add support for filtering out static collections, based on `searchStaticCollections` flag
-    if ((ownProps.searchCollections === undefined) || (ownProps.searchCollections === true)) {
+    // handle the situation where you are searching for just collections and NOT sources
+    const searchCollections = (ownProps.searchCollections === undefined) || (ownProps.searchCollections === true);
+    const searchSources = (ownProps.searchSources === undefined) || (ownProps.searchSources === true);
+    if (!searchSources) {
       dispatch(resetSourceSearch());
-      dispatch(fetchCollectionSearch(searchString));
-    }
-    if ((ownProps.searchSources === undefined) || (ownProps.searchSources === true)) {
-      dispatch(resetCollectionSearch());
+    } else {
       dispatch(fetchSourceSearch(searchString));
+    }
+    if (!searchCollections) {
+      dispatch(resetCollectionSearch());
+    } else {
+      dispatch(fetchCollectionSearch(searchString));
     }
   },
 });

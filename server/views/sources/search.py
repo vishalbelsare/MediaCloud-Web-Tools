@@ -19,9 +19,9 @@ def media_search(search_str):
     if 'tags[]' in request.args:
         tags = request.args['tags[]'].split(',')
     if tags is None:
-        source_list = _cached_media_search(cleaned_search_str)[:10]
+        source_list = _cached_media_search(cleaned_search_str)[:5]
     else:
-        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:10]
+        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:5]
     return jsonify({'list':source_list})
 
 @cache

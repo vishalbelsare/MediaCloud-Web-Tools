@@ -130,9 +130,9 @@ SourcesAndCollectionsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.selected.collectionsByMetadata.fetchStatus,
-  queriedSources: state.sources.selected.sourcesByMetadata.list,
-  queriedCollections: state.sources.selected.collectionsByMetadata.list,
+  fetchStatus: state.sources.search.advanced.collections.fetchStatus,
+  queriedSources: state.sources.search.advanced.sources.list,
+  queriedCollections: state.sources.search.advanced.collections.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
