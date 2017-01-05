@@ -9,11 +9,11 @@ import InfluentialStoryExplorer from './InfluentialStoryExplorer';
 
 const localMessages = {
   title: { id: 'topic.influentialStoryExplorer.title', defaultMessage: 'Story Explorer' },
-  intro: { id: 'topic.influentialStoryExplorer.intro', defaultMessage: 'This is an <b>experimental</b> interface that lets you dyanimcally explore stories in a multi-dimensional way.  Think of it as a pivot-table explorer within this timespan.  First it has to download a list of all the stories in this timespan, so don\'t be surprised if it spins for a minute while downloading.  Then you\'ll see a number of charts you can explore.  Drag and click on the charts to filter for just the stories you want to see.' },
+  intro: { id: 'topic.influentialStoryExplorer.intro', defaultMessage: 'This is an <b>experimental</b> interface that lets you dyanimcally explore stories in a multi-dimensional way.  Think of it as a pivot-table explorer within this timespan.  First it has to download a list of all the stories in this timespan, so don\'t be surprised if it spins for 5 or so minutes while downloading.  Then you\'ll see a number of charts you can explore.  Drag and click on the charts to filter for just the stories you want to see.' },
   error: { id: 'topic.influentialStoryExplorer.error', defaultMessage: 'Sorry - there are too many stories in this timespan to support this UI.  Try looking at just one week or just one month of this topic instead.' },
 };
 
-const MAX_STORIES = 50000;
+const MAX_STORIES = 100000;
 
 class InfluentialStoryExplorerContainer extends React.Component {
 
