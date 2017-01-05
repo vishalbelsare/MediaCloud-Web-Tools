@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import seedCollections from './seedCollections';
 import seedSources from './seedSources';
 import toCopy from './toCopy';
-import createOrUpdateSourcesByTemplate from './createOrUpdateSourcesByTemplate';
+import toUpload from './toUpload';
 
 const form = combineReducers({
   seedCollections,
   seedSources,
   toCopy,
-  createOrUpdateSourcesByTemplate,
+  toUpload,
 });
 
 export default form;
