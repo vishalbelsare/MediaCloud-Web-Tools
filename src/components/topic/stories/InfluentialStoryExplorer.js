@@ -1,7 +1,5 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import moment from 'moment';
 import * as d3 from 'd3';
@@ -12,7 +10,6 @@ import messages from '../../../resources/messages';
 import { googleFavIconUrl, storyDomainName } from '../../../lib/urlUtil';
 
 const localMessages = {
-  title: { id: 'topic.influentialStoryExplorer.title', defaultMessage: 'Story Explorer' },
   storiesChartTitle: { id: 'topic.influentialStoryExplorer.storiesChart.title', defaultMessage: 'Stories Each Day in this Timespan' },
   storiesChartY: { id: 'topic.influentialStoryExplorer.storiesChart.y', defaultMessage: 'stories / day' },
   storiesChartX: { id: 'topic.influentialStoryExplorer.storiesChart.x', defaultMessage: 'date' },
@@ -35,6 +32,8 @@ const INLINK_BIN_COUNT = 15;
 class InfluentialStoryExplorer extends React.Component {
 
   componentDidMount() {
+    const { selectedTimespan } = this.props;
+    this.renderDC(selectedTimespan);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,6 +70,12 @@ class InfluentialStoryExplorer extends React.Component {
   resetInlinkChart = (event) => {
     event.preventDefault();
     this.state.charts.inlinkChart.filterAll();
+    dc.redrawAll();
+  }
+
+  resetStoriesChart = (event) => {
+    event.preventDefault();
+    this.state.charts.storiesOverTimeChart.filterAll();
     dc.redrawAll();
   }
 
@@ -111,7 +116,7 @@ class InfluentialStoryExplorer extends React.Component {
       // clean up the data
       for (let i = 0; i < data.length; i += 1) {
         const d = data[i];
-        d.publishDate = moment(d.publish_date).toDate();
+        d.publishDate = new Date(d.publish_date.substring(0, 4), d.publish_date.substring(5, 7), d.publish_date.substring(8, 10));
         d.publishMonth = d.publishDate.getMonth(); // pre-calculate month for better performance
         d.bitly_click_count = +d.bitly_click_count; // coerce to number
         d.facebook_share_count = +d.facebook_share_count;
@@ -123,6 +128,7 @@ class InfluentialStoryExplorer extends React.Component {
       }
       // set up all the dimensions and groups that feed the charts
       const dateExtents = [selectedTimespan.startDateObj, selectedTimespan.endDateObj];
+      const totalDays = moment(selectedTimespan.endDateObj).diff(moment(selectedTimespan.startDateObj), 'days');
       const ndx = crossfilter(data);
       const all = ndx.groupAll();
       const publishDateDimension = ndx.dimension(d => d.publishDate);
@@ -137,10 +143,12 @@ class InfluentialStoryExplorer extends React.Component {
       const inlinkGroup = inlinkDimension.group(d => Math.floor(d / inlinkBinSize) * inlinkBinSize);
       // histogram of stories
       storiesOverTimeChart
-        .width(940).height(200)
+        .width(1000).height(200)
         .dimension(publishDateDimension)
         .group(publishDateGroup)
+        .gap(0)
         .x(d3.scaleTime().domain(dateExtents))
+        .xUnits(() => totalDays)
         .yAxisLabel(formatMessage(localMessages.storiesChartY))
         .xAxisLabel(formatMessage(localMessages.storiesChartX));
       // language pie chart
@@ -153,7 +161,7 @@ class InfluentialStoryExplorer extends React.Component {
         .group(languageGroup);
       // facebook share histogram
       facebookShareChart
-        .width(350).height(200)
+        .width(380).height(200)
         .group(facebookGroup)
         .dimension(facebookDimension)
         .gap(1)
@@ -164,7 +172,7 @@ class InfluentialStoryExplorer extends React.Component {
         .renderHorizontalGridLines(true);
       // bit.ly click histogram
       bitlyClickChart
-        .width(350).height(200)
+        .width(380).height(200)
         .group(bitlyGroup)
         .dimension(bitlyDimension)
         .gap(1)
@@ -175,7 +183,7 @@ class InfluentialStoryExplorer extends React.Component {
         .renderHorizontalGridLines(true);
       // media inlink histogram
       inlinkChart
-        .width(350).height(200)
+        .width(380).height(200)
         .group(inlinkGroup)
         .dimension(inlinkDimension)
         .gap(1)
@@ -215,6 +223,7 @@ class InfluentialStoryExplorer extends React.Component {
           bitlyClickChart,
           facebookShareChart,
           inlinkChart,
+          storiesOverTimeChart,
         },
       });
       dc.renderAll();
@@ -222,26 +231,31 @@ class InfluentialStoryExplorer extends React.Component {
   }
 
   render() {
-    const { formatMessage } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     return (
       <div className="story-explorer">
         <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <Title render={titleHandler} />
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-            </Col>
-          </Row>
           <div id="story-explorer-loading" style={{ display: 'none' }}>
-            <LoadingSpinner />
+            <Row>
+              <Col lg={12}>
+                <LoadingSpinner />
+              </Col>
+            </Row>
           </div>
           <div id="story-explorer-content" style={{ display: 'none' }}>
             <Row>
               <Col lg={10}>
-                <h3><FormattedMessage {...localMessages.storiesChartTitle} /></h3>
-                <div id="stories-over-time-chart" />
-                <div id="stories-by-month-chart" />
+                <div id="stories-over-time-chart">
+                  <h3>
+                    <FormattedMessage {...localMessages.storiesChartTitle} />
+                    <small>
+                      <span className="reset" style={{ display: 'none' }} >
+                        <span className="filter" />
+                        &nbsp;
+                        <a onClick={this.resetStoriesChart} tabIndex={0}><FormattedMessage {...messages.reset} /></a>
+                      </span>
+                    </small>
+                  </h3>
+                </div>
               </Col>
               <Col lg={2}>
                 <div id="language-chart">
@@ -312,32 +326,16 @@ class InfluentialStoryExplorer extends React.Component {
   }
 }
 
-InfluentialStoryExplorer.ROWS_PER_PAGE = 50;
-
 InfluentialStoryExplorer.propTypes = {
   // from the composition chain
   intl: React.PropTypes.object.isRequired,
   // from parent
-  // from state
-  topicInfo: React.PropTypes.object.isRequired,
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   selectedTimespan: React.PropTypes.object,
-  // from PagedContainer wrapper
-  nextButton: React.PropTypes.node,
-  previousButton: React.PropTypes.node,
 };
-
-const mapStateToProps = state => ({
-  filters: state.topics.selected.filters,
-  topicInfo: state.topics.selected.info,
-  topicId: state.topics.selected.id,
-  selectedTimespan: state.topics.selected.timespans.selected,
-});
 
 export default
   injectIntl(
-    connect(mapStateToProps)(
-      InfluentialStoryExplorer
-    )
+    InfluentialStoryExplorer
   );
