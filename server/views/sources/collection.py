@@ -33,14 +33,14 @@ def upload_file():
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return ''
+            return jsonify({'error':'No file part'})
         file = request.files['file']
 
         if file.filename == '':
             flash('No selected file')
-            return ''
+            return jsonify({'error':'No selected file'})
         if file and allowed_file(file.filename):
-            props = ['URL','NAME','PUBLICATION-COUNTRY','ID']
+            props = ['URL','NAME','PUB_COUNTRY','MEDIA_ID']
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
@@ -48,67 +48,54 @@ def upload_file():
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 newOrUpdated = []
-                newOrUpdatedWithMeta = []
-                reader.next()
+                newOrUpdatedWithMetaAndEmpties = []
+                reader.next() # this means we have to have a header 
                 for line in reader:
                     try:
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore'): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
-                        newline = {k.lower():v for k, v in newline.items() if v !=''}
-                        newOrUpdatedWithMeta.append(newline)
-                        withoutMeta = {k.lower():v for k, v in newline.items() if k !='publication-country'}
-                        newOrUpdated.append(withoutMeta)
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
+                        newOrUpdatedWithMetaAndEmpties.append(newline)
+                        newlineNoEmpties = {k:v for k, v in newline.items() if v !=''}
+                        noEmptiesNoMeta = {k:v for k, v in newlineNoEmpties.items() if k !='pub_country'}
+                        newOrUpdated.append(noEmptiesNoMeta)
                     except Exception as e:
                         logger.error("Couldn't process a CSV row: "+str(e))
-                createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMeta)
+                        return jsonify({"error":"Couldn't process a CSV row: "+str(e)})
+                if len(newOrUpdated) > 0:
+                    return createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
 
-    return {'temp'}
+    return jsonify({'error':'Something went wrong. Check your CSV file for formatting errors'})
 
-def createSourceFromTemplate(sourceList, sourceListWithMeta):
+def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
-
-    valid_metadata = [
-        { 'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY }
-    ]
-    
-    # for metadata_item in valid_metadata:
-           # metadata_tag = if metadata_item['form_key'] in newOrUpdated else None # this is optional
-    print sourceListWithMeta
     result = user_mc.mediaCreate(sourceList)
+    logger.debug("success creating or updating source %s",result)
     # status, media_id, url, error in result
 
-
     mergedLists = []
-    mergedLists = sourceListWithMeta
+    mergedLists = newOrUpdatedWithMetaAndEmpties
     for r in result:
         for i in mergedLists:
             i.update(r.items())
 
+    tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY)
 
-    print mergedLists
     for source in mergedLists:
         if source['status'] != 'error':
-                metadata_tag_id = source['publication-country'] if source['publication-country'] else None # this is optional
-                if metadata_tag_id != None:
-                    print 'found metadata'
-                    if source['status'] == 'new':
-                        print 'found new'
-                        tag = MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
-                        user_mc.tagMedia([tag])
-                    # more complicated b/c we have to remove any pre-existing
-                    if source['status'] == 'existing':
-                        print 'found existing'
-                        # do I have to go fetch this metadata or can I just replace it
-                        # existing_tag_ids = [ t['tags_id'] for t in source['media_source_tags']
-                        # if t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY]
-                        tag = MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
-                        user_mc.tagMedia([tag], clear_others=True)
+            metadata_tag_id = source['pub_country'] if source['pub_country'] else None
+            if metadata_tag_id not in ['',None]:
+                matching = [t for t in tagISOs if t['tag'] == 'pub_'+ metadata_tag_id]
+                if matching not in ['',None]:
+                    metadata_tag_id = matching[0]['tags_id']
+                    logger.debug('found metadata to add %s',metadata_tag_id)
+                    user_mc.tagMedia(
+                        tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
+                        clear_others=True) # make sure to clear any other values set in this metadata tag set
+                    logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
-
-
-        
-    # if it worked, update any metadata, because we need to remove the other tags in each set 
-    return jsonify(result)
+     
+    # return newly created or updated source list with media_ids filled in
+    return jsonify({'results':mergedLists})
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required
