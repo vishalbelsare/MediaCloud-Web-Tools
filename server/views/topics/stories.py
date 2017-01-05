@@ -109,18 +109,23 @@ def topic_stories(topics_id):
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def topic_stories_csv(topics_id):
+    as_attachment = True
+    if ('attach' in request.args):
+        as_attachment = request.args['attach'] == 1
     user_mc = user_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment)
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     '''
-    Helper method to strem a list of stories back to the client as a csv.  Any args you pass in will be
+    Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
     simply be passed on to a call to topicStoryList.
     '''
+    as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     all_stories = []
     more_stories = True
     params = kwargs
+    del params['as_attachment']
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
         while more_stories:
@@ -134,6 +139,6 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
         props = ['stories_id', 'publish_date', 'title', 'url', 'media_id', 'media_name',
             'media_inlink_count', 'inlink_count',
             'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
-        return csv.stream_response(all_stories, props, filename)
+        return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400

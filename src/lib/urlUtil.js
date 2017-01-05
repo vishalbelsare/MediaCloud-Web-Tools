@@ -10,7 +10,11 @@ export function googleFavIconUrl(domain) {
 // return our best guess for the domain name of a story
 export function storyDomainName(story) {
   // use guid unless it isn't a url
-  tempATag.href = (story.guid.startsWith('http')) ? story.guid : story.url;
+  if ({}.hasOwnProperty.call(story, 'guid')) {
+    tempATag.href = (story.guid.startsWith('http')) ? story.guid : story.url;
+  } else {
+    tempATag.href = story.url;
+  }
   // get the domain without any subdomain
   const domain = tempATag.hostname.split('.').slice(-2).join('.');
   return domain;

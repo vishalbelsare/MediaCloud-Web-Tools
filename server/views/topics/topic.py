@@ -7,7 +7,7 @@ from server import app, db
 from server.util.mail import send_email
 from server.util.request import form_fields_required, api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
-from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
+from server.views.topics.apicache import cached_topic_timespan_list
 
 logger = logging.getLogger(__name__)
 

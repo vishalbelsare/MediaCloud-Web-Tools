@@ -1,0 +1,18 @@
+@import '../constants';
+
+.story-explorer {
+  #story-counts {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: $material-grey300 1px solid;
+    border-bottom: $material-grey300 1px solid;
+  }
+  #bitly-click-chart .x.axis text,
+  #facebook-share-chart .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-45deg);
+  }
+}

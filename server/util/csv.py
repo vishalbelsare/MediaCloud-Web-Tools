@@ -4,7 +4,7 @@ import flask
 
 logger = logging.getLogger(__name__)
 
-def stream_response(data, dict_keys, filename, column_names=None):
+def stream_response(data, dict_keys, filename, column_names=None, as_attachment=True):
     """Stream a fully ready dict to the user as a csv.
     Keyword arguments:
     data -- an array of dicts
@@ -40,5 +40,8 @@ def stream_response(data, dict_keys, filename, column_names=None):
                 logger.exception(e)
                 logger.debug(row)
     download_filename = 'mediacloud-'+str(filename)+'-'+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+'.csv'
-    return flask.Response(stream_as_csv(data, dict_keys, column_names), mimetype='text/csv; charset=utf-8',
-                headers={"Content-Disposition":"attachment;filename="+download_filename})
+    headers = {}
+    if as_attachment:
+        headers["Content-Disposition"] = "attachment;filename="+download_filename
+    return flask.Response(stream_as_csv(data, dict_keys, column_names),
+                          mimetype='text/csv; charset=utf-8', headers=headers)

@@ -25,6 +25,14 @@ h2 {
   margin-bottom: 20px;
 }
 
+h3 {
+  small {
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: normal;
+  }
+}
+
 td {
   font-family: $body-text-font-families;
 }
@@ -54,10 +62,12 @@ table th {
   padding: 5px;
 }
 
+table tr:nth-child(even),
 table tr.even {
   background-color: $material-grey200;
 }
 
+table tr:nth-child(odd),
 table tr.odd {
   background-color: inherit;
 }
