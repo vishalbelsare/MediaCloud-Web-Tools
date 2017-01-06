@@ -116,10 +116,12 @@ Spidered?: {spidered}
 
 Sincerely,
 
-Your friendly MIT Topic Mapper server
+Your friendly Media Cloud Topic Mapper server
 🎓👓
+
+https://topics.mediacloud.org
     """
-    send_email('system@mediacloud.org',
+    send_email('no-reply@mediacloud.org',
         [user_name(),'topic-request@mediacloud.org'],
         'New Topic Request: '+request.form['name'],
         content.format(
