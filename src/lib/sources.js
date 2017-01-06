@@ -1,8 +1,14 @@
 import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from './apiUtil';
 
-export function sourceList() {
-  return createApiPromise('api/sources/all');
-}
+// possible return statuses from a call to createSource
+export const CREATE_SOURCE_STATUS_NEW = 'new';
+export const CREATE_SOURCE_STATUS_EXISTING = 'existing';
+export const CREATE_SOURCE_STATUS_ERROR = 'error';
+
+// possible statuses to send to a call to updateSourceSuggestion
+// export const UPDATE_SOURCE_SUGGESTION_STATUS_PENDING = 'pending';
+export const UPDATE_SOURCE_SUGGESTION_STATUS_APPROVED = 'approved';
+export const UPDATE_SOURCE_SUGGESTION_STATUS_REJECTED = 'rejected';
 
 export function sourcesByIds(params) {
   const acceptedParams = acceptParams(params, ['src']);
@@ -94,10 +100,6 @@ export function metadataValues(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
 
-export const CREATE_SOURCE_STATUS_NEW = 'new';
-export const CREATE_SOURCE_STATUS_EXISTING = 'existing';
-export const CREATE_SOURCE_STATUS_ERROR = 'error';
-
 export function createSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'publicationCountry', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
@@ -116,4 +118,15 @@ export function sourceFeeds(id) {
 export function suggestSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reason', 'collections[]']);
   return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);
+}
+
+export function listSourceSuggestions(params) {
+  const acceptedParams = acceptParams(params, ['all']);
+  const all = acceptedParams.all || false;
+  return createApiPromise(`/api/sources/suggestions?all=${all ? 1 : 0}`);
+}
+
+export function updateSourceSuggestion(params) {
+  const acceptedParams = acceptParams(params, ['suggestionId', 'status', 'reason']);
+  return createPostingApiPromise(`/api/sources/suggestions/${acceptParams.suggestionId}/update`, acceptedParams);
 }
