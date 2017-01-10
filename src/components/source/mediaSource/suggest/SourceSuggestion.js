@@ -4,7 +4,7 @@ import DataCard from '../../../common/DataCard';
 
 const localMessages = {
   info: { id: 'source.suggestion.info', defaultMessage: 'Suggested as "{name}" by {user} on {date} because "{reason}".' },
-  markSummary: { id: 'source.suggestion.markSummary', defaultMessage: 'Marked as {status} by {user} on {date} because {reason}.' },
+  markSummary: { id: 'source.suggestion.markSummary', defaultMessage: 'Marked as {status} by {user} on {date} because "{reason}".' },
   notMarked: { id: 'source.suggestion.notMarked', defaultMessage: 'Not reviwed yet.' },
 };
 
