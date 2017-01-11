@@ -9,6 +9,7 @@ import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../..
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
+import LinkWithFilters from '../LinkWithFilters';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { pagedAndSortedLocation } from '../../util/location';
@@ -16,6 +17,7 @@ import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {
   title: { id: 'topic.influentialStories.title', defaultMessage: 'Influential Stories' },
+  exploreLink: { id: 'topic.influentialStories.exploreLink', defaultMessage: 'Try the experimental dynamic story explorer UI.' },
 };
 
 class InfluentialStoriesContainer extends React.Component {
@@ -51,6 +53,11 @@ class InfluentialStoriesContainer extends React.Component {
                 <FormattedMessage {...localMessages.title} />
                 {helpButton}
               </h2>
+              <p>
+                <LinkWithFilters to={`/topics/${topicId}/stories/explore`}>
+                  <FormattedMessage {...localMessages.exploreLink} />
+                </LinkWithFilters>
+              </p>
               <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
               { previousButton }
               { nextButton }
@@ -106,7 +113,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(fetchTopicInfluentialStories(props.topicId, params))
       .then((results) => {
-        dispatch(push(pagedAndSortedLocation(ownProps.location, results.link_ids.current, props.sort)));
+        // only update the url if it has changed
+        if ((results.link_ids.current.toString() !== ownProps.location.query.linkId) ||
+            (props.sort !== ownProps.location.query.sort)) {
+          dispatch(push(pagedAndSortedLocation(
+            ownProps.location,
+            results.link_ids.current,
+            props.sort,
+            props.filters
+          )));
+        }
       });
   },
   sortData: (sort) => {

@@ -3,12 +3,15 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
+import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
-  nameLabel: { id: 'source.suggest.name.label', defaultMessage: 'Name of Suggested Source' },
-  urlLabel: { id: 'source.suggest.url.label', defaultMessage: 'URL of Suggested Source(required)' },
-  feedUrlLabel: { id: 'source.suggest.feedurl.label', defaultMessage: 'URL of feed' },
-  reasonLabel: { id: 'source.suggest.reasons.label', defaultMessage: 'Reasons for Suggestion' },
+  nameLabel: { id: 'source.suggest.name.label', defaultMessage: 'Name' },
+  urlLabel: { id: 'source.suggest.url.label', defaultMessage: 'Homepage (required)' },
+  feedUrlLabel: { id: 'source.suggest.feedurl.label', defaultMessage: 'RSS feed URL' },
+  feedUrlHint: { id: 'source.suggest.feedurl.hint', defaultMessage: 'if you know the url of an RSS feed, enter it here' },
+  reasonLabel: { id: 'source.suggest.reasons.label', defaultMessage: 'Reasons' },
+  reasonHint: { id: 'source.suggest.reasons.hint', defaultMessage: 'why do you want us to add this source' },
   addLabel: { id: 'source.suggest.collection.label', defaultMessage: 'Add to these Collection' },
   nameError: { id: 'source.suggest.name.error', defaultMessage: 'You have to enter a name for this source.' },
   urlError: { id: 'source.suggest.url.error', defaultMessage: 'Pick have to enter a url for this source.' },
@@ -18,19 +21,6 @@ const SourceSuggestionForm = (props) => {
   const { renderTextField } = props;
   return (
     <div className="app-form">
-      <Row>
-        <Col md={3}>
-          <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.urlLabel} />
-          </span>
-        </Col>
-        <Col md={4}>
-          <Field
-            name="url"
-            component={renderTextField}
-          />
-        </Col>
-      </Row>
       <Row>
         <Col md={3}>
           <span className="label unlabeled-field-label">
@@ -47,6 +37,20 @@ const SourceSuggestionForm = (props) => {
       <Row>
         <Col md={3}>
           <span className="label unlabeled-field-label">
+            <FormattedMessage {...localMessages.urlLabel} />
+          </span>
+        </Col>
+        <Col md={4}>
+          <Field
+            name="url"
+            component={renderTextField}
+            fullWidth
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col md={3}>
+          <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.feedUrlLabel} />
           </span>
         </Col>
@@ -54,6 +58,8 @@ const SourceSuggestionForm = (props) => {
           <Field
             name="feedurl"
             component={renderTextField}
+            hintText={localMessages.feedUrlHint}
+            fullWidth
           />
         </Col>
       </Row>
@@ -67,6 +73,7 @@ const SourceSuggestionForm = (props) => {
           <Field
             name="reason"
             component={renderTextField}
+            hintText={localMessages.reasonHint}
             fullWidth
           />
         </Col>
@@ -82,8 +89,17 @@ SourceSuggestionForm.propTypes = {
   initialValues: React.PropTypes.object,
 };
 
+function validate(values) {
+  const errors = {};
+  if (emptyString(values.url)) {
+    errors.email = localMessages.missingUrl;
+  }
+  return errors;
+}
+
 const reduxFormConfig = {
   form: 'suggestionForm',
+  validate,
 };
 
 export default

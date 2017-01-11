@@ -9,7 +9,9 @@ import CreateCollectionContainer from '../components/source/collection/CreateCol
 import AdvancedSearchContainer from '../components/source/search/AdvancedSearchContainer';
 import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
-import SuggestSourceContainer from '../components/source/mediaSource/SuggestSourceContainer';
+import SuggestSourceContainer from '../components/source/mediaSource/suggest/SuggestSourceContainer';
+import AllSuggestionsContainer from '../components/source/mediaSource/suggest/AllSuggestionsContainer';
+import PendingSuggestionsContainer from '../components/source/mediaSource/suggest/PendingSuggestionsContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import SourceFeedContainer from '../components/source/mediaSource/SourceFeedContainer';
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
@@ -37,6 +39,8 @@ const sourceRoutes = (
       <Route path="/sources" >
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
         <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
+        <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />
+        <Route path="suggestions/history" component={AllSuggestionsContainer} onEnter={requireAuth} />
         <Route path="/sources/:sourceId" component={SelectSourceContainer} >
           <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
           <Redirect from="details" to=":sourceId" />

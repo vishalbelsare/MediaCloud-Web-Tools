@@ -7,7 +7,6 @@ import sys
 from flask import Flask, render_template
 from flask_webpack import Webpack
 from flask_mail import Mail
-import pymongo
 import flask_login
 from flask_cors import CORS
 from raven.conf import setup_logging
@@ -58,8 +57,12 @@ else:
 mc = mediacloud.api.AdminMediaCloud(settings.get('mediacloud', 'api_key'))
 logger.info("Connected to mediacloud")
 
-# Connect to CLIFF
-cliff = Cliff(settings.get('cliff', 'host'), settings.get('cliff', 'port'))
+# Connect to CLIFF if the settings are there
+cliff = None
+try:
+    cliff = Cliff(settings.get('cliff', 'host'), settings.get('cliff', 'port'))
+except Exception:
+    logger.warn("no CLIFF connection")
 
 # Connect to the app's mongo DB
 db_host = settings.get('database', 'host')

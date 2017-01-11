@@ -9,10 +9,10 @@ import os
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
 
 
-from server import app, mc
+from server import app, mc, db
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -132,6 +132,18 @@ def api_collections_by_ids():
         sources_list += info;
     return jsonify({'results':sources_list})
 
+@app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
+@flask_login.login_required
+@form_fields_required('favorite')
+@api_error_handler
+def collection_set_favorited(collection_id):
+    favorite = request.form["favorite"]
+    username = user_name()
+    if int(favorite) == 1:
+        db.add_item_to_users_list(username, 'favoriteCollections', int(collection_id))
+    else:
+        db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
+    return jsonify({'isFavorite': favorite})
 
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required

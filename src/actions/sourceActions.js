@@ -2,7 +2,6 @@ import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
 import * as api from '../lib/sources';
 
-// export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
 export const FETCH_SOURCES_BY_IDS = 'FETCH_SOURCES_BY_IDS';
@@ -44,9 +43,14 @@ export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECT
 export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTION';
 export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
 export const FETCH_SOURCE_FEEDS = 'FETCH_SOURCE_FEEDS';
-export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
 export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
+<<<<<<< HEAD
+export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
+export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
+export const FETCH_SOURCE_SUGGESTIONS = 'FETCH_SOURCE_SUGGESTIONS';
+=======
 export const UPLOAD_SOURCE_LIST_FROM_TEMPLATE = 'UPLOAD_SOURCE_LIST_FROM_TEMPLATE';
+>>>>>>> master
 
 export const selectCollection = createAction(SELECT_COLLECTION, id => id);
 
@@ -116,9 +120,16 @@ export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_
 
 export const fetchSourceFeeds = createAsyncAction(FETCH_SOURCE_FEEDS, api.sourceFeeds, id => id);
 
-export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource);
-
 export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIONS, api.similarCollections, id => id);
 
+export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource);
+
+export const updateSourceSuggetion = createAsyncAction(UPDATE_SOURCE_SUGGESTION, api.updateSourceSuggetion);
+
+<<<<<<< HEAD
+// accepts an 'all' boolean property
+export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS, api.listSourceSuggestions);
+=======
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 
+>>>>>>> master

@@ -19,6 +19,8 @@ const localMessages = {
   emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
+  suggestSource: { id: 'sources.menu.items.suggestSource', defaultMessage: 'Suggest a Source' },
+  pendingSuggestions: { id: 'sources.menu.items.pendingSuggestions', defaultMessage: 'Pending Suggestions' },
 };
 
 class SourcesDrawer extends React.Component {
@@ -77,7 +79,14 @@ class SourcesDrawer extends React.Component {
             <FormattedMessage {...localMessages.emm} />
           </MenuItem>
           <Divider />
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/suggest'); }}>
+            <FormattedMessage {...localMessages.suggestSource} />
+          </MenuItem>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/suggestions'); }}>
+              <FormattedMessage {...localMessages.pendingSuggestions} />
+            </MenuItem>
+            <Divider />
             <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
               <FormattedMessage {...localMessages.newSource} />
             </MenuItem>

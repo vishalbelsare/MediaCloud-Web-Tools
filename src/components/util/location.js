@@ -1,10 +1,11 @@
 
-export function pagedAndSortedLocation(location, linkId, sort) {
+export function pagedAndSortedLocation(location, linkId, sort, newFilters) {
   return Object.assign({}, location, {
     query: {
       ...location.query,
       linkId,
       sort,
+      ...newFilters,
     },
   });
 }

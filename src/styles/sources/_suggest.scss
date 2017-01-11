@@ -1,0 +1,12 @@
+
+.source-suggestion {
+  &.source-suggestion-rejected {
+  	background-color: #E17864;
+  }
+  &.source-suggestion-pending {
+  	background-color: #FFD98E;
+  }
+  &.source-suggestion-approved {
+  	background-color: #779161;
+  }
+}

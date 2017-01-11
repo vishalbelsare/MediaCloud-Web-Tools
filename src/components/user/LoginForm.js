@@ -9,7 +9,7 @@ import AppButton from '../common/AppButton';
 import { getAppName } from '../../config';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
-import { notEmptyString } from '../../lib/formValidators';
+import { emptyString } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 
 const MEDIACLOUD_REGISTER_URL = 'https://core.mediacloud.org/login/register';
@@ -110,10 +110,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 // in-browser validation callback
 function validate(values) {
   const errors = {};
-  if (!notEmptyString(values.email)) {
+  if (emptyString(values.email)) {
     errors.email = localMessages.missingEmail;
   }
-  if (!notEmptyString(values.password)) {
+  if (emptyString(values.password)) {
     errors.password = localMessages.missingPassword;
   }
   return errors;
@@ -121,7 +121,6 @@ function validate(values) {
 
 const reduxFormConfig = {
   form: 'login',
-  fields: ['email', 'password'],
   validate,
 };
 
