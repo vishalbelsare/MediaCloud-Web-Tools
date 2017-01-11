@@ -9,7 +9,7 @@ Werkzeug==0.11.10
 click==6.6
 gunicorn==19.4.5
 itsdangerous==0.24
-mediacloud==2.36.0
+mediacloud==2.36.1
 ndg-httpsclient==0.4.1
 pyOpenSSL==16.0.0
 pyasn1==0.1.9
