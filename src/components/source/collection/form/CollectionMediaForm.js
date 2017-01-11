@@ -9,6 +9,7 @@ import { updateFeedback } from '../../../../actions/appActions';
 import composeIntlForm from '../../../common/IntlForm';
 import ComingSoon from '../../../common/ComingSoon';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
+import CollectionUploadSourceContainer from '../CollectionUploadSourceContainer';
 import { googleFavIconUrl } from '../../../../lib/urlUtil';
 import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
@@ -106,7 +107,9 @@ class SourceSelectionRenderer extends React.Component {
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
                   <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
-                  <ComingSoon />
+                  <CollectionUploadSourceContainer
+                    onConfirm={item => this.addSources(item)}
+                  />
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
                   <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
