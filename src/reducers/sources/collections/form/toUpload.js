@@ -6,10 +6,13 @@ const toUpload = createAsyncReducer({
     list: [],
   },
   action: UPLOAD_SOURCE_LIST_FROM_TEMPLATE,
-  handleSuccess: payload => ({
+  handleSuccess: (payload) => {
+    if (payload.status && payload.status.indexOf('Error') > -1) {
     // best way to handle UI need for id vs media_id field?
-    list: payload.results.map(m => ({ ...m, id: m.media_id })),
-  }),
+      return { list: [], error: payload.status };
+    }
+    return { list: payload.results.map(m => ({ ...m, id: m.media_id })) };
+  },
 });
 
 export default toUpload;
