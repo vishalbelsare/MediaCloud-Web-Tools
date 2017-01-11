@@ -11,8 +11,8 @@ Python 2.7:
  * python 2.7 https://www.python.org/download/releases/2.7/
  * `pip install virtualenv` (if necessary) [also install/link pip if you don't have it (if on Mac OS, use sudo easy_install pip)]
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
- *  `source venv/bin/activate` to activate your virtual environment (and not run any global python installations)
- * On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install (http://brew.sh)
+ * activate your virtualenv (OSX: `source venv/bin/activate`, Windows: `call venv\Scripts\activate`) to activate your virtual environment (and not run any global python installations)
+ * On Window, make sure to create an environment variable: `set NODE_ENV=dev`
  * in MediaMeter directory>`pip install -r requirements.txt` 
 
 Node and npm:  
@@ -24,6 +24,10 @@ MongoDB:
 
 Redis:
 [Install Redis](http://redis.io/)  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install redis`
+
+MemCacahe:
+On OSX, make sure to run `brew install libmemcached` otherwise you'll get an error about pylibmc failing to install (http://brew.sh)
+ 
 
 Configuration
 ------------- 
