@@ -24,3 +24,4 @@ redis==2.10.5
 networkx==1.9
 Flask-Mail==0.9.1
 mediameter-cliff==1.2.0
+python-dateutil==2.6.0
