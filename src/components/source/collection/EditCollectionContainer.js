@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateCollection, select, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { updateCollection, selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionForm from './form/CollectionForm';
@@ -88,7 +88,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
   },
   asyncFetch: () => {
-    dispatch(select(ownProps.params.collectionId));
+    dispatch(selectCollection(ownProps.params.collectionId));
     dispatch(fetchCollectionDetails(ownProps.params.collectionId));
   },
 });
