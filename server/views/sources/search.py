@@ -21,7 +21,7 @@ def media_search(search_str):
     if tags is None:
         source_list = _cached_media_search(cleaned_search_str)[:5]
     else:
-        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:5]
+        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:10]
     return jsonify({'list':source_list})
 
 @cache
@@ -34,7 +34,7 @@ def _cached_media_search(search_str, tags_id=None):
 @api_error_handler
 def collection_search(search_str):
     results = _cached_collection_search(search_str)
-    trimmed = [ r[:3] for r in results]
+    trimmed = [ r[:10] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
     return jsonify({'list': flat_list})
 

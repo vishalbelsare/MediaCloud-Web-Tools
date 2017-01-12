@@ -1,20 +1,12 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
-import composeAsyncContainer from '../common/AsyncContainer';
-import SourcesAndCollectionsList from './SourcesAndCollectionsList';
-import AppButton from '../common/AppButton';
+import composeAsyncContainer from '../../common/AsyncContainer';
+import AdvancedSearchResults from './AdvancedSearchResults';
 import { fetchSourceByMetadata, fetchCollectionByMetadata,
-  selectAdvancedSearchCollection, selectAdvancedSearchSource } from '../../actions/sourceActions';
-
-const localMessages = {
-  title: { id: 'sources.collections.all.title', defaultMessage: 'Sources And Collections' },
-  send: { id: 'sources.collections.all.title', defaultMessage: 'Add Selected Items To Collection' },
-  intro: { id: 'sources.collections.all.intro',
-    defaultMessage: 'This is a list of all of our curated collections of media sources.  Collections are our primary way of organizing media sources; almost every media source in our system is a member of one or more of these curated collections.  Some collections are manually curated, and others are generated using quantitative metrics.  Some are historical, while others are actively maintained and updated.' },
-};
+  selectAdvancedSearchCollection, selectAdvancedSearchSource } from '../../../actions/sourceActions';
 
 const ADD_ALL_THIS_PAGE = 1;
 const REMOVE_ALL = 0;
@@ -23,7 +15,7 @@ const ADD_ALL_PAGES = 2;
 // TODO when paging is implemented, we'll have to set these booleans...
 const FIRST_PAGE = true;
 
-class SourcesAndCollectionsContainer extends React.Component {
+class AdvancedSearchResultsContainer extends React.Component {
   componentDidMount = () => {
     this.setState({ allOrNoneCheck: false });
   }
@@ -68,42 +60,27 @@ class SourcesAndCollectionsContainer extends React.Component {
     }
   };
   render() {
-    const { queriedSources, queriedCollections, pristine, submitting } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { queriedSources, queriedCollections } = this.props;
     return (
-      <div className="all-collections">
-        <Grid>
-          <Row>
-            <Col lg={6} />
-            <Col lg={6}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                type="submit"
-                label={formatMessage(localMessages.send)}
-                disabled={pristine || submitting}
-                primary
-                onClick={this.pushToCreateCollectionPage}
-              />
-            </Col>
-          </Row>
-          <SourcesAndCollectionsList
-            queriedSources={queriedSources}
-            queriedCollections={queriedCollections}
-            addRemoveAll={this.addOrRemoveAllSelected}
-            ADD_ALL_THIS_PAGE={ADD_ALL_THIS_PAGE}
-            REMOVE_ALL={REMOVE_ALL}
-            ADD_ALL_PAGES={ADD_ALL_PAGES}
-            allOrNoneCheck={this.evalStateAndPage()}
-            addOrRemoveToSelectedSources={this.addOrRemoveToSelectedSources}
-            addOrRemoveToSelectedCollections={this.addOrRemoveToSelectedCollections}
-          />
-        </Grid>
-      </div>
+      <Grid>
+        <AdvancedSearchResults
+          onAddToCollection={this.pushToCreateCollectionPage}
+          queriedSources={queriedSources}
+          queriedCollections={queriedCollections}
+          addRemoveAll={this.addOrRemoveAllSelected}
+          ADD_ALL_THIS_PAGE={ADD_ALL_THIS_PAGE}
+          REMOVE_ALL={REMOVE_ALL}
+          ADD_ALL_PAGES={ADD_ALL_PAGES}
+          allOrNoneCheck={this.evalStateAndPage()}
+          addOrRemoveToSelectedSources={this.addOrRemoveToSelectedSources}
+          addOrRemoveToSelectedCollections={this.addOrRemoveToSelectedCollections}
+        />
+      </Grid>
     );
   }
 }
 
-SourcesAndCollectionsContainer.propTypes = {
+AdvancedSearchResultsContainer.propTypes = {
   // from state
   queriedCollections: React.PropTypes.array,
   queriedSources: React.PropTypes.array,
@@ -191,7 +168,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncContainer(
-        SourcesAndCollectionsContainer
+        AdvancedSearchResultsContainer
       )
     )
   );

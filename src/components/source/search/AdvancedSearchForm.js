@@ -12,13 +12,13 @@ const localMessages = {
   pubCountrySuggestion: { id: 'search.advanced.pubCountryTip', defaultMessage: 'published in' },
 };
 
-const SearchMetadataPickerForm = (props) => {
+const AdvancedSearchForm = (props) => {
   const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
   const { formatMessage } = props.intl;
   return (
-    <form className="advancedQueryForm" onSubmit={handleSubmit(onSearch.bind(this))}>
+    <form className="advanced-search-form" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Row>
-        <Col lg={4}>
+        <Col lg={10}>
           <Field
             name="advancedSearchQueryString"
             value={initialValues}
@@ -29,7 +29,7 @@ const SearchMetadataPickerForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={6}>
+        <Col lg={10}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
@@ -38,9 +38,7 @@ const SearchMetadataPickerForm = (props) => {
             autocomplete
           />
         </Col>
-      </Row>
-      <Row>
-        <Col lgOffset={6} lg={2}>
+        <Col lg={2}>
           <AppButton
             style={{ marginTop: 30 }}
             type="submit"
@@ -53,7 +51,8 @@ const SearchMetadataPickerForm = (props) => {
     </form>
   );
 };
-SearchMetadataPickerForm.propTypes = {
+
+AdvancedSearchForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   // from form healper
@@ -76,7 +75,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        SearchMetadataPickerForm
+        AdvancedSearchForm
       )
     )
   );
