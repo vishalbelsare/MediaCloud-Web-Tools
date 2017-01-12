@@ -24,10 +24,11 @@ const CollectionDetailsForm = (props) => {
             <FormattedMessage {...localMessages.nameLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={11}>
           <Field
             name="name"
             component={renderTextField}
+            fullWidth
           />
         </Col>
       </Row>
@@ -37,10 +38,11 @@ const CollectionDetailsForm = (props) => {
             <FormattedMessage {...localMessages.descriptionLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={11}>
           <Field
             name="description"
             component={renderTextField}
+            fullWidth
           />
         </Col>
       </Row>
