@@ -17,6 +17,7 @@ import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
+import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
 import messages from '../../../resources/messages';
 
 
@@ -93,6 +94,11 @@ class CollectionDetailsContainer extends React.Component {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <CollectionGeographyContainer collectionId={collection.tags_id} collectionName={collection.label} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} md={12} xs={12}>
+            <CollectionMetadataCoverageSummaryContainer collectionId={collection.tags_id} collection={collection} sources={collection.media} />
           </Col>
         </Row>
         <Row>
