@@ -47,6 +47,9 @@ export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
 export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
 export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
 export const FETCH_SOURCE_SUGGESTIONS = 'FETCH_SOURCE_SUGGESTIONS';
+export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
+export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
+export const FETCH_SOURCE_SUGGESTIONS = 'FETCH_SOURCE_SUGGESTIONS';
 export const UPLOAD_SOURCE_LIST_FROM_TEMPLATE = 'UPLOAD_SOURCE_LIST_FROM_TEMPLATE';
 
 export const selectCollection = createAction(SELECT_COLLECTION, id => id);
@@ -125,5 +128,7 @@ export const updateSourceSuggetion = createAsyncAction(UPDATE_SOURCE_SUGGESTION,
 
 // accepts an 'all' boolean property
 export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS, api.listSourceSuggestions);
+
+export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);

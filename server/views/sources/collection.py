@@ -33,12 +33,12 @@ def upload_file():
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return jsonify({'error':'No file part'})
+            return jsonify({'status':'Error', 'message': 'No file part'})
         file = request.files['file']
 
         if file.filename == '':
             flash('No selected file')
-            return jsonify({'error':'No selected file'})
+            return jsonify({'status':'Error', 'message': 'No selected file'})
         if file and allowed_file(file.filename):
             props = ['URL','NAME','PUB_COUNTRY','MEDIA_ID']
             filename = secure_filename(file.filename)
@@ -60,32 +60,44 @@ def upload_file():
                         newOrUpdated.append(noEmptiesNoMeta)
                     except Exception as e:
                         logger.error("Couldn't process a CSV row: "+str(e))
-                        return jsonify({"error":"Couldn't process a CSV row: "+str(e)})
-                if len(newOrUpdated) > 0:
+                        return jsonify({'status':'Error', 'message': "couldn't process a CSV row: "+str(e)})
+
+                if len(newOrUpdated) > 100:
+                    return jsonify({'status':'Error', 'message': 'Too many sources to upload. The limit is 100.'})
+                elif len(newOrUpdated) > 0:
                     return createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
 
-    return jsonify({'error':'Something went wrong. Check your CSV file for formatting errors'})
+    return jsonify({'status':'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
 
 def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
-    logger.debug("success creating or updating source %s",result)
+    logger.debug("succ ess creating or updating source %s",result)
     # status, media_id, url, error in result
+    print result
+    
+    mList = []
+    for eachdict in result:
+        mNewDictList = [hasEmptiesDict for hasEmptiesDict in newOrUpdatedWithMetaAndEmpties if hasEmptiesDict['url'] == eachdict['url']]
+        mList += mNewDictList
+     
+    for eachNewDict in mList:
+        for eachdict in result:
+            missingItems = {k:v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
+            print(missingItems)
+            if eachNewDict['url'] == eachdict['url']:                 
+                eachNewDict.update(missingItems)
 
-    mergedLists = []
-    mergedLists = newOrUpdatedWithMetaAndEmpties
-    for r in result:
-        for i in mergedLists:
-            i.update(r.items())
+    print mList
 
     tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY)
 
-    for source in mergedLists:
+    for source in mList:
         if source['status'] != 'error':
             metadata_tag_id = source['pub_country'] if source['pub_country'] else None
             if metadata_tag_id not in ['',None]:
                 matching = [t for t in tagISOs if t['tag'] == 'pub_'+ metadata_tag_id]
-                if matching not in ['',None]:
+                if matching and matching not in ['',None]:
                     metadata_tag_id = matching[0]['tags_id']
                     logger.debug('found metadata to add %s',metadata_tag_id)
                     user_mc.tagMedia(
@@ -95,7 +107,7 @@ def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
     # with the results, combine ids with metadata tag list
      
     # return newly created or updated source list with media_ids filled in
-    return jsonify({'results':mergedLists})
+    return jsonify({'results':mList})
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required

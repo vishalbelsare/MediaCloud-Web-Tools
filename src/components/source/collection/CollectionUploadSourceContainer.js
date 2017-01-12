@@ -1,7 +1,8 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { uploadSourceListFromTemplate, updateFeedback } from '../../../actions/sourceActions';
+import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
+import { updateFeedback } from '../../../actions/appActions';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
 
@@ -17,17 +18,26 @@ const localMessages = {
 };
 class CollectionUploadSourceContainer extends React.Component {
 
+  selectedCSV = () => {
+    this.setState({ confirmTemplate: true });
+  }
+
+  confirmLoadCSV = () => {
+    this.setState({ confirmTemplate: false });
+  }
+
   uploadCSV = () => {
     const { uploadCSVFile } = this.props;
     const fd = this.textInput.files[0];
     uploadCSVFile(fd);
+    this.selectedCSV();
   }
   render() {
     const { onConfirm, sources } = this.props;
     let confirmContent = null;
-    if (sources.length > 0) {
+    if (sources.length > 0 && this.state && this.state.confirmTemplate) {
       confirmContent = (
-        <CollectionUploadConfirmer onConfirm={onConfirm} />
+        <CollectionUploadConfirmer onConfirm={onConfirm} onCancel={this.confirmLoadCSV} onClickButton={this.confirmLoadCSV} />
       );
     }
     return (
@@ -60,9 +70,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   uploadCSVFile: (csvFile) => {
     dispatch(uploadSourceListFromTemplate({ file: csvFile }))
-      .then(() => {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+      .then((results) => {
+        if (results.status === 'Error') {
+          updateFeedback({ open: true, message: ownProps.intl.formatMessage({ id: 'collection.upload.error', defaultMessage: results.message }) });
+        } else {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+        }
       });
   },
 });

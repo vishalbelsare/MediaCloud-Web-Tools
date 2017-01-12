@@ -135,3 +135,4 @@ export function collectionUploadSourceListFromTemplate(params) {
   const acceptedParams = acceptParams(params, ['file']);
   return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
 }
+
