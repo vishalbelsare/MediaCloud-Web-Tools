@@ -120,7 +120,6 @@ export function suggestSource(params) {
   return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);
 }
 
-<<<<<<< HEAD
 export function listSourceSuggestions(params) {
   const acceptedParams = acceptParams(params, ['all']);
   const all = acceptedParams.all || false;
@@ -130,9 +129,9 @@ export function listSourceSuggestions(params) {
 export function updateSourceSuggestion(params) {
   const acceptedParams = acceptParams(params, ['suggestionId', 'status', 'reason']);
   return createPostingApiPromise(`/api/sources/suggestions/${acceptParams.suggestionId}/update`, acceptedParams);
-=======
+}
+
 export function collectionUploadSourceListFromTemplate(params) {
   const acceptedParams = acceptParams(params, ['file']);
   return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
->>>>>>> master
 }
