@@ -10,6 +10,9 @@ from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_
 
 logger = logging.getLogger(__name__)
 
+MAX_SOURCES = 20
+MAX_COLLECTIONS = 20
+
 @app.route('/api/sources/search/<search_str>', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -19,9 +22,9 @@ def media_search(search_str):
     if 'tags[]' in request.args:
         tags = request.args['tags[]'].split(',')
     if tags is None:
-        source_list = _cached_media_search(cleaned_search_str)[:5]
+        source_list = _cached_media_search(cleaned_search_str)[:MAX_SOURCES]
     else:
-        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:10]
+        source_list = _cached_media_search(cleaned_search_str, tags_id=tags[0])[:MAX_SOURCES]
     return jsonify({'list':source_list})
 
 @cache
@@ -34,7 +37,7 @@ def _cached_media_search(search_str, tags_id=None):
 @api_error_handler
 def collection_search(search_str):
     results = _cached_collection_search(search_str)
-    trimmed = [ r[:10] for r in results]
+    trimmed = [ r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
     return jsonify({'list': flat_list})
 
