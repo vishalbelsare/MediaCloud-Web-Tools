@@ -121,7 +121,7 @@ export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIO
 
 export const suggestSource = createAsyncAction(SUGGEST_SOURCE, api.suggestSource);
 
-export const updateSourceSuggetion = createAsyncAction(UPDATE_SOURCE_SUGGESTION, api.updateSourceSuggetion);
+export const updateSourceSuggestion = createAsyncAction(UPDATE_SOURCE_SUGGESTION, api.updateSourceSuggestion, payload => payload);
 
 // accepts an 'all' boolean property
 export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS, api.listSourceSuggestions);
