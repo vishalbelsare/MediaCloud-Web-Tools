@@ -146,7 +146,7 @@ def api_collections_by_ids():
     for tagsId in collIdArray:
         info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
-        info = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+        info = [{'media_id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
         sources_list += info;
     return jsonify({'results':sources_list})
 
