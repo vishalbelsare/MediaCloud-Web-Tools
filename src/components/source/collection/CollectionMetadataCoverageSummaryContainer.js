@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-
+import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
 // import PieChart from '../../vis/TreeMap';
 
 const localMessages = {
@@ -20,7 +20,7 @@ const localMessages = {
     defaultMessage: '<p>This visualization gives you a sense of whichc sources are tagged with metadata.</p>',
   },
   cantShow: { id: 'collection.summary.metadatacoverage.cantShow', defaultMessage: 'Sorry, this collection has too many sources for us to compute a map of how much content each source contributes to it.' },
-  countryOfPublication: { id: 'collection.summary.metadatacoverage.pubCountry', defaultMessage: 'Country of Publication' },
+  pubCountryTitle: { id: 'collection.summary.metadatacoverage.pubCountry', defaultMessage: 'Country of Publication' },
 };
 
 class CollectionMetadataCoverageSummaryContainer extends React.Component {
@@ -46,7 +46,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     }
     return (
-      <DataCard>
+      <DataCard style={{ height: 50 }} >
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
@@ -55,7 +55,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
           {helpButton}
         </h2>
         {content}
-        <MetadataCoverageItem sources={sources} metadataId="1935" />
+        <MetadataCoverageItem title={formatMessage(localMessages.pubCountryTitle)} sources={sources} metadataId={TAG_SET_PUBLICATION_COUNTRY} />
       </DataCard>
     );
   }

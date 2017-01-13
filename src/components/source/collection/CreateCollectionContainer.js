@@ -114,7 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       showOnStories: values.showOnStories,
     };
     if ('sources' in values) {
-      infoToSave['sources[]'] = values.sources.map(s => s.id);
+      infoToSave['sources[]'] = values.sources.map(s => (s.id ? s.id : s.media_id));
     } else {
       infoToSave['sources[]'] = [];
     }

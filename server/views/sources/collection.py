@@ -65,16 +65,15 @@ def upload_file():
                 if len(newOrUpdated) > 100:
                     return jsonify({'status':'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 elif len(newOrUpdated) > 0:
-                    return createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
+                    return create_source_from_template(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
 
     return jsonify({'status':'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
 
-def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
+def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
     logger.debug("succ ess creating or updating source %s",result)
     # status, media_id, url, error in result
-    print result
     
     mList = []
     for eachdict in result:
@@ -84,13 +83,10 @@ def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
     for eachNewDict in mList:
         for eachdict in result:
             missingItems = {k:v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
-            print(missingItems)
             if eachNewDict['url'] == eachdict['url']:                 
                 eachNewDict.update(missingItems)
 
-    print mList
-
-    tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY)
+    tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY, rows=100)
 
     for source in mList:
         if source['status'] != 'error':
@@ -332,7 +328,7 @@ def collection_update(collection_id):
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
     source_ids = []
     if len(request.form['sources[]']) > 0:
-        source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
+        source_ids = [sid for sid in request.form['sources[]'].split(',')]
     # first update the collection
     updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
         is_static=(static=='true'),

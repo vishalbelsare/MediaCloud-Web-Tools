@@ -3,42 +3,43 @@ import { injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
 import initHighcharts from './initHighcharts';
 
+const DEFAULT_HEIGHT = 320;
+
 initHighcharts();
 /**
  * Pass in data - an array of `name`/`value` objects
  */
 const PieChart = (props) => {
-  const { title, data } = props;
+  const { title, data, colors, tooltipText } = props;
   const config = {
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
       plotShadow: false,
       type: 'pie',
+      height: DEFAULT_HEIGHT,
     },
     title: {
       text: title,
     },
     tooltip: {
-      pointFormat: '{series.name}: <b>{point.count:.1f}%</b>',
+      pointFormat: '{series.name}: <b>{point.y}</b>',
     },
+    colors,
     plotOptions: {
       pie: {
         allowPointSelect: true,
         cursor: 'pointer',
         dataLabels: {
           enabled: true,
-          format: '<b>{point.name}</b>: {point.count:.1f} %',
-          style: {
-            color: 'gray',
-          },
+          format: '<b>{point.name}</b>: {point.y}',
         },
       },
     },
     series: [{
-      name: 'Metadata',
       colorByPoint: true,
-      data: { data },
+      name: tooltipText,
+      data,
     }],
   };
   return (
@@ -53,7 +54,8 @@ PieChart.propTypes = {
   title: React.PropTypes.string.isRequired,
   data: React.PropTypes.array.isRequired,
   onPieSliceClick: React.PropTypes.func,
-  color: React.PropTypes.string,
+  colors: React.PropTypes.array.isRequired,
+  tooltipText: React.PropTypes.string.isRequired,
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };

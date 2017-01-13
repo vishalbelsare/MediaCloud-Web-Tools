@@ -1,14 +1,16 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PieChart from '../../vis/PieChart';
+import { getBrandDarkColor, getBrandLightColor } from '../../../styles/colors';
 
 const localMessages = {
   set: { id: 'collection.summary.metadatacoverage.set', defaultMessage: 'Has Metadata tags' },
-  noSet: { id: 'collection.summary.metadatacoverage.noset', defaultMessage: 'No Metadata tags' },
+  notSet: { id: 'collection.summary.metadatacoverage.noset', defaultMessage: 'No Metadata tags' },
+  tooltipText: { id: 'collection.summary.metadatacoverage.tooltip', defaultMessage: '# Sources:' },
 };
 
 const MetadataCoverageItem = (props) => {
-  const { sources, metadataId } = props;
+  const { sources, metadataId, title } = props;
   const { formatMessage } = props.intl;
   let content = null;
   let sourcesWithMetadata;
@@ -20,9 +22,12 @@ const MetadataCoverageItem = (props) => {
     const sourcesWithout = sources.length - sourcesWithMetadata.length;
     content = (
       <PieChart
+        title={title}
+        tooltipText={formatMessage(localMessages.tooltipText)}
+        colors={[getBrandDarkColor(), getBrandLightColor()]}
         data={[
-          { label: formatMessage(localMessages.set), count: sourcesWithMetadata.length, color: '#111111' },
-          { label: formatMessage(localMessages.notSet), count: sourcesWithout, color: '#cccccc' },
+          { name: formatMessage(localMessages.set), y: sourcesWithMetadata.length },
+          { name: formatMessage(localMessages.notSet), y: sourcesWithout },
         ]}
       />
     );
@@ -36,7 +41,7 @@ const MetadataCoverageItem = (props) => {
 
 MetadataCoverageItem.propTypes = {
   sources: React.PropTypes.array,
-  metadataId: React.PropTypes.string,
+  metadataId: React.PropTypes.number,
   title: React.PropTypes.string,
   intl: React.PropTypes.object.isRequired,
 };

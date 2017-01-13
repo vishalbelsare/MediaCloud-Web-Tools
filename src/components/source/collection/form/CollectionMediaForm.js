@@ -141,12 +141,12 @@ class SourceSelectionRenderer extends React.Component {
                       key={`c${idx}`}
                       name={source}
                       component={info => (
-                        <tr key={source.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+                        <tr key={source.media_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                           <td>
                             <img className="google-icon" src={googleFavIconUrl(info.input.value.url)} alt={info.input.value.name} />
                           </td>
                           <td>
-                            <Link to={`/sources/${info.input.value.id}`}>{info.input.value.name}</Link>
+                            <Link to={`/sources/${info.input.value.media_id}`}>{info.input.value.name}</Link>
                           </td>
                           <td>
                             <a href="{source.url}" target="_new">{info.input.value.url}</a>

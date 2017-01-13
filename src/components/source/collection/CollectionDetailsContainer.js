@@ -97,7 +97,7 @@ class CollectionDetailsContainer extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg={12} md={12} xs={12}>
+          <Col lg={12} md={12} xs={6}>
             <CollectionMetadataCoverageSummaryContainer collectionId={collection.tags_id} collection={collection} sources={collection.media} />
           </Col>
         </Row>
