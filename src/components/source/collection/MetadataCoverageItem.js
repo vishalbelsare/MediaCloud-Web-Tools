@@ -6,10 +6,7 @@ import { getBrandDarkColor, getBrandLightColor } from '../../../styles/colors';
 const localMessages = {
   set: { id: 'collection.summary.metadatacoverage.set', defaultMessage: 'Has Metadata tags' },
   notSet: { id: 'collection.summary.metadatacoverage.noset', defaultMessage: 'No Metadata tags' },
-<<<<<<< HEAD
   tooltipText: { id: 'collection.summary.metadatacoverage.tooltip', defaultMessage: '# Sources:' },
-=======
->>>>>>> origin/master
 };
 
 const MetadataCoverageItem = (props) => {
