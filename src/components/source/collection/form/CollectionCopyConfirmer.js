@@ -8,7 +8,7 @@ import messages from '../../../../resources/messages';
 
 const localMessages = {
   confirm: { id: 'collection.media.add.confirm',
-    defaultMessage: 'The "{name}" collection has {count} collections.  Do you want to add all {count} of them?',
+    defaultMessage: 'The "{name}" collection has {count} sources.  Do you want to add all {count} of them?',
   },
 };
 
