@@ -149,7 +149,7 @@ class SourceSelectionRenderer extends React.Component {
                             <Link to={`/sources/${info.input.value.media_id}`}>{info.input.value.name}</Link>
                           </td>
                           <td>
-                            <a href="{source.url}" target="_new">{info.input.value.url}</a>
+                            <a href={`${info.input.value.url}`} target="_new">{info.input.value.url}</a>
                           </td>
                           <td>
                             <RemoveButton onClick={() => fields.remove(idx)} />
