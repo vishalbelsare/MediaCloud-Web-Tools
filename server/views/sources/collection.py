@@ -16,6 +16,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.metadata import _cached_tags_in_tag_set
 import server.util.csv as csv
 from server.views.sources import COLLECTIONS_TAG_SET_ID
 
@@ -86,7 +87,7 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
             if eachNewDict['url'] == eachdict['url']:                 
                 eachNewDict.update(missingItems)
 
-    tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY, rows=100)
+    tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
 
     for source in mList:
         if source['status'] != 'error':
