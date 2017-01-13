@@ -4,7 +4,7 @@ import PieChart from '../../vis/PieChart';
 
 const localMessages = {
   set: { id: 'collection.summary.metadatacoverage.set', defaultMessage: 'Has Metadata tags' },
-  noSet: { id: 'collection.summary.metadatacoverage.noset', defaultMessage: 'No Metadata tags' },
+  notSet: { id: 'collection.summary.metadatacoverage.noset', defaultMessage: 'No Metadata tags' },
 };
 
 const MetadataCoverageItem = (props) => {
