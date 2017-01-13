@@ -110,14 +110,24 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
 @api_error_handler
 def api_collection_set(tag_sets_id):
     user_mc = user_mediacloud_client()
-    info = _cached_public_collection_list(user_mediacloud_key(), tag_sets_id)
+    info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
     return jsonify(info)
 
 @cache
-def _cached_public_collection_list(user_mc_key, tag_sets_id):
+def _cached_collection_set_list(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
-    collection_list = user_mc.tagList(tag_sets_id=tag_sets_id, rows=100, public_only=True)
+    # page through tags
+    more_tags = True
+    all_tags = []
+    last_tags_id = 0
+    while more_tags:
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
+        all_tags = all_tags + tags
+        if len(tags) > 0:
+            last_tags_id = tags[-1]['tags_id']
+        more_tags = len(tags) != 0
+    collection_list = all_tags
     collection_list = sorted(collection_list, key=itemgetter('label'))
     return {
         'name': tag_set['label'],

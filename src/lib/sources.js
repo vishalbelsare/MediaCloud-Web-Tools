@@ -128,7 +128,7 @@ export function listSourceSuggestions(params) {
 
 export function updateSourceSuggestion(params) {
   const acceptedParams = acceptParams(params, ['suggestionId', 'status', 'reason']);
-  return createPostingApiPromise(`/api/sources/suggestions/${acceptParams.suggestionId}/update`, acceptedParams);
+  return createPostingApiPromise(`/api/sources/suggestions/${acceptedParams.suggestionId}/update`, acceptedParams);
 }
 
 export function collectionUploadSourceListFromTemplate(params) {

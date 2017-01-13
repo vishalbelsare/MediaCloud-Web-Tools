@@ -45,7 +45,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       const { linkTo, onClick, color, tooltip, iconStyle } = this.props;
       const { formatMessage } = this.props.intl;
       const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(defaultTooltipMessage);
-      const linkTarget = linkTo || displayTooltip;
+      const linkTarget = linkTo || null;
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
       if (useBackgroundColor === true) {

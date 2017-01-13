@@ -118,7 +118,7 @@ const AdvancedSearchResults = (props) => {
                     />
                   </div>
                   <div className="search-result-actions">
-                    <Link to={`/sources/${collection.tags_id}`}>
+                    <Link to={`/collections/${collection.tags_id}`}>
                       <FormattedMessage {...localMessages.exploreCollectionInvite} />
                     </Link>
                     &nbsp;

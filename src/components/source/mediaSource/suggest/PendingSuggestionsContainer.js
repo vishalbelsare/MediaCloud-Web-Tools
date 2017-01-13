@@ -4,7 +4,7 @@ import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchSourceSuggestions } from '../../../../actions/sourceActions';
+import { fetchSourceSuggestions, updateSourceSuggestion } from '../../../../actions/sourceActions';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import SourceSuggestion from './SourceSuggestion';
 
@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const PendingSuggestionsContainer = (props) => {
-  const { suggestions } = props;
+  const { suggestions, handleApprove, handleReject } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
   return (
@@ -34,8 +34,8 @@ const PendingSuggestionsContainer = (props) => {
       </Row>
       <Row>
         { suggestions.map(s => (
-          <Col key={s.media_suggestions_id} lg={4} >
-            <SourceSuggestion suggestion={s} markable />
+          <Col key={s.media_suggestions_id} lg={12} >
+            <SourceSuggestion suggestion={s} markable onApprove={handleApprove} onReject={handleReject} />
           </Col>
         ))}
       </Row>
@@ -50,6 +50,9 @@ PendingSuggestionsContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   suggestions: React.PropTypes.array.isRequired,
+  // from dispatch
+  handleApprove: React.PropTypes.func,
+  handleReject: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -60,6 +63,20 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
     dispatch(fetchSourceSuggestions({ all: false }));
+  },
+  handleApprove: (suggestion, reason) => {
+    dispatch(updateSourceSuggestion({
+      suggestionId: suggestion.media_suggestions_id,
+      status: 'approved',
+      reason,
+    })).then(() => dispatch(fetchSourceSuggestions({ all: false })));
+  },
+  handleReject: (suggestion, reason) => {
+    dispatch(updateSourceSuggestion({
+      suggestionId: suggestion.media_suggestions_id,
+      status: 'rejected',
+      reason,
+    })).then(() => dispatch(fetchSourceSuggestions({ all: false })));
   },
 });
 
