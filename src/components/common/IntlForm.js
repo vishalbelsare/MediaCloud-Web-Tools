@@ -22,7 +22,7 @@ function composeIntlForm(Component) {
 
     intlCustomProps = (customProps) => {
       const intlCustom = Object.assign({}, customProps);
-      ['label', 'floatingLabelText', 'hintText', 'errorText'].forEach((prop) => {
+      ['label', 'floatingLabelText', 'hintText', 'errorText', 'disabled'].forEach((prop) => {
         if ((prop in customProps)) {
           intlCustom[prop] = this.intlIfObject(customProps[prop]);
         }
@@ -42,12 +42,13 @@ function composeIntlForm(Component) {
       );
     };
 
-    renderCheckbox = ({ input, name, label }) => (
+    renderCheckbox = ({ input, name, label, disabled }) => (
       <Checkbox
         name={name}
         label={this.intlIfObject(label)}
         checked={input.value === true}
         onCheck={input.onChange}
+        disabled={this.intlIfObject(disabled)}
       />
     );
 

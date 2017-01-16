@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const CollectionDetailsForm = (props) => {
-  const { renderTextField, renderCheckbox } = props;
+  const { renderTextField, renderCheckbox, initialValues } = props;
   return (
     <div className="collection-details-form">
       <Row>
@@ -28,6 +28,7 @@ const CollectionDetailsForm = (props) => {
           <Field
             name="name"
             component={renderTextField}
+            disabled={initialValues.disabled}
             fullWidth
           />
         </Col>
@@ -43,6 +44,7 @@ const CollectionDetailsForm = (props) => {
             name="description"
             component={renderTextField}
             fullWidth
+            disabled={initialValues.disabled}
           />
         </Col>
       </Row>
@@ -63,6 +65,7 @@ const CollectionDetailsForm = (props) => {
             component={renderCheckbox}
             fullWidth
             label={localMessages.showOnMediaLabel}
+            disabled={initialValues.disabled}
           />
         </Col>
       </Row>
@@ -72,6 +75,7 @@ const CollectionDetailsForm = (props) => {
             name="showOnStories"
             component={renderCheckbox}
             fullWidth
+            disabled={initialValues.disabled}
             label={localMessages.showOnStoriesLabel}
           />
         </Col>

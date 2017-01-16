@@ -26,6 +26,7 @@ const EditCollectionContainer = (props) => {
     static: collection.is_static === 1,
     showOnMedia: collection.show_on_media === 1,
     showOnStories: collection.show_on_stories === 1,
+    disabled: collection.is_static === 1,
   };
   return (
     <div>

@@ -6,6 +6,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
 import CollectionDetailsForm from './CollectionDetailsForm';
 import CollectionMediaForm from './CollectionMediaForm';
+import SourceList from '../SourceList';
 import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
@@ -16,14 +17,29 @@ const localMessages = {
 
 const CollectionForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
+  let enabledContent = null;
+  let disabledContent = null;
+
+  if (!initialValues.disabled) {
+    enabledContent = (
+      <CollectionMediaForm
+        initialValues={initialValues}
+      />
+    );
+  } else {
+    disabledContent = (
+      <SourceList
+        sources={initialValues.sources}
+      />
+    );
+  }
   return (
     <form className="app-form collection-form" name="collectionForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <CollectionDetailsForm
         initialValues={initialValues}
       />
-      <CollectionMediaForm
-        initialValues={initialValues}
-      />
+      {enabledContent}
+      {disabledContent}
       <Row>
         <Col lg={12}>
           <AppButton
