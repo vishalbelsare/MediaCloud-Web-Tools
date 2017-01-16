@@ -29,6 +29,7 @@ const CollectionForm = (props) => {
   } else {
     disabledContent = (
       <SourceList
+        collectionId={parseInt(initialValues.id, 10)}
         sources={initialValues.sources}
       />
     );

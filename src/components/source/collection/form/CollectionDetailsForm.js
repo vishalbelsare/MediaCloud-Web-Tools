@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const CollectionDetailsForm = (props) => {
-  const { renderTextField, renderCheckbox, initialValues } = props;
+  const { renderTextField, renderCheckbox, initialValues, updateFields } = props;
   return (
     <div className="collection-details-form">
       <Row>
@@ -55,6 +55,7 @@ const CollectionDetailsForm = (props) => {
             component={renderCheckbox}
             fullWidth
             label={localMessages.staticLabel}
+            onChange={updateFields}
           />
         </Col>
       </Row>
@@ -90,6 +91,7 @@ CollectionDetailsForm.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   renderCheckbox: React.PropTypes.func,
   initialValues: React.PropTypes.object,
+  updateFields: React.PropTypes.func,
 };
 
 const reduxFormConfig = {

@@ -169,6 +169,8 @@ def source_create():
     name = request.form['name']
     url = request.form['url']
     notes = request.form['notes'] if 'notes' in request.form else None    # this is optional
+    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
+    monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
     tag_ids_to_add = []
     if len(request.form['collections[]']) > 0:
@@ -205,7 +207,11 @@ def source_update(media_id):
     name = request.form['name']
     url = request.form['url']
     notes = request.form['notes'] if 'notes' in request.form else None  # this is optional
+    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
+    monitored = request.form['monitored'] if 'monitored' in request.form else None
     result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=notes)
+    
+
     # now we need to update the collections separately, because they are tags on the media source
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
