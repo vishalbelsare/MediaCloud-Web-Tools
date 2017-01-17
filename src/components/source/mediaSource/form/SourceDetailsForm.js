@@ -10,10 +10,12 @@ const localMessages = {
   notesLabel: { id: 'source.add.notes.label', defaultMessage: 'Editor\'s Notes' },
   nameError: { id: 'source.add.name.error', defaultMessage: 'You have to enter a name for this source.' },
   urlError: { id: 'source.add.url.error', defaultMessage: 'Pick have to enter a url for this source.' },
+  publicNotesLabel: { id: 'collection.add.publicNotes.label', defaultMessage: 'Public Notes' },
+  isMonitoredLabel: { id: 'collection.add.monitor.label', defaultMessage: 'Monitored' },
 };
 
 const SourceDetailsForm = (props) => {
-  const { renderTextField } = props;
+  const { renderTextField, renderCheckbox } = props;
   return (
     <div className="source-details-form">
       <Row>
@@ -45,6 +47,20 @@ const SourceDetailsForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
+            <FormattedMessage {...localMessages.publicNotesLabel} />
+          </span>
+        </Col>
+        <Col md={11}>
+          <Field
+            name="publicNotes"
+            component={renderTextField}
+            fullWidth
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col md={2}>
+          <span className="label unlabeled-field-label">
             <FormattedMessage {...localMessages.notesLabel} />
           </span>
         </Col>
@@ -56,6 +72,16 @@ const SourceDetailsForm = (props) => {
           />
         </Col>
       </Row>
+      <Row>
+        <Col md={2}>
+          <Field
+            name="monitored"
+            component={renderCheckbox}
+            fullWidth
+            label={localMessages.isMonitoredLabel}
+          />
+        </Col>
+      </Row>
     </div>
   );
 };
@@ -64,6 +90,7 @@ SourceDetailsForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
+  renderCheckbox: React.PropTypes.func.isRequired,
   initialValues: React.PropTypes.object,
 };
 

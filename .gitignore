@@ -15,3 +15,7 @@ data/map-files/*.gexf
 data/map-files/*.json
 data/map-files/*.txt
 update_mc_api.sh
+
+env/.Python
+
+env/bin/activate

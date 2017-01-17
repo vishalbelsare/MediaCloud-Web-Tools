@@ -42,10 +42,10 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       }
     }
     render() {
-      const { linkTo, onClick, color, tooltip } = this.props;
+      const { linkTo, onClick, color, tooltip, iconStyle } = this.props;
       const { formatMessage } = this.props.intl;
       const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(defaultTooltipMessage);
-      const linkTarget = linkTo || displayTooltip;
+      const linkTarget = linkTo || null;
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
       if (useBackgroundColor === true) {
@@ -63,6 +63,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           >
             <IconButton
               tooltip={displayTooltip}
+              iconStyle={iconStyle || {}}
               style={{ padding: 0, border: 0, width: 26, height: 26, color }}
               tooltipStyles={{ top: 20 }}
             >
@@ -79,6 +80,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       React.PropTypes.string,
       React.PropTypes.object,
     ]),
+    iconStyle: React.PropTypes.object,
     tooltip: React.PropTypes.string,
     intl: React.PropTypes.object.isRequired,
     color: React.PropTypes.string,

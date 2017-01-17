@@ -101,12 +101,12 @@ export function metadataValues(id) {
 }
 
 export function createSource(params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'publicationCountry', 'collections[]']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'notes', 'publicNotes', 'monitored', 'publicationCountry', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
 }
 
 export function updateSource(params) {
-  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'notes', 'publicationCountry']);
+  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'notes', 'publicNotes', 'monitored', 'publicationCountry']);
   acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
   return createPostingApiPromise(`/api/sources/${acceptedParams.id}/update`, acceptedParams);
 }
@@ -128,7 +128,7 @@ export function listSourceSuggestions(params) {
 
 export function updateSourceSuggestion(params) {
   const acceptedParams = acceptParams(params, ['suggestionId', 'status', 'reason']);
-  return createPostingApiPromise(`/api/sources/suggestions/${acceptParams.suggestionId}/update`, acceptedParams);
+  return createPostingApiPromise(`/api/sources/suggestions/${acceptedParams.suggestionId}/update`, acceptedParams);
 }
 
 export function collectionUploadSourceListFromTemplate(params) {

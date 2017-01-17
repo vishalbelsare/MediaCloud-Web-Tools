@@ -16,6 +16,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.metadata import _cached_tags_in_tag_set
 import server.util.csv as csv
 from server.views.sources import COLLECTIONS_TAG_SET_ID
 
@@ -65,16 +66,15 @@ def upload_file():
                 if len(newOrUpdated) > 100:
                     return jsonify({'status':'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 elif len(newOrUpdated) > 0:
-                    return createSourceFromTemplate(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
+                    return create_source_from_template(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
 
     return jsonify({'status':'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
 
-def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
+def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
     logger.debug("succ ess creating or updating source %s",result)
     # status, media_id, url, error in result
-    print result
     
     mList = []
     for eachdict in result:
@@ -84,13 +84,10 @@ def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
     for eachNewDict in mList:
         for eachdict in result:
             missingItems = {k:v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
-            print(missingItems)
             if eachNewDict['url'] == eachdict['url']:                 
                 eachNewDict.update(missingItems)
 
-    print mList
-
-    tagISOs = mc.tagList(tag_sets_id=TAG_SETS_ID_PUBLICATION_COUNTRY)
+    tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
 
     for source in mList:
         if source['status'] != 'error':
@@ -114,14 +111,24 @@ def createSourceFromTemplate(sourceList, newOrUpdatedWithMetaAndEmpties):
 @api_error_handler
 def api_collection_set(tag_sets_id):
     user_mc = user_mediacloud_client()
-    info = _cached_public_collection_list(user_mediacloud_key(), tag_sets_id)
+    info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
     return jsonify(info)
 
 @cache
-def _cached_public_collection_list(user_mc_key, tag_sets_id):
+def _cached_collection_set_list(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
-    collection_list = user_mc.tagList(tag_sets_id=tag_sets_id, rows=100, public_only=True)
+    # page through tags
+    more_tags = True
+    all_tags = []
+    last_tags_id = 0
+    while more_tags:
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
+        all_tags = all_tags + tags
+        if len(tags) > 0:
+            last_tags_id = tags[-1]['tags_id']
+        more_tags = len(tags) != 0
+    collection_list = all_tags
     collection_list = sorted(collection_list, key=itemgetter('label'))
     return {
         'name': tag_set['label'],
@@ -140,7 +147,7 @@ def api_collections_by_ids():
     for tagsId in collIdArray:
         info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
-        info = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+        info = [{'media_id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
         sources_list += info;
     return jsonify({'results':sources_list})
 
@@ -166,7 +173,7 @@ def api_collection_details(collection_id):
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    info['media'] = [{'id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+    info['media'] = all_media
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/sources.csv')
@@ -332,7 +339,7 @@ def collection_update(collection_id):
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
     source_ids = []
     if len(request.form['sources[]']) > 0:
-        source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
+        source_ids = [sid for sid in request.form['sources[]'].split(',')]
     # first update the collection
     updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
         is_static=(static=='true'),

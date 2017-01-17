@@ -28,10 +28,9 @@ class CollectionSourceRepresentation extends React.Component {
     window.location = url;
   }
 
-  handleLeafClick = (evt) => {
-    const { sources, navToSource } = this.props;
-    const source = sources[evt.point.index];
-    navToSource(source.media_id);
+  handlePieSliceClick = () => {
+    // const { sources } = this.props;
+    // const source = sources[evt.point.index];
   }
 
   render() {

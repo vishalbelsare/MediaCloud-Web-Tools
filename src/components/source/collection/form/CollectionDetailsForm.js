@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const CollectionDetailsForm = (props) => {
-  const { renderTextField, renderCheckbox } = props;
+  const { renderTextField, renderCheckbox, initialValues, updateFields } = props;
   return (
     <div className="collection-details-form">
       <Row>
@@ -24,10 +24,12 @@ const CollectionDetailsForm = (props) => {
             <FormattedMessage {...localMessages.nameLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={11}>
           <Field
             name="name"
             component={renderTextField}
+            disabled={initialValues.disabled}
+            fullWidth
           />
         </Col>
       </Row>
@@ -37,10 +39,12 @@ const CollectionDetailsForm = (props) => {
             <FormattedMessage {...localMessages.descriptionLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={11}>
           <Field
             name="description"
             component={renderTextField}
+            fullWidth
+            disabled={initialValues.disabled}
           />
         </Col>
       </Row>
@@ -51,6 +55,7 @@ const CollectionDetailsForm = (props) => {
             component={renderCheckbox}
             fullWidth
             label={localMessages.staticLabel}
+            onChange={updateFields}
           />
         </Col>
       </Row>
@@ -61,6 +66,7 @@ const CollectionDetailsForm = (props) => {
             component={renderCheckbox}
             fullWidth
             label={localMessages.showOnMediaLabel}
+            disabled={initialValues.disabled}
           />
         </Col>
       </Row>
@@ -70,6 +76,7 @@ const CollectionDetailsForm = (props) => {
             name="showOnStories"
             component={renderCheckbox}
             fullWidth
+            disabled={initialValues.disabled}
             label={localMessages.showOnStoriesLabel}
           />
         </Col>
@@ -84,6 +91,7 @@ CollectionDetailsForm.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   renderCheckbox: React.PropTypes.func,
   initialValues: React.PropTypes.object,
+  updateFields: React.PropTypes.func,
 };
 
 const reduxFormConfig = {

@@ -5,8 +5,8 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Divider from 'material-ui/Divider';
-import SearchMetadataPickerForm from './SearchMetadataPickerForm';
-import SourcesAndCollectionsContainer from '../SourcesAndCollectionsContainer';
+import AdvancedSearchForm from './AdvancedSearchForm';
+import AdvancedSearchResultsContainer from './AdvancedSearchResultsContainer';
 
 // const formSelector = formValueSelector('advancedQueryForm');
 
@@ -35,7 +35,7 @@ class AdvancedSearchContainer extends React.Component {
     const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
     let resultsContent = null;
     if ((this.state.queryStr) || (this.state.tags.length > 0)) {
-      resultsContent = <SourcesAndCollectionsContainer searchString={this.state.queryStr} tags={this.state.tags} />;
+      resultsContent = <AdvancedSearchResultsContainer searchString={this.state.queryStr} tags={this.state.tags} />;
     }
     return (
       <div>
@@ -46,7 +46,7 @@ class AdvancedSearchContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
             </Col>
           </Row>
-          <SearchMetadataPickerForm
+          <AdvancedSearchForm
             initialValues={{ advancedSearchQueryString: this.state.queryStr }}
             buttonLabel={formatMessage(localMessages.addButton)}
             onSearch={(values) => {

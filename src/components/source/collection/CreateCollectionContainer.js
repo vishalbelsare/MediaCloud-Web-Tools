@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import { createCollection, fetchSourcesByIds, fetchCollectionSourcesByIds,
   resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -53,7 +54,7 @@ class CreateCollectionContainer extends React.Component {
       // nothign to prefill, so show the form
       readyToShowForm = true;
     }
-    let formContent = null;
+    let formContent = <LoadingSpinner />;
     if (readyToShowForm) {
       formContent = (
         <CollectionForm
@@ -114,7 +115,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       showOnStories: values.showOnStories,
     };
     if ('sources' in values) {
-      infoToSave['sources[]'] = values.sources.map(s => s.id);
+      infoToSave['sources[]'] = values.sources.map(s => (s.id ? s.id : s.media_id));
     } else {
       infoToSave['sources[]'] = [];
     }

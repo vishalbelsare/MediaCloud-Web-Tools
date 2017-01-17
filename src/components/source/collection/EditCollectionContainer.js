@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateCollection, select, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { updateCollection, selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionForm from './form/CollectionForm';
@@ -26,6 +26,7 @@ const EditCollectionContainer = (props) => {
     static: collection.is_static === 1,
     showOnMedia: collection.show_on_media === 1,
     showOnStories: collection.show_on_stories === 1,
+    disabled: collection.is_static === 1,
   };
   return (
     <div>
@@ -74,7 +75,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       showOnStories: values.showOnStories,
     };
     if ('sources' in values) {
-      infoToSave['sources[]'] = values.sources.map(s => s.id);
+      infoToSave['sources[]'] = values.sources.map(s => (s.id ? s.id : s.media_id));
     } else {
       infoToSave['sources[]'] = [];
     }
@@ -88,7 +89,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
   },
   asyncFetch: () => {
-    dispatch(select(ownProps.params.collectionId));
+    dispatch(selectCollection(ownProps.params.collectionId));
     dispatch(fetchCollectionDetails(ownProps.params.collectionId));
   },
 });
