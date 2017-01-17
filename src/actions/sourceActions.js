@@ -50,6 +50,7 @@ export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
 export const FETCH_SOURCE_SUGGESTIONS = 'FETCH_SOURCE_SUGGESTIONS';
 
 export const UPLOAD_SOURCE_LIST_FROM_TEMPLATE = 'UPLOAD_SOURCE_LIST_FROM_TEMPLATE';
+export const FETCH_SYSTEM_STATS = 'FETCH_SYSTEM_STATS';
 
 export const selectCollection = createAction(SELECT_COLLECTION, id => id);
 
@@ -130,3 +131,4 @@ export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS
 
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 
+export const fetchSystemStats = createAsyncAction(FETCH_SYSTEM_STATS, api.systemStats);

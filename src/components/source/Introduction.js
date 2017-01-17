@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import SystemStatsContainer from './SystemStatsContainer';
 import DataCard from '../common/DataCard';
 import AppButton from '../common/AppButton';
 
@@ -27,6 +28,9 @@ const Introduction = props => (
           <AppButton label={props.intl.formatMessage(localMessages.browse)} primary />
         </Link>
       </Col>
+    </Row>
+    <Row>
+      <SystemStatsContainer />
     </Row>
     <Row>
       <Col lg={4} xs={12}>

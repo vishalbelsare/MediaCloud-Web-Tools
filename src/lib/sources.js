@@ -136,3 +136,6 @@ export function collectionUploadSourceListFromTemplate(params) {
   return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
 }
 
+export function systemStats() {
+  return createApiPromise('/api/system-stats');
+}
