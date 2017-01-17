@@ -33,7 +33,7 @@ def api_media_sources_by_ids():
     return jsonify({'results': source_list})
 
 
-@app.route('/api/sources/<media_id>/favorite', methods=['PUT'])
+@app.route('/api/sources/<media_id>/favorite', methods=['POST'])
 @flask_login.login_required
 @form_fields_required('favorite')
 @api_error_handler
@@ -46,6 +46,12 @@ def source_set_favorited(media_id):
         db.remove_item_from_users_list(username, 'favoriteSources', int(media_id))
     return jsonify({'isFavorite': favorite})
 
+def _add_user_favorite_flag_to_sources(sources):
+    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
+    for s in sources:
+        s['isFavorite'] = int(s['media_id']) in user_favorited
+    logger.debug("is favorited ##### %s",s['isFavorite'])
+    return sources
 
 @app.route('/api/sources/<media_id>/feeds', methods=['GET'])
 @flask_login.login_required
@@ -102,6 +108,7 @@ def api_media_source_details(media_id):
     info = _cached_media_source_details(user_mediacloud_key(), media_id,
                                         _safely_get_health_start_date(health))
     info['health'] = health
+    _add_user_favorite_flag_to_sources([info])
     return jsonify({'results': info})
 
 
@@ -210,7 +217,7 @@ def source_update(media_id):
     public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=notes)
-    
+
 
     # now we need to update the collections separately, because they are tags on the media source
     source = user_mc.media(media_id)
@@ -313,3 +320,15 @@ https://sources.mediacloud.org
                    reason=reason
                ))
     return jsonify(new_suggestion)
+
+@app.route('/api/sources/favorite', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def favorite_sources():
+    user_mc = user_mediacloud_client()
+    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
+    favorited_sources = [user_mc.media(media_id) for media_id in user_favorited]
+    for s in favorited_sources:
+        s['isFavorite'] = True
+    return jsonify({'sources': favorited_sources})
+

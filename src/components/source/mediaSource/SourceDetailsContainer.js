@@ -13,6 +13,8 @@ import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
 import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
+import FavoriteToggler from '../../common/FavoriteToggler';
+import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet } from '../../../lib/tagUtil';
 
 
@@ -51,7 +53,7 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source } = this.props;
+    const { source, onChangeFavorited } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
@@ -66,8 +68,13 @@ class SourceDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />
-;
+
+    let mainButton = null;
+    mainButton = (<FavoriteToggler
+      isFavorited={source.isFavorite}
+      onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
+    />);
+    let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />;
     if (metadata.length > 0) {
       metadataContent = (
         <ul>{ metadata.map(item =>
@@ -90,6 +97,7 @@ class SourceDetailsContainer extends React.Component {
                 ID #{source.media_id}
                 {publicMessage}
                 {editMessage}
+                {mainButton}
               </small>
             </h1>
             <p>
@@ -179,6 +187,7 @@ SourceDetailsContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   source: React.PropTypes.object,
+  onChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -187,7 +196,15 @@ const mapStateToProps = (state, ownProps) => ({
   source: state.sources.sources.selected.sourceDetails.object,
 });
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onChangeFavorited: (mediaId, isFavorite) => {
+    dispatch(favoriteSource(mediaId, isFavorite))
+      .then(() => {
+        const msg = (isFavorite) ? messages.favorited : messages.unfavorited;
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
+        // dispatch(fetchFavoriteSources());  // to update the list of favorites
+      });
+  },
 });
 
 export default

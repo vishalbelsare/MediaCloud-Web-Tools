@@ -8,7 +8,7 @@ import Lock from 'material-ui/svg-icons/action/lock';
 import Unlock from 'material-ui/svg-icons/action/lock-open';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback, fetchFavoriteCollections } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
@@ -17,6 +17,7 @@ import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
+import FavoriteToggler from '../../common/FavoriteToggler';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
 import messages from '../../../resources/messages';
 
@@ -51,7 +52,7 @@ class CollectionDetailsContainer extends React.Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, onChangeFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
@@ -65,6 +66,12 @@ class CollectionDetailsContainer extends React.Component {
       </span>
     );
     const lockIcon = (collection.is_static === 1) ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> : <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+    let mainButton = null;
+    mainButton = (<FavoriteToggler
+      isFavorited={collection.isFavorite}
+      onChangeFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
+    />);
+
     return (
       <Grid className="details collection-details">
         <Title render={titleHandler} />
@@ -73,7 +80,7 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
+              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} {mainButton} </small>
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
@@ -128,6 +135,7 @@ CollectionDetailsContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   collection: React.PropTypes.object,
+  onChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 CollectionDetailsContainer.contextTypes = {
@@ -140,10 +148,18 @@ const mapStateToProps = (state, ownProps) => ({
   collection: state.sources.collections.selected.collectionDetails.object,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId) => {
     dispatch(selectCollection(collectionId));
     dispatch(fetchCollectionDetails(collectionId));
+  },
+  onChangeFavorited: (mediaId, isFavorite) => {
+    dispatch(favoriteCollection(mediaId, isFavorite))
+      .then(() => {
+        const msg = (isFavorite) ? messages.collectionFavorited : messages.collectionFavorited;
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
+        dispatch(fetchFavoriteCollections());  // to update the list of favorites
+      });
   },
 });
 

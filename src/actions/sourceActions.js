@@ -49,6 +49,16 @@ export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
 export const FETCH_SOURCE_SUGGESTIONS = 'FETCH_SOURCE_SUGGESTIONS';
 export const UPLOAD_SOURCE_LIST_FROM_TEMPLATE = 'UPLOAD_SOURCE_LIST_FROM_TEMPLATE';
 
+export const SET_FAVORITE_SOURCE = 'SET_FAVORITE_SOURCE';
+export const FETCH_FAVORITE_COLLECTIONS = 'FETCH_FAVORITE_COLLECTIONS';
+export const SET_FAVORITE_COLLECTION = 'SET_FAVORITE_COLLECTION';
+export const FETCH_FAVORITE_SOURCES = 'FETCH_FAVORITE_SOURCES';
+
+export const favoriteCollection = createAsyncAction(SET_FAVORITE_COLLECTION, api.favoriteCollection);
+export const favoriteSource = createAsyncAction(SET_FAVORITE_SOURCE, api.favoriteSource);
+export const fetchFavoriteCollections = createAsyncAction(FETCH_FAVORITE_COLLECTIONS, api.fetchFavoriteCollections, id => id);
+export const fetchFavoriteSources = createAsyncAction(FETCH_FAVORITE_SOURCES, api.fetchFavoriteSources, id => id);
+
 export const selectCollection = createAction(SELECT_COLLECTION, id => id);
 
 export const selectSource = createAction(SELECT_SOURCE, id => id);

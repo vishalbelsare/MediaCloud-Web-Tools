@@ -136,3 +136,19 @@ export function collectionUploadSourceListFromTemplate(params) {
   return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
 }
 
+export function favoriteSource(mediaId, favorite) {
+  return createPostingApiPromise(`/api/sources/${mediaId}/favorite`, { favorite: (favorite) ? 1 : 0 });
+}
+
+export function favoriteSources() {
+  return createApiPromise('/api/sources/favorite');
+}
+
+export function favoriteCollection(id, favorite) {
+  return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
+}
+
+export function favoriteCollections() {
+  return createApiPromise('/api/collections/favorite');
+}
+
