@@ -15,6 +15,9 @@ import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
 import CollectionCopyConfirmer from './CollectionCopyConfirmer';
 
+// show an extra submit button if source list is longer than this many entries
+const EXTRA_BUTTON_LIST_LENGTH = 7;
+
 const formSelector = formValueSelector('collectionForm');
 
 const localMessages = {
@@ -67,7 +70,7 @@ class SourceSelectionRenderer extends React.Component {
     }
   }
   render() {
-    const { fields, meta: { error } } = this.props;
+    const { submitButton, fields, meta: { error } } = this.props;
     let copyConfirmation = null;
     if (this.state.collectionId) {
       copyConfirmation = (
@@ -78,6 +81,8 @@ class SourceSelectionRenderer extends React.Component {
         />
       );
     }
+    // show a extra submit button for convenience at top of long list
+    const topButtonContent = (fields.length > EXTRA_BUTTON_LIST_LENGTH) ? submitButton : null;
     return (
       <div className="collection-media-form">
 
@@ -122,7 +127,8 @@ class SourceSelectionRenderer extends React.Component {
 
         <div className="form-section collection-media-form-list">
           <Row>
-            <Col lg={12}>
+            <Col lg={10}>
+              {topButtonContent}
               <h2><FormattedMessage {...localMessages.sourcesToInclude} /></h2>
             </Col>
           </Row>
@@ -179,6 +185,7 @@ SourceSelectionRenderer.propTypes = {
   meta: React.PropTypes.object,
   initialValues: React.PropTypes.object,
   // from parent
+  submitButton: React.PropTypes.node,
   currentSources: React.PropTypes.array,
   onSourcesAdded: React.PropTypes.func.isRequired,
 };
@@ -190,6 +197,7 @@ const CollectionMediaForm = props => (
       component={SourceSelectionRenderer}
       currentSources={props.currentSources}
       onSourcesAdded={props.handleSourceAdded}
+      submitButton={props.submitButton}
     />
   </div>
 );
@@ -202,6 +210,7 @@ CollectionMediaForm.propTypes = {
   initialValues: React.PropTypes.object,
   // from form helper
   // from parent
+  submitButton: React.PropTypes.node,
   // from state
   currentSources: React.PropTypes.array,
   // from dispatch

@@ -1,8 +1,24 @@
 
-.collection-media-form {
+.collection-form {
 
-  .collection-copy-confirm {
-    margin-top: 10px;
+  .app-button {
+    &.submit-button {
+      float:right;
+      padding-top: 15px;
+    }
+  }
+
+  .collection-media-form {
+
+    .collection-copy-confirm {
+      margin-top: 10px;
+    }
+
+    .collection-media-form-list {
+      .app-button {
+      }
+    }
+
   }
 
 }
