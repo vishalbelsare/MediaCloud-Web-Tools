@@ -10,14 +10,15 @@ initHighcharts();
  * Pass in data - an array of `name`/`value` objects
  */
 const PieChart = (props) => {
-  const { title, data, colors, tooltipText } = props;
+  const { title, data, tooltipText, height, showDataLabels } = props;
+  const colors = data.map(d => d.color);
   const config = {
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
       plotShadow: false,
       type: 'pie',
-      height: DEFAULT_HEIGHT,
+      height: height || DEFAULT_HEIGHT,
     },
     title: {
       text: title,
@@ -31,7 +32,7 @@ const PieChart = (props) => {
         allowPointSelect: true,
         cursor: 'pointer',
         dataLabels: {
-          enabled: true,
+          enabled: showDataLabels,
           format: '<b>{point.name}</b>: {point.y}',
         },
       },
@@ -54,8 +55,9 @@ PieChart.propTypes = {
   title: React.PropTypes.string.isRequired,
   data: React.PropTypes.array.isRequired,
   onPieSliceClick: React.PropTypes.func,
-  colors: React.PropTypes.array.isRequired,
   tooltipText: React.PropTypes.string.isRequired,
+  showDataLabels: React.PropTypes.bool.isRequired,
+  height: React.PropTypes.number,
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };

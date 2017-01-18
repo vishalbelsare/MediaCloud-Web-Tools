@@ -25,12 +25,13 @@ class AppButton extends React.Component {
   }
 
   render() {
-    const { flat } = this.props;
+    const { flat, className } = this.props;
+    const customClassName = className || '';
     const buttonProps = {
-      className: `app-button ${this.state.hoverClass}`,
       onMouseEnter: this.handleMouseEnter,
       onMouseLeave: this.handleMouseLeave,
       ...this.props,
+      className: `app-button ${this.state.hoverClass} ${customClassName}`,
     };
     let content = null;
     if (flat) {
@@ -48,6 +49,7 @@ AppButton.propTypes = {
   // from parent
   disabled: React.PropTypes.bool,
   flat: React.PropTypes.bool,
+  className: React.PropTypes.string,
 };
 
 export default AppButton;
