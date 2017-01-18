@@ -5,8 +5,9 @@ from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from werkzeug import secure_filename
 import csv as pycsv
+import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet
 
 
 from server import app, mc, db
@@ -17,8 +18,6 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.metadata import _cached_tags_in_tag_set
-import server.util.csv as csv
-from server.views.sources import COLLECTIONS_TAG_SET_ID
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +104,39 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
      
     # return newly created or updated source list with media_ids filled in
     return jsonify({'results':mList})
+
+
+@app.route('/api/collections/<collection_id>/metadatacoverage.csv')
+@flask_login.login_required
+@api_error_handler
+def api_metadata_download(collection_id):
+    user_mc = user_mediacloud_client()
+    info = user_mc.tag(collection_id)
+    all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    print "######################" 
+
+    metadataItems = []
+    for eachDict in all_media:
+        for eachItem in eachDict['media_source_tags']:
+            if isMetaDataTagSet(eachItem['tag_sets_id']):
+                found = False
+                print eachItem
+                for dictItem in metadataItems:
+                    if dictItem['metadataId'] == eachItem['tag_sets_id']:
+                        temp = dictItem['tagged']
+                        dictItem.update({'tagged': temp + 1})
+                        found = True
+                if not found:
+                    metadataItems.append({'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
+
+    for i in metadataItems:
+        temp = len(all_media) - dictItem['tagged']
+        i.update({'notTagged': temp })
+
+    props = ['metadataCoverage', 'tagged', 'notTagged']
+    filename = "metadataCoverageForCollection" + collection_id + ".csv"
+    return csv.stream_response(metadataItems, props, filename)
+
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required

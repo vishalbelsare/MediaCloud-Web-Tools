@@ -27,7 +27,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
 
   downloadCsv = () => {
     const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/metadatacoverage/metadataCoverage.csv`;
+    const url = `/api/collections/${collectionId}/metadatacoverage.csv`;
     window.location = url;
   }
 
