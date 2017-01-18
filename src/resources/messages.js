@@ -142,6 +142,13 @@ const messages = {
     defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
   },
 
+  totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },
+  totalDownloadsStat: { id: 'totalDownloads', defaultMessage: 'Total Downloads' },
+  totalSentencesStat: { id: 'totalSentences', defaultMessage: 'Total Sentences' },
+  crawledMediaStat: { id: 'crawledMedia', defaultMessage: 'Active Crawled Media' },
+  crawledFeedsStat: { id: 'crawledFeeds', defaultMessage: 'Active Crawled Feeds' },
+  dailyStoriesStat: { id: 'dailyStories', defaultMessage: 'Daily Stories' },
+  dailyDownloadsStat: { id: 'dailyDownloads', defaultMessage: 'Daily Downloads' },
 };
 
 export default messages;

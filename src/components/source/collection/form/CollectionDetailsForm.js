@@ -8,8 +8,7 @@ const localMessages = {
   nameLabel: { id: 'collection.add.name.label', defaultMessage: 'Name' },
   descriptionLabel: { id: 'collection.add.description.label', defaultMessage: 'Description' },
   staticLabel: { id: 'collection.add.static.label', defaultMessage: 'Static' },
-  showOnStoriesLabel: { id: 'collection.add.showOnStories.label', defaultMessage: 'Show on Stories' },
-  showOnMediaLabel: { id: 'collection.add.showOnMedia.label', defaultMessage: 'Show on Media' },
+  showOnMediaLabel: { id: 'collection.add.showOnMedia.label', defaultMessage: 'Public' },
   descriptionError: { id: 'collection.add.description.error', defaultMessage: 'You have to enter a description for this collection.' },
   nameError: { id: 'collection.add.name.error', defaultMessage: 'You have to enter a name for this collection.' },
 };
@@ -67,17 +66,6 @@ const CollectionDetailsForm = (props) => {
             fullWidth
             label={localMessages.showOnMediaLabel}
             disabled={initialValues.disabled}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col md={2}>
-          <Field
-            name="showOnStories"
-            component={renderCheckbox}
-            fullWidth
-            disabled={initialValues.disabled}
-            label={localMessages.showOnStoriesLabel}
           />
         </Col>
       </Row>

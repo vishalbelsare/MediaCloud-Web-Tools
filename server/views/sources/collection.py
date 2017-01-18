@@ -113,7 +113,6 @@ def api_metadata_download(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    print "######################" 
 
     metadataItems = []
     for eachDict in all_media:

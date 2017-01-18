@@ -17,17 +17,25 @@ const localMessages = {
 
 const CollectionForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
-  let enabledContent = null;
-  let disabledContent = null;
-
+  let sourceContent = null; // show as editable or not depending on disabled flag
+  const submitButton = (
+    <AppButton
+      type="submit"
+      label={buttonLabel}
+      disabled={pristine || submitting}
+      primary
+      className="submit-button"
+    />
+  );
   if (!initialValues.disabled) {
-    enabledContent = (
+    sourceContent = (
       <CollectionMediaForm
         initialValues={initialValues}
+        submitButton={submitButton}
       />
     );
   } else {
-    disabledContent = (
+    sourceContent = (
       <SourceList
         collectionId={parseInt(initialValues.id, 10)}
         sources={initialValues.sources}
@@ -39,17 +47,10 @@ const CollectionForm = (props) => {
       <CollectionDetailsForm
         initialValues={initialValues}
       />
-      {enabledContent}
-      {disabledContent}
+      {sourceContent}
       <Row>
-        <Col lg={12}>
-          <AppButton
-            style={{ marginTop: 30 }}
-            type="submit"
-            label={buttonLabel}
-            disabled={pristine || submitting}
-            primary
-          />
+        <Col lg={10}>
+          {submitButton}
         </Col>
       </Row>
     </form>

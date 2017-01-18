@@ -87,7 +87,7 @@ export function createCollection(params) {
 }
 
 export function updateCollection(params) {
-  const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static', 'sources[]', 'showOnStories', 'showOnMedia']);
+  const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static', 'sources[]', 'showOnMedia']);
   return createPostingApiPromise(`/api/collections/${acceptedParams.id}/update`, acceptedParams);
 }
 
@@ -136,6 +136,7 @@ export function collectionUploadSourceListFromTemplate(params) {
   return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
 }
 
+<<<<<<< HEAD
 export function favoriteSource(mediaId, favorite) {
   return createPostingApiPromise(`/api/sources/${mediaId}/favorite`, { favorite: (favorite) ? 1 : 0 });
 }
@@ -152,3 +153,8 @@ export function favoriteCollections() {
   return createApiPromise('/api/collections/favorite');
 }
 
+=======
+export function systemStats() {
+  return createApiPromise('/api/system-stats');
+}
+>>>>>>> origin/master
