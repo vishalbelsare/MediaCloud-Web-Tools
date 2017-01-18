@@ -13,8 +13,10 @@ const sourceDetails = createAsyncReducer({
     object: payload.results,
   }),
   [SET_FAVORITE_SOURCE]: (payload, state) => ({
-    object: { ...state.object, isFavorite: payload.arg[1] },
-      // object: payload.results,
+    object: Object.assign({}, state.object, {
+      ...state.object,
+      isFavorite: payload.args[1],
+    }),
   }),
 });
 
