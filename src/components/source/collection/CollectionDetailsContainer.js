@@ -8,7 +8,7 @@ import Lock from 'material-ui/svg-icons/action/lock';
 import Unlock from 'material-ui/svg-icons/action/lock-open';
 import IconButton from 'material-ui/IconButton';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback, fetchFavoriteCollections } from '../../../actions/sourceActions';
+import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
@@ -80,7 +80,7 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} {mainButton} </small>
+              <small className="subtitle"> {mainButton} {lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
@@ -158,7 +158,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then(() => {
         const msg = (isFavorite) ? messages.collectionFavorited : messages.collectionFavorited;
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        dispatch(fetchFavoriteCollections());  // to update the list of favorites
+        // dispatch(fetchFavoriteCollections());  // to update the list of favorites
       });
   },
 });

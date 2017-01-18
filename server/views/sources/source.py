@@ -50,7 +50,6 @@ def _add_user_favorite_flag_to_sources(sources):
     user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
     for s in sources:
         s['isFavorite'] = int(s['media_id']) in user_favorited
-    logger.debug("is favorited ##### %s",s['isFavorite'])
     return sources
 
 @app.route('/api/sources/<media_id>/feeds', methods=['GET'])

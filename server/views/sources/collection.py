@@ -195,16 +195,24 @@ def collection_set_favorited(collection_id):
         db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
     return jsonify({'isFavorite': favorite})
 
+def _add_user_favorite_flag_to_collection(collections):
+    user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
+    for c in collections:
+        c['isFavorite'] = int(c['tags_id']) in user_favorited
+    return collections
+
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required
 @api_error_handler
 def api_collection_details(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
+    _add_user_favorite_flag_to_collection([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
     info['media'] = all_media
+
     return jsonify({'results':info})
 
 @app.route('/api/collections/<collection_id>/sources.csv')

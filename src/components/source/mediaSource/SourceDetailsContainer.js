@@ -94,10 +94,10 @@ class SourceDetailsContainer extends React.Component {
               <MediaSourceIcon height={32} />
               <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
               <small className="subtitle">
+                {mainButton}
                 ID #{source.media_id}
                 {publicMessage}
                 {editMessage}
-                {mainButton}
               </small>
             </h1>
             <p>
