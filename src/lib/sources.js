@@ -87,7 +87,7 @@ export function createCollection(params) {
 }
 
 export function updateCollection(params) {
-  const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static', 'sources[]', 'showOnStories', 'showOnMedia']);
+  const acceptedParams = acceptParams(params, ['id', 'name', 'description', 'static', 'sources[]', 'showOnMedia']);
   return createPostingApiPromise(`/api/collections/${acceptedParams.id}/update`, acceptedParams);
 }
 
