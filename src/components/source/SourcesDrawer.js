@@ -80,7 +80,7 @@ class SourcesDrawer extends React.Component {
             <FormattedMessage {...localMessages.emm} />
           </MenuItem>
           <Divider />
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/favorites'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/favorites'); }}>
             <FormattedMessage {...localMessages.favoritedItems} />
           </MenuItem>
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/suggest'); }}>
