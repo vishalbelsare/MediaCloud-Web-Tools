@@ -140,16 +140,16 @@ export function favoriteSource(mediaId, favorite) {
   return createPostingApiPromise(`/api/sources/${mediaId}/favorite`, { favorite: (favorite) ? 1 : 0 });
 }
 
-export function favoriteSources() {
-  return createApiPromise('/api/sources/favorite');
+export function fetchFavoriteSources() {
+  return createApiPromise('/api/favorites/sources');
 }
 
 export function favoriteCollection(id, favorite) {
   return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
 }
 
-export function favoriteCollections() {
-  return createApiPromise('/api/collections/favorite');
+export function fetchFavoriteCollections() {
+  return createApiPromise('/api/favorites/collections');
 }
 
 export function systemStats() {

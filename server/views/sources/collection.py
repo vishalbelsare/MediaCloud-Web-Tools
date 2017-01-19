@@ -197,6 +197,17 @@ def collection_set_favorited(collection_id):
         db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
     return jsonify({'isFavorite': favorite})
 
+@app.route('/api/favorites/collections', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def favorite_collections():
+    user_mc = user_mediacloud_client()
+    user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
+    favorited_collections = [user_mc.tag(tag_id) for tag_id in user_favorited]
+    for s in favorited_collections:
+        s['isFavorite'] = True
+    return jsonify({'list': favorited_collections})
+
 
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required

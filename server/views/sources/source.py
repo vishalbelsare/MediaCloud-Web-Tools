@@ -317,7 +317,7 @@ https://sources.mediacloud.org
                ))
     return jsonify(new_suggestion)
 
-@app.route('/api/sources/favorite', methods=['GET'])
+@app.route('/api/favorites/sources', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def favorite_sources():
@@ -326,5 +326,5 @@ def favorite_sources():
     favorited_sources = [user_mc.media(media_id) for media_id in user_favorited]
     for s in favorited_sources:
         s['isFavorite'] = True
-    return jsonify({'sources': favorited_sources})
+    return jsonify({'list': favorited_sources})
 
