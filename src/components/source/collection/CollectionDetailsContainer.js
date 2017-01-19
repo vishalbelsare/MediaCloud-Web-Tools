@@ -68,6 +68,7 @@ class CollectionDetailsContainer extends React.Component {
     const lockIcon = (collection.is_static === 1) ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> : <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
     let mainButton = null;
     mainButton = (<FavoriteToggler
+      style={{ display: 'inlineBlock' }}
       isFavorited={collection.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
     />);
@@ -80,7 +81,7 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle"> {mainButton} {lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
+              <small className="subtitle"> {lockIcon} ID #{collection.id} {publicMessage} {editMessage} {mainButton} </small>
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
