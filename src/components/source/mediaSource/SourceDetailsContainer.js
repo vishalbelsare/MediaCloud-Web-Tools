@@ -134,6 +134,9 @@ class SourceDetailsContainer extends React.Component {
                 values={{ gapCount: (source.health) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
               />
             </p>
+            <p>
+              <a href={source.url}> {source.url} </a>
+            </p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
           <Col lg={4} xs={12}>
