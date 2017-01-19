@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import { ExploreButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
+import FavoriteToggler from '../../common/FavoriteToggler';
 
 const localMessages = {
   title: { id: 'sourceCollectionList.title', defaultMessage: 'Search Results' },
@@ -25,7 +26,6 @@ const AdvancedSearchResults = (props) => {
     ADD_ALL_THIS_PAGE, REMOVE_ALL, ADD_ALL_PAGES } = props;
   const { formatMessage } = props.intl;
   const content = null;
-
   if (queriedSources === undefined || queriedCollections === undefined) {
     return (
       <div>
@@ -91,6 +91,10 @@ const AdvancedSearchResults = (props) => {
                     />
                   </div>
                   <div className="search-result-actions">
+                    <FavoriteToggler
+                      isFavorited={source.isFavorite}
+                      onChangeFavorited={() => {}}
+                    />
                     <Link to={`/sources/${source.media_id}`}>
                       <FormattedMessage {...localMessages.exploreSourceInvite} />
                     </Link>
@@ -128,6 +132,10 @@ const AdvancedSearchResults = (props) => {
                     <h2>
                       <FormattedHTMLMessage {...localMessages.collectionHeader} values={{ name: collection.label, tagSetName: collection.tag_set_label }} />
                     </h2>
+                    <FavoriteToggler
+                      isFavorited={collection.isFavorite}
+                      onChangeFavorited={() => {}}
+                    />
                     <p><span className="search-result-details"><FormattedMessage {...messages.collectionDescriptionProp} /></span>: {collection.description}</p>
                   </div>
                 </div>

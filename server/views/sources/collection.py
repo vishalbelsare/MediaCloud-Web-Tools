@@ -18,6 +18,7 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.metadata import _cached_tags_in_tag_set
+from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
 
 logger = logging.getLogger(__name__)
 
@@ -142,6 +143,7 @@ def api_metadata_download(collection_id):
 def api_collection_set(tag_sets_id):
     user_mc = user_mediacloud_client()
     info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
+    _add_user_favorite_flag_to_collections(info)
     return jsonify(info)
 
 @cache
@@ -178,6 +180,7 @@ def api_collections_by_ids():
         info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
         info = [{'media_id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+        _add_user_favorite_flag_to_sources(info)
         sources_list += info;
     return jsonify({'results':sources_list})
 
@@ -194,11 +197,6 @@ def collection_set_favorited(collection_id):
         db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
     return jsonify({'isFavorite': favorite})
 
-def _add_user_favorite_flag_to_collection(collections):
-    user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
-    for c in collections:
-        c['isFavorite'] = int(c['tags_id']) in user_favorited
-    return collections
 
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required
@@ -206,7 +204,7 @@ def _add_user_favorite_flag_to_collection(collections):
 def api_collection_details(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
-    _add_user_favorite_flag_to_collection([info])
+    _add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = collection_media_list(user_mediacloud_key(), collection_id)

@@ -17,8 +17,6 @@ import FavoriteToggler from '../../common/FavoriteToggler';
 import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet } from '../../../lib/tagUtil';
 
-const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12, display: 'inlineBlock' };
-
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
   sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
@@ -72,7 +70,6 @@ class SourceDetailsContainer extends React.Component {
 
     let mainButton = null;
     mainButton = (<FavoriteToggler
-      style={ICON_STYLE}
       isFavorited={source.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
     />);
