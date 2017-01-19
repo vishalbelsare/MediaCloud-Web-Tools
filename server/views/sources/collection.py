@@ -119,7 +119,6 @@ def api_metadata_download(collection_id):
         for eachItem in eachDict['media_source_tags']:
             if isMetaDataTagSet(eachItem['tag_sets_id']):
                 found = False
-                print eachItem
                 for dictItem in metadataItems:
                     if dictItem['metadataId'] == eachItem['tag_sets_id']:
                         temp = dictItem['tagged']
@@ -129,7 +128,7 @@ def api_metadata_download(collection_id):
                     metadataItems.append({'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
 
     for i in metadataItems:
-        temp = len(all_media) - dictItem['tagged']
+        temp = len(all_media) - i['tagged']
         i.update({'notTagged': temp })
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
