@@ -12,7 +12,7 @@ const localMessages = {
   },
   processedWithBitly: { id: 'topic.processedWithBitly', defaultMessage: 'It does not include social click counts from Bit.ly' },
   notProcessedWithBitly: { id: 'topic.notProcessedWithBitly', defaultMessage: 'It includes social click counts from Bit.ly.' },
-  seedQuery: { id: 'topic.seedQuery.description', defaultMessage: 'The seed query used to start this Topic was:<br/><code>{query}</code>.' },
+  seedQuery: { id: 'topic.seedQuery.description', defaultMessage: 'The seed query used to start this Topic was:<br/><code>{query}</code>' },
   state: { id: 'topic.state.description', defaultMessage: 'This topic is <b>{state}</b>. ' },
 };
 
