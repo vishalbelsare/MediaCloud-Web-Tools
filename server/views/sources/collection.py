@@ -208,6 +208,7 @@ def api_collection_details(collection_id):
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    _add_user_favorite_flag_to_sources(all_media)
     info['media'] = all_media
 
     return jsonify({'results':info})

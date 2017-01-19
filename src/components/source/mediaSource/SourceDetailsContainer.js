@@ -8,6 +8,7 @@ import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
+import FavoritedList from '../../common/FavoritedList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
@@ -23,6 +24,11 @@ const localMessages = {
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
+  },
+
+  favoritedCollectionsTitle: { id: 'source.details.collections.favorited.title', defaultMessage: 'Favorited Collections' },
+  favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',
+    defaultMessage: 'You have favorited {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
 
   feedInfo: { id: 'source.basicInfo.feeds',
@@ -55,6 +61,7 @@ class SourceDetailsContainer extends React.Component {
     const { source, onChangeFavorited } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+    const favCollections = source.media_source_tags.filter(c => c.isFavorite === true);
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
@@ -173,6 +180,18 @@ class SourceDetailsContainer extends React.Component {
               </h2>
               {metadataContent}
             </DataCard>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <FavoritedList
+              title={formatMessage(localMessages.favoritedCollectionsTitle)}
+              intro={formatMessage(localMessages.favoritedCollectionsIntro, {
+                name: source.name,
+                count: favCollections.length,
+              })}
+              favoritedItems={favCollections}
+            />
           </Col>
         </Row>
       </Grid>

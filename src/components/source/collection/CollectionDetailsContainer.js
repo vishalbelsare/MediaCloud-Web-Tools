@@ -12,6 +12,7 @@ import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFee
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
+import FavoritedList from '../../common/FavoritedList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -29,6 +30,10 @@ const localMessages = {
   sourceTableTitle: { id: 'collection.details.sourceTable.title', defaultMessage: 'Sources' },
   sourceTableIntro: { id: 'collection.details.sources.intro',
     defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
+  },
+  favoritedSourcesTitle: { id: 'source.details.sources.favorited.title', defaultMessage: 'Favorited Sources' },
+  favoritedSourcesIntro: { id: 'source.details.sources.favorited.intro',
+    defaultMessage: 'You have favorited {count, plural,\n =0 {no sources}\n =1 {one source}\n other {# sources}\n}.',
   },
   collectionIsOrIsnt: { id: 'collection.details.isOrIsnt', defaultMessage: 'This is a {shows, plural,\n =0 {dynamic collection; sources can be added and removed from it}\n =1 {static collection; the sources that are part of it will not change}\n}.' },
   collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
@@ -55,6 +60,7 @@ class CollectionDetailsContainer extends React.Component {
     const { collection, onChangeFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
+    const favSources = collection.media.filter(c => c.isFavorite === true);
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
     const editMessage = ( // TODO: permissions around this
@@ -115,6 +121,18 @@ class CollectionDetailsContainer extends React.Component {
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />
             <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <FavoritedList
+              title={formatMessage(localMessages.favoritedSourcesTitle)}
+              intro={formatMessage(localMessages.favoritedSourcesIntro, {
+                name: collection.name,
+                count: favSources.length,
+              })}
+              favoritedItems={favSources}
+            />
           </Col>
         </Row>
       </Grid>
