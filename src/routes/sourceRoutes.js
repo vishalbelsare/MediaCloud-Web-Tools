@@ -20,6 +20,7 @@ import MCCollectionListContainer from '../components/source/collection/list/MCCo
 import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
 import EMMCollectionListContainer from '../components/source/collection/list/EMMCollectionListContainer';
 import PageWrapper from '../components/source/PageWrapper';
+import FavoritedContainer from '../components/source/FavoritedContainer';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
 import SourcesApp from '../components/source/SourcesApp';
@@ -60,6 +61,7 @@ const sourceRoutes = (
       <Route path="/media-tag" >
         <Redirect from=":collectionId/details" to="/collections/:collectionId" />
       </Route>
+      <Route path="/favorites" component={FavoritedContainer} onEnter={requireAuth} />
     </Route>
   </Route>
 );
