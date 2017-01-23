@@ -9,7 +9,8 @@
   margin-bottom: 5px !important;
 }
 
-div.app-icon.app-icon-filled-star {
-	width: 12px !important;
-	height: 12px !important;
+.collection-list div.app-icon.app-icon-filled-star > svg {
+	margin-left: 5px;
+	width: 15px !important;
+	height: 15px !important;
 }
