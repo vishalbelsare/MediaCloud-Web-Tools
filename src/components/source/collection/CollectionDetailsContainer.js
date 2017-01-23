@@ -12,7 +12,6 @@ import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFee
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from './SourceList';
-import FavoritedList from '../../common/FavoritedList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -60,7 +59,6 @@ class CollectionDetailsContainer extends React.Component {
     const { collection, onChangeFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
-    const favSources = collection.media.filter(c => c.isFavorite === true);
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
     const editMessage = ( // TODO: permissions around this
@@ -71,7 +69,9 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    const lockIcon = (collection.is_static === 1) ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> : <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+    const lockIcon = collection.is_static === 1 ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> :
+      <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+
     let mainButton = null;
     mainButton = (<FavoriteToggler
       isFavorited={collection.isFavorite}
@@ -86,7 +86,9 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle"> {lockIcon} ID #{collection.id} {publicMessage} {editMessage} {mainButton} </small>
+              <div className="actions">{mainButton}</div>
+              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
+
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
@@ -121,18 +123,6 @@ class CollectionDetailsContainer extends React.Component {
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />
             <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} md={6} sm={12}>
-            <FavoritedList
-              title={formatMessage(localMessages.favoritedSourcesTitle)}
-              intro={formatMessage(localMessages.favoritedSourcesIntro, {
-                name: collection.name,
-                count: favSources.length,
-              })}
-              favoritedItems={favSources}
-            />
           </Col>
         </Row>
       </Grid>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import FilledStarIcon from '../common/icons/FilledStarIcon';
 import messages from '../../resources/messages';
 import { googleFavIconUrl } from '../../lib/urlUtil';
 
@@ -29,6 +30,9 @@ const SourceTable = (props) => {
               </td>
               <td>
                 <Link to={`/sources/${source.id ? source.id : source.media_id}`}>{source.name}</Link>
+              </td>
+              <td>
+                { source.isFavorite ? <FilledStarIcon /> : '' }
               </td>
             </tr>
             )

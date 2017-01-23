@@ -105,6 +105,7 @@ def api_media_source_details(media_id):
                                         _safely_get_health_start_date(health))
     info['health'] = health
     _add_user_favorite_flag_to_sources([info])
+    _add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify({'results': info})
 
 
