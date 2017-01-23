@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import { ExploreButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import FavoriteToggler from '../../common/FavoriteToggler';
+import FilledStarIcon from '../../common/icons/FilledStarIcon';
 
 const localMessages = {
   title: { id: 'sourceCollectionList.title', defaultMessage: 'Search Results' },
@@ -91,10 +91,7 @@ const AdvancedSearchResults = (props) => {
                     />
                   </div>
                   <div className="search-result-actions">
-                    <FavoriteToggler
-                      isFavorited={source.isFavorite}
-                      onChangeFavorited={() => {}}
-                    />
+                    { source.isFavorite ? <FilledStarIcon /> : '' }
                     <Link to={`/sources/${source.media_id}`}>
                       <FormattedMessage {...localMessages.exploreSourceInvite} />
                     </Link>
@@ -132,10 +129,7 @@ const AdvancedSearchResults = (props) => {
                     <h2>
                       <FormattedHTMLMessage {...localMessages.collectionHeader} values={{ name: collection.label, tagSetName: collection.tag_set_label }} />
                     </h2>
-                    <FavoriteToggler
-                      isFavorited={collection.isFavorite}
-                      onChangeFavorited={() => {}}
-                    />
+                    { collection.isFavorite ? <FilledStarIcon /> : '' }
                     <p><span className="search-result-details"><FormattedMessage {...messages.collectionDescriptionProp} /></span>: {collection.description}</p>
                   </div>
                 </div>

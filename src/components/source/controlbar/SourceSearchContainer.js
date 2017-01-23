@@ -6,7 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
-import FavoriteToggler from '../../common/FavoriteToggler';
+import FilledStarIcon from '../../common/icons/FilledStarIcon';
 
 const MAX_SUGGESTION_CHARS = 40;
 const MAX_SOURCES_TO_SHOW = 5;
@@ -71,10 +71,7 @@ class SourceSearchContainer extends React.Component {
           onClick={() => this.handleClick(item)}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         >
-          <FavoriteToggler
-            isFavorited={item.isFavorite}
-            onChangeFavorited={() => {}}
-          />
+          { item.isFavorite ? <FilledStarIcon /> : '' }
         </MenuItem>
       ),
     }));
