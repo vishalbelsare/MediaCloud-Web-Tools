@@ -1,0 +1,10 @@
+.topic-search {
+	position: relative;
+	top: 42px;
+	.fetching {
+		float: right;
+		position: absolute;
+		right: 2px;
+		top: 5px;
+	}
+}

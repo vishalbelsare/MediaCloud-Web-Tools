@@ -189,3 +189,7 @@ export function topicMapFiles(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
   return createApiPromise(`/api/topics/${topicId}/map-files`, acceptedParams);
 }
+
+export function fetchMatchingTopics() {
+  return createApiPromise('/api/topics/fetchMatchingTopics');
+}
