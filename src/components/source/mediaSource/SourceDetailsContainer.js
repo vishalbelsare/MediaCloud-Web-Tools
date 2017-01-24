@@ -17,14 +17,17 @@ import FavoriteToggler from '../../common/FavoriteToggler';
 import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet } from '../../../lib/tagUtil';
 
-const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12, display: 'inlineBlock' };
-
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
   sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
+  },
+
+  favoritedCollectionsTitle: { id: 'source.details.collections.favorited.title', defaultMessage: 'Favorited Collections' },
+  favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',
+    defaultMessage: 'You have favorited {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
 
   feedInfo: { id: 'source.basicInfo.feeds',
@@ -72,7 +75,6 @@ class SourceDetailsContainer extends React.Component {
 
     let mainButton = null;
     mainButton = (<FavoriteToggler
-      style={ICON_STYLE}
       isFavorited={source.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
     />);

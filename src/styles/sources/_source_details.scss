@@ -1,3 +1,13 @@
 .source-details .fav-toggle-button {
   margin-top: -5px;
 }
+
+div.app-icon.app-icon-filled-star {
+	float: right;
+}
+
+.collection-list div.app-icon.app-icon-filled-star > svg {
+	margin-left: 5px;
+	width: 15px !important;
+	height: 15px !important;
+}

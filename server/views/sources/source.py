@@ -16,6 +16,7 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.feeds import stream_feed_csv, source_feed_list
+from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ def api_media_sources_by_ids():
     for mediaId in source_id_array:
         info = _cached_media_source_details(user_mediacloud_key(), mediaId)
         source_list.append(info)
+    _add_user_favorite_flag_to_sources(source_list)
     return jsonify({'results': source_list})
 
 
@@ -46,11 +48,6 @@ def source_set_favorited(media_id):
         db.remove_item_from_users_list(username, 'favoriteSources', int(media_id))
     return jsonify({'isFavorite': favorite})
 
-def _add_user_favorite_flag_to_sources(sources):
-    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
-    for s in sources:
-        s['isFavorite'] = int(s['media_id']) in user_favorited
-    return sources
 
 @app.route('/api/sources/<media_id>/feeds', methods=['GET'])
 @flask_login.login_required
@@ -108,6 +105,7 @@ def api_media_source_details(media_id):
                                         _safely_get_health_start_date(health))
     info['health'] = health
     _add_user_favorite_flag_to_sources([info])
+    _add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify({'results': info})
 
 
@@ -320,7 +318,7 @@ https://sources.mediacloud.org
                ))
     return jsonify(new_suggestion)
 
-@app.route('/api/sources/favorite', methods=['GET'])
+@app.route('/api/favorites/sources', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def favorite_sources():
@@ -329,5 +327,5 @@ def favorite_sources():
     favorited_sources = [user_mc.media(media_id) for media_id in user_favorited]
     for s in favorited_sources:
         s['isFavorite'] = True
-    return jsonify({'sources': favorited_sources})
+    return jsonify({'list': favorited_sources})
 

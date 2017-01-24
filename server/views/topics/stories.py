@@ -28,7 +28,12 @@ def story(topics_id, stories_id):
     for tag in story_info['story_tags']:
         if tag['tag_sets_id'] == GEONAMES_TAG_SET_ID:
             geonames_id = int(tag['tag'][9:])
-            tag['geoname'] = _cached_geoname(geonames_id)
+            try:
+                tag['geoname'] = _cached_geoname(geonames_id)
+            except Exception as e:
+                # query to CLIFF failed :-( handle it gracefull
+                logger.exception(e)
+                tag['geoname'] = {}
     return jsonify(story_topic_info)
 
 @cache

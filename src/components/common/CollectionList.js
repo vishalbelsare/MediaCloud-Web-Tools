@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import CollectionIcon from './icons/CollectionIcon';
+import FilledStarIcon from './icons/FilledStarIcon';
 import { isCollectionTagSet } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
@@ -32,6 +33,7 @@ const CollectionList = (props) => {
           <Chip className="chip" key={c.tags_id} onTouchTap={() => handleClick(c.tags_id)}>
             <Avatar size={32}><CollectionIcon height={15} /></Avatar>
             {c.label}
+            { c.isFavorite ? <FilledStarIcon /> : '' }
           </Chip>
         )}
       </div>

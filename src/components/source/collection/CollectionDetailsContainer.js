@@ -30,6 +30,10 @@ const localMessages = {
   sourceTableIntro: { id: 'collection.details.sources.intro',
     defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
   },
+  favoritedSourcesTitle: { id: 'source.details.sources.favorited.title', defaultMessage: 'Favorited Sources' },
+  favoritedSourcesIntro: { id: 'source.details.sources.favorited.intro',
+    defaultMessage: 'You have favorited {count, plural,\n =0 {no sources}\n =1 {one source}\n other {# sources}\n}.',
+  },
   collectionIsOrIsnt: { id: 'collection.details.isOrIsnt', defaultMessage: 'This is a {shows, plural,\n =0 {dynamic collection; sources can be added and removed from it}\n =1 {static collection; the sources that are part of it will not change}\n}.' },
   collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
   collectionIsNotStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
@@ -65,10 +69,11 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    const lockIcon = (collection.is_static === 1) ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> : <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+    const lockIcon = collection.is_static === 1 ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> :
+      <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+
     let mainButton = null;
     mainButton = (<FavoriteToggler
-      style={{ display: 'inlineBlock' }}
       isFavorited={collection.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
     />);
@@ -81,7 +86,9 @@ class CollectionDetailsContainer extends React.Component {
             <h1>
               <CollectionIcon height={32} />
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <small className="subtitle"> {lockIcon} ID #{collection.id} {publicMessage} {editMessage} {mainButton} </small>
+              <div className="actions">{mainButton}</div>
+              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
+
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
@@ -105,7 +112,7 @@ class CollectionDetailsContainer extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg={12} md={12} xs={6}>
+          <Col lg={12} md={12} xs={12}>
             <CollectionMetadataCoverageSummaryContainer collectionId={collection.tags_id} collection={collection} sources={collection.media} />
           </Col>
         </Row>

@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
+import FilledStarIcon from '../../../common/icons/FilledStarIcon';
 import messages from '../../../../resources/messages';
 
 const CollectionList = (props) => {
@@ -33,6 +34,9 @@ const CollectionList = (props) => {
                   </td>
                   <td>
                     {c.description}
+                  </td>
+                  <td>
+                    { c.isFavorite ? <FilledStarIcon /> : '' }
                   </td>
                 </tr>
               ))}
