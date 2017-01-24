@@ -3,7 +3,7 @@ import json
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, TOOL_API_KEY
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.util import csv
 from server.views.topics import validated_sort
@@ -11,14 +11,20 @@ from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts
 from server.util.request import filters_from_args, api_error_handler
+from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/media', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def topic_media(topics_id):
-    media_list = topic_media_list(user_mediacloud_key(), topics_id)
+    if access_public_topic(topics_id):
+        media_list = topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, sort=None, limit=None, link_id=None)
+    elif is_user_logged_in():
+        media_list = topic_media_list(user_mediacloud_key(), topics_id)
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
     return jsonify(media_list)
 
 @app.route('/api/topics/<topics_id>/media/<media_id>', methods=['GET'])

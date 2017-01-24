@@ -1,6 +1,7 @@
 import logging
 from flask import request
 
+from server import mc, TOOL_API_KEY
 from server.cache import cache
 from server.auth import user_mediacloud_client
 from server.util.request import filters_from_args
@@ -103,8 +104,12 @@ def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_word_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
-    return user_mc.topicWordCount(topics_id, **kwargs)
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+    return local_mc.topicWordCount(topics_id, **kwargs)
 
 def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     '''
@@ -126,11 +131,16 @@ def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_sentence_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+
     # grab the timespan because we need the start and end dates
-    timespan = user_mc.topicTimespanList(topics_id,
+    timespan = local_mc.topicTimespanList(topics_id,
         snapshots_id=kwargs['snapshots_id'], foci_id=kwargs['foci_id'], timespans_id=kwargs['timespans_id'])[0]
-    return user_mc.topicSentenceCount(topics_id,
+    return local_mc.topicSentenceCount(topics_id,
         split=True, split_start_date=timespan['start_date'][:10], split_end_date=timespan['end_date'][:10],
         **kwargs)
 

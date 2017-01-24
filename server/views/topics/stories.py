@@ -3,12 +3,13 @@ import json
 from flask import jsonify, request
 import flask_login
 
-from server import app, cliff
+from server import app, cliff, mc, TOOL_API_KEY
 from server.cache import cache
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
+from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +17,21 @@ GEONAMES_TAG_SET_ID = 1011
 CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def story(topics_id, stories_id):
-    user_mc = user_mediacloud_client()
-    story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
-    story_info = user_mc.story(stories_id)  # add in other fields from regular call
+
+    local_mc = None
+    if access_public_topic(topics_id):
+        local_mc = mc
+        story_topic_info = topic_story_list(TOOL_API_KEY, topics_id, stories_id=stories_id)['stories'][0]
+    elif is_user_logged_in():
+        local_mc = user_mediacloud_client()
+        story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
+    
+    story_info = local_mc.story(stories_id)  # add in other fields from regular call
     for k in story_info.keys():
         if k not in story_topic_info.keys():
             story_topic_info[k] = story_info[k]

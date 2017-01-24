@@ -189,3 +189,22 @@ export function topicMapFiles(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId']);
   return createApiPromise(`/api/topics/${topicId}/map-files`, acceptedParams);
 }
+
+export function publicTopicSummary(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/summary`);
+}
+
+export function publicTopicTopStories(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/stories`, acceptedParams);
+}
+
+export function publicTopicTopMedia(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/media`, acceptedParams);
+}
+
+export function publicTopicTopWords(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'withTotals']);
+  return createApiPromise(`/api/topics/${topicId}/words`, acceptedParams);
+}

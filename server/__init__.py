@@ -54,7 +54,9 @@ else:
     logger.info("Started server in %s mode", server_mode)
 
 # Connect to MediaCloud
-mc = mediacloud.api.AdminMediaCloud(settings.get('mediacloud', 'api_key'))
+TOOL_API_KEY = settings.get('mediacloud', 'api_key')
+
+mc = mediacloud.api.AdminMediaCloud(TOOL_API_KEY)
 logger.info("Connected to mediacloud")
 
 # Connect to CLIFF if the settings are there

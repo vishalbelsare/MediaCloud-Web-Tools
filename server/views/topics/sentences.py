@@ -3,19 +3,25 @@ from operator import itemgetter
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, TOOL_API_KEY
 import server.util.csv as csv
 from server.util.request import filters_from_args, api_error_handler, json_error_response
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
+from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/sentences/count', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def topic_sentence_count(topics_id):
-    response = topic_sentence_counts(user_mediacloud_key(), topics_id)
+    if access_public_topic(topics_id):
+        response = topic_sentence_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,q=None)
+    elif is_user_logged_in():
+        response = topic_sentence_counts(user_mediacloud_key(), topics_id)
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
     return jsonify(response)
 
 @app.route('/api/topics/<topics_id>/sentences/count.csv', methods=['GET'])
