@@ -132,7 +132,8 @@ export function favoriteTopics() {
 }
 
 export function topicStoryCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  // important to include snapshot id here, so the server can use it
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 
