@@ -29,7 +29,7 @@ const HomeContainer = (props) => {
             <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
           </Col>
           <Col lg={4} xs={12}>
-            <TopicSearchContainer />
+            <h1><TopicSearchContainer /></h1>
           </Col>
         </Row>
         <FavoriteTopicsContainer onChangeFavorited={handleChangeFavorited} />
