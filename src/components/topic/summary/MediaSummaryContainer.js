@@ -7,6 +7,8 @@ import MediaTable from '../MediaTable';
 import messages from '../../../resources/messages';
 import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
@@ -46,10 +48,12 @@ class MediaSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
-        <div className="actions">
-          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/media`, filters)} />
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <div className="actions">
+            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/media`, filters)} />
+            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          </div>
+        </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}
