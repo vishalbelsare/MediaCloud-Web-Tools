@@ -69,8 +69,12 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    const lockIcon = collection.is_static === 1 ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> :
-      <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+    let lockIcon = null;
+    if (collection.is_static === 1) {
+      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton>);
+    } else {
+      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>);
+    }
 
     let mainButton = null;
     mainButton = (<FavoriteToggler

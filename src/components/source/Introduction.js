@@ -10,10 +10,12 @@ const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Media Cloud Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'Use this website to explore the sources and collections that make up Media Cloud.  Every day we pull stories from more than 50,000 online news sources into our database. Explore this site to see what sources and collections you can do research on. Explore the featured collections below, or use the search bar on the top right to look for a specific source.' },
   browse: { id: 'sources.intro.browse', defaultMessage: 'Browse our Collections' },
+  systemStatsTitle: { id: 'system.stats.title', defaultMessage: 'System Stats' },
 };
 
 const Introduction = props => (
   <Grid>
+
     <Row>
       <Col lg={8} xs={12}>
         <h1>
@@ -22,6 +24,7 @@ const Introduction = props => (
         <p><FormattedMessage {...localMessages.about} /></p>
       </Col>
     </Row>
+
     <Row>
       <Col lg={12}>
         <Link to="/collections/media-cloud">
@@ -29,9 +32,7 @@ const Introduction = props => (
         </Link>
       </Col>
     </Row>
-    <Row>
-      <SystemStatsContainer />
-    </Row>
+
     <Row>
       <Col lg={4} xs={12}>
         <DataCard>
@@ -73,6 +74,21 @@ const Introduction = props => (
         </DataCard>
       </Col>
     </Row>
+
+    <Row>
+      <Col lg={12}>
+        <br />
+        <br />
+      </Col>
+    </Row>
+
+    <Row>
+      <Col lg={12}>
+        <h2><FormattedMessage {...localMessages.systemStatsTitle} /></h2>
+      </Col>
+    </Row>
+    <SystemStatsContainer />
+
   </Grid>
 );
 
