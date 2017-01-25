@@ -5,7 +5,7 @@ from flask_login import current_user
 from server import app, mc, TOOL_API_KEY
 import server.util.csv as csv
 from server.util.request import api_error_handler
-from server.auth import user_mediacloud_key, is_user_logged_in
+from server.auth import user_mediacloud_key, user_mediacloud_client, is_user_logged_in
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts #, topic_media_list
@@ -29,7 +29,7 @@ def topic_words(topics_id):
     if access_public_topic(topics_id):
         results = topic_word_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,q=None)
     elif is_user_logged_in():
-        results = topic_word_counts(user_mediacloud_client(), topics_id)[:200]
+        results = topic_word_counts(user_mediacloud_key(), topics_id)[:200]
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
 

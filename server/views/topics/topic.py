@@ -27,7 +27,7 @@ def topic_list():
 @api_error_handler
 def topic_summary(topics_id):
     local_mc = None
-    if (access_public_topic()):
+    if (access_public_topic(topics_id)):
         local_mc = mc
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()

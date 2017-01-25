@@ -6,7 +6,7 @@ import flask_login
 from server import app, TOOL_API_KEY
 import server.util.csv as csv
 from server.util.request import filters_from_args, api_error_handler, json_error_response
-from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.auth import user_mediacloud_key, user_mediacloud_client, is_user_logged_in
 from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
 from server.views.topics import access_public_topic
 

@@ -6,6 +6,8 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -36,10 +38,12 @@ class SentenceCountSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
-        <div className="actions">
-          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <div className="actions">
+            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
+            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          </div>
+        </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}

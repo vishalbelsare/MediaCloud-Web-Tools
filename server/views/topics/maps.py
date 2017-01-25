@@ -6,9 +6,10 @@ from multiprocessing import Process
 
 from server import app, base_dir
 import server.util.csv as csv
-from server.auth import user_mediacloud_key
+from server.auth import user_mediacloud_key, is_user_logged_in
 from server.util.request import arguments_required, filters_from_args, api_error_handler
 from server.util import mapwriter
+from server.views.topics import access_public_topic
 
 DATA_DIR = os.path.join(base_dir, "data", "map-files")
 MAP_TYPES = ['wordMap', 'linkMap']
@@ -16,33 +17,35 @@ MAP_TYPES = ['wordMap', 'linkMap']
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/<topics_id>/map-files', methods=['GET'])
-@flask_login.login_required
-@arguments_required('snapshotId','timespanId')
 @api_error_handler
 def map_files(topics_id):
     files = { 
         'wordMap': 'unsupported',
         'linkMap': 'not rendered'
     }
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
-    map_type = MAP_TYPES[0] # no linkMaps yet
-    status = None
-    prefix = _get_file_prefix(map_type, topics_id, timespans_id)
-    lock_filename = prefix+".lock"
-    rendered_filename = prefix+".gexf"
-    # check if rendered file is there
-    is_rendered = os.path.isfile(os.path.join(DATA_DIR,rendered_filename))
-    logger.warn(os.path.join(DATA_DIR,rendered_filename))
-    logger.warn(is_rendered)
-    if is_rendered:
-        status = 'rendered'
+
+    if access_public_topic(topics_id) or is_user_logged_in():
+        snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+        map_type = MAP_TYPES[0] # no linkMaps yet
+        status = None
+        prefix = _get_file_prefix(map_type, topics_id, timespans_id)
+        lock_filename = prefix+".lock"
+        rendered_filename = prefix+".gexf"
+        # check if rendered file is there
+        is_rendered = os.path.isfile(os.path.join(DATA_DIR,rendered_filename))
+        logger.warn(os.path.join(DATA_DIR,rendered_filename))
+        logger.warn(is_rendered)
+        if is_rendered:
+            status = 'rendered'
+        else:
+            is_generating = os.path.isfile(os.path.join(DATA_DIR,lock_filename))
+            if not is_generating:
+                _start_generating_map_file(map_type, topics_id, timespans_id)
+            status = 'generating'
+        files[map_type] = status
+        return jsonify(files)
     else:
-        is_generating = os.path.isfile(os.path.join(DATA_DIR,lock_filename))
-        if not is_generating:
-            _start_generating_map_file(map_type, topics_id, timespans_id)
-        status = 'generating'
-    files[map_type] = status
-    return jsonify(files)
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
 
 @app.route('/api/topics/<topics_id>/map-files/<map_type>.<map_format>', methods=['GET'])
 @arguments_required('timespanId')

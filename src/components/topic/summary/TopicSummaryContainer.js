@@ -18,10 +18,10 @@ class TopicSummaryContainer extends React.Component {
     return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
-    const { filters, topicId, topicInfo, timespan } = this.props;
+    const { filters, topicId, topicInfo, timespan, user } = this.props;
     let content = <div />;
     let subContent = <div />;
-    if (this.filtersAreSet()) {
+    if (!user.isLoggedIn || this.filtersAreSet()) {
       subContent = (
         <Grid>
           <Row>
@@ -83,6 +83,7 @@ TopicSummaryContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
   topicInfo: React.PropTypes.object,
+  user: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -90,6 +91,7 @@ const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
   timespan: state.topics.selected.timespans.selected,
+  user: state.user,
 });
 
 export default

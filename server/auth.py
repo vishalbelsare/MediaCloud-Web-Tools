@@ -75,7 +75,6 @@ def load_user_from_request(request_object):
     return None
 
 def is_user_logged_in():
-    logger.debug("is user logged in: %s", str(current_user.is_authenticated))
     return current_user.is_authenticated
 
 def login_user(user):

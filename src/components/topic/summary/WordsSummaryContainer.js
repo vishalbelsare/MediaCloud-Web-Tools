@@ -8,6 +8,8 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
@@ -37,10 +39,12 @@ class WordsSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
-        <div className="actions">
-          <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <div className="actions">
+            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
+            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          </div>
+        </Permissioned>
         <h2>
           <FormattedMessage {...messages.topWords} />
           {helpButton}

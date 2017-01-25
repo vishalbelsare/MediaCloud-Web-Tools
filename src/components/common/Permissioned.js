@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN,
-         PERMISSION_ADMIN, PERMISSION_MEDIA_EDIT, PERMISSION_STORY_EDIT } from '../../lib/auth';
+         PERMISSION_ADMIN, PERMISSION_MEDIA_EDIT, PERMISSION_STORY_EDIT, PERMISSION_LOGGED_IN } from '../../lib/auth';
 
 /**
  * Use this to restrict who is allowed to see what.
@@ -35,7 +35,7 @@ const Permissioned = (props) => {
     }
   } else if (onlyRole) {
     // check role-level permissions
-    if (![PERMISSION_ADMIN, PERMISSION_MEDIA_EDIT, PERMISSION_STORY_EDIT].includes(onlyRole)) {
+    if (![PERMISSION_ADMIN, PERMISSION_MEDIA_EDIT, PERMISSION_STORY_EDIT, PERMISSION_LOGGED_IN].includes(onlyRole)) {
       const error = { message: `Invalid permission (${onlyRole})` };
       throw error;
     }
@@ -43,6 +43,9 @@ const Permissioned = (props) => {
       allowed = true; // because admins are allowed to do anything
     } else {
       switch (onlyRole) {
+        case PERMISSION_LOGGED_IN:
+          allowed = user.isLoggedIn;
+          break;
         case PERMISSION_ADMIN:
           allowed = userRolePermissions.includes(PERMISSION_ADMIN);
           break;

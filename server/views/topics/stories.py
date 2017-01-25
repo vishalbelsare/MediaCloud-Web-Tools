@@ -51,29 +51,58 @@ def _cached_geoname(geonames_id):
     return cliff.geonamesLookup(geonames_id)
 
 @app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def story_counts(topics_id):
-    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
-    filtered = topic_story_count(user_mediacloud_key(), topics_id)  # force a count with just the query
+
+    local_key = None
+    if access_public_topic(topics_id):
+        local_key = TOOL_API_KEY
+    elif is_user_logged_in():
+        local_key = user_mediacloud_key()
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
+    total = topic_story_count(local_key, topics_id, timespans_id=None, q=None)
+    filtered = topic_story_count(local_key, topics_id)  # force a count with just the query
     return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/geocoded-counts', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def story_geocoded_counts(topics_id):
+
     q = "tags_id_stories:"+str(CLIFF_CLAVIN_2_3_0_TAG_ID)
-    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
-    filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the filters
+
+    local_mc = None
+    if access_public_topic(topics_id):
+        local_mc = mc
+        total = topic_story_count(TOOL_API_KEY, topics_id, timespans_id=None, q=None)
+        filtered = topic_story_count(TOOL_API_KEY, topics_id)  # force a count with just the query
+    elif is_user_logged_in():
+        local_mc = user_mediacloud_client()
+        total = topic_story_count(user_mediacloud_key(), timespans_id=None, q=None)
+        filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
     return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def story_english_counts(topics_id):
     q = "language:en"
-    total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)  # get a total count
-    filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the filters
+
+    local_mc = None
+    if access_public_topic(topics_id):
+        local_mc = mc
+        total = topic_story_count(TOOL_API_KEY, topics_id, timespans_id=None, q=None)
+        filtered = topic_story_count(TOOL_API_KEY, topics_id)  # force a count with just the query
+    elif is_user_logged_in():
+        local_mc = user_mediacloud_client()
+        total = topic_story_count(user_mediacloud_key(), timespans_id=None, q=None)
+        filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
     return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])
@@ -115,10 +144,16 @@ def story_outlinks_csv(topics_id, stories_id):
     return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id)
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def topic_stories(topics_id):
-    stories = topic_story_list(user_mediacloud_key(), topics_id)
+    local_mc = None
+    if access_public_topic(topics_id):
+        stories = topic_story_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, q=None)
+    elif is_user_logged_in():
+        stories = topic_story_list(user_mediacloud_key(), topics_id)
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
     return jsonify(stories)
 
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])

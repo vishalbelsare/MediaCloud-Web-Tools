@@ -55,8 +55,12 @@ def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
-    return user_mc.topicStoryCount(topics_id, **kwargs)
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+    return local_mc.topicStoryCount(topics_id, **kwargs)
 
 def topic_story_list(user_mc_key, topics_id, **kwargs):
     '''
@@ -81,8 +85,12 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_story_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
-    return user_mc.topicStoryList(topics_id, **kwargs)
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+    return local_mc.topicStoryList(topics_id, **kwargs)
 
 def topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''

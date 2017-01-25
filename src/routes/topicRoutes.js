@@ -67,6 +67,10 @@ const topicRoutes = (
 
     </Route>
 
+    <Route path="/topics/public/:topicId" component={TopicContainer}>
+      <Route path="/topics/public/:topicId/summary" component={TopicSummaryContainer} />
+    </Route>
+
   </Route>
 
 );
