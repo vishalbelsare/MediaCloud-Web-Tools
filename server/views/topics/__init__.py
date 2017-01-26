@@ -1,11 +1,12 @@
 import json
 import flask_login
-from server import app, auth
+import os
+from server import app, base_dir
 from flask import jsonify
 
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
-CACHED_TOPICS = json.load(open('./server/static/data/all_topics.json'))
+CACHED_TOPICS = json.load(open(os.path.join(base_dir, 'server', 'static', 'data', 'all_topics.json')))
 
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
