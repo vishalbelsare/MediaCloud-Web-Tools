@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/sourceActions';
 import composeHelpfulContainer from '../common/HelpfulContainer';
@@ -21,18 +22,24 @@ const FavoritedContainer = (props) => {
   const { favoritedSources, favoritedCollections, helpButton } = props;
   const { formatMessage } = props.intl;
   return (
-    <div>
-      <FavoritedList
-        title={formatMessage(localMessages.favoritedSourcesTitle)}
-        favoritedItems={favoritedSources}
-        helpButton={helpButton}
-      />
-      <FavoritedList
-        title={formatMessage(localMessages.favoritedCollectionsTitle)}
-        favoritedItems={favoritedCollections}
-        helpButton={helpButton}
-      />
-    </div>
+    <Grid>
+      <Row>
+        <Col lg={6}>
+          <FavoritedList
+            title={formatMessage(localMessages.favoritedSourcesTitle)}
+            favoritedItems={favoritedSources}
+            helpButton={helpButton}
+          />
+        </Col>
+        <Col lg={6}>
+          <FavoritedList
+            title={formatMessage(localMessages.favoritedCollectionsTitle)}
+            favoritedItems={favoritedCollections}
+            helpButton={helpButton}
+          />
+        </Col>
+      </Row>
+    </Grid>
   );
 };
 
