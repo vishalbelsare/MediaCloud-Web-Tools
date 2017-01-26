@@ -4,6 +4,8 @@ import * as api from '../lib/sources';
 
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
+export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTION_LIST';
+export const FETCH_POPULAR_COLLECTIONS_LIST = 'FETCH_POPULAR_COLLECTION_LIST';
 export const FETCH_SOURCES_BY_IDS = 'FETCH_SOURCES_BY_IDS';
 export const RESET_SOURCES_BY_IDS = 'RESET_SOURCES_BY_IDS';
 export const FETCH_COLLECTION_SOURCES_BY_IDS = 'FETCH_COLLECTION_SOURCES_BY_IDS';
@@ -71,6 +73,10 @@ export const selectSource = createAction(SELECT_SOURCE, id => id);
 export const fetchSourceList = createAsyncAction(FETCH_SOURCE_LIST, api.sourceList);
 
 export const fetchCollectionList = createAsyncAction(FETCH_COLLECTION_LIST, api.collectionList, id => id);
+
+export const fetchFeaturedCollectionList = createAsyncAction(FETCH_FEATURED_COLLECTIONS_LIST, api.featuredCollectionList);
+
+export const fetchPopularCollectionList = createAsyncAction(FETCH_POPULAR_COLLECTIONS_LIST, api.popularCollectionList);
 
 export const fetchSourcesByIds = createAsyncAction(FETCH_SOURCES_BY_IDS, api.sourcesByIds, props => props);
 

@@ -184,6 +184,22 @@ def api_collections_by_ids():
         sources_list += info;
     return jsonify({'results':sources_list})
 
+@app.route('/api/collections/featured', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_featured_collections():
+    info = _cached_collection_set_list(user_mediacloud_key(), COLLECTIONS_TAG_SET_ID)
+    _add_user_favorite_flag_to_collections(info['collections'])
+    return jsonify({'results':info})
+
+@app.route('/api/collections/popular', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_popular_collections():
+    info = _cached_collection_set_list(user_mediacloud_key(), COLLECTIONS_TAG_SET_ID)
+
+    return jsonify({'results':info})
+
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
 @flask_login.login_required
 @form_fields_required('favorite')
