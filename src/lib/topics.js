@@ -191,6 +191,6 @@ export function topicMapFiles(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/map-files`, acceptedParams);
 }
 
-export function fetchMatchingTopics() {
-  return createApiPromise('/api/topics/fetchMatchingTopics');
+export function fetchFullTopicList() {
+  return createApiPromise('/api/topics/fetchFullTopicList');
 }

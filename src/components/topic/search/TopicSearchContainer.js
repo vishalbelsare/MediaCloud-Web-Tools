@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
-import LoadingSpinner from '../../common/LoadingSpinner';
-import { FETCH_ONGOING } from '../../../lib/fetchConstants';
-import { fetchMatchingTopics } from '../../../actions/topicActions';
+import composeAsyncContainer from '../../common/AsyncContainer';
+import { fetchFullTopicList } from '../../../actions/topicActions';
 
 const MAX_SUGGESTION_CHARS = 40;
 
@@ -25,13 +24,6 @@ class TopicSearchContainer extends React.Component {
     }
   }
 
-  shouldFireSearch = () => {
-    if (this.props.topicResults === undefined || this.props.topicResults.length === 0) {
-      return true;
-    }
-    return false;
-  }
-
   resetIfRequested = () => {
     const { topicResults } = this.props;
     let results = [];
@@ -48,57 +40,50 @@ class TopicSearchContainer extends React.Component {
     return resultsAsComponents;
   }
 
-  handleUpdateInput = () => {
-    const { search } = this.props;
-    if (this.shouldFireSearch()) {
-      search();
-    }
-  }
-
   render() {
-    const { topicFetchStatus } = this.props;
+    const { topicsCached } = this.props;
     const { formatMessage } = this.props.intl;
     const resultsAsComponents = this.resetIfRequested();
-    const isFetching = (topicFetchStatus === FETCH_ONGOING);
-    const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
-    return (
-      <div className="topic-search">
-        <div className="fetching">{fetchingStatus}</div>
-        <AutoComplete
-          hintText={formatMessage(localMessages.searchHint)}
-          fullWidth
-          openOnFocus
-          onClick={this.resetIfRequested}
-          dataSource={resultsAsComponents}
-          onUpdateInput={this.handleUpdateInput}
-          maxSearchResults={10}
-          filter={AutoComplete.fuzzyFilter}
-        />
-      </div>
-    );
+    if (topicsCached) {
+      return (
+        <div className="topic-search">
+          <AutoComplete
+            hintText={formatMessage(localMessages.searchHint)}
+            fullWidth
+            openOnFocus={false}
+            onClick={this.resetIfRequested}
+            dataSource={resultsAsComponents}
+            maxSearchResults={10}
+            filter={AutoComplete.fuzzyFilter}
+          />
+        </div>
+      );
+    }
+    return (<div className="topic-search" />);
   }
-
 }
 
 TopicSearchContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from state
-  topicFetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
   topicResults: React.PropTypes.array.isRequired,
+  topicsCached: React.PropTypes.bool.isRequired,
   // from dispatch
-  search: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   onTopicSelected: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  topicFetchStatus: state.topics.matching.fetchStatus,
-  topicResults: state.topics.matching.list,
+  fetchStatus: state.topics.full.fetchStatus,
+  topicResults: state.topics.full.list.topics,
+  topicsCached: state.topics.full.list.cached,
 });
 
 const mapDispatchToProps = dispatch => ({
-  search: () => {
-    dispatch(fetchMatchingTopics());
+  asyncFetch: () => {
+    dispatch(fetchFullTopicList());
   },
   onTopicSelected: (item) => {
     dispatch(push(`/topics/${item.id}/summary`));
@@ -108,6 +93,8 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      TopicSearchContainer
+      composeAsyncContainer(
+        TopicSearchContainer
+      )
     )
   );
