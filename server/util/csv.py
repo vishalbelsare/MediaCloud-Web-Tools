@@ -44,7 +44,7 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
                 logger.error("Couldn't process a CSV row: "+str(e))
                 logger.exception(e)
                 logger.debug(row)
-    download_filename = 'mediacloud-'+str(filename)+'-'+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+'.csv'
+    download_filename = str(filename)+'_'+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+'.csv'
     headers = {}
     if as_attachment:
         headers["Content-Disposition"] = "attachment;filename="+download_filename

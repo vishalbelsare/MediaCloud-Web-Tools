@@ -219,7 +219,7 @@ def api_collection_details(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_download_sources_template():
-    filename = "Collection Template for sources.csv"
+    filename = "Collection_Template_for_sources.csv"
     return csv.stream_response(COLLECTIONS_TEMPLATE_PROPS, COLLECTIONS_TEMPLATE_PROPS, filename)
 
 @app.route('/api/collections/<collection_id>/sources.csv')
@@ -229,7 +229,7 @@ def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    filename = info['label']
+    filename = "MC_Downloaded_Template_"
     propfields = ['URL','NAME','MEDIA_ID']
     return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
 
@@ -248,7 +248,7 @@ def collection_source_sentence_counts_csv(collection_id):
     info = user_mc.tag(collection_id)
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
-    filename = info['label']+" - source sentence counts.csv"
+    filename = info['label']+"-source sentence counts.csv"
     return csv.stream_response(results, props, filename)
 
 @cache
