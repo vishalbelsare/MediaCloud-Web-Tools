@@ -15,8 +15,13 @@ const localMessages = {
 class SourceList extends React.Component {
 
   downloadCsv = () => {
-    const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/sources.csv`;
+    const { collectionId, downloadUrl } = this.props;
+    let url = null;
+    if (collectionId) {
+      url = `/api/collections/${collectionId}/sources.csv`;
+    } else {
+      url = downloadUrl;
+    }
     window.location = url;
   }
 
@@ -47,6 +52,7 @@ SourceList.propTypes = {
   // from parent
   sources: React.PropTypes.array.isRequired,
   collectionId: React.PropTypes.number,
+  downloadUrl: React.PropTypes.string,
 };
 
 export default

@@ -18,6 +18,7 @@ from server.views.sources.sentences import cached_recent_sentence_counts, stream
 from server.views.sources.feeds import stream_feed_csv, source_feed_list
 from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -318,14 +319,4 @@ https://sources.mediacloud.org
                ))
     return jsonify(new_suggestion)
 
-@app.route('/api/favorites/sources', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def favorite_sources():
-    user_mc = user_mediacloud_client()
-    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
-    favorited_sources = [user_mc.media(media_id) for media_id in user_favorited]
-    for s in favorited_sources:
-        s['isFavorite'] = True
-    return jsonify({'list': favorited_sources})
 

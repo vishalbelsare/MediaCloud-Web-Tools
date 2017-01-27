@@ -1,7 +1,7 @@
 import logging
 from flask import jsonify
 import flask_login
-
+import server.util.csv as csv
 from server import app, mc, db
 from server.util.request import  api_error_handler
 from server.cache import cache
@@ -21,3 +21,48 @@ def _add_user_favorite_flag_to_collections(collections):
     for c in collections:
         c['isFavorite'] = int(c['tags_id']) in user_favorited
     return collections
+
+@app.route('/api/favorites/collections', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def favorite_collections():
+    user_mc = user_mediacloud_client()
+    user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
+    favorited_collections = [user_mc.tag(tag_id) for tag_id in user_favorited]
+    for s in favorited_collections:
+        s['isFavorite'] = True
+    return jsonify({'list': favorited_collections})
+
+@app.route('/api/favorites/collections.csv')
+@flask_login.login_required
+@api_error_handler
+def download_favorite_collections():
+    colllist = favorite_collections()
+    props = ['id', 'name']
+    filename = "FavoriteCollections.csv"
+    return csv.stream_response(colllist, props, filename)
+
+@app.route('/api/favorites/sources.csv')
+@flask_login.login_required
+@api_error_handler
+def download_favorite_sources():
+    user_mc = user_mediacloud_client()
+    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
+    favorited_s = [user_mc.media(media_id) for media_id in user_favorited]
+    for s in favorited_s:
+        s['isFavorite'] = True
+    props = ['media_id', 'name', 'url']
+    filename = "FavoriteSources.csv"
+    return csv.stream_response(favorited_s, props, filename)
+
+
+@app.route('/api/favorites/sources', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def favorite_sources():
+    user_mc = user_mediacloud_client()
+    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
+    favorited_s = [user_mc.media(media_id) for media_id in user_favorited]
+    for s in favorited_s:
+        s['isFavorite'] = True
+    return jsonify({'list': favorited_s})

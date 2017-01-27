@@ -30,6 +30,7 @@ const FavoritedContainer = (props) => {
             title={formatMessage(localMessages.favoritedSourcesTitle)}
             sources={favoritedSources}
             helpButton={helpButton}
+            downloadUrl="/api/favorites/sources.csv"
           />
         </Col>
         <Col lg={6}>
