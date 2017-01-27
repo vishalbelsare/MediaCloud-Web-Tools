@@ -16,7 +16,7 @@ const localMessages = {
 };
 
 const EditCollectionContainer = (props) => {
-  const { handleSave, collection } = props;
+  const { handleSave, collection, collectionId } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   const intialValues = {
@@ -41,6 +41,7 @@ const EditCollectionContainer = (props) => {
           initialValues={intialValues}
           onSave={handleSave}
           buttonLabel={formatMessage(localMessages.addButton)}
+          collectionId={collectionId}
         />
       </Grid>
     </div>

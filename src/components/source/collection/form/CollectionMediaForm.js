@@ -70,7 +70,7 @@ class SourceSelectionRenderer extends React.Component {
     }
   }
   render() {
-    const { submitButton, fields, meta: { error } } = this.props;
+    const { submitButton, fields, meta: { error }, currentSources } = this.props;
     let copyConfirmation = null;
     if (this.state.collectionId) {
       copyConfirmation = (
@@ -81,6 +81,7 @@ class SourceSelectionRenderer extends React.Component {
         />
       );
     }
+    const testSources = currentSources;
     // show a extra submit button for convenience at top of long list
     const topButtonContent = (fields.length > EXTRA_BUTTON_LIST_LENGTH) ? submitButton : null;
     return (
@@ -114,6 +115,8 @@ class SourceSelectionRenderer extends React.Component {
                   <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
                   <CollectionUploadSourceContainer
                     onConfirm={item => this.addSources(item)}
+                    sources={testSources}
+                    collectionId={this.state.collectionId}
                   />
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
@@ -188,6 +191,7 @@ SourceSelectionRenderer.propTypes = {
   submitButton: React.PropTypes.node,
   currentSources: React.PropTypes.array,
   onSourcesAdded: React.PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 const CollectionMediaForm = props => (
@@ -198,6 +202,7 @@ const CollectionMediaForm = props => (
       currentSources={props.currentSources}
       onSourcesAdded={props.handleSourceAdded}
       submitButton={props.submitButton}
+      intl={props.intl}
     />
   </div>
 );

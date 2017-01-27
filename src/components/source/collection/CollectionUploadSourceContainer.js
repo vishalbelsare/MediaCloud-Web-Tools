@@ -5,19 +5,32 @@ import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
+import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  uploadSourcesFromTemplateTitle: { id: 'collections.upload.title', defaultMessage: 'Similar Collections' },
+  uploadSourcesFromTemplateTitle: { id: 'collections.upload.title', defaultMessage: 'Sources From Template' },
+  downloadEmpty: { id: 'collections.download.emptycsv', defaultMessage: 'Download a template in CSV format' },
+  downloadFull: { id: 'collections.download.fullcsv', defaultMessage: 'Download current sources in CSV format' },
   helpTitle: { id: 'collection.upload.help.text.title',
-    defaultMessage: 'Similar Collections',
+    defaultMessage: 'Upload a Template of Sources',
   },
   helpText: { id: 'collection.upload.help.text',
-    defaultMessage: 'Here is a list of similar collections, based on how many sources they have in common. This can be a great way to discover other collecitons you might want to be using. Click one to explore it.',
+    defaultMessage: 'Uploaded sources with a CSV template. You can download a template by clicking the Download button.',
   },
   feedback: { id: 'collection.upload.feedback', defaultMessage: 'This upload was successful' },
 };
 class CollectionUploadSourceContainer extends React.Component {
 
+  downloadCsv = () => {
+    const { collectionId } = this.props;
+    let url = null;
+    if (collectionId) {
+      url = `/api/collections/${collectionId}/sources.csv`;
+    } else {
+      url = '/api/template/sources.csv';
+    }
+    window.location = url;
+  }
   selectedCSV = () => {
     this.setState({ confirmTemplate: true });
   }
@@ -33,7 +46,8 @@ class CollectionUploadSourceContainer extends React.Component {
     this.selectedCSV();
   }
   render() {
-    const { onConfirm, sources } = this.props;
+    const { onConfirm, sources, collectionId } = this.props;
+    const { formatMessage } = this.props.intl;
     let confirmContent = null;
     if (sources.length > 0 && this.state && this.state.confirmTemplate) {
       confirmContent = (
@@ -43,6 +57,7 @@ class CollectionUploadSourceContainer extends React.Component {
     return (
       <div>
         <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} />
+        <DownloadButton tooltip={sources.length > 0 && collectionId != null ? formatMessage(localMessages.downloadFull) : formatMessage(localMessages.downloadEmpty)} onClick={this.downloadCsv} />
         { confirmContent }
       </div>
     );
@@ -56,6 +71,8 @@ CollectionUploadSourceContainer.propTypes = {
   // from parent
   onConfirm: React.PropTypes.func.isRequired,
   sources: React.PropTypes.array,
+  collectionId: React.PropTypes.number,
+  // from parent
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,

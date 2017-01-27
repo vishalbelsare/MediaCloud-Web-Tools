@@ -12,7 +12,10 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
     filename -- a string to append to the automatically generated filename for identifaction
     column_names -- (optional) column names to use, defaults to dict_keys if not specified
     """
-    logger.debug("csv.stream_response with "+str(len(data))+" rows of data")
+    if (len(data) == 0):
+        logger.debug("data is empty, must be asking for template")
+    else:
+        logger.debug("csv.stream_response with "+str(len(data))+" rows of data")
     if column_names is None:
         column_names = dict_keys
     logger.debug("  cols: "+' '.join(column_names))
@@ -43,5 +46,12 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
     headers = {}
     if as_attachment:
         headers["Content-Disposition"] = "attachment;filename="+download_filename
-    return flask.Response(stream_as_csv(data, dict_keys, column_names),
+
+    if (not len(data) == 0):
+        return flask.Response(stream_as_csv(data, dict_keys, column_names),
                           mimetype='text/csv; charset=utf-8', headers=headers)
+    else:
+        return flask.Response(dict_keys,
+                          mimetype='text/csv; charset=utf-8', headers=headers)
+
+

@@ -213,6 +213,13 @@ def api_collection_details(collection_id):
 
     return jsonify({'results':info})
 
+@app.route('/api/template/sources.csv')
+@flask_login.login_required
+@api_error_handler
+def api_download_sources_template():
+    props = ['media_id', 'name', 'url']
+    filename = "Collection Template for sources.csv"
+    return csv.stream_response(props, props, filename)
 
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
