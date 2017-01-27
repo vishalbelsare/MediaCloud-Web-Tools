@@ -27,12 +27,14 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
             try:
                 attributes = []
                 for p in props:
+                    p = p.lower()
                     value = row[p]
                     cleaned_value = value
                     if isinstance(value, (int, long, float)):
                         cleaned_value = str(row[p])
                     elif value is None:
-                        cleaned_value = ""
+                        # trying to handle endode/decode problem on the other end
+                        cleaned_value = ''
                     else:
                         cleaned_value = '"'+value.encode('utf-8').replace('"', '""')+'"'
                     attributes.append(cleaned_value)

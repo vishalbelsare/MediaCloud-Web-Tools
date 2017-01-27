@@ -22,10 +22,10 @@ const localMessages = {
 class CollectionUploadSourceContainer extends React.Component {
 
   downloadCsv = () => {
-    const { collectionId } = this.props;
+    const { myCollectionId } = this.props;
     let url = null;
-    if (collectionId) {
-      url = `/api/collections/${collectionId}/sources.csv`;
+    if (myCollectionId) {
+      url = `/api/collections/${myCollectionId}/sources.csv`;
     } else {
       url = '/api/template/sources.csv';
     }
@@ -46,10 +46,10 @@ class CollectionUploadSourceContainer extends React.Component {
     this.selectedCSV();
   }
   render() {
-    const { onConfirm, sources, collectionId } = this.props;
+    const { onConfirm, mysources, myCollectionId } = this.props;
     const { formatMessage } = this.props.intl;
     let confirmContent = null;
-    if (sources.length > 0 && this.state && this.state.confirmTemplate) {
+    if (mysources && mysources.length > 0 && this.state && this.state.confirmTemplate) {
       confirmContent = (
         <CollectionUploadConfirmer onConfirm={onConfirm} onCancel={this.confirmLoadCSV} onClickButton={this.confirmLoadCSV} />
       );
@@ -57,7 +57,7 @@ class CollectionUploadSourceContainer extends React.Component {
     return (
       <div>
         <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} />
-        <DownloadButton tooltip={sources.length > 0 && collectionId != null ? formatMessage(localMessages.downloadFull) : formatMessage(localMessages.downloadEmpty)} onClick={this.downloadCsv} />
+        <DownloadButton tooltip={mysources && mysources.length > 0 && myCollectionId != null ? formatMessage(localMessages.downloadFull) : formatMessage(localMessages.downloadEmpty)} onClick={this.downloadCsv} />
         { confirmContent }
       </div>
     );
@@ -70,8 +70,8 @@ CollectionUploadSourceContainer.propTypes = {
   total: React.PropTypes.number,
   // from parent
   onConfirm: React.PropTypes.func.isRequired,
-  sources: React.PropTypes.array,
-  collectionId: React.PropTypes.number,
+  mysources: React.PropTypes.array,
+  myCollectionId: React.PropTypes.string,
   // from parent
   // from composition
   intl: React.PropTypes.object.isRequired,

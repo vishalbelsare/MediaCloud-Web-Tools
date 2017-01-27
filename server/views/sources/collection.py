@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet, COLLECTIONS_TEMPLATE_PROPS
 
 
 from server import app, mc, db
@@ -41,7 +41,7 @@ def upload_file():
             flash('No selected file')
             return jsonify({'status':'Error', 'message': 'No selected file'})
         if file and allowed_file(file.filename):
-            props = ['URL','NAME','PUB_COUNTRY','MEDIA_ID']
+            props = COLLECTIONS_TEMPLATE_PROPS
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
@@ -54,7 +54,9 @@ def upload_file():
                 for line in reader:
                     try:
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
+                        
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items() if v !=None}
+                        logger.debug(newline)
                         newOrUpdatedWithMetaAndEmpties.append(newline)
                         newlineNoEmpties = {k:v for k, v in newline.items() if v !=''}
                         noEmptiesNoMeta = {k:v for k, v in newlineNoEmpties.items() if k !='pub_country'}
@@ -217,20 +219,19 @@ def api_collection_details(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_download_sources_template():
-    props = ['media_id', 'name', 'url']
     filename = "Collection Template for sources.csv"
-    return csv.stream_response(props, props, filename)
+    return csv.stream_response(COLLECTIONS_TEMPLATE_PROPS, COLLECTIONS_TEMPLATE_PROPS, filename)
 
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
+    info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    props = ['media_id', 'name', 'url']
-    filename = info['label']+" - sources.csv"
-    return csv.stream_response(all_media, props, filename)
+    filename = info['label']
+    propfields = ['URL','NAME','MEDIA_ID']
+    return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
