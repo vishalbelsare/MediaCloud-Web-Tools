@@ -26,19 +26,39 @@ class SourceList extends React.Component {
   }
 
   render() {
-    const { sources } = this.props;
+    const { sources, title, intro } = this.props;
     const { formatMessage } = this.props.intl;
+
+    let titleRefactor = null;
+    if (title) {
+      titleRefactor = title;
+    } else {
+      titleRefactor = (
+        <FormattedMessage
+          {...localMessages.title}
+          values={{ count: sources.length }}
+        />
+      );
+    }
+    let introRefactor = null;
+    if (title) {
+      introRefactor = intro;
+    } else {
+      introRefactor = (
+        <FormattedMessage
+          {...localMessages.intro}
+          values={{ count: sources.length }}
+        />
+      );
+    }
     return (
       <DataCard className="source-list">
         <div className="actions">
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <h2>{titleRefactor}</h2>
         <p>
-          <FormattedMessage
-            {...localMessages.intro}
-            values={{ count: sources.length }}
-          />
+          {introRefactor}
         </p>
         <SourceTable sources={sources} />
       </DataCard>
@@ -50,6 +70,8 @@ SourceList.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
   // from parent
+  title: React.PropTypes.string,
+  intro: React.PropTypes.string,
   sources: React.PropTypes.array.isRequired,
   collectionId: React.PropTypes.number,
   downloadUrl: React.PropTypes.string,

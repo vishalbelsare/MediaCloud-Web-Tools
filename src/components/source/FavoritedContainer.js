@@ -11,6 +11,7 @@ import CollectionList from '../common/CollectionList';
 const localMessages = {
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorited Collections' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorited Sources' },
+  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'Your favorited sources' },
   helpTitle: { id: 'favorited.help.text.title',
     defaultMessage: 'Favorited items',
   },
@@ -28,6 +29,7 @@ const FavoritedContainer = (props) => {
         <Col lg={6}>
           <SourceList
             title={formatMessage(localMessages.favoritedSourcesTitle)}
+            intro={formatMessage(localMessages.favoritedSourcesIntro)}
             sources={favoritedSources}
             helpButton={helpButton}
             downloadUrl="/api/favorites/sources.csv"
