@@ -389,20 +389,20 @@ def collection_update(collection_id):
     if len(request.form['sources[]']) > 0:
         source_ids = [sid for sid in request.form['sources[]'].split(',')]
     # first update the collection
-    updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
-        is_static=(static=='true'),
-        show_on_stories=(show_on_stories=='true'),
-        show_on_media=(show_on_media=='true'))
+    updated_collection = user_mc.updateTag(collection_id, name, name, description,
+        is_static=(static == 'true'),
+        show_on_stories=(show_on_stories == 'true'),
+        show_on_media=(show_on_media == 'true'))
     # get the sources in the collection first, then remove and add as needed
     existing_source_ids = [m['media_id'] for m in collection_media_list(user_mediacloud_key(), collection_id)]
     source_ids_to_remove = list(set(existing_source_ids) - set(source_ids))
     source_ids_to_add = [sid for sid in source_ids if sid not in existing_source_ids]
-    logger.info(existing_source_ids)
-    logger.info(source_ids_to_add)
-    logger.info(source_ids_to_remove)
+    logger.debug(existing_source_ids)
+    logger.debug(source_ids_to_add)
+    logger.debug(source_ids_to_remove)
     # then go through and tag all the sources specified with the new collection id
-    tags_to_add = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add ]
-    tags_to_remove = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove ]
+    tags_to_add = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add]
+    tags_to_remove = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove]
     tags = tags_to_add + tags_to_remove
     if len(tags) > 0:
         user_mc.tagMedia(tags)
