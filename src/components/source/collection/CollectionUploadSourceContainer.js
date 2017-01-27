@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
 import { DownloadButton } from '../../common/IconButton';
 
@@ -53,6 +54,8 @@ class CollectionUploadSourceContainer extends React.Component {
       confirmContent = (
         <CollectionUploadConfirmer onConfirm={onConfirm} onCancel={this.confirmLoadCSV} onClickButton={this.confirmLoadCSV} />
       );
+    } else if (this.state && this.state.confirmTemplate) {
+      confirmContent = <LoadingSpinner />;
     }
     return (
       <div>

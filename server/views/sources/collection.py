@@ -78,6 +78,7 @@ def upload_file():
 def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
+    logger.debug("")
     logger.debug("success creating or updating source %s",result)
     # status, media_id, url, error in result
     
@@ -231,8 +232,15 @@ def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
     info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    send_media = []
+    for src in all_media:
+        for tag in src['media_source_tags']:
+            if isMetaDataTagSet(tag['tag_sets_id']):
+                src['pub_country'] = tag['tag'][-3:]
+        if 'pub_country' not in src:
+            src['pub_country'] = ''
     filename = "MC_Downloaded_Template_"
-    propfields = ['URL','NAME']
+    propfields = ['url','name','pub_country']
     return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
