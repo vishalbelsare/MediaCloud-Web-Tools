@@ -81,7 +81,7 @@ CollectionUploadSourceContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.form.toUpload.fetchStatus,
-  sources: state.sources.collections.form.toUpload.list, // this will activate confirmation message and button
+  mysources: state.sources.collections.form.toUpload.list, // this will activate confirmation message and button
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

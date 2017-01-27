@@ -45,7 +45,7 @@ def upload_file():
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
-            with open(file.filename, 'r') as f:
+            with open(file.filename, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 newOrUpdated = []
@@ -54,9 +54,12 @@ def upload_file():
                 for line in reader:
                     try:
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        
-                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items() if v !=None}
-                        logger.debug(newline)
+                        for item in line.items():
+                            if item[0] == 'PUB_COUNTRY' and item[1] not in ['',None]:
+                                logger.debug('item is pub country')
+                                line['PUB_COUNTRY'] = item[1].decode('utf-8', errors='replace').encode('ascii', errors='ignore')
+                        newline = {k:v for k, v in line.items() if k.lower() !='media_id'}
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for k, v in line.items()}
                         newOrUpdatedWithMetaAndEmpties.append(newline)
                         newlineNoEmpties = {k:v for k, v in newline.items() if v !=''}
                         noEmptiesNoMeta = {k:v for k, v in newlineNoEmpties.items() if k !='pub_country'}
@@ -75,7 +78,7 @@ def upload_file():
 def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
-    logger.debug("succ ess creating or updating source %s",result)
+    logger.debug("success creating or updating source %s",result)
     # status, media_id, url, error in result
     
     mList = []
@@ -90,7 +93,6 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
                 eachNewDict.update(missingItems)
 
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
-
     for source in mList:
         if source['status'] != 'error':
             metadata_tag_id = source['pub_country'] if source['pub_country'] else None
@@ -230,7 +232,7 @@ def api_collection_sources_csv(collection_id):
     info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
     filename = "MC_Downloaded_Template_"
-    propfields = ['URL','NAME','MEDIA_ID']
+    propfields = ['URL','NAME']
     return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
