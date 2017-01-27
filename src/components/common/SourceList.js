@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import DataCard from '../../common/DataCard';
-import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
-import SourceTable from '../SourceTable';
+import DataCard from './DataCard';
+import messages from '../../resources/messages';
+import { DownloadButton } from './IconButton';
+import SourceTable from './SourceTable';
 
 const localMessages = {
   title: { id: 'collection.details.sources.title', defaultMessage: 'Sources' },
@@ -46,7 +46,7 @@ SourceList.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   sources: React.PropTypes.array.isRequired,
-  collectionId: React.PropTypes.number.isRequired,
+  collectionId: React.PropTypes.number,
 };
 
 export default

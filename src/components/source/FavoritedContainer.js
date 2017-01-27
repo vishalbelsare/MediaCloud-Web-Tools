@@ -5,7 +5,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/sourceActions';
 import composeHelpfulContainer from '../common/HelpfulContainer';
-import FavoritedList from '../common/FavoritedList';
+import SourceList from '../common/SourceList';
+import CollectionList from '../common/CollectionList';
 
 const localMessages = {
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorited Collections' },
@@ -25,16 +26,16 @@ const FavoritedContainer = (props) => {
     <Grid>
       <Row>
         <Col lg={6}>
-          <FavoritedList
+          <SourceList
             title={formatMessage(localMessages.favoritedSourcesTitle)}
-            favoritedItems={favoritedSources}
+            sources={favoritedSources}
             helpButton={helpButton}
           />
         </Col>
         <Col lg={6}>
-          <FavoritedList
+          <CollectionList
             title={formatMessage(localMessages.favoritedCollectionsTitle)}
-            favoritedItems={favoritedCollections}
+            collections={favoritedCollections}
             helpButton={helpButton}
           />
         </Col>
@@ -48,7 +49,6 @@ FavoritedContainer.propTypes = {
   fetchStatus: React.PropTypes.string,
   total: React.PropTypes.number,
   // from parent
-  collectionId: React.PropTypes.number.isRequired,
   favoritedSources: React.PropTypes.array.isRequired,
   favoritedCollections: React.PropTypes.array.isRequired,
   // from dispatch
