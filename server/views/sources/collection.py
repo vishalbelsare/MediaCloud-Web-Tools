@@ -230,9 +230,8 @@ def api_download_sources_template():
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(int(collection_id))
+    #info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    send_media = []
     for src in all_media:
         for tag in src['media_source_tags']:
             if isMetaDataTagSet(tag['tag_sets_id']):
