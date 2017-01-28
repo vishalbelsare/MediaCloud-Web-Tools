@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 def stream_response(data, dict_keys, filename, column_names=None, as_attachment=True):
     """Stream a fully ready dict to the user as a csv.
     Keyword arguments:
-    data -- an array of dicts
+    data -- an array of dicts, one per row
     dict_keys -- the keys in each dict to build the csv out of (order is preserved)
     filename -- a string to append to the automatically generated filename for identifaction
     column_names -- (optional) column names to use, defaults to dict_keys if not specified
