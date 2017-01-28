@@ -229,11 +229,17 @@ def api_download_sources_template():
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(int(collection_id))
+    #info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    filename = "MC_Downloaded_Template_"
-    propfields = ['URL','NAME']
-    return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
+    # add in the tag values
+    for media in all_media:
+        pub_country_alpha3 = ''
+        for tag in media['media_source_tags']:
+            if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
+                pub_country_alpha3 = tag['tag'][-3:]
+        media['pub_country'] = pub_country_alpha3
+    filename = "collection_"+str(collection_id)+"_sources"
+    return csv.stream_response(all_media, COLLECTIONS_TEMPLATE_PROPS, filename, COLLECTIONS_TEMPLATE_PROPS)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
