@@ -1,4 +1,3 @@
-
 let appColors = {
   light: '#CC0000',
   dark: '#990000',
