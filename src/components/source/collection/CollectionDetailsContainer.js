@@ -11,7 +11,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import SourceList from './SourceList';
+import SourceList from '../../common/SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
