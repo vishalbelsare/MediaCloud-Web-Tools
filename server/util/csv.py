@@ -12,7 +12,10 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
     filename -- a string to append to the automatically generated filename for identifaction
     column_names -- (optional) column names to use, defaults to dict_keys if not specified
     """
-    logger.debug("csv.stream_response with "+str(len(data))+" rows of data")
+    if (len(data) == 0):
+        logger.debug("data is empty, must be asking for template")
+    else:
+        logger.debug("csv.stream_response with "+str(len(data))+" rows of data")
     if column_names is None:
         column_names = dict_keys
     logger.debug("  cols: "+' '.join(column_names))
@@ -29,7 +32,8 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
                     if isinstance(value, (int, long, float)):
                         cleaned_value = str(row[p])
                     elif value is None:
-                        cleaned_value = ""
+                        # trying to handle endode/decode problem on the other end
+                        cleaned_value = ''
                     else:
                         cleaned_value = '"'+value.encode('utf-8').replace('"', '""')+'"'
                     attributes.append(cleaned_value)
@@ -39,9 +43,16 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
                 logger.error("Couldn't process a CSV row: "+str(e))
                 logger.exception(e)
                 logger.debug(row)
-    download_filename = 'mediacloud-'+str(filename)+'-'+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+'.csv'
+    download_filename = str(filename)+'_'+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+'.csv'
     headers = {}
     if as_attachment:
         headers["Content-Disposition"] = "attachment;filename="+download_filename
-    return flask.Response(stream_as_csv(data, dict_keys, column_names),
+
+    if (not len(data) == 0):
+        return flask.Response(stream_as_csv(data, dict_keys, column_names),
                           mimetype='text/csv; charset=utf-8', headers=headers)
+    else:
+        return flask.Response(dict_keys,
+                          mimetype='text/csv; charset=utf-8', headers=headers)
+
+

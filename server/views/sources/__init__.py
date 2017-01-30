@@ -1,4 +1,4 @@
-
+COLLECTIONS_TEMPLATE_PROPS = ['url','name','pub_country']
 # some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
 GV_TAG_SET_ID = 556
@@ -11,6 +11,6 @@ VALID_METADATA_IDS = [{'pub_country':TAG_SETS_ID_PUBLICATION_COUNTRY}]
 
 def isMetaDataTagSet(metadataTagSetsId):
   for eachMetadataItem in VALID_METADATA_IDS:
-  	if metadataTagSetsId in eachMetadataItem.values():
-  		return 1
-  return 0
+  	if int(metadataTagSetsId) in eachMetadataItem.values():
+  		return True
+  return False
