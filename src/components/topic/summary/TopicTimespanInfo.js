@@ -11,6 +11,7 @@ const localMessages = {
   mediumLinkCount: { id: 'topic.summary.timespanInfo.mediumLinkCount', defaultMessage: 'Media Links' },
   geocodedCount: { id: 'topic.summary.timespanInfo.geocodedCount', defaultMessage: 'Geocoded Stories' },
   englishCount: { id: 'topic.summary.timespanInfo.englishCount', defaultMessage: 'English Stories' },
+  storyCount: { id: 'topic.summary.timespanInfo.storyCount', defaultMessage: 'Total Stories' },
 };
 
 const TopicTimespanInfo = (props) => {
@@ -29,6 +30,7 @@ const TopicTimespanInfo = (props) => {
           data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }) },
         { message: localMessages.englishCount,
           data: formatNumber(englishCounts.count / geocodedCounts.total, { style: 'percent' }) },
+        { message: localMessages.storyCount, data: formatNumber(timespan.story_count) },
       ]}
     />
   );
