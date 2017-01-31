@@ -130,7 +130,8 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     all_stories = []
     more_stories = True
     params = kwargs
-    del params['as_attachment']
+    if 'as_attachment' in params:
+        del params['as_attachment']
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
         while more_stories:
