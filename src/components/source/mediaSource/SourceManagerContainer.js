@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Link from 'react-router/lib/Link';
 import FavoritedList from '../../common/FavoritedList';
 import FeaturedCollectionsContainer from '../collection/FeaturedCollectionsContainer';
+import BrowseCollectionsContainer from '../collection/BrowseCollectionsContainer';
 import { fetchFavoriteCollections, fetchFavoriteSources, fetchFeaturedCollectionList, fetchPopularCollectionList } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import messages from '../../../resources/messages';
@@ -57,16 +57,9 @@ const SourceManagerContainer = (props) => {
           <h2>
             <FormattedMessage {...localMessages.browse} />
           </h2>
-          {popularCollections.map((c, idx) => (
-            <tr key={c.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-              <td>
-                <Link to={`/collections/${c.tags_id}`}>{c.label}</Link>
-              </td>
-              <td>
-                {c.description}
-              </td>
-            </tr>
-          ))}
+          <Col lg={8} xs={12}>
+            <BrowseCollectionsContainer collections={popularCollections} />
+          </Col>
         </Col>
       </Row>
     </Grid>
