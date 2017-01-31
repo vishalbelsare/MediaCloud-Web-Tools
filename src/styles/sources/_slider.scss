@@ -1,0 +1,6 @@
+@import '../constants';
+
+.slick-dots li button:before {
+    color: $sources-primary;
+    opacity: 0.50;
+}

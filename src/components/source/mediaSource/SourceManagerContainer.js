@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import FavoritedList from '../../common/FavoritedList';
+import FeaturedCollectionsContainer from '../collection/FeaturedCollectionsContainer';
 import { fetchFavoriteCollections, fetchFavoriteSources, fetchFeaturedCollectionList, fetchPopularCollectionList } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import messages from '../../../resources/messages';
@@ -45,16 +46,7 @@ const SourceManagerContainer = (props) => {
       </Row>
       <Row>
         <Col lg={8} xs={12}>
-          {featuredCollections.map((c, idx) => (
-            <tr key={c.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-              <td>
-                <Link to={`/collections/${c.tags_id}`}>{c.label}</Link>
-              </td>
-              <td>
-                {c.description}
-              </td>
-            </tr>
-          ))}
+          <FeaturedCollectionsContainer collections={featuredCollections} />
         </Col>
         <Col lg={4} xs={12}>
           {myFavorites}
