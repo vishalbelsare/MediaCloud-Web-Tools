@@ -3,9 +3,11 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
+// import { EyeButton } from '../../common/AppButton';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
@@ -16,6 +18,7 @@ import HealthBadge from '../HealthBadge';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet } from '../../../lib/tagUtil';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -40,6 +43,7 @@ const localMessages = {
   metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
   metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
   unknown: { id: 'source.basicInfo.health.unknown', defaultMessage: '(unknown)' },
+  isMonitored: { id: 'source.basicInfo.isMonitored', defaultMessage: 'monitored to ensure health' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -72,12 +76,19 @@ class SourceDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-
-    let mainButton = null;
-    mainButton = (<FavoriteToggler
+    const favButton = (<FavoriteToggler
       isFavorited={source.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
     />);
+    let monitoredIcon = null;
+    if (source.is_monitored) {
+      monitoredIcon = (
+        <RemoveRedEye
+          color={getBrandDarkColor()}
+          style={{ height: 20, width: 25, marginLeft: 10 }}
+        />
+      );
+    }
     let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />;
     if (metadata.length > 0) {
       metadataContent = (
@@ -89,11 +100,12 @@ class SourceDetailsContainer extends React.Component {
         </ul>
       );
     }
+    const publicNotes = (source.public_notes) ? <p>{source.public_notes}</p> : null;
     return (
       <Grid className="details source-details">
         <Title render={titleHandler} />
         <Row>
-          <Col lg={8} xs={12}>
+          <Col lg={10} xs={12}>
             <h1>
               <MediaSourceIcon height={32} />
               <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
@@ -101,9 +113,11 @@ class SourceDetailsContainer extends React.Component {
                 ID #{source.media_id}
                 {publicMessage}
                 {editMessage}
-                {mainButton}
+                {monitoredIcon}
+                {favButton}
               </small>
             </h1>
+            {publicNotes}
             <p>
               <FormattedMessage
                 {...localMessages.feedInfo}
@@ -143,7 +157,7 @@ class SourceDetailsContainer extends React.Component {
             </p>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
-          <Col lg={4} xs={12}>
+          <Col lg={2} xs={12}>
             <HealthBadge isHealthy={(source.health) ? source.health.is_healthy === 1 : true} />
           </Col>
         </Row>

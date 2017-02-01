@@ -116,6 +116,7 @@ const messages = {
   add: { id: 'add', defaultMessage: 'Add' },
   open: { id: 'open', defaultMessage: 'Open' },
   close: { id: 'close', defaultMessage: 'Close' },
+  monitored: { id: 'monitored', defaultMessage: 'Monitored' },
   none: { id: 'none', defaultMessage: 'None' },
   download: { id: 'download', defaultMessage: 'Download' },
   favorite: { id: 'favorite', defaultMessage: 'Favorite' },
