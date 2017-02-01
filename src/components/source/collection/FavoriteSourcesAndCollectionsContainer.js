@@ -42,11 +42,11 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
       <h1>
         <FormattedMessage {...localMessages.personal} />
       </h1>
-      <Link to={'favorited'}>
+      <Link to={'favorites'}>
         <FormattedMessage {...messages.exploreFavorites} />
       </Link>
       &nbsp;
-      <ExploreButton linkTo={'/sources/favorites'} />
+      <ExploreButton linkTo={'/favorites'} />
       <Grid>
         <Title render={titleHandler} />
         <h2>

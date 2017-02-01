@@ -23,6 +23,8 @@ const FeaturedCollectionsContainer = (props) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: 1,
+    autoplaySpeed: 4000,
   };
   let content = null;
 
