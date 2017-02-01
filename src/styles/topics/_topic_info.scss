@@ -1,6 +1,10 @@
+@import '../_constants';
+
 .topic-info {
-  .seed-query {
+  code {
+    display: block;
     max-height: 333px;
     overflow: scroll;
+    color: $material-grey500;
   }
 }
