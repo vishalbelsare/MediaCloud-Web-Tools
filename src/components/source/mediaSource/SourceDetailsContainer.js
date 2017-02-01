@@ -7,6 +7,8 @@ import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 // import { EyeButton } from '../../common/AppButton';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
@@ -44,6 +46,8 @@ const localMessages = {
   metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
   unknown: { id: 'source.basicInfo.health.unknown', defaultMessage: '(unknown)' },
   isMonitored: { id: 'source.basicInfo.isMonitored', defaultMessage: 'monitored to ensure health' },
+  publicNotes: { id: 'source.basicInfo.publicNotes', defaultMessage: '<p><b>Notes</b>: {notes}</p>' },
+  editorNotes: { id: 'source.basicInfo.editorNotes', defaultMessage: '<p><b>Editor\'s Notes</b>: {notes}</p>' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -100,7 +104,8 @@ class SourceDetailsContainer extends React.Component {
         </ul>
       );
     }
-    const publicNotes = (source.public_notes) ? <p>{source.public_notes}</p> : null;
+    const publicNotes = (source.public_notes) ? <FormattedHTMLMessage {...localMessages.publicNotes} values={{ notes: source.public_notes }} /> : null;
+    const editorNotes = (source.editor_notes) ? <FormattedHTMLMessage {...localMessages.editorNotes} values={{ notes: source.editor_notes }} /> : null;
     return (
       <Grid className="details source-details">
         <Title render={titleHandler} />
@@ -118,6 +123,9 @@ class SourceDetailsContainer extends React.Component {
               </small>
             </h1>
             {publicNotes}
+            <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+              {editorNotes}
+            </Permissioned>
             <p>
               <FormattedMessage
                 {...localMessages.feedInfo}
