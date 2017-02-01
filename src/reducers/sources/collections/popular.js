@@ -7,7 +7,7 @@ const popular = createAsyncReducer({
   },
   action: FETCH_POPULAR_COLLECTIONS_LIST,
   handleSuccess: payload => ({
-    list: payload.results.collections,
+    list: payload.results,
   }),
 });
 

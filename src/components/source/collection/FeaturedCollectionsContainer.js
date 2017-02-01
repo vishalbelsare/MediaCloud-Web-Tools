@@ -1,9 +1,12 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import DataCard from '../../common/DataCard';
-import CollectionTopWordsContainer from './CollectionTopWordsContainer';
+import FeaturedItem from './FeaturedItem';
+import { fetchFeaturedCollectionList } from '../../../actions/sourceActions';
+import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
   mainTitle: { id: 'collection.featured.mainTitle', defaultMessage: 'Featured Collections' },
@@ -14,7 +17,6 @@ const FeaturedCollectionsContainer = (props) => {
   const { collections } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-  const validCollections = collections.filter(c => c.label.indexOf('U.S.') > -1);
   const settings = {
     dots: true,
     infinite: true,
@@ -24,14 +26,11 @@ const FeaturedCollectionsContainer = (props) => {
   };
   let content = null;
 
-  if (validCollections && validCollections.length > 0) {
+  if (collections && collections.length > 0) {
     content = (
       <Slider {...settings} style={{ width: 80, height: 100, margin: 10, padding: 10 }}>
-        {validCollections.map((slide, idx) =>
-          <div key={idx}><h3>{slide.label}</h3>
-            <p>{slide.description}</p>
-            <CollectionTopWordsContainer collectionId={slide.tags_id} />
-          </div>
+        {collections.map((slide, idx) =>
+          <div key={idx}><FeaturedItem key={idx} collection={slide} /></div>
         )}
       </Slider>
     );
@@ -40,9 +39,9 @@ const FeaturedCollectionsContainer = (props) => {
   return (
     <DataCard>
       <Title render={titleHandler} />
-      <h2>
+      <h1>
         <FormattedMessage {...localMessages.mainTitle} />
-      </h2>
+      </h1>
       <div className="featured-collections">
         {content}
       </div>
@@ -55,4 +54,27 @@ FeaturedCollectionsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(FeaturedCollectionsContainer);
+const mapStateToProps = state => ({
+  fetchStatus: state.sources.collections.featured.fetchStatus,
+  collections: state.sources.collections.featured.list,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  fetchData: () => {
+    dispatch(fetchFeaturedCollectionList());
+  },
+  asyncFetch: () => {
+    dispatch(fetchFeaturedCollectionList());
+  },
+});
+
+export default
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeAsyncContainer(
+        FeaturedCollectionsContainer
+      )
+    )
+  );
+

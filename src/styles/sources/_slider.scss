@@ -4,3 +4,7 @@
     color: $sources-primary;
     opacity: 0.50;
 }
+
+.slick-prev, .slick-next {
+	display: none !important;
+}

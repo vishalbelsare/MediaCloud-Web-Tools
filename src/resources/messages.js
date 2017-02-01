@@ -49,8 +49,9 @@ const messages = {
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
   sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
 
-  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorited Collections' },
-  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorited Sources' },
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorite Collections' },
+  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorite Sources' },
+  exploreFavorites: { id: 'favorited.explore', defaultMessage: 'View Favorites' },
 
   feedName: { id: 'feed.name', defaultMessage: 'Name' },
   feedUrl: { id: 'feed.url', defaultMessage: 'URL' },

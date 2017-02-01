@@ -7,7 +7,7 @@ const featured = createAsyncReducer({
   },
   action: FETCH_FEATURED_COLLECTIONS_LIST,
   handleSuccess: payload => ({
-    list: payload.results.collections,
+    list: payload.results,
   }),
 });
 

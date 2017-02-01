@@ -1,28 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FavoritedList from '../../common/FavoritedList';
 import FeaturedCollectionsContainer from '../collection/FeaturedCollectionsContainer';
-import BrowseCollectionsContainer from '../collection/BrowseCollectionsContainer';
-import { fetchFavoriteCollections, fetchFavoriteSources, fetchFeaturedCollectionList, fetchPopularCollectionList } from '../../../actions/sourceActions';
+import PopularCollectionsContainer from '../collection/PopularCollectionsContainer';
+import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import messages from '../../../resources/messages';
+import { ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'something something. Explore the featured collections below, or your favorited sources and collections to the left.' },
   browse: { id: 'sources.intro.browse', defaultMessage: 'Browse by Category' },
   personal: { id: 'sources.intro.personal', defaultMessage: 'My Sources and Collections' },
+  created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
 };
 
 const SourceManagerContainer = (props) => {
-  const { favoritedSources, favoritedCollections, featuredCollections, popularCollections } = props;
+  const { favoritedSources, favoritedCollections } = props;
   const { formatMessage } = props.intl;
   let myFavorites = null;
   if (favoritedSources) {
     myFavorites = (
       <div>
+        <h1>
+          <FormattedMessage {...localMessages.personal} />
+        </h1>
+        <Link to={'favorited'}>
+          <FormattedMessage {...messages.exploreFavorites} />
+        </Link>
+        &nbsp;
+        <ExploreButton linkTo={'favorited'} />
         <FavoritedList
           title={formatMessage(messages.favoritedSourcesTitle)}
           favoritedItems={favoritedSources}
@@ -46,20 +57,15 @@ const SourceManagerContainer = (props) => {
       </Row>
       <Row>
         <Col lg={8} xs={12}>
-          <FeaturedCollectionsContainer collections={featuredCollections} />
+          <FeaturedCollectionsContainer />
         </Col>
         <Col lg={4} xs={12}>
           {myFavorites}
         </Col>
       </Row>
       <Row>
-        <Col lg={8} xs={12}>
-          <h2>
-            <FormattedMessage {...localMessages.browse} />
-          </h2>
-          <Col lg={8} xs={12}>
-            <BrowseCollectionsContainer collections={popularCollections} />
-          </Col>
+        <Col lg={12} xs={12}>
+          <PopularCollectionsContainer title={localMessages.browse} />
         </Col>
       </Row>
     </Grid>
@@ -79,8 +85,6 @@ SourceManagerContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   favoritedSources: React.PropTypes.array.isRequired,
   favoritedCollections: React.PropTypes.array.isRequired,
-  featuredCollections: React.PropTypes.array.isRequired,
-  popularCollections: React.PropTypes.array.isRequired,
 };
 
 SourceManagerContainer.contextTypes = {
@@ -91,8 +95,6 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.favorited.fetchStatus,
   favoritedSources: state.sources.sources.favorited.list,
   favoritedCollections: state.sources.collections.favorited.list,
-  featuredCollections: state.sources.collections.featured.list,
-  popularCollections: state.sources.collections.popular.list,
 });
 
 
@@ -100,14 +102,10 @@ const mapDispatchToProps = dispatch => ({
   fetchData: () => {
     dispatch(fetchFavoriteCollections());
     dispatch(fetchFavoriteSources());
-    dispatch(fetchFeaturedCollectionList());
-    dispatch(fetchPopularCollectionList());
   },
   asyncFetch: () => {
     dispatch(fetchFavoriteCollections());
     dispatch(fetchFavoriteSources());
-    dispatch(fetchFeaturedCollectionList());
-    dispatch(fetchPopularCollectionList());
   },
 });
 
