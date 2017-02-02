@@ -7,6 +7,8 @@ import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
+import LoginFormContainer from '../../user/LoginFormContainer';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicTimespanInfo from './TopicTimespanInfo';
 
 class TopicSummaryContainer extends React.Component {
@@ -18,6 +20,15 @@ class TopicSummaryContainer extends React.Component {
     const { filters, topicId, timespan, user } = this.props;
     let content = <div />;
     let subContent = <div />;
+    let loginIfPublic = null;
+
+    if (user.user_permission !== PERMISSION_LOGGED_IN) {
+      loginIfPublic = (
+        <Col lg={3} xs={3}>
+          <LoginFormContainer />
+        </Col>
+      );
+    }
     if (!user.isLoggedIn || this.filtersAreSet()) {
       subContent = (
         <Grid>
@@ -25,6 +36,7 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={6} xs={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
+            {loginIfPublic}
             <Col lg={6} xs={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} />
             </Col>
