@@ -2,12 +2,12 @@ import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
+import { Grid } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import messages from '../../../resources/messages';
+
 import { ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
@@ -25,14 +25,14 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
   if (favoritedSources && favoritedSources.length > 0) {
     srccontent = (
       favoritedSources.slice(0, RESULTS).map((c, idx) =>
-        <div key={idx} >{c.name}</div>
+        <h3 key={idx} ><Link to={`/sources/${c.media_id}`}>{c.name}</Link></h3>
       )
     );
   }
   if (favoritedCollections && favoritedCollections.length > 0) {
     colcontent = (
       favoritedCollections.slice(0, RESULTS).map((c, idx) =>
-        <div key={idx} >{c.name}</div>
+        <h3 key={idx} ><Link to={`/collections/${c.id}/summary`}>{c.name}</Link></h3>
       )
     );
   }
@@ -41,12 +41,10 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
     <DataCard>
       <h1>
         <FormattedMessage {...localMessages.personal} />
+        <div className="source-home-explore">
+          <ExploreButton linkTo={'/favorites'} />
+        </div>
       </h1>
-      <Link to={'favorites'}>
-        <FormattedMessage {...messages.exploreFavorites} />
-      </Link>
-      &nbsp;
-      <ExploreButton linkTo={'/favorites'} />
       <Grid>
         <Title render={titleHandler} />
         <h2>

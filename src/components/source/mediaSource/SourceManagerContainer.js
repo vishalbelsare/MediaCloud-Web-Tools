@@ -8,7 +8,7 @@ import FavoriteSourcesAndCollectionsContainer from '../collection/FavoriteSource
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
-  about: { id: 'sources.intro.about', defaultMessage: 'something something. Explore the featured collections below, or your favorited sources and collections to the left.' },
+  about: { id: 'sources.intro.about', defaultMessage: 'Explore the featured collections below, or your favorited sources and collections to the left.' },
   browse: { id: 'sources.intro.browse', defaultMessage: 'Browse by Category' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
 };
@@ -20,7 +20,7 @@ const SourceManagerContainer = () => (
         <h1>
           <FormattedMessage {...localMessages.title} />
         </h1>
-        <p><FormattedMessage {...localMessages.about} /></p>
+        <h2><FormattedMessage {...localMessages.about} /></h2>
       </Col>
     </Row>
     <Row>

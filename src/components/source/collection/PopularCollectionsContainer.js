@@ -9,7 +9,6 @@ import { fetchPopularCollectionList } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { ExploreButton } from '../../common/IconButton';
 import CollectionIcon from '../../common/icons/CollectionIcon';
-import messages from '../../../resources/messages';
 
 const localMessages = {
   mainTitle: { id: 'collection.popular.mainTitle', defaultMessage: 'Browse by Category' },
@@ -30,8 +29,9 @@ const PopularCollectionsContainer = (props) => {
             <CollectionIcon height={25} />
             <h3><Link to={`/collections/${c.id}/summary`}>{c.label}</Link></h3>
             <h4>{c.description}</h4>
-            <FormattedMessage {...messages.explore} />
-            <ExploreButton style={{ float: 'right' }} linkTo={`/collections/${c.tags_id}`} />
+            <div className="source-home-explore">
+              <ExploreButton linkTo={`/collections/${c.tags_id}`} />
+            </div>
           </DataCard>
         </Col>
       )
