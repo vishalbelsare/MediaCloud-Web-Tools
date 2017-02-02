@@ -142,7 +142,8 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
                 more_stories = True
             else:
                 more_stories = False
-        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id', 'media_name',
+        props = ['stories_id', 'publish_date', 'date_is_reliable', 
+            'title', 'url', 'media_id', 'media_name',
             'media_inlink_count', 'inlink_count',
             'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)

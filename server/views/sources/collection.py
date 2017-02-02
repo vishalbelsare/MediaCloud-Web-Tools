@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet, COLLECTIONS_TEMPLATE_PROPS
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet
 
 
 from server import app, mc, db
@@ -41,25 +41,20 @@ def upload_file():
             flash('No selected file')
             return jsonify({'status':'Error', 'message': 'No selected file'})
         if file and allowed_file(file.filename):
-            props = COLLECTIONS_TEMPLATE_PROPS
+            props = ['URL','NAME','PUB_COUNTRY','MEDIA_ID']
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
-            with open(file.filename, 'rU') as f:
+            with open(file.filename, 'r') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 newOrUpdated = []
                 newOrUpdatedWithMetaAndEmpties = []
-                reader.next() # this means we have to have a header 
+                reader.next() # this means we have to have a header
                 for line in reader:
                     try:
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        for item in line.items():
-                            if item[0] == 'PUB_COUNTRY' and item[1] not in ['',None]:
-                                logger.debug('item is pub country')
-                                line['PUB_COUNTRY'] = item[1].decode('utf-8', errors='replace').encode('ascii', errors='ignore')
-                        newline = {k:v for k, v in line.items() if k.lower() !='media_id'}
-                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for k, v in line.items()}
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
                         newOrUpdatedWithMetaAndEmpties.append(newline)
                         newlineNoEmpties = {k:v for k, v in newline.items() if v !=''}
                         noEmptiesNoMeta = {k:v for k, v in newlineNoEmpties.items() if k !='pub_country'}
@@ -78,22 +73,22 @@ def upload_file():
 def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
-    logger.debug("")
-    logger.debug("success creating or updating source %s",result)
+    logger.debug("succ ess creating or updating source %s",result)
     # status, media_id, url, error in result
-    
+
     mList = []
     for eachdict in result:
         mNewDictList = [hasEmptiesDict for hasEmptiesDict in newOrUpdatedWithMetaAndEmpties if hasEmptiesDict['url'] == eachdict['url']]
         mList += mNewDictList
-     
+
     for eachNewDict in mList:
         for eachdict in result:
             missingItems = {k:v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
-            if eachNewDict['url'] == eachdict['url']:                 
+            if eachNewDict['url'] == eachdict['url']:
                 eachNewDict.update(missingItems)
 
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
+
     for source in mList:
         if source['status'] != 'error':
             metadata_tag_id = source['pub_country'] if source['pub_country'] else None
@@ -107,7 +102,7 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
                         clear_others=True) # make sure to clear any other values set in this metadata tag set
                     logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
-     
+
     # return newly created or updated source list with media_ids filled in
     return jsonify({'results':mList})
 
@@ -202,7 +197,6 @@ def collection_set_favorited(collection_id):
         db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
     return jsonify({'isFavorite': favorite})
 
-
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required
 @api_error_handler
@@ -218,29 +212,16 @@ def api_collection_details(collection_id):
 
     return jsonify({'results':info})
 
-@app.route('/api/template/sources.csv')
-@flask_login.login_required
-@api_error_handler
-def api_download_sources_template():
-    filename = "Collection_Template_for_sources.csv"
-    return csv.stream_response(COLLECTIONS_TEMPLATE_PROPS, COLLECTIONS_TEMPLATE_PROPS, filename)
-
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
-    #info = user_mc.tag(int(collection_id))
+    info = user_mc.tag(collection_id)
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    for src in all_media:
-        for tag in src['media_source_tags']:
-            if isMetaDataTagSet(tag['tag_sets_id']):
-                src['pub_country'] = tag['tag'][-3:]
-        if 'pub_country' not in src:
-            src['pub_country'] = ''
-    filename = "MC_Downloaded_Template_"
-    propfields = ['url','name','pub_country']
-    return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
+    props = ['media_id', 'name', 'url']
+    filename = info['label']+" - sources.csv"
+    return csv.stream_response(all_media, props, filename)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
@@ -257,7 +238,7 @@ def collection_source_sentence_counts_csv(collection_id):
     info = user_mc.tag(collection_id)
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
-    filename = info['label']+"-source sentence counts.csv"
+    filename = info['label']+" - source sentence counts.csv"
     return csv.stream_response(results, props, filename)
 
 @cache
@@ -353,7 +334,7 @@ def similarCollections(collection_id):
     info = {}
     info['similarCollections'] = mc.tagList(similar_tags_id=collection_id)
     return jsonify({'results':info})
-  
+
 
 
 @app.route('/api/collections/create', methods=['POST'])
@@ -371,7 +352,7 @@ def collection_create():
     if len(request.form['sources[]']) > 0:
         source_ids = request.form['sources[]'].split(',')
     # first create the collection
-    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description, 
+    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description,
         is_static=(static=='true'),
         show_on_stories=(show_on_stories=='true'),
         show_on_media=(show_on_media=='true'))
@@ -396,20 +377,20 @@ def collection_update(collection_id):
     if len(request.form['sources[]']) > 0:
         source_ids = [sid for sid in request.form['sources[]'].split(',')]
     # first update the collection
-    updated_collection = user_mc.updateTag(collection_id, name, name, description,
-        is_static=(static == 'true'),
-        show_on_stories=(show_on_stories == 'true'),
-        show_on_media=(show_on_media == 'true'))
+    updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description,
+        is_static=(static=='true'),
+        show_on_stories=(show_on_stories=='true'),
+        show_on_media=(show_on_media=='true'))
     # get the sources in the collection first, then remove and add as needed
     existing_source_ids = [m['media_id'] for m in collection_media_list(user_mediacloud_key(), collection_id)]
     source_ids_to_remove = list(set(existing_source_ids) - set(source_ids))
     source_ids_to_add = [sid for sid in source_ids if sid not in existing_source_ids]
-    logger.debug(existing_source_ids)
-    logger.debug(source_ids_to_add)
-    logger.debug(source_ids_to_remove)
+    logger.info(existing_source_ids)
+    logger.info(source_ids_to_add)
+    logger.info(source_ids_to_remove)
     # then go through and tag all the sources specified with the new collection id
-    tags_to_add = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add]
-    tags_to_remove = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove]
+    tags_to_add = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add ]
+    tags_to_remove = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove ]
     tags = tags_to_add + tags_to_remove
     if len(tags) > 0:
         user_mc.tagMedia(tags)
