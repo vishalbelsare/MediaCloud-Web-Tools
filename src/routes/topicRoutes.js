@@ -6,6 +6,7 @@ import HomeContainer from '../components/topic/HomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';
+import PublicTopicSummaryContainer from '../components/topic/summary/PublicTopicSummaryContainer';
 import InfluentialMediaContainer from '../components/topic/media/InfluentialMediaContainer';
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import InfluentialStoryExplorerContainer from '../components/topic/stories/InfluentialStoryExplorerContainer';
@@ -68,7 +69,7 @@ const topicRoutes = (
     </Route>
 
     <Route path="/topics/public/:topicId" component={TopicContainer}>
-      <Route path="/topics/public/:topicId/summary" component={TopicSummaryContainer} />
+      <Route path="/topics/public/:topicId/summary" component={PublicTopicSummaryContainer} />
     </Route>
 
   </Route>
