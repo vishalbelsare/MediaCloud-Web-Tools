@@ -1,29 +1,41 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
 import TopicSummaryContainer from './TopicSummaryContainer';
 import AppButton from '../../common/AppButton';
-import messages from '../../../resources/messages';
+
+const localMessages = {
+  login: { id: 'topic.login', defaultMessage: 'Log in or Register Now!' },
+};
 
 const PublicTopicSummaryContainer = (props) => {
+  const { handleButtonClick } = props;
   const { formatMessage } = props.intl;
   return (
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <br />
-          <AppButton
-            type="submit"
-            label={formatMessage(messages.userLogin)}
-            primary
-          />
-        </Col>
-      </Row>
-      <Row>
+    <div className="publicTopicSummary">
+      <div>
+        <br />
+        <AppButton
+          flat
+          label={formatMessage(localMessages.login)}
+          onClick={() => { handleButtonClick('/home'); }}
+          toolTip={formatMessage(localMessages.login)}
+        />
+      </div>
+      <div>
         <TopicSummaryContainer />
-      </Row>
-    </Grid>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <br />
+        <AppButton
+          flat
+          label={formatMessage(localMessages.login)}
+          onClick={() => { handleButtonClick('/home'); }}
+          toolTip={formatMessage(localMessages.login)}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -32,15 +44,22 @@ PublicTopicSummaryContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from state
   user: React.PropTypes.object.isRequired,
+  handleButtonClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   user: state.user,
 });
 
+const mapDispatchToProps = dispatch => ({
+  handleButtonClick: (path) => {
+    dispatch(push(path));
+  },
+});
+
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       PublicTopicSummaryContainer
     )
   );
