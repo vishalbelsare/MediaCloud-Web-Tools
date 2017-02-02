@@ -3,14 +3,11 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
-import TopicInfo from './TopicInfo';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import TopicTimespanInfo from './TopicTimespanInfo';
-import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
-import DownloadMapContainer from './DownloadMapContainer';
 
 class TopicSummaryContainer extends React.Component {
   filtersAreSet() {
@@ -18,7 +15,7 @@ class TopicSummaryContainer extends React.Component {
     return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
-    const { filters, topicId, topicInfo, timespan, user } = this.props;
+    const { filters, topicId, timespan, user } = this.props;
     let content = <div />;
     let subContent = <div />;
     if (!user.isLoggedIn || this.filtersAreSet()) {
@@ -43,15 +40,6 @@ class TopicSummaryContainer extends React.Component {
             </Col>
             <Col lg={6} xs={12}>
               <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
-              <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={6} xs={12}>
-              <TopicInfo topic={topicInfo} />
-            </Col>
-            <Col lg={6} xs={12}>
-              <DownloadMapContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
         </Grid>

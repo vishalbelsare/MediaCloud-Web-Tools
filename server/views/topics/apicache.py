@@ -31,8 +31,12 @@ def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_media_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
-    return user_mc.topicMediaList(topics_id, **kwargs)
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+    return local_mc.topicMediaList(topics_id, **kwargs)
 
 def topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
