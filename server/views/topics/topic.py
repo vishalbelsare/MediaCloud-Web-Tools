@@ -3,11 +3,12 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app, db
+from server import app, db, mc
 from server.util.mail import send_email
-from server.util.request import form_fields_required, api_error_handler
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
+from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +22,21 @@ def topic_list():
     _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
+
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def topic_summary(topics_id):
-    user_mc = user_mediacloud_client()
-    topic = user_mc.topic(topics_id)
-    _add_user_favorite_flag_to_topics([topic])
+    local_mc = None
+    if (access_public_topic(topics_id)):
+        local_mc = mc
+    elif is_user_logged_in():
+        local_mc = user_mediacloud_client()
+    else:
+        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+
+    topic = local_mc.topic(topics_id)
+    if is_user_logged_in():
+        _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)
 
 def _add_user_favorite_flag_to_topics(topics):

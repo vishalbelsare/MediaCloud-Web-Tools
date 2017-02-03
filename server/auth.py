@@ -1,6 +1,7 @@
 import datetime
 import logging
 import flask_login
+from flask_login import current_user
 import mediacloud
 from flask import request
 
@@ -73,6 +74,9 @@ def load_user_from_request(request_object):
         return User.get(request_object.cookies[COOKIE_USER_KEY])
     return None
 
+def is_user_logged_in():
+    return current_user.is_authenticated
+
 def login_user(user):
     flask_login.login_user(user, remember=True)
     user.create_in_db_if_needed()
@@ -119,7 +123,7 @@ def user_name():
     return load_user_from_request(request).name
 
 def user_mediacloud_key():
-    return request.cookies[COOKIE_USER_KEY]
+    return request.cookies[COOKIE_USER_KEY] if COOKIE_USER_KEY in request.cookies else None
 
 def user_mediacloud_client():
     '''

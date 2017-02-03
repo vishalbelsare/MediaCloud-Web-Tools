@@ -5,6 +5,8 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchTopicStoryCounts } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import BubbleChart, { TEXT_PLACEMENT_ABOVE } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -50,12 +52,14 @@ class StoryTotalsSummaryContainer extends React.Component {
     }
     return (
       <DataCard>
-        <div className="actions">
-          <DownloadButton
-            tooltip={formatMessage(messages.download)}
-            onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
-          />
-        </div>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <div className="actions">
+            <DownloadButton
+              tooltip={formatMessage(messages.download)}
+              onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
+            />
+          </div>
+        </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}

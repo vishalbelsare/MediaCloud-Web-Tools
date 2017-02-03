@@ -6,6 +6,8 @@ export const PERMISSION_TOPIC_READ = 'read';
 export const PERMISSION_TOPIC_WRITE = 'write';
 export const PERMISSION_TOPIC_ADMIN = 'admin';
 
+
+export const PERMISSION_LOGGED_IN = 'user';
 // can do anything
 export const PERMISSION_ADMIN = 'admin';
 // can add and remove tags from media
