@@ -19,7 +19,7 @@ import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
-import { isMetaDataTagSet } from '../../../lib/tagUtil';
+import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
@@ -67,7 +67,7 @@ class SourceDetailsContainer extends React.Component {
   render() {
     const { source, onChangeFavorited } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const collections = source.media_source_tags.filter(c => c.show_on_media === 1);
+    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;

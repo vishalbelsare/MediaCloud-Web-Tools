@@ -1,4 +1,4 @@
-COLLECTIONS_TEMPLATE_PROPS = ['url','name','pub_country']
+COLLECTIONS_TEMPLATE_PROPS = ['url','name','pub_country', 'public_notes']
 # some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
 GV_TAG_SET_ID = 556

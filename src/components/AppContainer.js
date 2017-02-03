@@ -6,6 +6,7 @@ import Snackbar from 'material-ui/Snackbar';
 // polyfill for Safari :-(
 import intl from 'intl';  // eslint-disable-line
 import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
+import { Row } from 'react-flexbox-grid/lib';
 import BrandToolbar from './common/BrandToolbar';
 import BrandMasthead from './common/BrandMasthead';
 import messages from '../resources/messages';
@@ -16,12 +17,25 @@ import ErrorListContainer from './common/ErrorListContainer';
 
 const localMessages = {
   supportEmail: { id: 'app.supportEmail', defaultMessage: 'Problems? email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>' },
+  maintenance: { id: 'app.maintenance', defaultMessage: 'Sorry, we have taken our system down right now for maintenance' },
 };
+
+const maintenanceContainer = (
+  <Row center="xs">
+    <p className="coming-soon">{localMessages.maintenance.defaultMessage}</p>
+  </Row>
+);
 
 const AppContainer = (props) => {
   const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
+
+  let content = children;
+  if (document.appConfig.online === 0) {
+    content = maintenanceContainer;
+  }
+
   return (
     <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
@@ -40,7 +54,7 @@ const AppContainer = (props) => {
       </header>
       <ErrorListContainer />
       <div id="content">
-        {children}
+        {content}
       </div>
       <footer>
         <p><small>
