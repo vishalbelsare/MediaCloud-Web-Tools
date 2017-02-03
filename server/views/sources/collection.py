@@ -251,6 +251,8 @@ def api_collection_sources_csv(collection_id):
                 src['pub_country'] = tag['tag'][-3:]
         if 'pub_country' not in src:
             src['pub_country'] = ''
+        if 'editor_notes' not in src:
+            src['editor_notes'] = ''
     filename = "MC_Downloaded_Template_"
     return csv.stream_response(all_media, COLLECTIONS_TEMPLATE_PROPS, filename, COLLECTIONS_TEMPLATE_PROPS)
 
