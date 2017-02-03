@@ -1,4 +1,4 @@
 
-const appConfig = {
+document.appConfig = {
   online: 1,
 };
