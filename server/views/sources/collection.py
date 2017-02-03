@@ -7,8 +7,8 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, isMetaDataTagSet
-
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
+    isMetaDataTagSet, COLLECTIONS_TEMPLATE_PROPS
 
 from server import app, mc, db
 from server.util.request import arguments_required, form_fields_required, api_error_handler
@@ -22,9 +22,11 @@ from server.views.sources.favorites import _add_user_favorite_flag_to_collection
 
 logger = logging.getLogger(__name__)
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ['csv']
+
 
 @app.route('/api/collections/uploadSourceListFromTemplate', methods=['POST'])
 def upload_file():
@@ -34,77 +36,86 @@ def upload_file():
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return jsonify({'status':'Error', 'message': 'No file part'})
+            return jsonify({'status': 'Error', 'message': 'No file part'})
         file = request.files['file']
 
         if file.filename == '':
             flash('No selected file')
-            return jsonify({'status':'Error', 'message': 'No selected file'})
+            return jsonify({'status': 'Error', 'message': 'No selected file'})
         if file and allowed_file(file.filename):
-            props = ['URL','NAME','PUB_COUNTRY','MEDIA_ID']
+            props = COLLECTIONS_TEMPLATE_PROPS
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
-            with open(file.filename, 'r') as f:
+            with open(file.filename, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 newOrUpdated = []
                 newOrUpdatedWithMetaAndEmpties = []
-                reader.next() # this means we have to have a header
+                reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for k, v in line.items()}
+                        for item in line.items():
+                            if item[0] == 'PUB_COUNTRY' and item[1] not in ['', None]:
+                                logger.debug('item is pub country')
+                                line['PUB_COUNTRY'] = item[1].decode('utf-8', errors='replace').encode('ascii',
+                                                                                                       errors='ignore')
+                        newline = {k: v for k, v in line.items() if k.lower() != 'media_id'}
+                        newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
+                                   k, v in line.items()}
                         newOrUpdatedWithMetaAndEmpties.append(newline)
-                        newlineNoEmpties = {k:v for k, v in newline.items() if v !=''}
-                        noEmptiesNoMeta = {k:v for k, v in newlineNoEmpties.items() if k !='pub_country'}
+                        newlineNoEmpties = {k: v for k, v in newline.items() if v != ''}
+                        noEmptiesNoMeta = {k: v for k, v in newlineNoEmpties.items() if k != 'pub_country'}
                         newOrUpdated.append(noEmptiesNoMeta)
                     except Exception as e:
-                        logger.error("Couldn't process a CSV row: "+str(e))
-                        return jsonify({'status':'Error', 'message': "couldn't process a CSV row: "+str(e)})
+                        logger.error("Couldn't process a CSV row: " + str(e))
+                        return jsonify({'status': 'Error', 'message': "couldn't process a CSV row: " + str(e)})
 
                 if len(newOrUpdated) > 100:
-                    return jsonify({'status':'Error', 'message': 'Too many sources to upload. The limit is 100.'})
+                    return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 elif len(newOrUpdated) > 0:
                     return create_source_from_template(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
 
-    return jsonify({'status':'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
+    return jsonify({'status': 'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
+
 
 def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     user_mc = user_mediacloud_client()
     result = user_mc.mediaCreate(sourceList)
-    logger.debug("succ ess creating or updating source %s",result)
+    logger.debug("")
+    logger.debug("success creating or updating source %s", result)
     # status, media_id, url, error in result
 
     mList = []
     for eachdict in result:
-        mNewDictList = [hasEmptiesDict for hasEmptiesDict in newOrUpdatedWithMetaAndEmpties if hasEmptiesDict['url'] == eachdict['url']]
+        mNewDictList = [hasEmptiesDict for hasEmptiesDict in newOrUpdatedWithMetaAndEmpties if
+                        hasEmptiesDict['url'] == eachdict['url']]
         mList += mNewDictList
 
     for eachNewDict in mList:
         for eachdict in result:
-            missingItems = {k:v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
+            missingItems = {k: v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
             if eachNewDict['url'] == eachdict['url']:
                 eachNewDict.update(missingItems)
 
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
-
     for source in mList:
         if source['status'] != 'error':
             metadata_tag_id = source['pub_country'] if source['pub_country'] else None
-            if metadata_tag_id not in ['',None]:
-                matching = [t for t in tagISOs if t['tag'] == 'pub_'+ metadata_tag_id]
-                if matching and matching not in ['',None]:
+            if metadata_tag_id not in ['', None]:
+                matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
+                if matching and matching not in ['', None]:
                     metadata_tag_id = matching[0]['tags_id']
-                    logger.debug('found metadata to add %s',metadata_tag_id)
+                    logger.debug('found metadata to add %s', metadata_tag_id)
                     user_mc.tagMedia(
                         tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
-                        clear_others=True) # make sure to clear any other values set in this metadata tag set
+                        clear_others=True)  # make sure to clear any other values set in this metadata tag set
                     logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
-    return jsonify({'results':mList})
+    return jsonify({'results': mList})
 
 
 @app.route('/api/collections/<collection_id>/metadatacoverage.csv')
@@ -126,11 +137,12 @@ def api_metadata_download(collection_id):
                         dictItem.update({'tagged': temp + 1})
                         found = True
                 if not found:
-                    metadataItems.append({'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
+                    metadataItems.append(
+                        {'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
 
     for i in metadataItems:
         temp = len(all_media) - i['tagged']
-        i.update({'notTagged': temp })
+        i.update({'notTagged': temp})
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
     filename = "metadataCoverageForCollection" + collection_id + ".csv"
@@ -146,6 +158,7 @@ def api_collection_set(tag_sets_id):
     _add_user_favorite_flag_to_collections(info)
     return jsonify(info)
 
+
 @cache
 def _cached_collection_set_list(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
@@ -155,7 +168,8 @@ def _cached_collection_set_list(user_mc_key, tag_sets_id):
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100,
+                               public_only=True)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
@@ -168,6 +182,7 @@ def _cached_collection_set_list(user_mc_key, tag_sets_id):
         'collections': collection_list
     }
 
+
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
 @arguments_required('coll[]')
@@ -179,10 +194,11 @@ def api_collections_by_ids():
     for tagsId in collIdArray:
         info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
-        info = [{'media_id':m['media_id'], 'name':m['name'], 'url':m['url']} for m in all_media]
+        info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url']} for m in all_media]
         _add_user_favorite_flag_to_sources(info)
         sources_list += info;
-    return jsonify({'results':sources_list})
+    return jsonify({'results': sources_list})
+
 
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
 @flask_login.login_required
@@ -197,6 +213,7 @@ def collection_set_favorited(collection_id):
         db.remove_item_from_users_list(username, 'favoriteCollections', int(collection_id))
     return jsonify({'isFavorite': favorite})
 
+
 @app.route('/api/collections/<collection_id>/details')
 @flask_login.login_required
 @api_error_handler
@@ -210,18 +227,34 @@ def api_collection_details(collection_id):
     _add_user_favorite_flag_to_sources(all_media)
     info['media'] = all_media
 
-    return jsonify({'results':info})
+    return jsonify({'results': info})
+
+
+@app.route('/api/template/sources.csv')
+@flask_login.login_required
+@api_error_handler
+def api_download_sources_template():
+    filename = "Collection_Template_for_sources.csv"
+    return csv.stream_response(COLLECTIONS_TEMPLATE_PROPS, COLLECTIONS_TEMPLATE_PROPS, filename)
+
 
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
+    # info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    props = ['media_id', 'name', 'url']
-    filename = info['label']+" - sources.csv"
-    return csv.stream_response(all_media, props, filename)
+    for src in all_media:
+        for tag in src['media_source_tags']:
+            if isMetaDataTagSet(tag['tag_sets_id']):
+                src['pub_country'] = tag['tag'][-3:]
+        if 'pub_country' not in src:
+            src['pub_country'] = ''
+    filename = "MC_Downloaded_Template_"
+    propfields = ['url', 'name', 'pub_country']
+    return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
+
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
@@ -229,6 +262,7 @@ def api_collection_sources_csv(collection_id):
 def collection_source_sentence_counts(collection_id):
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     return jsonify({'sources': results})
+
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count.csv')
 @flask_login.login_required
@@ -238,20 +272,21 @@ def collection_source_sentence_counts_csv(collection_id):
     info = user_mc.tag(collection_id)
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
-    filename = info['label']+" - source sentence counts.csv"
+    filename = info['label'] + "-source sentence counts.csv"
     return csv.stream_response(results, props, filename)
+
 
 @cache
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sample_size = 2000
     # list all sources first
-    sources_by_id = { int(c['media_id']):c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
-    sentences = mc.sentenceList('*', 'tags_id_media:'+str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
+    sources_by_id = {int(c['media_id']): c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
+    sentences = mc.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
     # sum the number of sentences per media source
-    sentence_counts = { int(media_id):0 for media_id in sources_by_id.keys() }
+    sentence_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
     if 'docs' in sentences['response']:
         for sentence in sentences['response']['docs']:
-            if int(sentence['media_id']) in sentence_counts: # safety check
+            if int(sentence['media_id']) in sentence_counts:  # safety check
                 sentence_counts[int(sentence['media_id'])] = sentence_counts[int(sentence['media_id'])] + 1.
     # add in sentence count info to media info
     for media_id in sentence_counts.keys():
@@ -259,9 +294,11 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
         sources_by_id[media_id]['sentence_pct'] = sentence_counts[media_id] / sample_size
     return sources_by_id.values()
 
+
 def _tag_set_info(user_mc_key, tag_sets_id):
     user_mc = user_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
+
 
 def collection_media_list(user_mc_key, tags_id):
     more_media = True
@@ -272,9 +309,10 @@ def collection_media_list(user_mc_key, tags_id):
         media = collection_media_list_page(user_mc_key, tags_id, max_media_id)
         all_media = all_media + media
         if len(media) > 0:
-            max_media_id = media[len(media)-1]['media_id']
+            max_media_id = media[len(media) - 1]['media_id']
         more_media = len(media) != 0
     return sorted(all_media, key=lambda t: t['name'])
+
 
 def collection_media_list_page(user_mc_key, tags_id, max_media_id):
     '''
@@ -284,48 +322,59 @@ def collection_media_list_page(user_mc_key, tags_id, max_media_id):
     user_mc = user_mediacloud_client()
     return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
 
+
 @app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_collection_sentence_count(collection_id):
     info = {}
-    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(), ['tags_id_media:'+str(collection_id)])
-    return jsonify({'results':info})
+    info['sentenceCounts'] = cached_recent_sentence_counts(user_mediacloud_key(),
+                                                           ['tags_id_media:' + str(collection_id)])
+    return jsonify({'results': info})
+
 
 @app.route('/api/collections/<collection_id>/sentences/sentence-count.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def collection_sentence_count_csv(collection_id):
-    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Collection-' +collection_id, collection_id, "tags_id_media")
+    return stream_sentence_count_csv(user_mediacloud_key(), 'sentenceCounts-Collection-' + collection_id, collection_id,
+                                     "tags_id_media")
+
 
 @app.route('/api/collections/<collection_id>/geography')
 @flask_login.login_required
 @api_error_handler
 def geo_geography(collection_id):
     info = {}
-    info['geography'] = cached_geotag_count(user_mediacloud_key(), 'tags_id_media:'+str(collection_id))
-    return jsonify({'results':info})
+    info['geography'] = cached_geotag_count(user_mediacloud_key(), 'tags_id_media:' + str(collection_id))
+    return jsonify({'results': info})
+
 
 @app.route('/api/collections/<collection_id>/geography/geography.csv')
 @flask_login.login_required
 @api_error_handler
 def collection_geo_csv(collection_id):
-    return stream_geo_csv(user_mediacloud_key(), 'geography-Collection-' + collection_id, collection_id, "tags_id_media")
+    return stream_geo_csv(user_mediacloud_key(), 'geography-Collection-' + collection_id, collection_id,
+                          "tags_id_media")
+
 
 @app.route('/api/collections/<collection_id>/words')
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:'+str(collection_id))
+        'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:' + str(collection_id))
     }
-    return jsonify({'results':info})
+    return jsonify({'results': info})
+
 
 @app.route('/api/collections/<collection_id>/words/wordcount.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id, "tags_id_media")
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id,
+                                "tags_id_media")
+
 
 @app.route('/api/collections/<collection_id>/similarCollections', methods=['GET'])
 @flask_login.login_required
@@ -333,8 +382,7 @@ def collection_wordcount_csv(collection_id):
 def similarCollections(collection_id):
     info = {}
     info['similarCollections'] = mc.tagList(similar_tags_id=collection_id)
-    return jsonify({'results':info})
-
+    return jsonify({'results': info})
 
 
 @app.route('/api/collections/create', methods=['POST'])
@@ -353,14 +401,15 @@ def collection_create():
         source_ids = request.form['sources[]'].split(',')
     # first create the collection
     new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description,
-        is_static=(static=='true'),
-        show_on_stories=(show_on_stories=='true'),
-        show_on_media=(show_on_media=='true'))
+                                       is_static=(static == 'true'),
+                                       show_on_stories=(show_on_stories == 'true'),
+                                       show_on_media=(show_on_media == 'true'))
     # then go through and tag all the sources specified with the new collection id
-    tags = [ MediaTag(sid, tags_id=new_collection['tag']['tags_id'], action=TAG_ACTION_ADD) for sid in source_ids ]
+    tags = [MediaTag(sid, tags_id=new_collection['tag']['tags_id'], action=TAG_ACTION_ADD) for sid in source_ids]
     if len(tags) > 0:
         user_mc.tagMedia(tags)
     return jsonify(new_collection['tag'])
+
 
 @app.route('/api/collections/<collection_id>/update', methods=['POST'])
 @form_fields_required('name', 'description')
@@ -377,20 +426,20 @@ def collection_update(collection_id):
     if len(request.form['sources[]']) > 0:
         source_ids = [sid for sid in request.form['sources[]'].split(',')]
     # first update the collection
-    updated_collection = user_mc.updateTag(COLLECTIONS_TAG_SET_ID, name, name, description,
-        is_static=(static=='true'),
-        show_on_stories=(show_on_stories=='true'),
-        show_on_media=(show_on_media=='true'))
+    updated_collection = user_mc.updateTag(collection_id, name, name, description,
+                                           is_static=(static == 'true'),
+                                           show_on_stories=(show_on_stories == 'true'),
+                                           show_on_media=(show_on_media == 'true'))
     # get the sources in the collection first, then remove and add as needed
     existing_source_ids = [m['media_id'] for m in collection_media_list(user_mediacloud_key(), collection_id)]
     source_ids_to_remove = list(set(existing_source_ids) - set(source_ids))
     source_ids_to_add = [sid for sid in source_ids if sid not in existing_source_ids]
-    logger.info(existing_source_ids)
-    logger.info(source_ids_to_add)
-    logger.info(source_ids_to_remove)
+    logger.debug(existing_source_ids)
+    logger.debug(source_ids_to_add)
+    logger.debug(source_ids_to_remove)
     # then go through and tag all the sources specified with the new collection id
-    tags_to_add = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add ]
-    tags_to_remove = [ MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove ]
+    tags_to_add = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_ADD) for sid in source_ids_to_add]
+    tags_to_remove = [MediaTag(sid, tags_id=collection_id, action=TAG_ACTION_REMOVE) for sid in source_ids_to_remove]
     tags = tags_to_add + tags_to_remove
     if len(tags) > 0:
         user_mc.tagMedia(tags)
