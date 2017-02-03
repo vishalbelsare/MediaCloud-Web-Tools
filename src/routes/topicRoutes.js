@@ -26,6 +26,7 @@ import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
+import SimpleSceneContainer from '../components/common/SimpleSceneContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -38,10 +39,12 @@ const topicRoutes = (
 
     <Route path="/topics/suggest" component={CreateTopicContainer} onEnter={requireAuth} />
 
+    <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
+
     {userRoutes}
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
-
+      <Route path="/topics/:topicId/3D" component={SimpleSceneContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/test-filters" component={FilteredTopicContainer} onEnter={requireAuth} >
         <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media" component={InfluentialMediaContainer} onEnter={requireAuth} />
@@ -65,6 +68,10 @@ const topicRoutes = (
 
       <Route path="/topics/:topicId/settings" component={TopicSettingsContainer} />
 
+    </Route>
+
+    <Route path="/topics/public/:topicId" component={TopicContainer}>
+      <Route path="/topics/public/:topicId/summary" component={TopicSummaryContainer} />
     </Route>
 
   </Route>
