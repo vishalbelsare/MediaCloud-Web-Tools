@@ -1,10 +1,9 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import FeaturedCollectionsContainer from '../collection/FeaturedCollectionsContainer';
-import PopularCollectionsContainer from '../collection/PopularCollectionsContainer';
-import FavoriteSourcesAndCollectionsContainer from '../collection/FavoriteSourcesAndCollectionsContainer';
+import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
+import PopularCollectionsContainer from './PopularCollectionsContainer';
+import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -13,7 +12,7 @@ const localMessages = {
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
 };
 
-const SourceManagerContainer = () => (
+const Homepage = () => (
   <Grid>
     <Row>
       <Col lg={8} xs={12}>
@@ -39,7 +38,7 @@ const SourceManagerContainer = () => (
   </Grid>
 );
 
-SourceManagerContainer.propTypes = {
+Homepage.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from context
   location: React.PropTypes.object.isRequired,
@@ -49,7 +48,5 @@ SourceManagerContainer.propTypes = {
 
 export default
   injectIntl(
-    connect()(
-      SourceManagerContainer
-    ),
+    Homepage
   );

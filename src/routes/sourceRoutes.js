@@ -15,8 +15,7 @@ import PendingSuggestionsContainer from '../components/source/mediaSource/sugges
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import SourceFeedContainer from '../components/source/mediaSource/SourceFeedContainer';
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
-import SourceManagerContainer from '../components/source/mediaSource/SourceManagerContainer';
-import Introduction from '../components/source/Introduction';
+import Homepage from '../components/source/homepage/Homepage';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
 import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
 import EMMCollectionListContainer from '../components/source/collection/list/EMMCollectionListContainer';
@@ -36,10 +35,9 @@ const sourceRoutes = (
 
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
-      <Route path="/home" component={Introduction} />
+      <Route path="/home" component={Homepage} onEnter={requireAuth} />
       <Route path="/search" component={AdvancedSearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
-        <Route path="home" component={SourceManagerContainer} onEnter={requireAuth} />
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
         <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
         <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />

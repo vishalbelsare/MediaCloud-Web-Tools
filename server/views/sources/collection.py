@@ -7,7 +7,8 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  COLLECTIONS_TEMPLATE_PROPS, isMetaDataTagSet
+from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  COLLECTIONS_TEMPLATE_PROPS, \
+    isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
 from server import app, mc, db
 from server.util.request import arguments_required, form_fields_required, api_error_handler
