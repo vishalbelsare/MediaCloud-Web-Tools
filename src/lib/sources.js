@@ -31,6 +31,14 @@ export function collectionList(id) {
   return createApiPromise(`api/collections/set/${id}`);
 }
 
+export function featuredCollectionList() {
+  return createApiPromise('api/collections/featured');
+}
+
+export function popularCollectionList() {
+  return createApiPromise('api/collections/popular');
+}
+
 export function collectionsByIds(params) {
   const acceptedParams = acceptParams(params, ['coll']);
   acceptedParams['coll[]'] = params;

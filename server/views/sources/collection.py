@@ -7,8 +7,7 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
-    isMetaDataTagSet, COLLECTIONS_TEMPLATE_PROPS
+from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  COLLECTIONS_TEMPLATE_PROPS, isMetaDataTagSet
 
 from server import app, mc, db
 from server.util.request import arguments_required, form_fields_required, api_error_handler
@@ -199,6 +198,33 @@ def api_collections_by_ids():
         sources_list += info;
     return jsonify({'results': sources_list})
 
+
+@app.route('/api/collections/featured', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_featured_collections():
+    featured_collections = []
+    for tagsId in FEATURED_COLLECTION_LIST:
+        info = {}
+        user_mc = user_mediacloud_client()
+        info = user_mc.tag(tagsId)
+        info['id'] = tagsId
+        info['wordcount']= cached_wordcount(user_mediacloud_key, 'tags_id_media:'+str(tagsId))
+        featured_collections += [info];
+    return jsonify({'results':featured_collections})
+
+@app.route('/api/collections/popular', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_popular_collections():
+    popular_collections = []
+    for tagsId in POPULAR_COLLECTION_LIST:
+        info = {}
+        user_mc = user_mediacloud_client()
+        info = user_mc.tag(tagsId)
+        info['id'] = tagsId
+        popular_collections += [info];
+    return jsonify({'results':popular_collections})
 
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
 @flask_login.login_required

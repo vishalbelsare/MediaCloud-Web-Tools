@@ -22,8 +22,8 @@ const FavoritedList = (props) => {
       <h2>{title}{helpButton}</h2>
       <p>{intro}</p>
       <div className="">
-        {favoritedItems.map(c =>
-          <p>{c.name}</p>
+        {favoritedItems.map((c, idx) =>
+          <div key={idx} >{c.name}</div>
         )}
       </div>
     </DataCard>
