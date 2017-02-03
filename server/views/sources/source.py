@@ -310,7 +310,7 @@ https://sources.mediacloud.org
 """
     send_email('no-reply@mediacloud.org',
                [user_name(), 'source-suggestion@mediacloud.org'],
-               'New Topic Request: ' + request.form['name'],
+               'New Source Suggestion: ' + url,
                content.format(
                    username=user_name(),
                    name=name,
