@@ -24,7 +24,7 @@ const PopularCollectionsContainer = (props) => {
             <CollectionIcon height={25} />
             <div className="content">
               <div>
-                <h2><Link to={`/collections/${c.id}/summary`}>{c.label}</Link></h2>
+                <h2><Link to={`/collections/${c.id}`}>{c.label}</Link></h2>
                 <p>{c.description}</p>
               </div>
             </div>
