@@ -194,7 +194,7 @@ def api_collections_by_ids():
     for tagsId in collIdArray:
         info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
-        info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url']} for m in all_media]
+        info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes':m['public_notes']} for m in all_media]
         _add_user_favorite_flag_to_sources(info)
         sources_list += info;
     return jsonify({'results': sources_list})
@@ -252,8 +252,7 @@ def api_collection_sources_csv(collection_id):
         if 'pub_country' not in src:
             src['pub_country'] = ''
     filename = "MC_Downloaded_Template_"
-    propfields = ['url', 'name', 'pub_country']
-    return csv.stream_response(all_media, propfields, filename, COLLECTIONS_TEMPLATE_PROPS)
+    return csv.stream_response(all_media, COLLECTIONS_TEMPLATE_PROPS, filename, COLLECTIONS_TEMPLATE_PROPS)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
