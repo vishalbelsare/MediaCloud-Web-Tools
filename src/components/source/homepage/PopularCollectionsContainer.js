@@ -1,7 +1,6 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
@@ -11,25 +10,25 @@ import { ExploreButton } from '../../common/IconButton';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 
 const localMessages = {
-  mainTitle: { id: 'collection.popular.mainTitle', defaultMessage: 'Browse by Category' },
-  intro: { id: 'collection.popular.intro', defaultMessage: 'Browse popular collections' },
+  mainTitle: { id: 'collection.popular.mainTitle', defaultMessage: 'Popular Collections' },
 };
 
 const PopularCollectionsContainer = (props) => {
   const { collections } = props;
-  const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-
   let content = null;
   if (collections && collections.length > 0) {
     content = (
       collections.map((c, idx) =>
         <Col key={idx} lg={4} md={4} xs={4}>
-          <DataCard key={idx} style={{ width: 100 }}>
+          <DataCard key={idx} className="popular-collection">
             <CollectionIcon height={25} />
-            <h3><Link to={`/collections/${c.id}/summary`}>{c.label}</Link></h3>
-            <h4>{c.description}</h4>
-            <div className="source-home-explore">
+            <div className="content">
+              <div>
+                <h2><Link to={`/collections/${c.id}/summary`}>{c.label}</Link></h2>
+                <p>{c.description}</p>
+              </div>
+            </div>
+            <div className="actions">
               <ExploreButton linkTo={`/collections/${c.tags_id}`} />
             </div>
           </DataCard>
@@ -37,17 +36,15 @@ const PopularCollectionsContainer = (props) => {
       )
     );
   }
-
   return (
-    <Grid>
-      <Title render={titleHandler} />
+    <div className="popular-collection-list">
       <h2>
         <FormattedMessage {...localMessages.mainTitle} />
       </h2>
       <Row>
         {content}
       </Row>
-    </Grid>
+    </div>
   );
 };
 

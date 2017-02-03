@@ -15,18 +15,17 @@ const localMessages = {
 const Homepage = () => (
   <Grid>
     <Row>
-      <Col lg={8} xs={12}>
+      <Col lg={12}>
         <h1>
           <FormattedMessage {...localMessages.title} />
         </h1>
-        <h2><FormattedMessage {...localMessages.about} /></h2>
       </Col>
     </Row>
     <Row>
-      <Col lg={8} xs={12}>
+      <Col lg={7} xs={12}>
         <FeaturedCollectionsContainer />
       </Col>
-      <Col lg={4} xs={12}>
+      <Col lg={5} xs={12}>
         <FavoriteSourcesAndCollectionsContainer />
       </Col>
     </Row>

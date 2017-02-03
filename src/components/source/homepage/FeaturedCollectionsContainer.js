@@ -1,5 +1,4 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import Slider from 'react-slick';
@@ -15,12 +14,10 @@ const localMessages = {
 
 const FeaturedCollectionsContainer = (props) => {
   const { collections } = props;
-  const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 750,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: 1,
@@ -40,10 +37,9 @@ const FeaturedCollectionsContainer = (props) => {
 
   return (
     <DataCard>
-      <Title render={titleHandler} />
-      <h1>
+      <h2>
         <FormattedMessage {...localMessages.mainTitle} />
-      </h1>
+      </h2>
       <div className="featured-collections">
         {content}
       </div>

@@ -1,58 +1,56 @@
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import { Grid } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-
 import { ExploreButton } from '../../common/IconButton';
 
+const NUMBER_TO_SHOW = 8; // how many of each to show
+
 const localMessages = {
-  mainTitle: { id: 'collection.popular.mainTitle', defaultMessage: 'Favorited Sources and Collections' },
-  personal: { id: 'collection.intro.personal', defaultMessage: 'My Sources and Collections' },
+  mainTitle: { id: 'homepage.favorites.mainTitle', defaultMessage: 'My Favorites' },
+  seeAll: { id: 'homepage.favorites.seeAll', defaultMessage: 'see all your favorites' },
 };
 
 const FavoriteSourcesAndCollectionsContainer = (props) => {
   const { favoritedSources, favoritedCollections } = props;
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
-  const RESULTS = 5;
-  let srccontent = null;
-  let colcontent = null;
+  let favSourcesContent = null;
+  let favCollectionsContent = null;
+  // only show sources list if they have any
   if (favoritedSources && favoritedSources.length > 0) {
-    srccontent = (
-      favoritedSources.slice(0, RESULTS).map((c, idx) =>
-        <h3 key={idx} ><Link to={`/sources/${c.media_id}`}>{c.name}</Link></h3>
-      )
+    favSourcesContent = (
+      <ul className="fav-sources">
+        { favoritedSources.slice(0, NUMBER_TO_SHOW).map((c, idx) =>
+            (<li key={idx} ><Link to={`/sources/${c.media_id}`}>{c.name}</Link></li>)
+          )
+        }
+      </ul>
     );
   }
+  // only show collections list if they have any
   if (favoritedCollections && favoritedCollections.length > 0) {
-    colcontent = (
-      favoritedCollections.slice(0, RESULTS).map((c, idx) =>
-        <h3 key={idx} ><Link to={`/collections/${c.id}/summary`}>{c.name}</Link></h3>
-      )
+    favCollectionsContent = (
+      <ul className="fav-collections">
+        { favoritedCollections.slice(0, NUMBER_TO_SHOW).map((c, idx) =>
+            (<li key={idx} ><Link to={`/collections/${c.id}`}>{c.label}</Link></li>)
+          )
+      }
+      </ul>
     );
   }
-
   return (
-    <DataCard>
-      <h1>
-        <FormattedMessage {...localMessages.personal} />
-        <div className="source-home-explore">
-          <ExploreButton linkTo={'/favorites'} />
-        </div>
-      </h1>
-      <Grid>
-        <Title render={titleHandler} />
-        <h2>
-          <FormattedMessage {...localMessages.mainTitle} />
-        </h2>
-        {srccontent}
-        {colcontent}
-      </Grid>
+    <DataCard className="favorite-sources-collections">
+      <div className="actions">
+        <ExploreButton linkTo={'/favorites'} tooltip={formatMessage(localMessages.seeAll)} />
+      </div>
+      <h2>
+        <FormattedMessage {...localMessages.mainTitle} />
+      </h2>
+      {favSourcesContent}
+      {favCollectionsContent}
     </DataCard>
   );
 };

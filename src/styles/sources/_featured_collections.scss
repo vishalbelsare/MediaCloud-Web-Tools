@@ -1,0 +1,17 @@
+@import '../constants';
+
+.featured-collection {
+	h2 {
+		margin-bottom: 0px;
+	}
+	.app-icon {
+		height: 30px;
+	}
+	.ordered-word-cloud {
+		svg {
+			text {
+				fill: $material-grey600;
+			}
+		}
+	}
+}

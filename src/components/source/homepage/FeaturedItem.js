@@ -6,16 +6,21 @@ import CollectionIcon from '../../common/icons/CollectionIcon';
 
 const localMessages = {
   collectionTitle: { id: 'collection.featured.title', defaultMessage: 'Collection: ' },
-
 };
 
 const FeaturedItem = (props) => {
   const { collection } = props;
   return (
-    <div>
-      <h3><CollectionIcon height={25} /><FormattedMessage {...localMessages.collectionTitle} /><Link to={`/collections/${collection.id}/summary`}>{collection.label}</Link></h3>
-      <h4>{collection.description}</h4>
-      <OrderedWordCloud words={collection.wordcount} />
+    <div className="featured-collection">
+      <h2><CollectionIcon height={25} /><FormattedMessage {...localMessages.collectionTitle} /><Link to={`/collections/${collection.id}`}>{collection.label}</Link></h2>
+      <p><b>{collection.description}</b></p>
+      <OrderedWordCloud
+        words={collection.wordcount}
+        maxFontSize={16}
+        minfontSize={5}
+        width={600}
+        height={200}
+      />
     </div>
   );
 };
