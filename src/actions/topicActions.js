@@ -72,7 +72,7 @@ export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
-export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.publicTopicsList);
+export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsList);
 // pass in topicId
 export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 

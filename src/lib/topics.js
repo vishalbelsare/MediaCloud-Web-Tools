@@ -4,10 +4,6 @@ export function topicsList(linkId) {
   return createApiPromise('/api/topics/list', { linkId });
 }
 
-export function publicTopicsList() {
-  return createApiPromise('/api/topics/public/list');
-}
-
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }

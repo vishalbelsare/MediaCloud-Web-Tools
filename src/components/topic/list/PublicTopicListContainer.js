@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchPublicTopicsList } from '../../../actions/topicActions';
+import { fetchTopicsList } from '../../../actions/topicActions';
 import PublicTopics from './PublicTopics';
 
 const localMessages = {
@@ -32,13 +32,13 @@ PublicTopicListContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.publiclist.fetchStatus,
-  topics: state.topics.publiclist.topics,
+  fetchStatus: state.topics.all.fetchStatus,
+  topics: state.topics.all.topics,
 });
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
-    dispatch(fetchPublicTopicsList());
+    dispatch(fetchTopicsList());
   },
 });
 
