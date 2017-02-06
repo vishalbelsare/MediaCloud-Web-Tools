@@ -10,6 +10,10 @@
 @import '_collection_details';
 @import '_suggest';
 @import '_advanced_search';
+@import '_slider';
+@import '_source_home';
+@import '_featured_collections.scss';
+@import '_popular_collections.scss';
 
 .details {
   padding-top: 15px;
@@ -37,6 +41,11 @@ h1 {
   margin-left: 13px;
   margin-right: 13px;
   float: right;
+  color: $sources-primary;
+  fill: $sources-primary;
 }
 
-
+ div.app-icon.app-icon-filled-star > svg {
+  color: $sources-primary;
+  fill: $sources-primary;
+}

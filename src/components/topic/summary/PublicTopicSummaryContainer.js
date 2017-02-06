@@ -1,5 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import TopicSummaryContainer from './TopicSummaryContainer';
@@ -12,29 +13,24 @@ const localMessages = {
 const PublicTopicSummaryContainer = (props) => {
   const { handleButtonClick } = props;
   const { formatMessage } = props.intl;
+  const loginContent = (
+    <Grid>
+      <Row>
+        <Col lg={12}>
+          <AppButton
+            primary
+            label={formatMessage(localMessages.login)}
+            onClick={() => { handleButtonClick('/home'); }}
+          />
+        </Col>
+      </Row>
+    </Grid>
+  );
   return (
-    <div className="publicTopicSummary">
-      <div>
-        <br />
-        <AppButton
-          flat
-          label={formatMessage(localMessages.login)}
-          onClick={() => { handleButtonClick('/home'); }}
-          toolTip={formatMessage(localMessages.login)}
-        />
-      </div>
-      <div>
-        <TopicSummaryContainer />
-      </div>
-      <div style={{ textAlign: 'center' }}>
-        <br />
-        <AppButton
-          flat
-          label={formatMessage(localMessages.login)}
-          onClick={() => { handleButtonClick('/home'); }}
-          toolTip={formatMessage(localMessages.login)}
-        />
-      </div>
+    <div className="public-topic-summary">
+      {loginContent}
+      <TopicSummaryContainer />
+      {loginContent}
     </div>
   );
 };

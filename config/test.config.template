@@ -1,0 +1,6 @@
+const config =  {
+  "username": "my_username",
+  "password": "my_password"
+};
+
+export default config;

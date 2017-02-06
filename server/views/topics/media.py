@@ -21,7 +21,7 @@ def topic_media(topics_id):
     if access_public_topic(topics_id):
         media_list = topic_media_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, sort=None, limit=None, link_id=None)
     elif is_user_logged_in():
-        media_list = topic_media_list(user_mediacloud_client(), topics_id)
+        media_list = topic_media_list(user_mediacloud_key(), topics_id)
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
 

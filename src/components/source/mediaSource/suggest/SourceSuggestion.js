@@ -140,7 +140,7 @@ class SourceSuggestion extends React.Component {
               {...localMessages.info}
               values={{
                 name: suggestion.name,
-                user: suggestion.auth_users_id,
+                user: suggestion.email,
                 date: formatDate(suggestion.date_submitted),
                 reason: suggestion.reason,
               }}

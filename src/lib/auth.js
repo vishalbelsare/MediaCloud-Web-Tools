@@ -13,7 +13,7 @@ export const PERMISSION_ADMIN = 'admin';
 // can add and remove tags from media
 export const PERMISSION_MEDIA_EDIT = 'media-edit';
 // can add and remove tags from stories
-export const PERMISSION_STORY_EDIT = 'media-edit';
+export const PERMISSION_STORY_EDIT = 'story-edit';
 
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';

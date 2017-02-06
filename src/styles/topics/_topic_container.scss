@@ -12,16 +12,13 @@
     }
   }
 
-  .publicTopicSummary {
-  	text-align: center;
-  }
+  .public-topic-summary {
+    padding-top: 20px;
 
-  .publicTopicSummary div button.app-button {
-  	border: 3px solid red !important;
-  }
+    .topic-summary {
+      margin-bottom: 20px;
+    }
 
-  .publicTopicSummary div button.app-button.hovering :hover{
-  	background-color: grey !important;
   }
 
 }

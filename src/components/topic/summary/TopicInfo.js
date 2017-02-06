@@ -1,35 +1,25 @@
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
+import { PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
+import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
-  title: { id: 'topic.summary.info.title',
-    defaultMessage: 'About this Topic',
-  },
-  notSpidered: { id: 'topic.summary.info.notSpidered', defaultMessage: 'This topic was not spidered. ' },
-  spiderIterations: { id: 'topic.summary.info.spiderIterations',
-    defaultMessage: 'It was spidered to collect stories over {iterations, plural, 0ne {iteration} other {{formattedTotal} iterations} } (out of {maxIterations, plural, 0ne {iteration} other {{formattedTotal} iterations} }). ',
-  },
-  processedWithBitly: { id: 'topic.processedWithBitly', defaultMessage: 'It does not include social click counts from Bit.ly' },
-  notProcessedWithBitly: { id: 'topic.notProcessedWithBitly', defaultMessage: 'It includes social click counts from Bit.ly.' },
-  seedQuery: { id: 'topic.seedQuery.description', defaultMessage: 'The seed query used to start this Topic was:<br/><code>{query}</code>' },
-  state: { id: 'topic.state.description', defaultMessage: 'This topic is <b>{state}</b>. ' },
+  title: { id: 'topic.summary.info.title', defaultMessage: 'About this Topic' },
+  state: { id: 'topic.state', defaultMessage: 'State' },
 };
 
 const TopicInfo = (props) => {
   const { topic } = props;
   const { formatMessage } = props.intl;
-  let spiderText = '';
-  if (topic.has_been_spidered === 0) {
-    spiderText = formatMessage(localMessages.notSpidered);
+  let stateMessage = '';
+  if (topic.state !== 'error') {
+    stateMessage = topic.message; // show details to everyone if in normal state
   } else {
-    spiderText = formatMessage(localMessages.spiderIterations, {
-      iterations: topic.num_iterations,
-      maxIterations: topic.max_iterations,
-      formattedTotal: topic.num_iterations,
-    });
+    // only show error ugly stack trace to admin users
+    stateMessage = (<Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>{topic.message}</Permissioned>);
   }
-  const bitlyMessage = (topic.process_with_bitly === '1') ? localMessages.processedWithBitly : localMessages.notProcessedWithBitly;
   return (
     <DataCard className="topic-info">
       <h2>
@@ -37,12 +27,24 @@ const TopicInfo = (props) => {
       </h2>
       <p>{topic.description}</p>
       <p>
-        <FormattedHTMLMessage {...localMessages.state} values={{ state: topic.state }} />
-        {spiderText}
-        <FormattedMessage {...bitlyMessage} />
+        <b><FormattedMessage {...localMessages.state} /></b>: {topic.state }
+        <br />
+        {stateMessage}
       </p>
-      <p className="light seed-query">
-        <FormattedHTMLMessage {...localMessages.seedQuery} values={{ query: topic.solr_seed_query }} />
+      <p>
+        <b><FormattedMessage {...messages.topicPublicProp} /></b>: { topic.is_public ? formatMessage(messages.yes) : formatMessage(messages.no) }
+        <br />
+        <b><FormattedMessage {...messages.topicStartDateProp} /></b>: {topic.start_date}
+        <br />
+        <b><FormattedMessage {...messages.topicEndDateProp} /></b>: {topic.end_date}
+      </p>
+      <p>
+        <b><FormattedHTMLMessage {...messages.topicQueryProp} /></b>
+        <code>{topic.solr_seed_query}</code>
+      </p>
+      <p>
+        <b><FormattedHTMLMessage {...messages.topicValidationProp} /></b>
+        <code>{topic.pattern}</code>
       </p>
     </DataCard>
   );

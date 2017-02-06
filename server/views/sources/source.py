@@ -18,6 +18,7 @@ from server.views.sources.sentences import cached_recent_sentence_counts, stream
 from server.views.sources.feeds import stream_feed_csv, source_feed_list
 from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -172,7 +173,7 @@ def source_create():
     user_mc = user_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
-    notes = request.form['notes'] if 'notes' in request.form else None    # this is optional
+    editor_notes = request.form['editorNotes'] if 'editorNotes' in request.form else None    # this is optional
     public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
@@ -185,7 +186,9 @@ def source_create():
     source_to_create = {
         'name': name,
         'url': url,
-        'editor_notes': notes,
+        'editor_notes': editor_notes,
+        'public_notes': public_notes,
+        'is_monitored': monitored,
         'tags_ids': tag_ids_to_add
     }
     result = user_mc.mediaCreate([source_to_create])[0]  # need just the first entry, since we only create one
@@ -210,12 +213,11 @@ def source_update(media_id):
     # update the basic info
     name = request.form['name']
     url = request.form['url']
-    notes = request.form['notes'] if 'notes' in request.form else None  # this is optional
-    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
+    editor_notes = request.form['editorNotes'] if 'editorNotes' in request.form else None  # this is optional
+    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None  # this is optional
     monitored = request.form['monitored'] if 'monitored' in request.form else None
-    result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=notes)
-
-
+    result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=editor_notes,
+                                 is_monitored=monitored, public_notes=public_notes)
     # now we need to update the collections separately, because they are tags on the media source
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
@@ -308,7 +310,7 @@ https://sources.mediacloud.org
 """
     send_email('no-reply@mediacloud.org',
                [user_name(), 'source-suggestion@mediacloud.org'],
-               'New Topic Request: ' + request.form['name'],
+               'New Source Suggestion: ' + url,
                content.format(
                    username=user_name(),
                    name=name,
@@ -318,14 +320,4 @@ https://sources.mediacloud.org
                ))
     return jsonify(new_suggestion)
 
-@app.route('/api/favorites/sources', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def favorite_sources():
-    user_mc = user_mediacloud_client()
-    user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
-    favorited_sources = [user_mc.media(media_id) for media_id in user_favorited]
-    for s in favorited_sources:
-        s['isFavorite'] = True
-    return jsonify({'list': favorited_sources})
 

@@ -7,11 +7,13 @@ import composeIntlForm from '../../../common/IntlForm';
 const localMessages = {
   nameLabel: { id: 'source.add.name.label', defaultMessage: 'Name of Source' },
   urlLabel: { id: 'source.add.url.label', defaultMessage: 'URL' },
-  notesLabel: { id: 'source.add.notes.label', defaultMessage: 'Editor\'s Notes' },
+  editorNotesLabel: { id: 'source.add.editorNotes.label', defaultMessage: 'Editor\'s Notes' },
+  editorNotesHint: { id: 'source.add.editorNotes.hint', defaultMessage: 'Add some editor-only notes about this source - these won\'t show up for normal users' },
   nameError: { id: 'source.add.name.error', defaultMessage: 'You have to enter a name for this source.' },
   urlError: { id: 'source.add.url.error', defaultMessage: 'Pick have to enter a url for this source.' },
-  publicNotesLabel: { id: 'collection.add.publicNotes.label', defaultMessage: 'Public Notes' },
-  isMonitoredLabel: { id: 'collection.add.monitor.label', defaultMessage: 'Monitored' },
+  publicNotesLabel: { id: 'source.add.publicNotes.label', defaultMessage: 'Public Notes' },
+  publicNotesHint: { id: 'source.add.publicNotes.hint', defaultMessage: 'Add some public notes about this source' },
+  isMonitoredLabel: { id: 'source.add.monitor.label', defaultMessage: 'Monitored' },
 };
 
 const SourceDetailsForm = (props) => {
@@ -28,6 +30,7 @@ const SourceDetailsForm = (props) => {
           <Field
             name="name"
             component={renderTextField}
+            fullWidth
           />
         </Col>
       </Row>
@@ -41,6 +44,7 @@ const SourceDetailsForm = (props) => {
           <Field
             name="url"
             component={renderTextField}
+            fullWidth
           />
         </Col>
       </Row>
@@ -50,25 +54,29 @@ const SourceDetailsForm = (props) => {
             <FormattedMessage {...localMessages.publicNotesLabel} />
           </span>
         </Col>
-        <Col md={11}>
+        <Col md={8}>
           <Field
             name="publicNotes"
             component={renderTextField}
+            hintText={localMessages.publicNotesHint}
             fullWidth
+            rows={2}
           />
         </Col>
       </Row>
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.notesLabel} />
+            <FormattedMessage {...localMessages.editorNotesLabel} />
           </span>
         </Col>
         <Col md={8}>
           <Field
             name="notes"
             component={renderTextField}
+            hintText={localMessages.editorNotesHint}
             fullWidth
+            rows={2}
           />
         </Col>
       </Row>

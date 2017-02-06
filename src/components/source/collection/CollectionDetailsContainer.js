@@ -11,7 +11,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import SourceList from './SourceList';
+import SourceList from '../../common/SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -38,6 +38,8 @@ const localMessages = {
   collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
   collectionIsNotStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
   collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =1 {shows}\n} up on media and {onStories, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
+  collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a favorite' },
+  collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Marked this as not a favorite' },
 };
 
 class CollectionDetailsContainer extends React.Component {
@@ -69,8 +71,12 @@ class CollectionDetailsContainer extends React.Component {
         </Link>
       </span>
     );
-    const lockIcon = collection.is_static === 1 ? <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton> :
-      <IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>;
+    let lockIcon = null;
+    if (collection.is_static === 1) {
+      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton>);
+    } else {
+      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>);
+    }
 
     let mainButton = null;
     mainButton = (<FavoriteToggler
@@ -164,7 +170,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onChangeFavorited: (mediaId, isFavorite) => {
     dispatch(favoriteCollection(mediaId, isFavorite))
       .then(() => {
-        const msg = (isFavorite) ? messages.collectionFavorited : messages.collectionFavorited;
+        const msg = (isFavorite) ? localMessages.collectionFavorited : localMessages.collectionUnFavorited;
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
         // dispatch(fetchFavoriteCollections());  // to update the list of favorites
       });

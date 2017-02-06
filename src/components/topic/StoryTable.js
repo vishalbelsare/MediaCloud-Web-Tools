@@ -1,10 +1,14 @@
 import React from 'react';
-import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
+
+const localMessages = {
+  undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
+};
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
@@ -22,7 +26,7 @@ class StoryTable extends React.Component {
 
   render() {
     const { stories, onChangeSort, topicId, sortedBy } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatDate } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
@@ -67,7 +71,7 @@ class StoryTable extends React.Component {
       socialHeader = <FormattedMessage {...messages.bitlyClicks} />;
     }
     return (
-      <div>
+      <div className="story-table">
         <table width="100%">
           <tbody>
             <tr>
@@ -82,6 +86,18 @@ class StoryTable extends React.Component {
             </tr>
             {stories.map((story, idx) => {
               const domain = storyDomainName(story);
+              let dateToShow = null;  // need to handle undateable stories
+              let dateStyle = '';
+              if (story.publish_date === 'undateable') {
+                dateToShow = formatMessage(localMessages.undateable);
+                dateStyle = 'story-date-undateable';
+              } else {
+                dateToShow = formatDate(storyPubDateToTimestamp(story.publish_date));
+                dateStyle = (story.date_is_reliable === 0) ? 'story-date-unreliable' : 'story-date-reliable';
+                if (story.date_is_reliable === 0) {
+                  dateToShow += '?';
+                }
+              }
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
@@ -97,7 +113,7 @@ class StoryTable extends React.Component {
                       {story.media_name}
                     </LinkWithFilters>
                   </td>
-                  <td><FormattedDate value={storyPubDateToTimestamp(story.publish_date)} /></td>
+                  <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
                   <td><FormattedNumber value={story.media_inlink_count} /></td>
                   <td><FormattedNumber value={story.outlink_count} /></td>
                   <td><FormattedNumber value={story.bitly_click_count} /></td>

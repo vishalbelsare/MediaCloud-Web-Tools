@@ -49,6 +49,10 @@ const messages = {
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
   sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
 
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorite Collections' },
+  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorite Sources' },
+  exploreFavorites: { id: 'favorited.explore', defaultMessage: 'View Favorites' },
+
   feedName: { id: 'feed.name', defaultMessage: 'Name' },
   feedUrl: { id: 'feed.url', defaultMessage: 'URL' },
   feedDescription: { id: 'feed.description.default', defaultMessage: 'Description' },
@@ -116,6 +120,9 @@ const messages = {
   add: { id: 'add', defaultMessage: 'Add' },
   open: { id: 'open', defaultMessage: 'Open' },
   close: { id: 'close', defaultMessage: 'Close' },
+  yes: { id: 'yes', defaultMessage: 'Yes' },
+  no: { id: 'no', defaultMessage: 'No' },
+  monitored: { id: 'monitored', defaultMessage: 'Monitored' },
   none: { id: 'none', defaultMessage: 'None' },
   download: { id: 'download', defaultMessage: 'Download' },
   favorite: { id: 'favorite', defaultMessage: 'Favorite' },

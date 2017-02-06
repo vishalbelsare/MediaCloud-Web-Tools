@@ -15,9 +15,8 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
-  title: { id: 'topic.summary.public.title',
-    defaultMessage: 'Topic: {name}',
-  },
+  title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
+  previewTitle: { id: 'topic.summary.public.title', defaultMessage: 'Topic Preview: {name}' },
 };
 
 class TopicSummaryContainer extends React.Component {
@@ -28,16 +27,20 @@ class TopicSummaryContainer extends React.Component {
   render() {
     const { filters, topicId, topicInfo, timespan, user } = this.props;
     let content = <div />;
-    let subContent = <div />;
-    let optTitle = null;
+    let title = null;
+    if (user.isLoggedIn) {
+      title = <FormattedMessage {...localMessages.title} values={{ name: topicInfo.name }} />;
+    } else {
+      title = <FormattedMessage {...localMessages.previewTitle} values={{ name: topicInfo.name }} />;
+    }
     if (!user.isLoggedIn || this.filtersAreSet()) {
-      if (!user.isLoggedIn && topicInfo) {
-        optTitle = (
-          <h1><FormattedMessage {...localMessages.title} values={{ name: topicInfo.name }} /></h1>
-        );
-      }
-      subContent = (
+      content = (
         <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1>{title}</h1>
+            </Col>
+          </Row>
           <Row>
             <Col lg={6} xs={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
@@ -75,19 +78,11 @@ class TopicSummaryContainer extends React.Component {
         </Grid>
       );
     } else {
-      subContent = <LoadingSpinner />;
+      content = <LoadingSpinner />;
     }
-    content = (
-      <div>
-        {optTitle}
-        {subContent}
-      </div>
-    );
     return (
-      <div>
-        <div>
-          {content}
-        </div>
+      <div className="topic-summary">
+        {content}
       </div>
     );
   }

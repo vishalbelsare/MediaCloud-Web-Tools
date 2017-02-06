@@ -3,6 +3,7 @@ import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import TopicSearchContainer from './search/TopicSearchContainer';
 import FavoriteTopicsContainer from './list/FavoriteTopicsContainer';
 import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
@@ -24,8 +25,11 @@ const HomeContainer = (props) => {
       <Title render={titleHandler} />
       <Grid>
         <Row>
-          <Col lg={12} md={12} sm={12}>
+          <Col lg={8} xs={12}>
             <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
+          </Col>
+          <Col lg={4} xs={12}>
+            <h1><TopicSearchContainer /></h1>
           </Col>
         </Row>
         <FavoriteTopicsContainer onChangeFavorited={handleChangeFavorited} />

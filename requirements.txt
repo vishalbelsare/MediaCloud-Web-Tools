@@ -25,3 +25,4 @@ networkx==1.9
 Flask-Mail==0.9.1
 mediameter-cliff==1.2.0
 python-dateutil==2.6.0
+unicodecsv==0.14.1

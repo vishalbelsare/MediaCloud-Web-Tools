@@ -1,14 +1,17 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/sourceActions';
 import composeHelpfulContainer from '../common/HelpfulContainer';
-import FavoritedList from '../common/FavoritedList';
+import SourceList from '../common/SourceList';
+import CollectionList from '../common/CollectionList';
 
 const localMessages = {
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorited Collections' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorited Sources' },
+  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'Your favorited sources' },
   helpTitle: { id: 'favorited.help.text.title',
     defaultMessage: 'Favorited items',
   },
@@ -21,18 +24,26 @@ const FavoritedContainer = (props) => {
   const { favoritedSources, favoritedCollections, helpButton } = props;
   const { formatMessage } = props.intl;
   return (
-    <div>
-      <FavoritedList
-        title={formatMessage(localMessages.favoritedSourcesTitle)}
-        favoritedItems={favoritedSources}
-        helpButton={helpButton}
-      />
-      <FavoritedList
-        title={formatMessage(localMessages.favoritedCollectionsTitle)}
-        favoritedItems={favoritedCollections}
-        helpButton={helpButton}
-      />
-    </div>
+    <Grid>
+      <Row>
+        <Col lg={6}>
+          <SourceList
+            title={formatMessage(localMessages.favoritedSourcesTitle)}
+            intro={formatMessage(localMessages.favoritedSourcesIntro)}
+            sources={favoritedSources}
+            helpButton={helpButton}
+            downloadUrl="/api/favorites/sources.csv"
+          />
+        </Col>
+        <Col lg={6}>
+          <CollectionList
+            title={formatMessage(localMessages.favoritedCollectionsTitle)}
+            collections={favoritedCollections}
+            helpButton={helpButton}
+          />
+        </Col>
+      </Row>
+    </Grid>
   );
 };
 
@@ -41,7 +52,6 @@ FavoritedContainer.propTypes = {
   fetchStatus: React.PropTypes.string,
   total: React.PropTypes.number,
   // from parent
-  collectionId: React.PropTypes.number.isRequired,
   favoritedSources: React.PropTypes.array.isRequired,
   favoritedCollections: React.PropTypes.array.isRequired,
   // from dispatch

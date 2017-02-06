@@ -9,12 +9,13 @@ import { fetchSystemStats } from '../../actions/sourceActions';
 const SystemStatsContainer = (props) => {
   const { formatNumber } = props.intl;
   const { total_stories,
-          total_downloads,
+          // total_downloads,
           total_sentences,
           active_crawled_media,
-          active_crawled_feeds,
-          daily_stories,
-          daily_downloads } = props.stats;
+          // active_crawled_feeds,
+          // daily_stories,
+          // daily_downloads
+  } = props.stats;
 
   function abbreviateNumber(number, numSigFigs) {
     const pow = Math.round(number).toString().length;
@@ -32,23 +33,23 @@ const SystemStatsContainer = (props) => {
     }
     if (pow >= 4 && pow <= 6) {
       const abbrev = formatNumber(number / 1000, { maximumSignificantDigits: numSigFigs });
-      return abbrev.concat('k');
+      return abbrev.concat(' thousand');
     }
 
     return formatNumber(number);
   }
 
   return (
-    <div>
+    <div className="system-stats">
       <StatBar
         stats={[
           { message: messages.totalStoriesStat, data: abbreviateNumber(total_stories, 3) },
-          { message: messages.totalDownloadsStat, data: abbreviateNumber(total_downloads, 3) },
+          // { message: messages.totalDownloadsStat, data: abbreviateNumber(total_downloads, 3) },
           { message: messages.totalSentencesStat, data: abbreviateNumber(total_sentences, 3) },
-          { message: messages.crawledMediaStat, data: abbreviateNumber(active_crawled_media, 3) },
-          { message: messages.crawledFeedsStat, data: abbreviateNumber(active_crawled_feeds, 3) },
-          { message: messages.dailyStoriesStat, data: abbreviateNumber(daily_stories, 3) },
-          { message: messages.dailyDownloadsStat, data: abbreviateNumber(daily_downloads, 3) },
+          { message: messages.crawledMediaStat, data: abbreviateNumber(active_crawled_media, 2) },
+          // { message: messages.crawledFeedsStat, data: abbreviateNumber(active_crawled_feeds, 3) },
+          // { message: messages.dailyStoriesStat, data: abbreviateNumber(daily_stories, 3) },
+          // { message: messages.dailyDownloadsStat, data: abbreviateNumber(daily_downloads, 3) },
         ]}
       />
     </div>

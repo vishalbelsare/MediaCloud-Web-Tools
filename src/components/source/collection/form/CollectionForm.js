@@ -6,7 +6,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
 import CollectionDetailsForm from './CollectionDetailsForm';
 import CollectionMediaForm from './CollectionMediaForm';
-import SourceList from '../SourceList';
+import SourceList from '../../../common/SourceList';
 import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {

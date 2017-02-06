@@ -4,6 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, cliff, mc, TOOL_API_KEY
+from server.auth import is_user_logged_in
 from server.cache import cache
 import server.util.csv as csv
 from server.util.request import api_error_handler
@@ -79,7 +80,7 @@ def story_geocoded_counts(topics_id):
         filtered = topic_story_count(TOOL_API_KEY, topics_id)  # force a count with just the query
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
-        total = topic_story_count(user_mediacloud_key(), timespans_id=None, q=None)
+        total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)
         filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
@@ -98,7 +99,7 @@ def story_english_counts(topics_id):
         filtered = topic_story_count(TOOL_API_KEY, topics_id)  # force a count with just the query
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
-        total = topic_story_count(user_mediacloud_key(), timespans_id=None, q=None)
+        total = topic_story_count(user_mediacloud_key(), topics_id, timespans_id=None, q=None)
         filtered = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
@@ -175,7 +176,8 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     all_stories = []
     more_stories = True
     params = kwargs
-    del params['as_attachment']
+    if 'as_attachment' in params:
+        del params['as_attachment']
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
         while more_stories:
@@ -186,7 +188,8 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
                 more_stories = True
             else:
                 more_stories = False
-        props = ['stories_id', 'publish_date', 'title', 'url', 'media_id', 'media_name',
+        props = ['stories_id', 'publish_date', 'date_is_reliable', 
+            'title', 'url', 'media_id', 'media_name',
             'media_inlink_count', 'inlink_count',
             'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)

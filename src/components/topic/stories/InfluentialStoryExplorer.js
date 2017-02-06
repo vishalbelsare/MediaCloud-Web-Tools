@@ -23,6 +23,7 @@ const localMessages = {
   inlinkChartTitle: { id: 'topic.influentialStoryExplorer.inlinkChart.title', defaultMessage: 'Media Inlinks' },
   inlinkChartY: { id: 'topic.influentialStoryExplorer.inlinkChart.y', defaultMessage: 'stories' },
   inlinkChartX: { id: 'topic.influentialStoryExplorer.inlinkChart.x', defaultMessage: 'media inlinks' },
+  storyTableTitle: { id: 'topic.influentialStoryExplorer.storyTable.title', defaultMessage: 'Selected Stories' },
 };
 
 const FACEBOOK_BIN_COUNT = 15;
@@ -83,11 +84,11 @@ class InfluentialStoryExplorer extends React.Component {
     const loading = document.getElementById('story-explorer-loading');
     const content = document.getElementById('story-explorer-content');
     if (isLoading) {
-      loading.style.display = 'block';
-      content.style.display = 'none';
+      if (loading) loading.style.display = 'block';
+      if (content) content.style.display = 'none';
     } else {
-      loading.style.display = 'none';
-      content.style.display = 'block';
+      if (loading) loading.style.display = 'none';
+      if (content) content.style.display = 'block';
     }
   }
 
@@ -146,6 +147,7 @@ class InfluentialStoryExplorer extends React.Component {
         .width(1000).height(200)
         .dimension(publishDateDimension)
         .group(publishDateGroup)
+        .elasticY(true)
         .gap(0)
         .x(d3.scaleTime().domain(dateExtents))
         .xUnits(() => totalDays)
@@ -303,6 +305,7 @@ class InfluentialStoryExplorer extends React.Component {
             </Row>
             <Row>
               <Col lg={12}>
+                <h2><FormattedMessage {...localMessages.storyTableTitle} /></h2>
                 <table id="story-table">
                   <thead>
                     <tr className="header">

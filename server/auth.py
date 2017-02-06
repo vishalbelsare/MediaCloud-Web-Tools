@@ -123,7 +123,7 @@ def user_name():
     return load_user_from_request(request).name
 
 def user_mediacloud_key():
-    return request.cookies[COOKIE_USER_KEY]
+    return request.cookies[COOKIE_USER_KEY] if COOKIE_USER_KEY in request.cookies else None
 
 def user_mediacloud_client():
     '''

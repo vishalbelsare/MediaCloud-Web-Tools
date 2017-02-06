@@ -14,7 +14,7 @@ import messages from '../../resources/messages';
 const CollectionList = (props) => {
   const { title, intro, collections, handleClick, onDownload, helpButton } = props;
   const { formatMessage } = props.intl;
-  const validCollections = collections.filter(c => isCollectionTagSet(c.tag_sets_id));
+  const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
   let actions = null;
   if (onDownload) {
     actions = (
