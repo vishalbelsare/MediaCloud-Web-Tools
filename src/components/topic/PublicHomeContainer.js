@@ -3,6 +3,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import PublicTopicListContainer from './list/PublicTopicListContainer';
+import LoginFormContainer from '../user/LoginFormContainer';
 import TopicIcon from '../common/icons/TopicIcon';
 
 const localMessages = {
@@ -22,7 +23,14 @@ const PublicHomeContainer = (props) => {
             <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
           </Col>
         </Row>
-        <PublicTopicListContainer />
+        <Row>
+          <Col lg={8} xs={12}>
+            <PublicTopicListContainer />
+          </Col>
+          <Col lg={4} xs={12}>
+            <LoginFormContainer />
+          </Col>
+        </Row>
       </Grid>
     </div>
   );
