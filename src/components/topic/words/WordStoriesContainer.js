@@ -69,7 +69,6 @@ WordStoriesContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   inlinkedStories: React.PropTypes.array.isRequired,
-  params: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -77,6 +76,7 @@ const mapStateToProps = state => ({
   inlinkedStories: state.topics.selected.word.stories.stories,
   sort: state.topics.selected.word.stories.sort,
   filters: state.topics.selected.filters,
+  stem: state.topics.selected.word.info.stem,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -86,7 +86,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       sort: stateProps.sort,
       limit: STORIES_TO_SHOW,
     };
-    dispatch(fetchWordStories(ownProps.topicId, ownProps.word, params));
+    dispatch(fetchWordStories(ownProps.topicId, stateProps.stem, params));
   },
   sortData: (sort) => {
     dispatch(sortWordStories(sort));

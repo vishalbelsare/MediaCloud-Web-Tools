@@ -64,6 +64,7 @@ WordSentenceCountContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
+  params: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -71,11 +72,17 @@ const mapStateToProps = state => ({
   total: state.topics.selected.word.sentenceCount.total,
   counts: state.topics.selected.word.sentenceCount.counts,
   filters: state.topics.selected.filters,
+  stem: state.topics.selected.word.info.stem,
+  term: state.topics.selected.word.info.term,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (stateProps) => {
-    dispatch(fetchWordSentenceCounts(ownProps.topicId, ownProps.word, stateProps.filters));
+    const params = {
+      ...stateProps.filters,
+      sort: stateProps.sort,
+    };
+    dispatch(fetchWordSentenceCounts(ownProps.topicId, stateProps.stem, params));
   },
 });
 
