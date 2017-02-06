@@ -22,6 +22,17 @@ def topic_list():
     _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
+@app.route('/api/topics/public/list', methods=['GET'])
+@api_error_handler
+def public_topic_list():
+    user_mc = user_mediacloud_client()
+    all_topics = user_mc.topicList()
+    all_public_topics = []
+    for topic in all_topics['topics']:
+        if topic['is_public'] == 1:
+            all_public_topics.append(topic)
+    return jsonify(all_public_topics)
+
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
