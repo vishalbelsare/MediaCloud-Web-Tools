@@ -20,12 +20,12 @@ const PublicTopics = (props) => {
           <DataCard key={idx} className="public-topics">
             <div className="content">
               <div>
-                <h2><Link to={`/topics/${c.topics_id}`}>{c.name}</Link></h2>
+                <h2><Link to={`/topics/public/${c.topics_id}/summary`}>{c.name}</Link></h2>
                 <p>{c.description}</p>
               </div>
             </div>
             <div className="actions">
-              <ExploreButton linkTo={`/topics/${c.topics_id}`} />
+              <ExploreButton linkTo={`/topics/public/${c.topics_id}/summary`} />
             </div>
           </DataCard>
         </Col>
