@@ -29,9 +29,9 @@ def public_topic_list():
     all_topics = user_mc.topicList()
     all_public_topics = []
     for topic in all_topics['topics']:
-        if topic['is_public'] == 1:
+        if (topic['is_public'] == 1 or topic['topics_id'] == "1503"):
             all_public_topics.append(topic)
-    return jsonify(all_public_topics)
+    return jsonify({"topics": all_public_topics})
 
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])

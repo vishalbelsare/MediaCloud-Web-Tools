@@ -3,7 +3,7 @@ import { createAsyncAction } from '../lib/reduxHelpers';
 import * as api from '../lib/topics';
 
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
-export const FETCH_PUBLIC_TOPIC_LIST = 'FETCH_PUBLIC_TOPIC_LIST';
+export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
 export const TOPIC_FILTER_BY_TIMESPAN = 'TOPIC_FILTER_BY_TIMESPAN';
@@ -72,7 +72,7 @@ export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
-export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPIC_LIST, api.publicTopicsList);
+export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.publicTopicsList);
 // pass in topicId
 export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 

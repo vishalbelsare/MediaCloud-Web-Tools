@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPublicTopicsList } from '../../../actions/topicActions';
-import TopicList from './TopicList';
+import PublicTopics from './PublicTopics';
 
 const localMessages = {
-  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Topics' },
+  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Public Topics' },
 };
 
 const PublicTopicListContainer = (props) => {
@@ -16,7 +16,7 @@ const PublicTopicListContainer = (props) => {
     <Row>
       <Col lg={12} md={12} sm={12}>
         <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
-        <TopicList topics={topics} />
+        <PublicTopics topics={topics} />
       </Col>
     </Row>
   );
@@ -24,8 +24,7 @@ const PublicTopicListContainer = (props) => {
 
 PublicTopicListContainer.propTypes = {
   // from state
-  topics: React.PropTypes.array.isRequired,
-  links: React.PropTypes.object,
+  topics: React.PropTypes.array,
   // from context
   intl: React.PropTypes.object.isRequired,
   // from dispatch
@@ -33,9 +32,8 @@ PublicTopicListContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.all.fetchStatus,
-  topics: state.topics.all.topics,
-  links: state.topics.all.link_ids,
+  fetchStatus: state.topics.publiclist.fetchStatus,
+  topics: state.topics.publiclist.topics,
 });
 
 const mapDispatchToProps = dispatch => ({
