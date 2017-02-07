@@ -3,6 +3,7 @@ import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import HomeContainer from '../components/topic/HomeContainer';
+import PublicHomeContainer from '../components/topic/PublicHomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';
@@ -68,6 +69,7 @@ const topicRoutes = (
 
     </Route>
 
+    <Route path="/topics/public/home" component={PublicHomeContainer} />
     <Route path="/topics/public/:topicId" component={TopicContainer}>
       <Route path="/topics/public/:topicId/summary" component={PublicTopicSummaryContainer} />
     </Route>

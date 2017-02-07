@@ -13,14 +13,29 @@ from server.views.topics import access_public_topic
 logger = logging.getLogger(__name__)
 
 @app.route('/api/topics/list', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def topic_list():
-    user_mc = user_mediacloud_client()
-    link_id = request.args.get('linkId')
-    all_topics = user_mc.topicList(link_id=link_id)
-    _add_user_favorite_flag_to_topics(all_topics['topics'])
+    local_mc= None
+    if (not is_user_logged_in()):
+        local_mc = mc
+        all_topics = local_mc.topicList()
+        return public_topic_list(all_topics)
+    else:
+        local_mc = user_mediacloud_client()
+        link_id = request.args.get('linkId')
+        all_topics = local_mc.topicList(link_id=link_id)
+        _add_user_favorite_flag_to_topics(all_topics['topics'])
+
     return jsonify(all_topics)
+
+@api_error_handler
+def public_topic_list(topic_list):
+
+    all_public_topics = []
+    for topic in topic_list['topics']:
+        if (topic['is_public'] == 1 or topic['topics_id'] == "1503"):
+            all_public_topics.append(topic)
+    return jsonify({"topics": all_public_topics})
 
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
