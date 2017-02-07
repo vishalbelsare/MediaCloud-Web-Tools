@@ -101,17 +101,14 @@ const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, { ...props.filters, withTotals: true }));
   },
-  goToUrl: (url) => {
-    dispatch(push(url));
-  },
+  goToUrl: url => dispatch(push(url)),
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     handleWordCloudClick: (word) => {
-      const params = generateParamStr({ stem: word.stem, term: word.term });
-      let url = `/topics/${stateProps.topicId}/words/${word.stem}*?`;
-      url += params;
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      const url = `/topics/${stateProps.topicId}/words/${word.stem}*?${params}`;
       dispatchProps.goToUrl(url);
     },
     asyncFetch: () => {

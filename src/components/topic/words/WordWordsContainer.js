@@ -80,18 +80,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchWordWords(ownProps.topicId, props.stem));
   },
-  handleWordCloudClick: (word) => {
-    const params = generateParamStr({ stem: word.stem, term: word.term });
-    let url = `/topics/${ownProps.topicId}/words/${word.term}*?`;
-    url += params;
-    dispatch(push(url));
-  },
+  pushToUrl: url => dispatch(push(url)),
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps);
+    },
+    handleWordCloudClick: (word) => {
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      const url = `/topics/${ownProps.topicId}/words/${word.term}*?${params}`;
+      dispatchProps.pushToUrl(url);
     },
   });
 }

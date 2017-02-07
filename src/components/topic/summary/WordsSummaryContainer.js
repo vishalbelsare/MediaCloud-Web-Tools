@@ -93,20 +93,25 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchTopicTopWords(props.topicId, props.filters));
   },
-  handleWordCloudClick: (word) => {
-    const params = generateParamStr({ stem: word.stem, term: word.term });
-    let url = `/topics/${ownProps.topicId}/words/${word.stem}*?`;
-    url += params;
-    dispatch(push(url));
-  },
   asyncFetch: () => {
     dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
   },
+  pushToUrl: url => dispatch(push(url)),
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleWordCloudClick: (word) => {
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      const url = `/topics/${ownProps.topicId}/words/${word.stem}*?${params}`;
+      dispatchProps.pushToUrl(url);
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordsSummaryContainer
