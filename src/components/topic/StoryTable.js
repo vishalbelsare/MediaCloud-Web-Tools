@@ -5,6 +5,7 @@ import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
+import { ReadItNowButton } from '../common/IconButton';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -22,6 +23,10 @@ class StoryTable extends React.Component {
   sortByInlinks = () => {
     const { onChangeSort } = this.props;
     onChangeSort('inlink');
+  }
+
+  handleReadItClick = (story) => {
+    window.open(story.url, '_blank');
   }
 
   render() {
@@ -83,6 +88,7 @@ class StoryTable extends React.Component {
               <th><FormattedMessage {...messages.outlinks} /></th>
               <th>{socialHeader}</th>
               <th><FormattedMessage {...messages.facebookShares} /></th>
+              <th>{}</th>
             </tr>
             {stories.map((story, idx) => {
               const domain = storyDomainName(story);
@@ -118,6 +124,7 @@ class StoryTable extends React.Component {
                   <td><FormattedNumber value={story.outlink_count} /></td>
                   <td><FormattedNumber value={story.bitly_click_count} /></td>
                   <td><FormattedNumber value={story.facebook_share_count} /></td>
+                  <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                 </tr>
               );
             }
