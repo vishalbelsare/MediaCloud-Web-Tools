@@ -7,6 +7,7 @@ const localMessages = {
   wordCloudCount: { id: 'wordcloud.rollover.count', defaultMessage: 'Uses: {count}' },
   wordCloudStem: { id: 'wordcloud.rollover.stem', defaultMessage: 'Stem: {stem}' },
   worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
+  wordCloudError: { id: 'wordcloud.error', defaultMessage: 'Sorry, but there aren\'t enough words to render a useful word cloud.' },
 };
 
 const DEFAULT_WORD_COUNT = 100;
@@ -61,6 +62,8 @@ class OrderedWordCloud extends React.Component {
   render() {
     const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips, alreadyNormalized, fullExtent } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
+    const maxWordFreq = words.length > 0 ? words[0].count : 0;
+    const enoughDataToRender = (words.length > 10) && (maxWordFreq > 10);
     const options = {
       width,
       height,
@@ -168,11 +171,15 @@ class OrderedWordCloud extends React.Component {
     if (y && y < options.height) {
       svg.attr('height', y);
     }
-    return (
-      <div className="ordered-word-cloud">
-        {node.toReact()}
-      </div>
-    );
+
+    if (enoughDataToRender) {
+      return (
+        <div className="ordered-word-cloud">
+          {node.toReact()}
+        </div>
+      );
+    }
+    return (<i>{formatMessage(localMessages.wordCloudError)}</i>);
   }
 
 }
