@@ -20,8 +20,8 @@ const localMessages = {
 
 class WordWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData } = this.props;
-    if (nextProps.term !== this.props.term) {
+    const { fetchData, filters } = this.props;
+    if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem || nextProps.term !== this.props.term)) {
       fetchData(nextProps);
     }
   }
@@ -71,6 +71,7 @@ WordWordsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.words.fetchStatus,
+  filters: state.topics.selected.filters,
   words: state.topics.selected.word.words.list,
   stem: state.topics.selected.word.info.stem,
 });

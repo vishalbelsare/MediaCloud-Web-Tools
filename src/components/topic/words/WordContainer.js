@@ -55,7 +55,7 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <WordStoriesContainer topicId={topicId} stem={stem} />
+              <WordStoriesContainer topicId={topicId} stem={stem} term={term} />
             </Col>
           </Row>
           <Row>
