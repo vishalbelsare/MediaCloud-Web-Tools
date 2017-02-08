@@ -125,6 +125,8 @@ const messages = {
   monitored: { id: 'monitored', defaultMessage: 'Monitored' },
   none: { id: 'none', defaultMessage: 'None' },
   download: { id: 'download', defaultMessage: 'Download' },
+  downloadSVG: { id: 'downloadsvg', defaultMessage: 'Download a SVG' },
+  downloadCSV: { id: 'downloadcsv', defaultMessage: 'Download a CSV' },
   favorite: { id: 'favorite', defaultMessage: 'Favorite' },
   unfavorite: { id: 'unfavorite', defaultMessage: 'Unfavorite' },
   explore: { id: 'explore', defaultMessage: 'Explore' },

@@ -8,7 +8,8 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchWordWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
+import ActionMenuButton from '../../common/ActionMenuButton';
+import { DownloadIcon } from '../../common/icons/DownloadIcon';
 import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
@@ -34,10 +35,14 @@ class WordWordsContainer extends React.Component {
   render() {
     const { words, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
+    const menuItems = [
+      { text: formatMessage(messages.downloadCSV), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
+    ];
     return (
       <DataCard>
         <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          <ActionMenuButton actionItems={menuItems} />
         </div>
         <h2>
           <FormattedMessage {...messages.topWords} />
