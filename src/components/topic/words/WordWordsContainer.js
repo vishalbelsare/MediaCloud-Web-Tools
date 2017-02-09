@@ -11,6 +11,7 @@ import messages from '../../../resources/messages';
 import ActionMenuButton from '../../common/ActionMenuButton';
 import { DownloadIcon } from '../../common/icons/DownloadIcon';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { WORD_CLOUD_DOM_ID, downloadSvg } from '../../util/svg';
 
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
@@ -37,7 +38,7 @@ class WordWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const menuItems = [
       { text: formatMessage(messages.downloadCSV), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: downloadSvg },
     ];
     return (
       <DataCard>
@@ -49,7 +50,7 @@ class WordWordsContainer extends React.Component {
           {helpButton}
         </h2>
         <OrderedWordCloud
-          words={words} onWordClick={handleWordCloudClick}
+          words={words} onWordClick={handleWordCloudClick} domId={WORD_CLOUD_DOM_ID}
         />
       </DataCard>
     );
