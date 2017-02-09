@@ -9,16 +9,19 @@ const attention = createAsyncReducer({
   },
   action: FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS,
   // on success we have to clean the split sentence counts for each focus
-  handleSuccess: payload => ({
-    focalSet: {
-      ...payload,
-      foci: payload.foci.map(focus => ({
-        ...focus,
-        counts: cleanDateCounts(focus.sentence_counts.split),
-        total: focus.sentence_counts.count,
-      })),
-    },
-  }),
+  handleSuccess: (payload) => {
+    if (payload.foci !== null && payload.foci !== undefined && payload.foci.length > 0) {
+      return {
+        ...payload,
+        foci: payload.foci.map(focus => ({
+          ...focus,
+          counts: cleanDateCounts(focus.sentence_counts.split),
+          total: focus.sentence_counts.count,
+        })),
+      };
+    }
+    return { ...payload, foci: [] };
+  },
   // save the current selected one
   [SET_ATTENTION_FOCAL_SET_ID]: payload => ({ selectedFocalSetId: payload }),
 });

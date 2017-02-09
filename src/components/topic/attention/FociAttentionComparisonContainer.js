@@ -43,35 +43,41 @@ class FociAttentionComparisonContainer extends React.Component {
     const { focalSet, overallTotal, overallCounts } = this.props;
     const { formatMessage } = this.props.intl;
     // stich together bubble chart data
-    const bubbleData = [
-      ...focalSet.foci.map((focus, idx) => ({
-        label: focus.name, value: focus.total, color: COLORS[idx + 1],
-      })),
-      { label: formatMessage(localMessages.overallSeries), value: overallTotal, color: COLORS[0] },
-    ];
+    let bubbleData = [];
+    if (focalSet.foci !== undefined && focalSet.foci.length > 0) {
+      bubbleData = [
+        ...focalSet.foci.map((focus, idx) => ({
+          label: focus.name, value: focus.total, color: COLORS[idx + 1],
+        })),
+        { label: formatMessage(localMessages.overallSeries), value: overallTotal, color: COLORS[0] },
+      ];
+    }
     // stich together line chart data
     const overallData = dataAsSeries(overallCounts);      // now add a series for the whole thing
-    const series = [
-      ...focalSet.foci.map((focus, idx) => {    // add series for all the foci
-        const data = dataAsSeries(focus.counts);
-        return {
-          id: idx,
-          name: focus.name,
-          data: data.values,
-          pointStart: data.start,
-          pointInterval: data.intervalMs,
-          color: COLORS[idx + 1],
-        };
-      }),
-      {
-        id: 9999,
-        name: formatMessage(localMessages.overallSeries),
-        data: overallData.values,
-        pointStart: overallData.start,
-        pointInterval: overallData.intervalMs,
-        color: COLORS[0],
-      },
-    ];
+    let series = [];
+    if (focalSet.foci !== undefined) {
+      series = [
+        ...focalSet.foci.map((focus, idx) => {    // add series for all the foci
+          const data = dataAsSeries(focus.counts);
+          return {
+            id: idx,
+            name: focus.name,
+            data: data.values,
+            pointStart: data.start,
+            pointInterval: data.intervalMs,
+            color: COLORS[idx + 1],
+          };
+        }),
+        {
+          id: 9999,
+          name: formatMessage(localMessages.overallSeries),
+          data: overallData.values,
+          pointStart: overallData.start,
+          pointInterval: overallData.intervalMs,
+          color: COLORS[0],
+        },
+      ];
+    }
     return (
       <div>
         <Row>

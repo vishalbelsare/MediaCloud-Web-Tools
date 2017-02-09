@@ -74,7 +74,7 @@ class BubbleChart extends React.Component {
         throw error;
     }
     let content = null;
-    if (circles) {
+    if (circles && circles.length > 0) {
       // render it all
       const node = ReactFauxDOM.createElement('div');
       const div = d3.select(node).append('div').attr('id', 'bubble-chart-wrapper');
