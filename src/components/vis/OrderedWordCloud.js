@@ -60,7 +60,7 @@ class OrderedWordCloud extends React.Component {
   }
 
   render() {
-    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips, alreadyNormalized, fullExtent } = this.props;
+    const { words, width, height, minFontSize, maxFontSize, textColor, onWordClick, linkColor, showTooltips, alreadyNormalized, fullExtent, domId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const maxWordFreq = words.length > 0 ? words[0].count : 0;
     const enoughDataToRender = (words.length > 10) && (maxWordFreq > 10);
@@ -117,7 +117,9 @@ class OrderedWordCloud extends React.Component {
     const innerWidth = options.width - (2 * options.padding);
     const svg = d3.select(node)
         .attr('height', options.height)
-        .attr('width', options.width);
+        .attr('width', options.width)
+        .attr('id', domId)
+        .attr('class', 'word-cloud');
     let y = options.height;
     const sizeRange = { min: options.minFontSize, max: options.maxFontSize };
     let wordNodes;
@@ -197,6 +199,7 @@ OrderedWordCloud.propTypes = {
   intl: React.PropTypes.object.isRequired,
   alreadyNormalized: React.PropTypes.bool,
   fullExtent: React.PropTypes.array,
+  domId: React.PropTypes.string,
 };
 
 export default injectIntl(OrderedWordCloud);
