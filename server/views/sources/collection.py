@@ -7,7 +7,8 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  COLLECTIONS_TEMPLATE_PROPS, \
+from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  \
+    COLLECTIONS_TEMPLATE_PROPS_CREATE, COLLECTIONS_TEMPLATE_PROPS_VIEW, COLLECTIONS_TEMPLATE_PROPS_EDIT, \
     isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
 from server import app, mc, db
@@ -43,47 +44,86 @@ def upload_file():
             flash('No selected file')
             return jsonify({'status': 'Error', 'message': 'No selected file'})
         if file and allowed_file(file.filename):
-            props = COLLECTIONS_TEMPLATE_PROPS
+            props = COLLECTIONS_TEMPLATE_PROPS_EDIT
             filename = secure_filename(file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             file.save(os.path.join('', filename))
             with open(file.filename, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
-                newOrUpdated = []
-                newOrUpdatedWithMetaAndEmpties = []
+                newSources = []
+                updatedOnly = []
+                results = []
+                newWithMetaAndEmpties = []
                 reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
+                        newline = []
+                        has_media_id = False
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
                         for item in line.items():
-                            if item[0] == 'PUB_COUNTRY' and item[1] not in ['', None]:
-                                logger.debug('item is pub country')
-                                line['PUB_COUNTRY'] = item[1].decode('utf-8', errors='replace').encode('ascii',
+                            if item[0] == 'pub_country' and item[1] not in ['', None]:
+                                # don't decode unless there is something in there
+                                line['pub_country'] = item[1].decode('utf-8', errors='replace').encode('ascii',
                                                                                                        errors='ignore')
-                        newline = {k: v for k, v in line.items() if k.lower() != 'media_id'}
+                            if item[0] == 'media_id' and item[1] not in ['', None]:
+                                has_media_id = True
+
+                        if has_media_id:
+                                # remove all empty fields b/c we don't want to overwrite any fields with empty, just to update with values
+                                # eg metadata, public_notes, editor_notes
+                                # then decode. Not sure this is working
+                            temp = {k: v for k, v in line.items() if v not in ['', None] }
+                            decoded = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
+                                   k, v in temp.items()}
+                            updatedOnly.append(decoded)
+                            # don't add it to the create/newline stack
+                            continue
+
+                        # add to newline all items in line except for media_id b/c MC will create
+                        newline = {k: v for k, v in line.items() if k not in ['', None] and k.lower() != 'media_id'}
+
+                        # decode all keys as long as there is a key (why?)
                         newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
-                                   k, v in line.items()}
-                        newOrUpdatedWithMetaAndEmpties.append(newline)
-                        newlineNoEmpties = {k: v for k, v in newline.items() if v != ''}
+                                   k, v in line.items() if k not in ['', None] }
+
+                        # store metadata in another list(currently ignoring other fields whose values may be empty such as public_notes etc)
+                        newWithMetaAndEmpties.append(newline)
+
+                        newlineNoEmpties = {k: v for k, v in newWithMetaAndEmpties.items() if v != ''}
+                        # remove metadata from primary list b/c mediaCreate will not add them 
                         noEmptiesNoMeta = {k: v for k, v in newlineNoEmpties.items() if k != 'pub_country'}
-                        newOrUpdated.append(noEmptiesNoMeta)
+                        newSources.append(noEmptiesNoMeta)
+                        
                     except Exception as e:
                         logger.error("Couldn't process a CSV row: " + str(e))
                         return jsonify({'status': 'Error', 'message': "couldn't process a CSV row: " + str(e)})
 
-                if len(newOrUpdated) > 100:
+                if len(newSources) > 100:
                     return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 100.'})
-                elif len(newOrUpdated) > 0:
-                    return create_source_from_template(newOrUpdated, newOrUpdatedWithMetaAndEmpties)
+                else:
+                    if len(newSources) > 0:
+
+                        results.append(crud_source_from_template(newSources, newWithMetaAndEmpties, True))
+                    if len(updatedOnly) > 0:
+                        logger.debug("$$$$$$$$$$$$$$$$")
+                        logger.debug('updating sources')
+                        results.append(crud_source_from_template(updatedOnly, newWithMetaAndEmpties, False))
+                    return jsonify({'results':results})
 
     return jsonify({'status': 'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
 
 
-def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
+def crud_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties, createNew):
     user_mc = user_mediacloud_client()
-    result = user_mc.mediaCreate(sourceList)
-    logger.debug("")
+    result = []
+    if (createNew):
+        result = user_mc.mediaUpdateWithDict(sourceList)
+    else:
+        for src in sourceList:
+            result.append(user_mc.mediaUpdate(src))
+
+    logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
     logger.debug("success creating or updating source %s", result)
     # status, media_id, url, error in result
 
@@ -99,8 +139,13 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
             if eachNewDict['url'] == eachdict['url']:
                 eachNewDict.update(missingItems)
 
+    # now add/replace metadata to created or updated source
+    return updateMetaDataForSources(mList)
+
+# this only adds/replaces metadata with values (does not remove)
+def updateMetaDataForSources(sourceList):
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
-    for source in mList:
+    for source in sourceList:
         if source['status'] != 'error':
             metadata_tag_id = source['pub_country'] if source['pub_country'] else None
             if metadata_tag_id not in ['', None]:
@@ -115,7 +160,7 @@ def create_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties):
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
-    return jsonify({'results': mList})
+    return sourceList
 
 
 @app.route('/api/collections/<collection_id>/metadatacoverage.csv')
@@ -256,17 +301,24 @@ def api_collection_details(collection_id):
 
     return jsonify({'results': info})
 
-
+# either with or without editor notes
 @app.route('/api/template/sources.csv')
 @flask_login.login_required
+@arguments_required('dType')
 @api_error_handler
 def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
-    return csv.stream_response(COLLECTIONS_TEMPLATE_PROPS, COLLECTIONS_TEMPLATE_PROPS, filename)
+
+    if request.args['dType'] == "1":
+        what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    else:
+        what_type_download = COLLECTIONS_TEMPLATE_PROPS_VIEW
+    return csv.stream_response(what_type_download, what_type_download, filename)
 
 
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
+@arguments_required('dType')
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
@@ -276,12 +328,27 @@ def api_collection_sources_csv(collection_id):
         for tag in src['media_source_tags']:
             if isMetaDataTagSet(tag['tag_sets_id']):
                 src['pub_country'] = tag['tag'][-3:]
+
+        # handle nulls
         if 'pub_country' not in src:
             src['pub_country'] = ''
         if 'editor_notes' not in src:
             src['editor_notes'] = ''
-    filename = "MC_Downloaded_Template_"
-    return csv.stream_response(all_media, COLLECTIONS_TEMPLATE_PROPS, filename, COLLECTIONS_TEMPLATE_PROPS)
+        if 'is_monitored' not in src:
+            src['is_monitored'] = ''
+        if 'public_notes' not in src:
+            src['public_notes'] = ''
+        # if from details page, don't include editor_notes
+        # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
+    filePrefix = "MC_Downloaded_Template_"
+
+    if request.args['dType'] == "1":
+        what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    else:
+        what_type_download = COLLECTIONS_TEMPLATE_PROPS_VIEW
+    # if from details page
+    # COLLECTIONS_TEMPLATE_PROPS_VIEW vs COLLECTIONS_TEMPLATE_PROPS_EDIT
+    return csv.stream_response(all_media, what_type_download, filePrefix, what_type_download)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')

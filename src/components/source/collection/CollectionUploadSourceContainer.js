@@ -26,9 +26,9 @@ class CollectionUploadSourceContainer extends React.Component {
     const { myCollectionId } = this.props;
     let url = null;
     if (myCollectionId) {
-      url = `/api/collections/${myCollectionId}/sources.csv`;
+      url = `/api/collections/${myCollectionId}/sources.csv?dType=1`;
     } else {
-      url = '/api/template/sources.csv';
+      url = '/api/template/sources.csv?dType=1';
     }
     window.location = url;
   }

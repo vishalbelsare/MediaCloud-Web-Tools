@@ -31,7 +31,7 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
                     cleaned_value = value
                     if isinstance(value, (int, long, float)):
                         cleaned_value = str(row[p])
-                    elif value is None:
+                    elif value in ['', None]:
                         # trying to handle endode/decode problem on the other end
                         cleaned_value = ''
                     else:
@@ -52,6 +52,7 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         return flask.Response(stream_as_csv(data, dict_keys, column_names),
                           mimetype='text/csv; charset=utf-8', headers=headers)
     else:
+        dict_keys = ','.join(dict_keys) + '\n'
         return flask.Response(dict_keys,
                           mimetype='text/csv; charset=utf-8', headers=headers)
 

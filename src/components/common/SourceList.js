@@ -18,7 +18,7 @@ class SourceList extends React.Component {
     const { collectionId, downloadUrl } = this.props;
     let url = null;
     if (collectionId) {
-      url = `/api/collections/${collectionId}/sources.csv`;
+      url = `/api/collections/${collectionId}/sources.csv?dType=0`;
     } else {
       url = downloadUrl;
     }
