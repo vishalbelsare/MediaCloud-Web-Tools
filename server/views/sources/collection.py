@@ -94,37 +94,49 @@ def upload_file():
 
 def crud_source_from_template(sourceList, createNew):
     user_mc = user_mediacloud_client()
-    result = []
-
+    successful = []
+    errors = []
     sourceNoMeta = []
-        
+    logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
+    logger.debug("going to create or update these sources%s", sourceList)
+
     for src in sourceList:
         sourceNoMeta = {k: v for k, v in src.items() if k != 'pub_country'}
         if (createNew):
-            result = result + user_mc.mediaCreate([sourceNoMeta])
+            temp = user_mc.mediaCreate([sourceNoMeta])
+            if (temp['status'] != 'error'):
+                successful.append(temp)
+            else:
+                errors.append(temp)
         else:
-            result.append(user_mc.mediaUpdateWithDict(sourceNoMeta))
+            temp = user_mc.mediaUpdateWithDict(sourceNoMeta)
+            if (temp[success] == 1):
+                successful.append(src)
+            else:
+                errors.append(src)
 
-    logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
-    logger.debug("success creating or updating source %s", result)
-    # status, media_id, url, error in result, merge with sourceList so we have metadata and the fields we need for the return
+    logger.debug("successful :  %s", successful)
+    logger.debug("errors :  %s", errors)
+    # for new sources we have status, media_id, url, error in result, merge with sourceList so we have metadata and the fields we need for the return
     if (createNew):
         mList = []
-        for eachdict in result:
+        for eachdict in successful:
             for hasEmpties in sourceList:
                 mNewDictList = {k:v for k, v in hasEmpties.items() if
                             eachdict['url'] == hasEmpties['url']}
                 mList.append(mNewDictList)
 
         for eachNewDict in mList:
-            for eachdict in result:
+            for eachdict in successful:
                 missingItems = {k: v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
                 if eachNewDict['url'] == eachdict['url']:
                     eachNewDict.update(missingItems)
+
         return updateMetaDataForSources(mList)
 
+
     #if a successful update, just return what we have, success
-    return updateMetaDataForSources(sourceList)
+    return updateMetaDataForSources(result)
 
 # this only adds/replaces metadata with values (does not remove)
 def updateMetaDataForSources(sourceList):
