@@ -3,12 +3,22 @@ import { connect } from 'react-redux';
 import React3 from 'react-three-renderer';
 import * as THREE from 'three';
 import { injectIntl } from 'react-intl';
+// import composeAsyncContainer from '../common/AsyncContainer';
+import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
 
 class SimpleSceneContainer extends React.Component {
 
   componentWillMount() {
     const cameraPosition = new THREE.Vector3(0, 0, 5);
     this.setState({ cameraPosition });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { topicId, selectNewTopic } = this.props;
+    if ((nextProps.topicId !== topicId)) {
+      // console.log('componentWillReceiveProps');
+      selectNewTopic(topicId);
+    }
   }
 
   setupObjects = () => {
@@ -71,23 +81,37 @@ class SimpleSceneContainer extends React.Component {
 SimpleSceneContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  topic: React.PropTypes.object,
+  topicInfo: React.PropTypes.object,
   // from parent
   topicId: React.PropTypes.number,
   // from dispatch
   intl: React.PropTypes.object.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  selectNewTopic: React.PropTypes.func,
+  // from state
+  filters: React.PropTypes.object.isRequired,
+  needsNewSnapshot: React.PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected,
-  topicId: state.topics.selected.id,
+const mapStateToProps = (state, ownProps) => ({
+  filters: state.topics.selected.filters,
+  fetchStatus: state.topics.selected.info.fetchStatus,
   topicInfo: state.topics.selected.info,
+  topicId: parseInt(ownProps.params.topicId, 10),
+  needsNewSnapshot: state.topics.selected.needsNewSnapshot,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  selectNewTopic: (topicId) => {
+    dispatch(selectTopic(topicId));
+    dispatch(fetchTopicSummary(ownProps.params.topicId));
+  },
 });
 
 
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       SimpleSceneContainer
     )
   );
