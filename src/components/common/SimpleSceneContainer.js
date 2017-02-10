@@ -4,7 +4,7 @@ import React3 from 'react-three-renderer';
 import * as THREE from 'three';
 import { injectIntl } from 'react-intl';
 // import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, fetchTopicSummary } from '../../actions/topicActions';
+import { selectTopic, fetchTopicSummary, fetchTopicTopMedia } from '../../actions/topicActions';
 
 class SimpleSceneContainer extends React.Component {
 
@@ -44,6 +44,8 @@ class SimpleSceneContainer extends React.Component {
     const width = window.innerWidth; // canvas width
     const height = window.innerHeight; // canvas height
 
+    const { media } = this.props;
+    
     return (
       <React3
         mainCamera="camera" // this points to the perspectiveCamera which has the name set to "camera" below
@@ -62,16 +64,18 @@ class SimpleSceneContainer extends React.Component {
 
             position={this.state.cameraPosition}
           />
-          <mesh rotation={this.state.cubeRotation} >
-            <boxGeometry
-              width={1}
-              height={1}
-              depth={1}
-            />
-            <meshBasicMaterial
-              color={0x00ff00}
-            />
-          </mesh>
+          {media.map(m => (
+            <mesh rotation={this.state.cubeRotation} >
+              <boxGeometry
+                name={m.media_id}
+                width={1}
+                height={1}
+                depth={1}
+              />
+              <meshBasicMaterial color={0x00ff00} />
+            </mesh>
+            )
+          )}
         </scene>
       </React3>
     );
@@ -91,6 +95,7 @@ SimpleSceneContainer.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   needsNewSnapshot: React.PropTypes.bool.isRequired,
+  media: React.PropTypes.array,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -99,12 +104,20 @@ const mapStateToProps = (state, ownProps) => ({
   topicInfo: state.topics.selected.info,
   topicId: parseInt(ownProps.params.topicId, 10),
   needsNewSnapshot: state.topics.selected.needsNewSnapshot,
+  sort: state.topics.selected.summary.topMedia.sort,
+  media: state.topics.selected.summary.topMedia.media,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   selectNewTopic: (topicId) => {
+    const params = {
+      ...ownProps.filters,
+      sort: ownProps.sort,
+      limit: 10,
+    };
     dispatch(selectTopic(topicId));
     dispatch(fetchTopicSummary(ownProps.params.topicId));
+    dispatch(fetchTopicTopMedia(ownProps.params.topicId, params));
   },
 });
 
