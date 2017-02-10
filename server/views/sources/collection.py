@@ -58,42 +58,23 @@ def upload_file():
                 reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
-                        newline = []
-                        has_media_id = False
-                        # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up vals
-                        for item in line.items():
-                            if item[0] == 'pub_country' and item[1] not in ['', None]:
-                                # don't decode unless there is something in there
-                                line['pub_country'] = item[1].decode('utf-8', errors='replace').encode('ascii',
-                                                                                                       errors='ignore')
-                            if item[0] == 'media_id' and item[1] not in ['', None]:
-                                has_media_id = True
+                        newSrcs = []
+                        updatedSrcs =[]
+                        # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up val
 
-                        if has_media_id:
-                                # remove all empty fields b/c we don't want to overwrite any fields with empty, just to update with values
-                                # eg metadata, public_notes, editor_notes
-                                # then decode. Not sure this is working
-                            temp = {k: v for k, v in line.items() if v not in ['', None] }
-                            decoded = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
-                                   k, v in temp.items()}
-                            updatedOnly.append(decoded)
-                            # don't add it to the create/newline stack
-                            continue
+                        updatedSrc = line['media_id'] not in ['', None]
+                        
 
-                        # add to newline all items in line except for media_id b/c MC will create
-                        newline = {k: v for k, v in line.items() if k not in ['', None] and k.lower() != 'media_id'}
-
-                        # decode all keys as long as there is a key (why?)
+                        # decode all keys as long as there is a key  re Unicode vs ascii
                         newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
                                    k, v in line.items() if k not in ['', None] }
+                        newlineDecoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower() for
+                                   k, v in newline.items() if v not in ['', None] }
 
-                        # store metadata in another list(currently ignoring other fields whose values may be empty such as public_notes etc)
-                        newWithMetaAndEmpties.append(newline)
-
-                        newlineNoEmpties = {k: v for k, v in newWithMetaAndEmpties.items() if v != ''}
-                        # remove metadata from primary list b/c mediaCreate will not add them 
-                        noEmptiesNoMeta = {k: v for k, v in newlineNoEmpties.items() if k != 'pub_country'}
-                        newSources.append(noEmptiesNoMeta)
+                        if (updatedSrc):
+                            updatedOnly.append(newlineDecoded)
+                        else:
+                            newSources.append(newlineDecoded)
                         
                     except Exception as e:
                         logger.error("Couldn't process a CSV row: " + str(e))
@@ -103,60 +84,62 @@ def upload_file():
                     return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 else:
                     if len(newSources) > 0:
-
-                        results.append(crud_source_from_template(newSources, newWithMetaAndEmpties, True))
+                        results.append(crud_source_from_template(newSources, True))
                     if len(updatedOnly) > 0:
-                        logger.debug("$$$$$$$$$$$$$$$$")
-                        logger.debug('updating sources')
-                        results.append(crud_source_from_template(updatedOnly, newWithMetaAndEmpties, False))
+                        results.append(crud_source_from_template(updatedOnly, False))
                     return jsonify({'results':results})
 
     return jsonify({'status': 'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
 
 
-def crud_source_from_template(sourceList, newOrUpdatedWithMetaAndEmpties, createNew):
+def crud_source_from_template(sourceList, createNew):
     user_mc = user_mediacloud_client()
     result = []
-    if (createNew):
-        result = user_mc.mediaUpdateWithDict(sourceList)
-    else:
-        for src in sourceList:
-            result.append(user_mc.mediaUpdate(src))
+
+    sourceNoMeta = []
+        
+    for src in sourceList:
+        sourceNoMeta = {k: v for k, v in src.items() if k != 'pub_country'}
+        if (createNew):
+            result = result + user_mc.mediaCreate([sourceNoMeta])
+        else:
+            result.append(user_mc.mediaUpdateWithDict(sourceNoMeta))
 
     logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
     logger.debug("success creating or updating source %s", result)
-    # status, media_id, url, error in result
-
-    mList = []
-    for eachdict in result:
-        mNewDictList = [hasEmptiesDict for hasEmptiesDict in newOrUpdatedWithMetaAndEmpties if
-                        hasEmptiesDict['url'] == eachdict['url']]
-        mList += mNewDictList
-
-    for eachNewDict in mList:
+    # status, media_id, url, error in result, merge with sourceList so we have metadata and the fields we need for the return
+    if (createNew):
+        mList = []
         for eachdict in result:
-            missingItems = {k: v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
-            if eachNewDict['url'] == eachdict['url']:
-                eachNewDict.update(missingItems)
+            for hasEmpties in sourceList:
+                mNewDictList = {k:v for k, v in hasEmpties.items() if
+                            eachdict['url'] == hasEmpties['url']}
+                mList.append(mNewDictList)
 
-    # now add/replace metadata to created or updated source
-    return updateMetaDataForSources(mList)
+        for eachNewDict in mList:
+            for eachdict in result:
+                missingItems = {k: v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
+                if eachNewDict['url'] == eachdict['url']:
+                    eachNewDict.update(missingItems)
+        return updateMetaDataForSources(mList)
+
+    #if a successful update, just return what we have, success
+    return updateMetaDataForSources(sourceList)
 
 # this only adds/replaces metadata with values (does not remove)
 def updateMetaDataForSources(sourceList):
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
     for source in sourceList:
-        if source['status'] != 'error':
-            metadata_tag_id = source['pub_country'] if source['pub_country'] else None
-            if metadata_tag_id not in ['', None]:
-                matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
-                if matching and matching not in ['', None]:
-                    metadata_tag_id = matching[0]['tags_id']
-                    logger.debug('found metadata to add %s', metadata_tag_id)
-                    user_mc.tagMedia(
-                        tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
-                        clear_others=True)  # make sure to clear any other values set in this metadata tag set
-                    logger.debug("success adding metadata")
+        metadata_tag_id = source['pub_country'] if source['pub_country'] else None
+        if metadata_tag_id not in ['', None]:
+            matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
+            if matching and matching not in ['', None]:
+                metadata_tag_id = matching[0]['tags_id']
+                logger.debug('found metadata to add %s', metadata_tag_id)
+                user_mc.tagMedia(
+                    tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
+                    clear_others=True)  # make sure to clear any other values set in this metadata tag set
+                logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
