@@ -133,6 +133,7 @@ const messages = {
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
+  moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
