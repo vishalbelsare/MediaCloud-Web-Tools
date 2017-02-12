@@ -103,7 +103,7 @@ const messages = {
   word: { id: 'word', defaultMessage: 'Word Source' },
   ok: { id: 'ok', defaultMessage: 'OK' },
   cancel: { id: 'cancel', defaultMessage: 'Cancel' },
-  reset: { id: 'reset', defaultMessage: 'reset' },
+  reset: { id: 'reset', defaultMessage: 'Reset' },
   error: { id: 'error', defaultMessage: 'Error' },
   details: { id: 'details', defaultMessage: 'Details' },
   search: { id: 'search', defaultMessage: 'Search' },
@@ -134,6 +134,7 @@ const messages = {
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
+  filter: { id: 'filter', defaultMessage: 'Filter' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },

@@ -5,7 +5,6 @@ import { injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropUpIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import OpenInNewIcon from 'material-ui/svg-icons/action/open-in-new';
-import ModeEditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import messages from '../../resources/messages';
@@ -14,12 +13,15 @@ import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
+import EditIcon from './icons/EditIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
 import RemoveIcon from './icons/RemoveIcon';
 import CloseIcon from './icons/CloseIcon';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
+import ResetIcon from './icons/ResetIcon';
+import FilterIcon from './icons/FilterIcon';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 
 /**
@@ -115,7 +117,7 @@ export const SettingsButton = composeIconButton(SettingsIcon, messages.settings)
 
 export const ReadItNowButton = composeIconButton(OpenInNewIcon, messages.readItNow, false);
 
-export const EditButton = composeIconButton(ModeEditIcon, messages.edit, false);
+export const EditButton = composeIconButton(EditIcon, messages.edit, false);
 
 export const ErrorButton = composeIconButton(ErrorIcon, messages.error, false);
 
@@ -124,3 +126,7 @@ export const EyeButton = composeIconButton(RemoveRedEye, messages.monitored, fal
 export const MoreOptionsButton = composeIconButton(MoreOptionsIcon, messages.moreOptions);
 
 export const CloseButton = composeIconButton(CloseIcon, messages.close);
+
+export const ResetButton = composeIconButton(ResetIcon, messages.reset);
+
+export const FilterButton = composeIconButton(FilterIcon, messages.filter);
