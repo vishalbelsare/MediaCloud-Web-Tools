@@ -56,7 +56,7 @@ const SourceDetailsForm = (props) => {
         </Col>
         <Col md={8}>
           <Field
-            name="publicNotes"
+            name="public_notes"
             component={renderTextField}
             hintText={localMessages.publicNotesHint}
             fullWidth
@@ -72,7 +72,7 @@ const SourceDetailsForm = (props) => {
         </Col>
         <Col md={8}>
           <Field
-            name="notes"
+            name="editor_notes"
             component={renderTextField}
             hintText={localMessages.editorNotesHint}
             fullWidth

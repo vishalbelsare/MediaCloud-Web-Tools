@@ -56,7 +56,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       url: values.url,
       name: values.name,
       notes: values.notes,
-      publicNotes: values.publicNotes,
+      editor_notes: values.editor_notes,
+      public_notes: values.public_notes,
       montitored: values.monitored,
     };
     metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form

@@ -173,13 +173,11 @@ def source_create():
     user_mc = user_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
-    editor_notes = request.form['editorNotes'] if 'editorNotes' in request.form else None    # this is optional
-    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None
+    editor_notes = request.form['editor_notes'] if 'editor_notes' in request.form else None    # this is optional
+    public_notes = request.form['public_notes'] if 'public_notes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
-    tag_ids_to_add = []
-    if len(request.form['collections[]']) > 0:
-        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY}
     ]
@@ -213,16 +211,16 @@ def source_update(media_id):
     # update the basic info
     name = request.form['name']
     url = request.form['url']
-    editor_notes = request.form['editorNotes'] if 'editorNotes' in request.form else None  # this is optional
-    public_notes = request.form['publicNotes'] if 'publicNotes' in request.form else None  # this is optional
+    editor_notes = request.form['editor_notes'] if 'editor_notes' in request.form else None  # this is optional
+    public_notes = request.form['public_notes'] if 'public_notes' in request.form else None  # this is optional
     monitored = request.form['monitored'] if 'monitored' in request.form else None
-    result = user_mc.mediaUpdate(media_id, url=url, name=name, editor_notes=editor_notes,
-                                 is_monitored=monitored, public_notes=public_notes)
+    result = user_mc.mediaUpdate(media_id, {'url': url, 'name': name, 'editor_notes': editor_notes,
+        'is_monitored': monitored, 'public_notes': public_notes})
     # now we need to update the collections separately, because they are tags on the media source
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
         if t['tag_sets_id'] in [COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID]]
-    tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
     tag_ids_to_remove = list(set(existing_tag_ids) - set(tag_ids_to_add))
     tags_to_add = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_ADD)
                    for cid in tag_ids_to_add if cid not in existing_tag_ids]
@@ -272,6 +270,11 @@ def source_suggestion_update(suggestion_id):
     results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason)
     return jsonify(results)
 
+def _tag_ids_from_collections_param(input):
+    tag_ids_to_add = []
+    if len(input) > 0:
+        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",") if len(cid) > 0]
+    return set(tag_ids_to_add)
 
 @app.route('/api/sources/suggestions/submit', methods=['POST'])
 @form_fields_required('url')
@@ -283,9 +286,7 @@ def source_suggest():
     feed_url = request.form['feedurl'] if 'feedurl' in request.form else None
     name = request.form['name'] if 'name' in request.form else None
     reason = request.form['reason'] if 'reason' in request.form else None
-    tag_ids_to_add = []
-    if len(request.form['collections[]']) > 0:
-        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",")]
+    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
     new_suggestion = user_mc.mediaSuggest(url=url, name=name, feed_url=feed_url, reason=reason,
                                           collections=tag_ids_to_add)
     content = """
