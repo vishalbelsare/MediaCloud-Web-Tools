@@ -3,8 +3,8 @@ import { injectIntl } from 'react-intl';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import DownloadIcon from './icons/DownloadIcon';
+import MoreOptionsIcon from './icons/MoreOptionsIcon';
 // import messages from '../../resources/messages';
 
 // import DownloadIcon from './icons/DownloadIcon';
@@ -28,7 +28,7 @@ class ActionMenuButton extends React.Component {
     }
   }
   render() {
-    const { actionItems, topLevelIcon, useBackgroundColor } = this.props;
+    const { actionItems, topLevelButton, useBackgroundColor } = this.props;
     // const { formatMessage } = this.props.intl;
     // const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(...messages.defaultActionMenuButtonTooltip);
     const otherProps = {};
@@ -37,7 +37,7 @@ class ActionMenuButton extends React.Component {
     }
     return (
       <div className="action-menu-button">
-        <IconMenu iconButtonElement={topLevelIcon || <IconButton><MoreVertIcon /></IconButton>}>
+        <IconMenu iconButtonElement={topLevelButton || <IconButton><MoreOptionsIcon /></IconButton>}>
           {actionItems.map((item, idx) => (
             <MenuItem
               key={idx}
@@ -54,7 +54,7 @@ class ActionMenuButton extends React.Component {
 }
 ActionMenuButton.propTypes = {
   onClick: React.PropTypes.func,
-  topLevelIcon: React.PropTypes.object,
+  topLevelButton: React.PropTypes.func,
   actionItems: React.PropTypes.array.isRequired,
   tooltip: React.PropTypes.string,
   intl: React.PropTypes.object.isRequired,
