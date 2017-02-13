@@ -21,6 +21,7 @@ import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
+import EditTopicContainer from '../components/topic/create/EditTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import WordContainer from '../components/topic/words/WordContainer';
 import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
@@ -38,12 +39,14 @@ const topicRoutes = (
 
     <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
 
+    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
+
     <Route path="/topics/suggest" component={CreateTopicContainer} onEnter={requireAuth} />
 
     {userRoutes}
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
-
+      <Route path="edit" component={EditTopicContainer} onEnter={requireAuth} />
       <Route path="/topics/:topicId/test-filters" component={FilteredTopicContainer} onEnter={requireAuth} >
         <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media" component={InfluentialMediaContainer} onEnter={requireAuth} />

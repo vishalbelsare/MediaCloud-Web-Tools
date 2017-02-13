@@ -69,6 +69,8 @@ export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
 export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
+export const CREATE_TOPIC = 'CREATE_TOPIC';
+export const UPDATE_TOPIC = 'UPDATE_TOPIC';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -214,6 +216,9 @@ export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords)
 
 export const suggestTopic = createAsyncAction(SUGGEST_TOPIC, api.suggestTopic);
 
+export const createTopic = createAsyncAction(CREATE_TOPIC, api.createTopic);
+
+export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 // pass in topic id & params (snapshot id, focus id, timespan id)
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 

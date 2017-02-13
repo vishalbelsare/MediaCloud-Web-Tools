@@ -108,6 +108,15 @@ def favorite_topics():
         t['isFavorite'] = True
     return jsonify({'topics': favorited_topics})
 
+@app.route('/api/topics/create', methods=['PUT'])
+@flask_login.login_required
+@form_fields_required('name', 'description', 'public')
+@api_error_handler
+def topic_create(topics_id):
+    return topic_summary(topics_id) # give them back new data, so they can update the client
+
+
+
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
 @form_fields_required('name', 'description', 'public')
