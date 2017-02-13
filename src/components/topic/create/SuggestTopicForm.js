@@ -22,7 +22,7 @@ const SuggestTopicForm = (props) => {
   const { onSaveSuggestion, handleSubmit, pristine, submitting, renderTextField, renderCheckbox } = props;
   const { formatMessage } = props.intl;
   return (
-    <form className="create-topic" name="createTopicForm" onSubmit={handleSubmit(onSaveSuggestion.bind(this))}>
+    <form className="suggest-topic" name="suggestTopicForm" onSubmit={handleSubmit(onSaveSuggestion.bind(this))}>
       <Row>
         <Col lg={10}>
           <Field
@@ -89,7 +89,7 @@ const SuggestTopicForm = (props) => {
 
 SuggestTopicForm.propTypes = {
   // from parent
-  onSaveSuggestion: React.PropTypes.func.isRequired,
+  onSaveSuggestion: React.PropTypes.func,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
@@ -119,7 +119,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'createTopic',
+  form: 'suggestTopic',
   validate,
 };
 

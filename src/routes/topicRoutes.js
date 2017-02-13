@@ -21,6 +21,7 @@ import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
+import SuggestTopicContainer from '../components/topic/create/SuggestTopicContainer';
 import EditTopicContainer from '../components/topic/create/EditTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import WordContainer from '../components/topic/words/WordContainer';
@@ -41,7 +42,7 @@ const topicRoutes = (
 
     <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
 
-    <Route path="/topics/suggest" component={CreateTopicContainer} onEnter={requireAuth} />
+    <Route path="/topics/suggest" component={SuggestTopicContainer} onEnter={requireAuth} />
 
     {userRoutes}
 
