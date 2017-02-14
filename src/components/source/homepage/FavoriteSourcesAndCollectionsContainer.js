@@ -35,7 +35,7 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
     favCollectionsContent = (
       <ul className="fav-collections">
         { favoritedCollections.slice(0, NUMBER_TO_SHOW).map((c, idx) =>
-            (<li key={idx} ><Link to={`/collections/${c.id}`}>{c.label}</Link></li>)
+            (<li key={idx} ><Link to={`/collections/${c.tags_id}`}>{c.label}</Link></li>)
           )
       }
       </ul>
