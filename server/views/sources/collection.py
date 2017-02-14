@@ -84,9 +84,9 @@ def upload_file():
                     return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 else:
                     if len(newSources) > 0:
-                        results.append(crud_source_from_template(newSources, True))
+                        results += crud_source_from_template(newSources, True)
                     if len(updatedOnly) > 0:
-                        results.append(crud_source_from_template(updatedOnly, False))
+                        results += crud_source_from_template(updatedOnly, False)
                     return jsonify({'results':results})
 
     return jsonify({'status': 'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
@@ -101,6 +101,7 @@ def crud_source_from_template(sourceList, createNew):
     logger.debug("going to create or update these sources%s", sourceList)
 
     for src in sourceList:
+        # remove pub_country, will modify below
         sourceNoMeta = {k: v for k, v in src.items() if k != 'pub_country'}
         if (createNew):
             temp = user_mc.mediaCreate([sourceNoMeta])
@@ -109,8 +110,11 @@ def crud_source_from_template(sourceList, createNew):
             else:
                 errors.append(temp)
         else:
-            temp = user_mc.mediaUpdateWithDict(sourceNoMeta)
-            if (temp[success] == 1):
+            media_id = src['media_id']
+            sourceNoMetaNoId = []
+            sourceNoMetaNoId = {k: v for k, v in sourceNoMeta.items() if k != 'media_id'}
+            temp = user_mc.mediaUpdate(media_id, sourceNoMetaNoId)
+            if (temp['success'] == 1):
                 successful.append(src)
             else:
                 errors.append(src)
@@ -136,22 +140,23 @@ def crud_source_from_template(sourceList, createNew):
 
 
     #if a successful update, just return what we have, success
-    return updateMetaDataForSources(result)
+    return updateMetaDataForSources(successful)
 
 # this only adds/replaces metadata with values (does not remove)
 def updateMetaDataForSources(sourceList):
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
     for source in sourceList:
-        metadata_tag_id = source['pub_country'] if source['pub_country'] else None
-        if metadata_tag_id not in ['', None]:
-            matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
-            if matching and matching not in ['', None]:
-                metadata_tag_id = matching[0]['tags_id']
-                logger.debug('found metadata to add %s', metadata_tag_id)
-                user_mc.tagMedia(
-                    tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
-                    clear_others=True)  # make sure to clear any other values set in this metadata tag set
-                logger.debug("success adding metadata")
+        if 'pub_country' in source:
+            metadata_tag_id = source['pub_country'] 
+            if metadata_tag_id not in ['', None]:
+                matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
+                if matching and matching not in ['', None]:
+                    metadata_tag_id = matching[0]['tags_id']
+                    logger.debug('found metadata to add %s', metadata_tag_id)
+                    user_mc.tagMedia(
+                        tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
+                        clear_others=True)  # make sure to clear any other values set in this metadata tag set
+                    logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
