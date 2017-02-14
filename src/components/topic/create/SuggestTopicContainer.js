@@ -9,8 +9,8 @@ import { updateFeedback } from '../../../actions/appActions';
 import { suggestTopic } from '../../../actions/topicActions';
 
 const localMessages = {
-  suggestTitle: { id: 'topic.suggest.title', defaultMessage: 'Suggest a New Topic' },
-  suggestText: { id: 'topic.suggest.text', defaultMessage: 'You can auggest a new Topic to add to the MediaCloud system.' },
+  suggestTopicTitle: { id: 'topic.suggest.title', defaultMessage: 'Suggest a New Topic' },
+  suggestTopicText: { id: 'topic.suggest.text', defaultMessage: 'You can auggest a new Topic to add to the MediaCloud system.' },
   suggest: { id: 'topic.suggest', defaultMessage: 'Suggest Topic' },
 };
 
