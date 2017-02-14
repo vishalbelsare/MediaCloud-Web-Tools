@@ -68,7 +68,7 @@ def upload_file():
                         # decode all keys as long as there is a key  re Unicode vs ascii
                         newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
                                    k, v in line.items() if k not in ['', None] }
-                        newlineDecoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower() for
+                        newlineDecoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
                                    k, v in newline.items() if v not in ['', None] }
 
                         if (updatedSrc):
@@ -144,6 +144,7 @@ def crud_source_from_template(sourceList, createNew):
 
 # this only adds/replaces metadata with values (does not remove)
 def updateMetaDataForSources(sourceList):
+    user_mc = user_mediacloud_client()
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
     for source in sourceList:
         if 'pub_country' in source:
