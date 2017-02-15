@@ -1,6 +1,6 @@
 COLLECTIONS_TEMPLATE_PROPS_CREATE = ['url','name', 'pub_country', 'public_notes', 'is_monitored']
-COLLECTIONS_TEMPLATE_PROPS_VIEW = ['url','name','media_id', 'pub_country', 'public_notes', 'is_monitored']
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['url','name','media_id', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
+COLLECTIONS_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored']
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 # some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
 GV_TAG_SET_ID = 556
