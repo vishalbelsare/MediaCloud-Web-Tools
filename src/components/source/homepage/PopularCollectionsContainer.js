@@ -18,15 +18,16 @@ const PopularCollectionsContainer = (props) => {
     content = (
       <ContentPreview
         items={collections}
+        classStyle="browse-items"
         itemType="collections"
         icon={<CollectionIcon height="25" />}
-        linkInfo={c => `collection/${c.tags_id}`}
+        linkInfo={c => `collections/${c.tags_id}`}
         linkDisplay={c => c.label}
       />
     );
   }
   return (
-    <div className="popular-collection-list">
+    <div>
       <h2>
         <FormattedMessage {...localMessages.mainTitle} />
       </h2>

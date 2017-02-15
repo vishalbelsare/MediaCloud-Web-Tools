@@ -15,6 +15,7 @@ const PublicTopicListContainer = (props) => {
         <ContentPreview
           items={topics}
           itemType="topics"
+          classStyle="browse-items"
           icon={<TopicIcon height="25" />}
           linkInfo={c => `topics/${c.topics_id}`}
           linkDisplay={c => c.name}

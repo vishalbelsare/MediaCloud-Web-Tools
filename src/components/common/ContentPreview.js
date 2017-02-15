@@ -30,7 +30,7 @@ const ContentPreview = (props) => {
     );
   }
   return (
-    <div className="browse-items">
+    <div className="browse-list">
       <Row>
         {content}
       </Row>
@@ -46,6 +46,7 @@ ContentPreview.propTypes = {
   linkDisplay: React.PropTypes.func,
   linkInfo: React.PropTypes.func,
   items: React.PropTypes.array.isRequired,
+  classStyle: React.PropTypes.string,
   helpButton: React.PropTypes.node,
   // from dispatch
   handleClick: React.PropTypes.func.isRequired,

@@ -1,0 +1,19 @@
+.browse-list {
+	margin-top: 10px;
+
+	.browse-items {
+		display: block;
+		.content {
+			min-height: 150px;
+			display: flex;
+  		justify-content: center;
+  		align-items: center;
+			text-align: center;
+		}
+		padding-bottom: 50px;
+		.app-icon.app-icon-large {
+			height:30px;
+		}
+	}
+
+}
