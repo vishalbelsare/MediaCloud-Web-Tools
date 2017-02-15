@@ -3,6 +3,8 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
+import Permissioned from '../../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../../lib/auth';
 
 const localMessages = {
   nameLabel: { id: 'source.add.name.label', defaultMessage: 'Name of Source' },
@@ -48,48 +50,50 @@ const SourceDetailsForm = (props) => {
           />
         </Col>
       </Row>
-      <Row>
-        <Col md={2}>
-          <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.publicNotesLabel} />
-          </span>
-        </Col>
-        <Col md={8}>
-          <Field
-            name="public_notes"
-            component={renderTextField}
-            hintText={localMessages.publicNotesHint}
-            fullWidth
-            rows={2}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col md={2}>
-          <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.editorNotesLabel} />
-          </span>
-        </Col>
-        <Col md={8}>
-          <Field
-            name="editor_notes"
-            component={renderTextField}
-            hintText={localMessages.editorNotesHint}
-            fullWidth
-            rows={2}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col md={2}>
-          <Field
-            name="monitored"
-            component={renderCheckbox}
-            fullWidth
-            label={localMessages.isMonitoredLabel}
-          />
-        </Col>
-      </Row>
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Row>
+          <Col md={2}>
+            <span className="label unlabeled-field-label">
+              <FormattedMessage {...localMessages.publicNotesLabel} />
+            </span>
+          </Col>
+          <Col md={8}>
+            <Field
+              name="public_notes"
+              component={renderTextField}
+              hintText={localMessages.publicNotesHint}
+              fullWidth
+              rows={2}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={2}>
+            <span className="label unlabeled-field-label">
+              <FormattedMessage {...localMessages.editorNotesLabel} />
+            </span>
+          </Col>
+          <Col md={8}>
+            <Field
+              name="editor_notes"
+              component={renderTextField}
+              hintText={localMessages.editorNotesHint}
+              fullWidth
+              rows={2}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={2}>
+            <Field
+              name="monitored"
+              component={renderCheckbox}
+              fullWidth
+              label={localMessages.isMonitoredLabel}
+            />
+          </Col>
+        </Row>
+      </Permissioned>
     </div>
   );
 };
