@@ -19,7 +19,7 @@ const localMessages = {
 };
 
 const SourceDetailsForm = (props) => {
-  const { renderTextField, renderCheckbox } = props;
+  const { renderTextField, renderCheckbox, initialValues } = props;
   return (
     <div className="source-details-form">
       <Row>
@@ -63,6 +63,7 @@ const SourceDetailsForm = (props) => {
               component={renderTextField}
               hintText={localMessages.publicNotesHint}
               fullWidth
+              disabled={initialValues.disabled}
               rows={2}
             />
           </Col>
@@ -78,6 +79,7 @@ const SourceDetailsForm = (props) => {
               name="editor_notes"
               component={renderTextField}
               hintText={localMessages.editorNotesHint}
+              disabled={initialValues.disabled}
               fullWidth
               rows={2}
             />
@@ -90,6 +92,7 @@ const SourceDetailsForm = (props) => {
               component={renderCheckbox}
               fullWidth
               label={localMessages.isMonitoredLabel}
+              disabled={initialValues.disabled}
             />
           </Col>
         </Row>

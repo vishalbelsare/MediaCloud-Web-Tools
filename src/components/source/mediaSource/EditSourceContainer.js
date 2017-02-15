@@ -22,6 +22,7 @@ const EditSourceContainer = (props) => {
   const pubCountry = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_COUNTRY);
   const intialValues = {
     ...source,
+    // if user cannot edit media, disabled=true
     collections: source.media_source_tags
       .map(t => ({ ...t, name: t.label }))
       .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
@@ -61,6 +62,7 @@ const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
   source: state.sources.sources.selected.sourceDetails.object,
+  // user: state.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
