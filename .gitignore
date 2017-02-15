@@ -16,7 +16,5 @@ data/map-files/*.json
 data/map-files/*.txt
 server/static/data/all_topics.json
 update_mc_api.sh
-
-env/.Python
-
-env/bin/activate
+env
+*.csv
