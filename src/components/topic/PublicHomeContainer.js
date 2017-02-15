@@ -7,7 +7,7 @@ import LoginFormContainer from '../user/LoginFormContainer';
 import TopicIcon from '../common/icons/TopicIcon';
 
 const localMessages = {
-  homeTitle: { id: 'home.title', defaultMessage: 'Explore Topics' },
+  homeTitle: { id: 'home.title', defaultMessage: 'Explore Public Topics' },
 };
 
 const PublicHomeContainer = (props) => {

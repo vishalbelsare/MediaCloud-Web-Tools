@@ -1,22 +1,24 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPublicTopicsList } from '../../../actions/topicActions';
-import PublicTopics from './PublicTopics';
-
-const localMessages = {
-  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Public Topics' },
-};
+import TopicIcon from '../../common/icons/TopicIcon';
+import ContentPreview from '../../common/ContentPreview';
 
 const PublicTopicListContainer = (props) => {
   const { topics } = props;
   return (
     <Row>
       <Col lg={12} md={12} sm={12}>
-        <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
-        <PublicTopics topics={topics} />
+        <ContentPreview
+          items={topics}
+          itemType="topics"
+          icon={<TopicIcon height="25" />}
+          linkInfo={c => `topics/${c.topics_id}`}
+          linkDisplay={c => c.name}
+        />
       </Col>
     </Row>
   );
