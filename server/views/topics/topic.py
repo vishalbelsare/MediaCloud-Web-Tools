@@ -48,6 +48,7 @@ def topic_summary(topics_id):
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
 
     topic = local_mc.topic(topics_id)
+    topic['snapshot_status'] = mc.topicSnapshotGenerateStatus(topics_id)    # need to know if snapshot is running
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)

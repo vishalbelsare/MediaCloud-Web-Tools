@@ -2,13 +2,21 @@
 
 .topic-container {
 
-  .needs-new-snapshot-warning {
+  .topic-warning {
     background-color: $warning-color;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 16px;
     a {
       color: rgb(0,0,0);
       text-decoration: underline;
+    }
+    span.material-icons {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin-right: 10px;
     }
   }
 
