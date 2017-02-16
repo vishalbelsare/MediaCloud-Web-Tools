@@ -73,12 +73,14 @@ class SourceDetailsContainer extends React.Component {
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     const editMessage = ( // TODO: permissions around this
-      <span className="source-edit-link">
-        •&nbsp;
-        <Link to={`/sources/${source.media_id}/edit`} >
-          <FormattedMessage {...messages.edit} />
-        </Link>
-      </span>
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <span className="source-edit-link">
+          •&nbsp;
+          <Link to={`/sources/${source.media_id}/edit`} >
+            <FormattedMessage {...messages.edit} />
+          </Link>
+        </span>
+      </Permissioned>
     );
     const favButton = (<FavoriteToggler
       isFavorited={source.isFavorite}

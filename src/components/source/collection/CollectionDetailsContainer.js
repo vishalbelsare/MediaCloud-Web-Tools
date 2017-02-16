@@ -20,6 +20,8 @@ import CollectionSimilarContainer from './CollectionSimilarContainer';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 
 const localMessages = {
@@ -64,12 +66,14 @@ class CollectionDetailsContainer extends React.Component {
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
     const editMessage = ( // TODO: permissions around this
-      <span className="collection-edit-link">
-        •&nbsp;
-        <Link to={`/collections/${collection.tags_id}/edit`} >
-          <FormattedMessage {...messages.edit} />
-        </Link>
-      </span>
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <span className="collection-edit-link">
+          •&nbsp;
+          <Link to={`/collections/${collection.tags_id}/edit`} >
+            <FormattedMessage {...messages.edit} />
+          </Link>
+        </span>
+      </Permissioned>
     );
     let lockIcon = null;
     if (collection.is_static === 1) {
