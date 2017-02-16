@@ -8,6 +8,8 @@ import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },
@@ -29,20 +31,22 @@ const EditSourceContainer = (props) => {
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
   };
   return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-          </Col>
-        </Row>
-        <SourceForm
-          initialValues={intialValues}
-          onSave={handleSave}
-          buttonLabel={formatMessage(localMessages.addButton)}
-        />
-      </Grid>
+    <div className="edit-source">
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Title render={titleHandler} />
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+            </Col>
+          </Row>
+          <SourceForm
+            initialValues={intialValues}
+            onSave={handleSave}
+            buttonLabel={formatMessage(localMessages.addButton)}
+          />
+        </Grid>
+      </Permissioned>
     </div>
   );
 };

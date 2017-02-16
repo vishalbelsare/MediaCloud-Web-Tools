@@ -9,6 +9,8 @@ import { createCollection, fetchSourcesByIds, fetchCollectionSourcesByIds,
   resetAdvancedSearchSource, resetAdvancedSearchCollection } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Create New Collection' },
@@ -65,16 +67,18 @@ class CreateCollectionContainer extends React.Component {
       );
     }
     return (
-      <div>
-        <Title render={titleHandler} />
-        <Grid>
-          <Row>
-            <Col lg={12}>
-              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-            </Col>
-          </Row>
-          {formContent}
-        </Grid>
+      <div className="create-collection">
+        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+          <Title render={titleHandler} />
+          <Grid>
+            <Row>
+              <Col lg={12}>
+                <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+              </Col>
+            </Row>
+            {formContent}
+          </Grid>
+        </Permissioned>
       </div>
     );
   }

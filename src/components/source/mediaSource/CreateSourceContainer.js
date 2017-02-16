@@ -8,6 +8,8 @@ import { createSource, fetchSourceDetails } from '../../../actions/sourceActions
 import { CREATE_SOURCE_STATUS_ERROR, CREATE_SOURCE_STATUS_NEW, CREATE_SOURCE_STATUS_EXISTING } from '../../../lib/sources';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
@@ -22,19 +24,21 @@ const CreateSourceContainer = (props) => {
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-          </Col>
-        </Row>
-        <SourceForm
-          buttonLabel={formatMessage(localMessages.addButton)}
-          onSave={handleSave}
-        />
-      </Grid>
+    <div className="create-source">
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Title render={titleHandler} />
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+            </Col>
+          </Row>
+          <SourceForm
+            buttonLabel={formatMessage(localMessages.addButton)}
+            onSave={handleSave}
+          />
+        </Grid>
+      </Permissioned>
     </div>
   );
 };

@@ -8,6 +8,8 @@ import { updateCollection, selectCollection, fetchCollectionDetails } from '../.
 import { updateFeedback } from '../../../actions/appActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionForm from './form/CollectionForm';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
   mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Edit Collection' },
@@ -29,21 +31,23 @@ const EditCollectionContainer = (props) => {
     disabled: collection.is_static === 1,
   };
   return (
-    <div>
-      <Title render={titleHandler} />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
-          </Col>
-        </Row>
-        <CollectionForm
-          initialValues={intialValues}
-          onSave={handleSave}
-          buttonLabel={formatMessage(localMessages.addButton)}
-          collectionId={collectionId}
-        />
-      </Grid>
+    <div className="edit-collection">
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Title render={titleHandler} />
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.mainTitle} /></h1>
+            </Col>
+          </Row>
+          <CollectionForm
+            initialValues={intialValues}
+            onSave={handleSave}
+            buttonLabel={formatMessage(localMessages.addButton)}
+            collectionId={collectionId}
+          />
+        </Grid>
+      </Permissioned>
     </div>
   );
 };
