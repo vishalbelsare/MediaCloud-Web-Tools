@@ -10,7 +10,7 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import ActionMenuButton from '../../common/ActionMenuButton';
 // import { MoreOptionsButton } from '../../common/IconButton';
-import { DownloadIcon } from '../../common/icons/DownloadIcon';
+// import DownloadIcon from '../../common/icons/DownloadIcon';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { downloadSvg } from '../../util/svg';
 
@@ -40,8 +40,8 @@ class WordWordsContainer extends React.Component {
     const { words, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const menuItems = [
-      { text: formatMessage(messages.downloadCSV), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
+      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
     ];
     return (
       <DataCard>

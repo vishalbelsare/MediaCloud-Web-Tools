@@ -24,6 +24,11 @@ class ActionMenuButton extends React.Component {
       anchorEl: event.currentTarget,
     });
   }
+  handlePopupRequestClose = () => {
+    this.setState({
+      isPopupOpen: false,
+    });
+  }
   handleMouseEnter = () => {
     this.setState({ backgroundColor: getBrandDarkerColor() });
   }
@@ -47,16 +52,22 @@ class ActionMenuButton extends React.Component {
         <MoreOptionsIcon color={color} {...otherProps} />
       </IconButton>
     );
+    const defaultIcon = (
+      <IconButton iconStyle={iconStyle || {}} >
+        <DownloadIcon color={color} {...otherProps} />
+      </IconButton>
+    );
     // const { formatMessage } = this.props.intl;
     // const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(...messages.defaultActionMenuButtonTooltip);
     const icon = (this.state.isPopupOpen) ? closeIcon : openIcon;
     return (
       <div className="action-icon-menu">
         <IconMenu
+          open={this.state.isPopupOpen}
           iconButtonElement={icon}
-          onTouchTap={() => this.handlePopupOpenClick(event)}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          onRequestChange={() => this.handlePopupOpenClick(event)}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
           {actionItems.map((item, idx) => (
             <MenuItem
@@ -64,7 +75,8 @@ class ActionMenuButton extends React.Component {
               key={idx}
               primaryText={item.text}
               onTouchTap={() => item.clickHandler()}
-              rightIcon={<DownloadIcon color={color} {...otherProps} />}
+              onRequestClose={() => this.handlePopupRequestClose(event)}
+              rightIcon={item.icon || defaultIcon}
             />
           ))
           }
