@@ -59,7 +59,7 @@ class CollectionUploadSourceContainer extends React.Component {
     }
     return (
       <div>
-        <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} />
+        <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} disabled={this.state && this.state.confirmTemplate} />
         <DownloadButton tooltip={mysources && mysources.length > 0 && myCollectionId != null ? formatMessage(localMessages.downloadFull) : formatMessage(localMessages.downloadEmpty)} onClick={this.downloadCsv} />
         { confirmContent }
       </div>
