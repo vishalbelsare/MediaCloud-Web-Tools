@@ -11,7 +11,7 @@ import BubbleChart, { TEXT_PLACEMENT_ABOVE } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
-import { domElementToSvgString } from '../../util/svg';
+import { downloadSvg } from '../../util/svg';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
@@ -56,7 +56,7 @@ class StoryTotalsSummaryContainer extends React.Component {
           <div className="actions">
             <DownloadButton
               tooltip={formatMessage(messages.download)}
-              onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
+              onClick={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
             />
           </div>
         </Permissioned>

@@ -12,7 +12,7 @@ import ActionMenuButton from '../../common/ActionMenuButton';
 // import { MoreOptionsButton } from '../../common/IconButton';
 import { DownloadIcon } from '../../common/icons/DownloadIcon';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { WORD_CLOUD_DOM_ID, downloadSvg } from '../../util/svg';
+import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
@@ -20,6 +20,8 @@ const localMessages = {
     defaultMessage: '<p>This is a visualization showing the top words associated with this word.  Click a word to jump to a page about how it is used.</p>',
   },
 };
+
+const WORD_CLOUD_DOM_ID = 'word-cloud';
 
 class WordWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -39,7 +41,7 @@ class WordWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const menuItems = [
       { text: formatMessage(messages.downloadCSV), icon: <DownloadIcon />, clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: downloadSvg },
+      { text: formatMessage(messages.downloadSVG), icon: <DownloadIcon />, clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
     ];
     return (
       <DataCard>

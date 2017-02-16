@@ -10,7 +10,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import { domElementToSvgString } from '../../util/svg';
+import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
   overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Whole Topic' },
@@ -94,7 +94,7 @@ class FociAttentionComparisonContainer extends React.Component {
               <div className="actions">
                 <DownloadButton
                   tooltip={formatMessage(messages.download)}
-                  onClick={() => window.open(domElementToSvgString(BUBBLE_CHART_DOM_ID), '_new')}
+                  onClick={downloadSvg(BUBBLE_CHART_DOM_ID)}
                 />
               </div>
               <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
