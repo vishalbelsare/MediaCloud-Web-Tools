@@ -57,7 +57,7 @@ class AttentionOverTimeChart extends React.Component {
         pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
           const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
-          const seriesName = formatMessage(localMessages.tooltipSeriesName, { name: this.series.name });
+          const seriesName = this.series.name ? formatMessage(localMessages.tooltipSeriesName, { name: this.series.name }) : '';
           const val = formatMessage(localMessages.tooltipText, { count: rounded });
           return (`${seriesName}<br/>${val}`);
         },
@@ -112,7 +112,7 @@ class AttentionOverTimeChart extends React.Component {
       const values = data.map(d => (d.count / intervalDays));
       allSeries = [{
         id: 0,
-        name: formatMessage(localMessages.seriesTitle),
+        name: filename,
         color: lineColor,
         data: values,
         pointStart: dates[0],
