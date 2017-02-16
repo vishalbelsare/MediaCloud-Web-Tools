@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import DownloadIcon from './icons/DownloadIcon';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
+import CloseIcon from './icons/CloseIcon';
 // import messages from '../../resources/messages';
 
 // import DownloadIcon from './icons/DownloadIcon';
@@ -13,37 +14,57 @@ import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 class ActionMenuButton extends React.Component {
   state = {
     backgroundColor: getBrandDarkColor(),
+    isPopupOpen: false,
   };
+
+  handlePopupOpenClick = (event) => {
+    event.preventDefault();
+    this.setState({
+      isPopupOpen: !this.state.isPopupOpen,
+      anchorEl: event.currentTarget,
+    });
+  }
   handleMouseEnter = () => {
     this.setState({ backgroundColor: getBrandDarkerColor() });
   }
   handleMouseLeave = () => {
     this.setState({ backgroundColor: getBrandDarkColor() });
   }
-  handleClick = (event) => {
-    const { onClick } = this.props;
-    event.preventDefault();
-    if (onClick) {
-      onClick(event);
-    }
-  }
+
   render() {
-    const { actionItems, topLevelButton, useBackgroundColor } = this.props;
-    // const { formatMessage } = this.props.intl;
-    // const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(...messages.defaultActionMenuButtonTooltip);
+    const { actionItems, useBackgroundColor, color, iconStyle } = this.props;
     const otherProps = {};
     if (useBackgroundColor === true) {
       otherProps.backgroundColor = this.state.backgroundColor;
     }
+    const closeIcon = (
+      <IconButton>
+        <CloseIcon color={color} {...otherProps} />
+      </IconButton>
+    );
+    const openIcon = (
+      <IconButton iconStyle={iconStyle || {}} >
+        <MoreOptionsIcon color={color} {...otherProps} />
+      </IconButton>
+    );
+    // const { formatMessage } = this.props.intl;
+    // const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(...messages.defaultActionMenuButtonTooltip);
+    const icon = (this.state.isPopupOpen) ? closeIcon : openIcon;
     return (
-      <div className="action-menu-button">
-        <IconMenu iconButtonElement={topLevelButton || <IconButton><MoreOptionsIcon /></IconButton>}>
+      <div className="action-icon-menu">
+        <IconMenu
+          iconButtonElement={icon}
+          onTouchTap={() => this.handlePopupOpenClick(event)}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
           {actionItems.map((item, idx) => (
             <MenuItem
+              className="action-icon-menu-item"
               key={idx}
               primaryText={item.text}
               onTouchTap={() => item.clickHandler()}
-              rightIcon={<DownloadIcon />}
+              rightIcon={<DownloadIcon color={color} {...otherProps} />}
             />
           ))
           }
@@ -60,6 +81,7 @@ ActionMenuButton.propTypes = {
   intl: React.PropTypes.object.isRequired,
   color: React.PropTypes.string,
   useBackgroundColor: React.PropTypes.bool,
+  iconStyle: React.PropTypes.object,
 };
 
 export default injectIntl(ActionMenuButton);

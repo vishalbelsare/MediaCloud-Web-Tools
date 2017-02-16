@@ -46,7 +46,7 @@ class WordWordsContainer extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <ActionMenuButton actionItems={menuItems} />
+          <ActionMenuButton actionItems={menuItems} useBackgroundColor />
         </div>
         <h2>
           <FormattedMessage {...messages.topWords} />
