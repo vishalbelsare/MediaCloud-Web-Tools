@@ -14,17 +14,12 @@ import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import ErrorListContainer from './common/ErrorListContainer';
+import { ErrorNotice } from './common/Notice';
 
 const localMessages = {
   supportEmail: { id: 'app.supportEmail', defaultMessage: 'Problems? email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>' },
   maintenance: { id: 'app.maintenance', defaultMessage: 'Sorry, we have taken our system down right now for maintenance' },
 };
-
-const maintenanceContainer = (
-  <Row center="xs">
-    <p className="coming-soon">{localMessages.maintenance.defaultMessage}</p>
-  </Row>
-);
 
 const AppContainer = (props) => {
   const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
@@ -32,8 +27,20 @@ const AppContainer = (props) => {
   const brandColors = getBrandColors();
 
   let content = children;
-  if (document.appConfig.online === 0) {
-    content = maintenanceContainer;
+  if (document.appConfig.online === false) {
+    content = (
+      <div className="maintenance">
+        <Row center="lg">
+          <ErrorNotice>
+            <br /><br />
+            <FormattedMessage {...localMessages.maintenance} />
+            <br /><br />
+            <img alt="under-constrction" src="/static/img/under-construction.gif" />
+            <br /><br />
+          </ErrorNotice>
+        </Row>
+      </div>
+    );
   }
 
   return (
