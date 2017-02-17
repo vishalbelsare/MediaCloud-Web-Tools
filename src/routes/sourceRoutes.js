@@ -35,7 +35,7 @@ const sourceRoutes = (
 
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
-      <Route path="/home" component={Homepage} onEnter={requireAuth} />
+      <Route path="/home" component={Homepage} />
       <Route path="/search" component={AdvancedSearchContainer} onEnter={requireAuth} />
       <Route path="/sources" >
         <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />

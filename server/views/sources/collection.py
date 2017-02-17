@@ -247,7 +247,6 @@ def api_collections_by_ids():
 
 
 @app.route('/api/collections/featured', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def api_featured_collections():
     featured_collections = _cached_featured_collections()
@@ -259,12 +258,11 @@ def _cached_featured_collections():
     for tagsId in FEATURED_COLLECTION_LIST:
         info = mc.tag(tagsId)
         info['id'] = tagsId
-        info['wordcount'] = cached_wordcount(user_mediacloud_key, 'tags_id_media:'+str(tagsId))
+        info['wordcount'] = cached_wordcount(None, 'tags_id_media:'+str(tagsId))    # use None here to use app-level mc object
         featured_collections += [info]
     return featured_collections
 
 @app.route('/api/collections/popular', methods=['GET'])
-@flask_login.login_required
 @api_error_handler
 def api_popular_collections():
     popular_collections = _cached_popular_collections()
