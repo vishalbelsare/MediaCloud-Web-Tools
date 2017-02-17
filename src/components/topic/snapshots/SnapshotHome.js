@@ -8,7 +8,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import AppButton from '../../common/AppButton';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import { generateSnapshot } from '../../../actions/topicActions';
+import { generateSnapshot, fetchTopicSummary } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import ComingSoon from '../../common/ComingSoon';
 import SnapshotIcon from '../../common/icons/SnapshotIcon';
@@ -81,7 +81,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
           (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
-          dispatch(push(`/topics/${ownProps.params.topicId}/summary`));
+          dispatch(fetchTopicSummary(ownProps.params.topicId))  // update the topic so that we see the msg that a new snapshot is being generated up top
+            .then(() => dispatch(push(`/topics/${ownProps.params.topicId}/summary`)));
         } else {
           // was completed far too quickly, or was an error
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.snapshotFailed) }));
