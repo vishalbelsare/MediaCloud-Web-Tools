@@ -16,7 +16,6 @@ const TopicWarning = props => (
 );
 
 TopicWarning.propTypes = {
-  intl: React.PropTypes.object.isRequired,
   children: React.PropTypes.node.isRequired,
 };
 
