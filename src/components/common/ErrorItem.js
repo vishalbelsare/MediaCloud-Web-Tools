@@ -20,7 +20,7 @@ class ErrorItem extends React.Component {
     let messageContent = message;
     let detailsContent = null;
     if (isLowLevelError) {
-      if (message.includes('Invalid API key or authentication cookie')) {
+      if (message.includes('Invalid API key or authentication cookie') || message.includes('Internal Server Error')) {
         messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
       } else {
         messageContent = <FormattedMessage {...localMessages.internalError} />;
