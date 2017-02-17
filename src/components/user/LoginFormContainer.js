@@ -35,8 +35,8 @@ class LoginContainer extends React.Component {
 
 LoginContainer.propTypes = {
   isLoggedIn: React.PropTypes.bool.isRequired,
-  location: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object,
 };
 
 LoginContainer.contextTypes = {

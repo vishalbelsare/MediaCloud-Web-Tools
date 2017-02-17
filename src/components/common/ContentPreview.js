@@ -40,7 +40,6 @@ const ContentPreview = (props) => {
 
 ContentPreview.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string,
   icon: React.PropTypes.object,
   linkDisplay: React.PropTypes.func,
@@ -48,8 +47,6 @@ ContentPreview.propTypes = {
   items: React.PropTypes.array.isRequired,
   classStyle: React.PropTypes.string,
   helpButton: React.PropTypes.node,
-  // from dispatch
-  handleClick: React.PropTypes.func.isRequired,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
 };

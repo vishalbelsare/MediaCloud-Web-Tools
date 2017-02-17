@@ -74,7 +74,7 @@ const LoginFormComponent = (props) => {
 LoginFormComponent.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object,
   handleSubmit: React.PropTypes.func.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   // from state

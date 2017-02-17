@@ -32,7 +32,7 @@ import InfluentialWordsContainer from '../components/topic/words/InfluentialWord
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
 
-    <IndexRedirect to="/home" />
+    <IndexRedirect to="/topics/public/home" />
 
     <Route path="/about" component={About} />
 
@@ -54,7 +54,6 @@ const topicRoutes = (
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words/:word" component={WordContainer} onEnter={requireAuth} />
-
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >
