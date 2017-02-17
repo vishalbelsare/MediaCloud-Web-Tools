@@ -208,6 +208,9 @@ def source_create():
                     tags=[MediaTag(result['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
                     clear_others=True)   # make sure to clear any other values set in this metadata tag set
                 tag_ids_to_add.append(metadata_tag_id)
+    if result['status'] == 'new':
+        # if it is a really new source, kick off a scraping job to find any RSS feeds
+        user_mc.feedsScrape(result['media_id'])
     return jsonify(result)
 
 
