@@ -164,3 +164,6 @@ export function systemStats() {
   return createApiPromise('/api/system-stats');
 }
 
+export function scrapeSourceFeeds(mediaId) {
+  return createPostingApiPromise(`/api/sources/${mediaId}/scrape`);
+}

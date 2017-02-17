@@ -111,6 +111,13 @@ def api_media_source_details(media_id):
     _add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify(info)
 
+@app.route('/api/sources/<media_id>/scrape', methods=['POST'])
+@flask_login.login_required
+@api_error_handler
+def api_media_source_scrape_feeds(media_id):
+    user_mc = user_mediacloud_client()
+    results = user_mc.feedsScrape(media_id)
+    return jsonify(results)
 
 @app.route('/api/sources/<media_id>/sentences/sentence-count.csv', methods=['GET'])
 @flask_login.login_required

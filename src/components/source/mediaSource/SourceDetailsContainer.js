@@ -2,14 +2,12 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import RaisedButton from 'material-ui/RaisedButton';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-// import { EyeButton } from '../../common/AppButton';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
@@ -24,6 +22,7 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
+import AppButton from '../../common/AppButton';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -186,7 +185,7 @@ class SourceDetailsContainer extends React.Component {
             <p>
               <a href={source.url}> {source.url} </a>
             </p>
-            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
           <Col lg={2} xs={12}>
             <HealthBadge isHealthy={(source.health) ? source.health.is_healthy === 1 : true} />
