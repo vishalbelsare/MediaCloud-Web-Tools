@@ -8,6 +8,12 @@ const STORY_PUBLISH_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const SOURCE_SUGGESTION_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
+const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+export function jobStatusDateToMoment(statusDate, strict = true) {
+  return moment(statusDate, JOB_STATUS_DATE_FORMAT, strict);
+}
+
 export function sourceSuggestionDateToMoment(suggestionDate, strict = true) {
   return moment(suggestionDate.substring(0, SOURCE_SUGGESTION_DATE_FORMAT.length),
     SOURCE_SUGGESTION_DATE_FORMAT, strict);

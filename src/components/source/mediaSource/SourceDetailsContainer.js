@@ -21,6 +21,9 @@ import FavoriteToggler from '../../common/FavoriteToggler';
 import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
+import { InfoNotice, ErrorNotice } from '../../common/Notice';
+import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -29,14 +32,13 @@ const localMessages = {
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
-
   favoritedCollectionsTitle: { id: 'source.details.collections.favorited.title', defaultMessage: 'Favorited Collections' },
   favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',
     defaultMessage: 'You have favorited {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
-
   feedInfo: { id: 'source.basicInfo.feeds',
-    defaultMessage: 'Content from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}. {feedListLink}.' },
+    defaultMessage: 'The content is being pulled from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}. {feedListLink}.' },
+  feedLastScrapeDate: { id: 'source.basicInfo.feed.lastScrape', defaultMessage: ' (Last scraped on {date}) ' },
   feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
@@ -48,6 +50,8 @@ const localMessages = {
   isMonitored: { id: 'source.basicInfo.isMonitored', defaultMessage: 'monitored to ensure health' },
   publicNotes: { id: 'source.basicInfo.publicNotes', defaultMessage: '<p><b>Notes</b>: {notes}</p>' },
   editorNotes: { id: 'source.basicInfo.editorNotes', defaultMessage: '<p><b>Editor\'s Notes</b>: {notes}</p>' },
+  scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
+  scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -66,13 +70,30 @@ class SourceDetailsContainer extends React.Component {
 
   render() {
     const { source, onChangeFavorited } = this.props;
-    const { formatMessage, formatNumber } = this.props.intl;
+    const { formatMessage, formatNumber, formatDate } = this.props.intl;
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
-    const editMessage = ( // TODO: permissions around this
+    let notice;
+    // pull together any relevant warnings
+    if ((source.latestScrapeState === SOURCE_SCRAPE_STATE_QUEUED) || (source.latestScrapeState === SOURCE_SCRAPE_STATE_RUNNING)) {
+      notice = (<InfoNotice><FormattedMessage {...localMessages.scraping} /></InfoNotice>);
+    } else if (source.latestScrapeState === SOURCE_SCRAPE_STATE_ERROR) {
+      notice = (<ErrorNotice><FormattedMessage {...localMessages.scrapeFailed} /></ErrorNotice>);
+    }
+    let feedScrapeMsg;
+    if (source.latestScrapeState === SOURCE_SCRAPE_STATE_COMPLETED) {
+      feedScrapeMsg = (
+        <FormattedMessage
+          {...localMessages.feedLastScrapeDate}
+          values={{ date: formatDate(jobStatusDateToMoment(source.scrape_status.job_states[0].last_updated)) }}
+        />
+      );
+    }
+    // editors are allowed to edit this source
+    const editMessage = (
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
         <span className="source-edit-link">
           •&nbsp;
@@ -82,10 +103,12 @@ class SourceDetailsContainer extends React.Component {
         </span>
       </Permissioned>
     );
+    // user is allowed to toggled favorite or not
     const favButton = (<FavoriteToggler
       isFavorited={source.isFavorite}
       onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
     />);
+    // source might be monitored by admins
     let monitoredIcon = null;
     if (source.is_monitored) {
       monitoredIcon = (
@@ -95,6 +118,7 @@ class SourceDetailsContainer extends React.Component {
         />
       );
     }
+    // gather up metadata nicely
     let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />;
     if (metadata.length > 0) {
       metadataContent = (
@@ -124,23 +148,12 @@ class SourceDetailsContainer extends React.Component {
                 {favButton}
               </small>
             </h1>
+            {notice}
             {publicNotes}
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               {editorNotes}
             </Permissioned>
             <p>
-              <FormattedMessage
-                {...localMessages.feedInfo}
-                values={{
-                  feedCount: source.feedCount,
-                  feedListLink: (
-                    <Link to={`/sources/${source.media_id}/feeds`} >
-                      <FormattedMessage {...localMessages.feedLink} />
-                    </Link>
-                  ),
-                }}
-              />
-              &nbsp;
               <FormattedMessage
                 {...localMessages.dateInfo}
                 values={{
@@ -161,6 +174,19 @@ class SourceDetailsContainer extends React.Component {
                 {...localMessages.gapInfo}
                 values={{ gapCount: (source.health) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
               />
+              &nbsp;
+              <FormattedMessage
+                {...localMessages.feedInfo}
+                values={{
+                  feedCount: source.feedCount,
+                  feedListLink: (
+                    <Link to={`/sources/${source.media_id}/feeds`} >
+                      <FormattedMessage {...localMessages.feedLink} />
+                    </Link>
+                  ),
+                }}
+              />
+              {feedScrapeMsg}
             </p>
             <p>
               <a href={source.url}> {source.url} </a>
