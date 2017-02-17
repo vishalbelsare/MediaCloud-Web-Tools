@@ -40,7 +40,7 @@ class SourceSuggestion extends React.Component {
               status: suggestion.status,
               user: suggestion.mark_auth_users_id,
               reason: suggestion.mark_reason,
-              date: formatDate(suggestion.date_marked),
+              date: formatDate(suggestion.dateMarked),
             }}
           />
         </p>
@@ -133,7 +133,7 @@ class SourceSuggestion extends React.Component {
           <p>
             <b>{suggestion.status}</b>
             &nbsp;
-            <small><FormattedDate value={suggestion.date_marked} /></small>
+            <small><FormattedDate value={suggestion.dateMarked} /></small>
           </p>
           <p>
             <FormattedMessage
@@ -141,7 +141,7 @@ class SourceSuggestion extends React.Component {
               values={{
                 name: suggestion.name,
                 user: suggestion.email,
-                date: formatDate(suggestion.date_submitted),
+                date: formatDate(suggestion.dateSubmitted),
                 reason: suggestion.reason,
               }}
             />

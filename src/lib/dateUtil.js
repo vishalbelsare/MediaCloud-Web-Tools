@@ -4,14 +4,21 @@ const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
-const STORY_PUBLISH_DATE = 'YYYY-MM-DD HH:mm:ss';
+const STORY_PUBLISH_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-function solrDateToMoment(solrDateString, string = true) {
-  return moment(solrDateString, SOLR_DATE_FORMAT, string);
+const SOURCE_SUGGESTION_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+export function sourceSuggestionDateToMoment(suggestionDate, strict = true) {
+  return moment(suggestionDate.substring(0, SOURCE_SUGGESTION_DATE_FORMAT.length),
+    SOURCE_SUGGESTION_DATE_FORMAT, strict);
 }
 
-export function storyPubDateToTimestamp(solrDateString, string = true) {
-  return moment(solrDateString, STORY_PUBLISH_DATE, string).valueOf();
+function solrDateToMoment(solrDateString, strict = true) {
+  return moment(solrDateString, SOLR_DATE_FORMAT, strict);
+}
+
+export function storyPubDateToTimestamp(solrDateString, strict = true) {
+  return moment(solrDateString, STORY_PUBLISH_DATE_FORMAT, strict).valueOf();
 }
 
 function gapDateToMomemt(gapDateString, strict = true) {
