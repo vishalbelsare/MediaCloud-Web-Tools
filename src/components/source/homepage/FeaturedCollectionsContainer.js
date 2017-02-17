@@ -36,14 +36,16 @@ const FeaturedCollectionsContainer = (props) => {
   }
 
   return (
-    <DataCard>
-      <h2>
-        <FormattedMessage {...localMessages.mainTitle} />
-      </h2>
-      <div className="featured-collections">
-        {content}
-      </div>
-    </DataCard>
+    <div className="featured-collections">
+      <DataCard>
+        <h2>
+          <FormattedMessage {...localMessages.mainTitle} />
+        </h2>
+        <div>
+          {content}
+        </div>
+      </DataCard>
+    </div>
   );
 };
 

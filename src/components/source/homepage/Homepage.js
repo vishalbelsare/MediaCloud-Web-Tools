@@ -5,13 +5,15 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
-import LoginContainer from '../../user/LoginFormContainer';
+import DataCard from '../../common/DataCard';
+import LoginForm from '../../user/LoginForm';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'Explore the featured collections below, or your favorited sources and collections to the left.' },
   browse: { id: 'sources.intro.browse', defaultMessage: 'Browse by Category' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
+  loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
 const Homepage = (props) => {
@@ -19,7 +21,12 @@ const Homepage = (props) => {
   if (props.user.isLoggedIn) {
     sideBarContent = <FavoriteSourcesAndCollectionsContainer />;
   } else {
-    sideBarContent = <LoginContainer />;
+    sideBarContent = (
+      <DataCard>
+        <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
+        <LoginForm />
+      </DataCard>
+    );
   }
   return (
     <Grid>
