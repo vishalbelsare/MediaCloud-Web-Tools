@@ -83,6 +83,7 @@ class SourceDetailsContainer extends React.Component {
     } else if (source.latestScrapeState === SOURCE_SCRAPE_STATE_ERROR) {
       notice = (<ErrorNotice><FormattedMessage {...localMessages.scrapeFailed} /></ErrorNotice>);
     }
+    // show them the last feed scrape date, if there was a successfull one
     let feedScrapeMsg;
     if (source.latestScrapeState === SOURCE_SCRAPE_STATE_COMPLETED) {
       feedScrapeMsg = (
@@ -92,22 +93,6 @@ class SourceDetailsContainer extends React.Component {
         />
       );
     }
-    // editors are allowed to edit this source
-    const editMessage = (
-      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <span className="source-edit-link">
-          •&nbsp;
-          <Link to={`/sources/${source.media_id}/edit`} >
-            <FormattedMessage {...messages.edit} />
-          </Link>
-        </span>
-      </Permissioned>
-    );
-    // user is allowed to toggled favorite or not
-    const favButton = (<FavoriteToggler
-      isFavorited={source.isFavorite}
-      onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
-    />);
     // source might be monitored by admins
     let monitoredIcon = null;
     if (source.is_monitored) {
@@ -143,9 +128,19 @@ class SourceDetailsContainer extends React.Component {
               <small className="subtitle">
                 ID #{source.media_id}
                 {publicMessage}
-                {editMessage}
+                <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+                  <span className="source-edit-link">
+                    •&nbsp;
+                    <Link to={`/sources/${source.media_id}/edit`} >
+                      <FormattedMessage {...messages.edit} />
+                    </Link>
+                  </span>
+                </Permissioned>
                 {monitoredIcon}
-                {favButton}
+                <FavoriteToggler
+                  isFavorited={source.isFavorite}
+                  onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
+                />
               </small>
             </h1>
             {notice}
