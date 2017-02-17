@@ -1,0 +1,29 @@
+.notice {
+
+  padding: 16px;
+  font-size: 16px;
+  
+  a {
+    color: rgb(0,0,0);
+    text-decoration: underline;
+  }
+
+  span.material-icons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  &.info-notice {
+    background-color: $material-green500;
+  }
+  &.warning-notice {
+    background-color: $material-orange500;
+  }
+  &.error-notice {
+    background-color: $material-red500;
+  }
+
+}
