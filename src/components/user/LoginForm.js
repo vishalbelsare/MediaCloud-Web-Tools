@@ -75,6 +75,7 @@ LoginFormComponent.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   location: React.PropTypes.object,
+  redirect: React.PropTypes.string,
   handleSubmit: React.PropTypes.func.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   // from state
@@ -98,7 +99,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       } else {
         // redirect to destination if there is one
         const loc = ownProps.location;
-        const redirect = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
+        let redirect;
+        if (ownProps.redirect) {
+          redirect = ownProps.redirect;
+        } else {
+          redirect = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
+        }
         if (redirect) {
           dispatch(push(redirect));
         }

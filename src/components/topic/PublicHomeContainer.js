@@ -32,7 +32,7 @@ const PublicHomeContainer = (props) => {
           <Col lg={4} xs={12}>
             <DataCard>
               <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
-              <LoginForm />
+              <LoginForm redirect="/home" />
             </DataCard>
           </Col>
         </Row>
