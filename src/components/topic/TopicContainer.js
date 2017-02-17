@@ -50,7 +50,8 @@ class TopicContainer extends React.Component {
       );
     }
     // warn user if snapshot is being generated
-    if ([TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING].contains(topicInfo.latestSnapshotState)) {
+    if ((topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_QUEUED) ||
+        (topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_RUNNING)) {
       warning = (
         <TopicWarning>
           <FormattedMessage {...localMessages.snapshotGeneratingWarning} />
