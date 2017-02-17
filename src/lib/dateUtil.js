@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+export const STORY_PUB_DATE_UNDATEABLE = 'undateable';
+
 const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
@@ -23,8 +25,12 @@ function solrDateToMoment(solrDateString, strict = true) {
   return moment(solrDateString, SOLR_DATE_FORMAT, strict);
 }
 
+export function storyPubDateToMoment(solrDateString, strict = true) {
+  return moment(solrDateString, STORY_PUBLISH_DATE_FORMAT, strict);
+}
+
 export function storyPubDateToTimestamp(solrDateString, strict = true) {
-  return moment(solrDateString, STORY_PUBLISH_DATE_FORMAT, strict).valueOf();
+  return storyPubDateToMoment(solrDateString, strict).valueOf();
 }
 
 function gapDateToMomemt(gapDateString, strict = true) {

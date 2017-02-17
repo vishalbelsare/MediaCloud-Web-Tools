@@ -8,6 +8,7 @@ import crossfilter from 'crossfilter';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import messages from '../../../resources/messages';
 import { googleFavIconUrl, storyDomainName } from '../../../lib/urlUtil';
+import { storyPubDateToMoment, STORY_PUB_DATE_UNDATEABLE } from '../../../lib/dateUtil';
 
 const localMessages = {
   storiesChartTitle: { id: 'topic.influentialStoryExplorer.storiesChart.title', defaultMessage: 'Stories Each Day in this Timespan' },
@@ -117,8 +118,8 @@ class InfluentialStoryExplorer extends React.Component {
       // clean up the data
       for (let i = 0; i < data.length; i += 1) {
         const d = data[i];
-        d.publishDate = new Date(d.publish_date.substring(0, 4), d.publish_date.substring(5, 7), d.publish_date.substring(8, 10));
-        d.publishMonth = d.publishDate.getMonth(); // pre-calculate month for better performance
+        d.publishDate = (d.publish_date === STORY_PUB_DATE_UNDATEABLE) ? null : storyPubDateToMoment(d.publish_date).toDate();
+        d.publishMonth = (d.publish_date === STORY_PUB_DATE_UNDATEABLE) ? null : d.publishDate.getMonth(); // pre-calculate month for better performance
         d.bitly_click_count = +d.bitly_click_count; // coerce to number
         d.facebook_share_count = +d.facebook_share_count;
         d.inlink_count = +d.inlink_count;
@@ -203,12 +204,16 @@ class InfluentialStoryExplorer extends React.Component {
         .dimension(publishDateDimension)
         .size(50)
         .group((d) => {
-          const format = d3.format('02d');
-          return `${d.publishDate.getFullYear()}/${format((d.publishDate.getMonth() + 1))}`;
+          let monthStr = null;
+          if (d.publishDate !== null) { // ignore undateable ones
+            const format = d3.format('02d');
+            monthStr = `${d.publishDate.getFullYear()}/${format((d.publishDate.getMonth() + 1))}`;
+          }
+          return monthStr;
         })
         .showGroups(false)
         .columns([
-          d => moment(d.publishDate).format('MMM D, YYYY'),
+          d => ((d.publishDate === null) ? 'undateable' : moment(d.publishDate).format('MMM D, YYYY')),
           d => `<img className="google-icon" src=${googleFavIconUrl(d.domain)} alt=${d.domain} />`,
           d => d.media_name,
           d => d.title,
