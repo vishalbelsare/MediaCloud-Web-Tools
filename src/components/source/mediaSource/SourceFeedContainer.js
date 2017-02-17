@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
-import { fetchSourceFeeds, scrapeSourceFeeds } from '../../../actions/sourceActions';
+import { fetchSourceFeeds, scrapeSourceFeeds, fetchSourceDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import SourceFeedTable from '../SourceFeedTable';
@@ -126,7 +126,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
           (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.scraping) }));
-          dispatch(push(`/sources/${ownProps.params.sourceId}`));
+          // update the source so the user sees the new scrape status
+          dispatch(fetchSourceDetails(ownProps.params.sourceId))
+            .then(() => dispatch(push(`/sources/${ownProps.params.sourceId}`)));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.scrapeFailed) }));
         }
