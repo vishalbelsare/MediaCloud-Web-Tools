@@ -12,6 +12,7 @@ import { generateSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import ComingSoon from '../../common/ComingSoon';
 import SnapshotIcon from '../../common/icons/SnapshotIcon';
+import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING } from '../../../reducers/sources/sources/selected/sourceDetails';
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Snapshot Builder' },
@@ -21,6 +22,7 @@ const localMessages = {
   backToTopicLink: { id: 'snapshot.builder.backToTopic.link', defaultMessage: 'back to Topic' },
   summaryTitle: { id: 'snapshot.summary.title', defaultMessage: 'Summary of Your New Snapshot' },
   summaryMessage: { id: 'snapshot.summary.text', defaultMessage: 'You have made some changes that you can only see if you generate a new Snapshot.  Here\'s a summary of those changes:' },
+  snapshotFailed: { id: 'snapshot.generate.failed', defaultMessage: 'Sorry, but we failed to start generating the snapshot' },
 };
 
 const SnapshotHome = props => (
@@ -76,11 +78,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleGenerateSnapshotRequest: () => {
     dispatch(generateSnapshot(ownProps.params.topicId))
       .then((results) => {
-        if (results.success === 1) {
+        if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
+          (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.snapshotGenerating) }));
           dispatch(push(`/topics/${ownProps.params.topicId}/summary`));
         } else {
-          // TODO: error message!
+          // was completed far too quickly, or was an error
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.snapshotFailed) }));
         }
       });
   },
