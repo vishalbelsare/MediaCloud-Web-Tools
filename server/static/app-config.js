@@ -1,4 +1,4 @@
 
 document.appConfig = {
-  online: 1,
+  online: true,
 };
