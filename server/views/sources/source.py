@@ -105,9 +105,11 @@ def api_media_source_details(media_id):
     info = _cached_media_source_details(user_mediacloud_key(), media_id,
                                         _safely_get_health_start_date(health))
     info['health'] = health
+    user_mc = user_mediacloud_client()
+    info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
     _add_user_favorite_flag_to_sources([info])
     _add_user_favorite_flag_to_collections(info['media_source_tags'])
-    return jsonify({'results': info})
+    return jsonify(info)
 
 
 @app.route('/api/sources/<media_id>/sentences/sentence-count.csv', methods=['GET'])
