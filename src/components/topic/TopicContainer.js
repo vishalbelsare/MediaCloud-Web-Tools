@@ -1,18 +1,19 @@
 import React from 'react';
 import Title from 'react-title-component';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary } from '../../actions/topicActions';
-import TopicWarning from './TopicWarning';
 import { TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING, TOPIC_SNAPSHOT_STATE_ERROR } from '../../reducers/topics/selected/info';
+import { WarningNotice } from '../common/Notice';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
   snapshotGeneratingWarning: { id: 'snapshotGenerating.warning', defaultMessage: 'We are creating a new snapshot right now. Please reload this page in a minute to automatically see the freshest data.' },
-  snapshotFailed: { id: 'snapshotFailed.warning', defaultMessage: 'We tried to generate a new snapshot, but it failed.  The error is: ' },
+  snapshotFailed: { id: 'snapshotFailed.warning', defaultMessage: 'We tried to generate a new snapshot, but it failed.' },
 };
 
 class TopicContainer extends React.Component {
@@ -40,31 +41,43 @@ class TopicContainer extends React.Component {
     // warn user if they made changes that require a new snapshot
     if (needsNewSnapshot) {
       warning = (
-        <TopicWarning>
+        <WarningNotice>
           <FormattedMessage {...localMessages.warning} />
           &nbsp;
           <Link to={`/topics/${topicId}/snapshot`}>
             <FormattedMessage {...localMessages.snapshotBuilderLink} />
           </Link>
-        </TopicWarning>
+        </WarningNotice>
       );
     }
     // warn user if snapshot is being generated
     if ((topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_QUEUED) ||
         (topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_RUNNING)) {
       warning = (
-        <TopicWarning>
+        <WarningNotice>
           <FormattedMessage {...localMessages.snapshotGeneratingWarning} />
-        </TopicWarning>
+        </WarningNotice>
       );
     }
     // error if snapshot failed
     if (TOPIC_SNAPSHOT_STATE_ERROR === topicInfo.latestSnapshotState) {
       warning = (
-        <TopicWarning>
+        <WarningNotice details={topicInfo.snapshot_status.job_states[0].message}>
           <FormattedMessage {...localMessages.snapshotFailed} />
-          {topicInfo.snapshot_status.job_states[0].message}
-        </TopicWarning>
+        </WarningNotice>
+      );
+    }
+    if (warning) {
+      warning = (
+        <div className="topic-warning">
+          <Grid>
+            <Row>
+              <Col lg={12}>
+                {warning}
+              </Col>
+            </Row>
+          </Grid>
+        </div>
       );
     }
     return (
