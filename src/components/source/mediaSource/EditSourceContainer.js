@@ -65,7 +65,7 @@ EditSourceContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
-  source: state.sources.sources.selected.sourceDetails.object,
+  source: state.sources.sources.selected.sourceDetails,
   // user: state.user,
 });
 
