@@ -5,6 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
+import { saveToNotebook } from '../../../actions/userActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
@@ -14,7 +15,7 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
+  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Topic Attention' },
   helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
   helpText: { id: 'topic.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the coverage of this Topic over time.</p>',
@@ -34,7 +35,7 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, helpButton, topicId, filters } = this.props;
+    const { total, counts, helpButton, topicId, filters, handleSaveToNotebook } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -42,6 +43,20 @@ class SentenceCountSummaryContainer extends React.Component {
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            <DownloadButton
+              tooltip={formatMessage(messages.save)}
+              onClick={() => {
+                handleSaveToNotebook(
+                  'AttentionOverTimeChart',
+                  counts,
+                  {
+                    topicId,
+                    ...filters,
+                    title: formatMessage(localMessages.title),
+                  }
+                );
+              }}
+            />
           </div>
         </Permissioned>
         <h2>
@@ -73,6 +88,7 @@ SentenceCountSummaryContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
+  handleSaveToNotebook: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -84,6 +100,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
+  },
+  handleSaveToNotebook: (type, data, info) => {
+    dispatch(saveToNotebook(type, data, info));
   },
 });
 

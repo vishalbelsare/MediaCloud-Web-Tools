@@ -48,3 +48,8 @@ export function getCookies() {
     key: cookie.load(COOKIE_KEY),
   };
 }
+
+export function saveToNotebook(type, data, info) {
+  const params = { type, data, info };
+  return createPostingApiPromise('/api/user/notebook/save', params);
+}
