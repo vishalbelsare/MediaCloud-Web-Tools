@@ -13,18 +13,24 @@ const localMessages = {
   defaultTooltipMessage: { id: 'actionmenu.defaulttooltip', defaultMessage: 'More Options' },
 };
 
-class ActionMenuButton extends React.Component {
+class ActionMenu extends React.Component {
   state = {
     backgroundColor: getBrandDarkColor(),
     isPopupOpen: false,
   };
 
   handlePopupOpenClick = (event) => {
-    event.preventDefault();
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
-      anchorEl: event.currentTarget,
-    });
+    if (event) {
+      event.preventDefault();
+      this.setState({
+        isPopupOpen: !this.state.isPopupOpen,
+        anchorEl: event.currentTarget,
+      });
+    } else {
+      this.setState({
+        isPopupOpen: !this.state.isPopupOpen,
+      });
+    }
   }
   handlePopupRequestClose = () => {
     this.setState({
@@ -47,12 +53,12 @@ class ActionMenuButton extends React.Component {
       otherProps.backgroundColor = this.state.backgroundColor;
     }
     let closeIconButton = (
-      <IconButton iconStyle={iconStyle || {}}>
+      <IconButton style={{ padding: 0, margin: 0, width: 26, height: 26 }} >
         <CloseIcon color={color} {...otherProps} />
       </IconButton>
     );
     let openIconButton = (
-      <IconButton style={{ padding: 0, border: 0, width: 26, height: 26, color }} >
+      <IconButton style={{ padding: 0, margin: 0, width: 26, height: 26 }} >
         <MoreOptionsIcon color={color} {...otherProps} />
       </IconButton>
     );
@@ -108,7 +114,7 @@ class ActionMenuButton extends React.Component {
     );
   }
 }
-ActionMenuButton.propTypes = {
+ActionMenu.propTypes = {
   onClick: React.PropTypes.func,
   topLevelButton: React.PropTypes.func,
   actionItems: React.PropTypes.array.isRequired,
@@ -121,4 +127,4 @@ ActionMenuButton.propTypes = {
   iconStyle: React.PropTypes.object,
 };
 
-export default injectIntl(ActionMenuButton);
+export default injectIntl(ActionMenu);

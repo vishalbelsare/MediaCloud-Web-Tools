@@ -13,9 +13,10 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
-import { generateParamStr, downloadSvg } from '../../../lib/apiUtil';
-import ActionMenuButton from '../../common/ActionMenuButton';
-import DownloadIcon from '../../common/icons/DownloadIcon';
+import { generateParamStr } from '../../../lib/apiUtil';
+import { downloadSvg } from '../../util/svg';
+import ActionMenu from '../../common/ActionMenu';
+
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -49,7 +50,7 @@ class WordsSummaryContainer extends React.Component {
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
-            <ActionMenuButton actionItems={menuItems} useBackgroundColor />
+            <ActionMenu actionItems={menuItems} useBackgroundColor />
           </div>
         </Permissioned>
         <h2>
@@ -64,6 +65,7 @@ class WordsSummaryContainer extends React.Component {
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
           onWordClick={handleWordCloudClick}
+          domId={WORD_CLOUD_DOM_ID}
         />
       </DataCard>
     );
