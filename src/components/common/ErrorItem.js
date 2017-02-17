@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { ErrorButton } from '../common/IconButton';
+import { ErrorNotice } from '../common/Notice';
 
 const localMessages = {
-  internalError: { id: 'errors.internal', defaultMessage: 'Internal Error 💣' },
+  internalError: { id: 'errors.internal', defaultMessage: 'Internal Error' },
   notLoggedIn: { id: 'errors.notLoggedIn', defaultMessage: 'You need to login' },
   details: { id: 'errors.internal.details', defaultMessage: 'details' },
 };
@@ -32,6 +32,7 @@ class ErrorItem extends React.Component {
       }
       detailsContent = (
         <span>
+          &nbsp;
           <a
             href={`#${formatMessage(localMessages.details)}`}
             onClick={(evt) => {
@@ -47,10 +48,10 @@ class ErrorItem extends React.Component {
     }
     return (
       <div className="error-message">
-        <ErrorButton color="#ff0000" />
-        &nbsp;
-        {messageContent}
-        {detailsContent}
+        <ErrorNotice>
+          {messageContent}
+          {detailsContent}
+        </ErrorNotice>
       </div>
     );
   }

@@ -19,12 +19,12 @@ const ErrorListContainer = (props) => {
       <div id="error-list">
         <Grid>
           <Row>
-            <Col lgOffset={3} lg={6}>
+            <Col lg={12}>
               {errors.map((error, idx) => <ErrorItem key={idx} error={error} />)}
             </Col>
           </Row>
           <Row>
-            <Col lgOffset={3} lg={6}>
+            <Col lg={12}>
               <Row end="lg">
                 <Col lg={1}>
                   <AppButton flat label={formatMessage(localMessages.dismiss)} onClick={handleDismiss} />
