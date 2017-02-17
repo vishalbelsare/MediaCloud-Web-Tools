@@ -85,8 +85,8 @@ const messages = {
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
   mediaName: { id: 'media.name', defaultMessage: 'Name' },
 
-  focus: { id: 'focus', defaultMessage: 'Focus' },
-  focusCreate: { id: 'focus.create', defaultMessage: 'create a new Focus' },
+  focus: { id: 'focus', defaultMessage: 'Subtopic' },
+  focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
 
   story: { id: 'story', defaultMessage: 'Story' },
@@ -140,8 +140,8 @@ const messages = {
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
 
-  focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
-  removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any focus' },
+  focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
+  removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any Subtopic' },
 
   menuOpenTooltip: { id: 'menu.open.tooltip', defaultMessage: 'Open Main Menu' },
   menuTitle: { id: 'menu.title', defaultMessage: 'Main Menu' },

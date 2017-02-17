@@ -7,7 +7,7 @@ import { fetchTopicFocalSetsList } from '../../../actions/topicActions';
 import { asyncContainerize } from '../../common/AsyncContainer';
 
 const localMessages = {
-  pick: { id: 'attention.focalSet.selector.intro', defaultMessage: 'Pick a Focal Set to compare the attention between the Foci.' },
+  pick: { id: 'attention.focalSet.selector.intro', defaultMessage: 'Pick a Set to compare the attention between the Subtopics.' },
   noFocalSet: { id: 'attention.focalSet.selector.none', defaultMessage: '(None)' },
 };
 

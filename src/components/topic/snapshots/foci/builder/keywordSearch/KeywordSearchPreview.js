@@ -7,7 +7,7 @@ import KeywordStoryPreviewContainer from './KeywordStoryPreviewContainer';
 
 const localMessages = {
   about: { id: 'focus.create.keyword.results.about',
-    defaultMessage: 'Here is a preview of the top stores in the Timespan of the Topic you are investigating.  Look over these results to make sure they are the types of stories you are hoping this Focus will focus in on.' },
+    defaultMessage: 'Here is a preview of the top stores in the Timespan of the Topic you are investigating.  Look over these results to make sure they are the types of stories you are hoping this Subtopic will narrow in on.' },
 };
 
 const KeywordSearchPreview = (props) => {

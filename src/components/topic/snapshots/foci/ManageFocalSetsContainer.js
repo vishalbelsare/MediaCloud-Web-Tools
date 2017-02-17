@@ -14,18 +14,18 @@ import BackLinkingControlBar from '../../BackLinkingControlBar';
 import FocusIcon from '../../../common/icons/FocusIcon';
 
 const localMessages = {
-  focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Foci' },
+  focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Subtopics' },
   focalSetsManageAbout: { id: 'focalSets.manage.about',
-    defaultMessage: 'Every Focus is part of a Focal Set. All the Foci within a Focal Set share the same Focal Technique. Our tools lets you compare Foci with a Focal Set, but they don\'t let you easily compare Foci in different Focal Sets.' },
-  removeFocalSetTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove this Focal Set?' },
-  removeFocalSetAbout: { id: 'focalSets.manage.remove.about', defaultMessage: '<p>Removing a Focal Set means that the next Snapshot you make will NOT include it.  This will NOT remove the Focal Set from this Snapshot.</p><p>Are you sure you want to remove this Focal Set? All the Foci that are part of it will be removed as well.</p>' },
+    defaultMessage: 'Every Subtopic is part of a Set. All the Subtopics within a Set share the same Technique. Our tools lets you compare Subtopics with a Set, but they don\'t let you easily compare Subtopics in different Sets.' },
+  removeFocalSetTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove this Set?' },
+  removeFocalSetAbout: { id: 'focalSets.manage.remove.about', defaultMessage: '<p>Removing a Set means that the next Snapshot you make will NOT include it.  This will NOT remove the Set from this Snapshot.</p><p>Are you sure you want to remove this Set? All the Subtopic that are part of it will be removed from the next Snapshot as well.</p>' },
   removeOk: { id: 'focalSets.manage.remove.ok', defaultMessage: 'Remove It' },
-  removeFocalSetSucceeded: { id: 'focalSets.manage.remove.succeeded', defaultMessage: 'Removed the Focal Set' },
-  removeFocalSetFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Focal Set failed :-(' },
-  removeFocusSucceeded: { id: 'focus.remove.succeeded', defaultMessage: 'Removed the Focus' },
-  removeFocusFailed: { id: 'focus.remove.failed', defaultMessage: 'Sorry, but removing the Focus failed :-(' },
+  removeFocalSetSucceeded: { id: 'focalSets.manage.remove.succeeded', defaultMessage: 'Removed the Set' },
+  removeFocalSetFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Set failed :-(' },
+  removeFocusSucceeded: { id: 'focus.remove.succeeded', defaultMessage: 'Removed the Subtopic' },
+  removeFocusFailed: { id: 'focus.remove.failed', defaultMessage: 'Sorry, but removing the Subtopic failed :-(' },
   backToSnapshotBuilder: { id: 'backToSnapshotBuilder', defaultMessage: 'back to Snapshot Builder' },
-  addFocus: { id: 'focus.add', defaultMessage: 'Add a new Focus' },
+  addFocus: { id: 'focus.add', defaultMessage: 'Add a new Subtopic' },
 };
 
 class ManageFocalSetsContainer extends React.Component {

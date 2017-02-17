@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { DeleteButton, EditButton } from '../../../common/IconButton';
 
 const localMessages = {
-  focusDelete: { id: 'focusDefinition.delete', defaultMessage: 'Delete this Focus' },
+  focusDelete: { id: 'focusDefinition.delete', defaultMessage: 'Delete this Subtopic' },
 };
 
 class FocusDefinition extends React.Component {

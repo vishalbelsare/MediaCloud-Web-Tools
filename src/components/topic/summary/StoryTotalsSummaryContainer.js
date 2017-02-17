@@ -19,7 +19,7 @@ const localMessages = {
   title: { id: 'topic.summary.storyTotals.title', defaultMessage: 'Story Totals' },
   helpTitle: { id: 'topic.summary.storyTotals.help.title', defaultMessage: 'About the Story Count' },
   helpText: { id: 'topic.summary.storyTotals.help.into',
-    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic are included within the Timespan and Focus you have are looking at now.</p>',
+    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic are included within the Timespan and Subtopic you have are looking at now.</p>',
   },
   filteredLabel: { id: 'topic.summary.storyTotals.filtered', defaultMessage: 'Filtered' },
   totalLabel: { id: 'topic.summary.storyTotals.total', defaultMessage: 'Total' },

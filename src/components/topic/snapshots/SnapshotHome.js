@@ -16,8 +16,8 @@ import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING } from '../../.
 
 const localMessages = {
   title: { id: 'snapshot.builder.title', defaultMessage: 'Snapshot Builder' },
-  aboutText: { id: 'snapshot.builder.about', defaultMessage: '<p>A Snapshot includes all the content in your Topic at one point in time.  You can\'t change the content within a Snapshot.  Anything you want to change within a Topic requires a new Snapshot to be made.  This doesn\'t take a long time, but it isn\'t instant either.</p><p>Use this Snapshot Builder to change Foci, Timespans, and any other parts of your Topic.  When you\'re ready to generate your new Snapshot, click the <b>Generate My Snapshot</b> button!' },
-  fociLink: { id: 'snapshot.builder.foci.link', defaultMessage: 'Build Foci' },
+  aboutText: { id: 'snapshot.builder.about', defaultMessage: '<p>A Snapshot includes all the content in your Topic at one point in time.  You can\'t change the content within a Snapshot.  Anything you want to change within a Topic requires a new Snapshot to be made.  This doesn\'t take a long time, but it isn\'t instant either.</p><p>Use this Snapshot Builder to change Subtopics, Timespans, and any other parts of your Topic.  When you\'re ready to generate your new Snapshot, click the <b>Generate My Snapshot</b> button!' },
+  fociLink: { id: 'snapshot.builder.foci.link', defaultMessage: 'Build Subtopics' },
   timespanLink: { id: 'snapshot.builder.timespans.link', defaultMessage: 'Build Timespans' },
   backToTopicLink: { id: 'snapshot.builder.backToTopic.link', defaultMessage: 'back to Topic' },
   summaryTitle: { id: 'snapshot.summary.title', defaultMessage: 'Summary of Your New Snapshot' },

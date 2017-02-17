@@ -13,7 +13,7 @@ import composeAsyncContainer from '../../../../common/AsyncContainer';
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Focus' },
+  title: { id: 'focus.create.setup.title', defaultMessage: 'Step 3: Describe Your Subtopic' },
 };
 
 const FocusForm3DescribeContainer = (props) => {

@@ -12,7 +12,7 @@ import messages from '../../../../../resources/messages';
 const localMessages = {
   title: { id: 'focus.create.setup.title', defaultMessage: 'Step 1: Pick a Technique' },
   about: { id: 'focus.create.setup.about',
-    defaultMessage: 'Creating a Focus lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
+    defaultMessage: 'Creating a Subtopic lets you identify sub-conversations within this Topic that you can compare to one-another. For example, in a Topic about an election, you could have a topic for coverage about each candidate.' },
 };
 
 const formSelector = formValueSelector('snapshotFocus');

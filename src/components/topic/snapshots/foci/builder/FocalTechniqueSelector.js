@@ -10,19 +10,19 @@ import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TEC
 
 const localMessages = {
   about: { id: 'focus.techniquePicker.about',
-    defaultMessage: 'You can build a Focus using a variety of Focal Techniques; pick the one that best matches your awareness of the content and goals. You can\'t change this later.' },
+    defaultMessage: 'You can build a Subtopic using a variety of Techniques; pick the one that best matches your awareness of the content and goals. You can\'t change this later.' },
   keywordName: { id: 'focus.technique.keyword.name', defaultMessage: 'Keyword Search' },
   keywordDescription: { id: 'focus.technique.keyword.description',
-    defaultMessage: 'When you know a lot about the coverage, or have some hypotheses to test, you can define a Topic by specifying a boolean keyword search.' },
+    defaultMessage: 'When you know a lot about the coverage, or have some hypotheses to test, you can define a Subtopic by specifying a boolean keyword search.' },
   referenceName: { id: 'focus.technique.reference.name', defaultMessage: 'Upload Representative Articles' },
   referenceDescription: { id: 'focus.technique.reference.description',
-    defaultMessage: 'When you have a list of stories that you think define a Focus, you can upload that list and we\'ll use it to identify similar articles within this Topic.' },
+    defaultMessage: 'When you have a list of stories that you think define a Subtopic, you can upload that list and we\'ll use it to identify similar articles within this Subtopic.' },
   manualName: { id: 'focus.technique.manual.name', defaultMessage: 'Select a Community' },
   manualDescription: { id: 'focus.technique.manual.description',
-    defaultMessage: 'When you want to slice and dice a conversation you kind of understand, we will show you a map of the sources and words and you can select a portion of the map to define as a Focus.' },
+    defaultMessage: 'When you want to slice and dice a conversation you kind of understand, we will show you a map of the sources and words and you can select a portion of the map to define as a Subtopic.' },
   automagicName: { id: 'focus.technique.automagic.name', defaultMessage: 'Auto-Magic' },
   automagicDescription: { id: 'focus.technique.automagic.description',
-    defaultMessage: 'When you aren\'t sure what is going on, we can use an algorithm to detect communities of sub-conversations within the Topic for you, creating a Focus for each.' },
+    defaultMessage: 'When you aren\'t sure what is going on, we can use an algorithm to detect communities of sub-conversations within the Topic for you, creating a Subtopic for each.' },
 };
 
 const formSelector = formValueSelector('snapshotFocus');
