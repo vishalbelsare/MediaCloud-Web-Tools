@@ -8,9 +8,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchWordWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import ActionMenuButton from '../../common/ActionMenuButton';
-// import { MoreOptionsButton } from '../../common/IconButton';
-// import DownloadIcon from '../../common/icons/DownloadIcon';
+import ActionMenu from '../../common/ActionMenu';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { downloadSvg } from '../../util/svg';
 
@@ -46,7 +44,7 @@ class WordWordsContainer extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <ActionMenuButton actionItems={menuItems} useBackgroundColor />
+          <ActionMenu actionItems={menuItems} useBackgroundColor />
         </div>
         <h2>
           <FormattedMessage {...messages.topWords} />
