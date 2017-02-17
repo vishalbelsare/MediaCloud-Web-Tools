@@ -1,29 +1,28 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { uploadSourceListFromTemplate } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import CollectionUploadConfirmer from './form/CollectionUploadConfirmer';
 import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
-  uploadSourcesFromTemplateTitle: { id: 'collections.upload.title', defaultMessage: 'Sources From Template' },
   downloadEmpty: { id: 'collections.download.emptycsv', defaultMessage: 'Download a template in CSV format' },
   downloadFull: { id: 'collections.download.fullcsv', defaultMessage: 'Download current sources in CSV format' },
-  helpTitle: { id: 'collection.upload.help.text.title',
-    defaultMessage: 'Upload a Template of Sources',
-  },
   helpText: { id: 'collection.upload.help.text',
-    defaultMessage: 'Uploaded sources with a CSV template. You can download a template by clicking the Download button.',
+    defaultMessage: 'You can modify or add sources in batch using a CSV file.  First download the CSV template by clicking the Download button.  Then edit it, and upload it.',
   },
   feedback: { id: 'collection.upload.feedback', defaultMessage: 'This upload was successful' },
 };
 class CollectionUploadSourceContainer extends React.Component {
 
-  downloadCsv = () => {
+  downloadCsv = (evt) => {
     const { myCollectionId } = this.props;
+    if (evt) {
+      evt.preventDefault();
+    }
     let url = null;
     if (myCollectionId) {
       url = `/api/collections/${myCollectionId}/sources.csv?dType=1`;
@@ -57,10 +56,26 @@ class CollectionUploadSourceContainer extends React.Component {
     } else if (this.state && this.state.confirmTemplate) {
       confirmContent = <LoadingSpinner />;
     }
+    let downloadLabel;
+    if (mysources && mysources.length > 0 && myCollectionId != null) {
+      downloadLabel = formatMessage(localMessages.downloadFull);
+    } else {
+      downloadLabel = formatMessage(localMessages.downloadEmpty);
+    }
     return (
       <div>
+        <p>
+          <FormattedMessage {...localMessages.helpText} />
+        </p>
+        <a href="#download" onClick={this.downloadCsv} >
+          {downloadLabel}
+        </a>
+        &nbsp;
+        <DownloadButton tooltip={downloadLabel} onClick={this.downloadCsv} />
+        <br />
+        <br />
+        <b><FormattedMessage {...messages.upload} />:</b> &nbsp;
         <input type="file" onChange={this.uploadCSV} ref={(input) => { this.textInput = input; }} disabled={this.state && this.state.confirmTemplate} />
-        <DownloadButton tooltip={mysources && mysources.length > 0 && myCollectionId != null ? formatMessage(localMessages.downloadFull) : formatMessage(localMessages.downloadEmpty)} onClick={this.downloadCsv} />
         { confirmContent }
       </div>
     );
@@ -78,7 +93,6 @@ CollectionUploadSourceContainer.propTypes = {
   // from parent
   // from composition
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   uploadCSVFile: React.PropTypes.func.isRequired,
 };
 
@@ -103,8 +117,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        CollectionUploadSourceContainer
-      )
+      CollectionUploadSourceContainer
     )
   );

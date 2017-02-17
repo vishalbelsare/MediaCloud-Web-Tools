@@ -135,6 +135,7 @@ const messages = {
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
   filter: { id: 'filter', defaultMessage: 'Filter' },
+  upload: { id: 'filter', defaultMessage: 'Upload' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
