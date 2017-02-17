@@ -82,7 +82,7 @@ export function collectionWordCount(id) {
 }
 
 export function similarCollections(id) {
-  return createApiPromise(`api/collections/${id}/similarCollections`);
+  return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
 export function collectionSourceStoryCounts(id) {
@@ -141,7 +141,7 @@ export function updateSourceSuggestion(params) {
 
 export function collectionUploadSourceListFromTemplate(params) {
   const acceptedParams = acceptParams(params, ['file']);
-  return createPostingApiPromise('/api/collections/uploadSourceListFromTemplate', acceptedParams);
+  return createPostingApiPromise('/api/collections/upload-sources', acceptedParams);
 }
 
 export function favoriteSource(mediaId, favorite) {

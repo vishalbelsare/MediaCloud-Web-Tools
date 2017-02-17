@@ -12,9 +12,10 @@ from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION
     isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
 from server import app, mc, db
-from server.util.request import arguments_required, form_fields_required, api_error_handler
+from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.util.mail import send_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -23,130 +24,149 @@ from server.views.sources.favorites import _add_user_favorite_flag_to_collection
 
 logger = logging.getLogger(__name__)
 
-
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ['csv']
+    filename, file_extension = os.path.splitext(filename)
+    return file_extension.lower() in ['.csv']
 
-
-@app.route('/api/collections/uploadSourceListFromTemplate', methods=['POST'])
+@app.route('/api/collections/upload-sources', methods=['POST'])
 def upload_file():
     logger.debug("inside upload");
     logger.debug("request is %s", request.method)
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
-            return jsonify({'status': 'Error', 'message': 'No file part'})
-        file = request.files['file']
+            return json_error_response('No file part')
+        uploaded_file = request.files['file']
 
-        if file.filename == '':
-            flash('No selected file')
-            return jsonify({'status': 'Error', 'message': 'No selected file'})
-        if file and allowed_file(file.filename):
+        if uploaded_file.filename == '':
+            return json_error_response('No selected file')
+        if uploaded_file and allowed_file(uploaded_file.filename):
             props = COLLECTIONS_TEMPLATE_PROPS_EDIT
-            filename = secure_filename(file.filename)
+            filename = secure_filename(uploaded_file.filename)
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
-            file.save(os.path.join('', filename))
-            with open(file.filename, 'rU') as f:
+            uploaded_file.save(os.path.join('', filename))
+            with open(uploaded_file.filename, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
-                newSources = []
-                updatedOnly = []
-                results = []
-                newWithMetaAndEmpties = []
+                new_sources = []
+                updated_only = []
+                all_results = []
                 reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
-                        newSrcs = []
-                        updatedSrcs =[]
                         # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up val
-
                         updatedSrc = line['media_id'] not in ['', None]
-                        
-
                         # decode all keys as long as there is a key  re Unicode vs ascii
                         newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
                                    k, v in line.items() if k not in ['', None] }
-                        newlineDecoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
+                        newline_decoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
                                    k, v in newline.items() if v not in ['', None] }
-
-                        if (updatedSrc):
-                            updatedOnly.append(newlineDecoded)
+                        if updatedSrc:
+                            updated_only.append(newline_decoded)
                         else:
-                            newSources.append(newlineDecoded)
-                        
+                            new_sources.append(newline_decoded)
                     except Exception as e:
                         logger.error("Couldn't process a CSV row: " + str(e))
                         return jsonify({'status': 'Error', 'message': "couldn't process a CSV row: " + str(e)})
 
-                if len(newSources) > 100:
+                if len(new_sources) > 100:
                     return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 100.'})
                 else:
-                    if len(newSources) > 0:
-                        results += crud_source_from_template(newSources, True)
-                    if len(updatedOnly) > 0:
-                        results += crud_source_from_template(updatedOnly, False)
-                    return jsonify({'results':results})
+                    audit = []
+                    if len(new_sources) > 0:
+                        audit_results, successful = _create_or_update_sources(new_sources, True)
+                        all_results += successful
+                        audit += audit_results
+                    if len(updated_only) > 0:
+                        audit_results, successful = _create_or_update_sources(updated_only, False)
+                        all_results += successful
+                        audit += audit_results
+                    _email_batch_source_update_results(audit)
+                    return jsonify({'results': all_results})
 
-    return jsonify({'status': 'Error', 'message': 'Something went wrong. Check your CSV file for formatting errors'})
+    return json_error_response('Something went wrong. Check your CSV file for formatting errors')
 
-
-def crud_source_from_template(sourceList, createNew):
+def _create_or_update_sources(source_list, create_new):
     user_mc = user_mediacloud_client()
     successful = []
     errors = []
-    sourceNoMeta = []
     logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
-    logger.debug("going to create or update these sources%s", sourceList)
+    logger.debug("going to create or update these sources%s", source_list)
 
-    for src in sourceList:
+    results = []
+    for src in source_list:
         # remove pub_country, will modify below
-        sourceNoMeta = {k: v for k, v in src.items() if k != 'pub_country'}
-        if (createNew):
-            temp = user_mc.mediaCreate([sourceNoMeta])
-            if (temp['status'] != 'error'):
+        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country'}
+        if create_new:
+            temp = user_mc.mediaCreate([source_no_meta])[0]
+            if temp['status'] != 'error':
                 successful.append(temp)
             else:
                 errors.append(temp)
+            src['status'] = temp['status']
+            src['status_message'] = temp['error'] if 'error' in temp else temp['status']
         else:
             media_id = src['media_id']
-            sourceNoMetaNoId = []
-            sourceNoMetaNoId = {k: v for k, v in sourceNoMeta.items() if k != 'media_id'}
-            temp = user_mc.mediaUpdate(media_id, sourceNoMetaNoId)
-            if (temp['success'] == 1):
+            source_no_meta_no_id = {k: v for k, v in source_no_meta.items() if k != 'media_id'}
+            temp = user_mc.mediaUpdate(media_id, source_no_meta_no_id)
+            if temp['success'] == 1:
                 successful.append(src)
             else:
                 errors.append(src)
+            src['status'] = 'existing' if temp['success'] == 1 else 'error'
+            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
+        results.append(src)
 
     logger.debug("successful :  %s", successful)
     logger.debug("errors :  %s", errors)
-    # for new sources we have status, media_id, url, error in result, merge with sourceList so we have metadata and the fields we need for the return
-    if (createNew):
-        mList = []
-        for eachdict in successful:
-            for hasEmpties in sourceList:
-                mNewDictList = {k:v for k, v in hasEmpties.items() if
-                            eachdict['url'] == hasEmpties['url']}
-                mList.append(mNewDictList)
+    # for new sources we have status, media_id, url, error in result, merge with source_list so we have metadata and the fields we need for the return
+    if create_new:
+        media_list = []
+        for source in successful:
+            for hasEmpties in source_list:
+                new_dict_list = {k: v for k, v in hasEmpties.items() if source['url'] == hasEmpties['url']}
+                media_list.append(new_dict_list)
 
-        for eachNewDict in mList:
-            for eachdict in successful:
-                missingItems = {k: v for k, v in eachdict.items() if eachNewDict['url'] == eachdict['url']}
-                if eachNewDict['url'] == eachdict['url']:
-                    eachNewDict.update(missingItems)
+        for new_source in media_list:
+            for source in successful:
+                missing_items = {k: v for k, v in source.items() if new_source['url'] == source['url']}
+                if new_source['url'] == source['url']:
+                    new_source.update(missing_items)
 
-        return updateMetaDataForSources(mList)
-
+        return results, update_source_list_metadata(media_list)
 
     #if a successful update, just return what we have, success
-    return updateMetaDataForSources(successful)
+    return results, update_source_list_metadata(successful)
+
+def _email_batch_source_update_results(results):
+    summary = "\n".join([s['url']+" - "+s['status']+" ("+s['status_message']+")" for s in results])
+    content = """
+Hi,
+
+You just uploaded a bunch of sources to a collection.  By doing this, you updated or created
+{count} sources.  Here is a summary of how that went.
+
+{summary}
+
+Sincerely,
+
+Your friendly Media Cloud Source Manager server
+
+https://topics.mediacloud.org
+"""
+    send_email('no-reply@mediacloud.org',
+               [user_name()],
+               '[Media Cloud] batch source update results',
+               content.format(
+                   count=len(results),
+                   summary=summary
+               ))
 
 # this only adds/replaces metadata with values (does not remove)
-def updateMetaDataForSources(sourceList):
+def update_source_list_metadata(source_list):
     user_mc = user_mediacloud_client()
     tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
-    for source in sourceList:
+    for source in source_list:
         if 'pub_country' in source:
             metadata_tag_id = source['pub_country'] 
             if metadata_tag_id not in ['', None]:
@@ -161,45 +181,42 @@ def updateMetaDataForSources(sourceList):
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
-    return sourceList
+    return source_list
 
 
 @app.route('/api/collections/<collection_id>/metadatacoverage.csv')
 @flask_login.login_required
 @api_error_handler
 def api_metadata_download(collection_id):
-    user_mc = user_mediacloud_client()
-    info = user_mc.tag(collection_id)
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
 
-    metadataItems = []
-    for eachDict in all_media:
-        for eachItem in eachDict['media_source_tags']:
+    metadata_items = []
+    for each_dict in all_media:
+        for eachItem in each_dict['media_source_tags']:
             if isMetaDataTagSet(eachItem['tag_sets_id']):
                 found = False
-                for dictItem in metadataItems:
+                for dictItem in metadata_items:
                     if dictItem['metadataId'] == eachItem['tag_sets_id']:
                         temp = dictItem['tagged']
                         dictItem.update({'tagged': temp + 1})
                         found = True
                 if not found:
-                    metadataItems.append(
+                    metadata_items.append(
                         {'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
 
-    for i in metadataItems:
+    for i in metadata_items:
         temp = len(all_media) - i['tagged']
         i.update({'notTagged': temp})
 
     props = ['metadataCoverage', 'tagged', 'notTagged']
     filename = "metadataCoverageForCollection" + collection_id + ".csv"
-    return csv.stream_response(metadataItems, props, filename)
+    return csv.stream_response(metadata_items, props, filename)
 
 
 @app.route('/api/collections/set/<tag_sets_id>', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_collection_set(tag_sets_id):
-    user_mc = user_mediacloud_client()
     info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
     _add_user_favorite_flag_to_collections(info)
     return jsonify(info)
@@ -238,7 +255,6 @@ def api_collections_by_ids():
     collIdArray = request.args['coll[]'].split(',')
     sources_list = []
     for tagsId in collIdArray:
-        info = {}
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
         info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes':m['public_notes']} for m in all_media]
         _add_user_favorite_flag_to_sources(info)
@@ -445,7 +461,6 @@ def collection_sentence_count_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def geo_geography(collection_id):
-    info = {}
     info['geography'] = cached_geotag_count(user_mediacloud_key(), 'tags_id_media:' + str(collection_id))
     return jsonify({'results': info})
 
@@ -476,7 +491,7 @@ def collection_wordcount_csv(collection_id):
                                 "tags_id_media")
 
 
-@app.route('/api/collections/<collection_id>/similarCollections', methods=['GET'])
+@app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def similarCollections(collection_id):
