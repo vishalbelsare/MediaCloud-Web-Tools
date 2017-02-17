@@ -32,7 +32,6 @@ def public_topic_list(topic_list):
             all_public_topics.append(topic)
     return jsonify({"topics": all_public_topics})
 
-
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
