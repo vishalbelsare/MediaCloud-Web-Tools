@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
-import { saveToNotebook } from '../../../actions/userActions';
+import composeSaveableContainer from '../../common/SaveableContainer';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
@@ -35,34 +35,29 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, helpButton, topicId, filters, handleSaveToNotebook } = this.props;
+    const { total, counts, helpButton, topicId, filters, setDataToSave, savedFeedback, saveToNotebookButton } = this.props;
     const { formatMessage } = this.props.intl;
+    setDataToSave({
+      type: 'AttentionOverTimeChart',
+      data: counts,
+      topicId,
+      ...filters,
+      title: formatMessage(localMessages.title),
+    });
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-            <DownloadButton
-              tooltip={formatMessage(messages.save)}
-              onClick={() => {
-                handleSaveToNotebook(
-                  'AttentionOverTimeChart',
-                  counts,
-                  {
-                    topicId,
-                    ...filters,
-                    title: formatMessage(localMessages.title),
-                  }
-                );
-              }}
-            />
+            {saveToNotebookButton}
           </div>
         </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
+        {savedFeedback}
         <AttentionOverTimeChart
           total={total}
           data={counts}
@@ -78,6 +73,9 @@ SentenceCountSummaryContainer.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
+  saveToNotebookButton: React.PropTypes.node.isRequired,
+  savedFeedback: React.PropTypes.node.isRequired,
+  setDataToSave: React.PropTypes.func.isRequired,
   // passed in
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -88,7 +86,6 @@ SentenceCountSummaryContainer.propTypes = {
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
-  handleSaveToNotebook: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -100,9 +97,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
     dispatch(fetchTopicSentenceCounts(props.topicId, props.filters));
-  },
-  handleSaveToNotebook: (type, data, info) => {
-    dispatch(saveToNotebook(type, data, info));
   },
 });
 
@@ -119,7 +113,9 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
-          SentenceCountSummaryContainer
+          composeSaveableContainer(
+            SentenceCountSummaryContainer
+          )
         )
       )
     )

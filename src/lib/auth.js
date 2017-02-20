@@ -49,7 +49,7 @@ export function getCookies() {
   };
 }
 
-export function saveToNotebook(type, data, info) {
-  const params = { type, data, info };
+export function saveToNotebook(content) {
+  const params = { content: JSON.stringify(content) };
   return createPostingApiPromise('/api/user/notebook/save', params);
 }

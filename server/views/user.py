@@ -45,19 +45,15 @@ def permissions_for_user():
     return user_mc.userPermissionsList()
 
 @app.route('/api/user/notebook/save', methods=['POST'])
-@form_fields_required('type', 'data', 'info')
+@form_fields_required('content')
 @api_error_handler
 def notebook_add():
-    entry = {
-        'type': request.form['type'],
-        'data': json.decode(request.form['data']),
-        'info': json.decode(request.form['info'])
-    }
-    results = db.save_notebook_entry(auth.user_name(), entry)
-    return jsonify(results)
+    content = json.loads(request.form['content'])
+    object_id = db.save_notebook_entry(auth.user_name(), content)
+    return jsonify({'id': str(object_id)})
 
 @app.route('/api/user/notebook/<entry_id>', methods=['GET'])
 @api_error_handler
 def notebook_view(entry_id):
-    entry = db.load_notebook_entry(entry_id)
-    return jsonify(entry)
+    object = db.load_notebook_entry(entry_id)
+    return jsonify(object)
