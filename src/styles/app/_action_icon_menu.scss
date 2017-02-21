@@ -1,8 +1,13 @@
 
+.action-icon-menu {
+	float: right;
+	margin-left: 10px;
+}
+
 .action-icon-menu-item {
 	line-height: 28px !important;
 	min-height: 28px !important;
-	width: 200px !important;
+	padding: 10px !important;
 
 	button {
 		margin: 0 !important;
@@ -15,4 +20,3 @@
 		}
 	}
 }
-

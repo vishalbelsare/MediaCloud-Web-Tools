@@ -3,11 +3,13 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import PublicTopicListContainer from './list/PublicTopicListContainer';
-import LoginFormContainer from '../user/LoginFormContainer';
+import DataCard from '../common/DataCard';
+import LoginForm from '../user/LoginForm';
 import TopicIcon from '../common/icons/TopicIcon';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Explore Public Topics' },
+  loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
 const PublicHomeContainer = (props) => {
@@ -28,7 +30,10 @@ const PublicHomeContainer = (props) => {
             <PublicTopicListContainer />
           </Col>
           <Col lg={4} xs={12}>
-            <LoginFormContainer />
+            <DataCard>
+              <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
+              <LoginForm redirect="/home" />
+            </DataCard>
           </Col>
         </Row>
       </Grid>

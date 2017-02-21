@@ -2,13 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import ControlBar from './controlbar/SourceControlBar';
+import SourceControlBar from './controlbar/SourceControlBar';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../lib/auth';
 
 const PageWrapper = (props) => {
   const { children, goToAdvancedSearch } = props;
   return (
     <div>
-      <ControlBar onAdvancedSearchSelected={goToAdvancedSearch} />
+      <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+        <SourceControlBar onAdvancedSearchSelected={goToAdvancedSearch} />
+      </Permissioned>
       {children}
     </div>
   );

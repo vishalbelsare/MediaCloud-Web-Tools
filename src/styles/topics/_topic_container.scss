@@ -3,21 +3,7 @@
 .topic-container {
 
   .topic-warning {
-    background-color: $warning-color;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 16px;
-    a {
-      color: rgb(0,0,0);
-      text-decoration: underline;
-    }
-    span.material-icons {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
+    background-color: $material-orange500;
   }
 
   .public-topic-summary {

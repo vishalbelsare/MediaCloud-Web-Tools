@@ -16,41 +16,21 @@ class ErrorItem extends React.Component {
 
   render() {
     const { message } = this.props.error;
-    const { formatMessage } = this.props.intl;
     const isLowLevelError = message.includes('.pm');  // includes a stack trace
     let messageContent = message;
     let detailsContent = null;
     if (isLowLevelError) {
-      if (message.includes('Invalid API key or authentication cookie')) {
+      if (message.includes('Invalid API key or authentication cookie') || message.includes('Internal Server Error')) {
         messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
       } else {
         messageContent = <FormattedMessage {...localMessages.internalError} />;
       }
-      let smallContent = null;
-      if (this.state.showDetails) {
-        smallContent = <div><small>{message}</small></div>;
-      }
-      detailsContent = (
-        <span>
-          &nbsp;
-          <a
-            href={`#${formatMessage(localMessages.details)}`}
-            onClick={(evt) => {
-              evt.preventDefault();
-              this.setState({ showDetails: !this.state.showDetails });
-            }}
-          >
-            <FormattedMessage {...localMessages.details} />
-          </a>
-          {smallContent}
-        </span>
-      );
+      detailsContent = message;
     }
     return (
       <div className="error-message">
-        <ErrorNotice>
+        <ErrorNotice details={detailsContent}>
           {messageContent}
-          {detailsContent}
         </ErrorNotice>
       </div>
     );

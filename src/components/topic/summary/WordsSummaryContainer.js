@@ -10,10 +10,13 @@ import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { ExploreButton, DownloadButton } from '../../common/IconButton';
+import { ExploreButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { downloadSvg } from '../../util/svg';
+import ActionMenu from '../../common/ActionMenu';
+
 
 const localMessages = {
   helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
@@ -21,6 +24,7 @@ const localMessages = {
     defaultMessage: '<p>This is a visualization showing the top words in your Topic.</p>',
   },
 };
+const WORD_CLOUD_DOM_ID = 'word-cloud';
 
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -37,12 +41,16 @@ class WordsSummaryContainer extends React.Component {
   render() {
     const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
+    const menuItems = [
+      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
+    ];
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
-            <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            <ActionMenu actionItems={menuItems} useBackgroundColor />
           </div>
         </Permissioned>
         <h2>
@@ -57,6 +65,7 @@ class WordsSummaryContainer extends React.Component {
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
           onWordClick={handleWordCloudClick}
+          domId={WORD_CLOUD_DOM_ID}
         />
       </DataCard>
     );

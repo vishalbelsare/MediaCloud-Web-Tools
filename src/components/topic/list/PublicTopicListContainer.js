@@ -16,8 +16,8 @@ const PublicTopicListContainer = (props) => {
           items={topics}
           itemType="topics"
           classStyle="browse-items"
-          icon={<TopicIcon height="25" />}
-          linkInfo={c => `topics/${c.topics_id}`}
+          icon={<TopicIcon height={25} />}
+          linkInfo={c => `/topics/public/${c.topics_id}/summary`}
           linkDisplay={c => c.name}
         />
       </Col>

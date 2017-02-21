@@ -17,7 +17,7 @@ import LinkMapContainer from '../components/topic/maps/LinkMapContainer';
 import CreateFocusContainer from '../components/topic/snapshots/foci/CreateFocusContainer';
 import EditFocusContainer from '../components/topic/snapshots/foci/EditFocusContainer';
 import ManageFocalSetsContainer from '../components/topic/snapshots/foci/ManageFocalSetsContainer';
-import { requireAuth } from './routes';
+import { requireAuth, redirectHomeIfLoggedIn } from './routes';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
@@ -33,7 +33,7 @@ import InfluentialWordsContainer from '../components/topic/words/InfluentialWord
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
 
-    <IndexRedirect to="/home" />
+    <IndexRedirect to="/topics/public/home" />
 
     <Route path="/about" component={About} />
 
@@ -70,7 +70,7 @@ const topicRoutes = (
 
     </Route>
 
-    <Route path="/topics/public/home" component={PublicHomeContainer} />
+    <Route path="/topics/public/home" component={PublicHomeContainer} onEnter={redirectHomeIfLoggedIn} />
     <Route path="/topics/public/:topicId" component={TopicContainer}>
       <Route path="/topics/public/:topicId/summary" component={PublicTopicSummaryContainer} />
     </Route>

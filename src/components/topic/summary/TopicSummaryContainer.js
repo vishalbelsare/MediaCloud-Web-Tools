@@ -17,6 +17,7 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 const localMessages = {
   title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
   previewTitle: { id: 'topic.summary.public.title', defaultMessage: 'Topic Preview: {name}' },
+  previewIntro: { id: 'topic.summary.public.intro', defaultMessage: 'This is a preview of our {name} topic.  It shows just a sample of the data available once you login to the Topic Mapper tool. To explore, click on a link and sign in.' },
 };
 
 class TopicSummaryContainer extends React.Component {
@@ -28,10 +29,12 @@ class TopicSummaryContainer extends React.Component {
     const { filters, topicId, topicInfo, timespan, user } = this.props;
     let content = <div />;
     let title = null;
+    let intro = null;
     if (user.isLoggedIn) {
       title = <FormattedMessage {...localMessages.title} values={{ name: topicInfo.name }} />;
     } else {
       title = <FormattedMessage {...localMessages.previewTitle} values={{ name: topicInfo.name }} />;
+      intro = (<p><FormattedMessage {...localMessages.previewIntro} values={{ name: topicInfo.name }} /></p>);
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
       content = (
@@ -39,6 +42,7 @@ class TopicSummaryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <h1>{title}</h1>
+              {intro}
             </Col>
           </Row>
           <Row>

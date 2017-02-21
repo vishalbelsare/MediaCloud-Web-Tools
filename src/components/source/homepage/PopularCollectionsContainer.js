@@ -20,7 +20,7 @@ const PopularCollectionsContainer = (props) => {
         items={collections}
         classStyle="browse-items"
         itemType="collections"
-        icon={<CollectionIcon height="25" />}
+        icon={<CollectionIcon height={25} />}
         linkInfo={c => `collections/${c.tags_id}`}
         linkDisplay={c => c.label}
       />

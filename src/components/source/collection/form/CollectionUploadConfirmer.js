@@ -9,7 +9,7 @@ const localMessages = {
     defaultMessage: 'Download Template',
   },
   confirm: { id: 'collection.media.upload.confirm',
-    defaultMessage: '{count} sources were added and/or updated successfully! Do you want to add them to this collection?',
+    defaultMessage: 'We emailed you a summary of all the media sources we created or updated. {count} sources were added and/or updated successfully! Do you want to add them to this collection?',
   },
   error: { id: 'collection.media.upload.tooMany',
     defaultMessage: 'Limit exceeded: too many {count} sources to upload. You can add up to 100 sources at a time.',
