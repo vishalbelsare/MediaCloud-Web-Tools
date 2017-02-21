@@ -1,10 +1,10 @@
-import { SAVE_TO_NOTEBOOK } from '../../actions/userActions';
+import { SAVE_TO_NOTEBOOK } from '../../actions/notebookActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
 
-const publicationCountry = createAsyncReducer({
+const current = createAsyncReducer({
   initialState: {
   },
   action: SAVE_TO_NOTEBOOK,
 });
 
-export default publicationCountry;
+export default current;

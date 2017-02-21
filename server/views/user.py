@@ -43,17 +43,3 @@ def login_with_key():
 def permissions_for_user():
     user_mc = auth.user_mediacloud_client()
     return user_mc.userPermissionsList()
-
-@app.route('/api/user/notebook/save', methods=['POST'])
-@form_fields_required('content')
-@api_error_handler
-def notebook_add():
-    content = json.loads(request.form['content'])
-    object_id = db.save_notebook_entry(auth.user_name(), content)
-    return jsonify({'id': str(object_id)})
-
-@app.route('/api/user/notebook/<entry_id>', methods=['GET'])
-@api_error_handler
-def notebook_view(entry_id):
-    object = db.load_notebook_entry(entry_id)
-    return jsonify(object)

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import messages from '../../resources/messages';
 import * as fetchConstants from '../../lib/fetchConstants';
 import { SaveButton } from './IconButton';
-import { saveToNotebook } from '../../actions/userActions';
+import { saveToNotebook } from '../../actions/notebookActions';
 import { getAppName } from '../../config';
 import { updateFeedback } from '../../actions/appActions';
 import ConfirmationDialog from '../common/ConfirmationDialog';

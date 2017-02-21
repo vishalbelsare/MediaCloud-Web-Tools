@@ -6,7 +6,6 @@ export const PERMISSION_TOPIC_READ = 'read';
 export const PERMISSION_TOPIC_WRITE = 'write';
 export const PERMISSION_TOPIC_ADMIN = 'admin';
 
-
 export const PERMISSION_LOGGED_IN = 'user';
 // can do anything
 export const PERMISSION_ADMIN = 'admin';
@@ -47,9 +46,4 @@ export function getCookies() {
     email: cookie.load(COOKIE_USERNAME),
     key: cookie.load(COOKIE_KEY),
   };
-}
-
-export function saveToNotebook(content) {
-  const params = { content: JSON.stringify(content) };
-  return createPostingApiPromise('/api/user/notebook/save', params);
 }

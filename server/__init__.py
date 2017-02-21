@@ -145,6 +145,7 @@ def index():
 # now load in the appropriate view endpoints (only on Prod)
 import server.views.user
 import server.views.stat
+import server.views.notebook.management
 server_app = settings.get('server', 'app')
 if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.collection
