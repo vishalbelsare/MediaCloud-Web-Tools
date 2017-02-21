@@ -6,6 +6,7 @@ import user from './user';
 import topics from './topics/topics';
 import sources from './sources/sources';
 import metadata from './metadata/metadata';
+import notebook from './notebook/notebook';
 
 const rootReducer = combineReducers({
   app,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   metadata,
   form,
   routing,
+  notebook,
 });
 
 export default rootReducer;

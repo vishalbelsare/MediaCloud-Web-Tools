@@ -33,8 +33,6 @@ class ManageFocalSetsContainer extends React.Component {
   state = {
     removeDialogOpen: false,
     idToRemove: null,
-    snackBarOpen: false,
-    snackBarMessage: null,
   };
 
   handleDelete = (focalSetDef) => {
@@ -49,10 +47,6 @@ class ManageFocalSetsContainer extends React.Component {
 
   doNotActuallyDelete = () => {
     this.setState({ removeDialogOpen: false, idToRemove: null });
-  }
-
-  handleRemoveSnackBarRequestClose = () => {
-    this.setState({ snackBarOpen: false, snackBarMessage: null });
   }
 
   handleFocusDefinitionDelete = (focusDef) => {

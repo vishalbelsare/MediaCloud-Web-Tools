@@ -1,4 +1,5 @@
 import React from 'react';
+import TextField from 'material-ui/TextField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import messages from '../../resources/messages';
@@ -17,6 +18,7 @@ const localMessages = {
   saveDialogText: { id: 'notebook.save.text', defaultMessage: 'You can save this data view to your notebook.  Add a note to yourself about why you want to save it.  After you save it, you\'ll be able to see a frozen-in-time version of it in your Notebook.' },
   saveInvation: { id: 'notebook.save.invitation', defaultMessage: 'Save to Your Notebook' },
   savedToNotebook: { id: 'notebook.save.confirm', defaultMessage: 'We saved this to your notebook' },
+  noteToSelf: { id: 'notebook.save.noteToSelf', defaultMessage: 'Note to self...' },
 };
 
 /**
@@ -29,7 +31,6 @@ const composeSaveableContainer = (ChildComponent) => {
   class SaveableContainer extends React.Component {
     state = {
       open: false,
-      status: fetchConstants.FETCH_INVALID,
     };
     setDataToSave = (data) => {
       this.setDataToSave = data;
@@ -38,27 +39,33 @@ const composeSaveableContainer = (ChildComponent) => {
     handleSaveButtonClick = () => this.setState({ open: true });
     handleSave = () => {
       const { handleSaveToNotebook } = this.props;
-      this.setState({ status: fetchConstants.FETCH_ONGOING });
-      handleSaveToNotebook(this.dataToSave, this.setState);
-      console.log('save!');
+      this.setState({ open: false });
+      handleSaveToNotebook(this.dataToSave);
     };
     render() {
-      console.log('render saveable');
+      const { fetchStatus, notebookEntryId } = this.props;
       const { formatMessage } = this.props.intl;
       const saveToNotebookButton = <SaveButton onClick={this.handleSaveButtonClick} />;
       let savedFeedback = null;
-      switch (this.state.status) {
+      switch (fetchStatus) {
         case fetchConstants.FETCH_ONGOING:
           savedFeedback = <WarningNotice><FormattedMessage {...localMessages.saving} /></WarningNotice>;
           break;
         case fetchConstants.FETCH_SUCCEEDED:
-          savedFeedback = <InfoNotice><FormattedMessage {...localMessages.savedToNotebook} /></InfoNotice>;
+          savedFeedback = (
+            <InfoNotice>
+              <FormattedMessage {...localMessages.savedToNotebook} />
+              &nbsp;
+              ({notebookEntryId})
+            </InfoNotice>
+          );
+          // TODO: add link based on id
           break;
         case fetchConstants.FETCH_FAILED:
           savedFeedback = <ErrorNotice><FormattedMessage {...localMessages.failed} /></ErrorNotice>;
           break;
         default:
-          savedFeedback = '';
+          savedFeedback = <p>{fetchStatus}</p>;
           break;
       }
       return (
@@ -74,9 +81,16 @@ const composeSaveableContainer = (ChildComponent) => {
             title={formatMessage(localMessages.saveDialogTitle)}
             okText={formatMessage(messages.save)}
             onOk={this.handleSave}
-            okCancel={() => this.setState({ open: false })}
+            onCancel={() => this.setState({ open: false })}
           >
             <p><FormattedMessage {...localMessages.saveDialogText} /></p>
+            <TextField
+              id="saveToNotebookNotes"
+              hintText={formatMessage(localMessages.noteToSelf)}
+              multiLine
+              fullWidth
+              rows={1}
+            />
           </ConfirmationDialog>
         </span>
       );
@@ -85,20 +99,25 @@ const composeSaveableContainer = (ChildComponent) => {
   SaveableContainer.propTypes = {
     intl: React.PropTypes.object.isRequired,
     handleSaveToNotebook: React.PropTypes.func.isRequired,
+    fetchStatus: React.PropTypes.string.isRequired,
+    notebookEntryId: React.PropTypes.string,
   };
-  const mapStateToProps = () => ({
+  const mapStateToProps = state => ({
+    fetchStatus: state.notebook.current.fetchStatus,
+    notebookEntryId: state.notebook.current.id,
   });
   const mapDispatchToProps = (dispatch, ownProps) => ({
-    handleSaveToNotebook: (info, setState) => {
+    handleSaveToNotebook: (info) => {
+      const notes = document.getElementById('saveToNotebookNotes').value;
       const contentToSave = {
         ...info,
         app: getAppName(),  // add app name in for filtering later
+        notes,
         // TODO: add in url hash
       };
       dispatch(saveToNotebook(contentToSave))
         .then(() => {
           updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.savedToNotebook) });
-          setState({ status: fetchConstants.FETCH_SUCCEEDED });
         });
     },
   });
@@ -110,4 +129,3 @@ const composeSaveableContainer = (ChildComponent) => {
 };
 
 export default composeSaveableContainer;
-
