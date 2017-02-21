@@ -24,20 +24,9 @@ const localMessages = {
 
 class SentenceCountSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { filters, fetchData, counts, setDataToSave } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { filters, fetchData } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId) {
       fetchData(nextProps);
-    }
-    if ((counts) && (counts !== nextProps.counts)) {
-      // update data on save container if you need to
-      setDataToSave({
-        type: 'AttentionOverTimeChart',
-        data: nextProps.counts,
-        topicId: nextProps.topicId,
-        title: formatMessage(localMessages.title),
-        ...nextProps.filters,
-      });
     }
   }
   downloadCsv = () => {
@@ -46,8 +35,18 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, helpButton, topicId, filters, savedFeedback, saveToNotebookButton } = this.props;
+    const { total, counts, helpButton, topicId, filters, savedFeedback, saveToNotebookButton, setDataToSave } = this.props;
     const { formatMessage } = this.props.intl;
+    if (counts) { // if there is data, make it ready to save
+      // update data on save container if you need to
+      setDataToSave({
+        type: 'AttentionOverTimeChart',
+        data: counts,
+        topicId,
+        title: formatMessage(localMessages.title),
+        ...filters,
+      });
+    }
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>

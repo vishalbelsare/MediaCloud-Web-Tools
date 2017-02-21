@@ -33,7 +33,7 @@ const composeSaveableContainer = (ChildComponent) => {
       open: false,
     };
     setDataToSave = (data) => {
-      this.setDataToSave = data;
+      this.dataToSave = data;
     };
     dataToSave = null;
     handleSaveButtonClick = () => this.setState({ open: true });
@@ -65,7 +65,7 @@ const composeSaveableContainer = (ChildComponent) => {
           savedFeedback = <ErrorNotice><FormattedMessage {...localMessages.failed} /></ErrorNotice>;
           break;
         default:
-          savedFeedback = <p>{fetchStatus}</p>;
+          savedFeedback = '';
           break;
       }
       return (
