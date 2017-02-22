@@ -539,14 +539,14 @@ def collection_update(collection_id):
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
     source_ids = []
     if len(request.form['sources[]']) > 0:
-        source_ids = [sid for sid in request.form['sources[]'].split(',')]
+        source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
     # first update the collection
     updated_collection = user_mc.updateTag(collection_id, name, name, description,
                                            is_static=(static == 'true'),
                                            show_on_stories=(show_on_stories == 'true'),
                                            show_on_media=(show_on_media == 'true'))
     # get the sources in the collection first, then remove and add as needed
-    existing_source_ids = [m['media_id'] for m in collection_media_list(user_mediacloud_key(), collection_id)]
+    existing_source_ids = [int(m['media_id']) for m in collection_media_list(user_mediacloud_key(), collection_id)]
     source_ids_to_remove = list(set(existing_source_ids) - set(source_ids))
     source_ids_to_add = [sid for sid in source_ids if sid not in existing_source_ids]
     logger.debug(existing_source_ids)
