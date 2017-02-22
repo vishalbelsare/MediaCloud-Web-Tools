@@ -13,7 +13,7 @@ def build_top_words(media_list, topics_id, timespans_id, remove_words=None, word
     # TODO: Add parameters for wordCount resolution (sample size, etc.)
     # Output word count run statistics to file for metadata / paradata record
     top_words = {}
-    if(remove_words == None):
+    if remove_words is None:
         remove_words=[]
     media_sources = {ms['media_id']: ms['name'] for ms in media_list}
     for m in [ms['media_id'] for ms in media_list]:
