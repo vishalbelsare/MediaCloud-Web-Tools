@@ -12,9 +12,9 @@ import { notEmptyString } from '../../../../../../lib/formValidators';
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Configure Your {technique} Focus' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Configure Your {technique} Subtopic' },
   about: { id: 'focus.create.edit.about',
-    defaultMessage: 'This Focus is driven by a keyword search.  Any stories that match to boolean query you create will be included in the Focus for analysis together.' },
+    defaultMessage: 'This Subtopic is driven by a keyword search.  Any stories that match to boolean query you create will be included in the Subtopic for analysis together.' },
   errorNoKeywords: { id: 'focalTechnique.boolean.keywords.error', defaultMessage: 'You need to specify some keywords.' },
 };
 

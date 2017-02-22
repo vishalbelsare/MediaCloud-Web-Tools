@@ -15,16 +15,16 @@ import { updateFeedback } from '../../../../../actions/appActions';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
 
 const localMessages = {
-  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Focus' },
+  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Subtopic' },
   name: { id: 'focus.create.confirm.name', defaultMessage: '<b>Name</b>: {name}' },
   description: { id: 'focus.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
-  focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Focal Technique</b>: {name}' },
-  focalSetExisting: { id: 'focus.create.confirm.focalSetExisting', defaultMessage: '<b>Focal Technique</b>: Add to existing' },
-  focalSetNew: { id: 'focus.create.confirm.focalSetNew', defaultMessage: '<b>Focal Technique</b>: Create a new one named {name} ({description}' },
+  focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Technique</b>: {name}' },
+  focalSetExisting: { id: 'focus.create.confirm.focalSetExisting', defaultMessage: '<b>Technique</b>: Add to existing' },
+  focalSetNew: { id: 'focus.create.confirm.focalSetNew', defaultMessage: '<b>Technique</b>: Create a new one named {name} ({description}' },
   unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
-  addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Focus' },
-  focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Focal Set.' },
-  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Focus.' },
+  addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Subtopic' },
+  focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Set.' },
+  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
 };
 
 const FocusForm4ConfirmContainer = (props) => {

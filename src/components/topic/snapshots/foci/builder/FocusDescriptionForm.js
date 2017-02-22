@@ -11,15 +11,15 @@ import { emptyString, nullOrUndefined } from '../../../../../lib/formValidators'
 export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
 const localMessages = {
-  describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your focus a useful name and description so other people understand what it is for. You can change these later.' },
-  describeFocalSet: { id: 'focus.create.describeSet.about', defaultMessage: 'Your Focus has to be part of a Set, which lets you compare it to other Foci in the same Set.' },
-  focusName: { id: 'focus.name', defaultMessage: 'Focus Name' },
-  focusDescription: { id: 'focus.description', defaultMessage: 'Focus Description' },
-  pickFocalSet: { id: 'focus.pickFocalSet', defaultMessage: 'Pick a Focal Set' },
-  newFocalSetName: { id: 'focus.techniquePicker.new.name', defaultMessage: 'Create a New Focal Set' },
-  newFocalSetDescription: { id: 'focus.techniquePicker.new.description', defaultMessage: 'Pick this if you want to make a new Focal Set for this Focus.  Any Foci you add to it will be based on keyword searches.' },
-  errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Focus.' },
-  errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Focal Set.' },
+  describeFocusAbout: { id: 'focus.create.describe.about', defaultMessage: 'Give your Subtopic a useful name and description so other people understand what it is for. You can change these later.' },
+  describeFocalSet: { id: 'focus.create.describeSet.about', defaultMessage: 'Your Subtopic has to be part of a Set, which lets you compare it to other Subtopics in the same Set.' },
+  focusName: { id: 'focus.name', defaultMessage: 'Subtopic Name' },
+  focusDescription: { id: 'focus.description', defaultMessage: 'Subtopic Description' },
+  pickFocalSet: { id: 'focus.pickFocalSet', defaultMessage: 'Pick a Set' },
+  newFocalSetName: { id: 'focus.techniquePicker.new.name', defaultMessage: 'Create a Set' },
+  newFocalSetDescription: { id: 'focus.techniquePicker.new.description', defaultMessage: 'Pick this if you want to make a new Set for this Subtopic.  Any Subtopics you add to it will be based on keyword searches.' },
+  errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Subtopic.' },
+  errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Set.' },
 };
 
 const formSelector = formValueSelector('snapshotFocus');

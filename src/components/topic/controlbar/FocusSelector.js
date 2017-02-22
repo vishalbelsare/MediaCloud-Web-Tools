@@ -8,11 +8,11 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { REMOVE_FOCUS } from './FocusSelectorContainer';
 
 const localMessages = {
-  pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Focus' },
-  noFocus: { id: 'focus.none', defaultMessage: 'No Focus' },
-  helpTitle: { id: 'focus.selector.help.title', defaultMessage: 'About Foci' },
+  pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
+  noFocus: { id: 'focus.none', defaultMessage: 'No Subtopic' },
+  helpTitle: { id: 'focus.selector.help.title', defaultMessage: 'About Subtopics' },
   helpText: { id: 'focus.selector.help.text',
-    defaultMessage: '<p>Foci let you slice and dice your Topic.</p>',
+    defaultMessage: '<p>Subtopics let you slice and dice your Topic.</p>',
   },
 };
 

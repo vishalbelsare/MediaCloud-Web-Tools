@@ -5,9 +5,9 @@ import composeIntlForm from '../../../../common/IntlForm';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
-  focalSetName: { id: 'focalSet.name', defaultMessage: 'Focal Set Name' },
-  focalSetDescription: { id: 'focalSet.description', defaultMessage: 'Focal Set Description' },
-  focalSetWhy: { id: 'focalSet.why', defaultMessage: 'Give your new Focal Set a name and description so others can recognize what it is for.' },
+  focalSetName: { id: 'focalSet.name', defaultMessage: 'Set Name' },
+  focalSetDescription: { id: 'focalSet.description', defaultMessage: 'Set Description' },
+  focalSetWhy: { id: 'focalSet.why', defaultMessage: 'Give your new Set a name and description so others can recognize what it is for.' },
   errorNoName: { id: 'focalSet.name.error', defaultMessage: 'You need to name this.' },
   errorNoDescription: { id: 'focalSet.description.error', defaultMessage: 'You need a description.' },
 };

@@ -14,7 +14,7 @@ const localMessages = {
   title: { id: 'topic.snapshot.keywords.storyCount.title', defaultMessage: 'Story Counts' },
   helpTitle: { id: 'topic.snapshot.keywords.storyCount.help.title', defaultMessage: 'About Story Counts' },
   helpText: { id: 'topic.snapshot.keywords.storyCount.help.text',
-    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic would be included within this Focus.</p>',
+    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic would be included within this Subtopic.</p>',
   },
   filteredLabel: { id: 'topic.snapshot.keywords.storyCount.matching', defaultMessage: 'Matching Stories' },
   totalLabel: { id: 'topic.snapshot.keywords.storyCount.total', defaultMessage: 'All Stories' },

@@ -13,7 +13,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 
 const localMessages = {
   title: { id: 'topic.influentialWords.title', defaultMessage: 'Influential Words' },
-  intro: { id: 'topic.influentialWords.intro', defaultMessage: 'This screen lets you compare the words most used within this Timespan to the words used with this Focus. The words on the left are the most used in this Timespan. Those on the right are the most used within this Focus (if one is set, otherwise they are the most used in the whole snapshot).' },
+  intro: { id: 'topic.influentialWords.intro', defaultMessage: 'This screen lets you compare the words most used within this Timespan to the words used with this Subtopic. The words on the left are the most used in this Timespan. Those on the right are the most used within this Subtopic (if one is set, otherwise they are the most used in the whole snapshot).' },
   filtered: { id: 'topic.influentialWords.filtered', defaultMessage: 'This Timespan' },
   unfiltered: { id: 'topic.influentialWords.unfiltered', defaultMessage: 'Overall Timespan' },
 };

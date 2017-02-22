@@ -10,7 +10,7 @@ import FocusForm4ConfirmContainer from './FocusForm4ConfirmContainer';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 
 const localMessages = {
-  backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Foci Manager' },
+  backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Subtopic Builder' },
   step0Name: { id: 'focus.create.step0Name', defaultMessage: 'Pick a Technique' },
   step1Name: { id: 'focus.create.step1Name', defaultMessage: 'Configure' },
   step2Name: { id: 'focus.create.step2Name', defaultMessage: 'Describe' },

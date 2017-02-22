@@ -7,11 +7,11 @@ import DataCard from '../../../common/DataCard';
 import FocusDefinition from './FocusDefinition';
 
 const localMessages = {
-  focalSetAdd: { id: 'focalSets.delete', defaultMessage: 'Add another Focus to this Set' },
+  focalSetAdd: { id: 'focalSets.delete', defaultMessage: 'Add another Subtopic to this Set' },
   focalSetDelete: { id: 'focalSets.delete', defaultMessage: 'Delete this entire Set' },
-  focalSetTechnique: { id: 'focalSets.technique', defaultMessage: 'Focal Technique: {technique}' },
+  focalSetTechnique: { id: 'focalSets.technique', defaultMessage: 'Technique: {technique}' },
   focusCount: { id: 'focalSets.focus.count',
-    defaultMessage: 'Number of Foci: {count, plural,\n =0 {none}\n =1 {one}\n other {#}}',
+    defaultMessage: 'Number of Subtopics: {count, plural,\n =0 {none}\n =1 {one}\n other {#}}',
   },
   focalSetName: { id: 'focalSets.name', defaultMessage: 'Set: {name}' },
   focalSetDescription: { id: 'focalSets.description', defaultMessage: 'Description: {description}' },
