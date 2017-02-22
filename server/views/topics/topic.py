@@ -41,7 +41,7 @@ def topic_summary(topics_id):
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     topic = local_mc.topic(topics_id)
     topic['snapshot_status'] = mc.topicSnapshotGenerateStatus(topics_id)    # need to know if snapshot is running
