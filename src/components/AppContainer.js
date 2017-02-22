@@ -13,7 +13,7 @@ import messages from '../resources/messages';
 import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
-import ErrorListContainer from './common/ErrorListContainer';
+import AppNoticesContainer from './common/AppNoticesContainer';
 import { ErrorNotice } from './common/Notice';
 
 const localMessages = {
@@ -46,7 +46,7 @@ const AppContainer = (props) => {
   return (
     <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
-      <ErrorListContainer />
+      <AppNoticesContainer />
       <header>
         <BrandToolbar
           backgroundColor={brandColors.light}

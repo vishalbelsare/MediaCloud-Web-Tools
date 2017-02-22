@@ -2,25 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
-import { dismissErrors } from '../../actions/appActions';
+import { dismissNotices } from '../../actions/appActions';
 import { CloseButton } from '../common/IconButton';
-import ErrorItem from './ErrorItem';
+import AppNotice from './AppNotice';
 
 const localMessages = {
-  dismiss: { id: 'errors.dismiss', defaultMessage: 'dismiss' },
+  dismiss: { id: 'notices.dismiss', defaultMessage: 'dismiss' },
 };
 
-const ErrorListContainer = (props) => {
-  const { errors, handleDismiss } = props;
+const AppNoticesContainer = (props) => {
+  const { notices, handleDismiss } = props;
   const { formatMessage } = props.intl;
   let content = null;
-  if (errors.length > 0) {
+  if (notices.length > 0) {
     content = (
-      <div id="error-list">
+      <div id="app-notice-list">
         <Grid>
           <Row>
             <Col lg={10}>
-              {errors.map((error, idx) => <ErrorItem key={idx} error={error} />)}
+              {notices.map((notice, idx) => <AppNotice key={idx} info={notice} />)}
             </Col>
             <Col lg={2}>
               <CloseButton
@@ -37,33 +37,33 @@ const ErrorListContainer = (props) => {
   return content;
 };
 
-ErrorListContainer.propTypes = {
+AppNoticesContainer.propTypes = {
   // from parent
   // from context
   intl: React.PropTypes.object.isRequired,
   // state
-  errors: React.PropTypes.array,
+  notices: React.PropTypes.array,
   // from dispatch
   handleDismiss: React.PropTypes.func.isRequired,
 };
 
-ErrorListContainer.contextTypes = {
+AppNoticesContainer.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  errors: state.app.errors,
+  notices: state.app.notices,
 });
 
 const mapDispatchToProps = dispatch => ({
   handleDismiss: () => {
-    dispatch(dismissErrors());
+    dispatch(dismissNotices());
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      ErrorListContainer
+      AppNoticesContainer
     )
   );

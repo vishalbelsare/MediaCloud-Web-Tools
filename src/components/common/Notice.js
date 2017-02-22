@@ -2,9 +2,9 @@ import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-const LEVEL_INFO = 'info';
-const LEVEL_WARNING = 'warning';
-const LEVEL_ERROR = 'error';
+export const LEVEL_INFO = 'info';
+export const LEVEL_WARNING = 'warning';
+export const LEVEL_ERROR = 'error';
 
 const localMessages = {
   details: { id: 'errors.internal.details', defaultMessage: 'details' },

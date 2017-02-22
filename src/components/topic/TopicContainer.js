@@ -1,13 +1,12 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary } from '../../actions/topicActions';
+import { addNotice } from '../../actions/appActions';
 import { TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING, TOPIC_SNAPSHOT_STATE_ERROR } from '../../reducers/topics/selected/info';
-import { WarningNotice } from '../common/Notice';
+import { LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
@@ -17,74 +16,62 @@ const localMessages = {
 };
 
 class TopicContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    const { topicId, selectNewTopic } = this.props;
-    if ((nextProps.topicId !== topicId)) {
-      // console.log('componentWillReceiveProps');
-      selectNewTopic(topicId);
+  componentWillMount() {
+    const { topicInfo, needsNewSnapshot, addAppNotice } = this.props;
+    const { formatMessage } = this.props.intl;
+    // warn user if they made changes that require a new snapshot
+    if (needsNewSnapshot) {
+      addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
+    }
+    // warn user if snapshot is being generated
+    if ((topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_QUEUED) ||
+        (topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_RUNNING)) {
+      addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.snapshotGeneratingWarning) });
+    }
+    // error if snapshot failed
+    if (TOPIC_SNAPSHOT_STATE_ERROR === topicInfo.latestSnapshotState) {
+      addAppNotice({
+        level: LEVEL_ERROR,
+        message: formatMessage(localMessages.snapshotFailed),
+        details: topicInfo.snapshot_status.job_states[0].message,
+      });
     }
   }
-/*
-  shouldComponentUpdate(nextProps) {
-    const { topicId } = this.props;
-    return nextProps.topicId !== topicId;
+  componentWillReceiveProps(nextProps) {
+    const { topicId, topicInfo, selectNewTopic, needsNewSnapshot, addAppNotice } = this.props;
+    const { formatMessage } = this.props.intl;
+    if ((nextProps.topicId !== topicId)) {
+      selectNewTopic(topicId);
+      // warn user if they made changes that require a new snapshot
+      if (needsNewSnapshot) {
+        addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
+      }
+      // warn user if snapshot is being generated
+      if ((topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_QUEUED) ||
+          (topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_RUNNING)) {
+        addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.snapshotGeneratingWarning) });
+      }
+      // error if snapshot failed
+      if (TOPIC_SNAPSHOT_STATE_ERROR === topicInfo.latestSnapshotState) {
+        addAppNotice({
+          level: LEVEL_ERROR,
+          message: formatMessage(localMessages.snapshotFailed),
+          details: topicInfo.snapshot_status.job_states[0].message,
+        });
+      }
+    }
   }
-*/
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo, topicId, needsNewSnapshot } = this.props;
+    const { children, topicInfo } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
-    let warning = null;
-    // warn user if they made changes that require a new snapshot
-    if (needsNewSnapshot) {
-      warning = (
-        <WarningNotice>
-          <FormattedMessage {...localMessages.warning} />
-          &nbsp;
-          <Link to={`/topics/${topicId}/snapshot`}>
-            <FormattedMessage {...localMessages.snapshotBuilderLink} />
-          </Link>
-        </WarningNotice>
-      );
-    }
-    // warn user if snapshot is being generated
-    if ((topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_QUEUED) ||
-        (topicInfo.latestSnapshotState === TOPIC_SNAPSHOT_STATE_RUNNING)) {
-      warning = (
-        <WarningNotice>
-          <FormattedMessage {...localMessages.snapshotGeneratingWarning} />
-        </WarningNotice>
-      );
-    }
-    // error if snapshot failed
-    if (TOPIC_SNAPSHOT_STATE_ERROR === topicInfo.latestSnapshotState) {
-      warning = (
-        <WarningNotice details={topicInfo.snapshot_status.job_states[0].message}>
-          <FormattedMessage {...localMessages.snapshotFailed} />
-        </WarningNotice>
-      );
-    }
-    if (warning) {
-      warning = (
-        <div className="topic-warning">
-          <Grid>
-            <Row>
-              <Col lg={12}>
-                {warning}
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      );
-    }
     return (
       <div className="topic-container">
         <div>
           <Title render={titleHandler} />
-          {warning}
           {children}
         </div>
       </div>
@@ -101,6 +88,7 @@ TopicContainer.propTypes = {
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   selectNewTopic: React.PropTypes.func.isRequired,
+  addAppNotice: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
@@ -117,6 +105,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  addAppNotice: (info) => {
+    dispatch(addNotice(info));
+  },
   selectNewTopic: (topicId) => {
     dispatch(selectTopic(topicId));
   },

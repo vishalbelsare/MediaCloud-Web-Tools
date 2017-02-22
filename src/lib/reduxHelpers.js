@@ -1,6 +1,7 @@
 import { resolve, reject } from 'redux-simple-promise';
 import * as fetchConstants from './fetchConstants';
-import { addError } from '../actions/appActions';
+import { addNotice } from '../actions/appActions';
+import { LEVEL_ERROR } from '../components/common/Notice';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
 export function arrayToDict(arr, keyPropertyName) {
@@ -194,7 +195,7 @@ export function errorReportingMiddleware({ dispatch }) {
       }
     }
     if (message !== null) {
-      dispatch(addError({ message }));
+      dispatch(addNotice({ level: LEVEL_ERROR, message }));
     }
     return next(action);  // Call the next dispatch method in the middleware chain.
   };
