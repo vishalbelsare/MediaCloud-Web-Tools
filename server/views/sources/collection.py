@@ -461,7 +461,9 @@ def collection_sentence_count_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def geo_geography(collection_id):
-    info['geography'] = cached_geotag_count(user_mediacloud_key(), 'tags_id_media:' + str(collection_id))
+    info = {
+        'geography': cached_geotag_count(user_mediacloud_key(), 'tags_id_media:' + str(collection_id))
+    }
     return jsonify({'results': info})
 
 
