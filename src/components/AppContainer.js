@@ -46,6 +46,7 @@ const AppContainer = (props) => {
   return (
     <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
+      <ErrorListContainer />
       <header>
         <BrandToolbar
           backgroundColor={brandColors.light}
@@ -59,7 +60,6 @@ const AppContainer = (props) => {
           showLoginButton={showLoginButton}
         />
       </header>
-      <ErrorListContainer />
       <div id="content">
         {content}
       </div>

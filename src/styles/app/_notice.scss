@@ -2,8 +2,7 @@
 
 .notice {
 
-  padding: 16px;
-  font-size: 16px;
+  font-size: 14px;
   
   a {
     color: rgb(0,0,0) !important;
@@ -26,6 +25,14 @@
   }
   &.error-notice {
     background-color: $material-red500;
+  }
+
+  small {
+    color: $material-grey900;
+    font-size: 9px;
+    line-height: 12px;
+    display: block;
+    margin-left: 30px;
   }
 
 }

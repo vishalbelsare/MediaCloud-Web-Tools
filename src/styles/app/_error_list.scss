@@ -2,25 +2,12 @@
 
 #error-list {
 
-  background-color: $material-red500;  
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background-color: $material-red500;
+  padding-top: 5px;
+  padding-bottom: 5px;
 
-  a {
-    color: rgb(0,0,0);
-  }
-
-  .error-message {
-    padding-bottom: 10px;
-    font-size: 18px;
-
-  	small {
-  	  color: $material-grey900;
-  	  font-size: 12px;
-  	  line-height: 17px;
-  	  display: block;
-  	  margin-left: 30px;
-  	}
+  .icon-button {
+    float: right;
   }
 
 }

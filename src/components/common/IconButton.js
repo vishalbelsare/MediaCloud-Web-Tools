@@ -47,13 +47,15 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       }
     }
     render() {
-      const { linkTo, onClick, color, tooltip, iconStyle } = this.props;
+      const { linkTo, onClick, color, tooltip, iconStyle, backgroundColor } = this.props;
       const { formatMessage } = this.props.intl;
       const displayTooltip = ((tooltip !== undefined) && (tooltip !== null)) ? tooltip : formatMessage(defaultTooltipMessage);
       const linkTarget = linkTo || null;
       const clickHandler = (onClick) ? this.handleClick : null;
       const otherProps = {};
-      if (useBackgroundColor === true) {
+      if (backgroundColor) {
+        otherProps.backgroundColor = backgroundColor;
+      } else if (useBackgroundColor === true) {
         otherProps.backgroundColor = this.state.backgroundColor;
       }
       return (
@@ -89,6 +91,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
     tooltip: React.PropTypes.string,
     intl: React.PropTypes.object.isRequired,
     color: React.PropTypes.string,
+    backgroundColor: React.PropTypes.string,  // overrides everything else
   };
   return injectIntl(AppIconButton);
 }

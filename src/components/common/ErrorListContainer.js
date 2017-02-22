@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import { dismissErrors } from '../../actions/appActions';
-import AppButton from '../common/AppButton';
+import { CloseButton } from '../common/IconButton';
 import ErrorItem from './ErrorItem';
 
 const localMessages = {
@@ -19,17 +19,15 @@ const ErrorListContainer = (props) => {
       <div id="error-list">
         <Grid>
           <Row>
-            <Col lg={12}>
+            <Col lg={10}>
               {errors.map((error, idx) => <ErrorItem key={idx} error={error} />)}
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <Row end="lg">
-                <Col lg={1}>
-                  <AppButton flat label={formatMessage(localMessages.dismiss)} onClick={handleDismiss} />
-                </Col>
-              </Row>
+            <Col lg={2}>
+              <CloseButton
+                onClick={handleDismiss}
+                tooltip={formatMessage(localMessages.dismiss)}
+                backgroundColor="#000000"
+              />
             </Col>
           </Row>
         </Grid>
