@@ -13,7 +13,7 @@ const sourceDetails = createAsyncReducer({
   handleSuccess: (payload) => {
     // add in a shortcut to the latest scrape state
     let latestScrapeState;
-    if (payload.scrape_status.job_states.length > 0) {
+    if (payload.scrape_status && payload.scrape_status.job_states.length > 0) {
       latestScrapeState = payload.scrape_status.job_states[0].state;
     }
     return {
