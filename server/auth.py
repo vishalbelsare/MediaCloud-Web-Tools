@@ -11,6 +11,10 @@ logger = logging.getLogger(__name__)
 
 COOKIE_USER_KEY = "mediameter_user_key"
 
+ROLE_ADMIN = 'admin';
+ROLE_MEDIA_EDIT = 'media-edit';
+ROLE_STORY_EDIT = 'story-edit';
+
 # User class
 class User(flask_login.UserMixin):
 
@@ -81,6 +85,10 @@ def login_user(user):
     flask_login.login_user(user, remember=True)
     user.create_in_db_if_needed()
     logger.debug("  login succeeded")
+
+def user_has_auth_role(role):
+    user = load_user_from_request(request)
+    return (ROLE_ADMIN in user.profile['auth_roles']) or (role in user.profile['auth_roles'])
 
 def create_and_cache_user(username, key):
     user = User(username, key)

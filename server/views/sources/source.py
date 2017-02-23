@@ -8,7 +8,7 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
 from server import app, db
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.mail import send_email
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
@@ -106,7 +106,10 @@ def api_media_source_details(media_id):
                                         _safely_get_health_start_date(health))
     info['health'] = health
     user_mc = user_mediacloud_client()
-    info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
+    if user_has_auth_role(ROLE_MEDIA_EDIT):
+        info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
+    else:
+        info['scrape_status'] = None
     _add_user_favorite_flag_to_sources([info])
     _add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify(info)
