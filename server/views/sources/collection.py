@@ -209,13 +209,16 @@ def api_metadata_download(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_set(tag_sets_id):
-    info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
+    info = _tag_set_with_public_collections(tag_sets_id)
     _add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
-
-@cache
-def _cached_collection_set_list(user_mc_key, tag_sets_id):
+def _tag_set_with_public_collections(tag_sets_id):
+    '''
+    Return a list of all the public collections in a tag set.  Not cached because this can change, and load time isn't terrible.
+    :param tag_sets_id: the tag set to query for public collections
+    :return: dict of info and list of collections in
+    '''
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
@@ -223,20 +226,18 @@ def _cached_collection_set_list(user_mc_key, tag_sets_id):
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100,
-                               public_only=True)
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
         more_tags = len(tags) != 0
-    collection_list = all_tags
+    collection_list = [t for t in all_tags if t['show_on_media'] is 1]  # double check the show_on_media because that controls public or not
     collection_list = sorted(collection_list, key=itemgetter('label'))
     return {
         'name': tag_set['label'],
         'description': tag_set['description'],
         'collections': collection_list
     }
-
 
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
