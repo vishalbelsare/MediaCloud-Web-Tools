@@ -7,7 +7,7 @@ import initializeApp from './index';
  * This serves as the primary entry point to the Media Cloud Source Manager app.
  */
 
-setVersion('1.3.2');
+setVersion('1.3.3');
 
 setAppName('sources');
 
