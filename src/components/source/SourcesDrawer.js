@@ -19,7 +19,7 @@ const localMessages = {
   emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
-  favoritedItems: { id: 'sources.menu.items.favoritedItems', defaultMessage: 'Favorited Sources and Collections' },
+  favoritedItems: { id: 'sources.menu.items.favoritedItems', defaultMessage: 'My Favorites' },
   suggestSource: { id: 'sources.menu.items.suggestSource', defaultMessage: 'Suggest a Source' },
   pendingSuggestions: { id: 'sources.menu.items.pendingSuggestions', defaultMessage: 'Pending Suggestions' },
 };
