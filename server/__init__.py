@@ -12,6 +12,7 @@ from flask_cors import CORS
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
+import tempfile
 import mediacloud
 from mediameter.cliff import Cliff
 
@@ -95,6 +96,9 @@ def create_app():
     '''
     prod_app = settings.get('server', 'app')
     my_app = Flask(__name__)
+    # set up uploading
+    my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
+    my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
     # set up webpack
     webpack_config = {
         'DEBUG': isDevMode(),

@@ -37,15 +37,14 @@ def upload_file():
         if 'file' not in request.files:
             return json_error_response('No file part')
         uploaded_file = request.files['file']
-
         if uploaded_file.filename == '':
             return json_error_response('No selected file')
         if uploaded_file and allowed_file(uploaded_file.filename):
             props = COLLECTIONS_TEMPLATE_PROPS_EDIT
-            filename = secure_filename(uploaded_file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(uploaded_file.filename))
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
-            uploaded_file.save(os.path.join('', filename))
-            with open(uploaded_file.filename, 'rU') as f:
+            uploaded_file.save(filepath)
+            with open(filepath, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 new_sources = []
@@ -82,6 +81,8 @@ def upload_file():
                         all_results += successful
                         audit += audit_results
                     _email_batch_source_update_results(audit)
+                    for media in all_results:
+                        media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
