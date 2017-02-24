@@ -61,7 +61,10 @@ def upload_file():
                                    k, v in line.items() if k not in ['', None] }
                         newline_decoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
                                    k, v in newline.items() if v not in ['', None] }
+                        empties = {k: v for k, v in newline.items() if v in ['', None] }
+                        
                         if updatedSrc:
+                            newline_decoded.update(empties)
                             updated_only.append(newline_decoded)
                         else:
                             new_sources.append(newline_decoded)
