@@ -5,6 +5,12 @@
     text {
       cursor: pointer;
     }
+    text.word.left.show{
+      	opacity: 1;
+      }
+    text.word.left.hide{
+      	opacity: .2
+      }
   }
 }
 

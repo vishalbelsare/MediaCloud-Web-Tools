@@ -110,6 +110,7 @@ class OrderedWordCloud extends React.Component {
       .attr('class', 'viz-tooltip ordered-word-cloud-tooltip')
       .style('opacity', 0);
     // start layout calculations
+
     const node = ReactFauxDOM.createElement('svg');
     if (options.fullExtent === undefined) {
       options.fullExtent = d3.extent(words, d => d.tfnorm);
@@ -126,10 +127,11 @@ class OrderedWordCloud extends React.Component {
     const wordListHeight = options.height - (2 * options.padding);
     const wordWrapper = svg.append('g')
         .attr('transform', `translate(${2 * options.padding},0)`);
+
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
       // Create words
-      wordNodes = wordWrapper.selectAll('.word')
-        .data(words.slice(0, DEFAULT_WORD_COUNT), d => d.stem)
+      wordNodes = wordWrapper.selectAll('text')
+        .data(words.slice(0, DEFAULT_WORD_COUNT), d => (d.display === true : d.stem))
         .enter()
         .append('text')
           .classed('word', true)
@@ -160,10 +162,15 @@ class OrderedWordCloud extends React.Component {
           }
         })
         .on('click', (d) => {
+          const event = d3.event;
           if ((onWordClick !== null) && (onWordClick !== undefined)) {
-            onWordClick(d);
+            onWordClick(d, d3.select(event.target));
           }
+          return null;
         });
+      // not sure how to do this right
+      wordNodes.exit().remove();
+
       // Layout
       y = 0;
       const leftHeight = this.listCloudLayout(wordNodes, innerWidth, options.fullExtent, sizeRange);

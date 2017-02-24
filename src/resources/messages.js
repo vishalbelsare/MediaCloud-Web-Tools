@@ -124,6 +124,7 @@ const messages = {
   no: { id: 'no', defaultMessage: 'No' },
   monitored: { id: 'monitored', defaultMessage: 'Monitored' },
   none: { id: 'none', defaultMessage: 'None' },
+  editWordCloud: { id: 'editWordCloud', defaultMessage: 'Edit This Word Cloud Display' },
   download: { id: 'download', defaultMessage: 'Download' },
   downloadSVG: { id: 'downloadsvg', defaultMessage: 'Download a SVG' },
   downloadCSV: { id: 'downloadcsv', defaultMessage: 'Download a CSV' },
