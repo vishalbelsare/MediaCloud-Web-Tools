@@ -121,19 +121,11 @@ def _create_or_update_sources(source_list, create_new):
     logger.debug("errors :  %s", errors)
     # for new sources we have status, media_id, url, error in result, merge with source_list so we have metadata and the fields we need for the return
     if create_new:
-        media_list = []
-        for source in successful:
-            for hasEmpties in source_list:
-                new_dict_list = {k: v for k, v in hasEmpties.items() if source['url'] == hasEmpties['url']}
-                media_list.append(new_dict_list)
-
-        for new_source in media_list:
-            for source in successful:
-                missing_items = {k: v for k, v in source.items() if new_source['url'] == source['url']}
-                if new_source['url'] == source['url']:
-                    new_source.update(missing_items)
-
-        return results, update_source_list_metadata(media_list)
+        media_by_url = { media['url']:media for media in successful }
+        for s in source_list:
+            if s['url'] in media_by_url:
+                media_by_url[s['url']].update(s)
+        return results, update_source_list_metadata(media_by_url.values())
 
     #if a successful update, just return what we have, success
     return results, update_source_list_metadata(successful)
