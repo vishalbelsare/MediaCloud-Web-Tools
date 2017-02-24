@@ -349,7 +349,7 @@ def api_collection_sources_csv(collection_id):
             src['public_notes'] = ''
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
-    filePrefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
+    filePrefix = "MC_Downloaded_Template_"
 
     what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
 
