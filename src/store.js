@@ -15,20 +15,19 @@ const middlewares = [
   errorReportingMiddleware,
 ];
 
-const store = createStore(rootReducer, {}, compose(
-  applyMiddleware(...middlewares),
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-));
-
-/*
-const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
-
-function configureStore() {
-  return createStoreWithMiddleware(rootReducer,
-        window.devToolsExtension ? window.devToolsExtension() : f => f
-  );
+function configDevelopmentStore() {
+  return createStore(rootReducer, {}, compose(
+    applyMiddleware(...middlewares),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  ));
 }
 
-const store = configureStore();
-*/
+function configProductionStore() {
+  return createStore(rootReducer, {}, compose(
+    applyMiddleware(...middlewares),
+  ));
+}
+
+const store = (process.env.NODE_ENV === 'production') ? configProductionStore() : configDevelopmentStore();
+
 export default store;

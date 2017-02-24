@@ -4,24 +4,18 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/sourceActions';
-import composeHelpfulContainer from '../common/HelpfulContainer';
 import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
 
 const localMessages = {
-  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorited Collections' },
-  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorited Sources' },
-  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'Your favorited sources' },
-  helpTitle: { id: 'favorited.help.text.title',
-    defaultMessage: 'Favorited items',
-  },
-  helpText: { id: 'favorited.help.text',
-    defaultMessage: 'Here is a list of favorited items. Click one to explore it.',
-  },
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'My Favorite Collections' },
+  favoritedCollectionsIntro: { id: 'favorited.collections.intro', defaultMessage: 'These are collections you have marked as favorites by clicking the star next to their name.  This is useful to bookmark collections you use frequently.' },
+  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'My Favorite Sources' },
+  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'These are sources you have marked as favorites by clicking the star next to their name.  This is useful to bookmark sources you use frequently.' },
 };
 
 const FavoritedContainer = (props) => {
-  const { favoritedSources, favoritedCollections, helpButton } = props;
+  const { favoritedSources, favoritedCollections } = props;
   const { formatMessage } = props.intl;
   return (
     <Grid>
@@ -31,15 +25,14 @@ const FavoritedContainer = (props) => {
             title={formatMessage(localMessages.favoritedSourcesTitle)}
             intro={formatMessage(localMessages.favoritedSourcesIntro)}
             sources={favoritedSources}
-            helpButton={helpButton}
             downloadUrl="/api/favorites/sources.csv"
           />
         </Col>
         <Col lg={6}>
           <CollectionList
             title={formatMessage(localMessages.favoritedCollectionsTitle)}
+            intro={formatMessage(localMessages.favoritedCollectionsIntro)}
             collections={favoritedCollections}
-            helpButton={helpButton}
           />
         </Col>
       </Row>
@@ -58,7 +51,6 @@ FavoritedContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -77,10 +69,8 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText])(
-        composeAsyncContainer(
-          FavoritedContainer
-        )
+      composeAsyncContainer(
+        FavoritedContainer
       )
     )
   );

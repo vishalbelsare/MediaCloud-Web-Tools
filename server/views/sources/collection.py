@@ -37,15 +37,14 @@ def upload_file():
         if 'file' not in request.files:
             return json_error_response('No file part')
         uploaded_file = request.files['file']
-
         if uploaded_file.filename == '':
             return json_error_response('No selected file')
         if uploaded_file and allowed_file(uploaded_file.filename):
             props = COLLECTIONS_TEMPLATE_PROPS_EDIT
-            filename = secure_filename(uploaded_file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(uploaded_file.filename))
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
-            uploaded_file.save(os.path.join('', filename))
-            with open(uploaded_file.filename, 'rU') as f:
+            uploaded_file.save(filepath)
+            with open(filepath, 'rU') as f:
                 reader = pycsv.DictReader(f)
                 reader.fieldnames = props
                 new_sources = []
@@ -85,6 +84,8 @@ def upload_file():
                         all_results += successful
                         audit += audit_results
                     _email_batch_source_update_results(audit)
+                    for media in all_results:
+                        media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
@@ -212,13 +213,16 @@ def api_metadata_download(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_set(tag_sets_id):
-    info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
-    _add_user_favorite_flag_to_collections(info)
+    info = _tag_set_with_public_collections(tag_sets_id)
+    _add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
-
-@cache
-def _cached_collection_set_list(user_mc_key, tag_sets_id):
+def _tag_set_with_public_collections(tag_sets_id):
+    '''
+    Return a list of all the public collections in a tag set.  Not cached because this can change, and load time isn't terrible.
+    :param tag_sets_id: the tag set to query for public collections
+    :return: dict of info and list of collections in
+    '''
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
@@ -226,20 +230,18 @@ def _cached_collection_set_list(user_mc_key, tag_sets_id):
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100,
-                               public_only=True)
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
         more_tags = len(tags) != 0
-    collection_list = all_tags
+    collection_list = [t for t in all_tags if t['show_on_media'] is 1]  # double check the show_on_media because that controls public or not
     collection_list = sorted(collection_list, key=itemgetter('label'))
     return {
         'name': tag_set['label'],
         'description': tag_set['description'],
         'collections': collection_list
     }
-
 
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
