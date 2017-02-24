@@ -8,7 +8,7 @@ import csv as pycsv
 import server.util.csv as csv
 import os
 from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  \
-    COLLECTIONS_TEMPLATE_PROPS_VIEW, COLLECTIONS_TEMPLATE_PROPS_EDIT, \
+    COLLECTIONS_TEMPLATE_PROPS_EDIT, \
     isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
 from server import app, mc, db
@@ -74,11 +74,11 @@ def upload_file():
                 else:
                     audit = []
                     if len(new_sources) > 0:
-                        audit_results, successful = _create_or_update_sources(new_sources, True)
+                        audit_results, successful = _create_or_update_sources_from_template(new_sources, True)
                         all_results += successful
                         audit += audit_results
                     if len(updated_only) > 0:
-                        audit_results, successful = _create_or_update_sources(updated_only, False)
+                        audit_results, successful = _create_or_update_sources_from_template(updated_only, False)
                         all_results += successful
                         audit += audit_results
                     _email_batch_source_update_results(audit)
@@ -86,15 +86,15 @@ def upload_file():
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
 
-def _create_or_update_sources(source_list, create_new):
+def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     user_mc = user_mediacloud_client()
     successful = []
     errors = []
     logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
-    logger.debug("going to create or update these sources%s", source_list)
+    logger.debug("going to create or update these sources%s", source_list_from_csv)
 
     results = []
-    for src in source_list:
+    for src in source_list_from_csv:
         # remove pub_country, will modify below
         source_no_meta = {k: v for k, v in src.items() if k != 'pub_country'}
         if create_new:
@@ -121,19 +121,11 @@ def _create_or_update_sources(source_list, create_new):
     logger.debug("errors :  %s", errors)
     # for new sources we have status, media_id, url, error in result, merge with source_list so we have metadata and the fields we need for the return
     if create_new:
-        media_list = []
-        for source in successful:
-            for hasEmpties in source_list:
-                new_dict_list = {k: v for k, v in hasEmpties.items() if source['url'] == hasEmpties['url']}
-                media_list.append(new_dict_list)
-
-        for new_source in media_list:
-            for source in successful:
-                missing_items = {k: v for k, v in source.items() if new_source['url'] == source['url']}
-                if new_source['url'] == source['url']:
-                    new_source.update(missing_items)
-
-        return results, update_source_list_metadata(media_list)
+        info_by_url = { source['url']:source for source in successful}
+        for source in source_list_from_csv:
+            if source['url'] in info_by_url:
+                info_by_url[source['url']].update(source)
+        return results, update_source_list_metadata(info_by_url)
 
     #if a successful update, just return what we have, success
     return results, update_source_list_metadata(successful)
@@ -325,21 +317,17 @@ def api_collection_details(collection_id):
 # either with or without editor notes
 @app.route('/api/template/sources.csv')
 @flask_login.login_required
-@arguments_required('dType')
 @api_error_handler
 def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
 
-    if request.args['dType'] == "1":
-        what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
-    else:
-        what_type_download = COLLECTIONS_TEMPLATE_PROPS_VIEW
+    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    
     return csv.stream_response(what_type_download, what_type_download, filename)
 
 
 @app.route('/api/collections/<collection_id>/sources.csv')
 @flask_login.login_required
-@arguments_required('dType')
 @api_error_handler
 def api_collection_sources_csv(collection_id):
     user_mc = user_mediacloud_client()
@@ -363,12 +351,8 @@ def api_collection_sources_csv(collection_id):
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
     filePrefix = "MC_Downloaded_Template_"
 
-    if request.args['dType'] == "1":
-        what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
-    else:
-        what_type_download = COLLECTIONS_TEMPLATE_PROPS_VIEW
-    # if from details page
-    # COLLECTIONS_TEMPLATE_PROPS_VIEW vs COLLECTIONS_TEMPLATE_PROPS_EDIT
+    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+
     return csv.stream_response(all_media, what_type_download, filePrefix, what_type_download)
 
 
