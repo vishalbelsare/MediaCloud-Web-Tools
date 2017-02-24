@@ -210,7 +210,7 @@ def api_metadata_download(collection_id):
 @api_error_handler
 def api_collection_set(tag_sets_id):
     info = _cached_collection_set_list(user_mediacloud_key(), tag_sets_id)
-    _add_user_favorite_flag_to_collections(info)
+    _add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
 
