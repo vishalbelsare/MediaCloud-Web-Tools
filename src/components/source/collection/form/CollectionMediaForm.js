@@ -7,7 +7,6 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { updateFeedback } from '../../../../actions/appActions';
 import composeIntlForm from '../../../common/IntlForm';
-import ComingSoon from '../../../common/ComingSoon';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 import CollectionUploadSourceContainer from '../CollectionUploadSourceContainer';
 import { googleFavIconUrl } from '../../../../lib/urlUtil';
@@ -24,7 +23,9 @@ const localMessages = {
   title: { id: 'collection.media.title', defaultMessage: 'Add Media Sources' },
   sourcesToInclude: { id: 'collection.media.sources', defaultMessage: 'Sources To Include' },
   tabSource: { id: 'collection.media.addSource', defaultMessage: 'Add Existing Source' },
-  tabCollection: { id: 'collection.media.addCollection', defaultMessage: 'Copy From Collection' },
+  tabSourceIntro: { id: 'collection.media.addSource.intro', defaultMessage: 'You can add individual sources to this collection by searching for their name or url:' },
+  tabCollection: { id: 'collection.media.addCollection', defaultMessage: 'Import From Collection' },
+  tabCollectionIntro: { id: 'collection.media.addCollection.intro', defaultMessage: 'You can import all the sources from another collection into this one.  This is useful for "merging" collections.  Just search for the collection to import sources from:' },
   tabUpload: { id: 'collection.media.addSpreadsheet', defaultMessage: 'Upload a Spreadsheet' },
   tabUrls: { id: 'collection.media.addURLs', defaultMessage: 'Add URLs Manually' },
   sourceUrlHint: { id: 'collection.media.addURLs.hint', defaultMessage: 'Type in the URLs of each media source, one per line.' },
@@ -97,6 +98,7 @@ class SourceSelectionRenderer extends React.Component {
               <Tabs>
                 <Tab label={<FormattedMessage {...localMessages.tabSource} />} >
                   <h3><FormattedMessage {...localMessages.tabSource} /></h3>
+                  <p><FormattedMessage {...localMessages.tabSourceIntro} /></p>
                   <SourceSearchContainer
                     searchCollections={false}
                     onMediaSourceSelected={item => this.addSources([item])}
@@ -104,6 +106,7 @@ class SourceSelectionRenderer extends React.Component {
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
                   <h3><FormattedMessage {...localMessages.tabCollection} /></h3>
+                  <p><FormattedMessage {...localMessages.tabCollectionIntro} /></p>
                   <SourceSearchContainer
                     searchSources={false}
                     onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
@@ -117,10 +120,6 @@ class SourceSelectionRenderer extends React.Component {
                     mysources={currentSources}
                     myCollectionId={editCollectionId}
                   />
-                </Tab>
-                <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
-                  <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
-                  <ComingSoon />
                 </Tab>
               </Tabs>
             </Col>
