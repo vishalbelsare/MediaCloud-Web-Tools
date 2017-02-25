@@ -28,6 +28,7 @@ class WordsSummaryContainer extends React.Component {
   }
   render() {
     const { topicId, filters, helpButton, words, handleWordCloudClick } = this.props;
+    const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
       <EditableWordCloudDataCard
@@ -35,7 +36,7 @@ class WordsSummaryContainer extends React.Component {
         explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
         downloadUrl={urlDownload}
         onViewModeClick={handleWordCloudClick}
-        title={messages.topWords}
+        title={formatMessage(messages.topWords)}
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
       />

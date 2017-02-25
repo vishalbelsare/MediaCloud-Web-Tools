@@ -10,6 +10,8 @@ import { getBrandDarkColor } from '../../styles/colors';
 import { PERMISSION_LOGGED_IN } from '../../lib/auth';
 import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
+import EditIcon from './icons/EditIcon';
+import RemoveIcon from './icons/RemoveIcon';
 
 class EditableWordCloudDataCard extends React.Component {
 
@@ -59,25 +61,28 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   render() {
-    const { words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId } = this.props;
+    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId } = this.props;
     const { formatMessage } = this.props.intl;
-    const defaultMenuItems = [
-      { text: formatMessage(messages.editWordCloud), clickHandler: () => this.toggleEditing() },
-      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(domId) },
-    ];
     let className = null;
     let clickHandler = null;
+    let editModeIcon = <EditIcon />;
     let wordsArray = words.map(w => ({ ...w, display: true }));
     if (this.state && this.state.editing && this.state.modifiableWords) {
       clickHandler = this.onEditModeClick;
       className = 'editable-word-cloud editing';
       wordsArray = this.state.modifiableWords;
+      editModeIcon = <RemoveIcon />;
     } else if (this.state && !this.state.editing && this.state.displayOnlyWords) {
       clickHandler = onViewModeClick;
       className = 'editable-word-cloud';
       wordsArray = this.state.displayOnlyWords;
+      editModeIcon = <EditIcon />;
     }
+    const defaultMenuItems = [
+      { text: formatMessage(messages.editWordCloud), icon: editModeIcon, clickHandler: () => this.toggleEditing() },
+      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(domId) },
+    ];
     return (
       <DataCard className={className}>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -87,6 +92,7 @@ class EditableWordCloudDataCard extends React.Component {
           </div>
         </Permissioned>
         <h2>
+          {title}
           {helpButton}
         </h2>
         <OrderedWordCloud
@@ -110,7 +116,7 @@ EditableWordCloudDataCard.propTypes = {
   height: React.PropTypes.number,
   maxFontSize: React.PropTypes.number,
   minFontSize: React.PropTypes.number,
-  title: React.PropTypes.object.isRequired,
+  title: React.PropTypes.string.isRequired,
   words: React.PropTypes.array.isRequired,
   itemId: React.PropTypes.string,
   downloadUrl: React.PropTypes.string,
