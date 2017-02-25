@@ -14,15 +14,16 @@ import ActionMenu from './ActionMenu';
 class EditableWordCloudDataCard extends React.Component {
 
   state = {
-    editable: false, // the id of a collection to copy
-    modifiableWords: null,
+    editing: false, // the id of a collection to copy
+    allModifiableWords: null,
+    displayOnlyWords: null,
   };
 
   onEditModeClick = (d, node) => {
     // it is easiest to change the CSS of a svg text mode by classing the text node
     const text = node.nodes()[0];
     if (text.attributes.class.nodeValue === 'word left' || text.attributes.class.nodeValue === 'word left show') {
-      text.attributes.class.nodeValue = 'word left hide';
+      text.attributes.class.nodeValue += ' hide';
     } else if (text.attributes.class.nodeValue === 'word left hide') {
       text.attributes.class.nodeValue = 'word left show';
     }
@@ -39,16 +40,16 @@ class EditableWordCloudDataCard extends React.Component {
 
       if (this.state.modifiableWords == null) {
         const initializeDisplayOfWords = words.map(w => ({ ...w, display: true }));
-        this.setState({ modifiableWords: initializeDisplayOfWords });
+        this.setState({ modifiableWords: initializeDisplayOfWords, displayOnlyWords: initializeDisplayOfWords });
       }
       // after initialization if not editing, filter words that say 'don't display'
 
-      if (this.state.modifiableWords != null && this.state.editable) {
+      if (this.state.modifiableWords != null && this.state.editing) {
         const displayOnlyWords = this.state.modifiableWords.filter(w => w.display === true);
-        this.setState({ modifiableWords: displayOnlyWords });
+        this.setState({ displayOnlyWords });
       }
 
-      this.setState({ editable: !this.state.editable });
+      this.setState({ editing: !this.state.editing });
     }
   };
 
@@ -67,13 +68,15 @@ class EditableWordCloudDataCard extends React.Component {
     ];
     let className = null;
     let clickHandler = null;
-    const wordsArray = (this.state && this.state.modifiableWords) ? this.state.modifiableWords : words;
-    if (this.state.editable) {
+    let wordsArray = words.map(w => ({ ...w, display: true }));
+    if (this.state && this.state.editing && this.state.modifiableWords) {
       clickHandler = this.onEditModeClick;
       className = 'editable-word-cloud editing';
-    } else {
+      wordsArray = this.state.modifiableWords;
+    } else if (this.state && !this.state.editing && this.state.displayOnlyWords) {
       clickHandler = onViewModeClick;
       className = 'editable-word-cloud';
+      wordsArray = this.state.displayOnlyWords;
     }
     return (
       <DataCard className={className}>

@@ -131,9 +131,10 @@ class OrderedWordCloud extends React.Component {
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
       // Create words
       wordNodes = wordWrapper.selectAll('text')
-        .data(words.slice(0, DEFAULT_WORD_COUNT), d => (d.display === true : d.stem))
+        .data(words.slice(0, DEFAULT_WORD_COUNT), d => d.stem)
         .enter()
-        .append('text')
+        .append('text') // for incoming data
+          .attr('class', '')
           .classed('word', true)
           .classed('left', true)
         .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
@@ -168,8 +169,6 @@ class OrderedWordCloud extends React.Component {
           }
           return null;
         });
-      // not sure how to do this right
-      wordNodes.exit().remove();
 
       // Layout
       y = 0;
