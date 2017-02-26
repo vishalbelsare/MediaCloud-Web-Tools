@@ -24,7 +24,9 @@ const localMessages = {
   unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
   addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Subtopic' },
   focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Set.' },
+  focalSetNotSaved: { id: 'focus.notSaved', defaultMessage: 'Sorry, we couldn\'t save your new Set' },
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
+  focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work! Make sure you have a unique Subtopic name?' },
 };
 
 const FocusForm4ConfirmContainer = (props) => {
@@ -110,13 +112,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
     dispatch(goToCreateFocusStep(2));
   },
-  saveFocus: (topicId, values, focalSetSavedMessage, focusSavedMessage) => {
+  saveFocus: (topicId, values) => {
+    const focalSetSavedMessage = ownProps.intl.formatMessage(localMessages.focalSetSaved);
+    const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
+    const focusNotSaved = ownProps.intl.formatMessage(localMessages.focusNotSaved);
     const newFocusDefinition = {
       focusName: values.focusName,
       focusDescription: values.focusDescription,
       keywords: values.keywords,
     };
     if (values.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+      // if they are creating a new set we need to save that first
       const newFocalSetDefinition = {
         focalSetName: values.focalSetName,
         focalSetDescription: values.focalSetDescription,
@@ -125,27 +131,39 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       // save the focal definition
       dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
         .then((results) => {
-          // TODO: check results to make sure it worked before proceeding
-          dispatch(updateFeedback({ open: true, message: focalSetSavedMessage }));  // user feedback
-          // save the focus
-          newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
-          dispatch(createFocusDefinition(topicId, newFocusDefinition))
-            .then(() => {
-              dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-              dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-              dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-              dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-            });
+          if ((results.status) && results.status === 500) {
+            dispatch(updateFeedback({ open: true, message: focalSetNotSaved }));  // user feedback that it failed
+          } else {
+            // TODO: check results to make sure it worked before proceeding
+            dispatch(updateFeedback({ open: true, message: focalSetSavedMessage }));  // user feedback
+            // save the focus
+            newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
+            dispatch(createFocusDefinition(topicId, newFocusDefinition))
+              .then((moreResults) => {
+                if ((moreResults.status) && moreResults.status === 500) {
+                  dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
+                } else {
+                  dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+                  dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+                  dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+                  dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+                }
+              });
+          }
         });
     } else {
+      // uses and existing set, so just save this definition
       newFocusDefinition.focalSetDefinitionsId = values.focalSetDefinitionId;
       dispatch(createFocusDefinition(topicId, newFocusDefinition))
-        .then(() => {
-          // TODO: check results to make sure it worked before proceeding
-          dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-          dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-          dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-          dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+        .then((results) => {
+          if ((results.status) && results.status === 500) {
+            dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
+          } else {
+            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback that snapshot is needed
+            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback that it worked
+            dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+          }
         });
     }
   },
@@ -154,10 +172,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     finishStep: (values) => {
-      dispatchProps.saveFocus(ownProps.topicId, values,
-        ownProps.intl.formatMessage(localMessages.focalSetSaved),
-        ownProps.intl.formatMessage(localMessages.focusSaved)
-      );
+      dispatchProps.saveFocus(ownProps.topicId, values);
     },
   });
 }
