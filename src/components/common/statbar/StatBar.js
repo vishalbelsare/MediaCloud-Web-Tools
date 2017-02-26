@@ -13,7 +13,7 @@ StatBar.propTypes = {
   // from parent
   stats: React.PropTypes.array.isRequired,
   className: React.PropTypes.string,
-  columnWidth: React.PropTypes.string.number,
+  columnWidth: React.PropTypes.number,
   // from context
   intl: React.PropTypes.object.isRequired,
 };

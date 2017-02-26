@@ -16,7 +16,7 @@ Stat.propTypes = {
   // from parent
   message: React.PropTypes.object.isRequired,
   data: React.PropTypes.string.isRequired,
-  columnWidth: React.PropTypes.string.number,
+  columnWidth: React.PropTypes.number,
   // from context
   intl: React.PropTypes.object.isRequired,
 };
