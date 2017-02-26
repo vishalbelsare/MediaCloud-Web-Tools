@@ -66,7 +66,7 @@ class MediaTable extends React.Component {
       socialHeader = <FormattedMessage {...messages.bitlyClicks} />;
     }
     return (
-      <div>
+      <div className="media-table">
         <table>
           <tbody>
             <tr>

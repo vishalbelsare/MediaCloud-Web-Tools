@@ -1,0 +1,12 @@
+
+.media-table {
+  display:block;
+  max-width: 100%;
+  overflow: scroll;
+
+  table {
+    table-layout: fixed;
+    max-width: 100%;    
+  }
+
+}

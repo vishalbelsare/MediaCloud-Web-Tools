@@ -77,7 +77,7 @@ class StoryTable extends React.Component {
     }
     return (
       <div className="story-table">
-        <table width="100%">
+        <table>
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>

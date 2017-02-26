@@ -1,14 +1,22 @@
 @import '../_constants';
 
 .story-table {
+  display:block;
+  max-width: 100%;
+  overflow: scroll;
 
-   .story-date {
-      &.story-date-unreliable {
-         color: $material-grey600;
-      }
-      &.story-date-undateable {
-         font-style: italic;
-      }
-   }
+  table {
+    table-layout: fixed;
+    max-width: 100%;
+  }
+
+  .story-date {
+    &.story-date-unreliable {
+       color: $material-grey600;
+    }
+    &.story-date-undateable {
+       font-style: italic;
+    }
+  }
 
 }
