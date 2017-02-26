@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import { dismissNotices } from '../../actions/appActions';
 import { CloseButton } from '../common/IconButton';
 import AppNotice from './AppNotice';
+import { LEVEL_ERROR } from './Notice';
 
 const localMessages = {
   dismiss: { id: 'notices.dismiss', defaultMessage: 'dismiss' },
@@ -15,8 +16,9 @@ const AppNoticesContainer = (props) => {
   const { formatMessage } = props.intl;
   let content = null;
   if (notices.length > 0) {
+    const isNotAllErrors = notices.map(({ level }) => level === LEVEL_ERROR).includes(false);
     content = (
-      <div id="app-notice-list">
+      <div id="app-notice-list" className={`app-notice-list-${isNotAllErrors ? 'warnings' : 'errors'}`}>
         <Grid>
           <Row>
             <Col lg={10}>
