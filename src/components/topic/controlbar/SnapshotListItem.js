@@ -20,16 +20,17 @@ class SnapshotListItem extends React.Component {
     const { formatMessage } = this.props.intl;
     const label = snapshot.snapshot_date.substr(0, 16);
     const date = snapshot.snapshot_date.substr(0, 16);
-    const isCompleted = (snapshot.state === 'completed');
-    const stateMessage = (isCompleted) ? '' : formatMessage(localMessages.snapshotNotReady);
-    const clickHandler = (isCompleted) ? this.handleClick : null;
-    const disabledClass = (isCompleted) ? '' : 'disabled';
+    const isUsable = snapshot.isUsable;
+    const stateMessage = (isUsable) ? '' : formatMessage(localMessages.snapshotNotReady);
+    const clickHandler = (isUsable) ? this.handleClick : null;
+    const disabledClass = (isUsable) ? '' : 'disabled';
     const selectedClass = (selected === true) ? 'selected' : '';
     const rootClasses = `popup-item snapshot-item ${disabledClass} ${selectedClass}`;
     return (
       <div className={rootClasses} onClick={clickHandler} onKeyPress={clickHandler} role="button" tabIndex={0}>
         <div className="title">{ label }</div>
         <small>{ stateMessage }</small>
+        &nbsp;
         <small><FormattedMessage {...messages.snapshotAge} values={{ age: moment(date).fromNow() }} /></small>
       </div>
     );

@@ -44,7 +44,6 @@ def topic_summary(topics_id):
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     topic = local_mc.topic(topics_id)
-    topic['snapshot_status'] = mc.topicSnapshotGenerateStatus(topics_id)    # need to know if snapshot is running
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)
@@ -61,7 +60,8 @@ def _add_user_favorite_flag_to_topics(topics):
 def topic_snapshots_list(topics_id):
     user_mc = user_mediacloud_client()
     snapshots = user_mc.topicSnapshotList(topics_id)
-    return jsonify({'list':snapshots})
+    snapshot_status = mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
+    return jsonify({'list': snapshots, 'jobStatus': snapshot_status})
 
 @app.route('/api/topics/<topics_id>/snapshots/generate', methods=['POST'])
 @flask_login.login_required
