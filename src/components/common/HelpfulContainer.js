@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
 import messages from '../../resources/messages';
 import { HelpButton } from './IconButton';
@@ -11,7 +12,7 @@ import { HelpButton } from './IconButton';
  * that you specify.
  * `contentHTMLTextMsgId` can be a intl message id or an array of intl message ids.
  */
-function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
+function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHelpSidebar) {
   return (ChildComponent) => {
     class HelpfulContainer extends React.Component {
       state = {
@@ -39,9 +40,26 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId) {
         } else {
           content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
         }
+        let displayContent;
+        if (showHelpSidebar) {
+          displayContent = (
+            <Row>
+              <Col lg={8}>
+                <ChildComponent {...this.props} helpButton={helpButton} helpContent={content} />
+              </Col>
+              <Col lg={4}>
+                <div className="helpful-content">
+                  {content}
+                </div>
+              </Col>
+            </Row>
+          );
+        } else {
+          displayContent = <ChildComponent {...this.props} helpButton={helpButton} helpContent={content} />;
+        }
         return (
           <span className="helpful">
-            <ChildComponent {...this.props} helpButton={helpButton} />
+            {displayContent}
             <Dialog
               title={formatMessage(contentTitleMsgId)}
               actions={dialogActions}
