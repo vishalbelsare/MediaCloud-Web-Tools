@@ -4,7 +4,7 @@ import { Col } from 'react-flexbox-grid/lib';
 import DataCard from '../DataCard';
 
 const Stat = props => (
-  <Col lg={4}>
+  <Col lg={props.columnWidth || 4}>
     <DataCard className="stat">
       <small><FormattedMessage {...props.message} /></small>
       <em>{props.data}</em>
@@ -16,6 +16,7 @@ Stat.propTypes = {
   // from parent
   message: React.PropTypes.object.isRequired,
   data: React.PropTypes.string.isRequired,
+  columnWidth: React.PropTypes.string.number,
   // from context
   intl: React.PropTypes.object.isRequired,
 };
