@@ -16,7 +16,7 @@ const localMessages = {
   focusName: { id: 'focus.name', defaultMessage: 'Subtopic Name' },
   focusDescription: { id: 'focus.description', defaultMessage: 'Subtopic Description' },
   pickFocalSet: { id: 'focus.pickFocalSet', defaultMessage: 'Pick a Set' },
-  newFocalSetName: { id: 'focus.techniquePicker.new.name', defaultMessage: 'Create a Set' },
+  newFocalSetName: { id: 'focus.techniquePicker.new.name', defaultMessage: 'Create a New Set' },
   newFocalSetDescription: { id: 'focus.techniquePicker.new.description', defaultMessage: 'Pick this if you want to make a new Set for this Subtopic.  Any Subtopics you add to it will be based on keyword searches.' },
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Subtopic.' },
   errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Set.' },
