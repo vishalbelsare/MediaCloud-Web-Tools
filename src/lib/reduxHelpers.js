@@ -1,4 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
+import { push } from 'react-router-redux';
 import * as fetchConstants from './fetchConstants';
 import { addNotice } from '../actions/appActions';
 import { LEVEL_ERROR } from '../components/common/Notice';
@@ -186,7 +187,11 @@ export function errorReportingMiddleware({ dispatch }) {
     let message = null;
     if (action.type.endsWith('_RESOLVED') || action.type.endsWith('_REJECTED')) {
       if ('status' in action.payload) {
-        if (action.payload.status !== 200) {
+        if (action.payload.status === 401) {
+          // unauthorized - ie. needs to login so delete cookies by going to logout
+          dispatch(push('/logout'));
+          message = action.payload.message;
+        } else if (action.payload.status !== 200) {
           message = 'Sorry, we had an error';
           if ('message' in action.payload) {
             message = action.payload.message;
