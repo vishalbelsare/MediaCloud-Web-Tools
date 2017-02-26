@@ -116,6 +116,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const focalSetSavedMessage = ownProps.intl.formatMessage(localMessages.focalSetSaved);
     const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
     const focusNotSaved = ownProps.intl.formatMessage(localMessages.focusNotSaved);
+    const focalSetNotSaved = ownProps.intl.formatMessage(localMessages.focalSetNotSaved);
     const newFocusDefinition = {
       focusName: values.focusName,
       focusDescription: values.focusDescription,
