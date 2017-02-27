@@ -1,37 +1,5 @@
 @import '../_constants';
 
-.editable-word-cloud.viewing {
-  .ordered-word-cloud > svg {
-    text {
-      cursor: pointer;
-    }
-    text.word.left.show{
-      opacity: 1;
-      visibility: visible;
-      display: block;
-    }
-    text.word.left.hide{
-      opacity: 0;
-      visibility: hidden;
-      display: none;
-    }
-  }
-}
-
-.editable-word-cloud.editing {
- .ordered-word-cloud > svg {
-    text {
-      cursor: pointer;
-    }
-    text.word.left.show{
-    	opacity: 1;
-    }
-    text.word.left.hide{
-    	opacity: .2
-    }
-  }
-}
-
 .ordered-word-cloud-tooltip {   
 
 }

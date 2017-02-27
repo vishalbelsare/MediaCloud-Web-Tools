@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
-import OrderedWordCloud from '../vis/OrderedWordCloud';
+import EditableOrderedWordCloud from '../vis/EditableOrderedWordCloud';
 import Permissioned from './Permissioned';
 import { ExploreButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
@@ -25,7 +25,7 @@ class EditableWordCloudDataCard extends React.Component {
     // it is easiest to change the CSS of a svg text mode by classing the text node
     const text = node.nodes()[0];
     if (text.attributes.class.nodeValue === 'word left' || text.attributes.class.nodeValue === 'word left show') {
-      text.attributes.class.nodeValue += ' hide';
+      text.attributes.class.nodeValue = 'word left hide';
     } else if (text.attributes.class.nodeValue === 'word left hide') {
       text.attributes.class.nodeValue = 'word left show';
     }
@@ -38,11 +38,12 @@ class EditableWordCloudDataCard extends React.Component {
   toggleEditing = () => {
     const { words } = this.props;
     if (this.state) {
-      // initialize copy of words
+      // initialize copy of words so we have the display tag set
 
       if (this.state.modifiableWords == null) {
         const initializeDisplayOfWords = words.map(w => ({ ...w, display: true }));
-        this.setState({ modifiableWords: initializeDisplayOfWords, displayOnlyWords: initializeDisplayOfWords });
+        const initializeDisplayOnlyWords = words.map(w => ({ ...w, display: true }));
+        this.setState({ modifiableWords: initializeDisplayOfWords, displayOnlyWords: initializeDisplayOnlyWords });
       }
       // after initialization if not editing, filter words that say 'don't display'
 
@@ -63,18 +64,18 @@ class EditableWordCloudDataCard extends React.Component {
   render() {
     const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId } = this.props;
     const { formatMessage } = this.props.intl;
-    let className = null;
-    let clickHandler = null;
+    let className = 'editable-word-cloud-datacard';
+    let editingClickHandler = onViewModeClick;
     let editModeIcon = <EditIcon />;
     let wordsArray = words.map(w => ({ ...w, display: true }));
     if (this.state && this.state.editing && this.state.modifiableWords) {
-      clickHandler = this.onEditModeClick;
-      className = 'editable-word-cloud editing';
+      editingClickHandler = this.onEditModeClick;
+      className = 'editable-word-cloud-datacard editing';
       wordsArray = this.state.modifiableWords;
       editModeIcon = <RemoveIcon />;
     } else if (this.state && !this.state.editing && this.state.displayOnlyWords) {
-      clickHandler = onViewModeClick;
-      className = 'editable-word-cloud';
+      editingClickHandler = onViewModeClick;
+      className = 'editable-word-cloud-datacard';
       wordsArray = this.state.displayOnlyWords;
       editModeIcon = <EditIcon />;
     }
@@ -95,14 +96,14 @@ class EditableWordCloudDataCard extends React.Component {
           {title}
           {helpButton}
         </h2>
-        <OrderedWordCloud
+        <EditableOrderedWordCloud
           words={wordsArray}
           textColor={getBrandDarkColor()}
           width={width}
           height={height}
           maxFontSize={maxFontSize}
           minFontSize={minFontSize}
-          onWordClick={clickHandler}
+          onWordClick={editingClickHandler}
           domId={domId}
         />
       </DataCard>
