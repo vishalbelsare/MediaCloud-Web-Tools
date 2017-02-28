@@ -120,11 +120,11 @@ export const SettingsButton = composeIconButton(SettingsIcon, messages.settings)
 
 export const ReadItNowButton = composeIconButton(OpenInNewIcon, messages.readItNow, false);
 
-export const EditButton = composeIconButton(EditIcon, messages.edit, false);
+export const EditButton = composeIconButton(EditIcon, messages.edit, true);
 
 export const ErrorButton = composeIconButton(ErrorIcon, messages.error, false);
 
-export const EyeButton = composeIconButton(RemoveRedEye, messages.monitored, false);
+export const ViewButton = composeIconButton(RemoveRedEye, messages.monitored, false);
 
 export const MoreOptionsButton = composeIconButton(MoreOptionsIcon, messages.moreOptions);
 
