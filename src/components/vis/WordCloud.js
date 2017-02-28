@@ -2,29 +2,44 @@ import React from 'react';
 import * as d3 from 'd3';
 import d3LayoutCloud from 'd3-cloud';
 import ReactFauxDOM from 'react-faux-dom';
+import { injectIntl } from 'react-intl';
 
 const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MAX_FONT_SIZE = 32;
+const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_TEXT_COLOR = '#333333';
 const DEFAULT_LINK_COLOR = '#000000';
+
+const localMessages = {
+  wordCloudCount: { id: 'wordcloud.rollover.count', defaultMessage: 'Uses: {count}' },
+  wordCloudStem: { id: 'wordcloud.rollover.stem', defaultMessage: 'Stem: {stem}' },
+  worldCloudTerm: { id: 'wordcloud.rollover.stem', defaultMessage: 'Term: {term}' },
+  wordCloudError: { id: 'wordcloud.error', defaultMessage: 'Sorry, but there aren\'t enough words to render a useful word cloud.' },
+};
 
 class WordCloud extends React.Component {
 
   render() {
-    const { words, width, height, maxFontSize, textColor, onWordClick, linkColor } = this.props;
+    const { words, width, height, maxFontSize, minFontSize, textColor, showTooltips, onWordClick, linkColor, domId } = this.props;
+    const { formatMessage, formatNumber } = this.props.intl;
     const options = {
       width,
       height,
       maxFontSize,
+      minFontSize,
       textColor,
       linkColor,
+      showTooltips,
     };
     if (width !== null) {
       options.width = DEFAULT_WIDTH;
     }
     if (height !== null) {
       options.height = DEFAULT_HEIGHT;
+    }
+    if (minFontSize === undefined) {
+      options.minFontSize = DEFAULT_MIN_FONT_SIZE;
     }
     if (maxFontSize !== null) {
       options.maxFontSize = DEFAULT_MAX_FONT_SIZE;
@@ -35,6 +50,15 @@ class WordCloud extends React.Component {
     if (linkColor !== null) {
       options.linkColor = DEFAULT_LINK_COLOR;
     }
+    if (showTooltips === undefined) {
+      options.showTooltips = false;
+    }
+    // create a rollover tooltip helper
+    const tooltipDiv = d3.select('body').append('div')
+      .attr('class', 'viz-tooltip word-cloud-tooltip')
+      .attr('id', domId)
+      .style('opacity', 0);
+    // start layout
     const node = ReactFauxDOM.createElement('svg');
     const counts = words.map(({ count }) => count);
     const max = d3.max(counts);
@@ -72,13 +96,31 @@ class WordCloud extends React.Component {
     .start();
     if (this.onWordClick !== undefined) {
       node.selectAll('text')
-        .on('mouseover', () => {
+        .on('mouseover', (d) => {
           d3.select(this).attr('fill', this.options.linkColor)
             .attr('cursor', 'pointer');
+          if (options.showTooltips) {
+            let tooltipHtml = formatMessage(localMessages.wordCloudStem, { stem: d.stem });
+            tooltipHtml += '<br />';
+            tooltipHtml += formatMessage(localMessages.worldCloudTerm, { term: d.term });
+            tooltipHtml += '<br />';
+            tooltipHtml += formatMessage(localMessages.wordCloudCount, { count: formatNumber(d.count) });
+            tooltipDiv.transition()
+              .duration(200)
+              .style('opacity', 0.9);
+            tooltipDiv.html(tooltipHtml)
+              .style('left', `${d3.event.pageX}px`)
+              .style('top', `${d3.event.pageY - 48}px`);
+          }
         })
         .on('mouseout', () => {
           d3.select(this).attr('fill', this.options.textColor)
             .attr('cursor', 'default');
+          if (options.showTooltips) {
+            tooltipDiv.transition()
+              .duration(500)
+              .style('opacity', 0);
+          }
         })
         .on('click', (d) => {
           onWordClick(d);
@@ -94,9 +136,16 @@ WordCloud.propTypes = {
   width: React.PropTypes.number,
   height: React.PropTypes.number,
   maxFontSize: React.PropTypes.number,
+  minFontSize: React.PropTypes.number,
   textColor: React.PropTypes.string,
   onWordClick: React.PropTypes.func,
   linkColor: React.PropTypes.string,
+  showTooltips: React.PropTypes.bool,
+  domId: React.PropTypes.string,
+  // from compositon chain
+  intl: React.PropTypes.object.isRequired,
+//  alreadyNormalized: React.PropTypes.bool,
+//  fullExtent: React.PropTypes.array,
 };
 
-export default WordCloud;
+export default injectIntl(WordCloud);

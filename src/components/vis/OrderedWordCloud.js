@@ -110,7 +110,6 @@ class OrderedWordCloud extends React.Component {
       .attr('class', 'viz-tooltip ordered-word-cloud-tooltip')
       .style('opacity', 0);
     // start layout calculations
-
     const node = ReactFauxDOM.createElement('svg');
     if (options.fullExtent === undefined) {
       options.fullExtent = d3.extent(words, d => d.tfnorm);
