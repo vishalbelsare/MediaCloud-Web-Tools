@@ -19,7 +19,7 @@ const localMessages = {
   title: { id: 'topic.summary.storyTotals.title', defaultMessage: 'Story Totals' },
   helpTitle: { id: 'topic.summary.storyTotals.help.title', defaultMessage: 'About the Story Count' },
   helpText: { id: 'topic.summary.storyTotals.help.into',
-    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic are included within the Timespan and Subtopic you have are looking at now.</p>',
+    defaultMessage: '<p>This bubble chart shows you how many stories from this Topic are included in the filters you have selected.  The "filtered" bubble is the number of stories included in your filters.  The "Total" bubble is the total stories within this topic.</p>',
   },
   filteredLabel: { id: 'topic.summary.storyTotals.filtered', defaultMessage: 'Filtered' },
   totalLabel: { id: 'topic.summary.storyTotals.total', defaultMessage: 'Total' },
@@ -108,7 +108,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText, true)(
         composeAsyncContainer(
           StoryTotalsSummaryContainer
         )

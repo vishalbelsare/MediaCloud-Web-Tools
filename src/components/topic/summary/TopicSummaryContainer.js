@@ -46,39 +46,33 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} xs={12}>
+            <Col lg={12}>
+              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
+            </Col>
+            <Col lg={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
-            <Col lg={6} xs={12}>
-              <WordsSummaryContainer topicId={topicId} filters={filters} />
-            </Col>
-          </Row>
-          <Row>
             <Col lg={12}>
               <StoriesSummaryContainer topicId={topicId} filters={filters} />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={6} xs={12}>
+            <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
-            <Col lg={6} xs={12}>
-              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
-              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-                <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
-              </Permissioned>
+            <Col lg={12}>
+              <WordsSummaryContainer topicId={topicId} filters={filters} />
             </Col>
-          </Row>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <Row>
-              <Col lg={6} xs={12}>
+            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+              <Col lg={12}>
+                <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+              </Col>
+              <Col lg={12}>
                 <TopicInfo topic={topicInfo} />
               </Col>
-              <Col lg={6} xs={12}>
+              <Col lg={12}>
                 <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>
-            </Row>
-          </Permissioned>
+            </Permissioned>
+          </Row>
         </Grid>
       );
     } else {

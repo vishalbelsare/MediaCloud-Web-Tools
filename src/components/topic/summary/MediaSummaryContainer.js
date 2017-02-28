@@ -115,7 +115,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText, true)(
         composeAsyncContainer(
           MediaSummaryContainer
         )
