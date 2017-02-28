@@ -24,7 +24,6 @@ def topic_list():
         _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
-@api_error_handler
 def public_topic_list(topic_list):
     all_public_topics = []
     for topic in topic_list:
