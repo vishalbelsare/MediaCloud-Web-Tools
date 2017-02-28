@@ -22,6 +22,7 @@ const TopicTimespanInfo = (props) => {
   }
   return (
     <StatBar
+      columnWidth={2}
       stats={[
         { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count) },
         { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },

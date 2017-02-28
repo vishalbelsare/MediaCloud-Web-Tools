@@ -46,6 +46,11 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
+            <Col lg={12}>
+              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
+            </Col>
+          </Row>
+          <Row>
             <Col lg={6} xs={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
@@ -63,7 +68,6 @@ class TopicSummaryContainer extends React.Component {
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
-              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
               <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
                 <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
               </Permissioned>
