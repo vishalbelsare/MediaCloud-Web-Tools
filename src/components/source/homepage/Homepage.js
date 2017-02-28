@@ -1,6 +1,7 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
+import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
@@ -10,7 +11,8 @@ import LoginForm from '../../user/LoginForm';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
-  about: { id: 'sources.intro.about', defaultMessage: 'Explore the featured collections below, or your favorited sources and collections to the left.' },
+  about: { id: 'sources.intro.about', defaultMessage: 'We add sources and create collections from media ecosystems around the world. In order to identify the right sources, we use a combination of automated search and discovery, identified lists of influential sources, and expert input from journalists and media practitioners. You can also ' },
+  suggestLink: { id: 'sources.intro.suggestLink', defaultMessage: 'suggest a source.' },
   browse: { id: 'sources.intro.browse', defaultMessage: 'Browse by Category' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
@@ -35,6 +37,10 @@ const Homepage = (props) => {
           <h1>
             <FormattedMessage {...localMessages.title} />
           </h1>
+          <p>
+            <FormattedHTMLMessage {...localMessages.about} />
+            <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
+          </p>
         </Col>
       </Row>
       <Row>
