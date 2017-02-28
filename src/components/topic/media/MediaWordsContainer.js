@@ -1,15 +1,14 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchMediaWords } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
-import { filtersAsUrlParams } from '../../util/location';
+import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
   helpTitle: { id: 'media.words.help.title', defaultMessage: 'About Media Top Words' },
@@ -18,6 +17,8 @@ const localMessages = {
   },
 };
 
+const WORD_CLOUD_DOM_ID = 'word-cloud';
+
 class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
@@ -25,26 +26,22 @@ class MediaWordsContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  downloadCsv = (event) => {
-    const { topicId, mediaId, filters } = this.props;
-    event.preventDefault();
-    const url = `/api/topics/${topicId}/media/${mediaId}/words.csv?${filtersAsUrlParams(filters)}`;
-    window.location = url;
-  }
+
   render() {
-    const { words, helpButton } = this.props;
+    const { topicId, mediaId, words, helpButton, filters, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
+    const urlDownload = `/api/topics/${topicId}/media/${mediaId}/words.csv?${filtersAsUrlParams(filters)}`;
+
     return (
-      <DataCard>
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>
-          <FormattedMessage {...messages.topWords} />
-          {helpButton}
-        </h2>
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+        downloadUrl={urlDownload}
+        onViewModeClick={handleWordCloudClick}
+        title={formatMessage(messages.topWords)}
+        helpButton={helpButton}
+        domId={WORD_CLOUD_DOM_ID}
+      />
     );
   }
 }
@@ -63,6 +60,7 @@ MediaWordsContainer.propTypes = {
   // from state
   words: React.PropTypes.array,
   fetchStatus: React.PropTypes.string.isRequired,
+  handleWordCloudClick: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -75,12 +73,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchMediaWords(ownProps.topicId, ownProps.mediaId, props.filters));
   },
+  pushToUrl: url => dispatch(push(url)),
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
       dispatchProps.fetchData(stateProps);
+    },
+    handleWordCloudClick: (word) => {
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      const url = `/topics/${ownProps.topicId}/words/${word.stem}*?${params}`;
+      dispatchProps.pushToUrl(url);
     },
   });
 }

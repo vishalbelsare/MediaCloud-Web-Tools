@@ -137,6 +137,8 @@ class OrderedWordCloud extends React.Component {
           .attr('class', '')
           .classed('word', true)
           .classed('left', true)
+          .classed('hide', d => d.display === false)
+          .classed('show', d => d.display === true)
         .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
@@ -182,7 +184,7 @@ class OrderedWordCloud extends React.Component {
 
     if (enoughDataToRender) {
       return (
-        <div className="ordered-word-cloud">
+        <div className="editable-ordered-word-cloud">
           {node.toReact()}
         </div>
       );
