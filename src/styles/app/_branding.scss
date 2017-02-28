@@ -23,13 +23,18 @@
       }
     }
     li.dashboard {
-        background-color: $dashboard-primary;
+      background-color: $dashboard-primary;
     }
     li.sources {
-        background-color: $sources-primary;
+      background-color: $sources-primary;
     }
     li.topics {
-        background-color: $topics-primary;
+      background-color: $topics-primary;
+    }
+    li.blog {
+      a {
+        color: $black;
+      }        
     }
   }
 }

@@ -21,20 +21,20 @@ const BrandToolbar = (props) => {
                   <FormattedMessage {...messages.dashboardToolShortName} />
                 </a>
               </li>
-              <li className="sources">
-                <a
-                  href="https://sources.mediacloud.org/"
-                  title={formatMessage(messages.sourcesToolDescription)}
-                >
-                  <FormattedMessage {...messages.sourcesToolShortName} />
-                </a>
-              </li>
               <li className="topics">
                 <a
                   href="https://topics.mediacloud.org/"
                   title={formatMessage(messages.topicsToolDescription)}
                 >
                   <FormattedMessage {...messages.topicsToolShortName} />
+                </a>
+              </li>
+              <li className="sources">
+                <a
+                  href="https://sources.mediacloud.org/"
+                  title={formatMessage(messages.sourcesToolDescription)}
+                >
+                  <FormattedMessage {...messages.sourcesToolShortName} />
                 </a>
               </li>
               <li className="blog">
