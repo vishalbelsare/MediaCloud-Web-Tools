@@ -17,7 +17,7 @@ const localMessages = {
     defaultMessage: '<p>This is a visualization showing the top words in your Topic.</p>',
   },
 };
-const WORD_CLOUD_DOM_ID = 'word-cloud';
+const WORD_CLOUD_DOM_ID = 'topic-summary-word-cloud';
 
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {

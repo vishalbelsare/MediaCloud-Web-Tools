@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import EditableOrderedWordCloud from '../vis/EditableOrderedWordCloud';
+import WordCloud from '../vis/WordCloud';
 import Permissioned from './Permissioned';
 import { ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
@@ -14,14 +15,17 @@ import { WarningNotice } from '../common/Notice';
 
 const localMessages = {
   aboutEditing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
+  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
+  modeUnordered: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
 
   state = {
-    editing: false, // the id of a collection to copy
+    editing: false,
     allModifiableWords: null,
     displayOnlyWords: null,
+    ordered: true,
   };
 
   onEditModeClick = (d, node) => {
@@ -37,6 +41,10 @@ class EditableWordCloudDataCard extends React.Component {
       changeWord[0].display = !changeWord[0].display;
     }
   };
+
+  toggleOrdered = () => {
+    this.setState({ ordered: !this.state.ordered });
+  }
 
   toggleEditing = () => {
     const { words } = this.props;
@@ -67,6 +75,7 @@ class EditableWordCloudDataCard extends React.Component {
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
     const editActionIcon = (<EditButton />);
+    const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
     if (this.state.editing && this.state.modifiableWords) {
       editingClickHandler = this.onEditModeClick;
       className = 'editable-word-cloud-datacard editing';
@@ -80,10 +89,50 @@ class EditableWordCloudDataCard extends React.Component {
     const defaultMenuItems = [
       { text: formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud),
         icon: editActionIcon,
-        clickHandler: () => this.toggleEditing() },
+        clickHandler: this.toggleEditing },
+      { text: formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered),
+        clickHandler: this.toggleOrdered },
       { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(domId) },
+      { text: formatMessage(messages.downloadSVG),
+        clickHandler: () => {
+          if (this.state.ordered) { // tricky to get the correct element to serialize
+            downloadSvg(uniqueDomId);
+          } else {
+            const svgChild = document.getElementById(uniqueDomId);
+            downloadSvg(svgChild.firstChild);
+          }
+        },
+      },
     ];
+    // set up rendered cloud as appropriate
+    let cloudContent;
+    if (this.state.ordered) {
+      cloudContent = (
+        <EditableOrderedWordCloud
+          words={wordsArray}
+          textColor={getBrandDarkColor()}
+          width={width}
+          height={height}
+          maxFontSize={maxFontSize}
+          minFontSize={minFontSize}
+          onWordClick={editingClickHandler}
+          domId={uniqueDomId}
+        />
+      );
+    } else {
+      cloudContent = (
+        <WordCloud
+          words={wordsArray}
+          textColor={getBrandDarkColor()}
+          width={width}
+          height={height}
+          maxFontSize={maxFontSize}
+          minFontSize={minFontSize}
+          onWordClick={editingClickHandler}
+          domId={uniqueDomId}
+        />
+      );
+    }
     return (
       <DataCard className={className}>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -97,16 +146,7 @@ class EditableWordCloudDataCard extends React.Component {
           {helpButton}
         </h2>
         {editingWarning}
-        <EditableOrderedWordCloud
-          words={wordsArray}
-          textColor={getBrandDarkColor()}
-          width={width}
-          height={height}
-          maxFontSize={maxFontSize}
-          minFontSize={minFontSize}
-          onWordClick={editingClickHandler}
-          domId={domId}
-        />
+        {cloudContent}
       </DataCard>
     );
   }

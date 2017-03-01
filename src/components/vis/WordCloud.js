@@ -4,6 +4,7 @@ import d3LayoutCloud from 'd3-cloud';
 import ReactFauxDOM from 'react-faux-dom';
 import { injectIntl } from 'react-intl';
 
+const DEFAULT_WORD_COUNT = 100;
 const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_MAX_FONT_SIZE = 32;
@@ -56,7 +57,6 @@ class WordCloud extends React.Component {
     // create a rollover tooltip helper
     const tooltipDiv = d3.select('body').append('div')
       .attr('class', 'viz-tooltip word-cloud-tooltip')
-      .attr('id', domId)
       .style('opacity', 0);
     // start layout
     const node = ReactFauxDOM.createElement('svg');
@@ -64,8 +64,9 @@ class WordCloud extends React.Component {
     const max = d3.max(counts);
     const slope = options.maxFontSize / Math.log(max);
     // get list of all words and sizes
-    const wordList = words.map(w => ({
+    const wordList = words.slice(0, DEFAULT_WORD_COUNT).map(w => ({
       text: w.term,
+      stem: w.stem,
       size: slope * Math.log(w.count),
     }));
     // create wordcloud
@@ -126,7 +127,11 @@ class WordCloud extends React.Component {
           onWordClick(d);
         });
     }
-    return node.toReact();
+    return (
+      <div className="editable-word-cloud" id={domId}>
+        {node.toReact()}
+      </div>
+    );
   }
 
 }
