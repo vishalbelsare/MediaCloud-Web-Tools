@@ -26,16 +26,15 @@ class TimespanPeriodSelector extends React.Component {
   }
 
   render() {
-    // TODO: unselected link is grey, rollover makes it green with a dotted line underneath, active is green
-    // (make show/hide act same as unselected)
     return (
       <div className="timespan-period-selector">
         { this.linkToPeriod('overall', localMessages.timespansOverall) }
-        { this.linkToPeriod('weekly', localMessages.timespansWeekly) }
         { this.linkToPeriod('monthly', localMessages.timespansMonthly) }
-        { this.linkToPeriod('custom', localMessages.timespansCustom) }
+        { this.linkToPeriod('weekly', localMessages.timespansWeekly) }
       </div>
     );
+    // removed custom for now:
+    //         { this.linkToPeriod('custom', localMessages.timespansCustom) }
   }
 }
 
