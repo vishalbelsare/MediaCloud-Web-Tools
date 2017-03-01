@@ -17,11 +17,16 @@ const localMessages = {
 
 const SourceForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
+  // need to init initialValues a bit on the way in to make lower-level logic work right
+  const cleanedInitialValues = initialValues ? { ...initialValues } : {};
+  if (cleanedInitialValues.disabled === undefined) {
+    cleanedInitialValues.disabled = false;
+  }
   return (
     <form className="app-form source-form" name="sourceForm" onSubmit={handleSubmit(onSave.bind(this))}>
-      <SourceDetailsForm initialValues={initialValues} />
-      <SourceMetadataForm initialValues={initialValues} />
-      <SourceCollectionsForm initialValues={initialValues} form="sourceForm" />
+      <SourceDetailsForm initialValues={cleanedInitialValues} />
+      <SourceMetadataForm initialValues={cleanedInitialValues} />
+      <SourceCollectionsForm initialValues={cleanedInitialValues} form="sourceForm" />
       <Row>
         <Col lg={12}>
           <AppButton
