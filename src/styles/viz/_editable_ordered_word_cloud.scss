@@ -1,7 +1,7 @@
 @import '../_constants';
 
 .editable-word-cloud-datacard {
-  .editable-ordered-word-cloud > svg {
+  .ordered-word-cloud > svg {
     text {
       cursor: pointer;
     }
@@ -9,11 +9,11 @@
 }
 
 .editable-word-cloud-datacard.editing {
- .editable-ordered-word-cloud > svg {
-    text.word.left.show{
+ .ordered-word-cloud > svg {
+    text.word.show{
     	opacity: 1;
     }
-    text.word.left.hide{
+    text.word.hide{
     	opacity: .2
     }
   }

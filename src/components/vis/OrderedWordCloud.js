@@ -135,7 +135,8 @@ class OrderedWordCloud extends React.Component {
         .append('text') // for incoming data
           .attr('class', '')
           .classed('word', true)
-          .classed('left', true)
+          .classed('hide', d => d.display === false)
+          .classed('show', d => d.display !== false)
         .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
