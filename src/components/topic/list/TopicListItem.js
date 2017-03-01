@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { Col } from 'react-flexbox-grid/lib';
 import Lock from 'material-ui/svg-icons/action/lock';
@@ -10,6 +10,7 @@ import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const localMessages = {
   notPermissioned: { id: 'topic.notPermissioned', defaultMessage: 'Missing Permission' },
+  status: { id: 'topic.status', defaultMessage: 'Status: {status}' },
 };
 
 const TopicListItem = (props) => {
@@ -41,7 +42,11 @@ const TopicListItem = (props) => {
         <div className="actions">{mainButton}</div>
         <h3>{title}</h3>
         <p>{topic.description}</p>
-        <p><small>{topic.state}</small></p>
+        <p>
+          <small><i>
+            <FormattedMessage {...localMessages.status} values={{ status: topic.state }} />
+          </i></small>
+        </p>
       </DataCard>
     </Col>
   );
