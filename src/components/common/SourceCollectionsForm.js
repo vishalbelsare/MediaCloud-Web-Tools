@@ -59,7 +59,7 @@ renderCollectionSelector.propTypes = {
 };
 
 const SourceCollectionsForm = (props) => {
-  const { title, intro } = props;
+  const { title, intro, initialValues } = props;
   return (
     <div className="form-section source-collection-form">
       <Row>
@@ -67,7 +67,7 @@ const SourceCollectionsForm = (props) => {
           <h2>{title}</h2>
         </Col>
       </Row>
-      <FieldArray name="sourcesAndCollections" intro={intro} component={renderCollectionSelector} />
+      <FieldArray name="sourcesAndCollections" intro={intro} component={renderCollectionSelector} initialValues={initialValues} />
     </div>
   );
 };
@@ -77,6 +77,7 @@ SourceCollectionsForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 export default

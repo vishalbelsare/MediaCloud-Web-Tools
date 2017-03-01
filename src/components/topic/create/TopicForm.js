@@ -16,7 +16,7 @@ const TopicForm = (props) => {
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
       <TopicDetailForm initialValues={initialValues} />
-      <SourceCollectionsForm title={title} intro={intro} form="topicForm" />
+      <SourceCollectionsForm title={title} intro={intro} form="topicForm" initialValues={initialValues} />
       <Row>
         <Col lg={2} xs={12}>
           <AppButton

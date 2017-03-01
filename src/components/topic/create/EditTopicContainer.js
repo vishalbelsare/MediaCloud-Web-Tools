@@ -13,8 +13,8 @@ const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic' },
   editTopicText: { id: 'topic.edit.text', defaultMessage: 'You can update this Topic.' },
   editTopic: { id: 'topic.edit', defaultMessage: 'Edit Topic' },
-  editTopicCollectionsTitle: { id: 'topic.edit', defaultMessage: 'Edit Sources and Collections' },
-  editTopicCollectionsIntro: { id: 'topic.create.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
+  editTopicCollectionsTitle: { id: 'topic.edit.editTopicCollectionsTitle', defaultMessage: 'Edit Sources and Collections' },
+  editTopicCollectionsIntro: { id: 'topic.edit.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
 };
 
 class EditTopicContainer extends React.Component {
@@ -30,13 +30,15 @@ class EditTopicContainer extends React.Component {
     const { handleSave, topicInfo } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
+
     if (topicInfo) {
+      const sources = topicInfo.media.map(t => ({ ...t }));
+      const collections = topicInfo.media_tags.map(t => ({ ...t, name: t.label }));
+      const sourcesAndCollections = sources.concat(collections);
       initialValues = {
         buttonLabel: 'edit',
         ...topicInfo,
-        // sources: topicInfo.media
-        //  .map(t => ({ ...t, name: t.label })),
-        // .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
+        sourcesAndCollections,
       };
     }
     return (
@@ -50,7 +52,7 @@ class EditTopicContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={12}>
-            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.editTopicCollections)} intro={formatMessage(localMessages.editTopicCollectionsIntro)} />
+            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.editTopicCollectionsTitle)} intro={formatMessage(localMessages.editTopicCollectionsIntro)} />
           </Col>
         </Row>
       </Grid>
