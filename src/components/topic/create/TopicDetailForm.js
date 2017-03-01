@@ -102,7 +102,7 @@ const TopicDetailForm = (props) => {
             name="ch_monitor_id"
             component={renderTextField}
             fullWidth
-            label={formatMessage(localMessages.monitored)}
+            floatingLabelText={formatMessage(localMessages.monitored)}
           />
         </Col>
         <Col lg={2}>
@@ -110,7 +110,7 @@ const TopicDetailForm = (props) => {
             name="twitter_topics_id"
             component={renderTextField}
             fullWidth
-            label={formatMessage(localMessages.twitter_topics_id)}
+            floatingLabelText={formatMessage(localMessages.twitter_topics_id)}
           />
         </Col>
       </Row>

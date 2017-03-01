@@ -117,7 +117,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoToSave['sources[]'] = '';
       infoToSave['collections[]'] = '';
     }
-    dispatch(updateTopic(infoToSave)).then((results) => {
+    dispatch(updateTopic(ownProps.params.topicId, infoToSave)).then((results) => {
       if (results.topics_id) {
         // let them know it worked
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
