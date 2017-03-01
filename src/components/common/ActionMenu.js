@@ -75,6 +75,7 @@ class ActionMenu extends React.Component {
               primaryText={item.text}
               onTouchTap={() => item.clickHandler()}
               rightIcon={item.icon}
+              disabled={item.disabled === true}
             />
           ))
         }

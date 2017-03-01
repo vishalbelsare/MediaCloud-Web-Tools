@@ -7,8 +7,8 @@ import { injectIntl } from 'react-intl';
 const DEFAULT_WORD_COUNT = 100;
 const DEFAULT_WIDTH = 530;
 const DEFAULT_HEIGHT = 300;
-const DEFAULT_MAX_FONT_SIZE = 32;
-const DEFAULT_MIN_FONT_SIZE = 10;
+const DEFAULT_MAX_FONT_SIZE = 36;
+const DEFAULT_MIN_FONT_SIZE = 8;
 const DEFAULT_TEXT_COLOR = '#333333';
 const DEFAULT_LINK_COLOR = '#000000';
 
@@ -68,6 +68,7 @@ class WordCloud extends React.Component {
       text: w.term,
       stem: w.stem,
       size: slope * Math.log(w.count),
+      display: w.display,
     }));
     // create wordcloud
     d3LayoutCloud().size([options.width, options.height])

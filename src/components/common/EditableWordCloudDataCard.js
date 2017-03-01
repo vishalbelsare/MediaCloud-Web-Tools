@@ -89,12 +89,21 @@ class EditableWordCloudDataCard extends React.Component {
     const defaultMenuItems = [
       { text: formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud),
         icon: editActionIcon,
-        clickHandler: this.toggleEditing },
+        disabled: !this.state.ordered,  // can't edit for now in cloud layout
+        clickHandler: this.toggleEditing,
+      },
       { text: formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered),
-        clickHandler: this.toggleOrdered },
-      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv, icon: <DownloadButton /> },
+        disabled: this.state.editing, // can't edit for now in cloud layout
+        clickHandler: this.toggleOrdered,
+      },
+      { text: formatMessage(messages.downloadCSV),
+        icon: <DownloadButton />,
+        disabled: this.state.editing, // can't download until done editing
+        clickHandler: this.downloadCsv,
+      },
       { text: formatMessage(messages.downloadSVG),
         icon: <DownloadButton />,
+        disabled: this.state.editing, // can't download until done editing
         clickHandler: () => {
           if (this.state.ordered) { // tricky to get the correct element to serialize
             downloadSvg(uniqueDomId);
