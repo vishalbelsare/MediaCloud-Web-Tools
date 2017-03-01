@@ -14,7 +14,14 @@
     	opacity: 1;
     }
     text.word.hide{
-    	opacity: .2
+    	opacity: .2;
+    }
+    text {
+      &:hover {
+        text-decoration: line-through;
+        fill: #000000 !important;
+        opacity: .2 !important;
+      }
     }
   }
 }
