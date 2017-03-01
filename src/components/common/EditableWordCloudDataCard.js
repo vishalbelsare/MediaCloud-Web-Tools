@@ -6,7 +6,7 @@ import messages from '../../resources/messages';
 import EditableOrderedWordCloud from '../vis/EditableOrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
 import Permissioned from './Permissioned';
-import { ExploreButton, EditButton } from './IconButton';
+import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
 import { PERMISSION_LOGGED_IN } from '../../lib/auth';
 import { downloadSvg } from '../util/svg';
@@ -92,8 +92,9 @@ class EditableWordCloudDataCard extends React.Component {
         clickHandler: this.toggleEditing },
       { text: formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered),
         clickHandler: this.toggleOrdered },
-      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
+      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv, icon: <DownloadButton /> },
       { text: formatMessage(messages.downloadSVG),
+        icon: <DownloadButton />,
         clickHandler: () => {
           if (this.state.ordered) { // tricky to get the correct element to serialize
             downloadSvg(uniqueDomId);

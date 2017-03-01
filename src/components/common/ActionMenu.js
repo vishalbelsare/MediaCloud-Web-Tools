@@ -3,8 +3,6 @@ import { injectIntl } from 'react-intl';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import { DownloadButton } from './IconButton';
-// import DownloadIcon from './icons/DownloadIcon';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import CloseIcon from './icons/CloseIcon';
 
@@ -59,8 +57,6 @@ class ActionMenu extends React.Component {
       closeIconButton = close;
     }
 
-    const defaultIconButton = (<DownloadButton />);
-
     const icon = (this.state.isPopupOpen) ? closeIconButton : openIconButton;
 
     return (
@@ -72,22 +68,15 @@ class ActionMenu extends React.Component {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-          {actionItems.map((item, idx) => {
-            const rtIcon = item.icon;
-            let rtIconButton;
-            if (rtIcon) {
-              rtIconButton = rtIcon;
-            } else {
-              rtIconButton = defaultIconButton;
-            }
-            return (<MenuItem
+          {actionItems.map((item, idx) => (
+            <MenuItem
               className="action-icon-menu-item"
               key={idx}
               primaryText={item.text}
               onTouchTap={() => item.clickHandler()}
-              rightIcon={rtIconButton}
-            />);
-          })
+              rightIcon={item.icon}
+            />
+          ))
         }
         </IconMenu>
       </div>
