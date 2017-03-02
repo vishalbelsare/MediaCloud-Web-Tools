@@ -18,6 +18,7 @@ const sourceDetails = createAsyncReducer({
     }
     return {
       ...payload,
+      media_id: parseInt(payload.media_id, 10), // make sure it is an int
       latestScrapeState,
     };
   },
