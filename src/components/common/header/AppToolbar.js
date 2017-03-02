@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../resources/messages';
+import messages from '../../../resources/messages';
 import UserMenuContainer from './UserMenuContainer';
 
 const BrandToolbar = (props) => {

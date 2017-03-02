@@ -6,9 +6,9 @@ import IconMenu from 'material-ui/IconMenu';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import { PERMISSION_LOGGED_IN } from '../../lib/auth';
-import Permissioned from './Permissioned';
-import messages from '../../resources/messages';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import Permissioned from '../Permissioned';
+import messages from '../../../resources/messages';
 
 /**
  * A permissioned menu of user-related activities, for display on a nav bar or something.

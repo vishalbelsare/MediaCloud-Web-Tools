@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import AppButton from '../common/AppButton';
-import messages from '../../resources/messages';
+import AppToolbar from './AppToolbar';
+import messages from '../../../resources/messages';
+import { getBrandColors } from '../../../styles/colors';
+import AppNoticesContainer from './AppNoticesContainer';
 
 const localMessages = {
   goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
@@ -21,8 +23,9 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { user, name, description, backgroundColor, mastheadText, navigateToHome, showLoginButton } = this.props;
+    const { drawer, name, description, backgroundColor, mastheadText, navigateToHome } = this.props;
     const { formatMessage } = this.props.intl;
+    const brandColors = getBrandColors();
     const styles = {
       root: {
         backgroundColor,
@@ -34,38 +37,33 @@ class BrandMasthead extends React.Component {
         clear: 'both',
       },
     };
-    let loginLogoutButton = null;
-    if (showLoginButton !== false) {
-      if (user.isLoggedIn) {
-        loginLogoutButton = <AppButton label={formatMessage(messages.userLogout)} onTouchTap={this.onRouteToLogout} />;
-      } else {
-        loginLogoutButton = <AppButton label={formatMessage(messages.userLogin)} onTouchTap={this.onRouteToLogin} />;
-      }
-    }
     const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });
     return (
-      <div id="branding-masthead" style={styles.root} >
-        <Grid>
-          <Row>
-            <Col lg={6} md={6} sm={6}>
-              <h1>
-                <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-                  <img alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
-                </a>
-                <strong dangerouslySetInnerHTML={createMastheadText()} />
-              </h1>
-            </Col>
-            <Col lg={6} md={6} sm={6}>
-              <div style={styles.right} >
-                <small>{description}</small>
-              </div>
-              <div style={styles.clear} />
-              <div style={styles.right} >
-                {loginLogoutButton}
-              </div>
-            </Col>
-          </Row>
-        </Grid>
+      <div className="app-header">
+        <AppNoticesContainer />
+        <AppToolbar
+          backgroundColor={brandColors.light}
+          drawer={drawer}
+        />
+        <div id="branding-masthead" style={styles.root} >
+          <Grid>
+            <Row>
+              <Col lg={6} md={6} sm={6}>
+                <h1>
+                  <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+                    <img alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+                  </a>
+                  <strong dangerouslySetInnerHTML={createMastheadText()} />
+                </h1>
+              </Col>
+              <Col lg={6} md={6} sm={6}>
+                <div style={styles.right} >
+                  <small>{description}</small>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
       </div>
     );
   }
@@ -78,11 +76,10 @@ BrandMasthead.propTypes = {
   description: React.PropTypes.string.isRequired,
   backgroundColor: React.PropTypes.string.isRequired,
   lightColor: React.PropTypes.string.isRequired,
-  showLoginButton: React.PropTypes.bool,
+  drawer: React.PropTypes.node,
   // from context
   intl: React.PropTypes.object.isRequired,
   // state
-  user: React.PropTypes.object.isRequired,
   mastheadText: React.PropTypes.string,
   // from dispatch
   navigateToHome: React.PropTypes.func.isRequired,
@@ -93,7 +90,6 @@ BrandMasthead.contextTypes = {
 };
 
 const mapStateToProps = state => ({
-  user: state.user,
   mastheadText: state.app.mastheadText,
 });
 

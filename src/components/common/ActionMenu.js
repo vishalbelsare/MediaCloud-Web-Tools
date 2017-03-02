@@ -40,12 +40,12 @@ class ActionMenu extends React.Component {
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 26, height: 26 }} >
+      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
         <CloseIcon color={color} {...otherProps} />
       </IconButton>
     );
     let openIconButton = (
-      <IconButton style={{ padding: 0, margin: 0, width: 26, height: 26 }} >
+      <IconButton style={{ padding: 0, margin: 0, width: 32, height: 32 }} >
         <MoreOptionsIcon color={color} {...otherProps} />
       </IconButton>
     );
