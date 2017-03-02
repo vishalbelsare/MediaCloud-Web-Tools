@@ -9,6 +9,8 @@ import TopicForm from './TopicForm';
 import { updateFeedback } from '../../../actions/appActions';
 import { createTopic } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const localMessages = {
   createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
@@ -35,9 +37,11 @@ const CreateTopicContainer = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={12}>
-          <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
-        </Col>
+        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+          <Col lg={12}>
+            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
+          </Col>
+        </Permissioned>
       </Row>
 
     </Grid>

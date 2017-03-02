@@ -9,6 +9,8 @@ import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic' },
@@ -52,9 +54,11 @@ class EditTopicContainer extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg={12}>
-            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.editTopicCollectionsTitle)} intro={formatMessage(localMessages.editTopicCollectionsIntro)} />
-          </Col>
+          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+            <Col lg={12}>
+              <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.editTopicCollectionsTitle)} intro={formatMessage(localMessages.editTopicCollectionsIntro)} />
+            </Col>
+          </Permissioned>
         </Row>
       </Grid>
     );
