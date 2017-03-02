@@ -32,6 +32,10 @@ class TopicContainer extends React.Component {
       }
     }
   }
+  componentWillUnmount() {
+    const { selectNewTopic } = this.props;
+    selectNewTopic(null);
+  }
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));

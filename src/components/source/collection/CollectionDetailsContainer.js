@@ -1,16 +1,14 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Title from 'react-title-component';
 import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
 import Lock from 'material-ui/svg-icons/action/lock';
 import Unlock from 'material-ui/svg-icons/action/lock-open';
 import IconButton from 'material-ui/IconButton';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import { favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
 import CollectionIcon from '../../common/icons/CollectionIcon';
-import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceList from '../../common/SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
@@ -46,13 +44,6 @@ const localMessages = {
 
 class CollectionDetailsContainer extends React.Component {
 
-  componentWillReceiveProps(nextProps) {
-    const { collectionId, fetchData } = this.props;
-    if ((nextProps.collectionId !== collectionId)) {
-      fetchData(nextProps.collectionId);
-    }
-  }
-
   searchOnDashboard = () => {
     const { collection } = this.props;
     const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sets":[${collection.tags_id}]}]/[]/[]/[{"uid":1,"name":"${collection.label}","color":"55868A"}]`;
@@ -63,7 +54,6 @@ class CollectionDetailsContainer extends React.Component {
     const { collection, onChangeFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
-    const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
     const editMessage = ( // TODO: permissions around this
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
@@ -85,12 +75,11 @@ class CollectionDetailsContainer extends React.Component {
     let mainButton = null;
     mainButton = (<FavoriteToggler
       isFavorited={collection.isFavorite}
-      onChangeFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
+      onSetFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
     />);
 
     return (
-      <Grid className="details collection-details">
-        <Title render={titleHandler} />
+      <div>
         <Row>
           <Col lg={12}>
             <h1>
@@ -98,7 +87,6 @@ class CollectionDetailsContainer extends React.Component {
               <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
               <div className="actions">{mainButton}</div>
               <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
-
             </h1>
             <p><b>{collection.description}</b></p>
             <p>
@@ -135,7 +123,7 @@ class CollectionDetailsContainer extends React.Component {
             <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
           </Col>
         </Row>
-      </Grid>
+      </div>
     );
   }
 
@@ -147,30 +135,17 @@ CollectionDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   collectionId: React.PropTypes.number.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  // from merge
-  asyncFetch: React.PropTypes.func.isRequired,
-  // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  collection: React.PropTypes.object,
   onChangeFavorited: React.PropTypes.func.isRequired,
-};
-
-CollectionDetailsContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  // from state
+  collection: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
-  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
   collection: state.sources.collections.selected.collectionDetails.object,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (collectionId) => {
-    dispatch(selectCollection(collectionId));
-    dispatch(fetchCollectionDetails(collectionId));
-  },
   onChangeFavorited: (mediaId, isFavorite) => {
     dispatch(favoriteCollection(mediaId, isFavorite))
       .then(() => {
@@ -181,19 +156,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.params.collectionId);
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        CollectionDetailsContainer
-      )
+    connect(mapStateToProps, mapDispatchToProps)(
+      CollectionDetailsContainer
     )
   );

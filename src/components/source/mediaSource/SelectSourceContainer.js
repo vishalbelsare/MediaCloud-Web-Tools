@@ -15,10 +15,9 @@ class SelectSourceContainer extends React.Component {
     }
   }
 
-  searchOnDashboard = () => {
-    const { source } = this.props;
-    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    window.open(dashboardUrl, '_blank');
+  componentWillUnmount() {
+    const { removeSourceId } = this.props;
+    removeSourceId();
   }
 
   render() {
@@ -39,6 +38,7 @@ SelectSourceContainer.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
+  removeSourceId: React.PropTypes.func.isRequired,
   // from context
   location: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
@@ -61,6 +61,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  removeSourceId: () => dispatch(selectSource(null)),
   fetchData: (sourceId) => {
     dispatch(selectSource(sourceId));
     dispatch(fetchSourceDetails(sourceId));

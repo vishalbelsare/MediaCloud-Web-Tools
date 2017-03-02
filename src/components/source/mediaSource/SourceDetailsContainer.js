@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -73,7 +72,6 @@ class SourceDetailsContainer extends React.Component {
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
-    const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     let notice;
     // pull together any relevant warnings
@@ -118,7 +116,6 @@ class SourceDetailsContainer extends React.Component {
     const editorNotes = (source.editor_notes) ? <FormattedHTMLMessage {...localMessages.editorNotes} values={{ notes: source.editor_notes }} /> : null;
     return (
       <Grid className="details source-details">
-        <Title render={titleHandler} />
         <Row>
           <Col lg={10} xs={12}>
             <h1>
@@ -138,7 +135,7 @@ class SourceDetailsContainer extends React.Component {
                 {monitoredIcon}
                 <FavoriteToggler
                   isFavorited={source.isFavorite}
-                  onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
+                  onSetFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
                 />
               </small>
             </h1>
@@ -235,15 +232,14 @@ SourceDetailsContainer.propTypes = {
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
-  // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  source: React.PropTypes.object,
+  // from dispatch
   onChangeFavorited: React.PropTypes.func.isRequired,
+  // from state
+  source: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
-  fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
   source: state.sources.sources.selected.sourceDetails,
 });
 
