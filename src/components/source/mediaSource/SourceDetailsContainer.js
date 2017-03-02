@@ -20,7 +20,7 @@ import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
-import { InfoNotice, ErrorNotice } from '../../common/Notice';
+import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import AppButton from '../../common/AppButton';
 
@@ -51,6 +51,7 @@ const localMessages = {
   editorNotes: { id: 'source.basicInfo.editorNotes', defaultMessage: '<p><b>Editor\'s Notes</b>: {notes}</p>' },
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
+  unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -75,6 +76,13 @@ class SourceDetailsContainer extends React.Component {
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
+
+    // check if source is not suitable for general queries
+    let unhealthySourceWarning;
+    if (source.media_source_tags[0].tags_id === 8875452 && !isCollectionTagSet(source.media_source_tags[0].tags_id) && !source.is_healthy) {
+      unhealthySourceWarning = (<WarningNotice><FormattedMessage {...localMessages.unhealthySource} /></WarningNotice>);
+    }
+
     let notice;
     // pull together any relevant warnings
     if ((source.latestScrapeState === SOURCE_SCRAPE_STATE_QUEUED) || (source.latestScrapeState === SOURCE_SCRAPE_STATE_RUNNING)) {
@@ -185,6 +193,7 @@ class SourceDetailsContainer extends React.Component {
             <p>
               <a href={source.url}> {source.url} </a>
             </p>
+            {unhealthySourceWarning} <br />
             <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
           <Col lg={2} xs={12}>
