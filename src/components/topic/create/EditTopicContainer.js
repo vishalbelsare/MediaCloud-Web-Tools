@@ -8,6 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic' },
@@ -36,7 +37,7 @@ class EditTopicContainer extends React.Component {
       const collections = topicInfo.media_tags.map(t => ({ ...t, name: t.label }));
       const sourcesAndCollections = sources.concat(collections);
       initialValues = {
-        buttonLabel: 'edit',
+        buttonLabel: formatMessage(messages.save),
         ...topicInfo,
         sourcesAndCollections,
       };

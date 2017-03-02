@@ -8,6 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicForm from './TopicForm';
 import { updateFeedback } from '../../../actions/appActions';
 import { createTopic } from '../../../actions/topicActions';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
@@ -22,7 +23,7 @@ const localMessages = {
 const CreateTopicContainer = (props) => {
   const { handleSave } = props;
   const { formatMessage } = props.intl;
-  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', spidered: false, max_iterations: 15, buttonLabel: 'create' };
+  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', spidered: false, max_iterations: 15, buttonLabel: formatMessage(messages.save) };
 
   return (
     <Grid>

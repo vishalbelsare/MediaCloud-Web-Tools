@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ControlBar from './controlbar/ControlBar';
-
+// import WarningNotice from './WarningNotice';
 class FilteredTopicContainer extends React.Component {
 
   filtersAreSet() {
@@ -12,9 +12,12 @@ class FilteredTopicContainer extends React.Component {
   }
 
   render() {
-    const { children, topicInfo, location, topicId } = this.props;
+    const { children, topicInfo, location, topicId, snapshots } = this.props;
     let subContent = <div />;
-    if (this.filtersAreSet()) {
+    if ((snapshots && snapshots.length < 1) ||
+      (snapshots && snapshots.length < 2)) {
+      subContent = <h2>Error</h2>;
+    } else if (this.filtersAreSet()) {
       subContent = children;
     } else {
       subContent = <LoadingSpinner />;
@@ -39,6 +42,7 @@ FilteredTopicContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
+  snapshots: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -46,6 +50,7 @@ const mapStateToProps = (state, ownProps) => ({
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
   params: ownProps.params,
+  snapshots: state.topics.selected.snapshots.list,
 });
 
 export default

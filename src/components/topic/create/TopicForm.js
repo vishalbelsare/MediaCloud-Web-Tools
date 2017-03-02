@@ -5,7 +5,7 @@ import { emptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
-import SourceCollectionsForm from '../../common/SourceCollectionsForm';
+import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 
 const localMessages = {
   name: { id: 'topic.name', defaultMessage: 'Name' },

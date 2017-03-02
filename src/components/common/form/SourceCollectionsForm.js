@@ -4,9 +4,9 @@ import Avatar from 'material-ui/Avatar';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
-import composeIntlForm from './IntlForm';
-import CollectionIcon from './icons/CollectionIcon';
-import SourceSearchContainer from '../source/controlbar/SourceSearchContainer';
+import composeIntlForm from '../IntlForm';
+import CollectionIcon from '../icons/CollectionIcon';
+import SourceSearchContainer from '../../source/controlbar/SourceSearchContainer';
 
 const localMessages = {
   add: { id: 'source.add.collections.add', defaultMessage: 'You can search for Sources and Collections to add to this topic:' },
