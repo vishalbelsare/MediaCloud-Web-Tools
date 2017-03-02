@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
+import DatePicker from 'material-ui/DatePicker';
 
 /**
  * Helpful compositional wrapper for forms that want to use Material-UI, react-intl and redux-form.
@@ -85,12 +86,29 @@ function composeIntlForm(Component) {
       );
     }
 
+    renderDatePickerInline = ({ input, name, type, ...custom }) => {
+      const intlCustom = this.intlCustomProps(custom);
+      return (
+        <DatePicker
+          {...input}
+          value={new Date(input.value)}
+          onChange={(event, value) => input.onChange(value)}
+          name={name}
+          {...intlCustom}
+          container={type}
+          mode="landscape"
+          hintText={intlCustom.hintText}
+        />
+      );
+    }
+
     render() {
       const helpers = {
         renderTextField: this.renderTextField,
         renderCheckbox: this.renderCheckbox,
         renderSelectField: this.renderSelectField,
         renderAutoComplete: this.renderAutoComplete,
+        renderDatePickerInline: this.renderDatePickerInline,
       };
       return (
         <Component {...this.props} {...helpers} />
