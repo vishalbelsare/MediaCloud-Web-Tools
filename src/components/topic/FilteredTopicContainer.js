@@ -14,9 +14,12 @@ class FilteredTopicContainer extends React.Component {
   render() {
     const { children, topicInfo, location, topicId, snapshots } = this.props;
     let subContent = <div />;
-    if ((snapshots && snapshots.length < 1) ||
-      (snapshots && snapshots.length < 2)) {
-      subContent = <h2>Error</h2>;
+    
+    // If the generation process is still ongoing, ask the user to wait a few minutes
+    if (snapshots && snapshots.length < 2) {
+      if (snapshots.length == 0 || 
+        (snapshots.length == 1 && snapshot[0].state != 'completed' && snapshot[0].searchable != 1)) {
+        subContent = <h2>'Please wait for the snapshot generation process to complete.'</h2>;
     } else if (this.filtersAreSet()) {
       subContent = children;
     } else {
