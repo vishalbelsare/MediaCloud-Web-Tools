@@ -14,7 +14,8 @@ import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
 
 const localMessages = {
-  aboutEditing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
+  editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
+  edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
   modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
   modeUnordered: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
 };
@@ -23,7 +24,7 @@ class EditableWordCloudDataCard extends React.Component {
 
   state = {
     editing: false,   // whether you are editing right now or not
-    allModifiableWords: null, // all the words, including a boolean display property on each
+    modifiableWords: null, // all the words, including a boolean display property on each
     displayOnlyWords: null, // only the words that are being displayed
     ordered: true,  // whether you are showing an ordered word cloud or circular layout word cloud
   };
@@ -40,6 +41,8 @@ class EditableWordCloudDataCard extends React.Component {
   toggleOrdered = () => {
     this.setState({ ordered: !this.state.ordered });
   }
+
+  isShowingAllWords = () => (this.state.modifiableWords.length === this.state.displayOnlyWords.length);
 
   toggleEditing = () => {
     const { words } = this.props;
@@ -75,10 +78,13 @@ class EditableWordCloudDataCard extends React.Component {
       editingClickHandler = this.onEditModeClick;
       className += ' editing';
       wordsArray = this.state.modifiableWords;
-      editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.aboutEditing} /></WarningNotice>);
+      editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.editing} /></WarningNotice>);
     } else if (!this.state.editing && this.state.displayOnlyWords) {
       editingClickHandler = onViewModeClick;
       wordsArray = this.state.displayOnlyWords;
+      if (!this.isShowingAllWords()) {
+        editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.edited} /></WarningNotice>);
+      }
     }
     const defaultMenuItems = [
       { text: formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud),
