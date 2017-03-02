@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
-import AppButton from '../../common/AppButton';
+import DescriptiveButton from '../../common/DescriptiveButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 
@@ -15,9 +15,12 @@ const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'We add sources and create collections from media ecosystems around the world. In order to identify the right sources, we use a combination of automated search and discovery, identified lists of influential sources, and expert input from journalists and media practitioners. You can also ' },
   suggestLink: { id: 'sources.intro.suggestLink', defaultMessage: 'suggest a source.' },
-  browseMediaCloud: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Media Cloud Collections' },
-  browseGlobalVoices: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Global Voices Collections' },
-  browseEMM: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse European Media Monitor Collections' },
+  browseMC: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Media Cloud Collections' },
+  browseMCabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the collections our team has put together to support our various investigations.' },
+  browseGV: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Global Voices Collections' },
+  browseGVabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See country-focused collections we created based on media sources cited by Global Voices.' },
+  browseEMM: { id: 'sources.into.browse.emm', defaultMessage: 'Browse EMM Collections' },
+  browseEMMabout: { id: 'sources.into.browse.emm.about', defaultMessage: 'See country-focused collections we created based on source in the European Media Monitor project.' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
@@ -57,26 +60,29 @@ const Homepage = (props) => {
           {sideBarContent}
         </Col>
       </Row>
-      <Row center="lg">
+      <Row>
         <Col lg={4} xs={12}>
-          <AppButton
-            primary
-            label={formatMessage(localMessages.browseMediaCloud)}
-            onClick={() => { goToUrl('/collectons/media-cloud'); }}
+          <DescriptiveButton
+            imageUrl="static/img/mediacloud-logo-black-2x.png"
+            label={formatMessage(localMessages.browseMC)}
+            description={formatMessage(localMessages.browseMCabout)}
+            onClick={() => { goToUrl('/collections/media-cloud'); }}
           />
         </Col>
         <Col lg={4} xs={12}>
-          <AppButton
-            primary
-            label={formatMessage(localMessages.browseGlobalVoices)}
-            onClick={() => { goToUrl('/collectons/global-voices'); }}
+          <DescriptiveButton
+            imageUrl="/static/img/logo-global-voices.png"
+            label={formatMessage(localMessages.browseGV)}
+            description={formatMessage(localMessages.browseGVabout)}
+            onClick={() => { goToUrl('/collections/global-voices'); }}
           />
         </Col>
         <Col lg={4} xs={12}>
-          <AppButton
-            primary
+          <DescriptiveButton
+            imageUrl="/static/img/logo-emm.png"
             label={formatMessage(localMessages.browseEMM)}
-            onClick={() => { goToUrl('/collectons/european-media-monitor'); }}
+            description={formatMessage(localMessages.browseEMMabout)}
+            onClick={() => { goToUrl('/collections/european-media-monitor'); }}
           />
         </Col>
       </Row>
