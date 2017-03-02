@@ -76,7 +76,7 @@ const Permissioned = (props) => {
 
 Permissioned.propTypes = {
   // from parent
-  children: React.PropTypes.node.isRequired,
+  children: React.PropTypes.node, // not required, because the content passed in could be null (if some property isn't filled in on an object)
   onlyTopic: React.PropTypes.string,
   onlyRole: React.PropTypes.string,
   // from state
