@@ -3,7 +3,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ControlBar from './controlbar/ControlBar';
-// import { WarningNotice } from '../common/Notice';
+import { WarningNotice } from '../common/Notice';
+import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
   warning: { id: 'topic.filter.warning', defaultMessage: 'Please wait for the snapshot generation process to complete.' },
@@ -15,23 +16,27 @@ class FilteredTopicContainer extends React.Component {
     return (topicId && filters.snapshotId && filters.timespanId);
   }
 
+  snapshotsAreCompletedAndSearchable() {
+    const { snapshots } = this.props;
+    return (snapshots &&
+        (snapshots.length === 1 &&
+         (snapshots[0].state === 'completed' && snapshots[0].searchable === 1)));
+  }
   render() {
-    const { children, topicInfo, location, topicId, snapshots } = this.props;
+    const { children, topicInfo, location, topicId, fetchStatus } = this.props;
     let subContent = <div />;
 
     // If the generation process is still ongoing, ask the user to wait a few minutes
-    if (snapshots && snapshots.length < 2) {
-      if (snapshots.length === 0 ||
-        (snapshots.length === 1 && snapshots[0].state !== 'completed' && snapshots[0].searchable !== 1)) {
-        subContent = (
-          // <WarningNotice>
-          <FormattedMessage {...localMessages.warning} />
-          // </WarningNotice>
-        );
-      }
-    } else if (this.filtersAreSet()) {
+    if (this.filtersAreSet() || this.snapshotsAreCompletedAndSearchable()) {
       subContent = children;
+    } else if (!this.snapshotsAreCompletedAndSearchable() && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+      subContent = (
+        <WarningNotice>
+          <FormattedMessage {...localMessages.warning} />
+        </WarningNotice>
+      );
     } else {
+      // how to distinguish between fetch-ongoing and a generating snapshot?
       subContent = <LoadingSpinner />;
     }
     return (
@@ -50,16 +55,18 @@ FilteredTopicContainer.propTypes = {
   children: React.PropTypes.node,
   location: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
+  fetchStatus: React.PropTypes.string,
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   topicInfo: React.PropTypes.object.isRequired,
-  snapshots: React.PropTypes.object.isRequired,
+  snapshots: React.PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
+  fetchStatus: state.topics.selected.snapshots.fetchStatus,
   topicInfo: state.topics.selected.info,
   params: ownProps.params,
   snapshots: state.topics.selected.snapshots.list,
