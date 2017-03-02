@@ -1,9 +1,13 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ControlBar from './controlbar/ControlBar';
-// import WarningNotice from './WarningNotice';
+// import { WarningNotice } from '../common/Notice';
+
+const localMessages = {
+  warning: { id: 'topic.filter.warning', defaultMessage: 'Please wait for the snapshot generation process to complete.' },
+};
 class FilteredTopicContainer extends React.Component {
 
   filtersAreSet() {
@@ -14,12 +18,17 @@ class FilteredTopicContainer extends React.Component {
   render() {
     const { children, topicInfo, location, topicId, snapshots } = this.props;
     let subContent = <div />;
-    
+
     // If the generation process is still ongoing, ask the user to wait a few minutes
     if (snapshots && snapshots.length < 2) {
-      if (snapshots.length == 0 || 
-        (snapshots.length == 1 && snapshot[0].state != 'completed' && snapshot[0].searchable != 1)) {
-        subContent = <h2>'Please wait for the snapshot generation process to complete.'</h2>;
+      if (snapshots.length === 0 ||
+        (snapshots.length === 1 && snapshots[0].state !== 'completed' && snapshots[0].searchable !== 1)) {
+        subContent = (
+          // <WarningNotice>
+          <FormattedMessage {...localMessages.warning} />
+          // </WarningNotice>
+        );
+      }
     } else if (this.filtersAreSet()) {
       subContent = children;
     } else {
