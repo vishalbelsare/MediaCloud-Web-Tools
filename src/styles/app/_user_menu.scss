@@ -1,4 +1,23 @@
+@import '../_constants';
 
 .user-menu {
   display: inline-block;
+
+  button {
+
+    padding: 0px !important;
+    width: 28px !important;
+    height: 28px !important;
+    background-color: rgb(255,255,255) !important;
+    border-radius: 14px !important;
+    margin-right: 5px !important;
+
+    svg {
+      width: 18px !important;
+      height: 18px !important;
+      fill: $material-grey400 !important;
+    }
+
+  }
+
 }
