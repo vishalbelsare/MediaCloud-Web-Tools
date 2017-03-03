@@ -5,7 +5,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
-import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
 import { SettingsButton } from '../../common/IconButton';
@@ -13,7 +12,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const ControlBar = (props) => {
-  const { topicInfo, topicId, location, filters } = props;
+  const { topicId, location, filters } = props;
   // const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let focusSelector = null;
@@ -28,13 +27,6 @@ const ControlBar = (props) => {
         <Grid>
           <Row>
             <Col lg={4} className="left">
-              <div className="topic-name">
-                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
-                &nbsp;
-                <b>
-                  {topicInfo.name}
-                </b>
-              </div>
               <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                 <SettingsButton
                   linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
@@ -68,12 +60,10 @@ ControlBar.propTypes = {
   location: React.PropTypes.object.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
-  topicInfo: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
-  topicInfo: state.topics.selected.info,
 });
 
 export default
