@@ -12,9 +12,9 @@ import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
-  mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit Source' },
-  addButton: { id: 'source.add.saveAll', defaultMessage: 'Update Source' },
-  feedback: { id: 'source.add.feedback', defaultMessage: 'We updated this source' },
+  mainTitle: { id: 'source.maintitle', defaultMessage: 'Edit' },
+  addButton: { id: 'source.add.saveAll', defaultMessage: 'Save Changes' },
+  feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your changes to this source' },
 };
 
 const EditSourceContainer = (props) => {
@@ -32,8 +32,8 @@ const EditSourceContainer = (props) => {
   };
   return (
     <div className="edit-source">
+      <Title render={titleHandler} />
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <Title render={titleHandler} />
         <Grid>
           <Row>
             <Col lg={12}>

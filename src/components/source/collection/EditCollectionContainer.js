@@ -4,17 +4,16 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateCollection, selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { updateCollection } from '../../../actions/sourceActions';
 import { updateFeedback } from '../../../actions/appActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
-  mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Edit Collection' },
-  addButton: { id: 'collection.add.saveAll', defaultMessage: 'Update Collection' },
-  feedback: { id: 'collection.add.feedback', defaultMessage: 'We updated this collection' },
+  mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Edit' },
+  addButton: { id: 'collection.add.saveAll', defaultMessage: 'Save Changes' },
+  feedback: { id: 'collection.add.feedback', defaultMessage: 'We saved your changes to this collection' },
 };
 
 const EditCollectionContainer = (props) => {
@@ -32,8 +31,8 @@ const EditCollectionContainer = (props) => {
   };
   return (
     <div className="edit-collection">
+      <Title render={titleHandler} />
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <Title render={titleHandler} />
         <Grid>
           <Row>
             <Col lg={12}>
@@ -59,13 +58,11 @@ EditCollectionContainer.propTypes = {
   handleSave: React.PropTypes.func.isRequired,
   // form state
   collectionId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
   collection: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
-  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
   collection: state.sources.collections.selected.collectionDetails.object,
 });
 
@@ -93,17 +90,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(push(`/collections/${ownProps.params.collectionId}`));
       });
   },
-  asyncFetch: () => {
-    dispatch(selectCollection(ownProps.params.collectionId));
-    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
-  },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        EditCollectionContainer
-      ),
+      EditCollectionContainer
     ),
   );
