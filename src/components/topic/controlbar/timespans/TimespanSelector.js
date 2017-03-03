@@ -59,7 +59,10 @@ const TimespanSelector = (props) => {
           <Col lg={2} sm={2} xs={12}>
             <TimespanPeriodSelector
               selectedPeriod={selectedPeriod}
-              onPeriodSelected={(period) => { onPeriodSelected(period); setExpanded(true); }}
+              onPeriodSelected={(period) => {
+                onPeriodSelected(period, timespans.filter(t => t.period === period)[0]);
+                setExpanded(true);
+              }}
             />
           </Col>
           <Col lg={8} sm={8} xs={12} className="center">
