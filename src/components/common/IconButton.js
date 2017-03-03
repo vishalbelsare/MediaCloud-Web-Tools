@@ -68,23 +68,18 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           <Icon color={color} {...otherProps} />
         </IconButton>
       );
-      let content;
-      if (linkTo) {
-        content = (
-          <Link
-            to={linkTarget}
-            onTouchTap={clickHandler}
-            className="icon-button-link"
-            name={displayTooltip}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-          >
-            {button}
-          </Link>
-        );
-      } else {
-        content = button;
-      }
+      const content = (
+        <Link
+          to={linkTarget}
+          onTouchTap={clickHandler}
+          className="icon-button-link"
+          name={displayTooltip}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        >
+          {button}
+        </Link>
+      );
       return (
         <div className="icon-button">
           {content}
