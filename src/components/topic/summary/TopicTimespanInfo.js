@@ -24,14 +24,14 @@ const TopicTimespanInfo = (props) => {
     <StatBar
       columnWidth={2}
       stats={[
+        { message: localMessages.storyCount, data: formatNumber(timespan.story_count) },
         { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count) },
-        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },
         { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count) },
-        { message: localMessages.geocodedCount,
-          data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }) },
+        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },
         { message: localMessages.englishCount,
           data: formatNumber(englishCounts.count / geocodedCounts.total, { style: 'percent' }) },
-        { message: localMessages.storyCount, data: formatNumber(timespan.story_count) },
+        { message: localMessages.geocodedCount,
+          data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }) },
       ]}
     />
   );
