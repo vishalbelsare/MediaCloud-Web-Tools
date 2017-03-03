@@ -19,6 +19,7 @@ class FilteredTopicContainer extends React.Component {
   snapshotsAreCompletedAndSearchable() {
     const { snapshots } = this.props;
     return (snapshots &&
+        snapshots.length > 1 ||
         (snapshots.length === 1 &&
          (snapshots[0].state === 'completed' && snapshots[0].searchable === 1)));
   }
