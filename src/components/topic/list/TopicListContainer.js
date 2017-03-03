@@ -14,12 +14,12 @@ const localMessages = {
 };
 
 const TopicListContainer = (props) => {
-  const { topics, nextButton, previousButton, onChangeFavorited } = props;
+  const { topics, nextButton, previousButton, onSetFavorited } = props;
   return (
     <Row>
       <Col lg={12} md={12} sm={12}>
         <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
-        <TopicList topics={topics} onChangeFavorited={onChangeFavorited} />
+        <TopicList topics={topics} onSetFavorited={onSetFavorited} />
         { previousButton }
         { nextButton }
       </Col>
@@ -29,7 +29,7 @@ const TopicListContainer = (props) => {
 
 TopicListContainer.propTypes = {
   // from parent
-  onChangeFavorited: React.PropTypes.func.isRequired,
+  onSetFavorited: React.PropTypes.func.isRequired,
   // from state
   topics: React.PropTypes.array.isRequired,
   links: React.PropTypes.object,
