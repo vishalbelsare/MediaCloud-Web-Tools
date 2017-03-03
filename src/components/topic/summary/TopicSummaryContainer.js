@@ -28,12 +28,8 @@ class TopicSummaryContainer extends React.Component {
   render() {
     const { filters, topicId, topicInfo, timespan, user } = this.props;
     let content = <div />;
-    let title = null;
     let intro = null;
-    if (user.isLoggedIn) {
-      title = <FormattedMessage {...localMessages.title} values={{ name: topicInfo.name }} />;
-    } else {
-      title = <FormattedMessage {...localMessages.previewTitle} values={{ name: topicInfo.name }} />;
+    if (!user.isLoggedIn) {
       intro = (<p><FormattedMessage {...localMessages.previewIntro} values={{ name: topicInfo.name }} /></p>);
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
@@ -41,7 +37,6 @@ class TopicSummaryContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12}>
-              <h1>{title}</h1>
               {intro}
             </Col>
           </Row>

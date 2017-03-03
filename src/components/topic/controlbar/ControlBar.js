@@ -9,15 +9,11 @@ import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
 import { SettingsButton } from '../../common/IconButton';
-import { updateFeedback } from '../../../actions/appActions';
-import { setTopicFavorite } from '../../../actions/topicActions';
-import FavoriteToggler from '../../common/FavoriteToggler';
-import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const ControlBar = (props) => {
-  const { topicInfo, topicId, location, filters, handleChangeFavorited } = props;
+  const { topicInfo, topicId, location, filters } = props;
   // const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let focusSelector = null;
@@ -44,10 +40,6 @@ const ControlBar = (props) => {
                   linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
                 />
               </Permissioned>
-              <FavoriteToggler
-                isFavorited={topicInfo.isFavorite}
-                onChangeFavorited={isFavNow => handleChangeFavorited(topicInfo.topics_id, isFavNow)}
-              />
             </Col>
             <Col lg={4}>
               {focusSelector}
@@ -77,8 +69,6 @@ ControlBar.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   topicInfo: React.PropTypes.object,
-  // from dispatch
-  handleChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -86,19 +76,9 @@ const mapStateToProps = state => ({
   topicInfo: state.topics.selected.info,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleChangeFavorited: (topicId, isFavorite) => {
-    dispatch(setTopicFavorite(topicId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-      });
-  },
-});
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps)(
       ControlBar
     )
   );

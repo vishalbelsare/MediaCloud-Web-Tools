@@ -18,7 +18,6 @@ const SourcesApp = (props) => {
         title={formatMessage(messages.sourcesToolName)}
         description={formatMessage(messages.sourcesToolDescription)}
         drawer={drawer}
-        showLoginButton={false}
         subHeader={<SourceMgrSubHeaderContainer />}
       >
         {props.children}
