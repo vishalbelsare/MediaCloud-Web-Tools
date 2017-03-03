@@ -20,7 +20,7 @@ const localMessages = {
 };
 
 const AppContainer = (props) => {
-  const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
+  const { children, feedback, subHeader, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
 
@@ -52,6 +52,7 @@ const AppContainer = (props) => {
           lightColor={brandColors.light}
           showLoginButton={showLoginButton}
           drawer={drawer}
+          subHeader={subHeader}
         />
       </header>
       <div id="content">
@@ -98,6 +99,7 @@ AppContainer.propTypes = {
   description: React.PropTypes.string.isRequired,
   drawer: React.PropTypes.node,
   showLoginButton: React.PropTypes.bool,
+  subHeader: React.PropTypes.node,
 };
 
 AppContainer.contextTypes = {

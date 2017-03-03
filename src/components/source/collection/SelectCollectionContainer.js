@@ -1,10 +1,20 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { setSubHeaderVisible } from '../../../actions/appActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import SourceControlBar from '../controlbar/SourceControlBar';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { EditButton } from '../../common/IconButton';
+
+const localMessages = {
+  editCollection: { id: 'collection.edit', defaultMessage: 'Modify this Collection' },
+};
 
 class SelectCollectionContainer extends React.Component {
 
@@ -24,10 +34,22 @@ class SelectCollectionContainer extends React.Component {
     const { children, collection } = this.props;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     return (
-      <Grid className="details collection-details">
+      <div>
         <Title render={titleHandler} />
-        {children}
-      </Grid>
+        <SourceControlBar>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <span className="collection-edit-link">
+              <Link to={`/collections/${collection.tags_id}/edit`} >
+                <EditButton />
+                <FormattedMessage {...localMessages.editCollection} />
+              </Link>
+            </span>
+          </Permissioned>
+        </SourceControlBar>
+        <Grid className="details collection-details">
+          {children}
+        </Grid>
+      </div>
     );
   }
 
@@ -61,14 +83,19 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  removeCollectionId: () => dispatch(selectCollection(null)),
+  removeCollectionId: () => {
+    dispatch(selectCollection(null));
+    dispatch(setSubHeaderVisible(false));
+  },
   fetchData: (collectionId) => {
     dispatch(selectCollection(collectionId));
-    dispatch(fetchCollectionDetails(collectionId));
+    dispatch(fetchCollectionDetails(collectionId))
+      .then(() => dispatch(setSubHeaderVisible(true)));
   },
   asyncFetch: () => {
     dispatch(selectCollection(ownProps.params.collectionId));
-    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
+    dispatch(fetchCollectionDetails(ownProps.params.collectionId))
+      .then(() => dispatch(setSubHeaderVisible(true)));
   },
 });
 

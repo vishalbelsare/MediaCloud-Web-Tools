@@ -2,22 +2,16 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
-import FavoriteToggler from '../../common/FavoriteToggler';
-import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
-import { getBrandDarkColor } from '../../../styles/colors';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
@@ -67,12 +61,11 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source, onChangeFavorited } = this.props;
+    const { source } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
-    const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     let notice;
     // pull together any relevant warnings
     if ((source.latestScrapeState === SOURCE_SCRAPE_STATE_QUEUED) || (source.latestScrapeState === SOURCE_SCRAPE_STATE_RUNNING)) {
@@ -87,16 +80,6 @@ class SourceDetailsContainer extends React.Component {
         <FormattedMessage
           {...localMessages.feedLastScrapeDate}
           values={{ date: formatDate(jobStatusDateToMoment(source.scrape_status.job_states[0].last_updated)) }}
-        />
-      );
-    }
-    // source might be monitored by admins
-    let monitoredIcon = null;
-    if (source.is_monitored) {
-      monitoredIcon = (
-        <RemoveRedEye
-          color={getBrandDarkColor()}
-          style={{ height: 20, width: 25, marginLeft: 10 }}
         />
       );
     }
@@ -118,27 +101,6 @@ class SourceDetailsContainer extends React.Component {
       <Grid className="details source-details">
         <Row>
           <Col lg={10} xs={12}>
-            <h1>
-              <MediaSourceIcon height={32} />
-              <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small className="subtitle">
-                ID #{source.media_id}
-                {publicMessage}
-                <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-                  <span className="source-edit-link">
-                    •&nbsp;
-                    <Link to={`/sources/${source.media_id}/edit`} >
-                      <FormattedMessage {...messages.edit} />
-                    </Link>
-                  </span>
-                </Permissioned>
-                {monitoredIcon}
-                <FavoriteToggler
-                  isFavorited={source.isFavorite}
-                  onSetFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
-                />
-              </small>
-            </h1>
             {notice}
             {publicNotes}
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
@@ -232,8 +194,6 @@ SourceDetailsContainer.propTypes = {
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
-  // from dispatch
-  onChangeFavorited: React.PropTypes.func.isRequired,
   // from state
   source: React.PropTypes.object,
 };
@@ -243,20 +203,9 @@ const mapStateToProps = (state, ownProps) => ({
   source: state.sources.sources.selected.sourceDetails,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  onChangeFavorited: (mediaId, isFavorite) => {
-    dispatch(favoriteSource(mediaId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? messages.favorited : messages.unfavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        // dispatch(fetchFavoriteSources());  // to update the list of favorites
-      });
-  },
-});
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps)(
       SourceDetailsContainer
     )
   );

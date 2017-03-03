@@ -11,6 +11,7 @@ const FavoriteToggler = (props) => {
     mainButton = (<FavoriteButton
       tooltip={formatMessage(messages.unfavorite)}
       onClick={() => onSetFavorited(false)}
+      color={'#ffffff'}
     />);
   } else {
     mainButton = (<FavoriteBorderButton

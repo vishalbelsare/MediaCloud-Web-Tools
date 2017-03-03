@@ -4,6 +4,7 @@ import Title from 'react-title-component';
 import AppContainer from '../AppContainer';
 import SourcesDrawer from './SourcesDrawer';
 import messages from '../../resources/messages';
+import SourceMgrSubHeaderContainer from './SourceMgrSubHeaderContainer';
 
 const SourcesApp = (props) => {
   const { formatMessage } = props.intl;
@@ -18,6 +19,7 @@ const SourcesApp = (props) => {
         description={formatMessage(messages.sourcesToolDescription)}
         drawer={drawer}
         showLoginButton={false}
+        subHeader={<SourceMgrSubHeaderContainer />}
       >
         {props.children}
       </AppContainer>

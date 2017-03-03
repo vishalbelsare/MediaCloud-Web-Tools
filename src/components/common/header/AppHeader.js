@@ -12,7 +12,7 @@ const localMessages = {
   goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
 };
 
-class BrandMasthead extends React.Component {
+class AppHeader extends React.Component {
 
   onRouteToLogout = () => {
     this.context.router.push('/logout');
@@ -23,7 +23,7 @@ class BrandMasthead extends React.Component {
   }
 
   render() {
-    const { drawer, name, description, backgroundColor, mastheadText, navigateToHome } = this.props;
+    const { drawer, name, subHeader, showSubHeader, description, backgroundColor, navigateToHome } = this.props;
     const { formatMessage } = this.props.intl;
     const brandColors = getBrandColors();
     const styles = {
@@ -37,7 +37,42 @@ class BrandMasthead extends React.Component {
         clear: 'both',
       },
     };
-    const createMastheadText = () => ({ __html: (mastheadText !== null) ? mastheadText : name });
+    let content;
+    if (showSubHeader) {
+      content = (
+        <Row>
+          <Col lg={2}>
+            <h1>
+              <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+                <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+              </a>
+            </h1>
+          </Col>
+          <Col lg={8}>
+            {subHeader}
+          </Col>
+          <Col lg={2} />
+        </Row>
+      );
+    } else {
+      content = (
+        <Row>
+          <Col lg={6} md={6} sm={6}>
+            <h1>
+              <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+                <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+              </a>
+              <strong>{name}</strong>
+            </h1>
+          </Col>
+          <Col lg={6} md={6} sm={6}>
+            <div style={styles.right} >
+              <small>{description}</small>
+            </div>
+          </Col>
+        </Row>
+      );
+    }
     return (
       <div className="app-header">
         <AppNoticesContainer />
@@ -45,52 +80,38 @@ class BrandMasthead extends React.Component {
           backgroundColor={brandColors.light}
           drawer={drawer}
         />
-        <div id="branding-masthead" style={styles.root} >
+        <div style={styles.root} >
           <Grid>
-            <Row>
-              <Col lg={6} md={6} sm={6}>
-                <h1>
-                  <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-                    <img alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
-                  </a>
-                  <strong dangerouslySetInnerHTML={createMastheadText()} />
-                </h1>
-              </Col>
-              <Col lg={6} md={6} sm={6}>
-                <div style={styles.right} >
-                  <small>{description}</small>
-                </div>
-              </Col>
-            </Row>
+            {content}
           </Grid>
         </div>
       </div>
     );
   }
-
 }
 
-BrandMasthead.propTypes = {
+AppHeader.propTypes = {
   // from parent
   name: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
   backgroundColor: React.PropTypes.string.isRequired,
   lightColor: React.PropTypes.string.isRequired,
   drawer: React.PropTypes.node,
+  subHeader: React.PropTypes.node,
   // from context
   intl: React.PropTypes.object.isRequired,
   // state
-  mastheadText: React.PropTypes.string,
+  showSubHeader: React.PropTypes.bool,
   // from dispatch
   navigateToHome: React.PropTypes.func.isRequired,
 };
 
-BrandMasthead.contextTypes = {
+AppHeader.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  mastheadText: state.app.mastheadText,
+const mapStateToProps = store => ({
+  showSubHeader: store.app.showSubHeader,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -103,6 +124,6 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      BrandMasthead
+      AppHeader
     )
   );

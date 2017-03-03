@@ -2,7 +2,7 @@
 
 #branding-toolbar {
   height: 40px;
-  font-family: 'Lato', sans-serif;
+  font-family: $font-families;
   color: $white;
   ul {
     display: block;
@@ -14,9 +14,10 @@
       float: left;
       padding-left: 1em;
       padding-right: 1em;
-      height: 40px;
+      padding-top: 6px;
+      height: 34px;
       a {
-        font-size: 18px;
+        font-size: 14px;
         line-height: 2.1em;
         text-decoration: none;
         color: $white;
@@ -34,13 +35,14 @@
     li.blog {
       a {
         color: $black;
+        opacity: 0.5;
       }        
     }
   }
 }
 
-#branding-masthead {
-  font-family: 'Lato', sans-serif;
+.app-header {
+  font-family: $font-families;
   h1 {
     font-size: 36px;
     font-weight: 500;
@@ -65,7 +67,7 @@
     }
   }
   small {
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-families;
     margin-top: 10px;
     margin-bottom: 10px;
     float: right;

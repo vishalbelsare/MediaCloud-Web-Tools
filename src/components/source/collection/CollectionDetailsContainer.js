@@ -1,26 +1,15 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
-import Lock from 'material-ui/svg-icons/action/lock';
-import Unlock from 'material-ui/svg-icons/action/lock-open';
-import IconButton from 'material-ui/IconButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
-import CollectionIcon from '../../common/icons/CollectionIcon';
 import SourceList from '../../common/SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
-import FavoriteToggler from '../../common/FavoriteToggler';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
-import messages from '../../../resources/messages';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-
 
 const localMessages = {
   searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -51,48 +40,20 @@ class CollectionDetailsContainer extends React.Component {
   }
 
   render() {
-    const { collection, onChangeFavorited } = this.props;
+    const { collection } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
-    const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
-    const editMessage = ( // TODO: permissions around this
-      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <span className="collection-edit-link">
-          •&nbsp;
-          <Link to={`/collections/${collection.tags_id}/edit`} >
-            <FormattedMessage {...messages.edit} />
-          </Link>
-        </span>
-      </Permissioned>
-    );
-    let lockIcon = null;
-    if (collection.is_static === 1) {
-      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton>);
-    } else {
-      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>);
-    }
-
-    let mainButton = null;
-    mainButton = (<FavoriteToggler
-      isFavorited={collection.isFavorite}
-      onSetFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
-    />);
-
     return (
       <div>
         <Row>
-          <Col lg={12}>
-            <h1>
-              <CollectionIcon height={32} />
-              <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <div className="actions">{mainButton}</div>
-              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
-            </h1>
+          <Col lg={8}>
             <p><b>{collection.description}</b></p>
             <p>
               <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
               <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media, onStories: collection.show_on_stories }} /></li>
             </p>
+          </Col>
+          <Col lg={4}>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
         </Row>
@@ -134,8 +95,6 @@ CollectionDetailsContainer.propTypes = {
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   collectionId: React.PropTypes.number.isRequired,
-  // from dispatch
-  onChangeFavorited: React.PropTypes.func.isRequired,
   // from state
   collection: React.PropTypes.object,
 };
@@ -145,20 +104,9 @@ const mapStateToProps = (state, ownProps) => ({
   collection: state.sources.collections.selected.collectionDetails.object,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  onChangeFavorited: (mediaId, isFavorite) => {
-    dispatch(favoriteCollection(mediaId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? localMessages.collectionFavorited : localMessages.collectionUnFavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        // dispatch(fetchFavoriteCollections());  // to update the list of favorites
-      });
-  },
-});
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps)(
       CollectionDetailsContainer
     )
   );
