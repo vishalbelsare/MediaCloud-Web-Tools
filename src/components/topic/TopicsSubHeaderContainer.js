@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import AppSubHeader from '../common/header/AppSubHeader';
 import { setTopicFavorite } from '../../actions/topicActions';
 import { updateFeedback } from '../../actions/appActions';
+import messages from '../../resources/messages';
 
 const localMessages = {
   topicFavorited: { id: 'source.favorited', defaultMessage: 'Favorited this topic' },
@@ -17,7 +18,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     content = (
       <div className="topic-sub-header">
         <AppSubHeader
-          title={topicInfo.name}
+          title={`${messages.topicName}: ${topicInfo.name}`}
           subTitle={topicInfo.description}
           isFavorite={topicInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
