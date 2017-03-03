@@ -6,11 +6,12 @@ import MenuItem from 'material-ui/MenuItem';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
-import FilledStarIcon from '../../common/icons/FilledStarIcon';
 
 const MAX_SUGGESTION_CHARS = 40;
 const MAX_SOURCES_TO_SHOW = 5;
 const MAX_COLLECTIONS_TO_SHOW = 3;
+
+const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a search
 
 const localMessages = {
   advancedSearch: { id: 'sources.search.advanced', defaultMessage: 'Advanced Search...' },
@@ -23,6 +24,8 @@ class SourceSearchContainer extends React.Component {
     super(props);
     this.state = {
       lastSearchString: '',
+      lastKeypress: 0,
+      searchTimeout: null,
     };
   }
 
@@ -42,15 +45,12 @@ class SourceSearchContainer extends React.Component {
     }
   }
 
-  shouldFireSearch = (newSearchString) => {
-    if (((newSearchString.length > 0) &&
-        (newSearchString !== this.state.lastSearchString)) ||
-        ((newSearchString === this.state.lastSearchString) &&
-          (Math.abs(newSearchString.length - this.state.lastSearchString.length) > 2))) {
-      this.setState({ lastSearchString: newSearchString });
-      return true;
+  fireSearchIfNeeded = () => {
+    const { search } = this.props;
+    const shouldSearch = this.state.lastSearchString.length > 3;
+    if (shouldSearch) {
+      search(this.state.lastSearchString);
     }
-    return false;
   }
 
   resetIfRequested = () => {
@@ -70,9 +70,7 @@ class SourceSearchContainer extends React.Component {
         <MenuItem
           onClick={() => this.handleClick(item)}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
-        >
-          { item.isFavorite ? <FilledStarIcon /> : '' }
-        </MenuItem>
+        />
       ),
     }));
 
@@ -91,10 +89,19 @@ class SourceSearchContainer extends React.Component {
   }
 
   handleUpdateInput = (searchString) => {
+    clearTimeout(this.state.searchTimeout); // cancel any pending searches
+    this.setState({
+      lastSearchString: searchString,
+      searchTimeout: setTimeout(this.fireSearchIfNeeded, DELAY_BEFORE_SEARCH_MS),  // schedule a search for when they stop typing
+    });
+  }
+
+  handleNewRequest = (searchString, index) => {
     const { search } = this.props;
-    if (this.shouldFireSearch(searchString)) {
+    if (index === -1) { // they pressed enter in the text field
       search(searchString);
     }
+    // else: they clicked an item and it will take care of things itself
   }
 
   render() {
@@ -113,6 +120,7 @@ class SourceSearchContainer extends React.Component {
           onClick={this.resetIfRequested}
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
+          onNewRequest={this.handleNewRequest}
           maxSearchResults={10}
           filter={() => true}
         />
