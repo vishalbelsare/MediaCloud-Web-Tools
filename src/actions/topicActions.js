@@ -210,8 +210,6 @@ export const sortWordStories = createAction(SORT_WORD_STORIES, sort => sort);
 // pass in topic id, media id, snapshot id, timespan id
 export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords);
 
-export const suggestTopic = createAsyncAction(SUGGEST_TOPIC, api.suggestTopic);
-
 export const createTopic = createAsyncAction(CREATE_TOPIC, api.createTopic);
 
 export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);

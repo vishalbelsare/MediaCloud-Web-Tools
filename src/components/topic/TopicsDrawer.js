@@ -12,7 +12,7 @@ import messages from '../../resources/messages';
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
   home: { id: 'topics.menu.items.home', defaultMessage: 'Explore Topics' },
-  createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Suggest a New Topic' },
+  createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
 class TopicsDrawer extends React.Component {
@@ -46,7 +46,7 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/suggest'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
             <FormattedMessage {...localMessages.createNewTopic} />
           </MenuItem>
         </div>

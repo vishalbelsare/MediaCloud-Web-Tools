@@ -123,11 +123,11 @@ def topic_create():
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
     }
 
-    # parse out any tag to add (ie. collections and metadata)
+    # parse out any sources and collections to add
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
 
-    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query, start_date=start_date, end_date=end_date, media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **optional_args )
+    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query, start_date=start_date, end_date=end_date, media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **optional_args)
 
     return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
 
@@ -153,54 +153,11 @@ def topic_update(topics_id):
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
     }
-# parse out any tag to add (ie. collections and metadata)
+
+    # parse out any sources and collections to add
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
 
-    result = user_mc.topicUpdate(topics_id, **args )
+    result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
     return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
-
-
-@app.route('/api/topics/suggest', methods=['PUT'])
-@flask_login.login_required
-@form_fields_required('name', 'description', 'seedQuery', 'reason')
-@api_error_handler
-def topic_suggest():
-    spidered = False
-    if 'spidered' in request.form:
-        spidered = request.form['spidered'] is '1'
-    content = """
-Hi,
-
-{username} just requested a new Topic be created with the following info:
-
-Name: {name}
-
-Description: {description}
-
-Seed Query: {seedQuery}
-
-Reason: {reason}
-
-Spidered?: {spidered}
-
-Sincerely,
-
-Your friendly Media Cloud Topic Mapper server
-🎓👓
-
-https://topics.mediacloud.org
-    """
-    send_email('no-reply@mediacloud.org',
-        [user_name(),'topic-request@mediacloud.org'],
-        'New Topic Request: '+request.form['name'],
-        content.format(
-            username=user_name(),
-            name=request.form['name'],
-            description=request.form['description'],
-            seedQuery=request.form['seedQuery'],
-            reason=request.form['reason'],
-            spidered=spidered
-        ))
-    return jsonify({'success': 1})
