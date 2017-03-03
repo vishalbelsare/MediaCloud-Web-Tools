@@ -13,7 +13,7 @@ import SourceGeographyContainer from './SourceGeographyContainer';
 import HealthBadge from '../HealthBadge';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
-import { InfoNotice, ErrorNotice } from '../../common/Notice';
+import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import AppButton from '../../common/AppButton';
 
@@ -44,6 +44,7 @@ const localMessages = {
   editorNotes: { id: 'source.basicInfo.editorNotes', defaultMessage: '<p><b>Editor\'s Notes</b>: {notes}</p>' },
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
+  unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -66,6 +67,11 @@ class SourceDetailsContainer extends React.Component {
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
+    // check if source is not suitable for general queries
+    let unhealthySourceWarning;
+    if (source.media_source_tags[0].tags_id === 8875452 && !isCollectionTagSet(source.media_source_tags[0].tags_id) && !source.is_healthy) {
+      unhealthySourceWarning = (<WarningNotice><FormattedMessage {...localMessages.unhealthySource} /></WarningNotice>);
+    }
     let notice;
     // pull together any relevant warnings
     if ((source.latestScrapeState === SOURCE_SCRAPE_STATE_QUEUED) || (source.latestScrapeState === SOURCE_SCRAPE_STATE_RUNNING)) {
@@ -102,6 +108,7 @@ class SourceDetailsContainer extends React.Component {
         <Row>
           <Col lg={10} xs={12}>
             {notice}
+            {unhealthySourceWarning} <br />
             {publicNotes}
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               {editorNotes}
