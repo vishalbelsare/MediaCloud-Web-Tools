@@ -16,7 +16,7 @@ const localMessages = {
 };
 
 const HomeContainer = (props) => {
-  const { handleChangeFavorited } = props;
+  const { handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   const title = formatMessage(localMessages.homeTitle);
   const titleHandler = parentTitle => `${title} | ${parentTitle}`;
@@ -32,8 +32,8 @@ const HomeContainer = (props) => {
             <h1><TopicSearchContainer /></h1>
           </Col>
         </Row>
-        <FavoriteTopicsContainer onChangeFavorited={handleChangeFavorited} />
-        <TopicListContainer onChangeFavorited={handleChangeFavorited} />
+        <FavoriteTopicsContainer onSetFavorited={handleSetFavorited} />
+        <TopicListContainer onSetFavorited={handleSetFavorited} />
       </Grid>
     </div>
   );
@@ -43,11 +43,11 @@ HomeContainer.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from dispatch
-  handleChangeFavorited: React.PropTypes.func.isRequired,
+  handleSetFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleChangeFavorited: (topicId, isFavorite) => {
+  handleSetFavorited: (topicId, isFavorite) => {
     dispatch(setTopicFavorite(topicId, isFavorite))
       .then(() => {
         const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;

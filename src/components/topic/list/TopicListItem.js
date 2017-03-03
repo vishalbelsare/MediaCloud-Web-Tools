@@ -14,7 +14,7 @@ const localMessages = {
 };
 
 const TopicListItem = (props) => {
-  const { topic, onChangeFavorited } = props;
+  const { topic, onSetFavorited } = props;
   const { formatMessage } = props.intl;
   const disable = false; // (topic.state !== 'ready');
   let title = null;
@@ -27,7 +27,7 @@ const TopicListItem = (props) => {
   if (topic.user_permission !== PERMISSION_TOPIC_NONE) {
     mainButton = (<FavoriteToggler
       isFavorited={topic.isFavorite}
-      onChangeFavorited={isFavNow => onChangeFavorited(topic.topics_id, isFavNow)}
+      onSetFavorited={isFavNow => onSetFavorited(topic.topics_id, isFavNow)}
     />);
   } else {
     mainButton = (
@@ -55,7 +55,7 @@ const TopicListItem = (props) => {
 TopicListItem.propTypes = {
   intl: React.PropTypes.object.isRequired,
   topic: React.PropTypes.object.isRequired,
-  onChangeFavorited: React.PropTypes.func.isRequired,
+  onSetFavorited: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(TopicListItem);
