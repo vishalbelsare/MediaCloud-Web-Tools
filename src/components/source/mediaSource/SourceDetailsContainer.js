@@ -70,7 +70,14 @@ class SourceDetailsContainer extends React.Component {
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
     if (source.media_source_tags[0].tags_id === 8875452 && !isCollectionTagSet(source.media_source_tags[0].tags_id) && !source.is_healthy) {
-      unhealthySourceWarning = (<WarningNotice><FormattedMessage {...localMessages.unhealthySource} /></WarningNotice>);
+      unhealthySourceWarning = (
+        <span>
+          <WarningNotice>
+            <FormattedMessage {...localMessages.unhealthySource} />
+          </WarningNotice>
+          <br />
+        </span>
+      );
     }
     let notice;
     // pull together any relevant warnings
@@ -108,7 +115,7 @@ class SourceDetailsContainer extends React.Component {
         <Row>
           <Col lg={10} xs={12}>
             {notice}
-            {unhealthySourceWarning} <br />
+            {unhealthySourceWarning}
             {publicNotes}
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               {editorNotes}
