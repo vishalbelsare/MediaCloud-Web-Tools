@@ -1,0 +1,9 @@
+@import '../_constants';
+
+.user-menu {
+  button {
+    svg {
+      fill: $material-grey800 !important;
+    }
+  }
+}
