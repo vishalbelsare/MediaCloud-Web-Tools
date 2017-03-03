@@ -13,11 +13,13 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
 const localMessages = {
-  editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic' },
-  editTopicText: { id: 'topic.edit.text', defaultMessage: 'You can update this Topic.' },
+  editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
+  editTopicText: { id: 'topic.edit.text', defaultMessage: 'You can update this Topic. If you make changes to the query, media sourcs, or dates, those will be reflected in the next snapshot you run.' },
   editTopic: { id: 'topic.edit', defaultMessage: 'Edit Topic' },
   editTopicCollectionsTitle: { id: 'topic.edit.editTopicCollectionsTitle', defaultMessage: 'Edit Sources and Collections' },
   editTopicCollectionsIntro: { id: 'topic.edit.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
+  feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
+  failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\t work!' },
 };
 
 class EditTopicContainer extends React.Component {
@@ -35,8 +37,9 @@ class EditTopicContainer extends React.Component {
     let initialValues = {};
 
     if (topicInfo) {
-      const sources = topicInfo.media.map(t => ({ ...t }));
-      const collections = topicInfo.media_tags.map(t => ({ ...t, name: t.label }));
+      // load sources and collections in a backwards compatible way
+      const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
+      const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
       const sourcesAndCollections = sources.concat(collections);
       initialValues = {
         buttonLabel: formatMessage(messages.save),
@@ -53,13 +56,14 @@ class EditTopicContainer extends React.Component {
             <p><FormattedMessage {...localMessages.editTopicText} /></p>
           </Col>
         </Row>
-        <Row>
-          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-            <Col lg={12}>
-              <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.editTopicCollectionsTitle)} intro={formatMessage(localMessages.editTopicCollectionsIntro)} />
-            </Col>
-          </Permissioned>
-        </Row>
+        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+          <TopicForm
+            onSaveTopic={handleSave}
+            initialValues={initialValues}
+            title={formatMessage(localMessages.editTopicCollectionsTitle)}
+            intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+          />
+        </Permissioned>
       </Grid>
     );
   }

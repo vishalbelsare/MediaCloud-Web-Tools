@@ -17,8 +17,6 @@ const localMessages = {
   start_date: { id: 'topic.form.detail.start_date', defaultMessage: 'Start Date' },
   end_date: { id: 'topic.form.detail.end_date', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public ?' },
-  sources: { id: 'topic.form.detail.sources', defaultMessage: 'Sources' },
-  collections: { id: 'topic.form.detail', defaultMessage: 'Collections' },
   monitored: { id: 'topic.form.detail.monitored', defaultMessage: 'Crimson Hexagon Id' },
   spidered: { id: 'topic.form.detail.spidered', defaultMessage: 'Spidered ?' },
   max_iterations: { id: 'topic.form.detail.max_iterations', defaultMessage: 'Max Iterations' },

@@ -18,6 +18,7 @@ const SourceMgrSubHeaderContainer = (props) => {
       <div className="topic-sub-header">
         <AppSubHeader
           title={topicInfo.name}
+          subTitle={topicInfo.description}
           isFavorite={topicInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
         />
