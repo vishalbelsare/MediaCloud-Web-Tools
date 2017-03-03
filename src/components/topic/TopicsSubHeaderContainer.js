@@ -13,12 +13,13 @@ const localMessages = {
 
 const SourceMgrSubHeaderContainer = (props) => {
   const { topicId, topicInfo, handleSetFavorited } = props;
+  const { formatMessage } = props.intl;
   let content = null;
   if (topicInfo !== null) {
     content = (
       <div className="topic-sub-header">
         <AppSubHeader
-          title={`${messages.topicName}: ${topicInfo.name}`}
+          title={`${formatMessage(messages.topicName)}: ${topicInfo.name}`}
           subTitle={topicInfo.description}
           isFavorite={topicInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
