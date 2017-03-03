@@ -7,13 +7,18 @@ import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
-import { SettingsButton } from '../../common/IconButton';
+import { EditButton, SettingsButton } from '../../common/IconButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
+const localMessages = {
+  editPermissions: { id: 'topic.editPermissions', defaultMessage: 'Edit Topic Permissions' },
+  editSettings: { id: 'topic.editSettings', defaultMessage: 'Edit Topic Settings' },
+};
+
 const ControlBar = (props) => {
   const { topicId, location, filters } = props;
-  // const { formatMessage } = props.intl;
+  const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let focusSelector = null;
   let subControls = null;
@@ -28,8 +33,13 @@ const ControlBar = (props) => {
           <Row>
             <Col lg={4} className="left">
               <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                <EditButton
+                  linkTo={filteredLinkTo(`/topics/${topicId}/edit`, filters)}
+                  tooltip={formatMessage(localMessages.editSettings)}
+                />
                 <SettingsButton
-                  linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
+                  linkTo={filteredLinkTo(`/topics/${topicId}/permissions`, filters)}
+                  tooltip={formatMessage(localMessages.editPermissions)}
                 />
               </Permissioned>
             </Col>
