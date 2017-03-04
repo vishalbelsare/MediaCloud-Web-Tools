@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
@@ -14,7 +14,7 @@ import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
-  helpTitle: { id: 'topic.summary.stories.help.title', defaultMessage: 'About Top Stories' },
+  descriptionIntro: { id: 'topic.summary.stories.help.title', defaultMessage: 'The top stories within this topic can suggest the main ways it is talked about.  Sort by different measures to get a better picture of a story\'s influence.' },
 };
 
 const NUM_TO_SHOW = 10;
@@ -37,7 +37,7 @@ class StoriesSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, helpButton, filters } = this.props;
+    const { stories, sort, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -49,7 +49,6 @@ class StoriesSummaryContainer extends React.Component {
         </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         <StoryTable stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
       </DataCard>
@@ -60,7 +59,6 @@ class StoriesSummaryContainer extends React.Component {
 StoriesSummaryContainer.propTypes = {
   // from the composition chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -108,7 +106,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, messages.storiesTableHelpText)(
+      composeDescribedDataCard(localMessages.descriptionIntro, messages.storiesTableHelpText)(
         composeAsyncContainer(
           StoriesSummaryContainer
         )
