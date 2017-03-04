@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary } from '../../actions/topicActions';
-import { addNotice } from '../../actions/appActions';
+import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
 import { LEVEL_WARNING } from '../common/Notice';
 
 const localMessages = {
@@ -31,6 +31,10 @@ class TopicContainer extends React.Component {
         addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
       }
     }
+  }
+  componentWillUnmount() {
+    const { selectNewTopic } = this.props;
+    selectNewTopic(null);
   }
   filtersAreSet() {
     const { filters, topicId } = this.props;
@@ -81,6 +85,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   selectNewTopic: (topicId) => {
     dispatch(selectTopic(topicId));
+    if (topicId === null) {
+      dispatch(setSubHeaderVisible(false));
+    }
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
@@ -95,7 +102,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     if (ownProps.location.query.timespanId) {
       dispatch(filterByTimespan(query.timespanId));
     }
-    dispatch(fetchTopicSummary(ownProps.params.topicId));
+    dispatch(fetchTopicSummary(ownProps.params.topicId))
+      .then(() => dispatch(setSubHeaderVisible(true)));
   },
 });
 

@@ -24,6 +24,15 @@ class TopicSearchContainer extends React.Component {
     }
   }
 
+  handleMenuItemKeyDown = (item, event) => {
+    switch (event.key) {
+      case 'Enter':
+        this.handleClick(item);
+        break;
+      default: break;
+    }
+  }
+
   resetIfRequested = () => {
     const { topicResults } = this.props;
     let results = [];
@@ -33,6 +42,7 @@ class TopicSearchContainer extends React.Component {
       value: (
         <MenuItem
           onClick={() => this.handleClick(item)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, item)}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       ),

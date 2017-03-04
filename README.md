@@ -62,7 +62,7 @@ Releasing
 5. Test it and then tag and commit it all.
 
 Updating npm Depedencies
-------------------------
+------------------------ 
 
 It is important to occasionally we upgrade to the latest verison of the npm libraries we use.
 This is something to do every month or so, to make sure we don't fall behind the rapid development 

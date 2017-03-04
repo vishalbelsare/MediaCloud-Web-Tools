@@ -27,7 +27,7 @@ const PopularCollectionsContainer = (props) => {
     );
   }
   return (
-    <div>
+    <div className="popular-collections">
       <h2>
         <FormattedMessage {...localMessages.mainTitle} />
       </h2>

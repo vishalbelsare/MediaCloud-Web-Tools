@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { Col } from 'react-flexbox-grid/lib';
 import Lock from 'material-ui/svg-icons/action/lock';
@@ -10,10 +10,11 @@ import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const localMessages = {
   notPermissioned: { id: 'topic.notPermissioned', defaultMessage: 'Missing Permission' },
+  status: { id: 'topic.status', defaultMessage: 'Status: {status}' },
 };
 
 const TopicListItem = (props) => {
-  const { topic, onChangeFavorited } = props;
+  const { topic, onSetFavorited } = props;
   const { formatMessage } = props.intl;
   const disable = false; // (topic.state !== 'ready');
   let title = null;
@@ -26,7 +27,7 @@ const TopicListItem = (props) => {
   if (topic.user_permission !== PERMISSION_TOPIC_NONE) {
     mainButton = (<FavoriteToggler
       isFavorited={topic.isFavorite}
-      onChangeFavorited={isFavNow => onChangeFavorited(topic.topics_id, isFavNow)}
+      onSetFavorited={isFavNow => onSetFavorited(topic.topics_id, isFavNow)}
     />);
   } else {
     mainButton = (
@@ -41,7 +42,11 @@ const TopicListItem = (props) => {
         <div className="actions">{mainButton}</div>
         <h3>{title}</h3>
         <p>{topic.description}</p>
-        <p><small>{topic.state}</small></p>
+        <p>
+          <small><i>
+            <FormattedMessage {...localMessages.status} values={{ status: topic.state }} />
+          </i></small>
+        </p>
       </DataCard>
     </Col>
   );
@@ -50,7 +55,7 @@ const TopicListItem = (props) => {
 TopicListItem.propTypes = {
   intl: React.PropTypes.object.isRequired,
   topic: React.PropTypes.object.isRequired,
-  onChangeFavorited: React.PropTypes.func.isRequired,
+  onSetFavorited: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(TopicListItem);

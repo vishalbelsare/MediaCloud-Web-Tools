@@ -59,7 +59,6 @@ export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COU
 export const FETCH_TOPIC_ENGLISH_STORY_COUNTS = 'FETCH_TOPIC_ENGLISH_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
-export const SAVE_TOPIC_DETAILS = 'SAVE_TOPIC_DETAILS';
 export const SUGGEST_TOPIC = 'SUGGEST_TOPIC';
 export const SELECT_WORD = 'SELECT_WORD';
 export const FETCH_WORD = 'FETCH_WORD';
@@ -69,6 +68,8 @@ export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
 export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
+export const CREATE_TOPIC = 'CREATE_TOPIC';
+export const UPDATE_TOPIC = 'UPDATE_TOPIC';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -197,9 +198,6 @@ export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, i
 // pass in topicId, focalSetId, filters
 export const fetchTopicFocalSetSetenceCounts = createAsyncAction(FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS, api.topicFocalSetSentenceCounts);
 
-// pass in topicId, dictionary of properties to send to server
-export const saveTopicDetails = createAsyncAction(SAVE_TOPIC_DETAILS, api.saveTopicDetails);
-
 export const selectWord = createAction(SELECT_WORD, payload => payload);
 
 export const fetchWord = createAsyncAction(FETCH_WORD, api.word);
@@ -212,8 +210,9 @@ export const sortWordStories = createAction(SORT_WORD_STORIES, sort => sort);
 // pass in topic id, media id, snapshot id, timespan id
 export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords);
 
-export const suggestTopic = createAsyncAction(SUGGEST_TOPIC, api.suggestTopic);
+export const createTopic = createAsyncAction(CREATE_TOPIC, api.createTopic);
 
+export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 // pass in topic id & params (snapshot id, focus id, timespan id)
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 

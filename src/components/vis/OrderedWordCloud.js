@@ -126,14 +126,17 @@ class OrderedWordCloud extends React.Component {
     const wordListHeight = options.height - (2 * options.padding);
     const wordWrapper = svg.append('g')
         .attr('transform', `translate(${2 * options.padding},0)`);
+
     while (y >= wordListHeight && sizeRange.max > sizeRange.min) {
       // Create words
-      wordNodes = wordWrapper.selectAll('.word')
+      wordNodes = wordWrapper.selectAll('text')
         .data(words.slice(0, DEFAULT_WORD_COUNT), d => d.stem)
         .enter()
-        .append('text')
+        .append('text') // for incoming data
+          .attr('class', '')
           .classed('word', true)
-          .classed('left', true)
+          .classed('hide', d => d.display === false)
+          .classed('show', d => d.display !== false)
         .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
@@ -160,10 +163,13 @@ class OrderedWordCloud extends React.Component {
           }
         })
         .on('click', (d) => {
+          const event = d3.event;
           if ((onWordClick !== null) && (onWordClick !== undefined)) {
-            onWordClick(d);
+            onWordClick(d, d3.select(event.target));
           }
+          return null;
         });
+
       // Layout
       y = 0;
       const leftHeight = this.listCloudLayout(wordNodes, innerWidth, options.fullExtent, sizeRange);

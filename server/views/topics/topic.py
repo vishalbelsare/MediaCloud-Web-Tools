@@ -4,11 +4,13 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, db, mc
+from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.mail import send_email
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic, CACHED_TOPICS
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +26,6 @@ def topic_list():
         _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
-@api_error_handler
 def public_topic_list(topic_list):
     all_public_topics = []
     for topic in topic_list:
@@ -103,52 +104,60 @@ def favorite_topics():
         t['isFavorite'] = True
     return jsonify({'topics': favorited_topics})
 
+@app.route('/api/topics/create', methods=['PUT'])
+@flask_login.login_required
+@form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
+@api_error_handler
+def topic_create():
+    user_mc = user_mediacloud_client()
+    name = request.form['name']
+    description = request.form['description']
+    solr_seed_query = request.form['solr_seed_query']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+
+    optional_args = {
+        'is_public': request.form['is_public'] if 'is_public' in request.form else None,
+        'ch_monitor_id': request.form['ch_monitor_id'] if 'ch_monitor_id' in request.form else None,    # this is optional
+        'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
+        'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
+    }
+
+    # parse out any sources and collections to add
+    media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
+    tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
+
+    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query, start_date=start_date, end_date=end_date, media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **optional_args)
+
+    return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
+
+
+
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
-@form_fields_required('name', 'description', 'public')
+# require any fields?
+@form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
 @api_error_handler
 def topic_update(topics_id):
-    return topic_summary(topics_id) # give them back new data, so they can update the client
 
-@app.route('/api/topics/suggest', methods=['PUT'])
-@flask_login.login_required
-@form_fields_required('name', 'description', 'seedQuery', 'reason')
-@api_error_handler
-def topic_suggest():
-    spidered = False
-    if 'spidered' in request.form:
-        spidered = request.form['spidered'] is '1'
-    content = """
-Hi,
+    user_mc = user_mediacloud_client()
+    # top five cannot be empty fyi
+    args = {
+        'name': request.form['name'],
+        'description': request.form['description'],
+        'solr_seed_query': request.form['solr_seed_query'],
+        'start_date': request.form['start_date'],
+        'end_date': request.form['end_date'],
+        'is_public': request.form['is_public'] if 'is_public' in request.form else None,
+        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['chtopic_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
+        'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
+        'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
+    }
 
-{username} just requested a new Topic be created with the following info:
+    # parse out any sources and collections to add
+    media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
+    tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
 
-Name: {name}
+    result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
-Description: {description}
-
-Seed Query: {seedQuery}
-
-Reason: {reason}
-
-Spidered?: {spidered}
-
-Sincerely,
-
-Your friendly Media Cloud Topic Mapper server
-🎓👓
-
-https://topics.mediacloud.org
-    """
-    send_email('no-reply@mediacloud.org',
-        [user_name(),'topic-request@mediacloud.org'],
-        'New Topic Request: '+request.form['name'],
-        content.format(
-            username=user_name(),
-            name=request.form['name'],
-            description=request.form['description'],
-            seedQuery=request.form['seedQuery'],
-            reason=request.form['reason'],
-            spidered=spidered
-        ))
-    return jsonify({'success': 1})
+    return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client

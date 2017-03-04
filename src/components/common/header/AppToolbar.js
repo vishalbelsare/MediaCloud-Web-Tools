@@ -1,7 +1,8 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import messages from '../../resources/messages';
+import messages from '../../../resources/messages';
+import UserMenuContainer from './UserMenuContainer';
 
 const BrandToolbar = (props) => {
   const { backgroundColor, drawer } = props;
@@ -21,20 +22,20 @@ const BrandToolbar = (props) => {
                   <FormattedMessage {...messages.dashboardToolShortName} />
                 </a>
               </li>
-              <li className="sources">
-                <a
-                  href="https://sources.mediacloud.org/"
-                  title={formatMessage(messages.sourcesToolDescription)}
-                >
-                  <FormattedMessage {...messages.sourcesToolShortName} />
-                </a>
-              </li>
               <li className="topics">
                 <a
                   href="https://topics.mediacloud.org/"
                   title={formatMessage(messages.topicsToolDescription)}
                 >
                   <FormattedMessage {...messages.topicsToolShortName} />
+                </a>
+              </li>
+              <li className="sources">
+                <a
+                  href="https://sources.mediacloud.org/"
+                  title={formatMessage(messages.sourcesToolDescription)}
+                >
+                  <FormattedMessage {...messages.sourcesToolShortName} />
                 </a>
               </li>
               <li className="blog">
@@ -49,6 +50,7 @@ const BrandToolbar = (props) => {
           </Col>
           <Col lg={2}>
             <div className="actions">
+              <UserMenuContainer />
               {drawer}
             </div>
           </Col>

@@ -1,14 +1,15 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchStoryWords } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import { filteredLinkTo } from '../../util/location';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
+import { generateParamStr } from '../../../lib/apiUtil';
+
 
 const localMessages = {
   helpTitle: { id: 'story.words.help.title', defaultMessage: 'About Story Top Words' },
@@ -17,26 +18,31 @@ const localMessages = {
   },
 };
 
+const WORD_CLOUD_DOM_ID = 'word-cloud';
+
 class StoryWordsContainer extends React.Component {
-  downloadCsv = () => {
-    const { storiesId, topicId } = this.props;
-    const url = `/api/topics/${topicId}/stories/${storiesId}/words.csv`;
-    window.location = url;
+
+  componentWillReceiveProps(nextProps) {
+    const { fetchData, filters } = this.props;
+    if (nextProps.filters.timespanId !== filters.timespanId) {
+      fetchData(nextProps);
+    }
   }
+
   render() {
-    const { words, helpButton } = this.props;
+    const { storiesId, topicId, words, helpButton, handleWordCloudClick, filters } = this.props;
     const { formatMessage } = this.props.intl;
+    const urlDownload = `/api/topics/${topicId}/stories/${storiesId}/words.csv`;
     return (
-      <DataCard>
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>
-          <FormattedMessage {...messages.topWords} />
-          {helpButton}
-        </h2>
-        <OrderedWordCloud words={words} textColor={getBrandDarkColor()} showTooltips />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+        downloadUrl={urlDownload}
+        onViewModeClick={handleWordCloudClick}
+        title={formatMessage(messages.topWords)}
+        helpButton={helpButton}
+        domId={WORD_CLOUD_DOM_ID}
+      />
     );
   }
 }
@@ -48,27 +54,45 @@ StoryWordsContainer.propTypes = {
   // from parent
   storiesId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object,
   // from dispatch
+  fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array.isRequired,
+  handleWordCloudClick: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.words.fetchStatus,
   words: state.topics.selected.story.words.list,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchStoryWords(ownProps.topicId, ownProps.storiesId)); // fetch the info we need
+  fetchData: (props) => {
+    dispatch(fetchStoryWords(ownProps.topicId, ownProps.storiesId, props.filters));
   },
+  pushToUrl: url => dispatch(push(url)),
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps); // fetch the info we need
+    },
+    handleWordCloudClick: (word) => {
+      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      const url = `/topics/${ownProps.topicId}/words/${word.stem}*?${params}`;
+      dispatchProps.pushToUrl(url);
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           StoryWordsContainer

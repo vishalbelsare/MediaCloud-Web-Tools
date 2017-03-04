@@ -1,28 +1,15 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Title from 'react-title-component';
-import Link from 'react-router/lib/Link';
 import RaisedButton from 'material-ui/RaisedButton';
-import Lock from 'material-ui/svg-icons/action/lock';
-import Unlock from 'material-ui/svg-icons/action/lock-open';
-import IconButton from 'material-ui/IconButton';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectCollection, fetchCollectionDetails, favoriteCollection, updateFeedback } from '../../../actions/sourceActions';
-import CollectionIcon from '../../common/icons/CollectionIcon';
-import composeAsyncContainer from '../../common/AsyncContainer';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import SourceList from '../../common/SourceList';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
-import FavoriteToggler from '../../common/FavoriteToggler';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
-import messages from '../../../resources/messages';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-
 
 const localMessages = {
   searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -37,21 +24,14 @@ const localMessages = {
     defaultMessage: 'You have favorited {count, plural,\n =0 {no sources}\n =1 {one source}\n other {# sources}\n}.',
   },
   collectionIsOrIsnt: { id: 'collection.details.isOrIsnt', defaultMessage: 'This is a {shows, plural,\n =0 {dynamic collection; sources can be added and removed from it}\n =1 {static collection; the sources that are part of it will not change}\n}.' },
-  collectionIsStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
-  collectionIsNotStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
+  collectionIsNotStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
+  collectionIsStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
   collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =1 {shows}\n} up on media and {onStories, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
   collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a favorite' },
   collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Marked this as not a favorite' },
 };
 
 class CollectionDetailsContainer extends React.Component {
-
-  componentWillReceiveProps(nextProps) {
-    const { collectionId, fetchData } = this.props;
-    if ((nextProps.collectionId !== collectionId)) {
-      fetchData(nextProps.collectionId);
-    }
-  }
 
   searchOnDashboard = () => {
     const { collection } = this.props;
@@ -60,51 +40,20 @@ class CollectionDetailsContainer extends React.Component {
   }
 
   render() {
-    const { collection, onChangeFavorited } = this.props;
+    const { collection } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
-    const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
-    const publicMessage = (collection.show_on_media === 1) ? `• ${formatMessage(messages.public)}` : '';
-    const editMessage = ( // TODO: permissions around this
-      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <span className="collection-edit-link">
-          •&nbsp;
-          <Link to={`/collections/${collection.tags_id}/edit`} >
-            <FormattedMessage {...messages.edit} />
-          </Link>
-        </span>
-      </Permissioned>
-    );
-    let lockIcon = null;
-    if (collection.is_static === 1) {
-      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsStatic)}><Lock /></IconButton>);
-    } else {
-      lockIcon = (<IconButton style={{ marginTop: 5 }} tooltip={formatMessage(localMessages.collectionIsNotStatic)}><Unlock /></IconButton>);
-    }
-
-    let mainButton = null;
-    mainButton = (<FavoriteToggler
-      isFavorited={collection.isFavorite}
-      onChangeFavorited={isFavNow => onChangeFavorited(collection.id, isFavNow)}
-    />);
-
     return (
-      <Grid className="details collection-details">
-        <Title render={titleHandler} />
+      <div>
         <Row>
-          <Col lg={12}>
-            <h1>
-              <CollectionIcon height={32} />
-              <FormattedMessage {...localMessages.collectionDetailsTitle} values={{ name: collection.label }} />
-              <div className="actions">{mainButton}</div>
-              <small className="subtitle">{lockIcon} ID #{collection.id} {publicMessage} {editMessage} </small>
-
-            </h1>
+          <Col lg={8}>
             <p><b>{collection.description}</b></p>
             <p>
               <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
               <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media, onStories: collection.show_on_stories }} /></li>
             </p>
+          </Col>
+          <Col lg={4}>
             <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
         </Row>
@@ -135,7 +84,7 @@ class CollectionDetailsContainer extends React.Component {
             <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
           </Col>
         </Row>
-      </Grid>
+      </div>
     );
   }
 
@@ -146,54 +95,18 @@ CollectionDetailsContainer.propTypes = {
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   collectionId: React.PropTypes.number.isRequired,
-  // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  // from merge
-  asyncFetch: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
   collection: React.PropTypes.object,
-  onChangeFavorited: React.PropTypes.func.isRequired,
-};
-
-CollectionDetailsContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
-  fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
   collection: state.sources.collections.selected.collectionDetails.object,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (collectionId) => {
-    dispatch(selectCollection(collectionId));
-    dispatch(fetchCollectionDetails(collectionId));
-  },
-  onChangeFavorited: (mediaId, isFavorite) => {
-    dispatch(favoriteCollection(mediaId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? localMessages.collectionFavorited : localMessages.collectionUnFavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        // dispatch(fetchFavoriteCollections());  // to update the list of favorites
-      });
-  },
-});
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.params.collectionId);
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        CollectionDetailsContainer
-      )
+    connect(mapStateToProps)(
+      CollectionDetailsContainer
     )
   );

@@ -1,10 +1,20 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
+import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
+import { setSubHeaderVisible } from '../../../actions/appActions';
+import SourceControlBar from '../controlbar/SourceControlBar';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { EditButton } from '../../common/IconButton';
+
+const localMessages = {
+  editSource: { id: 'source.edit', defaultMessage: 'Modify this Source' },
+};
 
 class SelectSourceContainer extends React.Component {
 
@@ -15,20 +25,31 @@ class SelectSourceContainer extends React.Component {
     }
   }
 
-  searchOnDashboard = () => {
-    const { source } = this.props;
-    const dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":3,"name":"${source.name}","color":"55868A"}]`;
-    window.open(dashboardUrl, '_blank');
+  componentWillUnmount() {
+    const { removeSourceId } = this.props;
+    removeSourceId();
   }
 
   render() {
     const { children, source } = this.props;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     return (
-      <Grid className="details source-details">
+      <div>
         <Title render={titleHandler} />
-        {children}
-      </Grid>
+        <SourceControlBar>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <span className="source-edit-link">
+              <Link to={`/sources/${source.media_id}/edit`} >
+                <EditButton />
+                <FormattedMessage {...localMessages.editSource} />
+              </Link>
+            </span>
+          </Permissioned>
+        </SourceControlBar>
+        <Grid className="details source-details">
+          {children}
+        </Grid>
+      </div>
     );
   }
 
@@ -39,6 +60,7 @@ SelectSourceContainer.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
+  removeSourceId: React.PropTypes.func.isRequired,
   // from context
   location: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,       // params from router
@@ -61,13 +83,19 @@ const mapStateToProps = (state, ownProps) => ({
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  removeSourceId: () => {
+    dispatch(selectSource(null));
+    dispatch(setSubHeaderVisible(false));
+  },
   fetchData: (sourceId) => {
     dispatch(selectSource(sourceId));
-    dispatch(fetchSourceDetails(sourceId));
+    dispatch(fetchSourceDetails(sourceId))
+      .then(() => dispatch(setSubHeaderVisible(true)));
   },
   asyncFetch: () => {
     dispatch(selectSource(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId));
+    dispatch(fetchSourceDetails(ownProps.params.sourceId))
+      .then(() => dispatch(setSubHeaderVisible(true)));
   },
 });
 

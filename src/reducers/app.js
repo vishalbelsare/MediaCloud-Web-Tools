@@ -1,24 +1,24 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { SET_BRAND_MASTHEAD_TEXT, UPDATE_FEEDBACK,
-  DISMISS_NOTICES, ADD_NOTICE } from '../actions/appActions';
+import { UPDATE_FEEDBACK, DISMISS_NOTICES, ADD_NOTICE, SET_SUB_HEADER_VISIBLE } from '../actions/appActions';
 import { createReducer } from '../lib/reduxHelpers';
 
 const INITIAL_STATE = {
-  mastheadText: null,
   feedback: {
     open: false,
     message: '',
   },
   notices: [],
+  showSubHeader: false,
 };
 
 const app = createReducer({
   initialState: INITIAL_STATE,
-  [SET_BRAND_MASTHEAD_TEXT]: payload => ({ mastheadText: payload }),
   [UPDATE_FEEDBACK]: payload => ({ feedback: payload }),
   [ADD_NOTICE]: (payload, state) => ({ notices: [...state.notices, payload] }),
   [DISMISS_NOTICES]: () => ({ notices: [] }),
   [LOCATION_CHANGE]: () => ({ errors: [] }),  // empty out errors when the user switches pages
+  // when an object is selected we want to show the subheader that app has set
+  [SET_SUB_HEADER_VISIBLE]: payload => ({ showSubHeader: payload }),
 });
 
 export default app;

@@ -1,16 +1,14 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchWordWords } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import messages from '../../../resources/messages';
-import ActionMenu from '../../common/ActionMenu';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { downloadSvg } from '../../util/svg';
+import { filteredLinkTo } from '../../util/location';
 
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
@@ -28,32 +26,21 @@ class WordWordsContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  downloadCsv = () => {
-    const { term, topicId } = this.props;
-    const url = `/api/topics/${topicId}/words/${term}/words.csv`;
-    window.location = url;
-  }
 
   render() {
-    const { words, handleWordCloudClick, helpButton } = this.props;
+    const { topicId, filters, words, term, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    const menuItems = [
-      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
-    ];
+    const urlDownload = `/api/topics/${topicId}/words/${term}/words.csv`;
     return (
-      <DataCard>
-        <div className="actions">
-          <ActionMenu actionItems={menuItems} useBackgroundColor />
-        </div>
-        <h2>
-          <FormattedMessage {...messages.topWords} />
-          {helpButton}
-        </h2>
-        <OrderedWordCloud
-          words={words} onWordClick={handleWordCloudClick} domId={WORD_CLOUD_DOM_ID}
-        />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+        downloadUrl={urlDownload}
+        onViewModeClick={handleWordCloudClick}
+        title={formatMessage(messages.topWords)}
+        helpButton={helpButton}
+        domId={WORD_CLOUD_DOM_ID}
+      />
     );
   }
 }

@@ -5,20 +5,20 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import FocusSelectorContainer from './FocusSelectorContainer';
-import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
-import { SettingsButton } from '../../common/IconButton';
-import { updateFeedback } from '../../../actions/appActions';
-import { setTopicFavorite } from '../../../actions/topicActions';
-import FavoriteToggler from '../../common/FavoriteToggler';
-import messages from '../../../resources/messages';
+import { EditButton, SettingsButton } from '../../common/IconButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
+const localMessages = {
+  editPermissions: { id: 'topic.editPermissions', defaultMessage: 'Edit Topic Permissions' },
+  editSettings: { id: 'topic.editSettings', defaultMessage: 'Edit Topic Settings' },
+};
+
 const ControlBar = (props) => {
-  const { topicInfo, topicId, location, filters, handleChangeFavorited } = props;
-  // const { formatMessage } = props.intl;
+  const { topicId, location, filters } = props;
+  const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let focusSelector = null;
   let subControls = null;
@@ -32,22 +32,16 @@ const ControlBar = (props) => {
         <Grid>
           <Row>
             <Col lg={4} className="left">
-              <div className="topic-name">
-                <LinkWithFilters to={`/topics/${topicInfo.topics_id}/summary`}>&larr;</LinkWithFilters>
-                &nbsp;
-                <b>
-                  {topicInfo.name}
-                </b>
-              </div>
               <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                <EditButton
+                  linkTo={filteredLinkTo(`/topics/${topicId}/edit`, filters)}
+                  tooltip={formatMessage(localMessages.editSettings)}
+                />
                 <SettingsButton
-                  linkTo={filteredLinkTo(`/topics/${topicId}/settings`, filters)}
+                  linkTo={filteredLinkTo(`/topics/${topicId}/permissions`, filters)}
+                  tooltip={formatMessage(localMessages.editPermissions)}
                 />
               </Permissioned>
-              <FavoriteToggler
-                isFavorited={topicInfo.isFavorite}
-                onChangeFavorited={isFavNow => handleChangeFavorited(topicInfo.topics_id, isFavNow)}
-              />
             </Col>
             <Col lg={4}>
               {focusSelector}
@@ -76,29 +70,15 @@ ControlBar.propTypes = {
   location: React.PropTypes.object.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
-  topicInfo: React.PropTypes.object,
-  // from dispatch
-  handleChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
-  topicInfo: state.topics.selected.info,
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleChangeFavorited: (topicId, isFavorite) => {
-    dispatch(setTopicFavorite(topicId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-      });
-  },
 });
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps)(
       ControlBar
     )
   );

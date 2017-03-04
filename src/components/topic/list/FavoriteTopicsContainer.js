@@ -12,12 +12,12 @@ const localMessages = {
 };
 
 const FavoriteTopicsContainer = (props) => {
-  const { topics, onChangeFavorited } = props;
+  const { topics, onSetFavorited } = props;
   let content = null;
   if (topics.length === 0) {
     content = (<i><FormattedMessage {...localMessages.noFavorites} /></i>);
   } else {
-    content = <TopicList topics={topics} onChangeFavorited={onChangeFavorited} />;
+    content = <TopicList topics={topics} onSetFavorited={onSetFavorited} />;
   }
   return (
     <Row>
@@ -31,7 +31,7 @@ const FavoriteTopicsContainer = (props) => {
 
 FavoriteTopicsContainer.propTypes = {
   // from parent
-  onChangeFavorited: React.PropTypes.func.isRequired,
+  onSetFavorited: React.PropTypes.func.isRequired,
   // from state
   topics: React.PropTypes.array.isRequired,
   // from context

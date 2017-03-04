@@ -7,16 +7,16 @@
 .action-icon-menu-item {
 	line-height: 28px !important;
 	min-height: 28px !important;
-	padding: 10px !important;
+	margin: 10px !important;
 
 	button {
 		margin: 0 !important;
 		padding: 0 !important;
 	}
-	.app-icon.app-icon-download {
-		svg {
-			margin: 0 !important;
-			padding-top: 5px !important;
-		}
+
+	.icon-button {
+		position: absolute;
+		right: 34px;
 	}
+
 }

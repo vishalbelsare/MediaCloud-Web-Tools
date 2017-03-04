@@ -21,9 +21,10 @@ import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
+import EditTopicContainer from '../components/topic/create/EditTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import WordContainer from '../components/topic/words/WordContainer';
-import TopicSettingsContainer from '../components/topic/settings/TopicSettingsContainer';
+import TopicPermissionsContainer from '../components/topic/permissions/TopicPermissionsContainer';
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
@@ -38,13 +39,17 @@ const topicRoutes = (
 
     <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
 
-    <Route path="/topics/suggest" component={CreateTopicContainer} onEnter={requireAuth} />
+    <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
 
     {userRoutes}
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 
-      <Route path="/topics/:topicId/test-filters" component={FilteredTopicContainer} onEnter={requireAuth} >
+      <Route path="edit" component={EditTopicContainer} onEnter={requireAuth} />
+
+      <Route path="permissions" component={TopicPermissionsContainer} onEnter={requireAuth} />
+
+      <Route path="/topics/:topicId/filtered" component={FilteredTopicContainer} onEnter={requireAuth} >
         <Route path="/topics/:topicId/summary" component={TopicSummaryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media" component={InfluentialMediaContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/media/:mediaId" component={MediaContainer} onEnter={requireAuth} />
@@ -63,8 +68,6 @@ const topicRoutes = (
         <Route path="/topics/:topicId/snapshot/foci/:focusDefId/edit" component={EditFocusContainer} />
         <Route path="/topics/:topicId/snapshot/timespans" component={ManageTimespansContainer} />
       </Route>
-
-      <Route path="/topics/:topicId/settings" component={TopicSettingsContainer} />
 
     </Route>
 

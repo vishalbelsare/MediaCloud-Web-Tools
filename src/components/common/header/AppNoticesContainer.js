@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
-import { dismissNotices } from '../../actions/appActions';
-import { CloseButton } from '../common/IconButton';
+import { dismissNotices } from '../../../actions/appActions';
+import { CloseButton } from '../IconButton';
 import AppNotice from './AppNotice';
-import { LEVEL_ERROR } from './Notice';
+import { LEVEL_ERROR } from '../Notice';
 
 const localMessages = {
   dismiss: { id: 'notices.dismiss', defaultMessage: 'dismiss' },

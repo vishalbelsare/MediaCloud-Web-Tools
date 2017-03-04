@@ -30,7 +30,7 @@ def api_media_sources_by_ids():
     source_list = []
     source_id_array = request.args['src[]'].split(',')
     for mediaId in source_id_array:
-        info = _cached_media_source_details(user_mediacloud_key(), mediaId)
+        info = _media_source_details(mediaId)
         source_list.append(info)
     _add_user_favorite_flag_to_sources(source_list)
     return jsonify({'results': source_list})
@@ -77,7 +77,7 @@ def _cached_media_source_health(user_mc_key, media_id):
     return results
 
 
-def _cached_media_source_details(user_mc_key, media_id, start_date_str=None):
+def _media_source_details(media_id):
     user_mc = user_mediacloud_client()
     info = user_mc.media(media_id)
     info['id'] = media_id
@@ -102,8 +102,7 @@ def _safely_get_health_start_date(health):
 @api_error_handler
 def api_media_source_details(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
-    info = _cached_media_source_details(user_mediacloud_key(), media_id,
-                                        _safely_get_health_start_date(health))
+    info = _media_source_details(media_id)
     info['health'] = health
     user_mc = user_mediacloud_client()
     if user_has_auth_role(ROLE_MEDIA_EDIT):

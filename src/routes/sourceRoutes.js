@@ -7,6 +7,7 @@ import SourceDetailsContainer from '../components/source/mediaSource/SourceDetai
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
 import CreateCollectionContainer from '../components/source/collection/CreateCollectionContainer';
 import AdvancedSearchContainer from '../components/source/search/AdvancedSearchContainer';
+import SelectCollectionContainer from '../components/source/collection/SelectCollectionContainer';
 import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import SuggestSourceContainer from '../components/source/mediaSource/suggest/SuggestSourceContainer';
@@ -37,32 +38,34 @@ const sourceRoutes = (
       <Route path="/about" component={About} />
       <Route path="/home" component={Homepage} />
       <Route path="/search" component={AdvancedSearchContainer} onEnter={requireAuth} />
-      <Route path="/sources" >
-        <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
-        <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
-        <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />
-        <Route path="suggestions/history" component={AllSuggestionsContainer} onEnter={requireAuth} />
-        <Route path="/sources/:sourceId" component={SelectSourceContainer} >
-          <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
-          <Redirect from="details" to=":sourceId" />
-          <Route path="edit" component={EditSourceContainer} onEnter={requireAuth} />
-          <Route path="feeds" component={SourceFeedContainer} onEnter={requireAuth} />
-        </Route>
-      </Route>
-      <Route path="/collections" >
-        <Route path="media-cloud" component={MCCollectionListContainer} encodeURI={requireAuth} />
-        <Route path="global-voices" component={GVCollectionListContainer} encodeURI={requireAuth} />
-        <Route path="european-media-monitor" component={EMMCollectionListContainer} encodeURI={requireAuth} />
-        <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
-        <Route path=":collectionId" component={CollectionDetailsContainer} onEnter={requireAuth} />
-        <Redirect from=":collectionId/details" to=":collectionId" />
-        <Route path=":collectionId/edit" component={EditCollectionContainer} onEnter={requireAuth} />
-      </Route>
-      <Route path="/media-tag" >
-        <Redirect from=":collectionId/details" to="/collections/:collectionId" />
-      </Route>
       <Route path="/favorites" component={FavoritedContainer} onEnter={requireAuth} />
     </Route>
+
+    <Route path="/sources" >
+      <Route path="create" component={CreateSourceContainer} onEnter={requireAuth} />
+      <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
+      <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />
+      <Route path="suggestions/history" component={AllSuggestionsContainer} onEnter={requireAuth} />
+      <Redirect from="details" to=":sourceId" />
+      <Route path="/sources/:sourceId" component={SelectSourceContainer} >
+        <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
+        <Route path="edit" component={EditSourceContainer} onEnter={requireAuth} />
+        <Route path="feeds" component={SourceFeedContainer} onEnter={requireAuth} />
+      </Route>
+    </Route>
+
+    <Route path="/collections" >
+      <Route path="media-cloud" component={MCCollectionListContainer} encodeURI={requireAuth} />
+      <Route path="global-voices" component={GVCollectionListContainer} encodeURI={requireAuth} />
+      <Route path="european-media-monitor" component={EMMCollectionListContainer} encodeURI={requireAuth} />
+      <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
+      <Redirect from="details" to=":collectionId" />
+      <Route path=":collectionId" component={SelectCollectionContainer} >
+        <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
+        <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
+      </Route>
+    </Route>
+
   </Route>
 );
 

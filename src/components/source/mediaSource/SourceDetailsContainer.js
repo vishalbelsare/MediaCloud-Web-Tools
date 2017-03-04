@@ -2,25 +2,18 @@ import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Title from 'react-title-component';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import messages from '../../../resources/messages';
 import HealthBadge from '../HealthBadge';
-import FavoriteToggler from '../../common/FavoriteToggler';
-import { favoriteSource, updateFeedback } from '../../../actions/sourceActions';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
-import { getBrandDarkColor } from '../../../styles/colors';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
-import { InfoNotice, ErrorNotice } from '../../common/Notice';
+import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import AppButton from '../../common/AppButton';
 
@@ -51,6 +44,7 @@ const localMessages = {
   editorNotes: { id: 'source.basicInfo.editorNotes', defaultMessage: '<p><b>Editor\'s Notes</b>: {notes}</p>' },
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
+  unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -68,13 +62,23 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source, onChangeFavorited } = this.props;
+    const { source } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
-    const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
-    const publicMessage = ` • ${formatMessage(messages.public)} `; // for now, every media source is public
+    // check if source is not suitable for general queries
+    let unhealthySourceWarning;
+    if (source.media_source_tags[0].tags_id === 8875452 && !isCollectionTagSet(source.media_source_tags[0].tags_id) && !source.is_healthy) {
+      unhealthySourceWarning = (
+        <span>
+          <WarningNotice>
+            <FormattedMessage {...localMessages.unhealthySource} />
+          </WarningNotice>
+          <br />
+        </span>
+      );
+    }
     let notice;
     // pull together any relevant warnings
     if ((source.latestScrapeState === SOURCE_SCRAPE_STATE_QUEUED) || (source.latestScrapeState === SOURCE_SCRAPE_STATE_RUNNING)) {
@@ -89,16 +93,6 @@ class SourceDetailsContainer extends React.Component {
         <FormattedMessage
           {...localMessages.feedLastScrapeDate}
           values={{ date: formatDate(jobStatusDateToMoment(source.scrape_status.job_states[0].last_updated)) }}
-        />
-      );
-    }
-    // source might be monitored by admins
-    let monitoredIcon = null;
-    if (source.is_monitored) {
-      monitoredIcon = (
-        <RemoveRedEye
-          color={getBrandDarkColor()}
-          style={{ height: 20, width: 25, marginLeft: 10 }}
         />
       );
     }
@@ -118,31 +112,10 @@ class SourceDetailsContainer extends React.Component {
     const editorNotes = (source.editor_notes) ? <FormattedHTMLMessage {...localMessages.editorNotes} values={{ notes: source.editor_notes }} /> : null;
     return (
       <Grid className="details source-details">
-        <Title render={titleHandler} />
         <Row>
           <Col lg={10} xs={12}>
-            <h1>
-              <MediaSourceIcon height={32} />
-              <FormattedMessage {...localMessages.sourceDetailsTitle} values={{ name: source.name }} />
-              <small className="subtitle">
-                ID #{source.media_id}
-                {publicMessage}
-                <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-                  <span className="source-edit-link">
-                    •&nbsp;
-                    <Link to={`/sources/${source.media_id}/edit`} >
-                      <FormattedMessage {...messages.edit} />
-                    </Link>
-                  </span>
-                </Permissioned>
-                {monitoredIcon}
-                <FavoriteToggler
-                  isFavorited={source.isFavorite}
-                  onChangeFavorited={isFavNow => onChangeFavorited(source.media_id, isFavNow)}
-                />
-              </small>
-            </h1>
             {notice}
+            {unhealthySourceWarning}
             {publicNotes}
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               {editorNotes}
@@ -236,31 +209,17 @@ SourceDetailsContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
   source: React.PropTypes.object,
-  onChangeFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
-  fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
   source: state.sources.sources.selected.sourceDetails,
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  onChangeFavorited: (mediaId, isFavorite) => {
-    dispatch(favoriteSource(mediaId, isFavorite))
-      .then(() => {
-        const msg = (isFavorite) ? messages.favorited : messages.unfavorited;
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        // dispatch(fetchFavoriteSources());  // to update the list of favorites
-      });
-  },
 });
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps)(
       SourceDetailsContainer
     )
   );

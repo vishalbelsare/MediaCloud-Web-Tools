@@ -120,10 +120,10 @@ class StoryTable extends React.Component {
                     </LinkWithFilters>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.media_inlink_count} /></td>
-                  <td><FormattedNumber value={story.outlink_count} /></td>
-                  <td><FormattedNumber value={story.bitly_click_count} /></td>
-                  <td><FormattedNumber value={story.facebook_share_count} /></td>
+                  <td><FormattedNumber value={story.media_inlink_count || 0} /></td>
+                  <td><FormattedNumber value={story.outlink_count || 0} /></td>
+                  <td><FormattedNumber value={story.bitly_click_count || 0} /></td>
+                  <td><FormattedNumber value={story.facebook_share_count || 0} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                 </tr>
               );

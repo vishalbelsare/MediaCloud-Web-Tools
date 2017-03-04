@@ -17,7 +17,7 @@ import word from './word/word';
 function id(state = null, action) {
   switch (action.type) {
     case SELECT_TOPIC:
-      return parseInt(action.payload, 10);
+      return action.payload ? parseInt(action.payload, 10) : null;
     default:
       return state;
   }

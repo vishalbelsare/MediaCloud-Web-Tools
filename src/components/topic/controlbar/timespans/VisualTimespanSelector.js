@@ -17,7 +17,7 @@ class VisualTimespanSelector extends React.Component {
     const horizontalPadding = 30;
     const verticalPadding = 0;
     const width = containerWidth - horizontalPadding;
-    const height = 38;
+    const height = 48;
     const node = ReactFauxDOM.createElement('svg');
     const dateRange = [startDate, endDate];
     const xScale = d3.scaleUtc().domain(dateRange).range([0, width - (horizontalPadding * 2)]);
@@ -35,10 +35,10 @@ class VisualTimespanSelector extends React.Component {
     // add the axis
     chartWrapper.append('g')
       .attr('class', 'xaxis')
-      .attr('transform', 'translate(0,10)')
+      .attr('transform', 'translate(0,20)')
       .call(xAxis);
     chartWrapper.selectAll('.xaxis text')
-      .attr('transform', 'translate(0,10)');
+      .attr('transform', 'translate(0,7)');
     // add the timespans
     chartWrapper.append('g')
       .attr('class', 'data')

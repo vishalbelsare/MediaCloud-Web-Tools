@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, WarningNotice } from '../common/Notice';
+import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, WarningNotice } from '../Notice';
 
 const localMessages = {
   internalError: { id: 'errors.internal', defaultMessage: 'Internal Error' },

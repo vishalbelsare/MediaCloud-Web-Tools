@@ -7,13 +7,11 @@ import Snackbar from 'material-ui/Snackbar';
 import intl from 'intl';  // eslint-disable-line
 import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
 import { Row } from 'react-flexbox-grid/lib';
-import BrandToolbar from './common/BrandToolbar';
-import BrandMasthead from './common/BrandMasthead';
+import AppHeader from './common/header/AppHeader';
 import messages from '../resources/messages';
 import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
-import AppNoticesContainer from './common/AppNoticesContainer';
 import { ErrorNotice } from './common/Notice';
 
 const localMessages = {
@@ -22,7 +20,7 @@ const localMessages = {
 };
 
 const AppContainer = (props) => {
-  const { children, feedback, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
+  const { children, feedback, subHeader, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
 
@@ -46,18 +44,15 @@ const AppContainer = (props) => {
   return (
     <div className={`app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
-      <AppNoticesContainer />
       <header>
-        <BrandToolbar
-          backgroundColor={brandColors.light}
-          drawer={drawer}
-        />
-        <BrandMasthead
+        <AppHeader
           name={title}
           description={description}
           backgroundColor={brandColors.dark}
           lightColor={brandColors.light}
           showLoginButton={showLoginButton}
+          drawer={drawer}
+          subHeader={subHeader}
         />
       </header>
       <div id="content">
@@ -104,6 +99,7 @@ AppContainer.propTypes = {
   description: React.PropTypes.string.isRequired,
   drawer: React.PropTypes.node,
   showLoginButton: React.PropTypes.bool,
+  subHeader: React.PropTypes.node,
 };
 
 AppContainer.contextTypes = {

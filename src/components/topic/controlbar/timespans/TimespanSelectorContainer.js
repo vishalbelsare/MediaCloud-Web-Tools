@@ -96,8 +96,9 @@ function findMatchingTimespan(timespan, timespanList) {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handlePeriodSelected: (period) => {
+  handlePeriodSelected: (period, firstTimespanInPeriod) => {
     dispatch(setTimespanVisiblePeriod(period));
+    updateTimespan(dispatch, ownProps.location, firstTimespanInPeriod, true);
   },
   setExpanded: (isExpanded) => {
     dispatch(toggleTimespanControls(isExpanded));

@@ -65,7 +65,7 @@ SourceSentenceCountContainer.propTypes = {
   total: React.PropTypes.number,
   counts: React.PropTypes.array,
   // from parent
-  sourceId: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
   filename: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,

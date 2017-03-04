@@ -14,11 +14,20 @@
 @import '_browse_list';
 @import '_action_icon_menu';
 @import '_notice';
+@import '_drawer';
+@import '_user_menu';
+@import '_descriptive_button';
+@import '_app_sub_header';
 
 #content { 
   min-height: 400px;
   padding-bottom: 30px;
   background-color: $white;
+
+  .notice {
+    padding: 10px;
+  }
+
 }
 
 .warning {

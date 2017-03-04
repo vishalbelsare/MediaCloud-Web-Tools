@@ -12,7 +12,7 @@ import messages from '../../resources/messages';
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
   home: { id: 'topics.menu.items.home', defaultMessage: 'Explore Topics' },
-  createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Suggest a New Topic' },
+  createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
 class TopicsDrawer extends React.Component {
@@ -29,21 +29,10 @@ class TopicsDrawer extends React.Component {
   render() {
     const { user, handleMenuItemClick } = this.props;
     const { formatMessage } = this.props.intl;
-    // gotta show login or logout correctly based on the user state
-    let loginLogoutMenuItem = null;
-    if (user.isLoggedIn) {
-      loginLogoutMenuItem = (
-        <div>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/user/profile'); }}>
-            <FormattedMessage {...messages.userProfile} />
-          </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/logout'); }}>
-            <FormattedMessage {...messages.userLogout} />
-          </MenuItem>
-        </div>
-      );
-    } else {
-      loginLogoutMenuItem = (
+    // gotta show extra login invivation based on the user state
+    let logoutMenuItem = null;
+    if (!user.isLoggedIn) {
+      logoutMenuItem = (
         <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/login'); }}>
           <FormattedMessage {...messages.userLogin} />
         </MenuItem>
@@ -57,7 +46,7 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/suggest'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
             <FormattedMessage {...localMessages.createNewTopic} />
           </MenuItem>
         </div>
@@ -65,7 +54,7 @@ class TopicsDrawer extends React.Component {
     }
     // bring it all together in a controlled drawer
     return (
-      <div>
+      <div className="drawer topics-drawer">
         <IconButton
           iconClassName="material-icons"
           tooltip={formatMessage(messages.menuOpenTooltip)}
@@ -87,7 +76,7 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
           </MenuItem>
-          {loginLogoutMenuItem}
+          {logoutMenuItem}
         </Drawer>
       </div>
     );

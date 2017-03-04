@@ -58,25 +58,31 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       } else if (useBackgroundColor === true) {
         otherProps.backgroundColor = this.state.backgroundColor;
       }
+      const button = (
+        <IconButton
+          tooltip={displayTooltip}
+          iconStyle={iconStyle || {}}
+          style={{ padding: 0, border: 0, width: 26, height: 26, color }}
+          tooltipStyles={{ top: 20 }}
+        >
+          <Icon color={color} {...otherProps} />
+        </IconButton>
+      );
+      const content = (
+        <Link
+          to={linkTarget}
+          onTouchTap={clickHandler}
+          className="icon-button-link"
+          name={displayTooltip}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        >
+          {button}
+        </Link>
+      );
       return (
         <div className="icon-button">
-          <Link
-            to={linkTarget}
-            onTouchTap={clickHandler}
-            className="icon-button-link"
-            name={displayTooltip}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-          >
-            <IconButton
-              tooltip={displayTooltip}
-              iconStyle={iconStyle || {}}
-              style={{ padding: 0, border: 0, width: 26, height: 26, color }}
-              tooltipStyles={{ top: 20 }}
-            >
-              <Icon color={color} {...otherProps} />
-            </IconButton>
-          </Link>
+          {content}
         </div>
       );
     }
@@ -120,11 +126,11 @@ export const SettingsButton = composeIconButton(SettingsIcon, messages.settings)
 
 export const ReadItNowButton = composeIconButton(OpenInNewIcon, messages.readItNow, false);
 
-export const EditButton = composeIconButton(EditIcon, messages.edit, false);
+export const EditButton = composeIconButton(EditIcon, messages.edit, true);
 
 export const ErrorButton = composeIconButton(ErrorIcon, messages.error, false);
 
-export const EyeButton = composeIconButton(RemoveRedEye, messages.monitored, false);
+export const ViewButton = composeIconButton(RemoveRedEye, messages.monitored, false);
 
 export const MoreOptionsButton = composeIconButton(MoreOptionsIcon, messages.moreOptions);
 

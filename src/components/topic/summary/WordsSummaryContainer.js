@@ -1,29 +1,22 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { ExploreButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
+
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { downloadSvg } from '../../util/svg';
-import ActionMenu from '../../common/ActionMenu';
-
 
 const localMessages = {
   descriptionIntro: { id: 'topic.summary.words.help.into',
     defaultMessage: 'Look at the top words to see how this topic was talked about. This can suggest what the dominant narrative was, and looking at different timespans can suggest how it evolved over time.',
   },
 };
-const WORD_CLOUD_DOM_ID = 'word-cloud';
+const WORD_CLOUD_DOM_ID = 'topic-summary-word-cloud';
 
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -32,18 +25,10 @@ class WordsSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  downloadCsv = () => {
-    const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
-    window.location = url;
-  }
   render() {
-    const { topicId, filters, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
+    const { topicId, filters, helpButton, words, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
-    const menuItems = [
-      { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
-      { text: formatMessage(messages.downloadSVG), clickHandler: () => downloadSvg(WORD_CLOUD_DOM_ID) },
-    ];
+    const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -55,14 +40,13 @@ class WordsSummaryContainer extends React.Component {
         <h2>
           <FormattedMessage {...messages.topWords} />
         </h2>
-        <OrderedWordCloud
+        <EditableWordCloudDataCard
           words={words}
-          textColor={getBrandDarkColor()}
-          width={width}
-          height={height}
-          maxFontSize={maxFontSize}
-          minFontSize={minFontSize}
-          onWordClick={handleWordCloudClick}
+          explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+          downloadUrl={urlDownload}
+          onViewModeClick={handleWordCloudClick}
+          title={formatMessage(messages.topWords)}
+          helpButton={helpButton}
           domId={WORD_CLOUD_DOM_ID}
         />
       </DataCard>
