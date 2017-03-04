@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -12,9 +12,8 @@ import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
-  helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
-  helpText: { id: 'topic.summary.words.help.into',
-    defaultMessage: '<p>This is a visualization showing the top words in your Topic.</p>',
+  descriptionIntro: { id: 'topic.summary.words.help.into',
+    defaultMessage: 'Look at the top words to see how this topic was talked about. This can suggest what the dominant narrative was, and looking at different timespans can suggest how it evolved over time.',
   },
 };
 const WORD_CLOUD_DOM_ID = 'topic-summary-word-cloud';
@@ -31,15 +30,26 @@ class WordsSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
-      <EditableWordCloudDataCard
-        words={words}
-        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
-        downloadUrl={urlDownload}
-        onViewModeClick={handleWordCloudClick}
-        title={formatMessage(messages.topWords)}
-        helpButton={helpButton}
-        domId={WORD_CLOUD_DOM_ID}
-      />
+      <DataCard>
+        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          <div className="actions">
+            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
+            <ActionMenu actionItems={menuItems} useBackgroundColor />
+          </div>
+        </Permissioned>
+        <h2>
+          <FormattedMessage {...messages.topWords} />
+        </h2>
+        <EditableWordCloudDataCard
+          words={words}
+          explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+          downloadUrl={urlDownload}
+          onViewModeClick={handleWordCloudClick}
+          title={formatMessage(messages.topWords)}
+          helpButton={helpButton}
+          domId={WORD_CLOUD_DOM_ID}
+        />
+      </DataCard>
     );
   }
 }
@@ -47,7 +57,6 @@ class WordsSummaryContainer extends React.Component {
 WordsSummaryContainer.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -93,7 +102,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordsSummaryContainer
         )
