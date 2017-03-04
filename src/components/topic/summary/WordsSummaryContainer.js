@@ -7,7 +7,6 @@ import composeDescribedDataCard from '../../common/DescribedDataCard';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
-
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
 
@@ -26,30 +25,19 @@ class WordsSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { topicId, filters, helpButton, words, handleWordCloudClick } = this.props;
+    const { topicId, filters, words, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
-      <DataCard>
-        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-          <div className="actions">
-            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/words`, filters)} />
-            <ActionMenu actionItems={menuItems} useBackgroundColor />
-          </div>
-        </Permissioned>
-        <h2>
-          <FormattedMessage {...messages.topWords} />
-        </h2>
-        <EditableWordCloudDataCard
-          words={words}
-          explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
-          downloadUrl={urlDownload}
-          onViewModeClick={handleWordCloudClick}
-          title={formatMessage(messages.topWords)}
-          helpButton={helpButton}
-          domId={WORD_CLOUD_DOM_ID}
-        />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        explore={filteredLinkTo(`/topics/${topicId}/words`, filters)}
+        downloadUrl={urlDownload}
+        onViewModeClick={handleWordCloudClick}
+        title={formatMessage(messages.topWords)}
+        domId={WORD_CLOUD_DOM_ID}
+        width={720}
+      />
     );
   }
 }

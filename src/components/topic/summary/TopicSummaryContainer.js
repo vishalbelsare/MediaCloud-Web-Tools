@@ -61,10 +61,10 @@ class TopicSummaryContainer extends React.Component {
                 <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
               </Col>
               <Col lg={12}>
-                <TopicInfo topic={topicInfo} />
+                <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>
               <Col lg={12}>
-                <DownloadMapContainer topicId={topicId} filters={filters} />
+                <TopicInfo topic={topicInfo} />
               </Col>
             </Permissioned>
           </Row>
