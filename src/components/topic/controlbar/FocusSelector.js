@@ -32,7 +32,7 @@ class FocusSelector extends React.Component {
         <SelectField
           floatingLabelText={formatMessage(localMessages.pickFocus)}
           floatingLabelFixed
-          floatingLabelStyle={{ color: 'rgb(224,224,224)' }}
+          floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
           labelStyle={{ color: 'rgb(255,255,255)' }}
           value={selectedId}
           onChange={this.handleFocusChange}

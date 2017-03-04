@@ -23,6 +23,7 @@ class FocusSelectorContainer extends React.Component {
         selectedId={(selectedFocus) ? selectedFocus.foci_id : null}
         foci={foci}
         onFocusSelected={handleFocusSelected}
+        location={location}
       />
     );
   }

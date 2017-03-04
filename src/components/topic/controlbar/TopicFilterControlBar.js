@@ -50,7 +50,7 @@ const TopicFilterControlBar = (props) => {
           </Row>
         </Grid>
       </div>
-      <FilterSelectorContainer />
+      <FilterSelectorContainer location={location} />
       <div className="sub">
         {subControls}
       </div>

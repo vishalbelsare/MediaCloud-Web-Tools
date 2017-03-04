@@ -1,19 +1,19 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import moment from 'moment';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import { getBrandDarkerColor } from '../../../styles/colors';
 
 const localMessages = {
   pickSnapshot: { id: 'snapshot.pick', defaultMessage: 'Load an Archived Snapshot' },
+  snapshotNotReady: { id: 'snapshot.notReady', defaultMessage: 'Not ready yet.' },
 };
 
 class SnapshotSelector extends React.Component {
 
   handleSnapshotSelected = (evt, index, value) => {
-    this.handlePopupRequestClose();
-    const { onSnapshotSelected } = this.props;
-    onSnapshotSelected(value);
+    const { onSnapshotSelected, snapshots } = this.props;
+    onSnapshotSelected(snapshots.find(s => s.snapshots_id === value));
   }
 
   render() {
@@ -29,19 +29,21 @@ class SnapshotSelector extends React.Component {
         <SelectField
           floatingLabelText={formatMessage(localMessages.pickSnapshot)}
           floatingLabelFixed
-          floatingLabelStyle={{ color: 'rgb(224,224,224)' }}
+          floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+          selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
           labelStyle={{ color: 'rgb(255,255,255)' }}
           value={selectedId}
           onChange={this.handleSnapshotSelected}
         >
           {snapshots.map((snapshot) => {
-            const date = snapshot.snapshot_date.substr(0, 16);
-            const label = `${snapshot.snapshot_date.substr(0, 16)} (${moment(date).fromNow()})`;
+            const dateStr = snapshot.snapshot_date.substr(0, 16);
+            const stateMessage = (snapshot.isUsable) ? '' : formatMessage(localMessages.snapshotNotReady);
             return (
               <MenuItem
+                disabled={!snapshot.isUsable}
                 key={snapshot.snapshots_id}
                 value={snapshot.snapshots_id}
-                primaryText={label}
+                primaryText={`${dateStr} ${stateMessage}`}
               />
             );
           })}
