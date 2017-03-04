@@ -135,6 +135,14 @@
     }
   }
 
+  &.app-icon-filter {
+    background-color: $material-grey800 !important;
+    width: 45px;
+    height: 35px;
+    border-radius: 0px;
+    padding-top: 10px;
+  }
+
 }
 
 h2 {

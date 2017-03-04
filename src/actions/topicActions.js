@@ -37,6 +37,7 @@ export const FETCH_MEDIA_OUTLINKS = 'FETCH_MEDIA_OUTLINKS';
 export const SORT_MEDIA_OUTLINKS = 'SORT_MEDIA_OUTLINKS';
 export const FETCH_MEDIA_WORDS = 'FETCH_MEDIA_WORDS';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
+export const TOGGLE_FILTER_CONTROLS = 'TOGGLE_FILTER_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
@@ -155,6 +156,8 @@ export const fetchMediaWords = createAsyncAction(FETCH_MEDIA_WORDS, api.mediaWor
 
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
 export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);
+
+export const toggleFilterControls = createAction(TOGGLE_FILTER_CONTROLS, isVisible => isVisible);
 
 // pass in the number of the step to go to
 export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);

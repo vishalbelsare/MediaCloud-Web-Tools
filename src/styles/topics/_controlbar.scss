@@ -4,6 +4,8 @@
 
   &.controlbar-topic {
 
+    border-bottom: 0px !important;
+
     .topic-name {
       display: inline-block;
       float: left;
@@ -17,6 +19,16 @@
         .app-icon-settings {
         }
       }
+      .right {
+        .icon-button {
+          float: right;
+        }
+      }
+    }
+
+    .filter-selector {
+      background-color: $material-grey800;
+      padding-bottom: 10px;
     }
   
   }

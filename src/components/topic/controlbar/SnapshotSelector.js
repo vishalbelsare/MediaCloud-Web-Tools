@@ -1,99 +1,51 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { Popover, PopoverAnimationVertical } from 'material-ui/Popover';
-import IconButton from 'material-ui/IconButton';
 import moment from 'moment';
-import messages from '../../../resources/messages';
-import SnapshotListItem from './SnapshotListItem';
-// import { ArrowDropUpButton, ArrowDropDownButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+
+const localMessages = {
+  pickSnapshot: { id: 'snapshot.pick', defaultMessage: 'Load an Archived Snapshot' },
+};
 
 class SnapshotSelector extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPopupOpen: false,
-    };
-  }
-
-  handlePopupOpenClick = (event) => {
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
-      anchorEl: event.currentTarget,
-    });
-  }
-
-  handlePopupRequestClose = () => {
-    this.setState({
-      isPopupOpen: false,
-    });
-  }
-
-  handleSnapshotSelected = (snapshotId) => {
+  handleSnapshotSelected = (evt, index, value) => {
     this.handlePopupRequestClose();
     const { onSnapshotSelected } = this.props;
-    onSnapshotSelected(snapshotId);
+    onSnapshotSelected(value);
   }
 
   render() {
     const { snapshots, selectedId } = this.props;
-    const { formatMessage, formatDate } = this.props.intl;
-    const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
-    /* let navControl = null;
-    if (this.state.isPopupOpen) {
-      navControl = (<ArrowDropUpButton
-        onClick={this.handlePopupOpenClick}
-        tooltip={formatMessage(messages.snapshotChange)}
-        color={getBrandDarkColor()}
-        style={{ position: 'relative' }}
-      />);
-    } else {
-      navControl = (<ArrowDropDownButton
-        onClick={this.handlePopupOpenClick}
-        tooltip={formatMessage(messages.snapshotChange)}
-        color={getBrandDarkColor()}
-        style={{ position: 'relative' }}
-      />);
-    }*/
+    const { formatMessage } = this.props.intl;
     // default to select first if you need to
     let selected = snapshots.find(snapshot => (snapshot.snapshots_id === selectedId));
     if (selected === null) {
       selected = snapshots[0];
     }
-    const selectedDate = (selected !== undefined) ? formatDate(moment(selected.snapshot_date.substr(0, 16))) : '';
     return (
-      <div className="popup-selector snapshot-selector">
-        <div className="label">
-          {selectedDate}
-        </div>
-        <IconButton
-          iconClassName="material-icons"
-          tooltip={formatMessage(messages.snapshotChange)}
-          onClick={this.handlePopupOpenClick}
-          iconStyle={{ color: getBrandDarkColor() }}
+      <div className="snapshot-selector">
+        <SelectField
+          floatingLabelText={formatMessage(localMessages.pickSnapshot)}
+          floatingLabelFixed
+          floatingLabelStyle={{ color: 'rgb(224,224,224)' }}
+          labelStyle={{ color: 'rgb(255,255,255)' }}
+          value={selectedId}
+          onChange={this.handleSnapshotSelected}
         >
-          {icon}
-        </IconButton>
-        <Popover
-          open={this.state.isPopupOpen}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          onRequestClose={this.handlePopupRequestClose}
-          animation={PopoverAnimationVertical}
-          className="popup-list"
-        >
-          {snapshots.map(snapshot =>
-            <SnapshotListItem
-              key={snapshot.snapshots_id}
-              id={snapshot.snapshots_id}
-              snapshot={snapshot}
-              selected={snapshot.snapshots_id === selectedId}
-              onSelected={() => { this.handleSnapshotSelected(snapshot.snapshots_id); }}
-            />
-          )}
-        </Popover>
+          {snapshots.map((snapshot) => {
+            const date = snapshot.snapshot_date.substr(0, 16);
+            const label = `${snapshot.snapshot_date.substr(0, 16)} (${moment(date).fromNow()})`;
+            return (
+              <MenuItem
+                key={snapshot.snapshots_id}
+                value={snapshot.snapshots_id}
+                primaryText={label}
+              />
+            );
+          })}
+        </SelectField>
       </div>
     );
   }

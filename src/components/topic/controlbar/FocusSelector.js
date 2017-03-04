@@ -1,97 +1,47 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import IconButton from 'material-ui/IconButton';
-import { Popover, PopoverAnimationVertical } from 'material-ui/Popover';
-import FocusListItem from './FocusListItem';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { getBrandDarkColor } from '../../../styles/colors';
+import { injectIntl } from 'react-intl';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import { REMOVE_FOCUS } from './FocusSelectorContainer';
 
 const localMessages = {
   pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
   noFocus: { id: 'focus.none', defaultMessage: 'No Subtopic' },
-  helpTitle: { id: 'focus.selector.help.title', defaultMessage: 'About Subtopics' },
-  helpText: { id: 'focus.selector.help.text',
-    defaultMessage: '<p>Subtopics let you slice and dice your Topic.</p>',
-  },
 };
 
 class FocusSelector extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPopupOpen: false,
-    };
-  }
-
-  handlePopupOpenClick = (event) => {
-    event.preventDefault();
-    this.setState({
-      isPopupOpen: !this.state.isPopupOpen,
-      anchorEl: event.currentTarget,
-    });
-  }
-
-  handlePopupRequestClose = () => {
-    this.setState({
-      isPopupOpen: false,
-    });
-  }
-
-  handleFocusSelected = (focus) => {
-    this.handlePopupRequestClose();
-    const { onFocusSelected } = this.props;
-    onFocusSelected(focus);
+  handleFocusChange = (evt, index, value) => {
+    const { foci, onFocusSelected } = this.props;
+    const { formatMessage } = this.props.intl;
+    let selected;
+    if (value === REMOVE_FOCUS) {
+      selected = { foci_id: REMOVE_FOCUS, name: formatMessage(localMessages.noFocus) };
+    } else {
+      selected = foci.find(focus => (focus.foci_id === value));
+    }
+    onFocusSelected(selected);
   }
 
   render() {
-    const { foci, selectedId, helpButton } = this.props;
+    const { foci, selectedId } = this.props;
     const { formatMessage } = this.props.intl;
-    const icon = (this.state.isPopupOpen) ? 'arrow_drop_up' : 'arrow_drop_down';
     // default to none
-    const selected = foci.find(focus => (focus.foci_id === selectedId));
-    const selectedSummary = (selected) ? selected.name : <FormattedMessage {...localMessages.pickFocus} />;
     return (
       <div className="focus-selector-wrapper">
-        <div className="popup-selector focus-selector">
-          <div className="label">
-            {selectedSummary}
-          </div>
-          <IconButton
-            iconClassName="material-icons"
-            tooltip={formatMessage(localMessages.pickFocus)}
-            onClick={this.handlePopupOpenClick}
-            iconStyle={{ color: getBrandDarkColor() }}
-          >
-            {icon}
-          </IconButton>
-          <Popover
-            open={this.state.isPopupOpen}
-            anchorEl={this.state.anchorEl}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            onRequestClose={this.handlePopupRequestClose}
-            animation={PopoverAnimationVertical}
-            className="popup-list"
-          >
-            {foci.map(focus =>
-              <FocusListItem
-                key={focus.foci_id}
-                focus={focus}
-                selected={focus.foci_id === selectedId}
-                onSelected={() => { this.handleFocusSelected(focus); }}
-              />
-            )}
-            <FocusListItem
-              key={REMOVE_FOCUS}
-              focus={{ foci_id: REMOVE_FOCUS, name: formatMessage(localMessages.noFocus) }}
-              selected={false}
-              onSelected={() => { this.handleFocusSelected(focus); }}
-            />
-          </Popover>
-        </div>
-        {helpButton}
+        <SelectField
+          floatingLabelText={formatMessage(localMessages.pickFocus)}
+          floatingLabelFixed
+          floatingLabelStyle={{ color: 'rgb(224,224,224)' }}
+          labelStyle={{ color: 'rgb(255,255,255)' }}
+          value={selectedId}
+          onChange={this.handleFocusChange}
+        >
+          {foci.map(focus =>
+            <MenuItem key={focus.foci_id} value={focus.foci_id} primaryText={focus.name} />
+          )}
+          <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(localMessages.noFocus)} />
+        </SelectField>
       </div>
     );
   }
@@ -103,12 +53,9 @@ FocusSelector.propTypes = {
   selectedId: React.PropTypes.number,
   intl: React.PropTypes.object.isRequired,
   onFocusSelected: React.PropTypes.func,
-  helpButton: React.PropTypes.node.isRequired,
 };
 
 export default
   injectIntl(
-    composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
-      FocusSelector
-    )
+    FocusSelector
   );

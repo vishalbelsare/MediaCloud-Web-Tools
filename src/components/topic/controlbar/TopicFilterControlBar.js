@@ -2,29 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import SnapshotSelectorContainer from './SnapshotSelectorContainer';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
-import FocusSelectorContainer from './FocusSelectorContainer';
 import { filteredLinkTo } from '../../util/location';
 import CreateSnapshotButton from './CreateSnapshotButton';
-import { EditButton, SettingsButton } from '../../common/IconButton';
+import { EditButton, SettingsButton, FilterButton } from '../../common/IconButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { toggleFilterControls } from '../../../actions/topicActions';
+import FilterSelectorContainer from './FilterSelectorContainer';
 
 const localMessages = {
   editPermissions: { id: 'topic.editPermissions', defaultMessage: 'Edit Topic Permissions' },
   editSettings: { id: 'topic.editSettings', defaultMessage: 'Edit Topic Settings' },
 };
 
-const ControlBar = (props) => {
-  const { topicId, location, filters } = props;
+const TopicFilterControlBar = (props) => {
+  const { topicId, location, filters, handleFilterToggle } = props;
   const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
-  let focusSelector = null;
   let subControls = null;
   if ((filters.snapshotId !== null) && (filters.snapshotId !== undefined)) {
     subControls = <TimespanSelectorContainer topicId={topicId} location={location} filters={filters} />;
-    focusSelector = <FocusSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
   }
   return (
     <div className="controlbar controlbar-topic">
@@ -43,11 +41,8 @@ const ControlBar = (props) => {
                 />
               </Permissioned>
             </Col>
-            <Col lg={4}>
-              {focusSelector}
-            </Col>
-            <Col lg={4} className="right">
-              <SnapshotSelectorContainer topicId={topicId} location={location} />
+            <Col lg={8} className="right">
+              <FilterButton onClick={() => handleFilterToggle()} />
               <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                 <CreateSnapshotButton topicId={topicId} />
               </Permissioned>
@@ -55,6 +50,7 @@ const ControlBar = (props) => {
           </Row>
         </Grid>
       </div>
+      <FilterSelectorContainer />
       <div className="sub">
         {subControls}
       </div>
@@ -62,7 +58,7 @@ const ControlBar = (props) => {
   );
 };
 
-ControlBar.propTypes = {
+TopicFilterControlBar.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
@@ -70,15 +66,24 @@ ControlBar.propTypes = {
   location: React.PropTypes.object.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
+  // from dispatch
+  handleFilterToggle: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
 });
 
+
+const mapDispatchToProps = dispatch => ({
+  handleFilterToggle: () => {
+    dispatch(toggleFilterControls());
+  },
+});
+
 export default
   injectIntl(
-    connect(mapStateToProps)(
-      ControlBar
+    connect(mapStateToProps, mapDispatchToProps)(
+      TopicFilterControlBar
     )
   );
