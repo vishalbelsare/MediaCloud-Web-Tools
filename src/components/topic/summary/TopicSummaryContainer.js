@@ -59,7 +59,7 @@ class TopicSummaryContainer extends React.Component {
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={12}>
-              <WordsSummaryContainer topicId={topicId} filters={filters} />
+              <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               <Col lg={12}>

@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchTopicTopWords } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
@@ -19,9 +19,8 @@ import ActionMenu from '../../common/ActionMenu';
 
 
 const localMessages = {
-  helpTitle: { id: 'topic.summary.words.help.title', defaultMessage: 'About Top Words' },
-  helpText: { id: 'topic.summary.words.help.into',
-    defaultMessage: '<p>This is a visualization showing the top words in your Topic.</p>',
+  descriptionIntro: { id: 'topic.summary.words.help.into',
+    defaultMessage: 'Look at the top words to see how this topic was talked about. This can suggest what the dominant narrative was, and looking at different timespans can suggest how it evolved over time.',
   },
 };
 const WORD_CLOUD_DOM_ID = 'word-cloud';
@@ -39,7 +38,7 @@ class WordsSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { topicId, filters, helpButton, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
+    const { topicId, filters, words, width, height, maxFontSize, minFontSize, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
     const menuItems = [
       { text: formatMessage(messages.downloadCSV), clickHandler: this.downloadCsv },
@@ -55,7 +54,6 @@ class WordsSummaryContainer extends React.Component {
         </Permissioned>
         <h2>
           <FormattedMessage {...messages.topWords} />
-          {helpButton}
         </h2>
         <OrderedWordCloud
           words={words}
@@ -75,7 +73,6 @@ class WordsSummaryContainer extends React.Component {
 WordsSummaryContainer.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -121,7 +118,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText], true)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordsSummaryContainer
         )

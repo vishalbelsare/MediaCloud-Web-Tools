@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
@@ -15,10 +15,7 @@ import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
-  helpTitle: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.summary.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Topic over time.</p>',
-  },
+  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
 class SentenceCountSummaryContainer extends React.Component {
@@ -34,7 +31,7 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, helpButton, topicId, filters } = this.props;
+    const { total, counts, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -46,7 +43,6 @@ class SentenceCountSummaryContainer extends React.Component {
         </Permissioned>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         <AttentionOverTimeChart
           total={total}
@@ -62,7 +58,6 @@ class SentenceCountSummaryContainer extends React.Component {
 SentenceCountSummaryContainer.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // passed in
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -98,7 +93,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText], true)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
         composeAsyncContainer(
           SentenceCountSummaryContainer
         )
