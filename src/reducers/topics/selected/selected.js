@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SELECT_TOPIC, SET_TOPIC_NEEDS_NEW_SNAPSHOT } from '../../../actions/topicActions';
+import { SELECT_TOPIC, SET_TOPIC_NEEDS_NEW_SNAPSHOT, TOGGLE_FILTER_CONTROLS } from '../../../actions/topicActions';
 import snapshots from './snapshots';
 import timespans from './timespans';
 import summary from './summary/summary';
@@ -32,8 +32,18 @@ function needsNewSnapshot(state = false, action) {
   }
 }
 
+function filtersVisible(state = true, action) {
+  switch (action.type) {
+    case TOGGLE_FILTER_CONTROLS:
+      return !state;
+    default:
+      return state;
+  }
+}
+
 const selected = combineReducers({
   id,
+  filtersVisible, // do this here, instead of in filters, so that a visible state change doesn't change filters and thus trigger tons of re-renders
   needsNewSnapshot,
   info,
   summary,
@@ -52,7 +62,7 @@ const selected = combineReducers({
 
 const rootReducer = (state, action) => {
   let modifiedState = state;
-  if (action.type === 'SELECT_TOPIC') {
+  if (action.type === SELECT_TOPIC) {
     // when the switch topics re-initialize the whole state tree, to make sure
     // we don't get any weird artifacts from the previuos topic
     // @see: http://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store

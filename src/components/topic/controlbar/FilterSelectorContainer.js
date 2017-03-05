@@ -24,15 +24,25 @@ const localMessages = {
  * mostly so that heppens first before other things render.
  */
 const FilterSelectorContainer = (props) => {
-  const { filters, topicId, snapshotId, snapshots, location, handleSnapshotSelected } = props;
+  const { filters, topicId, filtersVisible, snapshotId, snapshots, location, handleSnapshotSelected } = props;
   let content = null;
-  if (filters.isVisible) {
+  let focusSelectorContent = null;
+  if (snapshotId) {
+    focusSelectorContent = (
+      <FocusSelectorContainer
+        topicId={topicId}
+        location={location}
+        snapshotId={filters.snapshotId}
+      />
+    );
+  }
+  if (filtersVisible) {
     content = (
       <div className="filter-selector">
         <Grid>
           <Row>
             <Col lg={4}>
-              <FocusSelectorContainer topicId={topicId} location={location} snapshotId={filters.snapshotId} />;
+              {focusSelectorContent}
             </Col>
             <Col lg={4}>
               <SnapshotSelector
@@ -61,10 +71,12 @@ FilterSelectorContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   snapshots: React.PropTypes.array.isRequired,
   snapshotId: React.PropTypes.number,
+  filtersVisible: React.PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
+  filtersVisible: state.topics.selected.filtersVisible,
   topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.snapshots.fetchStatus,
   snapshots: state.topics.selected.snapshots.list,

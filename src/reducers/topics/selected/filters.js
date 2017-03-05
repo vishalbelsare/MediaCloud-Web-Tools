@@ -1,5 +1,5 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS, TOGGLE_FILTER_CONTROLS } from '../../../actions/topicActions';
+import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS } from '../../../actions/topicActions';
 import { createReducer } from '../../../lib/reduxHelpers';
 
 function parseId(potentialId) {
@@ -11,7 +11,6 @@ const info = createReducer({
     snapshotId: null,
     timespanId: null,
     focusId: null,
-    isVisible: true,
   },
   [TOPIC_FILTER_BY_SNAPSHOT]: payload => ({
     snapshotId: parseId(payload),
@@ -36,7 +35,6 @@ const info = createReducer({
     }
     return updates;
   },
-  [TOGGLE_FILTER_CONTROLS]: (payload, state) => ({ isVisible: !state.isVisible }),
 });
 
 export default info;

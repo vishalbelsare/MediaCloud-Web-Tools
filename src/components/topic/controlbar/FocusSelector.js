@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { REMOVE_FOCUS } from './FocusSelectorContainer';
+import { getBrandDarkerColor } from '../../../styles/colors';
 
 const localMessages = {
   pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
@@ -26,6 +27,14 @@ class FocusSelector extends React.Component {
   render() {
     const { foci, selectedId } = this.props;
     const { formatMessage } = this.props.intl;
+    const focusName = focus => `${focus.focalSet.name}: ${focus.name}`;
+    foci.sort((f1, f2) => { // alphabetical
+      const f1Name = focusName(f1).toUpperCase();
+      const f2Name = focusName(f2).toUpperCase();
+      if (f1Name < f2Name) return -1;
+      if (f1Name > f2Name) return 1;
+      return 0;
+    });
     // default to none
     return (
       <div className="focus-selector-wrapper">
@@ -33,12 +42,17 @@ class FocusSelector extends React.Component {
           floatingLabelText={formatMessage(localMessages.pickFocus)}
           floatingLabelFixed
           floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+          selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
           labelStyle={{ color: 'rgb(255,255,255)' }}
           value={selectedId}
           onChange={this.handleFocusChange}
         >
           {foci.map(focus =>
-            <MenuItem key={focus.foci_id} value={focus.foci_id} primaryText={focus.name} />
+            <MenuItem
+              key={focus.foci_id}
+              value={focus.foci_id}
+              primaryText={focusName(focus)}
+            />
           )}
           <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(localMessages.noFocus)} />
         </SelectField>
