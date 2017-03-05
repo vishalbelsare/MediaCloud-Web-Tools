@@ -1,13 +1,9 @@
 import React from 'react';
-import { push } from 'react-router-redux';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchTopicFocalSetsList, filterByFocus } from '../../../actions/topicActions';
+import { fetchTopicFocalSetsList } from '../../../actions/topicActions';
 import { NO_SPINNER, asyncContainerize } from '../../common/AsyncContainer';
-import { filteredLocation } from '../../util/location';
 import FocusSelector from './FocusSelector';
-
-const REMOVE_FOCUS = 0;
 
 class FocusSelectorContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -17,12 +13,12 @@ class FocusSelectorContainer extends React.Component {
     }
   }
   render() {
-    const { foci, selectedFocus, handleFocusSelected } = this.props;
+    const { foci, selectedFocus, onFocusSelected } = this.props;
     return (
       <FocusSelector
         selectedId={(selectedFocus) ? selectedFocus.foci_id : null}
         foci={foci}
-        onFocusSelected={handleFocusSelected}
+        onFocusSelected={onFocusSelected}
         location={location}
       />
     );
@@ -34,11 +30,11 @@ FocusSelectorContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   location: React.PropTypes.object.isRequired,
   snapshotId: React.PropTypes.number,
+  onFocusSelected: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  handleFocusSelected: React.PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -53,17 +49,11 @@ const mapStateToProps = state => ({
   selectedFocus: state.topics.selected.focalSets.foci.selected,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (topicId, snapshotId) => {
     if (topicId !== null) {
       dispatch(fetchTopicFocalSetsList(topicId, snapshotId));
     }
-  },
-  handleFocusSelected: (focus) => {
-    const selectedFocusId = (focus.foci_id === REMOVE_FOCUS) ? null : focus.foci_id;
-    const newLocation = filteredLocation(ownProps.location, { focusId: selectedFocusId, timespanId: null });
-    dispatch(push(newLocation));
-    dispatch(filterByFocus(selectedFocusId));
   },
 });
 

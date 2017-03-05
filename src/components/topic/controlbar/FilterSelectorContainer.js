@@ -24,7 +24,7 @@ const localMessages = {
  * mostly so that heppens first before other things render.
  */
 const FilterSelectorContainer = (props) => {
-  const { filters, topicId, filtersVisible, snapshotId, snapshots, location, handleSnapshotSelected } = props;
+  const { filters, topicId, filtersVisible, snapshotId, snapshots, location, handleSnapshotSelected, onFocusSelected } = props;
   let content = null;
   let focusSelectorContent = null;
   if (snapshotId) {
@@ -33,6 +33,7 @@ const FilterSelectorContainer = (props) => {
         topicId={topicId}
         location={location}
         snapshotId={filters.snapshotId}
+        onFocusSelected={onFocusSelected}
       />
     );
   }
@@ -63,6 +64,8 @@ FilterSelectorContainer.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   location: React.PropTypes.object.isRequired,
+  // from parent
+  onFocusSelected: React.PropTypes.func.isRequired,
   // from dispatch
   handleSnapshotSelected: React.PropTypes.func.isRequired,
   // from state

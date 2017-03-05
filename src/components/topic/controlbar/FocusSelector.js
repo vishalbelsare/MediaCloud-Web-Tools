@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import { REMOVE_FOCUS } from './FocusSelectorContainer';
+import { REMOVE_FOCUS } from './TopicFilterControlBar';
 import { getBrandDarkerColor } from '../../../styles/colors';
 
 const localMessages = {
