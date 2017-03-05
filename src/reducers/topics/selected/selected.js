@@ -32,7 +32,7 @@ function needsNewSnapshot(state = false, action) {
   }
 }
 
-function filtersVisible(state = true, action) {
+function filtersVisible(state = false, action) {
   switch (action.type) {
     case TOGGLE_FILTER_CONTROLS:
       return !state;

@@ -18,6 +18,7 @@ const REMOVE_FOCUS = 0;
 const localMessages = {
   editPermissions: { id: 'topic.editPermissions', defaultMessage: 'Edit Topic Permissions' },
   editSettings: { id: 'topic.editSettings', defaultMessage: 'Edit Topic Settings' },
+  filterTopic: { id: 'topic.filter', defaultMessage: 'Filter this Topic' },
 };
 
 const TopicFilterControlBar = (props) => {
@@ -47,7 +48,7 @@ const TopicFilterControlBar = (props) => {
               </Permissioned>
             </Col>
             <Col lg={8} className="right">
-              <FilterButton onClick={() => handleFilterToggle()} />
+              <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />
               <ActiveFiltersContainer
                 onRemoveFocus={() => handleFocusSelected(REMOVE_FOCUS)}
               />

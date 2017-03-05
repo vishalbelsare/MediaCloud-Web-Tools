@@ -12,7 +12,7 @@ const ActiveFilters = (props) => {
     focusChip = (
       <Chip
         backgroundColor={'rgb(255,255,255)'}
-        style={{ border: '1px solid rgb(158,158,158)' }}
+        style={{ border: '1px solid rgb(189,189,189)' }}
         onRequestDelete={onRemoveFocus}
       >
         <FormattedMessage {...messages.focus} />: {focus.name}
