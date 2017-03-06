@@ -136,7 +136,7 @@ def topic_create():
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
 # require any fields?
-@form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
+@form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):
 
@@ -149,7 +149,7 @@ def topic_update(topics_id):
         'start_date': request.form['start_date'],
         'end_date': request.form['end_date'],
         'is_public': request.form['is_public'] if 'is_public' in request.form else None,
-        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['chtopic_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
+        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
     }
@@ -157,6 +157,10 @@ def topic_update(topics_id):
     # parse out any sources and collections to add
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
+    # hack to support twitter-only topics
+    if (len(media_ids_to_add) is 0) and (len(tag_ids_to_add) is 0):
+        media_ids_to_add = None
+        tag_ids_to_add = None
 
     result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
