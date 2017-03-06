@@ -14,12 +14,17 @@ const localMessages = {
 const SourceMgrSubHeaderContainer = (props) => {
   const { topicId, topicInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
+  let title = '';
+  if (topicInfo.is_public === 1) {
+    title += `${formatMessage(messages.topicPublicProp)} `;
+  }
+  title += `${formatMessage(messages.topicName)}: ${topicInfo.name}`;
   let content = null;
   if (topicInfo !== null) {
     content = (
       <div className="topic-sub-header">
         <AppSubHeader
-          title={`${formatMessage(messages.topicName)}: ${topicInfo.name}`}
+          title={title}
           subTitle={topicInfo.description}
           isFavorite={topicInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
