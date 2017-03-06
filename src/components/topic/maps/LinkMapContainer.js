@@ -3,10 +3,13 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import LinkMapForm from './LinkMapForm';
+import { selectTopic, filterBySnapshot, filterByFocus, filterByTimespan, fetchCustomMap, updateFeedback } from '../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'topic.maps.link.title', defaultMessage: 'Link Map' },
   intro: { id: 'topic.maps.link.title', defaultMessage: 'We can generate a network graph showing how the media sources linked to each other.' },
+  fetchButton: { id: 'topic.maps.button', defaultMessage: 'Download network map' },
 };
 
 class LinkMapContainer extends React.Component {
@@ -19,8 +22,10 @@ class LinkMapContainer extends React.Component {
   }
 
   render() {
+    const { handleFetchMapData } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
+    const initialValues = { color_field: 'media_type', num_media: 500, include_weights: false };
     return (
       <Grid>
         <Title render={titleHandler} />
@@ -30,11 +35,12 @@ class LinkMapContainer extends React.Component {
             <p><FormattedMessage {...localMessages.intro} /></p>
           </Col>
         </Row>
-        <Row>
-          <Col lg={6}>
-          Content!
-          </Col>
-        </Row>
+        <LinkMapForm
+          initialValues={initialValues}
+          onFetch={handleFetchMapData}
+          buttonLabel={formatMessage(localMessages.fetchButton)}
+        />
+
       </Grid>
     );
   }
@@ -50,6 +56,8 @@ LinkMapContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
+  // from parent
+  handleFetchMapData: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -57,10 +65,35 @@ const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
 });
 
-const mapDispatchToProps = () => ({
-  fetchMapData: (values) => {
-    console.log(values);
-    // dispatch(fetchTopicTopWords(props.topicId, { ...props.filters, withTotals: true }));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleFetchMapData: (values) => {
+    // try to save it
+    const params = {
+      ...ownProps.location.query,
+      ...values,
+    };
+    dispatch(fetchCustomMap(ownProps.params.topicId, params))
+      .then((result) => {
+        if (result.success === 1) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          // need to fetch it again because something may have changed
+        }
+      });
+  },
+  fetchData: () => {
+    dispatch(selectTopic(ownProps.params.topicId));
+    // select any filters that are there
+    const query = ownProps.location.query;
+    if (ownProps.location.query.snapshotId) {
+      dispatch(filterBySnapshot(query.snapshotId));
+    }
+    if (ownProps.location.query.focusId) {
+      dispatch(filterByFocus(query.focusId));
+    }
+    if (ownProps.location.query.timespanId) {
+      dispatch(filterByTimespan(query.timespanId));
+    }
   },
 });
 

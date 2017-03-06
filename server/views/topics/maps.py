@@ -64,8 +64,9 @@ def map_files_download(topics_id, map_type, map_format):
     return send_from_directory(directory=DATA_DIR, filename=filename, 
         mimetype=mime_type, as_attachment=True)
 
-@app.route('/api/topics/<topics_id>/map-files/requestGEFX', methods=['GET'])
+@app.route('/api/topics/<topics_id>/map-files/fetchCustomMap', methods=['GET'])
 @arguments_required( 'timespanId')
+# @form_fields_required('color_field', 'num_media','include_weights')
 # @flask_login.login_required
 def map_files_download_custom(topics_id):
 
@@ -74,10 +75,12 @@ def map_files_download_custom(topics_id):
     #  'snapshots_id', 'foci_id', 'timespans_id'
     # how to treat these as req or default?
     optional_args = {
-        'timespans_id': request.args['timespanId'],
-        'color_field': request.form['color_field'] if 'color_field' in request.form else 'type',
+        'timespans_id': request.args['timespanId'] if 'timespanId' in request.args else None,
+        'snapshots_id': request.args['snapshotId'] if 'snapshots_id' in request.args else None,
+        'foci_id': request.args['fociId'] if 'foci_id' in request.args else None,
+        'color_field': request.form['color_field'] if 'color_field' in request.form else 'media_type',
         'num_media': request.form['num_media'] if 'num_media' in request.form else 500,    # this is optional
-        'include_weights': request.form['include_weights'] if 'include_weights' in request.form else False,
+        'include_weights': request.form['include_weights'] if 'include_weights' in request.form else 1,
         'num_links_per_medium': request.form['num_links_per_medium'] if 'num_links_per_medium' in request.form else None, 
     }
     filename = "link-map-"+topics_id+"-"+request.args['timespanId']+"."+ "gefx"
