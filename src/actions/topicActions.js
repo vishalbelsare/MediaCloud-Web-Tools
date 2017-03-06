@@ -7,6 +7,7 @@ export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
 export const TOPIC_FILTER_BY_TIMESPAN = 'TOPIC_FILTER_BY_TIMESPAN';
+export const TOPIC_FILTER_BY_QUERY = 'TOPIC_FILTER_BY_QUERY';
 export const FETCH_TOPIC_SUMMARY = 'FETCH_TOPIC_SUMMARY';
 export const FETCH_TOPIC_TOP_STORIES = 'FETCH_TOPIC_TOP_STORIES';
 export const SORT_TOPIC_TOP_STORIES = 'SORT_TOPIC_TOP_STORIES';
@@ -90,6 +91,8 @@ export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
 // pass in focusId
 export const filterByFocus = createAction(TOPIC_FILTER_BY_FOCUS, id => id);
+// pass in query str
+export const filterByQuery = createAction(TOPIC_FILTER_BY_QUERY, str => str);
 
 // pass in topicId
 export const fetchTopicSummary = createAsyncAction(FETCH_TOPIC_SUMMARY, api.topicSummary);

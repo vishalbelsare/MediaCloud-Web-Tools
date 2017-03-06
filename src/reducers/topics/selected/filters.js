@@ -1,5 +1,5 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS } from '../../../actions/topicActions';
+import { TOPIC_FILTER_BY_SNAPSHOT, TOPIC_FILTER_BY_TIMESPAN, TOPIC_FILTER_BY_FOCUS, TOPIC_FILTER_BY_QUERY } from '../../../actions/topicActions';
 import { createReducer } from '../../../lib/reduxHelpers';
 
 function parseId(potentialId) {
@@ -11,6 +11,7 @@ const info = createReducer({
     snapshotId: null,
     timespanId: null,
     focusId: null,
+    q: null,
   },
   [TOPIC_FILTER_BY_SNAPSHOT]: payload => ({
     snapshotId: parseId(payload),
@@ -22,6 +23,9 @@ const info = createReducer({
   }),
   [TOPIC_FILTER_BY_TIMESPAN]: payload => ({
     timespanId: parseId(payload),
+  }),
+  [TOPIC_FILTER_BY_QUERY]: payload => ({
+    q: payload,
   }),
   [LOCATION_CHANGE]: (payload, state) => {
     // for some reason when the user hits the back button we need to manually re-render
