@@ -9,6 +9,7 @@ import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
+import { filteredLinkTo } from '../../util/location';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 
@@ -126,15 +127,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoToSave['sources[]'] = '';
       infoToSave['collections[]'] = '';
     }
-    dispatch(updateTopic(ownProps.params.topicId, infoToSave)).then((results) => {
-      if (results.topics_id) {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        dispatch(push(`/topics/${results.topics_id}/summary`));
-      } else {
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+    dispatch(updateTopic(ownProps.params.topicId, infoToSave))
+      .then((results) => {
+        if (results.topics_id) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          // update topic info and redirect back to topic summary
+          dispatch(fetchTopicSummary(results.topics_id))
+            .then(() => dispatch(push(filteredLinkTo(`/topics/${results.topics_id}/summary`))));
+        } else {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+        }
       }
-    });
+    );
   },
 });
 
