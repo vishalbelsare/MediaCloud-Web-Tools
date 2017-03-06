@@ -148,7 +148,7 @@ def topic_update(topics_id):
         'solr_seed_query': request.form['solr_seed_query'],
         'start_date': request.form['start_date'],
         'end_date': request.form['end_date'],
-        'is_public': request.form['is_public'] if 'is_public' in request.form else None,
+        'is_public': 1 if request.form['is_public'] == 'true' else 0,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
