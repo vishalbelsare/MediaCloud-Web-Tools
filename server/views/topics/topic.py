@@ -20,7 +20,7 @@ def topic_list():
     if (not is_user_logged_in()):
         return public_topic_list(CACHED_TOPICS)
     else:
-        user_mc= user_mediacloud_client()
+        user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
         all_topics = user_mc.topicList(link_id=link_id)
         _add_user_favorite_flag_to_topics(all_topics['topics'])
