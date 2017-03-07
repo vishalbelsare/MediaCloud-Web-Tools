@@ -1,12 +1,15 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
+import Link from 'react-router/lib/Link';
 import messages from '../../../resources/messages';
 import AppButton from '../../common/AppButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
 import DescriptiveButton from '../../common/DescriptiveButton';
+import FocusIcon from '../../common/icons/FocusIcon';
+import TimespanIcon from '../../common/icons/TimespanIcon';
 
 const localMessages = {
   modifyTopic: { id: 'topic.modify', defaultMessage: 'Modify Topic' },
@@ -26,7 +29,10 @@ class ModifyTopicDialog extends React.Component {
     open: false,
   };
 
-  handleModifyClick = () => {
+  handleModifyClick = (evt) => {
+    if (evt) {
+      evt.preventDefault();
+    }
     this.setState({ open: true });
   };
 
@@ -60,11 +66,13 @@ class ModifyTopicDialog extends React.Component {
             onClick={this.handleModifyClick}
             tooltip={formatMessage(localMessages.modifyTopic)}
           />
+          <Link to={`#${formatMessage(localMessages.modifyTopic)}`} onClick={this.handleModifyClick}>
+            <b><FormattedMessage {...localMessages.modifyTopic} /></b>
+          </Link>
         </Permissioned>
         <Dialog
           title={formatMessage(localMessages.modifyTopic)}
           actions={dialogActions}
-          modal
           open={this.state.open}
           onRequestClose={this.handleRemoveDialogClose}
           className={'modify-topic-dialog'}
@@ -76,11 +84,13 @@ class ModifyTopicDialog extends React.Component {
         >
           {snapshotButton}
           <DescriptiveButton
+            svgIcon={(<FocusIcon />)}
             label={formatMessage(messages.addFocus)}
             description={formatMessage(localMessages.addFocusDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/foci`)}
           />
           <DescriptiveButton
+            svgIcon={(<TimespanIcon />)}
             label={formatMessage(localMessages.addTimespan)}
             description={formatMessage(localMessages.addTimespanDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/timespans`)}
