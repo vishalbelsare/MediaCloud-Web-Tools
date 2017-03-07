@@ -1,6 +1,6 @@
 import logging
 import flask
-from flask import jsonify, request, send_from_directory
+from flask import jsonify, request, send_from_directory, send_file
 import flask_login
 import os
 from multiprocessing import Process
@@ -86,10 +86,14 @@ def map_files_download_custom(topics_id):
     filename = "link-map-"+topics_id+"-"+request.args['timespanId']+"."+ "gefx"
 
     resultStream = user_mc.topicMediaMap(topics_id, **optional_args)
-    headers = {}
-    headers["Content-Disposition"] = "attachment;filename="+filename
 
-    return flask.Response(resultStream, mimetype='application/octet-stream', headers=headers)
+    generator = (cell for row in resultStream
+                    for cell in row)
+
+    headers = {}
+    # headers["Content-Disposition"] = "attachment;filename="+filename
+
+    return flask.Response(generator, mimetype="attachment/octet", headers={"Content-Disposition": "attachment;filename=test.txt"})
 
 def _start_generating_map_file(map_type, topics_id, timespans_id):
     file_prefix = _get_file_prefix(map_type, topics_id, timespans_id)

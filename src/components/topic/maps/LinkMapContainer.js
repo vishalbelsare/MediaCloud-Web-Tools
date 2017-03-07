@@ -4,7 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LinkMapForm from './LinkMapForm';
-import { selectTopic, filterBySnapshot, filterByFocus, filterByTimespan, fetchCustomMap, updateFeedback } from '../../../actions/topicActions';
+import { selectTopic, filterBySnapshot, filterByFocus, filterByTimespan } from '../../../actions/topicActions';
+import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
   title: { id: 'topic.maps.link.title', defaultMessage: 'Link Map' },
@@ -68,18 +69,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleFetchMapData: (values) => {
     // try to save it
-    const params = {
-      ...ownProps.location.query,
-      ...values,
-    };
-    dispatch(fetchCustomMap(ownProps.params.topicId, params))
-      .then((result) => {
-        if (result.success === 1) {
-          // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          // need to fetch it again because something may have changed
-        }
-      });
+    const params = generateParamStr({ ...ownProps.location.query, ...values });
+
+    const url = `/api/topics/${ownProps.params.topicId}/map-files/fetchCustomMap?${params}`;
+    window.location = url;
   },
   fetchData: () => {
     dispatch(selectTopic(ownProps.params.topicId));
