@@ -5,8 +5,10 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import PermissionForm from './PermissionForm';
 import { fetchPermissionsList, updatePermission } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import BackLinkingControlBar from '../BackLinkingControlBar';
 import { updateFeedback } from '../../../actions/appActions';
 import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'topic.permissions.title', defaultMessage: 'Topic Permissions' },
@@ -27,39 +29,42 @@ class TopicPermissionsContainer extends React.Component {
   }
 
   render() {
-    const { handleUpdate, permissions, handleDelete } = this.props;
+    const { handleUpdate, permissions, handleDelete, topicId } = this.props;
     return (
-      <div className="topic-acl">
-        <Grid>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-              <p><FormattedMessage {...localMessages.intro} /></p>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h2><FormattedMessage {...localMessages.addTitle} /></h2>
-            </Col>
-          </Row>
-          <PermissionForm form="newPermissionForm" initialValues={{ email: null, permission: null }} onSave={handleUpdate} />
-          <Row>
-            <Col md={10} sm={12}>
-              <h2><FormattedMessage {...localMessages.existingTitle} /></h2>
-              <p><FormattedMessage {...localMessages.existingIntro} /></p>
-            </Col>
-          </Row>
-          { permissions.map((p, index) =>
-            <PermissionForm
-              form={`updatePermissionForm${index}`}
-              key={p.email}
-              initialValues={p}
-              onSave={handleUpdate}
-              showDeleteButton
-              onDelete={handleDelete}
-            />
-          )}
-        </Grid>
+      <div className="topic-permissioned">
+        <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
+        <div className="topic-acl">
+          <Grid>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <h1><FormattedMessage {...localMessages.title} /></h1>
+                <p><FormattedMessage {...localMessages.intro} /></p>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12} md={12} sm={12}>
+                <h2><FormattedMessage {...localMessages.addTitle} /></h2>
+              </Col>
+            </Row>
+            <PermissionForm form="newPermissionForm" initialValues={{ email: null, permission: null }} onSave={handleUpdate} />
+            <Row>
+              <Col md={10} sm={12}>
+                <h2><FormattedMessage {...localMessages.existingTitle} /></h2>
+                <p><FormattedMessage {...localMessages.existingIntro} /></p>
+              </Col>
+            </Row>
+            { permissions.map((p, index) =>
+              <PermissionForm
+                form={`updatePermissionForm${index}`}
+                key={p.email}
+                initialValues={p}
+                onSave={handleUpdate}
+                showDeleteButton
+                onDelete={handleDelete}
+              />
+            )}
+          </Grid>
+        </div>
       </div>
     );
   }

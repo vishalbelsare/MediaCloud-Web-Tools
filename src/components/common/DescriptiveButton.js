@@ -6,7 +6,7 @@ import React from 'react';
 const DescriptiveButton = (props) => {
   const { imageUrl, label, description, onClick } = props;
   return (
-    <div className="descriptive-button" onTouchTap={() => onClick()}>
+    <div className="descriptive-button" onTouchTap={onClick}>
       <img src={imageUrl} alt={label} width={50} height={50} />
       <b>{label}</b>
       <p>{description}</p>

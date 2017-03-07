@@ -1,0 +1,31 @@
+@import '../_constants';
+
+.modify-topic-dialog {
+
+  .modify-topic-dialog-content {
+    > div {
+      background-color: $material-grey800 !important;
+    }
+  }
+
+  .modify-topic-dialog-title {
+    font-weight: bold !important;
+    text-align: center !important;
+    font-family: $font-families !important;
+    color: rgb(255,255,255) !important;
+  }
+
+  .modify-topic-dialog-body {
+    .descriptive-button {
+      max-width: 400px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 25px;
+    }
+  }
+
+  .modify-topic-dialog-overlay {
+
+  }
+
+}

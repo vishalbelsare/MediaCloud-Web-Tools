@@ -5,13 +5,11 @@ import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import { filteredLinkTo, filteredLocation } from '../../util/location';
-import CreateSnapshotButton from './CreateSnapshotButton';
-import { EditButton, SettingsButton, FilterButton } from '../../common/IconButton';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { FilterButton } from '../../common/IconButton';
 import { toggleFilterControls, filterByFocus } from '../../../actions/topicActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
 import ActiveFiltersContainer from './ActiveFiltersContainer';
+import ModifyTopicDialog from './ModifyTopicDialog';
 
 const REMOVE_FOCUS = 0;
 
@@ -22,7 +20,7 @@ const localMessages = {
 };
 
 const TopicFilterControlBar = (props) => {
-  const { topicId, location, filters, handleFilterToggle, handleFocusSelected } = props;
+  const { topicId, location, filters, goToUrl, handleFilterToggle, handleFocusSelected } = props;
   const { formatMessage } = props.intl;
   // both the focus and timespans selectors need the snapshot to be selected first
   let subControls = null;
@@ -35,17 +33,11 @@ const TopicFilterControlBar = (props) => {
         <Grid>
           <Row>
             <Col lg={4} className="left">
-              <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                <EditButton
-                  linkTo={filteredLinkTo(`/topics/${topicId}/edit`, filters)}
-                  tooltip={formatMessage(localMessages.editSettings)}
-                />
-                <SettingsButton
-                  linkTo={filteredLinkTo(`/topics/${topicId}/permissions`, filters)}
-                  tooltip={formatMessage(localMessages.editPermissions)}
-                />
-                <CreateSnapshotButton topicId={topicId} />
-              </Permissioned>
+              <ModifyTopicDialog
+                topicId={topicId}
+                onUrlChange={goToUrl}
+                allowSnapshot={false}
+              />
             </Col>
             <Col lg={8} className="right">
               <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />
@@ -78,6 +70,8 @@ TopicFilterControlBar.propTypes = {
   // from dispatch
   handleFilterToggle: React.PropTypes.func.isRequired,
   handleFocusSelected: React.PropTypes.func.isRequired,
+  // from merge
+  goToUrl: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -95,11 +89,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(push(newLocation));
     dispatch(filterByFocus(selectedFocusId));
   },
+  redirectToUrl: (url, filters) => dispatch(push(filteredLinkTo(url, filters))),
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    goToUrl: url => dispatchProps.redirectToUrl(url, stateProps.filters),
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       TopicFilterControlBar
     )
   );
