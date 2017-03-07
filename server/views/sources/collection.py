@@ -11,7 +11,7 @@ from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION
     COLLECTIONS_TEMPLATE_PROPS_EDIT, \
     isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
-from server import app, mc, db
+from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
@@ -83,7 +83,10 @@ def upload_file():
                         audit_results, successful = _create_or_update_sources_from_template(updated_only, False)
                         all_results += successful
                         audit += audit_results
-                    _email_batch_source_update_results(audit)
+                    if settings.has_option('smtp', 'enabled'):
+                        mail_enabled = settings.get('smtp', 'enabled')
+                        if mail_enabled is '1':
+                            _email_batch_source_update_results(audit)
                     for media in all_results:
                         media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
