@@ -279,7 +279,8 @@ def _cached_featured_collections():
 @api_error_handler
 def api_popular_collections():
     popular_collections = _cached_popular_collections()
-    return jsonify({'results': popular_collections})
+    sorted_popular_collections = sorted(popular_collections, key=lambda t: t['label'].lower() if t['label'] is not None else None)
+    return jsonify({'results': sorted_popular_collections})
 
 @cache
 def _cached_popular_collections():
