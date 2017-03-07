@@ -11,7 +11,7 @@ import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 
 const localMessages = {
-  mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Edit' },
+  mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Modify this Collection' },
   addButton: { id: 'collection.add.saveAll', defaultMessage: 'Save Changes' },
   feedback: { id: 'collection.add.feedback', defaultMessage: 'We saved your changes to this collection' },
 };
