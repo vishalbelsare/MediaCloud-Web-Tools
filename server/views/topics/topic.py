@@ -31,7 +31,8 @@ def public_topic_list(topic_list):
     for topic in topic_list:
         if (topic['is_public'] == 1):
             all_public_topics.append(topic)
-    return jsonify({"topics": all_public_topics})
+    sorted_public_topics = sorted(all_public_topics, key=lambda t: t['name'].lower())
+    return jsonify({"topics": sorted_public_topics})
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
