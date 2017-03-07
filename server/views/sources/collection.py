@@ -8,7 +8,6 @@ import csv as pycsv
 import server.util.csv as csv
 import os
 from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  \
-    COLLECTIONS_TEMPLATE_PROPS_EDIT, \
     isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
 
 from server import app, mc, db, settings
@@ -323,14 +322,13 @@ def api_collection_details(collection_id):
 
     return jsonify({'results': info})
 
-# either with or without editor notes
 @app.route('/api/template/sources.csv')
 @flask_login.login_required
 @api_error_handler
 def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
 
-    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    what_type_download = csv.SOURCES_TEMPLATE_PROPS_EDIT
     
     return csv.stream_response(what_type_download, what_type_download, filename)
 
@@ -347,22 +345,12 @@ def api_collection_sources_csv(collection_id):
             if isMetaDataTagSet(tag['tag_sets_id']):
                 src['pub_country'] = tag['tag'][-3:]
 
-        # handle nulls
-        if 'pub_country' not in src:
-            src['pub_country'] = ''
-        if 'editor_notes' not in src:
-            src['editor_notes'] = ''
-        if 'is_monitored' not in src:
-            src['is_monitored'] = ''
-        if 'public_notes' not in src:
-            src['public_notes'] = ''
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
-    filePrefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
+    file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
 
-    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    return csv.api_download_sources_csv( all_media, file_prefix)
 
-    return csv.stream_response(all_media, what_type_download, filePrefix, what_type_download)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
