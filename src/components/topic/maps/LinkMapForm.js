@@ -15,14 +15,15 @@ const localMessages = {
   colorBy: { id: 'linkmap.colorby', defaultMessage: 'Color By' },
   partisan_code: { id: 'linkmap.colorby.partisan', defaultMessage: 'Partisan Code' },
   media_type: { id: 'linkmap.colorby.media', defaultMessage: 'Media Type' },
-  media: { id: 'linkmap.media', defaultMessage: 'Media' },
+  media: { id: 'linkmap.media', defaultMessage: 'Numbe of Top Media to Include' },
   weightEdges: { id: 'linkmap.weightEdges', defaultMessage: 'Weight Edges' },
-  outlinks: { id: 'linkmap.outlinks', defaultMessage: 'Outlinks/Media' },
+  outlinks: { id: 'linkmap.outlinks', defaultMessage: 'Outlinks per Media to Include' },
+  outlinksHint: { id: 'linkmap.outlinks.hint', defaultMessage: 'how many?' },
   errorNameYourFocus: { id: 'linkmap.error.noName', defaultMessage: 'You need to name your Focus.' },
 };
 
 const LinkMapForm = (props) => {
-  const { renderTextField, renderSelectField, renderCheckbox, buttonLabel, initialValues, pristine, submitting, handleSubmit, onFetch } = props;
+  const { renderTextField, renderSelectField, renderCheckbox, buttonLabel, initialValues, submitting, handleSubmit, onFetch } = props;
   const { formatMessage } = props.intl;
   // if they pick "make a new focal set" then let them enter name and description
   return (
@@ -64,7 +65,7 @@ const LinkMapForm = (props) => {
             name="include_weights"
             initialValues={initialValues.include_weights}
             component={renderCheckbox}
-            floatingLabelText={formatMessage(localMessages.weightEdges)}
+            label={formatMessage(localMessages.weightEdges)}
           />
         </Col>
       </Row>
@@ -84,7 +85,7 @@ const LinkMapForm = (props) => {
             style={{ marginTop: 30 }}
             type="submit"
             label={buttonLabel}
-            disabled={pristine || submitting}
+            disabled={submitting}
             primary
           />
         </Col>

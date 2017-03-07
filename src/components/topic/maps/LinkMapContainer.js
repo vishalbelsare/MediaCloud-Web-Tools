@@ -9,7 +9,7 @@ import { generateParamStr } from '../../../lib/apiUtil';
 
 const localMessages = {
   title: { id: 'topic.maps.link.title', defaultMessage: 'Link Map' },
-  intro: { id: 'topic.maps.link.title', defaultMessage: 'We can generate a network graph showing how the media sources linked to each other.' },
+  intro: { id: 'topic.maps.link.title', defaultMessage: 'Generate a network graph showing how the media sources linked to each other.' },
   fetchButton: { id: 'topic.maps.button', defaultMessage: 'Download network map' },
 };
 
