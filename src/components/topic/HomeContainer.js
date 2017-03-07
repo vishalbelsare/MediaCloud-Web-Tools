@@ -23,13 +23,22 @@ const HomeContainer = (props) => {
   return (
     <div>
       <Title render={titleHandler} />
+      <div className="controlbar">
+        <div className="main">
+          <Grid>
+            <Row>
+              <Col lg={8} />
+              <Col lg={4}>
+                <TopicSearchContainer />
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      </div>
       <Grid>
         <Row>
-          <Col lg={8} xs={12}>
+          <Col lg={12}>
             <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
-          </Col>
-          <Col lg={4} xs={12}>
-            <h1><TopicSearchContainer /></h1>
           </Col>
         </Row>
         <FavoriteTopicsContainer onSetFavorited={handleSetFavorited} />
