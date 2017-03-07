@@ -88,6 +88,7 @@ class WordCloud extends React.Component {
         .data(wordsAsData)
         .enter()
           .append('text')
+            .attr('font-family', 'Lato, Helvetica, sans')
             .attr('font-size', d => `${d.size}px`)
             .attr('fill', options.textColor)
             .attr('text-anchor', 'middle')
