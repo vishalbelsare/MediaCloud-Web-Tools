@@ -30,7 +30,13 @@ const CollectionList = (props) => {
       <p>{intro}</p>
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
-          <Chip className="chip" key={c.tags_id} onTouchTap={() => handleClick(c.tags_id)}>
+          <Chip
+            className="chip"
+            backgroundColor={'#FFFFFF'}
+            key={c.tags_id}
+            style={{ border: 'rgb(117,117,117) 1px solid' }}
+            onTouchTap={() => handleClick(c.tags_id)}
+          >
             <Avatar size={32}><CollectionIcon height={15} /></Avatar>
             {c.label}
             { c.isFavorite ? <FilledStarIcon /> : '' }
