@@ -23,6 +23,15 @@
       margin-bottom: 25px;
       .app-icon {
         width: 50px !important;
+        &.app-icon-snapshots > svg {
+          height: 30px !important;
+        }
+        &.app-icon-timespan > svg {
+          height: 30px !important;
+        }
+        &.app-icon-focus > svg {
+          height: 30px !important;
+        }
       }
     }
   }

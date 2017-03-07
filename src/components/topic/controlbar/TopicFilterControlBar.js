@@ -36,7 +36,7 @@ const TopicFilterControlBar = (props) => {
               <ModifyTopicDialog
                 topicId={topicId}
                 onUrlChange={goToUrl}
-                allowSnapshot={false}
+                allowSnapshot
               />
             </Col>
             <Col lg={8} className="right">
