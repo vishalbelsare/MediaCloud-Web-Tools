@@ -1,12 +1,13 @@
 import logging
-from flask import jsonify, request, send_from_directory
+import flask
+from flask import jsonify, request, send_from_directory, send_file
 import flask_login
 import os
 from multiprocessing import Process
 
-from server import app, base_dir
+from server import app, base_dir, mc
 import server.util.csv as csv
-from server.auth import user_mediacloud_key, is_user_logged_in
+from server.auth import user_mediacloud_key, is_user_logged_in, user_mediacloud_client
 from server.util.request import arguments_required, filters_from_args, api_error_handler
 from server.util import mapwriter
 from server.views.topics import access_public_topic
@@ -62,6 +63,37 @@ def map_files_download(topics_id, map_type, map_format):
     filename = map_type+"-"+topics_id+"-"+request.args['timespanId']+"."+map_format
     return send_from_directory(directory=DATA_DIR, filename=filename, 
         mimetype=mime_type, as_attachment=True)
+
+@app.route('/api/topics/<topics_id>/map-files/fetchCustomMap', methods=['GET'])
+@arguments_required( 'timespanId')
+# @form_fields_required('color_field', 'num_media','include_weights')
+# @flask_login.login_required
+def map_files_download_custom(topics_id):
+
+    mime_type = "application/octet-stream"
+    user_mc= user_mediacloud_client()
+    #  'snapshots_id', 'foci_id', 'timespans_id'
+    # how to treat these as req or default?
+    optional_args = {
+        'timespans_id': request.args['timespanId'] if 'timespanId' in request.args else None,
+        'snapshots_id': request.args['snapshotId'] if 'snapshots_id' in request.args else None,
+        'foci_id': request.args['fociId'] if 'foci_id' in request.args else None,
+        'color_field': request.form['color_field'] if 'color_field' in request.form else 'media_type',
+        'num_media': request.form['num_media'] if 'num_media' in request.form else 500,    # this is optional
+        'include_weights': request.form['include_weights'] if 'include_weights' in request.form else 1,
+        'num_links_per_medium': request.form['num_links_per_medium'] if 'num_links_per_medium' in request.form else None, 
+    }
+    filename = "link-map-"+topics_id+"-"+request.args['timespanId']+"."+ "gefx"
+
+    resultStream = user_mc.topicMediaMap(topics_id, **optional_args)
+
+    generator = (cell for row in resultStream
+                    for cell in row)
+
+    headers = {}
+    # headers["Content-Disposition"] = "attachment;filename="+filename
+
+    return flask.Response(generator, mimetype="attachment/octet", headers={"Content-Disposition": "attachment;filename=test.txt"})
 
 def _start_generating_map_file(map_type, topics_id, timespans_id):
     file_prefix = _get_file_prefix(map_type, topics_id, timespans_id)

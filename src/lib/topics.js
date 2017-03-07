@@ -191,6 +191,11 @@ export function topicMapFiles(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/map-files`, acceptedParams);
 }
 
+export function fetchCustomMap(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'color_field', 'num_media', 'include_weights', 'num_links_per_medium']);
+  return createApiPromise(`/api/topics/${topicId}/map-files/fetchCustomMap`, acceptedParams);
+}
+
 export function fetchFullTopicList() {
   return createApiPromise('/api/topics/fetchFullTopicList');
 }
