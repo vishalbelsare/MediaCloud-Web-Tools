@@ -5,17 +5,17 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
 import ComingSoon from '../../../common/ComingSoon';
 import TimespanIcon from '../../../common/icons/TimespanIcon';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   title: { id: 'timespans.manage.title', defaultMessage: 'Manage Timespans' },
   about: { id: 'timespans.manage.about',
     defaultMessage: 'Each topic includes weekly and monthly timespans automatically.  To make analysis and comparison easier, you can define your own timespans too.  This page lets you manage your custom timespans.' },
-  backToSnapshotBuilder: { id: 'backToSnapshotBuilder', defaultMessage: 'back to Snapshot Builder' },
 };
 
 const ManageTimespansContainer = props => (
   <div className="manage-focal-sets">
-    <BackLinkingControlBar message={localMessages.backToSnapshotBuilder} linkTo={`/topics/${props.topicId}/snapshot`} />
+    <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${props.topicId}/summary`} />
     <Grid>
       <Row>
         <Col lg={10}>

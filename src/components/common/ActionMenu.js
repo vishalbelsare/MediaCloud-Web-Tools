@@ -5,7 +5,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import CloseIcon from './icons/CloseIcon';
-
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 
 class ActionMenu extends React.Component {

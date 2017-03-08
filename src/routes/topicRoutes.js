@@ -1,7 +1,6 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
-import IndexRoute from 'react-router/lib/IndexRoute';
 import HomeContainer from '../components/topic/HomeContainer';
 import PublicHomeContainer from '../components/topic/PublicHomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
@@ -27,7 +26,7 @@ import AttentionContainer from '../components/topic/attention/AttentionContainer
 import WordContainer from '../components/topic/words/WordContainer';
 import TopicPermissionsContainer from '../components/topic/permissions/TopicPermissionsContainer';
 import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
-import SnapshotHome from '../components/topic/snapshots/SnapshotHome';
+import SnapshotGenerate from '../components/topic/snapshots/SnapshotGenerate';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
 
@@ -64,11 +63,11 @@ const topicRoutes = (
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >
-        <IndexRoute component={SnapshotHome} />
-        <Route path="/topics/:topicId/snapshot/foci" component={ManageFocalSetsContainer} />
-        <Route path="/topics/:topicId/snapshot/foci/create" component={CreateFocusContainer} />
-        <Route path="/topics/:topicId/snapshot/foci/:focusDefId/edit" component={EditFocusContainer} />
-        <Route path="/topics/:topicId/snapshot/timespans" component={ManageTimespansContainer} />
+        <Route path="generate" component={SnapshotGenerate} />
+        <Route path="foci" component={ManageFocalSetsContainer} />
+        <Route path="foci/create" component={CreateFocusContainer} />
+        <Route path="foci/:focusDefId/edit" component={EditFocusContainer} />
+        <Route path="timespans" component={ManageTimespansContainer} />
       </Route>
 
     </Route>

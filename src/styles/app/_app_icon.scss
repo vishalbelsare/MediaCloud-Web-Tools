@@ -135,6 +135,14 @@
     }
   }
 
+  &.app-icon-filter {
+    background-color: $material-grey800 !important;
+    width: 45px;
+    height: 35px;
+    border-radius: 0px;
+    padding-top: 10px;
+  }
+
 }
 
 h2 {
@@ -146,5 +154,9 @@ h2 {
   .app-icon-collection {
     padding-top:30px;
     padding-left: 5px;
+  }
+  .app-icon-media-source {
+    padding-top:30px;
+    padding-left: 10px;
   }
 }

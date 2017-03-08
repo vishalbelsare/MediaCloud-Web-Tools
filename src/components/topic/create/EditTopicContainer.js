@@ -9,6 +9,7 @@ import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
+import BackLinkingControlBar from '../BackLinkingControlBar';
 import { filteredLinkTo } from '../../util/location';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
@@ -33,7 +34,7 @@ class EditTopicContainer extends React.Component {
   }
 
   render() {
-    const { handleSave, topicInfo } = this.props;
+    const { handleSave, topicInfo, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
 
@@ -49,23 +50,26 @@ class EditTopicContainer extends React.Component {
       };
     }
     return (
-      <Grid>
-        <Title render={formatMessage(localMessages.editTopicTitle)} />
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
-            <p><FormattedMessage {...localMessages.editTopicText} /></p>
-          </Col>
-        </Row>
-        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-          <TopicForm
-            onSaveTopic={handleSave}
-            initialValues={initialValues}
-            title={formatMessage(localMessages.editTopicCollectionsTitle)}
-            intro={formatMessage(localMessages.editTopicCollectionsIntro)}
-          />
-        </Permissioned>
-      </Grid>
+      <div className="topic-edit-form">
+        <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
+        <Grid>
+          <Title render={formatMessage(localMessages.editTopicTitle)} />
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
+              <p><FormattedMessage {...localMessages.editTopicText} /></p>
+            </Col>
+          </Row>
+          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+            <TopicForm
+              onSaveTopic={handleSave}
+              initialValues={initialValues}
+              title={formatMessage(localMessages.editTopicCollectionsTitle)}
+              intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+            />
+          </Permissioned>
+        </Grid>
+      </div>
     );
   }
 }

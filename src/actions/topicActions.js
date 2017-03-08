@@ -7,6 +7,7 @@ export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
 export const TOPIC_FILTER_BY_TIMESPAN = 'TOPIC_FILTER_BY_TIMESPAN';
+export const TOPIC_FILTER_BY_QUERY = 'TOPIC_FILTER_BY_QUERY';
 export const FETCH_TOPIC_SUMMARY = 'FETCH_TOPIC_SUMMARY';
 export const FETCH_TOPIC_TOP_STORIES = 'FETCH_TOPIC_TOP_STORIES';
 export const SORT_TOPIC_TOP_STORIES = 'SORT_TOPIC_TOP_STORIES';
@@ -37,6 +38,7 @@ export const FETCH_MEDIA_OUTLINKS = 'FETCH_MEDIA_OUTLINKS';
 export const SORT_MEDIA_OUTLINKS = 'SORT_MEDIA_OUTLINKS';
 export const FETCH_MEDIA_WORDS = 'FETCH_MEDIA_WORDS';
 export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
+export const TOGGLE_FILTER_CONTROLS = 'TOGGLE_FILTER_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
@@ -89,6 +91,8 @@ export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_
 export const filterByTimespan = createAction(TOPIC_FILTER_BY_TIMESPAN, id => id);
 // pass in focusId
 export const filterByFocus = createAction(TOPIC_FILTER_BY_FOCUS, id => id);
+// pass in query str
+export const filterByQuery = createAction(TOPIC_FILTER_BY_QUERY, str => str);
 
 // pass in topicId
 export const fetchTopicSummary = createAsyncAction(FETCH_TOPIC_SUMMARY, api.topicSummary);
@@ -155,6 +159,8 @@ export const fetchMediaWords = createAsyncAction(FETCH_MEDIA_WORDS, api.mediaWor
 
 export const toggleTimespanControls = createAction(TOGGLE_TIMESPAN_CONTROLS, isVisible => isVisible);
 export const setTimespanVisiblePeriod = createAction(SET_TIMESPAN_VISIBLE_PERIOD, period => period);
+
+export const toggleFilterControls = createAction(TOGGLE_FILTER_CONTROLS, isVisible => isVisible);
 
 // pass in the number of the step to go to
 export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);

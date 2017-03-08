@@ -32,6 +32,7 @@ const messages = {
   topicStartDateProp: { id: 'topic.prop.startDate', defaultMessage: 'Start Date' },
   topicEndDateProp: { id: 'topic.prop.endDate', defaultMessage: 'End Date' },
   topicQueryProp: { id: 'topic.prop.query', defaultMessage: 'Query' },
+  topicSourceCollectionsProp: { id: 'topic.prop.query', defaultMessage: 'Sources and Collections' },
   topicValidationProp: { id: 'topic.prop.validationPattern', defaultMessage: 'Validation Pattern' },
   topicIterationsProp: { id: 'topic.prop.iteration', defaultMessage: 'Iterations' },
   toicSkipSolrQueryProp: { id: 'topic.prop.public', defaultMessage: 'Skip SOLR Query' },
@@ -88,6 +89,7 @@ const messages = {
   focus: { id: 'focus', defaultMessage: 'Subtopic' },
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
+  addFocus: { id: 'focus.add', defaultMessage: 'Add a New Subtopic' },
 
   story: { id: 'story', defaultMessage: 'Story' },
   storyPlural: { id: 'stories', defaultMessage: 'Stories' },

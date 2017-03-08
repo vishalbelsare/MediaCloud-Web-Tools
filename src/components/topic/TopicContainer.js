@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary } from '../../actions/topicActions';
+import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
 import { LEVEL_WARNING } from '../common/Notice';
 
@@ -91,7 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
-    // select any filters that are there
+    // select any filters that are serialized on the url
     const query = ownProps.location.query;
     if (ownProps.location.query.snapshotId) {
       dispatch(filterBySnapshot(query.snapshotId));
@@ -101,6 +101,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     if (ownProps.location.query.timespanId) {
       dispatch(filterByTimespan(query.timespanId));
+    }
+    if (ownProps.location.query.q) {
+      dispatch(filterByQuery(query.q));
     }
     dispatch(fetchTopicSummary(ownProps.params.topicId))
       .then(() => dispatch(setSubHeaderVisible(true)));

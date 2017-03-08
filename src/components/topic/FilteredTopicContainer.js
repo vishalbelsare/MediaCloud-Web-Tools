@@ -2,13 +2,14 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
-import ControlBar from './controlbar/ControlBar';
+import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
 import { WarningNotice } from '../common/Notice';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
   warning: { id: 'topic.filter.warning', defaultMessage: 'Please wait for the snapshot generation process to complete.' },
 };
+
 class FilteredTopicContainer extends React.Component {
 
   filtersAreSet() {
@@ -23,7 +24,7 @@ class FilteredTopicContainer extends React.Component {
          (snapshots[0].state === 'completed' && snapshots[0].searchable === 1)));
   }
   render() {
-    const { children, topicInfo, location, topicId, fetchStatus } = this.props;
+    const { children, location, topicId, fetchStatus } = this.props;
     let subContent = <div />;
 
     // If the generation process is still ongoing, ask the user to wait a few minutes
@@ -41,7 +42,7 @@ class FilteredTopicContainer extends React.Component {
     }
     return (
       <div>
-        <ControlBar topicId={topicId} title={topicInfo.name} location={location} />
+        <TopicFilterControlBar topicId={topicId} location={location} />
         {subContent}
       </div>
     );
@@ -59,7 +60,6 @@ FilteredTopicContainer.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
-  topicInfo: React.PropTypes.object.isRequired,
   snapshots: React.PropTypes.array.isRequired,
 };
 

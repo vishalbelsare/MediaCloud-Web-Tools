@@ -12,6 +12,7 @@ import { updateFeedback } from '../../../../actions/appActions';
 import FocalSetDefinitionSummary from './FocalSetDefinitionSummary';
 import BackLinkingControlBar from '../../BackLinkingControlBar';
 import FocusIcon from '../../../common/icons/FocusIcon';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Subtopics' },
@@ -24,8 +25,7 @@ const localMessages = {
   removeFocalSetFailed: { id: 'focalSets.manage.remove.failed', defaultMessage: 'Sorry, but removing the Set failed :-(' },
   removeFocusSucceeded: { id: 'focus.remove.succeeded', defaultMessage: 'Removed the Subtopic' },
   removeFocusFailed: { id: 'focus.remove.failed', defaultMessage: 'Sorry, but removing the Subtopic failed :-(' },
-  backToSnapshotBuilder: { id: 'backToSnapshotBuilder', defaultMessage: 'back to Snapshot Builder' },
-  addFocus: { id: 'focus.add', defaultMessage: 'Add a new Subtopic' },
+  backToTopic: { id: 'backToTopic', defaultMessage: 'back to the topic' },
 };
 
 class ManageFocalSetsContainer extends React.Component {
@@ -76,7 +76,7 @@ class ManageFocalSetsContainer extends React.Component {
     );
     return (
       <div className="manage-focal-sets">
-        <BackLinkingControlBar message={localMessages.backToSnapshotBuilder} linkTo={`/topics/${topicId}/snapshot`} />
+        <BackLinkingControlBar message={localMessages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
         <Grid>
           <Row>
             <Col lg={12}>
@@ -108,7 +108,7 @@ class ManageFocalSetsContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <Link to={`/topics/${topicId}/snapshot/foci/create`}>
-                <AppButton primary label={formatMessage(localMessages.addFocus)} />
+                <AppButton primary label={formatMessage(messages.addFocus)} />
               </Link>
             </Col>
           </Row>
