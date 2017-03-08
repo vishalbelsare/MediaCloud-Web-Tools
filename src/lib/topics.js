@@ -111,8 +111,9 @@ export function deleteFocusDefinition(topicId, focusDefinitionId) {
   return createApiPromise(`/api/topics/${topicId}/focus-definitions/${focusDefinitionId}/delete`, null, 'delete');
 }
 
-export function topicGenerateSnapshot(topicId) {
-  return createPostingApiPromise(`/api/topics/${topicId}/snapshots/generate`);
+export function topicGenerateSnapshot(topicId, params) {
+  const acceptedParams = acceptParams(params, ['note']);
+  return createPostingApiPromise(`/api/topics/${topicId}/snapshots/generate`, acceptedParams);
 }
 
 export function topicUpdatePermission(topicId, email, permission) {

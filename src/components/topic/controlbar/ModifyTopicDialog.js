@@ -9,7 +9,6 @@ import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
 import DescriptiveButton from '../../common/DescriptiveButton';
 import FocusIcon from '../../common/icons/FocusIcon';
-import TimespanIcon from '../../common/icons/TimespanIcon';
 import SnapshotIcon from '../../common/icons/SnapshotIcon';
 
 const localMessages = {
@@ -54,7 +53,7 @@ class ModifyTopicDialog extends React.Component {
     if (allowSnapshot) {
       snapshotButton = (
         <DescriptiveButton
-          svgIcon={(<SnapshotIcon height={50} />)}
+          svgIcon={(<SnapshotIcon height={40} />)}
           label={formatMessage(messages.snapshotGenerate)}
           description={formatMessage(localMessages.generateSnapshotDetails)}
           onClick={() => onUrlChange(`/topics/${topicId}/snapshot/generate`)}
@@ -90,12 +89,6 @@ class ModifyTopicDialog extends React.Component {
             label={formatMessage(messages.addFocus)}
             description={formatMessage(localMessages.addFocusDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/foci`)}
-          />
-          <DescriptiveButton
-            svgIcon={(<TimespanIcon height={50} />)}
-            label={formatMessage(localMessages.addTimespan)}
-            description={formatMessage(localMessages.addTimespanDetails)}
-            onClick={() => onUrlChange(`/topics/${topicId}/snapshot/timespans`)}
           />
           <DescriptiveButton
             label={formatMessage(localMessages.changePermissions)}

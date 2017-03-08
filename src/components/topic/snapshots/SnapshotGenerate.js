@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import BackLinkingControlBar from '../BackLinkingControlBar';
-import AppButton from '../../common/AppButton';
+import SnapshotGenerateForm from './GenerateSnapshotForm';
 import messages from '../../../resources/messages';
 import { generateSnapshot, fetchTopicSummary } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -28,13 +28,7 @@ const SnapshotGenerate = props => (
           <FormattedHTMLMessage {...localMessages.aboutText} />
         </Col>
       </Row>
-      <Row>
-        <AppButton
-          label={props.intl.formatMessage(messages.snapshotGenerate)}
-          primary
-          onClick={props.handleGenerateSnapshotRequest}
-        />
-      </Row>
+      <SnapshotGenerateForm onGenerate={props.handleGenerateSnapshotRequest} />
     </Grid>
   </div>
 );
@@ -54,8 +48,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleGenerateSnapshotRequest: () => {
-    dispatch(generateSnapshot(ownProps.params.topicId))
+  handleGenerateSnapshotRequest: (values) => {
+    dispatch(generateSnapshot(ownProps.params.topicId, { note: values.note }))
       .then((results) => {
         if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
           (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
