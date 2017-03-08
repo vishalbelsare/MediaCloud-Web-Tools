@@ -28,7 +28,7 @@ const TimespanSelector = (props) => {
   let expandControl = null;
   if (isExpanded) {
     // we have to set back the selected period to match the selectedTimespan's period when they collapse the UI
-    expandControl = (<a href="#hide-timespans" className="greyed" onClick={(evt) => { evt.preventDefault(); onPeriodSelected(selectedTimespan.period); setExpanded(false); }}>
+    expandControl = (<a href="#hide-timespans" className="greyed" onClick={(evt) => { evt.preventDefault(); setExpanded(false); }}>
       <FormattedMessage {...localMessages.timespansHide} />
     </a>);
   } else {
