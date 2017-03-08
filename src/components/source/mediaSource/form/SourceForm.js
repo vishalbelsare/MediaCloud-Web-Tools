@@ -6,7 +6,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
 import SourceDetailsForm from './SourceDetailsForm';
 import SourceMetadataForm from './SourceMetadataForm';
-import SourceCollectionsForm from './SourceCollectionsForm';
+import PickCollectionsForm from './PickCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
@@ -26,7 +26,7 @@ const SourceForm = (props) => {
     <form className="app-form source-form" name="sourceForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <SourceDetailsForm initialValues={cleanedInitialValues} />
       <SourceMetadataForm initialValues={cleanedInitialValues} />
-      <SourceCollectionsForm initialValues={cleanedInitialValues} form="sourceForm" />
+      <PickCollectionsForm initialValues={cleanedInitialValues} form="sourceForm" />
       <Row>
         <Col lg={12}>
           <AppButton
