@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
 import SourceSuggestionForm from './SourceSuggestionForm';
-import SourceCollectionsForm from '../form/SourceCollectionsForm';
+import PickCollectionsForm from '../form/PickCollectionsForm';
 import { emptyString } from '../../../../lib/formValidators';
 import { suggestSource } from '../../../../actions/sourceActions';
 import { updateFeedback } from '../../../../actions/appActions';
@@ -37,7 +37,7 @@ const SuggestSourceContainer = (props) => {
         </Row>
         <form name="suggestionForm" onSubmit={handleSubmit(handleSave.bind(this))}>
           <SourceSuggestionForm initialValues={initialValues} />
-          <SourceCollectionsForm form="suggestionForm" />
+          <PickCollectionsForm form="suggestionForm" />
           <Row>
             <Col lg={12}>
               <AppButton
