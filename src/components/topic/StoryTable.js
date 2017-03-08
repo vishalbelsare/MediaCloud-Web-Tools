@@ -30,7 +30,7 @@ class StoryTable extends React.Component {
   }
 
   render() {
-    const { stories, onChangeSort, topicId, sortedBy } = this.props;
+    const { stories, onChangeSort, topicId, sortedBy, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
@@ -94,6 +94,7 @@ class StoryTable extends React.Component {
               const domain = storyDomainName(story);
               let dateToShow = null;  // need to handle undateable stories
               let dateStyle = '';
+              const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
               if (story.publish_date === 'undateable') {
                 dateToShow = formatMessage(localMessages.undateable);
                 dateStyle = 'story-date-undateable';
@@ -108,7 +109,7 @@ class StoryTable extends React.Component {
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
                     <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
-                      {story.title}
+                      {title}
                     </LinkWithFilters>
                   </td>
                   <td>
@@ -143,6 +144,7 @@ StoryTable.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   onChangeSort: React.PropTypes.func,
   sortedBy: React.PropTypes.string,
+  maxTitleLength: React.PropTypes.number,
 };
 
 export default injectIntl(StoryTable);

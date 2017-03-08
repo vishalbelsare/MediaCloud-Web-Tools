@@ -50,7 +50,13 @@ class StoriesSummaryContainer extends React.Component {
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
-        <StoryTable stories={stories} topicId={topicId} onChangeSort={this.onChangeSort} sortedBy={sort} />
+        <StoryTable
+          stories={stories}
+          topicId={topicId}
+          onChangeSort={this.onChangeSort}
+          sortedBy={sort}
+          maxTitleLength={50}
+        />
       </DataCard>
     );
   }
