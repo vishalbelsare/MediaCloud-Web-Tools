@@ -2,6 +2,9 @@ import logging
 import datetime
 import flask
 
+from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
+
+SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored']
 SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 
 logger = logging.getLogger(__name__)
@@ -75,5 +78,10 @@ def api_download_sources_csv(all_media, file_prefix):
             src['public_notes'] = ''
 
     what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
+
+    if user_has_auth_role(ROLE_MEDIA_EDIT):
+        what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
+    else:
+        what_type_download = SOURCES_TEMPLATE_PROPS_VIEW # no editor_notes
 
     return stream_response(all_media, what_type_download, file_prefix, what_type_download)
