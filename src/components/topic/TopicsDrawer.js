@@ -11,7 +11,7 @@ import messages from '../../resources/messages';
 
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
-  home: { id: 'topics.menu.items.home', defaultMessage: 'Explore Topics' },
+  home: { id: 'topics.menu.items.home', defaultMessage: 'Home' },
   createNewTopic: { id: 'topics.menu.items.newTopic', defaultMessage: 'Create a New Topic' },
 };
 
