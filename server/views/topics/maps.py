@@ -80,7 +80,7 @@ def map_files_download_custom(topics_id):
         'include_weights': request.form['include_weights'] if 'include_weights' in request.form else 1,
         'num_links_per_medium': request.form['num_links_per_medium'] if 'num_links_per_medium' in request.form else None, 
     }
-    filename = "link-map-"+topics_id+"-"+request.args['timespanId']+"."+ "gefx"
+    filename = "link-map-"+topics_id+"-"+request.args['timespanId']+"."+ "gexf"
     result_stream = user_mc.topicMediaMap(topics_id, **optional_args)
     generator = (cell for row in result_stream  for cell in row)
     return flask.Response(generator, mimetype="attachment/octet", headers={"Content-Disposition": "attachment;filename="+filename})
