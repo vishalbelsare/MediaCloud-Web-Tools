@@ -7,13 +7,13 @@ import DataCard from './DataCard';
 import { ExploreButton } from './IconButton';
 
 const ContentPreview = (props) => {
-  const { items, icon, linkInfo, linkDisplay } = props;
+  const { items, icon, linkInfo, linkDisplay, disabled } = props;
   let content = null;
   if (items && items.length > 0) {
     content = (
       items.map((c, idx) =>
         <Col key={idx} lg={4} md={4} xs={4}>
-          <DataCard key={idx} className="browse-items">
+          <DataCard key={idx} className="browse-items" disabled={disabled ? disabled(c) : false}>
             {icon}
             <div className="content">
               <div>
@@ -47,6 +47,7 @@ ContentPreview.propTypes = {
   items: React.PropTypes.array.isRequired,
   classStyle: React.PropTypes.string,
   helpButton: React.PropTypes.node,
+  disabled: React.PropTypes.func,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -17,6 +18,7 @@ const localMessages = {
   downloadJson: { id: 'topic.summary.mapDownload.download.json', defaultMessage: 'Download a .json file to analyze with Python' },
   wordMap: { id: 'topic.summary.mapDownload.wordMap.header', defaultMessage: 'Word Map' },
   linkMap: { id: 'topic.summary.mapDownload.linkMap.header', defaultMessage: 'Link Map' },
+  linkMapDownload: { id: 'topic.summary.mapDownload.linkMap.download', defaultMessage: 'Generate a .gexf link map.' },
 };
 
 class DownloadMapContainer extends React.Component {
@@ -63,6 +65,8 @@ class DownloadMapContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
+        <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
+        <p><Link to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></Link></p>
         <h3><FormattedMessage {...localMessages.wordMap} />:</h3>
         {wordMapContent}
       </DataCard>

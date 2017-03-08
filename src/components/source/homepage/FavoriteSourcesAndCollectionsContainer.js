@@ -12,6 +12,7 @@ const NUMBER_TO_SHOW = 8; // how many of each to show
 const localMessages = {
   mainTitle: { id: 'homepage.favorites.mainTitle', defaultMessage: 'My Favorites' },
   seeAll: { id: 'homepage.favorites.seeAll', defaultMessage: 'see all your favorites' },
+  noFavs: { id: 'homepage.favorites.none', defaultMessage: 'You don\'t have any favorites yet! When you favorite a source or collection it will show up here.' },
 };
 
 const FavoriteSourcesAndCollectionsContainer = (props) => {
@@ -41,6 +42,10 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
       </ul>
     );
   }
+  let noFavsContent = null;
+  if ((favoritedSources.length === 0) && (favoritedCollections.length === 0)) {
+    noFavsContent = <FormattedMessage {...localMessages.noFavs} />;
+  }
   return (
     <DataCard className="favorite-sources-collections">
       <div className="actions">
@@ -49,6 +54,7 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
       <h2>
         <FormattedMessage {...localMessages.mainTitle} />
       </h2>
+      {noFavsContent}
       {favSourcesContent}
       {favCollectionsContent}
     </DataCard>

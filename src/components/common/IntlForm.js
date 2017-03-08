@@ -47,7 +47,7 @@ function composeIntlForm(Component) {
       <Checkbox
         name={name}
         label={this.intlIfObject(label)}
-        checked={input.value === true}
+        checked={input.value === true || input.value === 1}
         onCheck={input.onChange}
         disabled={this.intlIfObject(disabled)}
       />

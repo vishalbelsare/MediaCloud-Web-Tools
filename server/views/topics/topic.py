@@ -20,7 +20,7 @@ def topic_list():
     if (not is_user_logged_in()):
         return public_topic_list(CACHED_TOPICS)
     else:
-        user_mc= user_mediacloud_client()
+        user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
         all_topics = user_mc.topicList(link_id=link_id)
         _add_user_favorite_flag_to_topics(all_topics['topics'])
@@ -31,7 +31,8 @@ def public_topic_list(topic_list):
     for topic in topic_list:
         if (topic['is_public'] == 1):
             all_public_topics.append(topic)
-    return jsonify({"topics": all_public_topics})
+    sorted_public_topics = sorted(all_public_topics, key=lambda t: t['name'].lower())
+    return jsonify({"topics": sorted_public_topics})
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
@@ -136,7 +137,7 @@ def topic_create():
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
 # require any fields?
-@form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
+@form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):
 
@@ -148,8 +149,8 @@ def topic_update(topics_id):
         'solr_seed_query': request.form['solr_seed_query'],
         'start_date': request.form['start_date'],
         'end_date': request.form['end_date'],
-        'is_public': request.form['is_public'] if 'is_public' in request.form else None,
-        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['chtopic_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
+        'is_public': 1 if request.form['is_public'] == 'true' else 0,
+        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
     }
@@ -157,6 +158,10 @@ def topic_update(topics_id):
     # parse out any sources and collections to add
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
+    # hack to support twitter-only topics
+    if (len(media_ids_to_add) is 0) and (len(tag_ids_to_add) is 0):
+        media_ids_to_add = None
+        tag_ids_to_add = None
 
     result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 

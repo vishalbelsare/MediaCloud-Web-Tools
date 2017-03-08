@@ -16,14 +16,20 @@ const localMessages = {
 const TopicListContainer = (props) => {
   const { topics, nextButton, previousButton, onSetFavorited } = props;
   return (
-    <Row>
-      <Col lg={12} md={12} sm={12}>
-        <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
-        <TopicList topics={topics} onSetFavorited={onSetFavorited} />
-        { previousButton }
-        { nextButton }
-      </Col>
-    </Row>
+    <div className="topic-list-container">
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
+        </Col>
+      </Row>
+      <TopicList topics={topics} onSetFavorited={onSetFavorited} />
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          { previousButton }
+          { nextButton }
+        </Col>
+      </Row>
+    </div>
   );
 };
 

@@ -1,18 +1,17 @@
 import React from 'react';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicSearchContainer from './search/TopicSearchContainer';
 import FavoriteTopicsContainer from './list/FavoriteTopicsContainer';
 import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
 import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicActions';
-import TopicIcon from '../common/icons/TopicIcon';
 import messages from '../../resources/messages';
 
 const localMessages = {
-  homeTitle: { id: 'home.title', defaultMessage: 'Explore Topics' },
+  homeTitle: { id: 'home.title', defaultMessage: 'Home' },
 };
 
 const HomeContainer = (props) => {
@@ -23,15 +22,19 @@ const HomeContainer = (props) => {
   return (
     <div>
       <Title render={titleHandler} />
+      <div className="controlbar">
+        <div className="main">
+          <Grid>
+            <Row>
+              <Col lg={8} />
+              <Col lg={4}>
+                <TopicSearchContainer />
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      </div>
       <Grid>
-        <Row>
-          <Col lg={8} xs={12}>
-            <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.homeTitle} /></h1>
-          </Col>
-          <Col lg={4} xs={12}>
-            <h1><TopicSearchContainer /></h1>
-          </Col>
-        </Row>
         <FavoriteTopicsContainer onSetFavorited={handleSetFavorited} />
         <TopicListContainer onSetFavorited={handleSetFavorited} />
       </Grid>

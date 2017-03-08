@@ -57,7 +57,7 @@ class AppHeader extends React.Component {
     } else {
       content = (
         <Row>
-          <Col lg={6} md={6} sm={6}>
+          <Col lg={7}>
             <h1>
               <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
                 <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
@@ -65,7 +65,7 @@ class AppHeader extends React.Component {
               <strong>{name}</strong>
             </h1>
           </Col>
-          <Col lg={6} md={6} sm={6}>
+          <Col lg={5}>
             <div style={styles.right} >
               <small>{description}</small>
             </div>

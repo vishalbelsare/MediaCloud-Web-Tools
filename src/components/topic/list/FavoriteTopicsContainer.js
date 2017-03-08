@@ -7,25 +7,27 @@ import { fetchFavoriteTopics } from '../../../actions/topicActions';
 import TopicList from './TopicList';
 
 const localMessages = {
-  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'Starred Topics' },
-  noFavorites: { id: 'topics.favorite.none', defaultMessage: 'You don\'t have any starred Topics yet. Click the star icon next to one on the list below to add it to your list of starred Topics.' },
+  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'My Favorite Topics' },
+  noFavorites: { id: 'topics.favorite.none', defaultMessage: 'You don\'t have any favorite Topics yet. Click the star icon next to one on the list below to add it to your list of starred Topics.' },
 };
 
 const FavoriteTopicsContainer = (props) => {
   const { topics, onSetFavorited } = props;
   let content = null;
   if (topics.length === 0) {
-    content = (<i><FormattedMessage {...localMessages.noFavorites} /></i>);
+    content = (<Row><Col lg={12} md={12} sm={12}><i><FormattedMessage {...localMessages.noFavorites} /></i></Col></Row>);
   } else {
     content = <TopicList topics={topics} onSetFavorited={onSetFavorited} />;
   }
   return (
-    <Row>
-      <Col lg={12} md={12} sm={12}>
-        <h2><FormattedMessage {...localMessages.favTopicsTitle} /></h2>
-        {content}
-      </Col>
-    </Row>
+    <div className="favorite-topics">
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          <h2><FormattedMessage {...localMessages.favTopicsTitle} /></h2>
+        </Col>
+      </Row>
+      {content}
+    </div>
   );
 };
 

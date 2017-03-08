@@ -38,7 +38,7 @@ def favorite_collections():
 @api_error_handler
 def download_favorite_collections():
     colllist = favorite_collections()
-    props = ['id', 'name']
+
     filename = "FavoriteCollections.csv"
     return csv.stream_response(colllist, props, filename)
 
@@ -51,9 +51,9 @@ def download_favorite_sources():
     favorited_s = [user_mc.media(media_id) for media_id in user_favorited]
     for s in favorited_s:
         s['isFavorite'] = True
-    props = ['media_id', 'name', 'url']
+
     filename = "FavoriteSources.csv"
-    return csv.stream_response(favorited_s, props, filename)
+    return csv.api_download_sources_csv( favorited_s, filename)
 
 
 @app.route('/api/favorites/sources', methods=['GET'])
