@@ -4,6 +4,7 @@ import DataCard from '../../common/DataCard';
 import { PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
+import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 
 const localMessages = {
   title: { id: 'topic.summary.info.title', defaultMessage: 'About this Topic' },
@@ -20,6 +21,7 @@ const TopicInfo = (props) => {
     // only show error ugly stack trace to admin users
     stateMessage = (<Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>{topic.message}</Permissioned>);
   }
+  const sourcesAndCollections = [...topic.media, ...topic.media_tags];
   return (
     <DataCard className="topic-info">
       <h2>
@@ -42,6 +44,10 @@ const TopicInfo = (props) => {
         <b><FormattedHTMLMessage {...messages.topicQueryProp} /></b>
         <code>{topic.solr_seed_query}</code>
       </p>
+      <p>
+        <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>
+      </p>
+      {sourcesAndCollections.map(object => <SourceOrCollectionChip object={object} />)}
       <p>
         <b><FormattedHTMLMessage {...messages.topicValidationProp} /></b>
         <code>{topic.pattern}</code>

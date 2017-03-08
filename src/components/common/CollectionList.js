@@ -1,11 +1,9 @@
 import React from 'react';
-import Chip from 'material-ui/Chip';
 import { injectIntl } from 'react-intl';
-import Avatar from 'material-ui/Avatar';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import DataCard from './DataCard';
-import CollectionIcon from './icons/CollectionIcon';
+import SourceOrCollectionChip from './SourceOrCollectionChip';
 import FilledStarIcon from './icons/FilledStarIcon';
 import { isCollectionTagSet } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
@@ -30,11 +28,9 @@ const CollectionList = (props) => {
       <p>{intro}</p>
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
-          <Chip className="chip" key={c.tags_id} onTouchTap={() => handleClick(c.tags_id)}>
-            <Avatar size={32}><CollectionIcon height={15} /></Avatar>
-            {c.label}
+          <SourceOrCollectionChip onClick={() => handleClick(c.tags_id)}>
             { c.isFavorite ? <FilledStarIcon /> : '' }
-          </Chip>
+          </SourceOrCollectionChip>
         )}
       </div>
     </DataCard>

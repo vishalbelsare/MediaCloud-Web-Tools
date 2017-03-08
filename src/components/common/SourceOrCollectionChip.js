@@ -5,26 +5,38 @@ import CollectionIcon from './icons/CollectionIcon';
 import MediaSourceIcon from './icons/MediaSourceIcon';
 
 const SourceOrCollectionChip = (props) => {
-  const { object, onDelete } = props;
+  const { object, onDelete, onClick, children } = props;
+  const isCollection = object.tags_id !== undefined;
   let icon;
-  if (object.tags_id) {
+  if (isCollection) {
     icon = <CollectionIcon height={15} />;
   } else {
     icon = <MediaSourceIcon height={15} />;
   }
-  const typeClass = object.tags_id ? 'chip-collection' : 'chip-media-source';
-  const objectId = object.tags_id || object.media_id;
+  const typeClass = isCollection ? 'chip-collection' : 'chip-media-source';
+  const objectId = object.id || isCollection ? object.tags_id : object.media_id;
+  const name = isCollection ? (object.name || object.label) : (object.name || object.url);
   return (
-    <Chip className={`chip ${typeClass}`} key={`chip${objectId}`} onRequestDelete={onDelete}>
+    <Chip
+      className={`chip ${typeClass}`}
+      key={`chip${objectId}`}
+      onRequestDelete={onDelete}
+      onTouchTap={onClick}
+      backgroundColor={'rgb(255,255,255)'}
+      style={{ border: '1px solid rgb(204,204,204)' }}
+    >
       <Avatar size={32}>{icon}</Avatar>
-      {object.name}
+      {name}
+      {children}
     </Chip>
   );
 };
 
 SourceOrCollectionChip.propTypes = {
   object: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.object,
+  onDelete: React.PropTypes.func,
+  onClick: React.PropTypes.func,
+  children: React.PropTypes.node,
 };
 
 export default SourceOrCollectionChip;

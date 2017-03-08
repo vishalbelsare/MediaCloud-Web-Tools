@@ -7,4 +7,7 @@
     overflow: scroll;
     color: $material-grey500;
   }
+  .chip {
+    display: inline-block !important;
+  }
 }

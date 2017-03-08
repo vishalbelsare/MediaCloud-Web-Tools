@@ -1,11 +1,9 @@
 import React from 'react';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../../../common/IntlForm';
-import CollectionIcon from '../../../common/icons/CollectionIcon';
+import SourceOrCollectionChip from '../../../common/SourceOrCollectionChip';
 import SourceSearchContainer from '../../controlbar/SourceSearchContainer';
 
 const localMessages = {
@@ -26,10 +24,7 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
             key={`c${index}`}
             name={collection}
             component={info => (
-              <Chip className="chip" key={`chip${index}`} onRequestDelete={() => fields.remove(index)}>
-                <Avatar size={32}><CollectionIcon height={15} /></Avatar>
-                {info.input.value.name}
-              </Chip>
+              <SourceOrCollectionChip object={info.input.value} onDelete={() => fields.remove(index)} />
             )}
           />
         )}
