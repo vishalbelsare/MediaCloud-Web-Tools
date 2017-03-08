@@ -81,7 +81,6 @@ def _media_source_details(media_id):
     user_mc = user_mediacloud_client()
     info = user_mc.media(media_id)
     info['id'] = media_id
-    info['feedCount'] = len(user_mc.feedList(media_id=media_id, rows=100))
     return info
 
 

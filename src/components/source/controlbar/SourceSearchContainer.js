@@ -15,7 +15,7 @@ const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a
 
 const localMessages = {
   advancedSearch: { id: 'sources.search.advanced', defaultMessage: 'Advanced Search...' },
-  searchHint: { id: 'sources.search.hint', defaultMessage: 'Search by name or URL' },
+  searchHint: { id: 'sources.search.hint', defaultMessage: 'Search for sources or collections' },
 };
 
 class SourceSearchContainer extends React.Component {
