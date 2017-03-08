@@ -53,7 +53,7 @@ renderCollectionSelector.propTypes = {
   meta: React.PropTypes.object,
 };
 
-const SourceCollectionsForm = () => (
+const PickCollectionsForm = () => (
   <div className="form-section source-collection-form">
     <Row>
       <Col lg={12} md={12} sm={12}>
@@ -65,7 +65,7 @@ const SourceCollectionsForm = () => (
 );
 
 
-SourceCollectionsForm.propTypes = {
+PickCollectionsForm.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
 };
@@ -74,7 +74,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm({ propTypes })(
-        SourceCollectionsForm
+        PickCollectionsForm
       )
     )
   );
