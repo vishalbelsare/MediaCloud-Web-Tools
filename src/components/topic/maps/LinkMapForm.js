@@ -13,8 +13,9 @@ const localMessages = {
   describeLinkMap: { id: 'linkmap.describe.about', defaultMessage: 'Link Map' },
   describeFocalSet: { id: 'linkmap.describe', defaultMessage: ' link map' },
   colorBy: { id: 'linkmap.colorby', defaultMessage: 'Color By' },
-  partisan_code: { id: 'linkmap.colorby.partisan', defaultMessage: 'Partisan Code' },
-  media_type: { id: 'linkmap.colorby.media', defaultMessage: 'Media Type' },
+  partisanCode: { id: 'linkmap.colorby.partisan', defaultMessage: 'Partisan Code' },
+  partisanRetweet: { id: 'linkmap.colorby.partisanRetweet', defaultMessage: 'Partisan Retweet' },
+  mediaType: { id: 'linkmap.colorby.media', defaultMessage: 'Media Type' },
   media: { id: 'linkmap.media', defaultMessage: 'Numbe of Top Media to Include' },
   weightEdges: { id: 'linkmap.weightEdges', defaultMessage: 'Weight Edges' },
   outlinks: { id: 'linkmap.outlinks', defaultMessage: 'Outlinks per Media to Include' },
@@ -39,12 +40,17 @@ const LinkMapForm = (props) => {
             <MenuItem
               key={0}
               value={'partisan_code'}
-              primaryText={formatMessage(localMessages.partisan_code)}
+              primaryText={formatMessage(localMessages.partisanCode)}
             />
             <MenuItem
               key={1}
               value={'media_type'}
-              primaryText={formatMessage(localMessages.media_type)}
+              primaryText={formatMessage(localMessages.mediaType)}
+            />
+            <MenuItem
+              key={2}
+              value={'partisan_retweet'}
+              primaryText={formatMessage(localMessages.partisanRetweet)}
             />
           </Field>
         </Col>
