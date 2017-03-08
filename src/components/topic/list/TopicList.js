@@ -1,16 +1,20 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { Row } from 'react-flexbox-grid/lib';
-import TopicListItem from './TopicListItem';
+import TopicIcon from '../../common/icons/TopicIcon';
+import ContentPreview from '../../common/ContentPreview';
+import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const TopicList = (props) => {
-  const { topics, onSetFavorited } = props;
+  const { topics } = props;
   return (
-    <Row>
-      {topics.map(topic =>
-        <TopicListItem key={topic.topics_id} topic={topic} onSetFavorited={onSetFavorited} />
-      )}
-    </Row>
+    <ContentPreview
+      items={topics}
+      classStyle="topic-list"
+      icon={<TopicIcon height={25} />}
+      linkInfo={t => `topics/${t.topics_id}/summary`}
+      linkDisplay={t => t.name}
+      disabled={t => t.user_permission === PERMISSION_TOPIC_NONE}
+    />
   );
 };
 
