@@ -1,12 +1,10 @@
 import React from 'react';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../IntlForm';
-import CollectionIcon from '../icons/CollectionIcon';
 import SourceSearchContainer from '../../source/controlbar/SourceSearchContainer';
+import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 
 const localMessages = {
   add: { id: 'source.add.collections.add', defaultMessage: 'You can search for Sources and Collections to add to this topic:' },
@@ -19,18 +17,15 @@ const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
         <span className="label chip-label">{intro}</span>
       </Col>
       <Col sm={6} xs={12}>
-        {fields.map((collection, index) =>
+        {fields.map((name, index) => (
           <Field
             key={`c${index}`}
-            name={collection}
+            name={name}
             component={info => (
-              <Chip className="chip" key={`chip${index}`} onRequestDelete={() => fields.remove(index)}>
-                <Avatar size={32}><CollectionIcon height={15} /></Avatar>
-                {info.input.value.name}
-              </Chip>
+              <SourceOrCollectionChip object={info.input.value} onDelete={() => fields.remove(index)} />
             )}
           />
-        )}
+        ))}
         {error && <div className="error">{error}</div>}
       </Col>
     </Row>
