@@ -1,10 +1,11 @@
 import React from 'react';
-import { FormattedDate, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
 import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import VisualTimespanSelector from './VisualTimespanSelector';
 import TimespanPeriodSelector from './TimespanPeriodSelector';
+import TimespanDateRange from '../../../common/TimespanDateRange';
 
 const localMessages = {
   timespansHelpTitle: { id: 'timespans.help.title', defaultMessage: 'About Timespans' },
@@ -13,7 +14,6 @@ const localMessages = {
   },
   timespansHide: { id: 'timespans.hide', defaultMessage: 'Hide Timespans' },
   timespansShow: { id: 'timespans.show', defaultMessage: 'Show Timespans' },
-  range: { id: 'timespan.range', defaultMessage: '{start} to {end}' },
 };
 
 function filterByPeriod(timespans, period) {
@@ -66,13 +66,7 @@ const TimespanSelector = (props) => {
             />
           </Col>
           <Col lg={8} sm={8} xs={12} className="center">
-            <FormattedMessage
-              {...localMessages.range}
-              values={{
-                start: <FormattedDate value={selectedTimespan.startDateObj} month="short" year="numeric" day="numeric" />,
-                end: <FormattedDate value={selectedTimespan.endDateObj} month="short" year="numeric" day="numeric" />,
-              }}
-            />
+            <TimespanDateRange timespan={selectedTimespan} />
           </Col>
           <Col lg={2} sm={2} xs={12} >
             <div className="toggle-control">
