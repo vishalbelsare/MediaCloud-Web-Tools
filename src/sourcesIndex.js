@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import { setAppName, setVersion } from './config';
 import { setAppColors } from './styles/colors';
 import routes from './routes/sourceRoutes';
@@ -6,6 +7,8 @@ import initializeApp from './index';
 /**
  * This serves as the primary entry point to the Media Cloud Source Manager app.
  */
+
+ReactGA.initialize('UA-60744513-8');
 
 setVersion('1.3.3');
 

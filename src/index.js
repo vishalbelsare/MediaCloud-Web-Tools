@@ -3,12 +3,12 @@ import 'intl';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ReactGA from 'react-ga';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import Router from 'react-router/lib/Router';
 import hashHistory from 'react-router/lib/hashHistory';
 import { syncHistoryWithStore } from 'react-router-redux';
-import ga from 'ga-react-router';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { hasCookies, getCookies } from './lib/auth';
@@ -30,8 +30,13 @@ export default function initializeApp(routes) {
   // Create an enhanced history that syncs navigation events with the store
   const history = syncHistoryWithStore(hashHistory, store);
 
-  // Track hits by listening for changes to the current location. The listener is called once immediately.
-  history.listen(location => ga('send', location));
+  const logPageView = () => {
+    // only log hits to google analytics when in production mode
+    if (process.env.NODE_ENV === 'production') {
+      ReactGA.set({ page: window.location.pathname });
+      ReactGA.pageview(window.location.pathname);
+    }
+  };
 
   const muiTheme = getMuiTheme({
     fontFamily: 'Lato, sans',
@@ -46,7 +51,7 @@ export default function initializeApp(routes) {
       <MuiThemeProvider muiTheme={muiTheme}>
         <Provider store={store}>
           <IntlProvider locale={DEFAULT_LOCALE}>
-            <Router history={history}>
+            <Router history={history} onUpdate={logPageView}>
               {routes}
             </Router>
           </IntlProvider>
