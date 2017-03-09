@@ -14,6 +14,14 @@ const BrandToolbar = (props) => {
         <Row>
           <Col lg={10}>
             <ul>
+              <li className="tools">
+                <a
+                  href="https://tools.mediacloud.org/"
+                  title={formatMessage(messages.toolsAppDescription)}
+                >
+                  <FormattedMessage {...messages.toolsAppShortName} />
+                </a>
+              </li>
               <li className="dashboard">
                 <a
                   href="https://dashboard.mediacloud.org/"
