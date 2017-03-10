@@ -10,7 +10,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import { createTopic } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
   createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
@@ -37,7 +37,7 @@ const CreateTopicContainer = (props) => {
         </Col>
       </Row>
       <Row>
-        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
           <Col lg={12}>
             <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
           </Col>
