@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import Recaptcha from 'react-recaptcha';
 import { changePassword, setLoginErrorMessage } from '../../actions/userActions';
@@ -15,6 +15,7 @@ import composeIntlForm from '../common/IntlForm';
 const localMessages = {
   missingOldPassword: { id: 'user.missingOldPassword', defaultMessage: 'You need to enter your old password.' },
   missingNewPassword: { id: 'user.missingNewPassword', defaultMessage: 'You need to enter a new password.' },
+  passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
 };
 
@@ -23,6 +24,11 @@ const ChangePasswordForm = (props) => {
   const { formatMessage } = props.intl;
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="change-password-form">
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          <h2><FormattedMessage {...messages.recoverPassword} /></h2>
+        </Col>
+      </Row>
       <Row>
         <Col lg={12}>
           <Field
@@ -40,6 +46,16 @@ const ChangePasswordForm = (props) => {
             type="password"
             component={renderTextField}
             floatingLabelText={messages.userNewPassword}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          <Field
+            name="confirm_password"
+            type="password"
+            component={renderTextField}
+            floatingLabelText={messages.userConfirmPassword}
           />
         </Col>
       </Row>
@@ -111,6 +127,9 @@ function validate(values) {
   }
   if (emptyString(values.new_password)) {
     errors.password = localMessages.missingNewPassword;
+  }
+  if (values.password !== values.confirmPassword) {
+    errors.password = localMessages.passwordsMismatch;
   }
   return errors;
 }

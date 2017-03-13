@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { recoverPassword, setLoginErrorMessage } from '../../actions/userActions';
 import AppButton from '../common/AppButton';
@@ -23,6 +23,11 @@ const RecoverPasswordForm = (props) => {
   const { formatMessage } = props.intl;
   return (
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="recover-password-form">
+      <Row>
+        <Col lg={12} md={12} sm={12}>
+          <h2><FormattedMessage {...messages.recoverPassword} /></h2>
+        </Col>
+      </Row>
       <Row>
         <Col lg={12}>
           <Field

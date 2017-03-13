@@ -158,6 +158,7 @@ const messages = {
   userPassword: { id: 'user.password', defaultMessage: 'Password' },
   userOldPassword: { id: 'user.oldpPassword', defaultMessage: 'Old Password' },
   userNewPassword: { id: 'user.newPassword', defaultMessage: 'New Password' },
+  userConfirmPassword: { id: 'user.confirmPassword', defaultMessage: 'Confirm Password' },
   userFullName: { id: 'user.fullName', defaultMessage: 'Full Name' },
   userNotes: { id: 'user.notes', defaultMessage: 'Notes' },
 

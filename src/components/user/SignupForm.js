@@ -1,10 +1,11 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Recaptcha from 'react-recaptcha';
 import { push } from 'react-router-redux';
+// import Title from 'react-title-component';
 import { signupUser, setLoginErrorMessage } from '../../actions/userActions';
 import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
@@ -16,6 +17,7 @@ const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
   missingFullname: { id: 'user.missingName', defaultMessage: 'You need to enter your full name.' },
   missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
+  passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
 };
@@ -23,72 +25,87 @@ const localMessages = {
 const SignupForm = (props) => {
   const { handleSubmit, onSubmitSignupForm, fetchStatus, renderTextField } = props;
   const { formatMessage } = props.intl;
+  // let recaptchaInstance = null;
+  // const titleHandler = parentTitle => `${formatMessage(messages.userSignup)} | ${parentTitle}`;
   return (
-    <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="signup-form">
-      <Row>
-        <Col lg={12}>
-          <Field
-            name="email"
-            component={renderTextField}
-            floatingLabelText={messages.userEmail}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <Field
-            name="password"
-            type="password"
-            component={renderTextField}
-            floatingLabelText={messages.userPassword}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <Field
-            name="full_name"
-            type="text"
-            component={renderTextField}
-            floatingLabelText={messages.userFullName}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <Field
-            name="notes"
-            multiLine
-            rows={2}
-            rowsMax={4}
-            component={renderTextField}
-            floatingLabelText={messages.userNotes}
-          />
-        </Col>
-      </Row>
-
-      <Recaptcha
-        sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG"
-      />
-
-      <Row>
-        <AppButton
-          type="submit"
-          label={formatMessage(messages.userSignup)}
-          primary
-          disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
-        />
-        <Col lg={12}>
-          <br />
-          <a href="/#/login">
-            <AppButton
-              flat
-              label={formatMessage(localMessages.signUpNow)}
+    <Grid>
+      < Recaptcha sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" render="explicit" verifyCallback={() => {}} onloadCallback={() => {}} />
+      <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="signup-form">
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            <h2><FormattedMessage {...messages.userSignup} /></h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Field
+              name="email"
+              component={renderTextField}
+              floatingLabelText={messages.userEmail}
             />
-          </a>
-        </Col>
-      </Row>
-    </form>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Field
+              name="password"
+              type="password"
+              component={renderTextField}
+              floatingLabelText={messages.userPassword}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Field
+              name="confirm_password"
+              type="password"
+              component={renderTextField}
+              floatingLabelText={messages.userConfirmPassword}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Field
+              name="full_name"
+              type="text"
+              component={renderTextField}
+              floatingLabelText={messages.userFullName}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Field
+              name="notes"
+              multiLine
+              rows={2}
+              rowsMax={4}
+              component={renderTextField}
+              floatingLabelText={messages.userNotes}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <AppButton
+            type="submit"
+            label={formatMessage(messages.userSignup)}
+            primary
+            disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
+          />
+          <Col lg={12}>
+            <br />
+            <a href="/#/login">
+              <AppButton
+                flat
+                label={formatMessage(localMessages.signUpNow)}
+              />
+            </a>
+          </Col>
+        </Row>
+      </form>
+    </Grid>
   );
 };
 
@@ -145,6 +162,9 @@ function validate(values) {
   }
   if (emptyString(values.password)) {
     errors.password = localMessages.missingPassword;
+  }
+  if (values.password !== values.confirmPassword) {
+    errors.password = localMessages.passwordsMismatch;
   }
   return errors;
 }
