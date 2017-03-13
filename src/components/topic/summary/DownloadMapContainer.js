@@ -1,10 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import DataCard from '../../common/DataCard';
+import LinkWithFilters from '../LinkWithFilters';
 import { fetchTopicMapFiles } from '../../../actions/topicActions';
 
 const localMessages = {
@@ -66,7 +66,7 @@ class DownloadMapContainer extends React.Component {
           {helpButton}
         </h2>
         <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
-        <p><Link to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></Link></p>
+        <p><LinkWithFilters to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
         <h3><FormattedMessage {...localMessages.wordMap} />:</h3>
         {wordMapContent}
       </DataCard>

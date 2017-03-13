@@ -10,12 +10,13 @@ import { fetchTopicTopWords } from '../../../actions/topicActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
+import TimespanDateRange from '../../common/TimespanDateRange';
 
 const localMessages = {
   title: { id: 'topic.influentialWords.title', defaultMessage: 'Influential Words' },
   intro: { id: 'topic.influentialWords.intro', defaultMessage: 'This screen lets you compare the words most used within this Timespan to the words used with this Subtopic. The words on the left are the most used in this Timespan. Those on the right are the most used within this Subtopic (if one is set, otherwise they are the most used in the whole snapshot).' },
-  filtered: { id: 'topic.influentialWords.filtered', defaultMessage: 'This Timespan' },
   unfiltered: { id: 'topic.influentialWords.unfiltered', defaultMessage: 'Overall Timespan' },
+  pickATimespan: { id: 'topic.influentialWords.pick', defaultMessage: 'You are currently looking at the overall timespan.  Pick a week or month to compare it to the overall timepsan here.' },
 };
 
 class InfluentialWordsContainer extends React.Component {
@@ -28,9 +29,30 @@ class InfluentialWordsContainer extends React.Component {
   }
 
   render() {
-    const { wordCounts, totalWordCounts, handleWordCloudClick } = this.props;
+    const { wordCounts, totalWordCounts, handleWordCloudClick, selectedTimespan } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
+    let comparisonContent;
+    if (selectedTimespan.period === 'overall') {
+      comparisonContent = (
+        <DataCard>
+          <FormattedMessage {...localMessages.pickATimespan} />
+        </DataCard>
+      );
+    } else {
+      comparisonContent = (
+        <DataCard>
+          <h2>
+            <TimespanDateRange timespan={selectedTimespan} />
+          </h2>
+          <OrderedWordCloud
+            words={wordCounts}
+            textColor={getBrandDarkColor()}
+            onWordClick={handleWordCloudClick}
+          />
+        </DataCard>
+      );
+    }
     return (
       <Grid>
         <Title render={titleHandler} />
@@ -44,18 +66,6 @@ class InfluentialWordsContainer extends React.Component {
           <Col lg={6}>
             <DataCard>
               <h2>
-                <FormattedMessage {...localMessages.filtered} />
-              </h2>
-              <OrderedWordCloud
-                words={wordCounts}
-                textColor={getBrandDarkColor()}
-                onWordClick={handleWordCloudClick}
-              />
-            </DataCard>
-          </Col>
-          <Col lg={6}>
-            <DataCard>
-              <h2>
                 <FormattedMessage {...localMessages.unfiltered} />
               </h2>
               <OrderedWordCloud
@@ -64,6 +74,9 @@ class InfluentialWordsContainer extends React.Component {
                 onWordClick={handleWordCloudClick}
               />
             </DataCard>
+          </Col>
+          <Col lg={6}>
+            {comparisonContent}
           </Col>
         </Row>
       </Grid>
@@ -83,12 +96,14 @@ InfluentialWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   wordCounts: React.PropTypes.array.isRequired,
   totalWordCounts: React.PropTypes.array.isRequired,
+  selectedTimespan: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   handleWordCloudClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
+  selectedTimespan: state.topics.selected.timespans.selected,
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   fetchStatus: state.topics.selected.summary.topWords.fetchStatus,

@@ -16,7 +16,7 @@ const localMessages = {
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   start_date: { id: 'topic.form.detail.start_date', defaultMessage: 'Start Date' },
   end_date: { id: 'topic.form.detail.end_date', defaultMessage: 'End Date' },
-  public: { id: 'topic.form.detail.public', defaultMessage: 'Public ?' },
+  public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
   monitored: { id: 'topic.form.detail.monitored', defaultMessage: 'Crimson Hexagon Id' },
   spidered: { id: 'topic.form.detail.spidered', defaultMessage: 'Spidered ?' },
   max_iterations: { id: 'topic.form.detail.max_iterations', defaultMessage: 'Max Iterations' },
@@ -99,7 +99,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={6}>
+        <Col lg={8}>
           <Card style={{ boxShadow: 'none' }} >
             <CardHeader
               style={{ fontWeight: 'bold' }}
@@ -109,7 +109,7 @@ const TopicDetailForm = (props) => {
             />
             <CardText expandable>
               <Row>
-                <Col lg={4}>
+                <Col lg={12}>
                   <Field
                     name="ch_monitor_id"
                     component={renderTextField}
@@ -119,7 +119,7 @@ const TopicDetailForm = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4}>
+                <Col lg={12}>
                   <Field
                     name="twitter_topics_id"
                     component={renderTextField}
@@ -129,7 +129,7 @@ const TopicDetailForm = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4}>
+                <Col lg={12}>
                   <Field
                     name="max_iterations"
                     component={renderSelectField}
@@ -141,7 +141,7 @@ const TopicDetailForm = (props) => {
                 </Col>
               </Row>
               <Row>
-                <Col lg={4}>
+                <Col lg={12}>
                   <Field
                     name="spidered"
                     component={renderCheckbox}

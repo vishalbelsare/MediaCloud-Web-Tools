@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import messages from '../../resources/messages';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../lib/auth';
 
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
@@ -46,9 +48,11 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
-            <FormattedMessage {...localMessages.createNewTopic} />
-          </MenuItem>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
+              <FormattedMessage {...localMessages.createNewTopic} />
+            </MenuItem>
+          </Permissioned>
         </div>
       );
     }

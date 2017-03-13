@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import { setAppName, setVersion } from './config';
 import { setAppColors } from './styles/colors';
 import routes from './routes/topicRoutes';
@@ -7,7 +8,9 @@ import initializeApp from './index';
  * This serves as the primary entry point to the Media Cloud Topic Mapper app.
  */
 
-setVersion('1.3.0');
+ReactGA.initialize('UA-60744513-7');
+
+setVersion('1.4.0');
 
 setAppName('topics');
 

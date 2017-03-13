@@ -4,7 +4,7 @@ import { cleanDateCounts } from '../../../lib/dateUtil';
 
 const attention = createAsyncReducer({
   initialState: {
-    focalSet: {},
+    foci: [],
     selectedFocalSetId: '0',
   },
   action: FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS,
