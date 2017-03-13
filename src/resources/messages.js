@@ -22,6 +22,9 @@ const messages = {
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
   unlimited: { id: 'user.unlimited', defaultMessage: 'Unlimited' },
   userProfile: { id: 'user.profile', defaultMessage: 'Profile' },
+  changePassword: { id: 'user.changePassword', defaultMessage: 'Change Password' },
+  recoverPassword: { id: 'user.recoverPassword', defaultMessage: 'Recover Password' },
+  userSignup: { id: 'user.signup', defaultMessage: 'Sign Up' },
 
   topicName: { id: 'topic.title.default', defaultMessage: 'Topic' },
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },
@@ -153,6 +156,10 @@ const messages = {
 
   userEmail: { id: 'user.email', defaultMessage: 'Email' },
   userPassword: { id: 'user.password', defaultMessage: 'Password' },
+  userOldPassword: { id: 'user.oldpPassword', defaultMessage: 'Old Password' },
+  userNewPassword: { id: 'user.newPassword', defaultMessage: 'New Password' },
+  userFullName: { id: 'user.fullName', defaultMessage: 'Full Name' },
+  userNotes: { id: 'user.notes', defaultMessage: 'Notes' },
 
   attentionChartHelpText: { id: 'attentionChart.help.text',
     defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',

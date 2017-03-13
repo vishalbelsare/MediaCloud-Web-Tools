@@ -1,6 +1,7 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import LoginFormContainer from '../components/user/LoginFormContainer';
+import UserRegContainer from '../components/user/UserRegContainer';
 import UserProfileContainer from '../components/user/UserProfileContainer';
 import store from '../store';
 import { logout } from '../actions/userActions';
@@ -16,6 +17,9 @@ const userRoutes = (
     <Route path="profile" component={UserProfileContainer} />
     <Route path="/login" component={LoginFormContainer} />
     <Route path="/logout" onEnter={onEnterLogout} />
+    <Route path="/signup" component={UserRegContainer} />
+    <Route path="/recover" component={UserRegContainer} />
+    <Route path="/change" component={UserRegContainer} />
   </Route>
 );
 

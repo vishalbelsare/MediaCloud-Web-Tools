@@ -41,3 +41,33 @@ def login_with_key():
 def permissions_for_user():
     user_mc = auth.user_mediacloud_client()
     return user_mc.userPermissionsList()
+
+@app.route('/api/user/signup', methods=['POST'])
+@form_fields_required('email', 'password', 'full_name')
+@api_error_handler 
+def signup():
+    username = request.form["email"]
+    logger.debug("login request from %s", username)
+    password = request.form["password"]
+
+    return jsonify({'success': 1})
+
+@app.route('/api/user/change_password', methods=['POST'])
+@form_fields_required('old_password', 'new_password')
+@api_error_handler 
+def change_password():
+    username = request.form["old_password"]
+    password = request.form["new_password"]
+
+    return jsonify({'success': 1})
+
+
+@app.route('/api/user/recover_password', methods=['POST'])
+@form_fields_required('email')
+@api_error_handler 
+def recover_password():
+    username = request.form["email"]
+    logger.debug("login request from %s", username)
+    
+    return jsonify({'success': 1})
+
