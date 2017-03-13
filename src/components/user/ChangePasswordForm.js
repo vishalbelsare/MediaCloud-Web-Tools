@@ -26,7 +26,7 @@ const ChangePasswordForm = (props) => {
     <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="change-password-form">
       <Row>
         <Col lg={12} md={12} sm={12}>
-          <h2><FormattedMessage {...messages.recoverPassword} /></h2>
+          <h2><FormattedMessage {...messages.changePassword} /></h2>
         </Col>
       </Row>
       <Row>
@@ -128,7 +128,7 @@ function validate(values) {
   if (emptyString(values.new_password)) {
     errors.password = localMessages.missingNewPassword;
   }
-  if (values.password !== values.confirmPassword) {
+  if ((values.password !== undefined && values.confirm_password !== undefined) && values.new_password !== values.confirm_password) {
     errors.password = localMessages.passwordsMismatch;
   }
   return errors;

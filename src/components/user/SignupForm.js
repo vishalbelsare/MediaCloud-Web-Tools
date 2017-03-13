@@ -23,10 +23,10 @@ const localMessages = {
 };
 
 const SignupForm = (props) => {
-  const { handleSubmit, onSubmitSignupForm, fetchStatus, renderTextField } = props;
+  const { handleSubmit, onSubmitSignupForm, fetchStatus, renderTextField, errorMessage } = props;
   const { formatMessage } = props.intl;
   // let recaptchaInstance = null;
-  // const titleHandler = parentTitle => `${formatMessage(messages.userSignup)} | ${parentTitle}`;
+  // const titleHandler = parentTitle => `${formatMessge(messages.userSignup)} | ${parentTitle}`;
   return (
     <Grid>
       < Recaptcha sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" render="explicit" verifyCallback={() => {}} onloadCallback={() => {}} />
@@ -58,6 +58,7 @@ const SignupForm = (props) => {
         <Row>
           <Col lg={12}>
             <Field
+              errors={errorMessage}
               name="confirm_password"
               type="password"
               component={renderTextField}
@@ -163,7 +164,7 @@ function validate(values) {
   if (emptyString(values.password)) {
     errors.password = localMessages.missingPassword;
   }
-  if (values.password !== values.confirmPassword) {
+  if ((values.password !== undefined && values.confirm_password !== undefined) && values.password !== values.confirm_password) {
     errors.password = localMessages.passwordsMismatch;
   }
   return errors;
