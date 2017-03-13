@@ -2,6 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Sigma, RandomizeNodePositions, RelativeSize } from 'react-sigma';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LinkMapForm from './LinkMapForm';
 import { selectTopic, filterBySnapshot, filterByFocus, filterByTimespan } from '../../../actions/topicActions';
@@ -27,6 +28,20 @@ class LinkMapContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     const initialValues = { color_field: 'media_type', num_media: 500, include_weights: false };
+    const nodes = { nodes: [{ id: 'n3', label: 'Alice' }, { id: 'n2', label: 'Rabbit' }], edges: [{ id: 'e1', source: 'n3', target: 'n2', label: 'SEES' }] };
+
+    const sigmaElement = (
+      <Sigma
+        graph={{ nodes: [{ id: 'id0' }, { id: 'id1' }], edges: [{ id: 'e0', source: 'id0', target: 'id1' }] }}
+        settings={{ drawEdges: true }}
+      >
+        <RelativeSize initialSize={15} />
+        <RandomizeNodePositions />
+      </Sigma>
+    );
+    if (sigmaElement && sigmaElement.graph) {
+      sigmaElement.graph.addNodes(nodes);
+    }
     return (
       <Grid>
         <Title render={titleHandler} />
@@ -36,12 +51,18 @@ class LinkMapContainer extends React.Component {
             <p><FormattedMessage {...localMessages.intro} /></p>
           </Col>
         </Row>
-        <LinkMapForm
-          initialValues={initialValues}
-          onFetch={handleFetchMapData}
-          buttonLabel={formatMessage(localMessages.fetchButton)}
-        />
-
+        <Row>
+          <Col lg={6} md={6} sm={12}>
+            <LinkMapForm
+              initialValues={initialValues}
+              onFetch={handleFetchMapData}
+              buttonLabel={formatMessage(localMessages.fetchButton)}
+            />
+          </Col>
+          <Col lg={6} md={6} sm={12}>
+            {sigmaElement}
+          </Col>
+        </Row>
       </Grid>
     );
   }
