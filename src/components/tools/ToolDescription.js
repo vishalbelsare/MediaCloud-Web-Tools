@@ -1,10 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-/**
- * The primary unit of our interface. Any self-contained piece of a larger report page should
- * be inside of a DataCard.
- */
 const ToolDescription = (props) => {
   const { name, description, screenshotUrl, url, className } = props;
   return (

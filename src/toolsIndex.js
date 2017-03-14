@@ -15,9 +15,9 @@ setVersion('1.0.0');
 setAppName('tools');
 
 setAppColors({
-  light: '#d896ff',
-  dark: '#800080',
-  darker: '#660066',
+  light: 'rgb(189,189,189)',
+  dark: 'rgb(97,97,97)',
+  darker: 'rgb(33,33,33)',
 });
 
 initializeApp(routes);

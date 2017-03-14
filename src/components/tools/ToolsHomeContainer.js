@@ -4,8 +4,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
-import ToolDescription from './ToolDescription';
 import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppToolbar';
+import ToolDescription from './ToolDescription';
+import Faq from './faq/Faq';
 
 const localMessages = {
   title: { id: 'tools.home.title', defaultMessage: 'Welcome to Media Cloud' },
@@ -22,7 +23,7 @@ const ToolsHomeContainer = (props) => {
         <Row>
           <Col lg={12}>
             <h1><FormattedMessage {...localMessages.title} /></h1>
-            <p><FormattedMessage {...localMessages.intro} /></p>
+            <p className="intro"><FormattedMessage {...localMessages.intro} /></p>
           </Col>
         </Row>
         <Row>
@@ -54,6 +55,7 @@ const ToolsHomeContainer = (props) => {
             />
           </Col>
         </Row>
+        <Faq />
       </Grid>
     </div>
   );
