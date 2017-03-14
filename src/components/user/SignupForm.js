@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Recaptcha from 'react-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { push } from 'react-router-redux';
 // import Title from 'react-title-component';
 import { signupUser, setLoginErrorMessage } from '../../actions/userActions';
@@ -29,7 +29,6 @@ const SignupForm = (props) => {
   // const titleHandler = parentTitle => `${formatMessge(messages.userSignup)} | ${parentTitle}`;
   return (
     <Grid>
-      < Recaptcha sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" render="explicit" verifyCallback={() => {}} onloadCallback={() => {}} />
       <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="signup-form">
         <Row>
           <Col lg={12} md={12} sm={12}>
@@ -87,6 +86,9 @@ const SignupForm = (props) => {
               floatingLabelText={messages.userNotes}
             />
           </Col>
+        </Row>
+        <Row>
+          <ReCAPTCHA sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" />
         </Row>
         <Row>
           <AppButton
