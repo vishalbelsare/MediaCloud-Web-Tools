@@ -6,7 +6,7 @@ import messages from '../../resources/messages';
 
 const ToolsApp = (props) => {
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(messages.sourcesToolShortName)} | ${parentTitle}`;
+  const titleHandler = parentTitle => `${formatMessage(messages.toolsAppName)} | ${parentTitle}`;
   return (
     <div>
       <Title render={titleHandler} />

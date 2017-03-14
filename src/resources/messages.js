@@ -3,19 +3,14 @@ const messages = {
 
   suiteName: { id: 'suite.name', defaultMessage: 'Media Cloud' },
 
-  blogToolShortName: { id: 'app.blog.name.short', defaultMessage: 'Blog' },
   blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
   blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
-  dashboardToolShortName: { id: 'app.dashboard.name.short', defaultMessage: 'Dashboard' },
   dashboardToolName: { id: 'app.dashboard.name', defaultMessage: 'Dashboard' },
   dashboardToolDescription: { id: 'app.dashboard.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
-  sourcesToolShortName: { id: 'app.sources.name.short', defaultMessage: 'Source Manager' },
   sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Source Manager' },
   sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
-  topicsToolShortName: { id: 'app.topics.name.short', defaultMessage: 'Topic Mapper' },
   topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topic Mapper' },
   topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
-  toolsAppShortName: { id: 'app.tools.name.short', defaultMessage: 'Tools' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Find out more about our tools and how to use them' },
 
