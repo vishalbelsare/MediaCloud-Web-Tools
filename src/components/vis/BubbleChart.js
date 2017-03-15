@@ -15,6 +15,7 @@ const DEFAULT_PLACEMENT = PLACEMENT_AUTO;
 // options for `textPlacement`
 export const TEXT_PLACEMENT_ABOVE = 'TEXT_ABOVE';
 export const TEXT_PLACEMENT_CENTER = 'TEXT_CENTER';
+export const TEXT_PLACEMENT_ROLLOVER = 'TEXT_PLACEMENT_ROLLOVER';
 const DEFAULT_TEXT_PLACEMENT = TEXT_PLACEMENT_CENTER;
 
 /**
@@ -30,6 +31,7 @@ class BubbleChart extends React.Component {
       height,
       maxBubbleRadius,
       placement,
+      textPlacement,
     };
     if ((width === null) || (width === undefined)) {
       options.width = DEFAULT_WIDTH;
@@ -83,6 +85,10 @@ class BubbleChart extends React.Component {
         .attr('width', options.width)
         .attr('height', options.height)
         .attr('class', 'bubble-chart');
+      // rollover tooltip
+      const rollover = d3.select('body').append('div')
+        .attr('class', 'bubble-chart-tooltip')
+        .style('opacity', 0);
       const totalWidth = circles.slice(-1)[0].x + circles.slice(-1)[0].r; // TODO: make this support bubble packing too
       const bubbles = svg.append('g')
         .attr('transform', `translate(${(options.width - totalWidth) / 2},${options.height / 2})`)
@@ -95,35 +101,59 @@ class BubbleChart extends React.Component {
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
         .style('fill', d => d.color || '');
+
+      // add tooltip to bubbles for rollover option
+      if ((options.textPlacement ? options.textPlacement : textPlacement) === TEXT_PLACEMENT_ROLLOVER) {
+        bubbles.selectAll('circle').on('mouseover', (d) => {
+          const pixel = 'px';
+          rollover.transition().duration(200).style('opacity', 0.9);
+          rollover.html(d.label)
+            .style('left', d3.event.pageX + pixel)
+            .style('top', d3.event.pageY + pixel);
+        })
+        .on('mouseout', () => {
+          rollover.transition().duration(500).style('opacity', 0);
+        });
+      }
+
       // format the text for each bubble
       let textYPlacement = null;
-      switch (textPlacement) {
+      switch (options.textPlacement ? options.textPlacement : textPlacement) {
         case TEXT_PLACEMENT_ABOVE:
           textYPlacement = d => d.y - d.r - 12;
           break;
         case TEXT_PLACEMENT_CENTER:
+          textYPlacement = d => d.y;
+          break;
+        case TEXT_PLACEMENT_ROLLOVER:
+          textYPlacement = d => d.y - 4;
+          break;
         default:
           textYPlacement = d => d.y;
           break;
       }
-      bubbles.append('text')
-        .attr('x', d => d.x)
-        .attr('y', d => textYPlacement(d) - 6)
-        .attr('text-anchor', 'middle')
-        .attr('fill', d => `${d.labelColor} !important` || '')
-        .text(d => d.label);
+
+      // don't show labels for rollover option
+      if ((options.textPlacement ? options.textPlacement : textPlacement) !== TEXT_PLACEMENT_ROLLOVER) {
+        bubbles.append('text')
+          .attr('x', d => d.x)
+          .attr('y', d => textYPlacement(d) - 6)
+          .attr('text-anchor', 'middle')
+          .attr('fill', d => `${d.labelColor} !important` || '')
+          .text(d => d.label);
+      }
       bubbles.append('text')
         .attr('x', d => d.x)
         .attr('y', d => textYPlacement(d) + 7)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.labelColor} !important` || '')
         .text(d => formatNumber(d.value));
+
       content = node.toReact();
     }
 
     return content;
   }
-
 }
 
 BubbleChart.propTypes = {
