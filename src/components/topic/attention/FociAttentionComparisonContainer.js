@@ -7,7 +7,7 @@ import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -103,6 +103,7 @@ class FociAttentionComparisonContainer extends React.Component {
                 placement={PLACEMENT_AUTO}
                 height={400}
                 domId={BUBBLE_CHART_DOM_ID}
+                textPlacement={TEXT_PLACEMENT_ROLLOVER}
               />
             </DataCard>
           </Col>
