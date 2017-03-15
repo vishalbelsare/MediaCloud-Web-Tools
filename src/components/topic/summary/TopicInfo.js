@@ -22,7 +22,7 @@ const TopicInfo = (props) => {
     stateMessage = (<Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>{topic.message}</Permissioned>);
   }
   // const sourcesAndCollections = [...topic.media, ...topic.media_tags];
-  const sourcesAndCollections = [...topic.media_tags];
+  const sourcesAndCollections = [];
   return (
     <DataCard className="topic-info">
       <h2>
