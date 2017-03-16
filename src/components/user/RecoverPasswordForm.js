@@ -25,7 +25,7 @@ const RecoverPasswordForm = (props) => {
       <form onSubmit={handleSubmit(onSubmitRecovery.bind(this))} className="recover-password-form">
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <h2><FormattedMessage {...messages.recoverPassword} /></h2>
+            <h2><FormattedMessage {...messages.userRecoverPassword} /></h2>
           </Col>
         </Row>
         <Row>
@@ -42,7 +42,7 @@ const RecoverPasswordForm = (props) => {
             <br />
             <AppButton
               type="submit"
-              label={formatMessage(messages.recoverPassword)}
+              label={formatMessage(messages.userRecoverPassword)}
               primary
               disabled={pristine}
             />

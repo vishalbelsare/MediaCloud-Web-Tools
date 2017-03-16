@@ -34,7 +34,7 @@ class ChangePasswordForm extends React.Component {
         <form onSubmit={handleSubmit(onSubmitChangePassword.bind(this))} className="change-password-form">
           <Row>
             <Col lg={12} md={12} sm={12}>
-              <h2><FormattedMessage {...messages.changePassword} /></h2>
+              <h2><FormattedMessage {...messages.userChangePassword} /></h2>
             </Col>
           </Row>
           <Row>
@@ -77,7 +77,7 @@ class ChangePasswordForm extends React.Component {
               <br />
               <AppButton
                 type="submit"
-                label={formatMessage(messages.changePassword)}
+                label={formatMessage(messages.userChangePassword)}
                 primary
                 disabled={!this.state.allowChangePassword || (pristine || submitting || errorMessage === '')}
               />

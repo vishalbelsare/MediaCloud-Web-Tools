@@ -28,6 +28,9 @@ const UserMenuContainer = (props) => {
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>
             <FormattedMessage {...messages.userProfile} />
           </MenuItem>
+          <MenuItem onTouchTap={() => { routeToUrl('/change-password'); }}>
+            <FormattedMessage {...messages.userChangePassword} />
+          </MenuItem>
           <MenuItem onTouchTap={() => { routeToUrl('/logout'); }}>
             <FormattedMessage {...messages.userLogout} />
           </MenuItem>

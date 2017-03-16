@@ -15,8 +15,8 @@ const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
   missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
-  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
-  forgotPassword: { id: 'user.forgotPassword', defaultMessage: 'Recover Password' },
+  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now!' },
+  forgotPassword: { id: 'user.forgotPassword', defaultMessage: 'Forgot Your Password?' },
 };
 
 const LoginFormComponent = (props) => {

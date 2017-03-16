@@ -22,9 +22,6 @@ const messages = {
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
   unlimited: { id: 'user.unlimited', defaultMessage: 'Unlimited' },
   userProfile: { id: 'user.profile', defaultMessage: 'Profile' },
-  changePassword: { id: 'user.changePassword', defaultMessage: 'Change Password' },
-  recoverPassword: { id: 'user.recoverPassword', defaultMessage: 'Recover Password' },
-  userSignup: { id: 'user.signup', defaultMessage: 'Sign Up' },
 
   topicName: { id: 'topic.title.default', defaultMessage: 'Topic' },
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },
@@ -159,6 +156,9 @@ const messages = {
   userOldPassword: { id: 'user.oldpPassword', defaultMessage: 'Old Password' },
   userNewPassword: { id: 'user.newPassword', defaultMessage: 'New Password' },
   userConfirmPassword: { id: 'user.confirmPassword', defaultMessage: 'Confirm Password' },
+  userChangePassword: { id: 'user.changePassword', defaultMessage: 'Change Password' },
+  userRecoverPassword: { id: 'user.recoverPassword', defaultMessage: 'Recover Password' },
+  userSignup: { id: 'user.signup', defaultMessage: 'Sign Up' },
   userFullName: { id: 'user.fullName', defaultMessage: 'Full Name' },
   userNotes: { id: 'user.notes', defaultMessage: 'Notes' },
 
