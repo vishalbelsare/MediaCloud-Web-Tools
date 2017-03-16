@@ -14,9 +14,9 @@ const localMessages = {
   reject: { id: 'source.suggestion.reject', defaultMessage: 'Reject' },
   approve: { id: 'source.suggestion.accept', defaultMessage: 'Approve' },
   approveTitle: { id: 'source.suggestion.approve.title', defaultMessage: 'Approve' },
-  approveIntro: { id: 'source.suggestion.approve.intro', defaultMessage: 'Make a note of why you are approving {url}' },
+  approveIntro: { id: 'source.suggestion.approve.intro', defaultMessage: 'Make a note of why you are approving {url}. This will be emailed to {email}.' },
   rejectTitle: { id: 'source.suggestion.reject.title', defaultMessage: 'Reject' },
-  rejectIntro: { id: 'source.suggestion.reject.intro', defaultMessage: 'Make a note of why you are rejecting {url}' },
+  rejectIntro: { id: 'source.suggestion.reject.intro', defaultMessage: 'Make a note of why you are rejecting {url}. This will be emailed to {email}.' },
   reasonHintText: { id: 'source.suggestion.reasonHintText', defaultMessage: 'Note why you\'re making this decision' },
 };
 
@@ -87,7 +87,7 @@ class SourceSuggestion extends React.Component {
             open={this.state.showApproveDialog}
             onRequestClose={() => this.setState({ showApproveDialog: false })}
           >
-            <p><FormattedMessage {...localMessages.approveIntro} values={{ url: suggestion.url }} /></p>
+            <p><FormattedMessage {...localMessages.approveIntro} values={{ url: suggestion.url, email: suggestion.email }} /></p>
             <TextField
               name="rejectReason"
               id={approveReasonInputId}
@@ -114,7 +114,7 @@ class SourceSuggestion extends React.Component {
             open={this.state.showRejectDialog}
             onRequestClose={() => this.setState({ showRejectDialog: false })}
           >
-            <p><FormattedMessage {...localMessages.rejectIntro} values={{ url: suggestion.url }} /></p>
+            <p><FormattedMessage {...localMessages.rejectIntro} values={{ url: suggestion.url, email: suggestion.email }} /></p>
             <TextField
               name="rejectReason"
               id={rejectReasonInputId}

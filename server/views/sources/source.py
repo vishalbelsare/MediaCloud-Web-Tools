@@ -6,11 +6,11 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
-from server import app, db
+from server import app, db, mc
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.mail import send_html_email
-from server.util.request import arguments_required, form_fields_required, api_error_handler
+from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -272,15 +272,41 @@ def source_suggestions():
     return jsonify({'list': suggestions})
 
 
+def _media_suggestion(suggestion_id):
+    pending = mc.mediaSuggestionsList(all=True)
+    for suggestion in pending:
+        if int(suggestion['media_suggestions_id']) == int(suggestion_id):
+            return suggestion
+    return None
+
 @app.route('/api/sources/suggestions/<suggestion_id>/update', methods=['POST'])
 @form_fields_required('status', 'reason')
 @flask_login.login_required
 @api_error_handler
 def source_suggestion_update(suggestion_id):
+    suggestion = _media_suggestion(suggestion_id)
+    if suggestion is None:
+        return json_error_response("Unknown suggestion id {}".format(suggestion_id))
     user_mc = user_mediacloud_client()
     status = request.form['status']
     reason = request.form['reason']
     results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason)
+    # send an email to the person that suggested it
+    url = suggestion['url']
+    email_title = "Source Suggestion {}: {}".format(status, url)
+    content_title = "We {} {}".format(status, url)
+    content_body = "Thanks for the suggestion. {}".format(reason)
+    action_text = "Login to Media Cloud"
+    action_url = "https://sources.mediacloud.org/#/login"
+    # send an email confirmation
+    send_html_email(email_title,
+                    [user_name(), 'source-suggestion@mediacloud.org'],
+                    render_template("emails/generic.txt",
+                                    content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
+                    render_template("emails/generic.html",
+                                    email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
+                    )
+    # and return that it worked
     return jsonify(results)
 
 def _tag_ids_from_collections_param(input):
