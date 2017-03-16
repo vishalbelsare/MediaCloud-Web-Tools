@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -8,7 +9,8 @@ import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActi
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
-import TreeMap from '../../vis/TreeMap';
+import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
+
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
@@ -18,7 +20,13 @@ const localMessages = {
     defaultMessage: '<p>This visualization gives you a sense of how much content each source contributes to this collection.  Each source is a rectangle.  The larger the rectangle, the more sentences it has in this collection.  Rollover one to see the actualy number of sentences. Click the source to learn more about it.</p><p>For performance reasons, these percentages are based on a sample of sentences from this collection.  Our tests show that this sampling provides very accurate results.</p>',
   },
   cantShow: { id: 'collection.summary.sourceRepresentation.cantShow', defaultMessage: 'Sorry, this collection has too many sources for us to compute a map of how much content each source contributes to it.' },
+  overallSeries: { id: 'collection.bubble.series.overall', defaultMessage: 'Overall' },
+  bubbleChartTitle: { id: 'collection.bubble.bubbleChart.title', defaultMessage: 'Total Bubble Representation' },
+  lineChartTitle: { id: 'collection.bubble.lineChart.title', defaultMessage: 'Bubble Representation' },
 };
+
+const BUBBLE_CHART_DOM_ID = 'source-representation-bubble-chart';
+const COLORS = d3.schemeCategory20;
 
 class CollectionSourceRepresentation extends React.Component {
 
@@ -36,13 +44,31 @@ class CollectionSourceRepresentation extends React.Component {
   render() {
     const { helpButton, sources } = this.props;
     const { formatMessage } = this.props.intl;
-    const data = sources.map(s => ({ name: s.name, value: s.sentence_pct }));  // also available: sentence_count
+
     let content = null;
     // if no sources that means there were too many to compute the chart for
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
-      content = <TreeMap title={formatMessage(localMessages.chartTitle)} data={data} onLeafClick={this.handleLeafClick} />;
+      const bubbleData = [
+        ...sources.map((s, idx) => ({
+          id: idx,
+          name: s.name,
+          label: s.name,
+          value: s.sentence_pct,
+          color: COLORS[idx + 1],
+        })),
+      ];
+
+      content = (
+        <BubbleChart
+          data={bubbleData}
+          placement={PLACEMENT_AUTO}
+          height={400}
+          domId={BUBBLE_CHART_DOM_ID}
+          textPlacement={TEXT_PLACEMENT_ROLLOVER}
+        />
+      );
     }
     return (
       <DataCard>
