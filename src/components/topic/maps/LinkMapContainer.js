@@ -10,23 +10,35 @@ import { generateParamStr } from '../../../lib/apiUtil';
 const localMessages = {
   title: { id: 'topic.maps.link.title', defaultMessage: 'Link Map' },
   intro: { id: 'topic.maps.link.title', defaultMessage: 'Generate a network graph showing how the media sources linked to each other.' },
-  fetchButton: { id: 'topic.maps.button', defaultMessage: 'Download network map' },
+  downloadButton: { id: 'topic.maps.downloadbutton', defaultMessage: 'Download a network map' },
+  viewButton: { id: 'topic.maps.viewbutton', defaultMessage: 'View a network map' },
 };
 
 class LinkMapContainer extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewMap: false,
+    };
+  }
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId) {
       fetchData(nextProps);
     }
   }
-
+  toggleViewMap = () => {
+    this.setState({
+      viewMap: !this.state.viewMap,
+    });
+  }
   render() {
-    const { handleFetchMapData } = this.props;
+    const { handleFetchMapData, filters, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     const initialValues = { color_field: 'media_type', num_media: 500, include_weights: false };
+
     return (
       <Grid>
         <Title render={titleHandler} />
@@ -38,10 +50,14 @@ class LinkMapContainer extends React.Component {
         </Row>
         <LinkMapForm
           initialValues={initialValues}
-          onFetch={handleFetchMapData}
-          buttonLabel={formatMessage(localMessages.fetchButton)}
+          filters={filters}
+          topicId={topicId}
+          showMap={this.state.viewMap}
+          onGetMapData={handleFetchMapData}
+          onViewMapData={this.toggleViewMap}
+          viewLabel={formatMessage(localMessages.viewButton)}
+          downloadLabel={formatMessage(localMessages.downloadButton)}
         />
-
       </Grid>
     );
   }
@@ -70,8 +86,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleFetchMapData: (values) => {
     // try to save it
     const params = generateParamStr({ ...ownProps.location.query, ...values });
-
     const url = `/api/topics/${ownProps.params.topicId}/map-files/fetchCustomMap?${params}`;
+
     window.location = url;
   },
   fetchData: () => {
