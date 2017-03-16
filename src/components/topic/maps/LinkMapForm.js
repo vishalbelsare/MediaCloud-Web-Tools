@@ -38,19 +38,20 @@ const LinkMapForm = (props) => {
     const fParams = generateParamStr({ ...fieldParams });
     const url = `/api/topics/${topicId}/map-files/fetchCustomMap?${params}&${fParams}`;
     sigmaElement = (
-      <Sigma
-        renderer="webgl"
-        style={{ maxWidth: 'inherit', width: '1000px', height: '700px' }}
-        settings={{ drawEdges: true, nodeColor: '#222222', defaultNodeColor: '#000', defaultLabelColor: '#222', defaultEdgeColor: '#eeeeee', edgeColor: '#eeeeee', scalingMode: 'outside' }}
-      >
-        <LoadGEXF path={url}>
-          <RandomizeNodePositions>
-            <ForceAtlas2 scalingRatio={5000} barnesHutOptimize barnesHutTheta={0.6} iterationsPerRender={3} />
-            <RelativeSize initialSize={8} />
-          </RandomizeNodePositions>
-        </LoadGEXF>
-      </Sigma>
-
+      <div className="link-map-sigma">
+        <Sigma
+          renderer="webgl"
+          style={{ width: '1200px', height: '600px' }}
+          settings={{ drawEdges: true, nodeColor: '#222222', defaultNodeColor: '#000', defaultLabelColor: '#222', defaultEdgeColor: '#eeeeee', edgeColor: '#eeeeee', scalingMode: 'outside' }}
+        >
+          <LoadGEXF path={url}>
+            <RandomizeNodePositions>
+              <ForceAtlas2 scalingRatio={5000} barnesHutOptimize barnesHutTheta={0.6} iterationsPerRender={3} />
+              <RelativeSize initialSize={8} />
+            </RandomizeNodePositions>
+          </LoadGEXF>
+        </Sigma>
+      </div>
     );
   }
   // if they pick "make a new focal set" then let them enter name and description
@@ -130,7 +131,11 @@ const LinkMapForm = (props) => {
           />
         </Col>
       </Row>
-      {sigmaElement}
+      <Row>
+        <Col lg={12}>
+          {sigmaElement}
+        </Col>
+      </Row>
     </form>
   );
 };
