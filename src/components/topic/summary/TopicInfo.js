@@ -21,8 +21,8 @@ const TopicInfo = (props) => {
     // only show error ugly stack trace to admin users
     stateMessage = (<Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>{topic.message}</Permissioned>);
   }
-  // const sourcesAndCollections = [...topic.media, ...topic.media_tags];
-  const sourcesAndCollections = [];
+  let sourcesAndCollections = topic.media ? [...topic.media] : [];
+  sourcesAndCollections = topic.media_tags ? [...sourcesAndCollections, ...topic.media_tags] : sourcesAndCollections;
   return (
     <DataCard className="topic-info">
       <h2>

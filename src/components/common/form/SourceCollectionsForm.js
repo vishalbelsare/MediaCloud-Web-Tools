@@ -13,10 +13,10 @@ const localMessages = {
 const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
   <div>
     <Row>
-      <Col sm={4} xs={12}>
+      <Col sm={4}>
         <span className="label chip-label">{intro}</span>
       </Col>
-      <Col sm={6} xs={12}>
+      <Col lg={8}>
         {fields.map((name, index) => (
           <Field
             key={`c${index}`}
@@ -30,13 +30,13 @@ const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
       </Col>
     </Row>
     <Row>
-      <Col xs={12}>&nbsp;</Col>
+      <Col lg={12}>&nbsp;</Col>
     </Row>
     <Row>
-      <Col sm={4} xs={6}>
+      <Col lg={4}>
         <span className="label field-label"><FormattedMessage {...localMessages.add} /></span>
       </Col>
-      <Col sm={6} xs={6}>
+      <Col lg={8}>
         <SourceSearchContainer
           searchSources
           searchStaticCollections

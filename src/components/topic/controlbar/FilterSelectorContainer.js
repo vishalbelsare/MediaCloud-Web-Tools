@@ -105,29 +105,31 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(filterBySnapshot(newSnapshotId));
           }
           // warn user if snapshot is being pending
-          const latestSnapshotJobStatus = response.jobStatus[0];
-          switch (latestSnapshotJobStatus.state) {
-            case TOPIC_SNAPSHOT_STATE_QUEUED:
-              dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotQueued) }));
-              break;
-            case TOPIC_SNAPSHOT_STATE_RUNNING:
-              dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotRunning) }));
-              break;
-            case TOPIC_SNAPSHOT_STATE_ERROR:
-              dispatch(addNotice({
-                level: LEVEL_ERROR,
-                message: ownProps.intl.formatMessage(localMessages.snapshotFailed),
-                details: latestSnapshotJobStatus.message,
-              }));
-              break;
-            case TOPIC_SNAPSHOT_STATE_COMPLETED:
-              const latestSnapshot = response.list[0];
-              if (!snapshotIsUsable(latestSnapshot)) {
-                dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotImporting) }));
-              }
-              break;
-            default:
-              // don't alert user about anything
+          if (response.jobStatus) {
+            const latestSnapshotJobStatus = response.jobStatus[0];
+            switch (latestSnapshotJobStatus.state) {
+              case TOPIC_SNAPSHOT_STATE_QUEUED:
+                dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotQueued) }));
+                break;
+              case TOPIC_SNAPSHOT_STATE_RUNNING:
+                dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotRunning) }));
+                break;
+              case TOPIC_SNAPSHOT_STATE_ERROR:
+                dispatch(addNotice({
+                  level: LEVEL_ERROR,
+                  message: ownProps.intl.formatMessage(localMessages.snapshotFailed),
+                  details: latestSnapshotJobStatus.message,
+                }));
+                break;
+              case TOPIC_SNAPSHOT_STATE_COMPLETED:
+                const latestSnapshot = response.list[0];
+                if (!snapshotIsUsable(latestSnapshot)) {
+                  dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.snapshotImporting) }));
+                }
+                break;
+              default:
+                // don't alert user about anything
+            }
           }
         });
     }

@@ -28,8 +28,6 @@ const localMessages = {
   favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',
     defaultMessage: 'You have favorited {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
   },
-  feedInfo: { id: 'source.basicInfo.feeds',
-    defaultMessage: 'The content is being pulled from {feedCount, plural,\n =0 {no RSS feeds}\n =1 {one RSS feed}\n =100 {over 100 RSS feeds}\n other {# RSS feeds}}. {feedListLink}.' },
   feedLastScrapeDate: { id: 'source.basicInfo.feed.lastScrape', defaultMessage: ' (Last scraped on {date}) ' },
   feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
@@ -142,17 +140,9 @@ class SourceDetailsContainer extends React.Component {
                 values={{ gapCount: (source.health) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
               />
               &nbsp;
-              <FormattedMessage
-                {...localMessages.feedInfo}
-                values={{
-                  feedCount: source.feedCount,
-                  feedListLink: (
-                    <Link to={`/sources/${source.media_id}/feeds`} >
-                      <FormattedMessage {...localMessages.feedLink} />
-                    </Link>
-                  ),
-                }}
-              />
+              <Link to={`/sources/${source.media_id}/feeds`} >
+                <FormattedMessage {...localMessages.feedLink} />
+              </Link>
               {feedScrapeMsg}
             </p>
             <p>

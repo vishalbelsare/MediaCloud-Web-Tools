@@ -7,7 +7,7 @@ import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -40,13 +40,13 @@ class FociAttentionComparisonContainer extends React.Component {
     }
   }
   render() {
-    const { focalSet, overallTotal, overallCounts } = this.props;
+    const { foci, overallTotal, overallCounts } = this.props;
     const { formatMessage } = this.props.intl;
     // stich together bubble chart data
     let bubbleData = [];
-    if (focalSet.foci !== undefined && focalSet.foci.length > 0) {
+    if (foci !== undefined && foci.length > 0) {
       bubbleData = [
-        ...focalSet.foci.map((focus, idx) => ({
+        ...foci.map((focus, idx) => ({
           label: focus.name, value: focus.total, color: COLORS[idx + 1],
         })),
         { label: formatMessage(localMessages.overallSeries), value: overallTotal, color: COLORS[0] },
@@ -55,9 +55,9 @@ class FociAttentionComparisonContainer extends React.Component {
     // stich together line chart data
     const overallData = dataAsSeries(overallCounts);      // now add a series for the whole thing
     let series = [];
-    if (focalSet.foci !== undefined) {
+    if (foci !== undefined) {
       series = [
-        ...focalSet.foci.map((focus, idx) => {    // add series for all the foci
+        ...foci.map((focus, idx) => {    // add series for all the foci
           const data = dataAsSeries(focus.counts);
           return {
             id: idx,
@@ -94,7 +94,7 @@ class FociAttentionComparisonContainer extends React.Component {
               <div className="actions">
                 <DownloadButton
                   tooltip={formatMessage(messages.download)}
-                  onClick={downloadSvg(BUBBLE_CHART_DOM_ID)}
+                  onClick={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
                 />
               </div>
               <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
@@ -103,6 +103,7 @@ class FociAttentionComparisonContainer extends React.Component {
                 placement={PLACEMENT_AUTO}
                 height={400}
                 domId={BUBBLE_CHART_DOM_ID}
+                textPlacement={TEXT_PLACEMENT_ROLLOVER}
               />
             </DataCard>
           </Col>
@@ -125,14 +126,14 @@ FociAttentionComparisonContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  focalSet: React.PropTypes.object.isRequired,
+  foci: React.PropTypes.array.isRequired,
   overallTotal: React.PropTypes.number.isRequired,
   overallCounts: React.PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.attention.fetchStatus,
-  focalSet: state.topics.selected.attention.focalSet,
+  foci: state.topics.selected.attention.foci,
   overallTotal: state.topics.selected.summary.sentenceCount.total,
   overallCounts: state.topics.selected.summary.sentenceCount.counts,
 });
