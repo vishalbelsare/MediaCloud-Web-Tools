@@ -4,11 +4,10 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { push } from 'react-router-redux';
-// import Title from 'react-title-component';
+import { replace } from 'react-router-redux';
 import { signupUser, setLoginErrorMessage } from '../../actions/userActions';
+// import { updateFeedback } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
-import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { emptyString } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
@@ -20,97 +19,114 @@ const localMessages = {
   passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
+  feedback: { id: 'user.signUp.feedback', defaultMessage: 'Successfully signed up.' },
+  signupSuccess: { id: 'user.signUp.success',
+    defaultMessage: '<h1>Clink the link we just emailed you</h1>' +
+    '<p>To make sure your email is valid, we have sent you a message with a magic link for you to click.  Click the link in the email to confirm that we got your email right.<p>' +
+    '<p><a href="post-to-recover-password">Click here to send the email again</a>.</p>.' },
 };
 
-const SignupForm = (props) => {
-  const { handleSubmit, onSubmitSignupForm, fetchStatus, renderTextField, errorMessage } = props;
-  const { formatMessage } = props.intl;
+class SignupForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { allowSignup: false };
+  }
+  allowSignin() {
+    this.setState({ allowSignin: true });
+  }
   // let recaptchaInstance = null;
   // const titleHandler = parentTitle => `${formatMessge(messages.userSignup)} | ${parentTitle}`;
-  return (
-    <Grid>
-      <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="signup-form">
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h2><FormattedMessage {...messages.userSignup} /></h2>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <Field
-              name="email"
-              component={renderTextField}
-              floatingLabelText={messages.userEmail}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <Field
-              name="password"
-              type="password"
-              component={renderTextField}
-              floatingLabelText={messages.userPassword}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <Field
-              errors={errorMessage}
-              name="confirm_password"
-              type="password"
-              component={renderTextField}
-              floatingLabelText={messages.userConfirmPassword}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <Field
-              name="full_name"
-              type="text"
-              component={renderTextField}
-              floatingLabelText={messages.userFullName}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <Field
-              name="notes"
-              multiLine
-              rows={2}
-              rowsMax={4}
-              component={renderTextField}
-              floatingLabelText={messages.userNotes}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <ReCAPTCHA sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" />
-        </Row>
-        <Row>
-          <AppButton
-            type="submit"
-            label={formatMessage(messages.userSignup)}
-            primary
-            disabled={fetchStatus === fetchConstants.FETCH_ONGOING}
-          />
-          <Col lg={12}>
-            <br />
-            <a href="/#/login">
-              <AppButton
-                flat
-                label={formatMessage(localMessages.signUpNow)}
+  render() {
+    const { handleSubmit, onSubmitSignupForm, pristine, submitting, renderTextField, errorMessage } = this.props;
+    const { formatMessage } = this.props.intl;
+    return (
+      <Grid>
+        <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="signup-form">
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <h2><FormattedMessage {...messages.userSignup} /></h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <Field
+                errors={errorMessage}
+                name="email"
+                component={renderTextField}
+                floatingLabelText={messages.userEmail}
               />
-            </a>
-          </Col>
-        </Row>
-      </form>
-    </Grid>
-  );
-};
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <Field
+                errors={errorMessage}
+                name="full_name"
+                type="text"
+                component={renderTextField}
+                floatingLabelText={messages.userFullName}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <Field
+                errors={errorMessage}
+                name="confirm_password"
+                type="password"
+                component={renderTextField}
+                floatingLabelText={messages.userConfirmPassword}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <Field
+                errors={errorMessage}
+                name="password"
+                type="password"
+                component={renderTextField}
+                floatingLabelText={messages.userPassword}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <Field
+                name="notes"
+                multiLine
+                rows={2}
+                rowsMax={4}
+                component={renderTextField}
+                floatingLabelText={messages.userNotes}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <ReCAPTCHA sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" onChange={() => { this.allowSignin(); }} />
+          </Row>
+          <Row>
+            <AppButton
+              type="submit"
+              label={formatMessage(messages.userSignup)}
+              primary
+              disabled={!this.state.allowSignin || (pristine || submitting || errorMessage === '')}
+            />
+            <Col lg={12}>
+              <br />
+              <a href="/#/login">
+                <AppButton
+                  flat
+                  label={formatMessage(localMessages.signUpNow)}
+                />
+              </a>
+            </Col>
+          </Row>
+        </form>
+      </Grid>
+    );
+  }
+}
 
 SignupForm.propTypes = {
   // from composition
@@ -119,6 +135,9 @@ SignupForm.propTypes = {
   redirect: React.PropTypes.string,
   handleSubmit: React.PropTypes.func.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
+
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   errorMessage: React.PropTypes.string,
@@ -138,17 +157,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       if (response.status === 401) {
         dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(localMessages.loginFailed)));
       } else {
-        // redirect to destination if there is one
-        const loc = ownProps.location;
-        let redirect;
-        if (ownProps.redirect) {
-          redirect = ownProps.redirect;
-        } else {
-          redirect = (loc && loc.state && loc.state.nextPathname) ? loc.state.nextPathname : '';
-        }
-        if (redirect) {
-          dispatch(push(redirect));
-        }
+        // dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+        dispatch(replace('/#/signup-success'));
       }
     });
   },
