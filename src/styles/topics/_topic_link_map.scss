@@ -1,5 +1,12 @@
+@import '../_constants';
+
 .link-map-form {
   .checkbox-top-align {
     margin-top: 30px !important;
   }
+}
+
+.link-map-sigma {
+  margin-top: 25px;
+  border: 1px solid $material-grey300;
 }
