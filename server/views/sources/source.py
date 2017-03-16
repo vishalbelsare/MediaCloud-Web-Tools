@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 import flask_login
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -9,7 +9,7 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from server import app, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.mail import send_email
+from server.util.mail import send_html_email
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -302,36 +302,16 @@ def source_suggest():
     tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
     new_suggestion = user_mc.mediaSuggest(url=url, name=name, feed_url=feed_url, reason=reason,
                                           collections=tag_ids_to_add)
-    content = """
-Hi,
-
-{username} just suggested a new source to add to Media Cloud:
-
-url: {url}
-
-Name: {name}
-
-Feed URL: {feed_url}
-
-Reason: {reason}
-
-Sincerely,
-
-Your friendly Media Cloud Source Manager server
-🎓👓
-
-https://sources.mediacloud.org
-"""
-    send_email('no-reply@mediacloud.org',
-               [user_name(), 'source-suggestion@mediacloud.org'],
-               'New Source Suggestion: ' + url,
-               content.format(
-                   username=user_name(),
-                   name=name,
-                   url=url,
-                   feed_url=feed_url,
-                   reason=reason
-               ))
+    # send an email confirmation
+    email_title = "Thanks for Suggesting " + url
+    send_html_email(email_title,
+        [user_name(), 'source-suggestion@mediacloud.org'],
+        render_template("emails/source_suggestion_ack.txt",
+                        username=user_name(), name=name, url=url, feed_url=feed_url, reason=reason),
+        render_template("emails/source_suggestion_ack.html",
+                        username=user_name(), name=name, url=url, feed_url=feed_url, reason=reason)
+    )
+    # and return that it worked
     return jsonify(new_suggestion)
 
 

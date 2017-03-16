@@ -1,11 +1,14 @@
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, render_template
 import flask_login
-from server.util.request import api_error_handler
+
 from server import app, auth
+from server.util.request import api_error_handler
+from server.util.mail import send_html_email
 from server.util.request import form_fields_required, json_error_response
 
 logger = logging.getLogger(__name__)
+
 
 @app.route('/api/login', methods=['POST'])
 @form_fields_required('email', 'password')
@@ -21,6 +24,7 @@ def login_with_password():
     auth.login_user(user)
     return jsonify(user.get_properties())
 
+
 @app.route('/api/login-with-key', methods=['POST'])
 @form_fields_required('email', 'key')
 @api_error_handler 
@@ -34,6 +38,7 @@ def login_with_key():
         return json_error_response("Login failed", 401)
     auth.login_user(user)
     return jsonify(user.get_properties())
+
 
 @app.route('/api/permissions/user/list', methods=['GET'])
 @flask_login.login_required
