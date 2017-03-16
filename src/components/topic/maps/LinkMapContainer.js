@@ -10,8 +10,8 @@ import { generateParamStr } from '../../../lib/apiUtil';
 const localMessages = {
   title: { id: 'topic.maps.link.title', defaultMessage: 'Link Map' },
   intro: { id: 'topic.maps.link.title', defaultMessage: 'Generate a network graph showing how the media sources linked to each other.' },
-  downloadButton: { id: 'topic.maps.downloadbutton', defaultMessage: 'Download a network map' },
-  viewButton: { id: 'topic.maps.viewbutton', defaultMessage: 'View a network map' },
+  downloadButton: { id: 'topic.maps.downloadbutton', defaultMessage: 'Download network map' },
+  viewButton: { id: 'topic.maps.viewbutton', defaultMessage: 'View network map' },
 };
 
 class LinkMapContainer extends React.Component {
@@ -28,9 +28,9 @@ class LinkMapContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  toggleViewMap = () => {
+  enableViewMap = () => {
     this.setState({
-      viewMap: !this.state.viewMap,
+      viewMap: true,
     });
   }
   render() {
@@ -54,7 +54,7 @@ class LinkMapContainer extends React.Component {
           topicId={topicId}
           showMap={this.state.viewMap}
           onGetMapData={handleFetchMapData}
-          onViewMapData={this.toggleViewMap}
+          onViewMapData={this.enableViewMap}
           viewLabel={formatMessage(localMessages.viewButton)}
           downloadLabel={formatMessage(localMessages.downloadButton)}
         />
