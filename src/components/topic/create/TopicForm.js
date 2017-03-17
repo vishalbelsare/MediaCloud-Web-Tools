@@ -18,7 +18,7 @@ const TopicForm = (props) => {
       <TopicDetailForm initialValues={initialValues} />
       <SourceCollectionsForm title={title} intro={intro} form="topicForm" initialValues={initialValues} />
       <Row>
-        <Col lg={2} xs={12}>
+        <Col lg={12}>
           <AppButton
             style={{ marginTop: 30 }}
             type="submit"

@@ -25,7 +25,7 @@ const localMessages = {
 const CreateTopicContainer = (props) => {
   const { handleSave } = props;
   const { formatMessage } = props.intl;
-  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', spidered: false, max_iterations: 15, buttonLabel: formatMessage(messages.save) };
+  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.save) };
 
   return (
     <Grid>
@@ -36,14 +36,9 @@ const CreateTopicContainer = (props) => {
           <p><FormattedMessage {...localMessages.createTopicText} /></p>
         </Col>
       </Row>
-      <Row>
-        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-          <Col lg={12}>
-            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
-          </Col>
-        </Permissioned>
-      </Row>
-
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
+      </Permissioned>
     </Grid>
   );
 };
@@ -71,10 +66,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       end_date: endDate,
       solr_seed_query: values.solr_seed_query,
       max_iterations: values.max_iterations,
-      ch_monitor_id: values.ch_monitor_id,
-      is_public: values.is_public,
+      ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
+      is_public: values.is_public === undefined ? false : values.is_public,
       twitter_topics_id: values.twitter_topics_id,
     };
+    infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
       infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);

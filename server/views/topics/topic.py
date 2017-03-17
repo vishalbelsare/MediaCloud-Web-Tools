@@ -119,7 +119,7 @@ def topic_create():
 
     optional_args = {
         'is_public': request.form['is_public'] if 'is_public' in request.form else None,
-        'ch_monitor_id': request.form['ch_monitor_id'] if 'ch_monitor_id' in request.form else None,    # this is optional
+        'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
     }
@@ -128,7 +128,9 @@ def topic_create():
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
 
-    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query, start_date=start_date, end_date=end_date, media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **optional_args)
+    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query,
+                                 start_date=start_date, end_date=end_date, media_ids=media_ids_to_add,
+                                 media_tags_ids=tag_ids_to_add, **optional_args)
 
     return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
 
@@ -149,7 +151,7 @@ def topic_update(topics_id):
         'solr_seed_query': request.form['solr_seed_query'],
         'start_date': request.form['start_date'],
         'end_date': request.form['end_date'],
-        'is_public': 1 if request.form['is_public'] == 'true' else 0,
+        'is_public': request.form['is_public'] if 'is_public' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
