@@ -290,12 +290,34 @@ def source_suggestion_update(suggestion_id):
     user_mc = user_mediacloud_client()
     status = request.form['status']
     reason = request.form['reason']
-    results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason)
+    results = None
+    email_note = ""
+    if status == "approved":
+        # if approved, we have to create it
+        media_source_to_create = { 'url': suggestion['url'],
+              'name': suggestion['name'],
+              'feeds': [suggestion['feed_url']],
+              'tags_ids': suggestion['tags_ids'] if 'tags_ids 'in suggestion else None,
+              'editor_notes': 'Suggested approved by {} on because {}.  Suggested by {} on {} because {} (id #{}).'.format(
+                  user_name(),  datetime.now().strftime("%I:%M%p on %B %d, %Y"), reason,
+                  suggestion['email'], suggestion['date_submitted'], suggestion['reason'], suggestion['media_suggestions_id']
+              )
+            }
+        creation_results = mc.mediaCreate([media_source_to_create])[0]
+        if creation_results['status'] == 'error':
+            status = "pending"  # so the email update looks good.
+            email_note = creation_results['error']+".  "
+        else:
+            email_note = "This source is "+str(creation_results['status'])+". "
+            results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason, creation_results['media_id'])
+    else:
+        # if rejected just mark it as such
+        results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason)
     # send an email to the person that suggested it
     url = suggestion['url']
     email_title = "Source Suggestion {}: {}".format(status, url)
     content_title = "We {} {}".format(status, url)
-    content_body = "Thanks for the suggestion. {}".format(reason)
+    content_body = "Thanks for the suggestion. {}{}".format(email_note, reason)
     action_text = "Login to Media Cloud"
     action_url = "https://sources.mediacloud.org/#/login"
     # send an email confirmation
@@ -306,7 +328,9 @@ def source_suggestion_update(suggestion_id):
                     render_template("emails/generic.html",
                                     email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
                     )
-    # and return that it worked
+    # and return that it worked or not
+    if status == "pending":
+        return json_error_response(email_note)
     return jsonify(results)
 
 def _tag_ids_from_collections_param(input):
