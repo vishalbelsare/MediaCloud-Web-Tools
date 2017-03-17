@@ -11,7 +11,7 @@ const localMessages = {
   nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a name.' },
   advancedSettings: { id: 'topic.form.detail.advancedSettings', defaultMessage: 'Advanced Settings' },
   description: { id: 'topic.form.detail.description', defaultMessage: 'Description' },
-  descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a descriptino.' },
+  descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a description.' },
   seedQuery: { id: 'topic.form.detail.seedQuery', defaultMessage: 'Seed Query' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
