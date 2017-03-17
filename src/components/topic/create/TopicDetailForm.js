@@ -18,7 +18,6 @@ const localMessages = {
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
   monitored: { id: 'topic.form.detail.monitored', defaultMessage: 'Crimson Hexagon Id' },
-  spidered: { id: 'topic.form.detail.spidered', defaultMessage: 'Spidered ?' },
   max_iterations: { id: 'topic.form.detail.max_iterations', defaultMessage: 'Max Iterations' },
   twitter_topics_id: { id: 'topic.form.detail.twitter_topic', defaultMessage: 'Twitter Id' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
@@ -139,16 +138,6 @@ const TopicDetailForm = (props) => {
                   >
                     {iterations.map(t => <MenuItem key={t} value={t} primaryText={t} />)}
                   </Field>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12}>
-                  <Field
-                    name="spidered"
-                    component={renderCheckbox}
-                    fullWidth
-                    label={localMessages.spidered}
-                  />
                 </Col>
               </Row>
             </CardText>

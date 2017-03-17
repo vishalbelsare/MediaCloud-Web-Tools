@@ -21,7 +21,7 @@ const localMessages = {
   editTopicCollectionsTitle: { id: 'topic.edit.editTopicCollectionsTitle', defaultMessage: 'Edit Sources and Collections' },
   editTopicCollectionsIntro: { id: 'topic.edit.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
   feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
-  failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\t work!' },
+  failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
 };
 
 class EditTopicContainer extends React.Component {
@@ -124,6 +124,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       is_public: values.is_public,
       twitter_topics_id: values.twitter_topics_id,
     };
+    infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
       infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
