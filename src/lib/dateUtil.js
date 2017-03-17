@@ -12,6 +12,12 @@ const SOURCE_SUGGESTION_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
+const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
+
+export function topicDateToMoment(topicDate, strict = true) {
+  return moment(topicDate, TOPIC_DATE_FORMAT, strict);
+}
+
 export function jobStatusDateToMoment(statusDate, strict = true) {
   return moment(statusDate, JOB_STATUS_DATE_FORMAT, strict);
 }

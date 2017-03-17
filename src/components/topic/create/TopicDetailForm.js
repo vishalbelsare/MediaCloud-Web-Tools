@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
-import { emptyString } from '../../../lib/formValidators';
+import { emptyString, invalidDate } from '../../../lib/formValidators';
 import composeIntlForm from '../../common/IntlForm';
 
 const localMessages = {
@@ -14,18 +14,19 @@ const localMessages = {
   descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a descriptino.' },
   seedQuery: { id: 'topic.form.detail.seedQuery', defaultMessage: 'Seed Query' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
-  start_date: { id: 'topic.form.detail.start_date', defaultMessage: 'Start Date' },
-  end_date: { id: 'topic.form.detail.end_date', defaultMessage: 'End Date' },
+  startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
+  endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
   monitored: { id: 'topic.form.detail.monitored', defaultMessage: 'Crimson Hexagon Id' },
   spidered: { id: 'topic.form.detail.spidered', defaultMessage: 'Spidered ?' },
   max_iterations: { id: 'topic.form.detail.max_iterations', defaultMessage: 'Max Iterations' },
   twitter_topics_id: { id: 'topic.form.detail.twitter_topic', defaultMessage: 'Twitter Id' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
+  dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
 };
 
 const TopicDetailForm = (props) => {
-  const { initialValues, renderTextField, renderCheckbox, renderSelectField, renderDatePickerInline } = props;
+  const { initialValues, renderTextField, renderCheckbox, renderSelectField } = props;
   const { formatMessage } = props.intl;
   const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   return (
@@ -54,24 +55,24 @@ const TopicDetailForm = (props) => {
           <Field
             value={initialValues}
             name="start_date"
-            component={renderDatePickerInline}
+            component={renderTextField}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(localMessages.start_date)}
-            label={formatMessage(localMessages.start_date)}
-            hintText={formatMessage(localMessages.start_date)}
+            floatingLabelText={formatMessage(localMessages.startDate)}
+            label={formatMessage(localMessages.startDate)}
+            hintText={formatMessage(localMessages.startDate)}
           />
         </Col>
         <Col lg={5}>
           <Field
             value={initialValues}
             name="end_date"
-            component={renderDatePickerInline}
+            component={renderTextField}
             type="inline"
             fullWidth
-            floatingLabelText={formatMessage(localMessages.end_date)}
-            label={formatMessage(localMessages.end_date)}
-            hintText={formatMessage(localMessages.end_date)}
+            floatingLabelText={formatMessage(localMessages.endDate)}
+            label={formatMessage(localMessages.endDate)}
+            hintText={formatMessage(localMessages.endDate)}
           />
         </Col>
       </Row>
@@ -181,8 +182,11 @@ function validate(values) {
   if (emptyString(values.seedQuery)) {
     errors.seedQuery = localMessages.seedQueryError;
   }
-  if (emptyString(values.reason)) {
-    errors.reason = localMessages.reasonError;
+  if (invalidDate(values.start_date)) {
+    errors.start_date = localMessages.dateError;
+  }
+  if (invalidDate(values.end_date)) {
+    errors.end_date = localMessages.dateError;
   }
   return errors;
 }

@@ -14,3 +14,9 @@ export function validEmail(value) {
 export function nullOrUndefined(value) {
   return (value === null) || (value === undefined);
 }
+
+const topicDatePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/g;
+
+export function invalidDate(value) {
+  return topicDatePattern.test(value) !== true;
+}
