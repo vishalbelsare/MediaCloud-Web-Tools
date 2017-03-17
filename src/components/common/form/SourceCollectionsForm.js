@@ -13,7 +13,7 @@ const localMessages = {
 const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
   <div>
     <Row>
-      <Col sm={4}>
+      <Col sm={2}>
         <span className="label chip-label">{intro}</span>
       </Col>
       <Col lg={8}>
@@ -33,7 +33,7 @@ const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
       <Col lg={12}>&nbsp;</Col>
     </Row>
     <Row>
-      <Col lg={4}>
+      <Col lg={2}>
         <span className="label field-label"><FormattedMessage {...localMessages.add} /></span>
       </Col>
       <Col lg={8}>

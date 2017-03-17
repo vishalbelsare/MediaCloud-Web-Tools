@@ -36,14 +36,9 @@ const CreateTopicContainer = (props) => {
           <p><FormattedMessage {...localMessages.createTopicText} /></p>
         </Col>
       </Row>
-      <Row>
-        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-          <Col lg={12}>
-            <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
-          </Col>
-        </Permissioned>
-      </Row>
-
+      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
+      </Permissioned>
     </Grid>
   );
 };
