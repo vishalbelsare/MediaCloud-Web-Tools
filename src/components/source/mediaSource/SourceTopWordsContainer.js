@@ -1,13 +1,11 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import DataCard from '../../common/DataCard';
-import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -17,11 +15,6 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
-  downloadCsv = () => {
-    const { source } = this.props;
-    const url = `/api/sources/${source.media_id}/words/wordcount.csv`;
-    window.location = url;
-  }
   handleWordClick = (word) => {
     const { source } = this.props;
     const searchStr = `${word.stem}*`;
@@ -29,19 +22,19 @@ class SourceTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { words, helpButton } = this.props;
+    const { source, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
+    const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
     return (
-      <DataCard>
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-          {helpButton}
-        </h2>
-        <OrderedWordCloud words={words} onWordClick={this.handleWordClick} />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        downloadUrl={downloadUrl}
+        onViewModeClick={this.handleWordClick}
+        title={formatMessage(localMessages.title)}
+        domId={`"media-source-top-words-${source.media_id}`}
+        width={520}
+        helpButton={helpButton}
+      />
     );
   }
 }
