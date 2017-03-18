@@ -143,11 +143,12 @@ class EditableWordCloudDataCard extends React.Component {
         />
       );
     }
+    const exploreButton = explore ? (<ExploreButton linkTo={explore} />) : null;
     return (
       <DataCard className={className}>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ExploreButton linkTo={explore} />
+            {exploreButton}
             <ActionMenu actionItems={defaultMenuItems} />
           </div>
         </Permissioned>
