@@ -29,6 +29,7 @@ import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotGenerate from '../components/topic/snapshots/SnapshotGenerate';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
+import NytLabelCountsContainer from '../components/topic/nytlabels/NytLabelCountsContainer';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -60,6 +61,7 @@ const topicRoutes = (
         <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words/:word" component={WordContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/link-map" component={LinkMapContainer} onEnter={requireAuth} />
+        <Route path="/topics/:topicId/nyt-labels" component={NytLabelCountsContainer} onEnter={requireAuth} />
       </Route>
 
       <Route path="/topics/:topicId/snapshot" component={SnapshotBuilder} >

@@ -72,6 +72,7 @@ export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 export const CREATE_TOPIC = 'CREATE_TOPIC';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
+export const FETCH_TOPIC_NYT_LABEL_COUNTS = 'FETCH_TOPIC_NYT_LABEL_COUNTS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -223,3 +224,5 @@ export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 
 export const fetchFullTopicList = createAsyncAction(FETCH_FULL_TOPIC_LIST, api.fetchFullTopicList);
+
+export const fetchTopicNytLabelCounts = createAsyncAction(FETCH_TOPIC_NYT_LABEL_COUNTS, api.fetchTopicNytLabelTree);

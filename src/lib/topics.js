@@ -200,3 +200,8 @@ export function fetchCustomMap(topicId, params) {
 export function fetchFullTopicList() {
   return createApiPromise('/api/topics/fetchFullTopicList');
 }
+
+export function fetchTopicNytLabelTree(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId']);
+  return createApiPromise(`/api/topics/${topicId}/nyt-labels/counts`, acceptedParams);
+}
