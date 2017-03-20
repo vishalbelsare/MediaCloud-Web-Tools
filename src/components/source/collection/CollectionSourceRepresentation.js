@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-// import * as d3Chromatic from 'd3-scale-chromatic';
+// import * as d3 from 'd3';
 import * as d3Chromatic from 'd3-scale-chromatic';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -26,6 +26,7 @@ const localMessages = {
 };
 
 const BUBBLE_CHART_DOM_ID = 'source-representation-bubble-chart';
+const SENTENCE_PERCENTAGE_MIN_VALUE = 0.01; // 1 percent threshold
 
 class CollectionSourceRepresentation extends React.Component {
 
@@ -49,16 +50,23 @@ class CollectionSourceRepresentation extends React.Component {
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
+      const contributingSources = sources.filter(d => Math.ceil(d.sentence_pct * 100) / 100 > SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherSourcesNode = { id: contributingSources.length, name: 'Other', label: 'Other', value: 1, unit: '%', color: '#eee' };
+      // const scaleRange = d3.scaleLinear().domain([0, 1]).range(['#ffffff', '#0000ff']);
       const bubbleData = [
-        ...sources.map((s, idx) => ({
+        ...contributingSources.map((s, idx) => ({
           id: idx,
           name: s.name,
           label: s.name,
-          value: s.sentence_pct * 100,
+          value: Math.ceil(s.sentence_pct * 100),
           unit: '%',
           color: d3Chromatic.interpolateBlues(s.sentence_pct),
         })),
       ];
+
+      if (sources.length - contributingSources.length !== 0) {
+        bubbleData.push(otherSourcesNode);
+      }
 
       content = (
         <BubbleChart
