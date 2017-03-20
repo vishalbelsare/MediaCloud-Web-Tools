@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import * as d3 from 'd3';
+// import * as d3Chromatic from 'd3-scale-chromatic';
+import * as d3Chromatic from 'd3-scale-chromatic';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -10,7 +11,6 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
-
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
@@ -26,7 +26,6 @@ const localMessages = {
 };
 
 const BUBBLE_CHART_DOM_ID = 'source-representation-bubble-chart';
-const COLORS = d3.schemeCategory20;
 
 class CollectionSourceRepresentation extends React.Component {
 
@@ -55,8 +54,9 @@ class CollectionSourceRepresentation extends React.Component {
           id: idx,
           name: s.name,
           label: s.name,
-          value: s.sentence_pct,
-          color: COLORS[idx + 1],
+          value: s.sentence_pct * 100,
+          unit: '%',
+          color: d3Chromatic.interpolateBlues(s.sentence_pct),
         })),
       ];
 

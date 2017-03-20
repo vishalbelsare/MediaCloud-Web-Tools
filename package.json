@@ -15,6 +15,7 @@
     "crossfilter": "^1.3.12",
     "d3": "4.4.0",
     "d3-cloud": "1.2.1",
+    "d3-scale-chromatic": "^1.1.1",
     "dc": "^2.0.0-beta.33",
     "flexboxgrid": "6.3.1",
     "highcharts-exporting": "0.1.2",
