@@ -7,10 +7,10 @@ import { favoriteSource, favoriteCollection } from '../../actions/sourceActions'
 import { updateFeedback } from '../../actions/appActions';
 
 const localMessages = {
-  sourceFavorited: { id: 'source.favorited', defaultMessage: 'Favorited this source' },
-  sourceUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Unfavorited this source' },
-  collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Favorited this collection' },
-  collectionUnfavorited: { id: 'collection.unfavorited', defaultMessage: 'Unfavorited this collection' },
+  sourceFavorited: { id: 'source.favorited', defaultMessage: 'Star this source' },
+  sourceUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Unstar this source' },
+  collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Star this collection' },
+  collectionUnfavorited: { id: 'collection.unfavorited', defaultMessage: 'Unstar this collection' },
   collectionDynamic: { id: 'collection.unfavorited', defaultMessage: 'Dynamic (can change)' },
   collectionStatic: { id: 'collection.unfavorited', defaultMessage: 'Static (won\'t change)' },
 };

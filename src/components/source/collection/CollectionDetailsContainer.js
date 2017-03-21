@@ -19,7 +19,7 @@ const localMessages = {
   sourceTableIntro: { id: 'collection.details.sources.intro',
     defaultMessage: 'This collection includes {count, plural,\n =0 {no media sources} \n =1 {one media source} \n other {# media sources}\n}.',
   },
-  favoritedSourcesTitle: { id: 'source.details.sources.favorited.title', defaultMessage: 'Favorited Sources' },
+  favoritedSourcesTitle: { id: 'source.details.sources.favorited.title', defaultMessage: 'Starred Sources' },
   favoritedSourcesIntro: { id: 'source.details.sources.favorited.intro',
     defaultMessage: 'You have favorited {count, plural,\n =0 {no sources}\n =1 {one source}\n other {# sources}\n}.',
   },
@@ -27,8 +27,8 @@ const localMessages = {
   collectionIsNotStatic: { id: 'collection.details.isStatic', defaultMessage: 'This is a dynamic collection; sources can be added and removed from it' },
   collectionIsStatic: { id: 'collection.details.isNotStatic', defaultMessage: 'This is a static collection; the sources that are part of it will not change.' },
   collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =1 {shows}\n} up on media and {onStories, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
-  collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a favorite' },
-  collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Marked this as not a favorite' },
+  collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a starred collection' },
+  collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Remove this as a starred collection' },
 };
 
 class CollectionDetailsContainer extends React.Component {

@@ -10,9 +10,9 @@ import { ExploreButton } from '../../common/IconButton';
 const NUMBER_TO_SHOW = 8; // how many of each to show
 
 const localMessages = {
-  mainTitle: { id: 'homepage.favorites.mainTitle', defaultMessage: 'My Favorites' },
-  seeAll: { id: 'homepage.favorites.seeAll', defaultMessage: 'see all your favorites' },
-  noFavs: { id: 'homepage.favorites.none', defaultMessage: 'You don\'t have any favorites yet! When you favorite a source or collection it will show up here.' },
+  mainTitle: { id: 'homepage.favorites.mainTitle', defaultMessage: 'My Starred Items' },
+  seeAll: { id: 'homepage.favorites.seeAll', defaultMessage: 'see all your starred items' },
+  noFavs: { id: 'homepage.favorites.none', defaultMessage: 'You don\'t have any starred items yet! When you star a source or collection it will show up here.' },
 };
 
 const FavoriteSourcesAndCollectionsContainer = (props) => {
