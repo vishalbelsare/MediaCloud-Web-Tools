@@ -1,7 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-// import * as d3 from 'd3';
-import * as d3Chromatic from 'd3-scale-chromatic';
+import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -11,6 +10,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
@@ -52,7 +52,11 @@ class CollectionSourceRepresentation extends React.Component {
     } else {
       const contributingSources = sources.filter(d => Math.ceil(d.sentence_pct * 100) / 100 > SENTENCE_PERCENTAGE_MIN_VALUE);
       const otherSourcesNode = { id: contributingSources.length, name: 'Other', label: 'Other', value: 1, unit: '%', color: '#eee' };
-      // const scaleRange = d3.scaleLinear().domain([0, 1]).range(['#ffffff', '#0000ff']);
+      const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.sentence_pct)) * 100) / 100;
+      const scaleRange = d3.scaleLinear()
+        .domain([0, maxPct])
+        .range([d3.rgb('#ffffff'), d3.rgb(getBrandDarkColor())]);
+
       const bubbleData = [
         ...contributingSources.map((s, idx) => ({
           id: idx,
@@ -60,7 +64,7 @@ class CollectionSourceRepresentation extends React.Component {
           label: s.name,
           value: Math.ceil(s.sentence_pct * 100),
           unit: '%',
-          color: d3Chromatic.interpolateBlues(s.sentence_pct),
+          color: scaleRange(s.sentence_pct),
         })),
       ];
 
