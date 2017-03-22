@@ -11,22 +11,27 @@ const ContentPreview = (props) => {
   let content = null;
   if (items && items.length > 0) {
     content = (
-      items.map((c, idx) =>
-        <Col key={idx} lg={4} md={4} xs={4}>
-          <DataCard key={idx} className="browse-items" disabled={disabled ? disabled(c) : false}>
-            {icon}
-            <div className="content">
-              <div>
-                <h2><Link to={linkInfo(c)}>{linkDisplay(c)}</Link></h2>
-                <p>{c.description}</p>
+      items.map((c, idx) => {
+        const isDisabled = disabled ? disabled(c) : false;
+        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
+        const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
+        return (
+          <Col key={idx} lg={4} xs={12}>
+            <DataCard key={idx} className="browse-items" disabled={isDisabled}>
+              {icon}
+              <div className="content">
+                <div>
+                  <h2>{title}</h2>
+                  <p>{c.description}</p>
+                </div>
               </div>
-            </div>
-            <div className="actions">
-              <ExploreButton linkTo={linkInfo(c)} />
-            </div>
-          </DataCard>
-        </Col>
-      )
+              <div className="actions">
+                {exploreButton}
+              </div>
+            </DataCard>
+          </Col>
+        );
+      })
     );
   }
   return (
