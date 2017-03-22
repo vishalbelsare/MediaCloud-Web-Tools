@@ -19,7 +19,13 @@ const TopicForm = (props) => {
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
       <TopicDetailForm initialValues={initialValues} mode={mode} />
-      <SourceCollectionsForm title={title} intro={intro} form="topicForm" initialValues={initialValues} />
+      <SourceCollectionsForm
+        title={title}
+        intro={intro}
+        form="topicForm"
+        initialValues={initialValues}
+        allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+      />
       <Row>
         <Col lg={12}>
           <AppButton
