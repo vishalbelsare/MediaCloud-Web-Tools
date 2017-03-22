@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
@@ -13,6 +12,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import { filteredLinkTo } from '../../util/location';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
@@ -66,6 +66,7 @@ class EditTopicContainer extends React.Component {
               initialValues={initialValues}
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+              mode={TOPIC_FORM_MODE_EDIT}
             />
           </Permissioned>
         </Grid>

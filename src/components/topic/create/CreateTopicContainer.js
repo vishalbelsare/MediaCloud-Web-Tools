@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicForm from './TopicForm';
 import { updateFeedback } from '../../../actions/appActions';
 import { createTopic } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 
 const localMessages = {
   createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
@@ -37,7 +37,13 @@ const CreateTopicContainer = (props) => {
         </Col>
       </Row>
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
+        <TopicForm
+          onSaveTopic={handleSave}
+          initialValues={initialValues}
+          title={formatMessage(localMessages.addCollectionsTitle)}
+          intro={formatMessage(localMessages.addCollectionsIntro)}
+          mode={TOPIC_FORM_MODE_CREATE}
+        />
       </Permissioned>
     </Grid>
   );
