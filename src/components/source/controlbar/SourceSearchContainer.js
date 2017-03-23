@@ -69,6 +69,7 @@ class SourceSearchContainer extends React.Component {
       value: (
         <MenuItem
           onClick={() => this.handleClick(item)}
+          id={`searchResult${item.media_id || item.tags_id}`}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       ),
