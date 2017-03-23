@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
@@ -13,6 +12,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import { filteredLinkTo } from '../../util/location';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
@@ -21,7 +21,7 @@ const localMessages = {
   editTopicCollectionsTitle: { id: 'topic.edit.editTopicCollectionsTitle', defaultMessage: 'Edit Sources and Collections' },
   editTopicCollectionsIntro: { id: 'topic.edit.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
   feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
-  failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\t work!' },
+  failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
 };
 
 class EditTopicContainer extends React.Component {
@@ -66,6 +66,7 @@ class EditTopicContainer extends React.Component {
               initialValues={initialValues}
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+              mode={TOPIC_FORM_MODE_EDIT}
             />
           </Permissioned>
         </Grid>
@@ -124,6 +125,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       is_public: values.is_public,
       twitter_topics_id: values.twitter_topics_id,
     };
+    infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
       infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);

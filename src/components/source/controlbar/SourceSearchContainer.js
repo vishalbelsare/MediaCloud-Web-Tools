@@ -58,11 +58,11 @@ class SourceSearchContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     let results = [];
     const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
-    if (searchSources || searchSources === undefined) {
-      results = results.concat(sourceResults.slice(0, MAX_SOURCES_TO_SHOW));
-    }
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults.slice(0, MAX_COLLECTIONS_TO_SHOW));
+    }
+    if (searchSources || searchSources === undefined) {
+      results = results.concat(sourceResults.slice(0, MAX_SOURCES_TO_SHOW));
     }
     let resultsAsComponents = results.map(item => ({
       text: item.name,

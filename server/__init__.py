@@ -149,6 +149,7 @@ def index():
 # now load in the appropriate view endpoints (only on Prod)
 import server.views.user
 import server.views.stat
+import server.views.sources.search
 server_app = settings.get('server', 'app')
 if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.collection
@@ -156,7 +157,6 @@ if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
-    import server.views.sources.search
     import server.views.sources.metadata
 if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.media

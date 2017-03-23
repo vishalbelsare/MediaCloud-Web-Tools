@@ -10,10 +10,10 @@ const localMessages = {
   add: { id: 'source.add.collections.add', defaultMessage: 'You can search for Sources and Collections to add to this topic:' },
 };
 
-const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
+const renderCollectionSelector = ({ intro, allowRemoval, fields, meta: { error } }) => (
   <div>
     <Row>
-      <Col sm={4}>
+      <Col sm={2}>
         <span className="label chip-label">{intro}</span>
       </Col>
       <Col lg={8}>
@@ -21,9 +21,12 @@ const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
           <Field
             key={`c${index}`}
             name={name}
-            component={info => (
-              <SourceOrCollectionChip object={info.input.value} onDelete={() => fields.remove(index)} />
-            )}
+            component={(info) => {
+              const handleDelete = (allowRemoval || info.meta.dirty) ? () => fields.remove(index) : undefined;
+              return (
+                <SourceOrCollectionChip object={info.input.value} onDelete={handleDelete} />
+              );
+            }}
           />
         ))}
         {error && <div className="error">{error}</div>}
@@ -33,7 +36,7 @@ const renderCollectionSelector = ({ intro, fields, meta: { error } }) => (
       <Col lg={12}>&nbsp;</Col>
     </Row>
     <Row>
-      <Col lg={4}>
+      <Col lg={2}>
         <span className="label field-label"><FormattedMessage {...localMessages.add} /></span>
       </Col>
       <Col lg={8}>
@@ -51,10 +54,11 @@ renderCollectionSelector.propTypes = {
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
   intro: React.PropTypes.string.isRequired,
+  allowRemoval: React.PropTypes.bool,
 };
 
 const SourceCollectionsForm = (props) => {
-  const { title, intro, initialValues } = props;
+  const { title, intro, initialValues, allowRemoval } = props;
   return (
     <div className="form-section source-collection-form">
       <Row>
@@ -62,7 +66,13 @@ const SourceCollectionsForm = (props) => {
           <h2>{title}</h2>
         </Col>
       </Row>
-      <FieldArray name="sourcesAndCollections" intro={intro} component={renderCollectionSelector} initialValues={initialValues} />
+      <FieldArray
+        name="sourcesAndCollections"
+        intro={intro}
+        allowRemoval={allowRemoval}
+        component={renderCollectionSelector}
+        initialValues={initialValues}
+      />
     </div>
   );
 };
@@ -73,6 +83,7 @@ SourceCollectionsForm.propTypes = {
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
+  allowRemoval: React.PropTypes.bool,
 };
 
 export default

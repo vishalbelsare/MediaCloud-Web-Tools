@@ -94,6 +94,7 @@ function composeIntlForm(Component) {
           value={new Date(input.value)}
           onChange={(event, value) => input.onChange(value)}
           name={name}
+          autoOk
           {...intlCustom}
           container={type}
           mode="landscape"

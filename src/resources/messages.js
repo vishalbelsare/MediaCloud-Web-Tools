@@ -50,9 +50,9 @@ const messages = {
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
   sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
 
-  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Favorite Collections' },
-  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Favorite Sources' },
-  exploreFavorites: { id: 'favorited.explore', defaultMessage: 'View Favorites' },
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Starred Collections' },
+  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Starred Sources' },
+  exploreFavorites: { id: 'favorited.explore', defaultMessage: 'View Starred Sources And Collections' },
 
   feedName: { id: 'feed.name', defaultMessage: 'Name' },
   feedUrl: { id: 'feed.url', defaultMessage: 'URL' },
@@ -131,8 +131,8 @@ const messages = {
   download: { id: 'download', defaultMessage: 'Download' },
   downloadSVG: { id: 'downloadsvg', defaultMessage: 'Download a SVG' },
   downloadCSV: { id: 'downloadcsv', defaultMessage: 'Download a CSV' },
-  favorite: { id: 'favorite', defaultMessage: 'Favorite' },
-  unfavorite: { id: 'unfavorite', defaultMessage: 'Unfavorite' },
+  favorite: { id: 'favorite', defaultMessage: 'Star' },
+  unfavorite: { id: 'unfavorite', defaultMessage: 'Unstar' },
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },
@@ -141,8 +141,8 @@ const messages = {
   filter: { id: 'filter', defaultMessage: 'Filter' },
   upload: { id: 'filter', defaultMessage: 'Upload' },
 
-  topicFavorited: { id: 'topics.favorited', defaultMessage: 'Added it as a favorite.' },
-  topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Removed it from your favorites.' },
+  topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
+  topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },
 
   focusPick: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
   removeFocus: { id: 'focus.pick', defaultMessage: 'Don\'t use any Subtopic' },

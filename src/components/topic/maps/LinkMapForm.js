@@ -1,11 +1,13 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Sigma, RelativeSize, LoadGEXF, ForceAtlas2, RandomizeNodePositions } from 'react-sigma';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
+import { generateParamStr } from '../../../lib/apiUtil';
 
 export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
@@ -23,12 +25,38 @@ const localMessages = {
   errorNameYourFocus: { id: 'linkmap.error.noName', defaultMessage: 'You need to name your Focus.' },
 };
 
+const formSelector = formValueSelector('linkMap');
+
 const LinkMapForm = (props) => {
-  const { renderTextField, renderSelectField, renderCheckbox, buttonLabel, initialValues, submitting, handleSubmit, onFetch } = props;
+  const { renderTextField, renderSelectField, renderCheckbox, topicId, showMap, filters, fieldParams, downloadLabel, viewLabel, initialValues, submitting, handleSubmit, onGetMapData, onViewMapData } = props;
   const { formatMessage } = props.intl;
+
+  let sigmaElement = null;
+
+  if (showMap) {
+    const params = generateParamStr({ ...filters });
+    const fParams = generateParamStr({ ...fieldParams });
+    const url = `/api/topics/${topicId}/map-files/fetchCustomMap?${params}&${fParams}`;
+    sigmaElement = (
+      <div className="link-map-sigma">
+        <Sigma
+          renderer="webgl"
+          style={{ width: '1200px', height: '600px' }}
+          settings={{ drawEdges: true, nodeColor: '#222222', defaultNodeColor: '#000', defaultLabelColor: '#222', defaultEdgeColor: '#eeeeee', edgeColor: '#eeeeee', scalingMode: 'outside' }}
+        >
+          <LoadGEXF path={url}>
+            <RandomizeNodePositions>
+              <ForceAtlas2 scalingRatio={5000} barnesHutOptimize barnesHutTheta={0.6} iterationsPerRender={3} />
+              <RelativeSize initialSize={8} />
+            </RandomizeNodePositions>
+          </LoadGEXF>
+        </Sigma>
+      </div>
+    );
+  }
   // if they pick "make a new focal set" then let them enter name and description
   return (
-    <form className="app-form link-map-form" name="linkMapForm" onSubmit={handleSubmit(onFetch.bind(this))}>
+    <form className="app-form link-map-form" name="linkMapForm" onSubmit={handleSubmit(onGetMapData.bind(this))}>
       <Row>
         <Col lg={3} xs={12}>
           <Field
@@ -54,8 +82,6 @@ const LinkMapForm = (props) => {
             />
           </Field>
         </Col>
-      </Row>
-      <Row>
         <Col lg={3} xs={12}>
           <Field
             values={initialValues.media}
@@ -64,18 +90,15 @@ const LinkMapForm = (props) => {
             floatingLabelText={formatMessage(localMessages.media)}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col lg={3} xs={12}>
+        <Col lg={3} xs={12} className="checkbox-top-align">
           <Field
+            style={{ marginTop: 30 }}
             name="include_weights"
             initialValues={initialValues.include_weights}
             component={renderCheckbox}
             label={formatMessage(localMessages.weightEdges)}
           />
         </Col>
-      </Row>
-      <Row>
         <Col lg={3} xs={12}>
           <Field
             name="num_links_per_medium"
@@ -83,17 +106,34 @@ const LinkMapForm = (props) => {
             floatingLabelText={formatMessage(localMessages.outlinks)}
           />
         </Col>
-
       </Row>
       <Row>
-        <Col lg={12}>
+        <Col lg={6} xs={12} />
+        <Col lg={3} xs={12}>
           <AppButton
+            name="primary"
             style={{ marginTop: 30 }}
             type="submit"
-            label={buttonLabel}
+            label={downloadLabel}
             disabled={submitting}
             primary
           />
+        </Col>
+        <Col lg={3} xs={12}>
+          <AppButton
+            name="secondary"
+            style={{ marginTop: 30 }}
+            type="button"
+            label={viewLabel}
+            disabled={submitting}
+            onTouchTap={onViewMapData}
+            primary
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          {sigmaElement}
         </Col>
       </Row>
     </form>
@@ -104,19 +144,25 @@ LinkMapForm.propTypes = {
   // from parent
   topicId: React.PropTypes.number,
   initialValues: React.PropTypes.object.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderCheckbox: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   handleSubmit: React.PropTypes.func,
-  onFetch: React.PropTypes.func.isRequired,
+  onGetMapData: React.PropTypes.func.isRequired,
+  onViewMapData: React.PropTypes.func.isRequired,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
-  buttonLabel: React.PropTypes.string,
+  downloadLabel: React.PropTypes.string,
+  viewLabel: React.PropTypes.string,
+  showMap: React.PropTypes.bool.isRequired,
+  fieldParams: React.PropTypes.object,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  fieldParams: formSelector(state, 'color_field', 'num_media', 'include_weights', 'num_links_per_medium', 'viewMap'),
 });
 
 function validate() {
@@ -125,7 +171,7 @@ function validate() {
 }
 
 const reduxFormConfig = {
-  form: 'linkMapForm', // make sure this matches the sub-components and other wizard steps
+  form: 'linkMap', // make sure this matches the sub-components and other wizard steps
   validate,
 };
 

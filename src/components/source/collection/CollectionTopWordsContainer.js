@@ -1,13 +1,11 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import { fetchCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import DataCard from '../../common/DataCard';
-import messages from '../../../resources/messages';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -17,11 +15,6 @@ const localMessages = {
 };
 
 class CollectionTopWordsContainer extends React.Component {
-  downloadCsv = () => {
-    const { collectionId } = this.props;
-    const url = `/api/collections/${collectionId}/words/wordcount.csv`;
-    window.location = url;
-  }
   handleWordClick = (word) => {
     const { collectionId } = this.props;
     const searchStr = `${word.stem}*`;
@@ -29,19 +22,19 @@ class CollectionTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { words, helpButton } = this.props;
+    const { collectionId, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
+    const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
     return (
-      <DataCard>
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-          {helpButton}
-        </h2>
-        <OrderedWordCloud words={words} onWordClick={this.handleWordClick} />
-      </DataCard>
+      <EditableWordCloudDataCard
+        words={words}
+        downloadUrl={downloadUrl}
+        onViewModeClick={this.handleWordClick}
+        title={formatMessage(localMessages.title)}
+        domId={`"collection-top-words-${collectionId}`}
+        width={520}
+        helpButton={helpButton}
+      />
     );
   }
 }

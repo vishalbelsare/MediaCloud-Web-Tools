@@ -7,8 +7,8 @@ import { fetchFavoriteTopics } from '../../../actions/topicActions';
 import TopicList from './TopicList';
 
 const localMessages = {
-  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'My Favorite Topics' },
-  noFavorites: { id: 'topics.favorite.none', defaultMessage: 'You don\'t have any favorite Topics yet. Click the star icon next to one on the list below to add it to your list of starred Topics.' },
+  favTopicsTitle: { id: 'topics.favorite.title', defaultMessage: 'My Starred Topics' },
+  noFavorites: { id: 'topics.favorite.none', defaultMessage: 'You don\'t have any starred Topics yet. Click the star icon next to one on the list below to add it to your list of starred Topics.' },
 };
 
 const FavoriteTopicsContainer = (props) => {

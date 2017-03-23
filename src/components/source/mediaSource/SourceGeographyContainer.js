@@ -8,6 +8,7 @@ import { fetchSourceGeo } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
+import { getBrandLightColor } from '../../../styles/colors';
 
 const localMessages = {
   title: { id: 'source.summary.map.title', defaultMessage: 'Geographic Attention' },
@@ -42,7 +43,7 @@ class SourceGeographyContainer extends React.Component {
           {helpButton}
         </h2>
         <p>{intro}</p>
-        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} />
+        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} countryMaxColorScale={getBrandLightColor()} />
       </DataCard>
     );
   }
