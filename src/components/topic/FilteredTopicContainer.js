@@ -7,7 +7,7 @@ import { WarningNotice } from '../common/Notice';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
-  warning: { id: 'topic.filter.warning', defaultMessage: 'Please wait for the snapshot generation process to complete.' },
+  warning: { id: 'topic.filter.warning', defaultMessage: 'No snapshots are available to use yet.  Please wait a little longer for a valid snapshot of all the content to be generated.' },
 };
 
 class FilteredTopicContainer extends React.Component {

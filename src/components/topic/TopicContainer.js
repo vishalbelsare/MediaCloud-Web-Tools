@@ -1,34 +1,41 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
-import { LEVEL_WARNING } from '../common/Notice';
+import { LEVEL_WARNING, LEVEL_ERROR, ErrorNotice } from '../common/Notice';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
+  hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!  See the notes at the top if this page for more technical details.' },
 };
 
 class TopicContainer extends React.Component {
   componentWillMount() {
-    const { needsNewSnapshot, addAppNotice } = this.props;
+    const { needsNewSnapshot, addAppNotice, topicInfo } = this.props;
     const { formatMessage } = this.props.intl;
     // warn user if they made changes that require a new snapshot
     if (needsNewSnapshot) {
       addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
     }
+    if (topicInfo.state === 'error') {
+      addAppNotice({ level: LEVEL_ERROR, message: topicInfo.message });
+    }
   }
   componentWillReceiveProps(nextProps) {
-    const { topicId, selectNewTopic, needsNewSnapshot, addAppNotice } = this.props;
+    const { topicId, topicInfo, selectNewTopic, needsNewSnapshot, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     if ((nextProps.topicId !== topicId)) {
       selectNewTopic(topicId);
       // warn user if they made changes that require a new snapshot
       if (needsNewSnapshot) {
         addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
+      }
+      if (topicInfo.state === 'error') {
+        addAppNotice({ level: LEVEL_ERROR, message: topicInfo.message });
       }
     }
   }
@@ -43,10 +50,20 @@ class TopicContainer extends React.Component {
   render() {
     const { children, topicInfo } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
+    // show a big error if there is one to show
+    let errorNotice = null;
+    if (topicInfo.state === 'error') {
+      errorNotice = (
+        <ErrorNotice>
+          <FormattedMessage {...localMessages.hasAnError} />
+        </ErrorNotice>
+      );
+    }
     return (
       <div className="topic-container">
         <div>
           <Title render={titleHandler} />
+          {errorNotice}
           {children}
         </div>
       </div>
