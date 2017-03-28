@@ -32,6 +32,15 @@ class TopicSummaryContainer extends React.Component {
     if (!user.isLoggedIn) {
       intro = (<p><FormattedMessage {...localMessages.previewIntro} values={{ name: topicInfo.name }} /></p>);
     }
+    // only show filtered story counts if you have a filter in place
+    let filteredStoryCountContent = null;
+    if ((timespan && (timespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
+      filteredStoryCountContent = (
+        <Col lg={12}>
+          <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+        </Col>
+      );
+    }
     if (!user.isLoggedIn || this.filtersAreSet()) {
       content = (
         <Grid>
@@ -57,9 +66,7 @@ class TopicSummaryContainer extends React.Component {
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-              <Col lg={12}>
-                <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
-              </Col>
+              {filteredStoryCountContent}
               <Col lg={12}>
                 <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>
