@@ -13,10 +13,8 @@ class FaqItem extends React.Component {
 
   toggleVisible = (evt) => {
     evt.preventDefault();
-    console.log(this.state.showAnswer);
     const visible = !this.state.showAnswer;
     this.setState({ showAnswer: visible });
-    console.log(this.state.showAnswer);
   }
 
   render() {
