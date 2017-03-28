@@ -29,7 +29,7 @@ const localMessages = {
 };
 
 const TopicDetailForm = (props) => {
-  const { initialValues, renderTextField, renderCheckbox, renderSelectField, mode } = props;
+  const { renderTextField, renderCheckbox, renderSelectField, mode } = props;
   const { formatMessage } = props.intl;
   const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   let queryWarning = null;
@@ -64,7 +64,6 @@ const TopicDetailForm = (props) => {
       <Row>
         <Col lg={5}>
           <Field
-            value={initialValues}
             name="start_date"
             component={renderTextField}
             type="inline"
@@ -76,7 +75,6 @@ const TopicDetailForm = (props) => {
         </Col>
         <Col lg={5}>
           <Field
-            value={initialValues}
             name="end_date"
             component={renderTextField}
             type="inline"
@@ -183,8 +181,8 @@ function validate(values) {
   if (emptyString(values.description)) {
     errors.description = localMessages.descriptionError;
   }
-  if (emptyString(values.seedQuery)) {
-    errors.seedQuery = localMessages.seedQueryError;
+  if (emptyString(values.solr_seed_query)) {
+    errors.solr_seed_query = localMessages.seedQueryError;
   }
   if (invalidDate(values.start_date)) {
     errors.start_date = localMessages.dateError;

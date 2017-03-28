@@ -3,7 +3,6 @@ import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -110,15 +109,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
   handleSave: (values) => {
-    let startDate = new Date(values.start_date);
-    startDate = moment(startDate).format('YYYY-MM-DD');
-    let endDate = new Date(values.end_date);
-    endDate = moment(endDate).format('YYYY-MM-DD');
     const infoToSave = {
       name: values.name,
       description: values.description,
-      start_date: startDate,
-      end_date: endDate,
+      start_date: values.start_date,
+      end_date: values.end_date,
       solr_seed_query: values.solr_seed_query,
       max_iterations: values.max_iterations,
       ch_monitor_id: values.ch_monitor_id,
