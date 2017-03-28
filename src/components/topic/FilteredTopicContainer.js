@@ -25,12 +25,12 @@ class FilteredTopicContainer extends React.Component {
   }
   render() {
     const { children, location, topicId, fetchStatus } = this.props;
-    let subContent = <div />;
-
+    let subContent = null;
+    const snapshotsReady = this.snapshotsAreCompletedAndSearchable();
     // If the generation process is still ongoing, ask the user to wait a few minutes
-    if (this.filtersAreSet() || this.snapshotsAreCompletedAndSearchable()) {
+    if (this.filtersAreSet() || snapshotsReady) {
       subContent = children;
-    } else if (!this.snapshotsAreCompletedAndSearchable() && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+    } else if (!snapshotsReady && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
       subContent = (
         <WarningNotice>
           <FormattedMessage {...localMessages.warning} />
