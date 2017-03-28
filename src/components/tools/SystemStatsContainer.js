@@ -13,8 +13,8 @@ const SystemStatsContainer = (props) => {
           total_sentences,
           active_crawled_media,
           // active_crawled_feeds,
-          // daily_stories,
-          // daily_downloads
+          daily_stories,
+          // daily_downloads,
   } = props.stats;
 
   function abbreviateNumber(number, numSigFigs) {
@@ -42,13 +42,14 @@ const SystemStatsContainer = (props) => {
   return (
     <div className="system-stats">
       <StatBar
+        columnWidth={3}
         stats={[
           { message: messages.totalStoriesStat, data: abbreviateNumber(total_stories, 3) },
           // { message: messages.totalDownloadsStat, data: abbreviateNumber(total_downloads, 3) },
           { message: messages.totalSentencesStat, data: abbreviateNumber(total_sentences, 3) },
           { message: messages.crawledMediaStat, data: abbreviateNumber(active_crawled_media, 2) },
           // { message: messages.crawledFeedsStat, data: abbreviateNumber(active_crawled_feeds, 3) },
-          // { message: messages.dailyStoriesStat, data: abbreviateNumber(daily_stories, 3) },
+          { message: messages.dailyStoriesStat, data: abbreviateNumber(daily_stories, 3) },
           // { message: messages.dailyDownloadsStat, data: abbreviateNumber(daily_downloads, 3) },
         ]}
       />
@@ -64,8 +65,8 @@ SystemStatsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.sources.systemStats.fetchStatus,
-  stats: state.sources.systemStats.stats,
+  fetchStatus: state.system.stats.fetchStatus,
+  stats: state.system.stats.stats,
 });
 
 const mapDispatchToProps = dispatch => ({

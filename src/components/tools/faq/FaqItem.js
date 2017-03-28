@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
   answer: { id: 'faq.answer', defaultMessage: 'show answer' },
@@ -20,7 +20,7 @@ class FaqItem extends React.Component {
   render() {
     const { question, answer } = this.props;
     const { formatMessage } = this.props.intl;
-    const answerContent = this.state.showAnswer ? <p className="answer"><FormattedMessage {...answer} /></p> : null;
+    const answerContent = this.state.showAnswer ? <p className="answer"><FormattedHTMLMessage {...answer} /></p> : null;
     return (
       <div className="faq-item">
         <h4 className="question">

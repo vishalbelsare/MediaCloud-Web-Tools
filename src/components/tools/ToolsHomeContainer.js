@@ -7,6 +7,7 @@ import messages from '../../resources/messages';
 import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppToolbar';
 import ToolDescription from './ToolDescription';
 import Faq from './faq/Faq';
+import SystemStatsContainer from './SystemStatsContainer';
 
 const localMessages = {
   title: { id: 'tools.home.title', defaultMessage: 'Welcome to Media Cloud' },
@@ -55,6 +56,7 @@ const ToolsHomeContainer = (props) => {
             />
           </Col>
         </Row>
+        <SystemStatsContainer />
         <Faq />
       </Grid>
     </div>
