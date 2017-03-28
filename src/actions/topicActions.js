@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
-import * as api from '../lib/topics';
+import * as api from '../lib/serverApi/topics';
 
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
 export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';

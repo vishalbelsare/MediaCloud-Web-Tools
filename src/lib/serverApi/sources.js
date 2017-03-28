@@ -1,4 +1,4 @@
-import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from '../apiUtil';
 
 // possible return statuses from a call to createSource
 export const CREATE_SOURCE_STATUS_NEW = 'new';

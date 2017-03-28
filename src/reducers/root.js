@@ -5,14 +5,14 @@ import app from './app';
 import user from './user';
 import topics from './topics/topics';
 import sources from './sources/sources';
-import metadata from './metadata/metadata';
+import system from './system/system';
 
 const rootReducer = combineReducers({
   app,
   user,
   topics,
   sources,
-  metadata,
+  system,
   form,
   routing,
 });

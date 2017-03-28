@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import publicationCountry from './publicationCountry';
 
-const rootReducer = combineReducers({
+const metadata = combineReducers({
   publicationCountry,
 });
 
-export default rootReducer;
+export default metadata;
