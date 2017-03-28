@@ -10,7 +10,7 @@ import Faq from './faq/Faq';
 
 const localMessages = {
   title: { id: 'tools.home.title', defaultMessage: 'Welcome to Media Cloud' },
-  intro: { id: 'tools.home.intro', defaultMessage: 'Use our tools to track and visualize online news.' },
+  intro: { id: 'tools.home.intro', defaultMessage: 'Understanding attention and influence within media ecosystems.' },
 };
 
 const ToolsHomeContainer = (props) => {
