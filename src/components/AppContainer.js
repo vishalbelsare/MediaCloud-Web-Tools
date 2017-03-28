@@ -15,7 +15,7 @@ import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
 
 const localMessages = {
-  supportEmail: { id: 'app.supportEmail', defaultMessage: 'Problems? email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>' },
+  supportOptions: { id: 'app.supportOptions', defaultMessage: 'Need help? Join our <a href="https://groups.io/g/mediacloud">discussion group</a><br />or email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
   maintenance: { id: 'app.maintenance', defaultMessage: 'Sorry, we have taken our system down right now for maintenance' },
 };
 
@@ -69,7 +69,7 @@ const AppContainer = (props) => {
             <FormattedMessage {...messages.berkmanName} />
           </a>.
           <br />
-          <FormattedHTMLMessage {...localMessages.supportEmail} />
+          <FormattedHTMLMessage {...localMessages.supportOptions} />
           <br />
           v{getVersion()}
         </small>
