@@ -3,18 +3,20 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../common/IntlForm';
-import { emptyString } from '../../../../lib/formValidators';
+import { emptyString, invalidUrl } from '../../../../lib/formValidators';
 
 const localMessages = {
   nameLabel: { id: 'source.suggest.name.label', defaultMessage: 'Name' },
   urlLabel: { id: 'source.suggest.url.label', defaultMessage: 'Homepage (required)' },
   feedUrlLabel: { id: 'source.suggest.feedurl.label', defaultMessage: 'RSS feed URL' },
   feedUrlHint: { id: 'source.suggest.feedurl.hint', defaultMessage: 'if you know the url of an RSS feed, enter it here' },
+  invalidFeedUrl: { id: 'source.suggest.feedurl.invalid', defaultMessage: 'That isn\'t a valid URL. Please enter just one full url here.' },
   reasonLabel: { id: 'source.suggest.reasons.label', defaultMessage: 'Reasons' },
   reasonHint: { id: 'source.suggest.reasons.hint', defaultMessage: 'why do you want us to add this source' },
   addLabel: { id: 'source.suggest.collection.label', defaultMessage: 'Add to these Collection' },
   nameError: { id: 'source.suggest.name.error', defaultMessage: 'You have to enter a name for this source.' },
   urlError: { id: 'source.suggest.url.error', defaultMessage: 'Pick have to enter a url for this source.' },
+  invalidUrl: { id: 'source.suggest.url.invalid', defaultMessage: 'That isn\'t a valid URL. Please enter just one full url here.' },
 };
 
 const SourceSuggestionForm = (props) => {
@@ -92,7 +94,10 @@ SourceSuggestionForm.propTypes = {
 function validate(values) {
   const errors = {};
   if (emptyString(values.url)) {
-    errors.email = localMessages.missingUrl;
+    errors.url = localMessages.missingUrl;
+  }
+  if (invalidUrl(values.url)) {
+    errors.url = localMessages.invalidUrl;
   }
   return errors;
 }
