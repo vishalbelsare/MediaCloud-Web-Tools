@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
+import Link from 'react-router/lib/Link';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
@@ -86,7 +87,14 @@ class EditableWordCloudDataCard extends React.Component {
         editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.edited} /></WarningNotice>);
       }
     }
-
+    let titleContent = title;
+    if (explore) {
+      titleContent = (
+        <Link to={explore}>
+          {title}
+        </Link>
+      );
+    }
     // set up rendered cloud as appropriate
     let cloudContent;
     if (this.state.ordered) {
@@ -161,7 +169,7 @@ class EditableWordCloudDataCard extends React.Component {
           </div>
         </Permissioned>
         <h2>
-          {title}
+          {titleContent}
           {helpButton}
         </h2>
         {editingWarning}
