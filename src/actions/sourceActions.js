@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
-import * as api from '../lib/sources';
+import * as api from '../lib/serverApi/sources';
 
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';

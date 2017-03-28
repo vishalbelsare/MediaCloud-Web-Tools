@@ -1,4 +1,4 @@
-import { createApiPromise, createPostingApiPromise, acceptParams } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams } from '../apiUtil';
 
 export function topicsList(linkId) {
   return createApiPromise('/api/topics/list', linkId ? { linkId } : undefined);
