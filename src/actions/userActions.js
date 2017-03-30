@@ -9,6 +9,7 @@ export const SET_LOGIN_ERROR_MESSAGE = 'SET_LOGIN_ERROR_MESSAGE';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
 export const SIGNUP = 'SIGNUP';
+export const RESEND_ACTIVATION_EMAIL = 'RESEND_ACTIVATION_EMAIL';
 
 // pass in email and key
 export const loginWithKey = createAsyncAction(LOGIN_WITH_KEY, api.promiseToLoginWithKey);
@@ -25,3 +26,5 @@ export const changePassword = createAsyncAction(CHANGE_PASSWORD, api.changePassw
 export const recoverPassword = createAsyncAction(RECOVER_PASSWORD, api.recoverPassword);
 
 export const signupUser = createAsyncAction(SIGNUP, api.signupUser);
+
+export const resendActivation = createAsyncAction(RESEND_ACTIVATION_EMAIL, api.resendActionationEmail);

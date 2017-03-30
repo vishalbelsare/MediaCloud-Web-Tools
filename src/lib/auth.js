@@ -38,8 +38,12 @@ export function recoverPassword(email) {
 }
 
 export function signupUser(params) {
-  const acceptedParams = acceptParams(params, ['email', 'password', 'full_name', 'notes']);
+  const acceptedParams = acceptParams(params, ['email', 'password', 'fullName', 'notes', 'subscribeToNewsletter']);
   return createPostingApiPromise('/api/user/signup', acceptedParams);
+}
+
+export function resendActionationEmail(email) {
+  return createPostingApiPromise('/api/user/activation/resend', email);
 }
 
 export function saveCookies(email, key) {

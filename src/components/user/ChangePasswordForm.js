@@ -4,18 +4,20 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { changePassword, setLoginErrorMessage } from '../../actions/userActions';
+import { changePassword } from '../../actions/userActions';
 import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
 import { emptyString } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
+import { addNotice } from '../../actions/appActions';
+import { LEVEL_ERROR } from '../common/Notice';
 
 const localMessages = {
   missingOldPassword: { id: 'user.missingOldPassword', defaultMessage: 'You need to enter your old password.' },
   missingNewPassword: { id: 'user.missingNewPassword', defaultMessage: 'You need to enter a new password.' },
   passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
+  failed: { id: 'user.passwordChange.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
 
 class ChangePasswordForm extends React.Component {
@@ -31,15 +33,16 @@ class ChangePasswordForm extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <Grid>
-        <form onSubmit={handleSubmit(onSubmitChangePassword.bind(this))} className="change-password-form">
+        <form onSubmit={handleSubmit(onSubmitChangePassword.bind(this))} className="app-form change-password-form">
           <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h2><FormattedMessage {...messages.userChangePassword} /></h2>
+            <Col lg={12}>
+              <h1><FormattedMessage {...messages.userChangePassword} /></h1>
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col lg={5}>
               <Field
+                fullWidth
                 name="old_password"
                 type="password"
                 component={renderTextField}
@@ -48,8 +51,9 @@ class ChangePasswordForm extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col lg={5}>
               <Field
+                fullWidth
                 errors={errorMessage}
                 name="new_password"
                 type="password"
@@ -59,8 +63,9 @@ class ChangePasswordForm extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col lg={5}>
               <Field
+                fullWidth
                 errors={errorMessage}
                 name="confirm_password"
                 type="password"
@@ -70,16 +75,12 @@ class ChangePasswordForm extends React.Component {
             </Col>
           </Row>
           <Row>
-            <ReCAPTCHA sitekey="6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG" onChange={() => { this.allowChangePassword(); }} />
-          </Row>
-          <Row>
             <Col lg={12}>
-              <br />
               <AppButton
                 type="submit"
                 label={formatMessage(messages.userChangePassword)}
                 primary
-                disabled={!this.state.allowChangePassword || (pristine || submitting || errorMessage === '')}
+                disabled={pristine || submitting}
               />
             </Col>
           </Row>
@@ -110,15 +111,16 @@ const mapStateToProps = state => ({
   errorMessage: state.user.errorMessage,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   onSubmitChangePassword: (values) => {
     dispatch(changePassword(values))
     .then((response) => {
-      if (response.status === 401) {
-        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(localMessages.loginFailed)));
+      if (response.status !== 200) {
+        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
+      } else if (response.success === 1) {
+        dispatch(addNotice({ message: response.error, level: LEVEL_ERROR }));
       } else {
-        // redirect to destination if there is one
-        dispatch(push('/change-password-success'));
+        dispatch(push('/user/change-password-success'));
       }
     });
   },

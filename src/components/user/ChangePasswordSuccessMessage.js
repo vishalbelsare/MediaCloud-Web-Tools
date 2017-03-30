@@ -1,20 +1,24 @@
 import React from 'react';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
-  email: { id: 'success.email', defaultMessage: 'We have emailed you a link to reset your password' },
-  emailCheck: { id: 'success.emailInfo', defaultMessage: 'We just emailed you a link to reset your password.  Click the link in your email.' },
-  sendAgain: { id: 'error.sendAgain', defaultMessage: 'Click here to send the email again' },
+  title: { id: 'success.email', defaultMessage: 'Password Changed' },
+  intro: { id: 'success.emailInfo', defaultMessage: 'We changed your password. We emailed you just to confirm that you did this on purpose - don\'t be suprised.' },
 };
 
 const ChangePasswordSuccessMessage = () => (
-  <div className="user-login">
-    <h1><FormattedMessage {...localMessages.email} /></h1>
-    <p><FormattedMessage {...localMessages.emailCheck} /></p>
-    <p><a href="/#/recover"><FormattedMessage {...localMessages.sendAgain} /></a></p>
+  <div className="change-password-success">
+    <Grid>
+      <Row>
+        <Col log={12}>
+          <h1><FormattedMessage {...localMessages.title} /></h1>
+          <p><FormattedMessage {...localMessages.intro} /></p>
+        </Col>
+      </Row>
+    </Grid>
   </div>
 );
-
 
 ChangePasswordSuccessMessage.propTypes = {
   intl: React.PropTypes.object.isRequired,

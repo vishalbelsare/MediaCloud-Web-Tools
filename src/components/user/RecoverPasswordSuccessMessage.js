@@ -1,4 +1,5 @@
 import React from 'react';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
@@ -8,10 +9,15 @@ const localMessages = {
 };
 
 const RecoverPasswordSuccessMessage = () => (
-  <div className="user-login">
-    <h1><FormattedMessage {...localMessages.click} /></h1>
-    <p><FormattedMessage {...localMessages.emailCheck} /></p>
-    <p><a href="/#/recover"><FormattedMessage {...localMessages.sendAgain} /></a></p>
+  <div className="reset-password-confirm">
+    <Grid>
+      <Row>
+        <Col lg={12}>
+          <h1><FormattedMessage {...localMessages.click} /></h1>
+          <p><FormattedMessage {...localMessages.emailCheck} /></p>
+        </Col>
+      </Row>
+    </Grid>
   </div>
 );
 

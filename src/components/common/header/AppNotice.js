@@ -16,17 +16,22 @@ class AppNotice extends React.Component {
 
   render() {
     const { message, level, details } = this.props.info;
-    const isLowLevelError = (message.includes('.pm')) || (message.includes('.py'));  // ie. does it include a stack trace
-    let messageContent = message;
+    const { formatMessage } = this.props.intl;
+    let stringMessage = message;
+    if (typeof message === 'object') {
+      stringMessage = formatMessage(message);
+    }
+    const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
+    let messageContent = stringMessage;
     let detailsContent = details;
     if ((details === undefined) || (details === null)) {
       if (isLowLevelError) {
-        if (message.includes('Invalid API key or authentication cookie')) {
+        if (stringMessage.includes('Invalid API key or authentication cookie')) {
           messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
         } else {
           messageContent = <FormattedMessage {...localMessages.internalError} />;
         }
-        detailsContent = message;
+        detailsContent = stringMessage;
       }
     }
     let content = null;

@@ -3,12 +3,13 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
 import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
-import { emptyString } from '../../lib/formValidators';
+import { emptyString, invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 
 const localMessages = {
@@ -23,7 +24,7 @@ const LoginFormComponent = (props) => {
   const { handleSubmit, onSubmitLoginForm, fetchStatus, renderTextField } = props;
   const { formatMessage } = props.intl;
   return (
-    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
+    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="app-form login-form">
       <Row>
         <Col lg={12}>
           <Field
@@ -57,21 +58,20 @@ const LoginFormComponent = (props) => {
       <Row>
         <Col lg={12}>
           <br />
-          <a href="/#/signup">
+          <Link to="/user/signup">
             <AppButton
               flat
               label={formatMessage(localMessages.signUpNow)}
             />
-          </a>
+          </Link>
         </Col>
         <Col lg={12}>
-          <br />
-          <a href="/#/recover">
+          <Link to="/user/recover-password">
             <AppButton
               flat
               label={formatMessage(localMessages.forgotPassword)}
             />
-          </a>
+          </Link>
         </Col>
       </Row>
     </form>
@@ -123,7 +123,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 // in-browser validation callback
 function validate(values) {
   const errors = {};
-  if (emptyString(values.email)) {
+  if (invalidEmail(values.email)) {
     errors.email = localMessages.missingEmail;
   }
   if (emptyString(values.password)) {

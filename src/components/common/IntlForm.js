@@ -35,6 +35,7 @@ function composeIntlForm(Component) {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
+          className="form-field-text"
           name={name}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
@@ -45,6 +46,7 @@ function composeIntlForm(Component) {
 
     renderCheckbox = ({ input, name, label, disabled }) => (
       <Checkbox
+        className="form-field-checkbox"
         name={name}
         label={this.intlIfObject(label)}
         checked={input.value === true || input.value === 1}
@@ -57,6 +59,7 @@ function composeIntlForm(Component) {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <SelectField
+          className="form-field-select"
           name={name}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
@@ -72,6 +75,7 @@ function composeIntlForm(Component) {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <AutoComplete
+          className="form-field-autocomplete"
           {...input}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           onNewRequest={(currentValue) => {
@@ -90,6 +94,7 @@ function composeIntlForm(Component) {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <DatePicker
+          className="form-field-date"
           {...input}
           value={new Date(input.value)}
           onChange={(event, value) => input.onChange(value)}
