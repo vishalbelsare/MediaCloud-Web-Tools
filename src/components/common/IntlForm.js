@@ -33,9 +33,6 @@ function composeIntlForm(Component) {
 
     renderTextField = ({ input, meta: { touched, error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
-      if (input.name === 'start_date') {
-        console.log(`error = ${error}`);
-      }
       return (
         <TextField
           errorText={touched && (error ? this.intlIfObject(error) : null)}

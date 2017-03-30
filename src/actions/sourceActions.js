@@ -56,6 +56,7 @@ export const SET_FAVORITE_COLLECTION = 'SET_FAVORITE_COLLECTION';
 export const FETCH_FAVORITE_SOURCES = 'FETCH_FAVORITE_SOURCES';
 export const FETCH_SYSTEM_STATS = 'FETCH_SYSTEM_STATS';
 export const SCRAPE_SOURCE_FEEDS = 'SCRAPE_SOURCE_FEEDS';
+export const CREATE_SOURCES_FROM_URLS = 'CREATE_SOURCES_FROM_URLS';
 
 export const fetchSystemStats = createAsyncAction(FETCH_SYSTEM_STATS, api.systemStats);
 
@@ -151,3 +152,5 @@ export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 
 export const scrapeSourceFeeds = createAsyncAction(SCRAPE_SOURCE_FEEDS, api.scrapeSourceFeeds, id => id);
+
+export const createSourcesByUrl = createAsyncAction(CREATE_SOURCES_FROM_URLS, api.createSourcesByUrl, urls => urls);

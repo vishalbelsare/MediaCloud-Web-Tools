@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import json
 from flask import request, jsonify
 import flask_login
 from datetime import datetime
@@ -212,6 +213,18 @@ def source_create():
         # if it is a really new source, kick off a scraping job to find any RSS feeds
         user_mc.feedsScrape(result['media_id'])
     return jsonify(result)
+
+
+@app.route('/api/sources/create-from-urls', methods=['PUT'])
+@form_fields_required('urls')
+@flask_login.login_required
+@api_error_handler
+def source_create_from_urls():
+    user_mc = user_mediacloud_client()
+    urls = request.form['urls'].split(",")
+    sources_to_create = [{'url': url} for url in urls]
+    results = user_mc.mediaCreate(sources_to_create)
+    return jsonify(results)
 
 
 @app.route('/api/sources/<media_id>/update', methods=['POST'])
