@@ -9,7 +9,7 @@ import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActi
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
-import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
@@ -43,28 +43,33 @@ class CollectionSourceRepresentation extends React.Component {
 
   render() {
     const { helpButton, sources } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
 
     let content = null;
     // if no sources that means there were too many to compute the chart for
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
-      const contributingSources = sources.filter(d => Math.ceil(d.sentence_pct * 100) / 100 > SENTENCE_PERCENTAGE_MIN_VALUE);
-      const otherSourcesNode = { id: contributingSources.length, name: 'Other', label: 'Other', value: 1, unit: '%', color: '#eee' };
+      const contributingSources = sources.filter(d => d.sentence_pct > SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherSources = sources.filter(d => d.sentence_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherTotal = d3.sum(otherSources.map(d => d.sentence_pct));
+      const otherSourcesNode = {
+        centerText: formatMessage(messages.other),
+        rolloverText: `${formatMessage(messages.other)}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
+        value: otherTotal,
+        fill: '#eee',
+      };
       const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.sentence_pct)) * 100) / 100;
       const scaleRange = d3.scaleLinear()
         .domain([0, maxPct])
         .range([d3.rgb('#ffffff'), d3.rgb(getBrandDarkColor())]);
 
       const bubbleData = [
-        ...contributingSources.map((s, idx) => ({
-          id: idx,
-          name: s.name,
-          label: s.name,
-          value: Math.ceil(s.sentence_pct * 100),
-          unit: '%',
-          color: scaleRange(s.sentence_pct),
+        ...contributingSources.map(s => ({
+          centerText: s.name,
+          rolloverText: `${s.name}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
+          value: s.sentence_pct,
+          fill: scaleRange(s.sentence_pct),
         })),
       ];
 
@@ -78,7 +83,6 @@ class CollectionSourceRepresentation extends React.Component {
           placement={PLACEMENT_AUTO}
           height={400}
           domId={BUBBLE_CHART_DOM_ID}
-          textPlacement={TEXT_PLACEMENT_ROLLOVER}
         />
       );
     }

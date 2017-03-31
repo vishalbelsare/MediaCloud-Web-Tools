@@ -137,7 +137,8 @@ const messages = {
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
   filter: { id: 'filter', defaultMessage: 'Filter' },
-  upload: { id: 'filter', defaultMessage: 'Upload' },
+  upload: { id: 'upload', defaultMessage: 'Upload' },
+  other: { id: 'other', defaultMessage: 'Other' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },

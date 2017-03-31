@@ -12,26 +12,19 @@ export const PLACEMENT_AUTO = 'PLACEMENT_AUTO';
 export const PLACEMENT_HORIZONTAL = 'PLACEMENT_HORIZONTAL';
 const DEFAULT_PLACEMENT = PLACEMENT_AUTO;
 
-// options for `textPlacement`
-export const TEXT_PLACEMENT_ABOVE = 'TEXT_ABOVE';
-export const TEXT_PLACEMENT_CENTER = 'TEXT_CENTER';
-export const TEXT_PLACEMENT_ROLLOVER = 'TEXT_PLACEMENT_ROLLOVER';
-const DEFAULT_TEXT_PLACEMENT = TEXT_PLACEMENT_CENTER;
-
 /**
  * Draw a bubble chart with labels.  Values are mapped to area, not radius.
  */
 class BubbleChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, placement, textPlacement, domId } = this.props;
-    const { formatNumber } = this.props.intl;
+    const { data, width, height, maxBubbleRadius, placement, domId } = this.props;
+    // const { formatNumber } = this.props.intl;
     const options = {
       width,
       height,
       maxBubbleRadius,
       placement,
-      textPlacement,
     };
     if ((width === null) || (width === undefined)) {
       options.width = DEFAULT_WIDTH;
@@ -44,9 +37,6 @@ class BubbleChart extends React.Component {
     }
     if ((placement === null) || (placement === undefined)) {
       options.placement = DEFAULT_PLACEMENT;
-    }
-    if ((textPlacement === null) || (textPlacement === undefined)) {
-      options.textPlacement = DEFAULT_TEXT_PLACEMENT;
     }
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
@@ -94,64 +84,47 @@ class BubbleChart extends React.Component {
         .attr('class', 'bubble-chart-tooltip')
         .style('opacity', 0);
       const totalWidth = circles.slice(-1)[0].x + circles.slice(-1)[0].r; // TODO: make this support bubble packing too
+      // only center align if auto layout
+      const horizontalTranslaton = (options.placement === PLACEMENT_HORIZONTAL) ? 0 : (options.width - totalWidth) / 2;
       const bubbles = svg.append('g')
-        .attr('transform', `translate(${(options.width - totalWidth) / 2},${options.height / 2})`)
-        .selectAll('.bubble')
-        .data(circles)
-        .enter();
+          .attr('transform', `translate(${horizontalTranslaton},${options.height / 2})`)
+          .selectAll('.bubble')
+          .data(circles)
+          .enter();
       // create the bubbles
       bubbles.append('circle')
         .attr('r', d => d.r)
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .style('fill', d => d.color || '');
+        .style('fill', d => d.fill || '');
 
-      // add tooltip to bubbles for rollover option
-      if ((options.textPlacement ? options.textPlacement : textPlacement) === TEXT_PLACEMENT_ROLLOVER) {
-        bubbles.selectAll('circle').on('mouseover', (d) => {
-          const pixel = 'px';
-          rollover.transition().duration(200).style('opacity', 0.9);
-          rollover.html(d.label)
-            .style('left', d3.event.pageX + pixel)
-            .style('top', d3.event.pageY + pixel);
-        })
-        .on('mouseout', () => {
-          rollover.transition().duration(500).style('opacity', 0);
-        });
-      }
+      // add tooltip to bubbles
+      bubbles.selectAll('circle').on('mouseover', (d) => {
+        const pixel = 'px';
+        rollover.transition().duration(200).style('opacity', 0.9);
+        rollover.html(d.rolloverText)
+          .style('left', d3.event.pageX + pixel)
+          .style('top', d3.event.pageY + pixel);
+      })
+      .on('mouseout', () => {
+        rollover.transition().duration(500).style('opacity', 0);
+      });
 
-      // format the text for each bubble
-      let textYPlacement = null;
-      switch (options.textPlacement ? options.textPlacement : textPlacement) {
-        case TEXT_PLACEMENT_ABOVE:
-          textYPlacement = d => d.y - d.r - 12;
-          break;
-        case TEXT_PLACEMENT_CENTER:
-          textYPlacement = d => d.y;
-          break;
-        case TEXT_PLACEMENT_ROLLOVER:
-          textYPlacement = d => d.y - 4;
-          break;
-        default:
-          textYPlacement = d => d.y;
-          break;
-      }
-
-      // don't show labels for rollover option
-      if ((options.textPlacement ? options.textPlacement : textPlacement) !== TEXT_PLACEMENT_ROLLOVER) {
-        bubbles.append('text')
-          .attr('x', d => d.x)
-          .attr('y', d => textYPlacement(d) - 6)
-          .attr('text-anchor', 'middle')
-          .attr('fill', d => `${d.labelColor} !important` || '')
-          .text(d => d.label);
-      }
+      // add center labels
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => textYPlacement(d) + 7)
+        .attr('y', d => d.y + 7)
         .attr('text-anchor', 'middle')
-        .attr('fill', d => `${d.labelColor} !important` || '')
-        .text(d => `${formatNumber(d.value)} ${d.unit ? d.unit : ''}`);
+        .attr('fill', d => `${d.centerTextColor} !important` || '')
+        .text(d => d.centerText);
+
+      // add top labels
+      bubbles.append('text')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y - d.r - 7)
+        .attr('text-anchor', 'middle')
+        .attr('fill', d => `${d.aboveTextColor} !important` || '')
+        .text(d => d.aboveText);
 
       content = node.toReact();
     }
@@ -162,12 +135,22 @@ class BubbleChart extends React.Component {
 
 BubbleChart.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  data: React.PropTypes.array.isRequired, // [ {'label': string, 'value': number, 'color': string(optional), 'labelColor': string(optional)}, ... ]
+  /*
+  [{
+    'value': number,
+    'fill': string(optional),
+    'centerText': string(optional),
+    'centerTextColor': string(optional),
+    'aboveText': string(optional),
+    'aboveTextColor': string(optional),
+    'rolloverText': string(optional),
+  }]
+  */
+  data: React.PropTypes.array.isRequired,
   domId: React.PropTypes.string.isRequired,  // to make download work
   width: React.PropTypes.number,
   height: React.PropTypes.number,
   placement: React.PropTypes.string,
-  textPlacement: React.PropTypes.string,
   maxBubbleRadius: React.PropTypes.number,
 };
 
