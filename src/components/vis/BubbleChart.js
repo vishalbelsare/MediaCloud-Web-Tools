@@ -97,9 +97,14 @@ class BubbleChart extends React.Component {
       const rollover = d3.select('body').append('div')
         .attr('class', 'bubble-chart-tooltip')
         .style('opacity', 0);
-      const totalWidth = circles.slice(-1)[0].x + circles.slice(-1)[0].r; // TODO: make this support bubble packing too
+      /*
+      // figure out the total width, to support centering for bubble packed ones
+      const minX = d3.min(circles.map(c => c.x - c.r));
+      const maxX = d3.max(circles.map(c => c.x + c.r));
+      const totalWidth = maxX - minX;
+      */
       // only center align if auto layout
-      const horizontalTranslaton = (options.placement === PLACEMENT_HORIZONTAL) ? 0 : (options.width - totalWidth) / 2;
+      const horizontalTranslaton = (options.placement === PLACEMENT_HORIZONTAL) ? 0 : options.width / 2;
       const bubbles = svg.append('g')
           .attr('transform', `translate(${horizontalTranslaton},${options.height / 2})`)
           .selectAll('.bubble')
@@ -127,9 +132,11 @@ class BubbleChart extends React.Component {
       // add center labels
       bubbles.append('text')
         .attr('x', d => d.x)
-        .attr('y', d => d.y + 7)
+        .attr('y', d => d.y + 5)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.centerTextColor} !important` || '')
+        .attr('font-family', 'Lato, Helvetica, sans')
+        .attr('font-size', '10px')
         .text(d => d.centerText);
 
       // add top labels
@@ -138,6 +145,8 @@ class BubbleChart extends React.Component {
         .attr('y', d => d.y - d.r - 7)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.aboveTextColor} !important` || '')
+        .attr('font-family', 'Lato, Helvetica, sans')
+        .attr('font-size', '10px')
         .text(d => d.aboveText);
 
       // add bottom labels
@@ -146,6 +155,8 @@ class BubbleChart extends React.Component {
         .attr('y', d => d.y + d.r + 15)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.belowTextColor} !important` || '')
+        .attr('font-family', 'Lato, Helvetica, sans')
+        .attr('font-size', '10px')
         .text(d => d.belowText);
 
       content = node.toReact();
