@@ -105,7 +105,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(filterBySnapshot(newSnapshotId));
           }
           // warn user if snapshot is being pending
-          if (response.jobStatus) {
+          if (response.jobStatus && response.jobStatus.length > 0) {
             const latestSnapshotJobStatus = response.jobStatus[0];
             switch (latestSnapshotJobStatus.state) {
               case TOPIC_SNAPSHOT_STATE_QUEUED:
