@@ -30,7 +30,8 @@ class TopicContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { topicId, topicInfo, selectNewTopic, needsNewSnapshot, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
-    if ((nextProps.topicId !== topicId)) {
+    // if they edited the topic, or the topic changed then reload
+    if ((nextProps.topicInfo !== topicInfo) || (nextProps.topicId !== topicId)) {
       selectNewTopic(topicId);
       // warn user if they made changes that require a new snapshot
       if (needsNewSnapshot) {
@@ -40,10 +41,6 @@ class TopicContainer extends React.Component {
         addAppNotice({ level: LEVEL_ERROR, message: topicInfo.message });
       }
     }
-  }
-  componentWillUnmount() {
-    const { selectNewTopic } = this.props;
-    selectNewTopic(null);
   }
   filtersAreSet() {
     const { filters, topicId } = this.props;
