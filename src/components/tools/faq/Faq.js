@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import FaqItem from './FaqItem';
 
 const localMessages = {
@@ -26,7 +25,7 @@ const localMessages = {
   q10: { id: 'faq.q10', defaultMessage: 'Can I add sources to the database?' },
   a10: { id: 'faq.a10', defaultMessage: 'If a source or a set of sources is not already part of our database, you can suggest its addition through the Sources tool, and we will carefully consider your suggestion. Our first inclination is to say yes to suggestions.' },
   q11: { id: 'faq.q11', defaultMessage: 'How can I get more help?' },
-  a11: { id: 'faq.a11', defaultMessage: 'Join our <a href="http://groups.io/g/mediacloud/members">mailing list</a> or send us an email to <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
+  a11: { id: 'faq.a11', defaultMessage: 'Join our <a href="http://groups.io/g/mediacloud">mailing list</a> or send us an email to <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
 };
 
 const NUM_ITEMS = 11;
@@ -35,21 +34,13 @@ const Faq = () => {
   const items = [];
   for (let i = 1; i <= NUM_ITEMS; i += 1) {
     items.push((
-      <Col lg={6} key={i}>
-        <FaqItem question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} />
-      </Col>
+      <FaqItem key={i} question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} />
     ));
   }
   return (
     <div className="faq">
-      <Row>
-        <Col lg={12}>
-          <h2><FormattedMessage {...localMessages.title} /></h2>
-        </Col>
-      </Row>
-      <Row>
-        {items}
-      </Row>
+      <h2><FormattedMessage {...localMessages.title} /></h2>
+      {items}
     </div>
   );
 };
