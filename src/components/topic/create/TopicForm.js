@@ -7,16 +7,25 @@ import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 
+export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
+export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
+
 const localMessages = {
   name: { id: 'topic.name', defaultMessage: 'Name' },
 };
 
 const TopicForm = (props) => {
-  const { onSaveTopic, handleSubmit, pristine, submitting, initialValues, title, intro } = props;
+  const { onSaveTopic, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
-      <TopicDetailForm initialValues={initialValues} />
-      <SourceCollectionsForm title={title} intro={intro} form="topicForm" initialValues={initialValues} />
+      <TopicDetailForm initialValues={initialValues} mode={mode} />
+      <SourceCollectionsForm
+        title={title}
+        intro={intro}
+        form="topicForm"
+        initialValues={initialValues}
+        allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+      />
       <Row>
         <Col lg={12}>
           <AppButton
@@ -44,6 +53,7 @@ TopicForm.propTypes = {
   submitting: React.PropTypes.bool.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
+  mode: React.PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
 };
 
 function validate(values) {

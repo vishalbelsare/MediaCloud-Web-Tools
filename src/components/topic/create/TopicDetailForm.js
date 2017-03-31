@@ -1,10 +1,13 @@
 import React from 'react';
+import { FormattedHTMLMessage } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
 import { emptyString, invalidDate } from '../../../lib/formValidators';
 import composeIntlForm from '../../common/IntlForm';
+import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
+import { WarningNotice } from '../../common/Notice';
 
 const localMessages = {
   name: { id: 'topic.form.detail.name', defaultMessage: 'Name' },
@@ -14,6 +17,7 @@ const localMessages = {
   descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a description.' },
   seedQuery: { id: 'topic.form.detail.seedQuery', defaultMessage: 'Seed Query' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
+  queryEditWarning: { id: 'topic.form.detal.query.edit.warning', defaultMessage: '<b>Be careful!</b> If you plan to edit the query and make a new snapshot make sure you only increase the scope of the query.  If you reduce the scope there will be stories from previous snapshots included that don\'t match your new reduced query.' },
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
@@ -25,9 +29,17 @@ const localMessages = {
 };
 
 const TopicDetailForm = (props) => {
-  const { initialValues, renderTextField, renderCheckbox, renderSelectField } = props;
+  const { renderTextField, renderCheckbox, renderSelectField, mode } = props;
   const { formatMessage } = props.intl;
   const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  let queryWarning = null;
+  if (mode === TOPIC_FORM_MODE_EDIT) {
+    queryWarning = (
+      <WarningNotice>
+        <FormattedHTMLMessage {...localMessages.queryEditWarning} />
+      </WarningNotice>
+    );
+  }
   return (
     <div>
       <Row>
@@ -52,7 +64,6 @@ const TopicDetailForm = (props) => {
       <Row>
         <Col lg={5}>
           <Field
-            value={initialValues}
             name="start_date"
             component={renderTextField}
             type="inline"
@@ -64,7 +75,6 @@ const TopicDetailForm = (props) => {
         </Col>
         <Col lg={5}>
           <Field
-            value={initialValues}
             name="end_date"
             component={renderTextField}
             type="inline"
@@ -96,6 +106,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={localMessages.seedQuery}
           />
+          {queryWarning}
         </Col>
       </Row>
       <Row>
@@ -155,9 +166,11 @@ TopicDetailForm.propTypes = {
   renderCheckbox: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
   renderDatePickerInline: React.PropTypes.func.isRequired,
-  initialValues: React.PropTypes.object,
   // from form helper
   handleSubmit: React.PropTypes.func.isRequired,
+  // from parent
+  mode: React.PropTypes.string.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 function validate(values) {
@@ -168,8 +181,8 @@ function validate(values) {
   if (emptyString(values.description)) {
     errors.description = localMessages.descriptionError;
   }
-  if (emptyString(values.seedQuery)) {
-    errors.seedQuery = localMessages.seedQueryError;
+  if (emptyString(values.solr_seed_query)) {
+    errors.solr_seed_query = localMessages.seedQueryError;
   }
   if (invalidDate(values.start_date)) {
     errors.start_date = localMessages.dateError;

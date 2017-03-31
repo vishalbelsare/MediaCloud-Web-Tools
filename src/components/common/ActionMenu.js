@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
+// import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import CloseIcon from './icons/CloseIcon';
@@ -34,7 +34,7 @@ class ActionMenu extends React.Component {
   }
 
   render() {
-    const { actionItems, color, openButton, closeButton } = this.props;
+    const { color, openButton, closeButton, children } = this.props;
 
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
@@ -67,17 +67,7 @@ class ActionMenu extends React.Component {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-          {actionItems.map((item, idx) => (
-            <MenuItem
-              className="action-icon-menu-item"
-              key={idx}
-              primaryText={item.text}
-              onTouchTap={() => item.clickHandler()}
-              rightIcon={item.icon}
-              disabled={item.disabled === true}
-            />
-          ))
-        }
+          {children}
         </IconMenu>
       </div>
     );
@@ -86,7 +76,7 @@ class ActionMenu extends React.Component {
 ActionMenu.propTypes = {
   onClick: React.PropTypes.func,
   topLevelButton: React.PropTypes.func,
-  actionItems: React.PropTypes.array.isRequired,
+  children: React.PropTypes.array,
   openButton: React.PropTypes.object,
   closeButton: React.PropTypes.object,
   tooltip: React.PropTypes.string,

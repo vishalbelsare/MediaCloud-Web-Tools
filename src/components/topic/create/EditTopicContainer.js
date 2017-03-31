@@ -3,9 +3,7 @@ import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import moment from 'moment';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicForm from './TopicForm';
 import { selectTopic, fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
@@ -13,6 +11,7 @@ import BackLinkingControlBar from '../BackLinkingControlBar';
 import { filteredLinkTo } from '../../util/location';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 
 const localMessages = {
   editTopicTitle: { id: 'topic.edit.title', defaultMessage: 'Edit Topic Settings' },
@@ -66,6 +65,7 @@ class EditTopicContainer extends React.Component {
               initialValues={initialValues}
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+              mode={TOPIC_FORM_MODE_EDIT}
             />
           </Permissioned>
         </Grid>
@@ -109,15 +109,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicSummary(ownProps.params.topicId));
   },
   handleSave: (values) => {
-    let startDate = new Date(values.start_date);
-    startDate = moment(startDate).format('YYYY-MM-DD');
-    let endDate = new Date(values.end_date);
-    endDate = moment(endDate).format('YYYY-MM-DD');
     const infoToSave = {
       name: values.name,
       description: values.description,
-      start_date: startDate,
-      end_date: endDate,
+      start_date: values.start_date,
+      end_date: values.end_date,
       solr_seed_query: values.solr_seed_query,
       max_iterations: values.max_iterations,
       ch_monitor_id: values.ch_monitor_id,

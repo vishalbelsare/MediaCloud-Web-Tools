@@ -2,6 +2,7 @@ import React from 'react';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import initHighcharts from './initHighcharts';
+import { getBrandDarkColor } from '../../styles/colors';
 
 initHighcharts();
 
@@ -17,8 +18,22 @@ const localMessages = {
 class GeoChart extends React.Component {
 
   getConfig() {
-    const { data } = this.props;
+    const { data, countryMinColorScale, countryMaxColorScale, hoverColor } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
+    const options = {
+      countryMinColorScale,
+      countryMaxColorScale,
+      hoverColor,
+    };
+    if (countryMinColorScale === undefined) {
+      options.countryMinColorScale = '#ffffff';
+    }
+    if (countryMaxColorScale === undefined) {
+      options.countryMinColorScale = getBrandDarkColor();
+    }
+    if (hoverColor === undefined) {
+      options.hoverColor = '#BADA55';
+    }
     const config = {
       // Initiate the chart
       title: {
@@ -37,7 +52,9 @@ class GeoChart extends React.Component {
       },
       colorAxis: {
         min: 0.000001,
+        minColor: options.countryMinColorScale,
         max: 1.0,
+        maxColor: options.countryMaxColorScale,
         type: 'logarithmic',
       },
       tooltip: {
@@ -57,7 +74,7 @@ class GeoChart extends React.Component {
         cursor: 'pointer',
         states: {
           hover: {
-            color: '#BADA55',
+            color: options.hoverColor,
           },
           select: {
             color: '#a4edba',
@@ -122,6 +139,9 @@ class GeoChart extends React.Component {
 
 GeoChart.propTypes = {
   data: React.PropTypes.array.isRequired,
+  countryMinColorScale: React.PropTypes.string,
+  countryMaxColorScale: React.PropTypes.string,
+  hoverColor: React.PropTypes.string,
   onCountryClick: React.PropTypes.func,
   intl: React.PropTypes.object.isRequired,
 };

@@ -9,6 +9,7 @@ import { fetchCollectionGeo } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
+import { getBrandLightColor } from '../../../styles/colors';
 
 const localMessages = {
   title: { id: 'collection.summary.geo.title', defaultMessage: 'Geographic Attention' },
@@ -42,7 +43,7 @@ class CollectionGeographyContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} />
+        <GeoChart data={geolist} onCountryClick={this.handleCountryClick} countryMaxColorScale={getBrandLightColor()} />
       </DataCard>
     );
   }

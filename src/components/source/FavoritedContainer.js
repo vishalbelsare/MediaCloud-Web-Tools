@@ -8,10 +8,10 @@ import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
 
 const localMessages = {
-  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'My Favorite Collections' },
-  favoritedCollectionsIntro: { id: 'favorited.collections.intro', defaultMessage: 'These are collections you have marked as favorites by clicking the star next to their name.  This is useful to bookmark collections you use frequently.' },
-  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'My Favorite Sources' },
-  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'These are sources you have marked as favorites by clicking the star next to their name.  This is useful to bookmark sources you use frequently.' },
+  favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'My Starred Collections' },
+  favoritedCollectionsIntro: { id: 'favorited.collections.intro', defaultMessage: 'These are collections you have starred by clicking the star next to their name.  This is useful to bookmark collections you use frequently.' },
+  favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'My Starred Sources' },
+  favoritedSourcesIntro: { id: 'favorited.souces.intro', defaultMessage: 'These are sources you have starred by clicking the star next to their name.  This is useful to bookmark sources you use frequently.' },
 };
 
 const FavoritedContainer = (props) => {

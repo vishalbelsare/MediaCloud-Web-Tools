@@ -10,6 +10,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
+import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
@@ -25,7 +26,7 @@ const localMessages = {
 };
 
 const BUBBLE_CHART_DOM_ID = 'source-representation-bubble-chart';
-const COLORS = d3.schemeCategory20;
+const SENTENCE_PERCENTAGE_MIN_VALUE = 0.01; // 1 percent threshold
 
 class CollectionSourceRepresentation extends React.Component {
 
@@ -49,15 +50,27 @@ class CollectionSourceRepresentation extends React.Component {
     if (sources.length === 0) {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
+      const contributingSources = sources.filter(d => Math.ceil(d.sentence_pct * 100) / 100 > SENTENCE_PERCENTAGE_MIN_VALUE);
+      const otherSourcesNode = { id: contributingSources.length, name: 'Other', label: 'Other', value: 1, unit: '%', color: '#eee' };
+      const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.sentence_pct)) * 100) / 100;
+      const scaleRange = d3.scaleLinear()
+        .domain([0, maxPct])
+        .range([d3.rgb('#ffffff'), d3.rgb(getBrandDarkColor())]);
+
       const bubbleData = [
-        ...sources.map((s, idx) => ({
+        ...contributingSources.map((s, idx) => ({
           id: idx,
           name: s.name,
           label: s.name,
-          value: s.sentence_pct,
-          color: COLORS[idx + 1],
+          value: Math.ceil(s.sentence_pct * 100),
+          unit: '%',
+          color: scaleRange(s.sentence_pct),
         })),
       ];
+
+      if (sources.length - contributingSources.length !== 0) {
+        bubbleData.push(otherSourcesNode);
+      }
 
       content = (
         <BubbleChart

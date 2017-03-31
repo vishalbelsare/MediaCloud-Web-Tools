@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import request, jsonify, render_template
+import json
+from flask import request, jsonify
 import flask_login
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
-from server import app, db, mc
+from server import app, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.mail import send_html_email
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -187,7 +187,7 @@ def source_create():
     public_notes = request.form['public_notes'] if 'public_notes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
-    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
+    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY}
     ]
@@ -215,6 +215,18 @@ def source_create():
     return jsonify(result)
 
 
+@app.route('/api/sources/create-from-urls', methods=['PUT'])
+@form_fields_required('urls')
+@flask_login.login_required
+@api_error_handler
+def source_create_from_urls():
+    user_mc = user_mediacloud_client()
+    urls = request.form['urls'].split(",")
+    sources_to_create = [{'url': url} for url in urls]
+    results = user_mc.mediaCreate(sources_to_create)
+    return jsonify(results)
+
+
 @app.route('/api/sources/<media_id>/update', methods=['POST'])
 @form_fields_required('name', 'url')
 @flask_login.login_required
@@ -233,7 +245,7 @@ def source_update(media_id):
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
         if (t['tag_sets_id'] in [COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID]) and (t['show_on_media'] is 1)]
-    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
+    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     tag_ids_to_remove = list(set(existing_tag_ids) - set(tag_ids_to_add))
     tags_to_add = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_ADD)
                    for cid in tag_ids_to_add if cid not in existing_tag_ids]
@@ -262,106 +274,8 @@ def source_update(media_id):
     return jsonify(result)
 
 
-@app.route('/api/sources/suggestions', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def source_suggestions():
-    user_mc = user_mediacloud_client()
-    show_all = request.args['all'] == '1' if 'all' in request.args else False
-    suggestions = user_mc.mediaSuggestionsList(all=show_all)
-    return jsonify({'list': suggestions})
-
-
-def _media_suggestion(suggestion_id):
-    pending = mc.mediaSuggestionsList(all=True)
-    for suggestion in pending:
-        if int(suggestion['media_suggestions_id']) == int(suggestion_id):
-            return suggestion
-    return None
-
-@app.route('/api/sources/suggestions/<suggestion_id>/update', methods=['POST'])
-@form_fields_required('status', 'reason')
-@flask_login.login_required
-@api_error_handler
-def source_suggestion_update(suggestion_id):
-    suggestion = _media_suggestion(suggestion_id)
-    if suggestion is None:
-        return json_error_response("Unknown suggestion id {}".format(suggestion_id))
-    user_mc = user_mediacloud_client()
-    status = request.form['status']
-    reason = request.form['reason']
-    results = None
-    email_note = ""
-    if status == "approved":
-        # if approved, we have to create it
-        media_source_to_create = { 'url': suggestion['url'],
-              'name': suggestion['name'],
-              'feeds': [suggestion['feed_url']],
-              'tags_ids': suggestion['tags_ids'] if 'tags_ids 'in suggestion else None,
-              'editor_notes': 'Suggested approved by {} on because {}.  Suggested by {} on {} because {} (id #{}).'.format(
-                  user_name(),  datetime.now().strftime("%I:%M%p on %B %d, %Y"), reason,
-                  suggestion['email'], suggestion['date_submitted'], suggestion['reason'], suggestion['media_suggestions_id']
-              )
-            }
-        creation_results = mc.mediaCreate([media_source_to_create])[0]
-        if creation_results['status'] == 'error':
-            status = "pending"  # so the email update looks good.
-            email_note = creation_results['error']+".  "
-        else:
-            email_note = "This source is "+str(creation_results['status'])+". "
-            results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason, creation_results['media_id'])
-    else:
-        # if rejected just mark it as such
-        results = user_mc.mediaSuggestionsMark(suggestion_id, status, reason)
-    # send an email to the person that suggested it
-    url = suggestion['url']
-    email_title = "Source Suggestion {}: {}".format(status, url)
-    content_title = "We {} {}".format(status, url)
-    content_body = "Thanks for the suggestion. {}{}".format(email_note, reason)
-    action_text = "Login to Media Cloud"
-    action_url = "https://sources.mediacloud.org/#/login"
-    # send an email confirmation
-    send_html_email(email_title,
-                    [user_name(), 'source-suggestion@mediacloud.org'],
-                    render_template("emails/generic.txt",
-                                    content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
-                    render_template("emails/generic.html",
-                                    email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
-                    )
-    # and return that it worked or not
-    if status == "pending":
-        return json_error_response(email_note)
-    return jsonify(results)
-
-def _tag_ids_from_collections_param(input):
+def tag_ids_from_collections_param(input):
     tag_ids_to_add = []
     if len(input) > 0:
         tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",") if len(cid) > 0]
     return list(set(tag_ids_to_add))
-
-@app.route('/api/sources/suggestions/submit', methods=['POST'])
-@form_fields_required('url')
-@flask_login.login_required
-@api_error_handler
-def source_suggest():
-    user_mc = user_mediacloud_client()
-    url = request.form['url']
-    feed_url = request.form['feedurl'] if 'feedurl' in request.form else None
-    name = request.form['name'] if 'name' in request.form else None
-    reason = request.form['reason'] if 'reason' in request.form else None
-    tag_ids_to_add = _tag_ids_from_collections_param(request.form['collections[]'])
-    new_suggestion = user_mc.mediaSuggest(url=url, name=name, feed_url=feed_url, reason=reason,
-                                          collections=tag_ids_to_add)
-    # send an email confirmation
-    email_title = "Thanks for Suggesting " + url
-    send_html_email(email_title,
-        [user_name(), 'source-suggestion@mediacloud.org'],
-        render_template("emails/source_suggestion_ack.txt",
-                        username=user_name(), name=name, url=url, feed_url=feed_url, reason=reason),
-        render_template("emails/source_suggestion_ack.html",
-                        username=user_name(), name=name, url=url, feed_url=feed_url, reason=reason)
-    )
-    # and return that it worked
-    return jsonify(new_suggestion)
-
-

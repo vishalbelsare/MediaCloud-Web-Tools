@@ -7,6 +7,9 @@ for some of our new web apps.  Check out the `doc` folder for more documentation
 Dev Installation
 ----------------
 
+Git:
+ * `git submodule update --init --recursive`
+
 Python 2.7:
  * python 2.7 https://www.python.org/download/releases/2.7/
  * `pip install virtualenv` (if necessary) [also install/link pip if you don't have it (if on Mac OS, use sudo easy_install pip)]

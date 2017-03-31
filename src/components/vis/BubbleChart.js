@@ -151,7 +151,7 @@ class BubbleChart extends React.Component {
         .attr('y', d => textYPlacement(d) + 7)
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.labelColor} !important` || '')
-        .text(d => formatNumber(d.value));
+        .text(d => `${formatNumber(d.value)} ${d.unit ? d.unit : ''}`);
 
       content = node.toReact();
     }

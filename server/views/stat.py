@@ -1,17 +1,14 @@
 import logging
-from flask import jsonify, request
+from flask import jsonify
 import flask_login
 
-from server import app, auth
-from server.auth import user_mediacloud_client
+from server import app, mc
 from server.util.request import api_error_handler
 
 logger = logging.getLogger(__name__)
 
 @app.route('/api/system-stats', methods=['GET'])
-@flask_login.login_required
-@api_error_handler 
+@api_error_handler
 def stats():
-    user_mc = user_mediacloud_client()
-    result = user_mc.stats()
+    result = mc.stats()
     return jsonify({'stats': result})

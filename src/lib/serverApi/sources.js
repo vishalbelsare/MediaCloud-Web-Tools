@@ -1,4 +1,4 @@
-import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from './apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams, generateParamStr } from '../apiUtil';
 
 // possible return statuses from a call to createSource
 export const CREATE_SOURCE_STATUS_NEW = 'new';
@@ -166,4 +166,8 @@ export function systemStats() {
 
 export function scrapeSourceFeeds(mediaId) {
   return createPostingApiPromise(`/api/sources/${mediaId}/scrape`);
+}
+
+export function createSourcesByUrl(urls) {
+  return createPostingApiPromise('/api/sources/create-from-urls', { urls }, 'put');
 }

@@ -7,7 +7,7 @@ import { WarningNotice } from '../common/Notice';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
-  warning: { id: 'topic.filter.warning', defaultMessage: 'Please wait for the snapshot generation process to complete.' },
+  warning: { id: 'topic.filter.warning', defaultMessage: 'No snapshots are available to use yet.  Please wait a little longer for a valid snapshot of all the content to be generated.' },
 };
 
 class FilteredTopicContainer extends React.Component {
@@ -25,12 +25,12 @@ class FilteredTopicContainer extends React.Component {
   }
   render() {
     const { children, location, topicId, fetchStatus } = this.props;
-    let subContent = <div />;
-
+    let subContent = null;
+    const snapshotsReady = this.snapshotsAreCompletedAndSearchable();
     // If the generation process is still ongoing, ask the user to wait a few minutes
-    if (this.filtersAreSet() || this.snapshotsAreCompletedAndSearchable()) {
+    if (this.filtersAreSet() || snapshotsReady) {
       subContent = children;
-    } else if (!this.snapshotsAreCompletedAndSearchable() && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+    } else if (!snapshotsReady && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
       subContent = (
         <WarningNotice>
           <FormattedMessage {...localMessages.warning} />

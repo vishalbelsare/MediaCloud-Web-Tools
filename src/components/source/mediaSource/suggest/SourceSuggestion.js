@@ -10,7 +10,7 @@ import AppButton from '../../../common/AppButton';
 const localMessages = {
   info: { id: 'source.suggestion.info', defaultMessage: 'Suggested as "{name}" by {user} on {date} because "{reason}".' },
   markSummary: { id: 'source.suggestion.markSummary', defaultMessage: 'Marked as {status} by {user} on {date} because "{reason}".' },
-  notMarked: { id: 'source.suggestion.notMarked', defaultMessage: 'Not reviwed yet.' },
+  notMarked: { id: 'source.suggestion.notMarked', defaultMessage: 'Not reviewed yet.' },
   reject: { id: 'source.suggestion.reject', defaultMessage: 'Reject' },
   approve: { id: 'source.suggestion.accept', defaultMessage: 'Approve' },
   approveTitle: { id: 'source.suggestion.approve.title', defaultMessage: 'Approve' },

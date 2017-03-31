@@ -1,6 +1,8 @@
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
+import MenuItem from 'material-ui/MenuItem';
+import Link from 'react-router/lib/Link';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
@@ -72,7 +74,6 @@ class EditableWordCloudDataCard extends React.Component {
     let editingClickHandler = onViewModeClick;
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
-    const editActionIcon = (<EditButton />);
     const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
     if (this.state.editing && this.state.modifiableWords) {
       editingClickHandler = this.onEditModeClick;
@@ -86,34 +87,14 @@ class EditableWordCloudDataCard extends React.Component {
         editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.edited} /></WarningNotice>);
       }
     }
-    const defaultMenuItems = [
-      { text: formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud),
-        icon: editActionIcon,
-        disabled: !this.state.ordered,  // can't edit for now in cloud layout
-        clickHandler: this.toggleEditing,
-      },
-      { text: formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered),
-        disabled: this.state.editing, // can't edit for now in cloud layout
-        clickHandler: this.toggleOrdered,
-      },
-      { text: formatMessage(messages.downloadCSV),
-        icon: <DownloadButton />,
-        disabled: this.state.editing, // can't download until done editing
-        clickHandler: this.downloadCsv,
-      },
-      { text: formatMessage(messages.downloadSVG),
-        icon: <DownloadButton />,
-        disabled: this.state.editing, // can't download until done editing
-        clickHandler: () => {
-          if (this.state.ordered) { // tricky to get the correct element to serialize
-            downloadSvg(uniqueDomId);
-          } else {
-            const svgChild = document.getElementById(uniqueDomId);
-            downloadSvg(svgChild.firstChild);
-          }
-        },
-      },
-    ];
+    let titleContent = title;
+    if (explore) {
+      titleContent = (
+        <Link to={explore}>
+          {title}
+        </Link>
+      );
+    }
     // set up rendered cloud as appropriate
     let cloudContent;
     if (this.state.ordered) {
@@ -143,16 +124,52 @@ class EditableWordCloudDataCard extends React.Component {
         />
       );
     }
+    const exploreButton = explore ? (<ExploreButton linkTo={explore} />) : null;
     return (
       <DataCard className={className}>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ExploreButton linkTo={explore} />
-            <ActionMenu actionItems={defaultMenuItems} />
+            {exploreButton}
+            <ActionMenu>
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+                rightIcon={<EditButton />}
+                disabled={!this.state.ordered} // can't edit for now in cloud layout
+                onTouchTap={this.toggleEditing}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered)}
+                disabled={this.state.editing} // can't edit for now in cloud layout
+                onTouchTap={this.toggleOrdered}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadCSV)}
+                rightIcon={<DownloadButton />}
+                disabled={this.state.editing} // can't download until done editing
+                onTouchTap={this.downloadCsv}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadSVG)}
+                rightIcon={<DownloadButton />}
+                disabled={this.state.editing} // can't download until done editing
+                onTouchTap={() => {
+                  if (this.state.ordered) { // tricky to get the correct element to serialize
+                    downloadSvg(uniqueDomId);
+                  } else {
+                    const svgChild = document.getElementById(uniqueDomId);
+                    downloadSvg(svgChild.firstChild);
+                  }
+                }}
+              />
+            </ActionMenu>
           </div>
         </Permissioned>
         <h2>
-          {title}
+          {titleContent}
           {helpButton}
         </h2>
         {editingWarning}

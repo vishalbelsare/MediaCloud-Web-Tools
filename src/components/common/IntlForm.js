@@ -31,11 +31,10 @@ function composeIntlForm(Component) {
       return intlCustom;
     };
 
-    renderTextField = ({ input, name, meta: { touched, error }, ...custom }) => {
+    renderTextField = ({ input, meta: { touched, error }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
-          name={name}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
           {...intlCustom}
@@ -43,9 +42,9 @@ function composeIntlForm(Component) {
       );
     };
 
-    renderCheckbox = ({ input, name, label, disabled }) => (
+    renderCheckbox = ({ input, label, disabled }) => (
       <Checkbox
-        name={name}
+        name={input.name}
         label={this.intlIfObject(label)}
         checked={input.value === true || input.value === 1}
         onCheck={input.onChange}
@@ -53,11 +52,10 @@ function composeIntlForm(Component) {
       />
     );
 
-    renderSelectField = ({ input, name, meta: { touched, error }, children, ...custom }) => {
+    renderSelectField = ({ input, meta: { touched, error }, children, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <SelectField
-          name={name}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
           {...input}
           onChange={(event, index, value) => input.onChange(value)}

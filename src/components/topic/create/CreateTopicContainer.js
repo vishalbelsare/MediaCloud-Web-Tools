@@ -2,15 +2,14 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicForm from './TopicForm';
 import { updateFeedback } from '../../../actions/appActions';
 import { createTopic } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 
 const localMessages = {
   createTopicTitle: { id: 'topic.create.title', defaultMessage: 'Create a New Topic' },
@@ -37,7 +36,13 @@ const CreateTopicContainer = (props) => {
         </Col>
       </Row>
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <TopicForm onSaveTopic={handleSave} initialValues={initialValues} title={formatMessage(localMessages.addCollectionsTitle)} intro={formatMessage(localMessages.addCollectionsIntro)} />
+        <TopicForm
+          onSaveTopic={handleSave}
+          initialValues={initialValues}
+          title={formatMessage(localMessages.addCollectionsTitle)}
+          intro={formatMessage(localMessages.addCollectionsIntro)}
+          mode={TOPIC_FORM_MODE_CREATE}
+        />
       </Permissioned>
     </Grid>
   );
@@ -55,15 +60,11 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    let startDate = new Date(values.start_date);
-    startDate = moment(startDate).format('YYYY-MM-DD');
-    let endDate = new Date(values.end_date);
-    endDate = moment(endDate).format('YYYY-MM-DD');
     const infoToSave = {
       name: values.name,
       description: values.description,
-      start_date: startDate,
-      end_date: endDate,
+      start_date: values.start_date,
+      end_date: values.end_date,
       solr_seed_query: values.solr_seed_query,
       max_iterations: values.max_iterations,
       ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
