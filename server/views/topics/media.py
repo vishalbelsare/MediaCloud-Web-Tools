@@ -23,7 +23,7 @@ def topic_media(topics_id):
     elif is_user_logged_in():
         media_list = topic_media_list(user_mediacloud_key(), topics_id)
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     return jsonify(media_list)
 
@@ -44,7 +44,7 @@ def media(topics_id, media_id):
 @api_error_handler
 def topic_media_csv(topics_id):
     sort = validated_sort(request.args.get('sort'))
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     return _stream_media_list_csv(user_mediacloud_key(), 'media', topics_id, sort=sort,
         snapshots_id=snapshots_id, timespans_id=timespans_id, foci_id=foci_id)
 

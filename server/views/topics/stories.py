@@ -65,19 +65,6 @@ def story_counts(topics_id):
     filtered = topic_story_count(local_key, topics_id)  # force a count with just the query
     return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
 
-@app.route('/api/topics/<topics_id>/stories/geocoded-counts', methods=['GET'])
-@api_error_handler
-def story_geocoded_counts(topics_id):
-    q = "tags_id_stories:"+str(CLIFF_CLAVIN_2_3_0_TAG_ID)
-    if access_public_topic(topics_id):
-        total = topic_story_count(TOOL_API_KEY, topics_id, q=None)
-        geocoded = topic_story_count(TOOL_API_KEY, topics_id, q=q)  # force a count with just the query
-    elif is_user_logged_in():
-        total = topic_story_count(user_mediacloud_key(), topics_id, q=None)
-        geocoded = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
-    else:
-        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-    return jsonify({'counts': {'count': geocoded['count'], 'total': total['count']}})
 
 @app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
 @api_error_handler

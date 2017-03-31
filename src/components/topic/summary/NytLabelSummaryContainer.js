@@ -1,11 +1,12 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import MenuItem from 'material-ui/MenuItem';
 import { schemeCategory10 } from 'd3';
 import { fetchTopicNytLabelCounts } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import BubbleChart, { PLACEMENT_HORIZONTAL, TEXT_PLACEMENT_CENTER } from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_HORIZONTAL } from '../../vis/BubbleChart';
 import { downloadSvg } from '../../util/svg';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
@@ -13,8 +14,9 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
 import ActionMenu from '../../common/ActionMenu';
 import { DownloadButton } from '../../common/IconButton';
+import { filtersAsUrlParams } from '../../util/location';
 
-const BUBBLE_CHART_DOM_ID = 'nyt-label-representation-bubble-chart';
+const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
 const COLORS = schemeCategory10;
 const PERCENTAGE_MIN_VALUE = 0.05; // anything lower than this goes into an "other" bubble
 
@@ -35,36 +37,40 @@ class NytLabelSummaryContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/nyt-labels/counts.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/nyt-tags/counts.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {
     const { data } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     const dataOverMinTheshold = data.filter(d => d.pct > PERCENTAGE_MIN_VALUE);
     const bubbleData = [
       ...dataOverMinTheshold.map((s, idx) => ({
-        id: idx,
-        label: s.tag,
-        value: s.pct * 100,
-        color: COLORS[idx + 1],
+        value: s.pct,
+        fill: COLORS[idx + 1],
+        aboveText: (idx % 2 === 0) ? s.tag : null,
+        belowText: (idx % 2 !== 0) ? s.tag : null,
+        rolloverText: `${s.tag}: ${formatNumber(s.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
       })),
-    ];
-    const defaultMenuItems = [
-      { text: formatMessage(messages.downloadCSV),
-        icon: <DownloadButton />,
-        clickHandler: this.downloadCsv,
-      },
-      { text: formatMessage(messages.downloadSVG),
-        icon: <DownloadButton />,
-        clickHandler: () => downloadSvg(BUBBLE_CHART_DOM_ID),
-      },
     ];
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ActionMenu actionItems={defaultMenuItems} />
+            <ActionMenu>
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadCSV)}
+                rightIcon={<DownloadButton />}
+                onTouchTap={this.downloadCsv}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadSVG)}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
+              />
+            </ActionMenu>
           </div>
         </Permissioned>
         <h2>
@@ -76,7 +82,6 @@ class NytLabelSummaryContainer extends React.Component {
           width={800}
           height={220}
           domId={BUBBLE_CHART_DOM_ID}
-          textPlacement={TEXT_PLACEMENT_CENTER}
           maxBubbleRadius={80}
         />
       </DataCard>

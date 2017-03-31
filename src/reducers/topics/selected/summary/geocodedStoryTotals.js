@@ -1,4 +1,4 @@
-import { FETCH_TOPIC_GEOCODED_STORY_COUNTS } from '../../../../actions/topicActions';
+import { FETCH_TOPIC_GEOCODED_STORY_COVERAGE } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const geocodedStoryTotals = createAsyncReducer({
@@ -8,7 +8,7 @@ const geocodedStoryTotals = createAsyncReducer({
       total: 0,
     },
   },
-  action: FETCH_TOPIC_GEOCODED_STORY_COUNTS,
+  action: FETCH_TOPIC_GEOCODED_STORY_COVERAGE,
 });
 
 export default geocodedStoryTotals;

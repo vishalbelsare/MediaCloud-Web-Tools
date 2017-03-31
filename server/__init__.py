@@ -169,4 +169,5 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.foci
     import server.views.topics.permissions
     import server.views.topics.maps
-    import server.views.topics.nytlabels
+    import server.views.topics.nyttags
+    import server.views.topics.geotags

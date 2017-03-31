@@ -40,7 +40,7 @@ def stream_sentence_count_csv(user_mc_key, filename, topics_id, **kwargs):
 @flask_login.login_required
 @api_error_handler
 def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     all_focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id)
     # need the timespan info, to find the appropriate timespan with each focus
     base_snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)

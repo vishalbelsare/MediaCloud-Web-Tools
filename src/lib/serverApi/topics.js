@@ -138,11 +138,6 @@ export function topicStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/counts`, acceptedParams);
 }
 
-export function topicGeocodedStoryCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/stories/geocoded-counts`, acceptedParams);
-}
-
 export function topicEnglishStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/stories/english-counts`, acceptedParams);
@@ -201,7 +196,22 @@ export function fetchFullTopicList() {
   return createApiPromise('/api/topics/fetchFullTopicList');
 }
 
-export function fetchTopicNytLabelTree(topicId, params) {
-  const acceptedParams = acceptParams(params, ['timespanId']);
-  return createApiPromise(`/api/topics/${topicId}/nyt-labels/counts`, acceptedParams);
+export function topicNytTaggedStoryCoverage(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/nyt-tags/coverage`, acceptedParams);
+}
+
+export function topicNytTaggedStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/nyt-tags/counts`, acceptedParams);
+}
+
+export function topicGeocodedStoryCoverage(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/geo-tags/coverage`, acceptedParams);
+}
+
+export function topicGeocodedStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/geo-tags/counts`, acceptedParams);
 }

@@ -57,7 +57,6 @@ export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
-export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
 export const FETCH_TOPIC_ENGLISH_STORY_COUNTS = 'FETCH_TOPIC_ENGLISH_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
@@ -72,7 +71,10 @@ export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 export const CREATE_TOPIC = 'CREATE_TOPIC';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
-export const FETCH_TOPIC_NYT_LABEL_COUNTS = 'FETCH_TOPIC_NYT_LABEL_COUNTS';
+export const FETCH_TOPIC_GEOCODED_STORY_COVERAGE = 'FETCH_TOPIC_GEOCODED_STORY_COVERAGE';
+export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
+export const FETCH_TOPIC_NYT_TAG_COVERAGE = 'FETCH_TOPIC_NYT_TAG_COVERAGE';
+export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -111,8 +113,6 @@ export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.t
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);
 // pass in topic id, filters
 export const fetchTopicStoryCounts = createAsyncAction(FETCH_TOPIC_STORY_COUNTS, api.topicStoryCounts);
-// pass in topic id, filters
-export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);
 // pass in topic id, filters
 export const fetchTopicEnglishStoryCounts = createAsyncAction(FETCH_TOPIC_ENGLISH_STORY_COUNTS, api.topicEnglishStoryCounts);
 
@@ -223,6 +223,17 @@ export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 // pass in topic id & params (snapshot id, focus id, timespan id)
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 
+// pass in topic id, filters
 export const fetchFullTopicList = createAsyncAction(FETCH_FULL_TOPIC_LIST, api.fetchFullTopicList);
 
-export const fetchTopicNytLabelCounts = createAsyncAction(FETCH_TOPIC_NYT_LABEL_COUNTS, api.fetchTopicNytLabelTree);
+// pass in topic id, filters
+export const fetchTopicNytLabelCoverage = createAsyncAction(FETCH_TOPIC_NYT_TAG_COVERAGE, api.topicNytTaggedStoryCoverage);
+
+// pass in topic id, filters
+export const fetchTopicNytLabelCounts = createAsyncAction(FETCH_TOPIC_NYT_TAG_COUNTS, api.topicNytTaggedStoryCounts);
+
+// pass in topic id, filters
+export const fetchTopicGeocodedStoryCoverage = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COVERAGE, api.topicGeocodedStoryCoverage);
+
+// pass in topic id, filters
+export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);

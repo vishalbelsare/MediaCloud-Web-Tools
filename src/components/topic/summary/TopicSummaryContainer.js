@@ -12,6 +12,7 @@ import TopicTimespanInfo from './TopicTimespanInfo';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
+import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -68,6 +69,9 @@ class TopicSummaryContainer extends React.Component {
             </Col>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
+            </Col>
+            <Col lg={12}>
+              <GeoTagSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               {filteredStoryCountContent}

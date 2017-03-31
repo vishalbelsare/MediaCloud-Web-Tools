@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicGeocodedStoryCounts, fetchTopicEnglishStoryCounts } from '../../../actions/topicActions';
+import { fetchTopicGeocodedStoryCoverage, fetchTopicEnglishStoryCounts } from '../../../actions/topicActions';
 import StatBar from '../../common/statbar/StatBar';
 
 const localMessages = {
@@ -59,7 +59,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchTopicGeocodedStoryCounts(ownProps.topicId, ownProps.filters));
+    dispatch(fetchTopicGeocodedStoryCoverage(ownProps.topicId, ownProps.filters));
     dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, ownProps.filters));
   },
 });

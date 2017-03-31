@@ -1,7 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const DEFAULT_WIDTH = 530;
 const DEFAULT_MAX_BUBBLE_RADIUS = 70;
@@ -12,6 +12,10 @@ export const PLACEMENT_AUTO = 'PLACEMENT_AUTO';
 export const PLACEMENT_HORIZONTAL = 'PLACEMENT_HORIZONTAL';
 const DEFAULT_PLACEMENT = PLACEMENT_AUTO;
 
+const localMessages = {
+  noData: { id: 'chart.bubble.noData', defaultMessage: 'Sorry, but we don\'t have any data to draw this chart.' },
+};
+
 /**
  * Draw a bubble chart with labels.  Values are mapped to area, not radius.
  */
@@ -19,6 +23,16 @@ class BubbleChart extends React.Component {
 
   render() {
     const { data, width, height, maxBubbleRadius, placement, domId } = this.props;
+
+    // bail if no data
+    if (data.length === 0) {
+      return (
+        <div>
+          <p><FormattedMessage {...localMessages.noData} /></p>
+        </div>
+      );
+    }
+
     // const { formatNumber } = this.props.intl;
     const options = {
       width,
@@ -126,6 +140,14 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.aboveTextColor} !important` || '')
         .text(d => d.aboveText);
 
+      // add bottom labels
+      bubbles.append('text')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y + d.r + 15)
+        .attr('text-anchor', 'middle')
+        .attr('fill', d => `${d.belowTextColor} !important` || '')
+        .text(d => d.belowText);
+
       content = node.toReact();
     }
 
@@ -143,6 +165,8 @@ BubbleChart.propTypes = {
     'centerTextColor': string(optional),
     'aboveText': string(optional),
     'aboveTextColor': string(optional),
+    'belowText': string(optional),
+    'belowTextColor': string(optional),
     'rolloverText': string(optional),
   }]
   */
