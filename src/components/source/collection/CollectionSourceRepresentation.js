@@ -11,7 +11,6 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
 
-
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
   title: { id: 'collection.summary.sourceRepresentation.title', defaultMessage: 'Source Representation' },

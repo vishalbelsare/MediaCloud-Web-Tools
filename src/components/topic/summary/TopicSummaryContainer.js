@@ -11,6 +11,7 @@ import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import TopicTimespanInfo from './TopicTimespanInfo';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
+import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -52,6 +53,9 @@ class TopicSummaryContainer extends React.Component {
             </Col>
             <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
+            </Col>
+            <Col lg={12}>
+              <NytLabelSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />

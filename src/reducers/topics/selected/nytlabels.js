@@ -3,7 +3,7 @@ import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const nytlabels = createAsyncReducer({
   initialState: {
-    tree: {},
+    results: [],
   },
   action: FETCH_TOPIC_NYT_LABEL_COUNTS,
 });
