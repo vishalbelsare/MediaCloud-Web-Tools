@@ -54,11 +54,15 @@ class BubbleChart extends React.Component {
     const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     let circles = null;
     switch (options.placement) {
-      case PLACEMENT_HORIZONTAL:      // EXPERIMENTAL
+      case PLACEMENT_HORIZONTAL:
         circles = data.map((d, idx, list) => {
-          const preceeding = list.slice(0, idx);
-          const diameters = preceeding.map(d2 => (radius(d2.value) + 5) * 2);
-          const xOffset = diameters.reduce((a, b) => a + b, 0);
+          let xOffset = 0;
+          if (idx > 0) {
+            const preceeding = list.slice(0, idx);
+            const diameters = preceeding.map(d2 => (radius(d2.value) * 2) + 10);
+            xOffset = d3.sum(diameters);
+          }
+          xOffset += radius(d.value);
           return {
             ...d,
             r: radius(d.value),

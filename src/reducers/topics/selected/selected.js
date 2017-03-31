@@ -13,6 +13,7 @@ import focalSets from './focalSets/focalSets';
 import permissions from './permissions';
 import attention from './attention';
 import word from './word/word';
+import nytlabels from './nytlabels';
 
 function id(state = null, action) {
   switch (action.type) {
@@ -58,6 +59,7 @@ const selected = combineReducers({
   permissions,
   attention,
   word,
+  nytlabels,
 });
 
 const rootReducer = (state, action) => {
