@@ -1,5 +1,4 @@
 import os
-import logging
 import logging.config
 import ConfigParser
 import json
@@ -20,8 +19,10 @@ from server.database import AppDatabase
 
 SERVER_MODE_DEV = "dev"
 SERVER_MODE_PROD = "prod"
+
 SERVER_APP_TOPICS = "topics"
 SERVER_APP_SOURCES = "sources"
+SERVER_APP_TOOLS = "tools"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActions';
@@ -11,6 +12,8 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
+import ActionMenu from '../../common/ActionMenu';
+import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.sourceRepresentation.chart.title', defaultMessage: 'Sentences By Source' },
@@ -54,9 +57,9 @@ class CollectionSourceRepresentation extends React.Component {
       const otherSources = sources.filter(d => d.sentence_pct <= SENTENCE_PERCENTAGE_MIN_VALUE);
       const otherTotal = d3.sum(otherSources.map(d => d.sentence_pct));
       const otherSourcesNode = {
+        value: otherTotal,
         centerText: formatMessage(messages.other),
         rolloverText: `${formatMessage(messages.other)}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
-        value: otherTotal,
         fill: '#eee',
       };
       const maxPct = Math.ceil(d3.max(contributingSources.map(d => d.sentence_pct)) * 100) / 100;
@@ -66,9 +69,9 @@ class CollectionSourceRepresentation extends React.Component {
 
       const bubbleData = [
         ...contributingSources.map(s => ({
-          centerText: s.name,
-          rolloverText: `${s.name}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
           value: s.sentence_pct,
+          centerText: s.name,
+          rolloverText: `${s.name}: ${formatNumber(s.sentence_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
           fill: scaleRange(s.sentence_pct),
         })),
       ];
@@ -89,7 +92,20 @@ class CollectionSourceRepresentation extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+          <ActionMenu>
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadCSV)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={this.downloadCsv}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
+            />
+          </ActionMenu>
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
