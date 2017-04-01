@@ -64,15 +64,19 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
-            <Col lg={12}>
-              <NytLabelSummaryContainer topicId={topicId} filters={filters} />
-            </Col>
+            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+              <Col lg={12}>
+                <NytLabelSummaryContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Permissioned>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
-            <Col lg={12}>
-              <GeoTagSummaryContainer topicId={topicId} filters={filters} />
-            </Col>
+            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+              <Col lg={12}>
+                <GeoTagSummaryContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Permissioned>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               {filteredStoryCountContent}
               <Col lg={12}>
