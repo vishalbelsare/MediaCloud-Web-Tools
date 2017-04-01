@@ -4,8 +4,8 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateCollection } from '../../../actions/sourceActions';
-import { updateFeedback } from '../../../actions/appActions';
+import { updateCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
@@ -84,10 +84,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     // try to save it
     dispatch(updateCollection(infoToSave))
       .then(() => {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        // TODO: redirect to new source detail page
-        dispatch(push(`/collections/${ownProps.params.collectionId}`));
+        dispatch(fetchCollectionDetails(ownProps.params.collectionId))
+        .then(() => {
+          dispatch(setSubHeaderVisible(true));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(push(`/collections/${ownProps.params.collectionId}`));
+        });
       });
   },
 });
