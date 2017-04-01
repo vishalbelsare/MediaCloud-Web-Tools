@@ -4,7 +4,8 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import { loginWithPassword, setLoginErrorMessage } from '../../actions/userActions';
+import { loginWithPassword } from '../../actions/userActions';
+// import { addNotice } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
 import { getAppName } from '../../config';
 import * as fetchConstants from '../../lib/fetchConstants';
@@ -25,7 +26,7 @@ const LoginFormComponent = (props) => {
   const { handleSubmit, onSubmitLoginForm, fetchStatus, renderTextField } = props;
   const { formatMessage } = props.intl;
   return (
-    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="login-form">
+    <form onSubmit={handleSubmit(onSubmitLoginForm.bind(this))} className="app-form login-form">
       <Row>
         <Col lg={12}>
           <Field
@@ -80,23 +81,20 @@ LoginFormComponent.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  errorMessage: React.PropTypes.string,
   // from dispatch
   onSubmitLoginForm: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.user.fetchStatus,
-  errorMessage: state.user.errorMessage,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
-      if (response.status === 401) {
-        dispatch(setLoginErrorMessage(ownProps.intl.formatMessage(localMessages.loginFailed)));
-      } else {
+      // error reporting is handled by error reporting middleware, so you only need to handle success here
+      if (response.status !== 401) {
         // redirect to destination if there is one
         const loc = ownProps.location;
         let redirect;
