@@ -130,12 +130,12 @@ def topic_create():
 
     topic_result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query,
                                        start_date=start_date, end_date=end_date, media_ids=media_ids_to_add,
-                                       media_tags_ids=tag_ids_to_add, **optional_args)
+                                       media_tags_ids=tag_ids_to_add, **optional_args)['topics'][0]
 
-    topic_id = topic_result['topics'][0]['topics_id']
+    topic_id = topic_result['topics_id']
     spider_job = user_mc.topicSpider(topic_id)  # kick off a spider, which will also generate a snapshot
-    results = topic_summary(topic_id)
-    topic_summary[0]['spider_job_state'] = spider_job['job_state']
+    results = user_mc.topic(topic_id)
+    results['spider_job_state'] = spider_job
 
     return jsonify(results)  # give them back new data, so they can update the client
 
