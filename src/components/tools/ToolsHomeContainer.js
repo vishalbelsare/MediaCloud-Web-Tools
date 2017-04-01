@@ -8,15 +8,40 @@ import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppTool
 import ToolDescription from './ToolDescription';
 import Faq from './faq/Faq';
 import SystemStatsContainer from './SystemStatsContainer';
+import LoginForm from '../user/LoginForm';
+import DataCard from '../common/DataCard';
 
 const localMessages = {
   title: { id: 'tools.home.title', defaultMessage: 'Welcome to Media Cloud' },
   intro: { id: 'tools.home.intro', defaultMessage: 'Understanding attention and influence within media ecosystems.' },
+  loginTitle: { id: 'tools.home.login.title', defaultMessage: 'Login or Signup Now' },
 };
 
 const ToolsHomeContainer = (props) => {
+  const { isLoggedIn } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
+  const notLoggedInContent = (
+    <Row>
+      <Col lg={8}>
+        <Faq />
+      </Col>
+      <Col lg={4}>
+        <DataCard>
+          <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
+          <LoginForm redirect="/" />
+        </DataCard>
+      </Col>
+    </Row>
+  );
+  const loggedInContent = (
+    <Row>
+      <Col lg={12}>
+        <Faq />
+      </Col>
+    </Row>
+  );
+  const content = (isLoggedIn) ? loggedInContent : notLoggedInContent;
   return (
     <div className="tools-home">
       <Grid>
@@ -57,7 +82,7 @@ const ToolsHomeContainer = (props) => {
           </Col>
         </Row>
         <SystemStatsContainer />
-        <Faq />
+        { content }
       </Grid>
     </div>
   );

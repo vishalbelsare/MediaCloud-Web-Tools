@@ -11,8 +11,8 @@ const maps = require('./world-eckert3-lowres');
 const localMessages = {
   title: { id: 'chart.geographyAttention.chart.title', defaultMessage: 'Mentions by Country' },
   seriesName: { id: 'chart.geographyAttention.series.name', defaultMessage: 'Geographic Attention' },
-  tooltipTitle: { id: 'chart.geographyAttention.title', defaultMessage: '{count} of sentences mention {name}' },
-  noData: { id: 'chart.geographyAttention.noData', defaultMessage: 'Sorry, but we don\'t have any data about the places mentioned.' },
+  tooltipTitle: { id: 'chart.geographyAttention.title', defaultMessage: '{count} of stories are about {name}' },
+  noData: { id: 'chart.geographyAttention.noData', defaultMessage: 'Sorry, but we don\'t have any geographic attention data to show.' },
 };
 
 class GeoChart extends React.Component {

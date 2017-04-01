@@ -26,8 +26,8 @@ class SelectCollectionContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    const { removeCollectionId } = this.props;
-    removeCollectionId();
+    // const { removeCollectionId } = this.props;
+    // removeCollectionId();
   }
 
   render() {
