@@ -18,7 +18,7 @@ import { filtersAsUrlParams } from '../../util/location';
 
 const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
 const COLORS = schemeCategory10;
-const PERCENTAGE_MIN_VALUE = 0.05; // anything lower than this goes into an "other" bubble
+const PERCENTAGE_MIN_VALUE = 0.03; // anything lower than this goes into an "other" bubble
 
 const localMessages = {
   title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top Themes' },
