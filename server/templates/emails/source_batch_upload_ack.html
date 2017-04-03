@@ -1,0 +1,25 @@
+{% extends "email.html" %}
+
+{% block email_title %}
+Results of Batch Update {{ url }}
+{% endblock %}
+
+{% block content_title %}
+Results of Batch Update {{ url }}
+{% endblock %}
+
+{% block content_body %}
+<table>
+<tr style="text-align: left;line-height: 30px;color: #373737;">
+<td> {{ url }}</td>
+<td> {{ name }}</td>
+</table>
+{% endblock %}
+
+{% block action_text %}
+Login to Media Cloud
+{% endblock %}
+
+{% block action_url %}
+https://sources.mediacloud.org/#/login
+{% endblock %}
