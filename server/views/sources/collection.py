@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, render_template
 import flask_login
 from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
@@ -14,7 +14,7 @@ from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
-from server.util.mail import send_email
+from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -22,6 +22,7 @@ from server.views.sources.metadata import _cached_tags_in_tag_set
 from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
 
 logger = logging.getLogger(__name__)
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 
 def allowed_file(filename):
     filename, file_extension = os.path.splitext(filename)
@@ -82,12 +83,12 @@ def upload_file():
                         audit_results, successful = _create_or_update_sources_from_template(updated_only, False)
                         all_results += successful
                         audit += audit_results
-                    if settings.has_option('smtp', 'enabled'):
-                        mail_enabled = settings.get('smtp', 'enabled')
-                        if mail_enabled is '1':
-                            _email_batch_source_update_results(audit)
+                    if settings.get('server', 'smtp'):
+                        mail_enabled = settings.get('server', 'smtp')
+                        # if mail_enabled is '1':
+                        _email_batch_source_update_results(audit)
                     for media in all_results:
-                        media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
+                        media['media_id'] = media['media_id']  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
@@ -137,28 +138,29 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     return results, update_source_list_metadata(successful)
 
 def _email_batch_source_update_results(results):
-    summary = "\n".join([s['url']+" - "+s['status']+" ("+s['status_message']+")" for s in results])
-    content = """
-Hi,
 
-You just uploaded a bunch of sources to a collection.  By doing this, you updated or created
-{count} sources.  Here is a summary of how that went.
+    email_title = "Source Batch Updates "
+    content_title = "You just uploaded {} sources to a collection.".format(len(results))
+    updated_sources = []
+    created_sources = []
+    for updated in results:
+        if updated['status'] == 'existing':
+            updated_sources.append("Updated Source: {} {}".format(updated['url'], updated['name'])) #status mesasage
+    for created in results:
+        if created['status'] == 'created':
+            created_sources.append("Created Source: {} {}".format(created['url'], created['name']))
 
-{summary}
-
-Sincerely,
-
-Your friendly Media Cloud Source Manager server
-
-https://topics.mediacloud.org
-"""
-    send_email('no-reply@mediacloud.org',
-               [user_name()],
-               '[Media Cloud] batch source update results',
-               content.format(
-                   count=len(results),
-                   summary=summary
-               ))
+    content_body = "Here is the summary of how that went: {}".format(created_sources)
+    action_text = "Login to Media Cloud"
+    action_url = "https://sources.mediacloud.org/#/login"
+    # send an email confirmation
+    send_html_email(email_title,
+                    [user_name(), 'source-create-update@mediacloud.org'],
+                    render_template("emails/generic.txt",
+                                    content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
+                    render_template("emails/generic.html",
+                                    email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
+                    )
 
 # this only adds/replaces metadata with values (does not remove)
 def update_source_list_metadata(source_list):
