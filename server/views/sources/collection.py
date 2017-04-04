@@ -50,6 +50,7 @@ def upload_file():
                 new_sources = []
                 updated_only = []
                 all_results = []
+                all_errors = []
                 reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
@@ -76,19 +77,22 @@ def upload_file():
                 else:
                     audit = []
                     if len(new_sources) > 0:
-                        audit_results, successful = _create_or_update_sources_from_template(new_sources, True)
+                        audit_results, successful, errors = _create_or_update_sources_from_template(new_sources, True)
                         all_results += successful
                         audit += audit_results
+                        all_errors += errors
                     if len(updated_only) > 0:
-                        audit_results, successful = _create_or_update_sources_from_template(updated_only, False)
+                        audit_results, successful, errors = _create_or_update_sources_from_template(updated_only, False)
                         all_results += successful
                         audit += audit_results
-                    if settings.get('server', 'smtp'):
-                        mail_enabled = settings.get('server', 'smtp')
-                        # if mail_enabled is '1':
-                        _email_batch_source_update_results(audit)
+                        all_errors += errors
+                    if settings.has_option('smtp', 'enabled'):
+                        mail_enabled = settings.get('smtp', 'enabled')
+                        if mail_enabled is '1':
+                            _email_batch_source_update_results(audit)
                     for media in all_results:
-                        media['media_id'] = media['media_id']  # make sure they are ints so no-dupes logic works on front end
+                        if 'media_id' in media:
+                            media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
@@ -106,22 +110,26 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
         source_no_meta = {k: v for k, v in src.items() if k != 'pub_country'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
+            src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
+            if 'error' in temp:
+                src['status_message'] = temp['error'] 
+            else: 
+                src['status_message'] = src['status']
             if temp['status'] != 'error':
-                successful.append(temp)
+                successful.append(src)
             else:
-                errors.append(temp)
-            src['status'] = temp['status']
-            src['status_message'] = temp['error'] if 'error' in temp else temp['status']
+                errors.append(src)
         else:
             media_id = src['media_id']
             source_no_meta_no_id = {k: v for k, v in source_no_meta.items() if k != 'media_id'}
             temp = user_mc.mediaUpdate(media_id, source_no_meta_no_id)
+            src['status'] = 'existing' if temp['success'] == 1 else 'error'
+            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
             if temp['success'] == 1:
                 successful.append(src)
             else:
                 errors.append(src)
-            src['status'] = 'existing' if temp['success'] == 1 else 'error'
-            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
+        
         results.append(src)
 
     logger.debug("successful :  %s", successful)
@@ -132,33 +140,28 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
         for source in source_list_from_csv:
             if source['url'] in info_by_url:
                 info_by_url[source['url']].update(source)
-        return results, update_source_list_metadata(info_by_url)
+        return results, update_source_list_metadata(info_by_url), errors
 
     #if a successful update, just return what we have, success
-    return results, update_source_list_metadata(successful)
+    return results, update_source_list_metadata(successful), errors
 
-def _email_batch_source_update_results(results):
+def _email_batch_source_update_results(audit_feedback):
 
     email_title = "Source Batch Updates "
-    content_title = "You just uploaded {} sources to a collection.".format(len(results))
+    content_title = "You just uploaded {} sources to a collection.".format(len(audit_feedback))
     updated_sources = []
-    created_sources = []
-    for updated in results:
-        if updated['status'] == 'existing':
-            updated_sources.append("Updated Source: {} {}".format(updated['url'], updated['name'])) #status mesasage
-    for created in results:
-        if created['status'] == 'created':
-            created_sources.append("Created Source: {} {}".format(created['url'], created['name']))
+    for updated in audit_feedback:
+        updated_sources.append(updated)
 
-    content_body = "Here is the summary of how that went: {}".format(created_sources)
+    content_body = updated_sources
     action_text = "Login to Media Cloud"
     action_url = "https://sources.mediacloud.org/#/login"
     # send an email confirmation
     send_html_email(email_title,
-                    [user_name(), 'source-create-update@mediacloud.org'],
-                    render_template("emails/generic.txt",
+                    [user_name(), 'noreply@mediacloud.org'],
+                    render_template("emails/source_batch_upload_ack.txt",
                                     content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
-                    render_template("emails/generic.html",
+                    render_template("emails/source_batch_upload_ack.html",
                                     email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
                     )
 
