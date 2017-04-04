@@ -215,7 +215,7 @@ def topic_tag_counts(user_mc_key, timespans_id, tag_sets_id, sample_size):
      This doesn't support the other filters, because it has to use sentenceFieldCount,
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
-    query = "{~ timespan:"+str(timespans_id)+"}"
+    query = "timespans_id:{}".format(timespans_id)
     user_mc = user_mediacloud_client()
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)
