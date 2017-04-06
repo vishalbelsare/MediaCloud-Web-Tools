@@ -22,7 +22,7 @@ const BrandToolbar = (props) => {
             <ul>
               <li className="tools">
                 <a
-                  href={TOPICS_URL}
+                  href={TOOLS_URL}
                   title={formatMessage(messages.toolsAppDescription)}
                 >
                   <FormattedMessage {...messages.toolsAppName} />
