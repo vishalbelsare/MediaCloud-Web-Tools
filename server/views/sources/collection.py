@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, render_template
 import flask_login
 from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
@@ -14,7 +14,7 @@ from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
-from server.util.mail import send_email
+from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -22,6 +22,7 @@ from server.views.sources.metadata import _cached_tags_in_tag_set
 from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
 
 logger = logging.getLogger(__name__)
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 
 def allowed_file(filename):
     filename, file_extension = os.path.splitext(filename)
@@ -49,6 +50,7 @@ def upload_file():
                 new_sources = []
                 updated_only = []
                 all_results = []
+                all_errors = []
                 reader.next()  # this means we have to have a header
                 for line in reader:
                     try:
@@ -75,19 +77,22 @@ def upload_file():
                 else:
                     audit = []
                     if len(new_sources) > 0:
-                        audit_results, successful = _create_or_update_sources_from_template(new_sources, True)
+                        audit_results, successful, errors = _create_or_update_sources_from_template(new_sources, True)
                         all_results += successful
                         audit += audit_results
+                        all_errors += errors
                     if len(updated_only) > 0:
-                        audit_results, successful = _create_or_update_sources_from_template(updated_only, False)
+                        audit_results, successful, errors = _create_or_update_sources_from_template(updated_only, False)
                         all_results += successful
                         audit += audit_results
+                        all_errors += errors
                     if settings.has_option('smtp', 'enabled'):
                         mail_enabled = settings.get('smtp', 'enabled')
                         if mail_enabled is '1':
                             _email_batch_source_update_results(audit)
                     for media in all_results:
-                        media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
+                        if 'media_id' in media:
+                            media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
@@ -105,22 +110,26 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
         source_no_meta = {k: v for k, v in src.items() if k != 'pub_country'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
+            src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
+            if 'error' in temp:
+                src['status_message'] = temp['error'] 
+            else: 
+                src['status_message'] = src['status']
             if temp['status'] != 'error':
-                successful.append(temp)
+                successful.append(src)
             else:
-                errors.append(temp)
-            src['status'] = temp['status']
-            src['status_message'] = temp['error'] if 'error' in temp else temp['status']
+                errors.append(src)
         else:
             media_id = src['media_id']
             source_no_meta_no_id = {k: v for k, v in source_no_meta.items() if k != 'media_id'}
             temp = user_mc.mediaUpdate(media_id, source_no_meta_no_id)
+            src['status'] = 'existing' if temp['success'] == 1 else 'error'
+            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
             if temp['success'] == 1:
                 successful.append(src)
             else:
                 errors.append(src)
-            src['status'] = 'existing' if temp['success'] == 1 else 'error'
-            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
+        
         results.append(src)
 
     logger.debug("successful :  %s", successful)
@@ -131,34 +140,30 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
         for source in source_list_from_csv:
             if source['url'] in info_by_url:
                 info_by_url[source['url']].update(source)
-        return results, update_source_list_metadata(info_by_url)
+        return results, update_source_list_metadata(info_by_url), errors
 
     #if a successful update, just return what we have, success
-    return results, update_source_list_metadata(successful)
+    return results, update_source_list_metadata(successful), errors
 
-def _email_batch_source_update_results(results):
-    summary = "\n".join([s['url']+" - "+s['status']+" ("+s['status_message']+")" for s in results])
-    content = """
-Hi,
+def _email_batch_source_update_results(audit_feedback):
 
-You just uploaded a bunch of sources to a collection.  By doing this, you updated or created
-{count} sources.  Here is a summary of how that went.
+    email_title = "Source Batch Updates "
+    content_title = "You just uploaded {} sources to a collection.".format(len(audit_feedback))
+    updated_sources = []
+    for updated in audit_feedback:
+        updated_sources.append(updated)
 
-{summary}
-
-Sincerely,
-
-Your friendly Media Cloud Source Manager server
-
-https://topics.mediacloud.org
-"""
-    send_email('no-reply@mediacloud.org',
-               [user_name()],
-               '[Media Cloud] batch source update results',
-               content.format(
-                   count=len(results),
-                   summary=summary
-               ))
+    content_body = updated_sources
+    action_text = "Login to Media Cloud"
+    action_url = "https://sources.mediacloud.org/#/login"
+    # send an email confirmation
+    send_html_email(email_title,
+                    [user_name(), 'noreply@mediacloud.org'],
+                    render_template("emails/source_batch_upload_ack.txt",
+                                    content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
+                    render_template("emails/source_batch_upload_ack.html",
+                                    email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
+                    )
 
 # this only adds/replaces metadata with values (does not remove)
 def update_source_list_metadata(source_list):
