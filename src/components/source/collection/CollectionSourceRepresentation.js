@@ -30,6 +30,7 @@ const localMessages = {
 
 const BUBBLE_CHART_DOM_ID = 'source-representation-bubble-chart';
 const SENTENCE_PERCENTAGE_MIN_VALUE = 0.01; // 1 percent threshold
+const TOP_N_LABELS_TO_SHOW = 5; // only the top N bubbles will get a label visible on them (so the text is readable)
 
 class CollectionSourceRepresentation extends React.Component {
 
@@ -58,7 +59,6 @@ class CollectionSourceRepresentation extends React.Component {
       const otherTotal = d3.sum(otherSources.map(d => d.sentence_pct));
       const otherSourcesNode = {
         value: otherTotal,
-        centerText: formatMessage(messages.other),
         rolloverText: `${formatMessage(messages.other)}: ${formatNumber(otherTotal, { style: 'percent', maximumFractionDigits: 2 })}`,
         fill: '#eee',
       };
@@ -68,9 +68,9 @@ class CollectionSourceRepresentation extends React.Component {
         .range([d3.rgb('#ffffff'), d3.rgb(getBrandDarkColor())]);
 
       const bubbleData = [
-        ...contributingSources.map(s => ({
+        ...contributingSources.sort((a, b) => b.sentence_pct - a.sentence_pct).map((s, idx) => ({
           value: s.sentence_pct,
-          centerText: s.name,
+          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? s.name : null,
           rolloverText: `${s.name}: ${formatNumber(s.sentence_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
           fill: scaleRange(s.sentence_pct),
         })),
