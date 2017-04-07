@@ -167,5 +167,6 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
             'media_inlink_count', 'inlink_count',
             'outlink_count', 'bitly_click_count', 'facebook_share_count', 'language']
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
-    except Exception as exception:
-        return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
+    except Exception as e:
+        logger.exception(e)
+        return json.dumps({'error': str(e)}, separators=(',', ':')), 400
