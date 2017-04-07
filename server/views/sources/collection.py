@@ -13,7 +13,7 @@ from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -220,16 +220,24 @@ def api_metadata_download(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_set(tag_sets_id):
-    info = _tag_set_with_public_collections(tag_sets_id)
-    _add_user_favorite_flag_to_collections(info['collections'])
-    return jsonify(info)
-
-def _tag_set_with_public_collections(tag_sets_id):
     '''
-    Return a list of all the public collections in a tag set.  Not cached because this can change, and load time isn't terrible.
+    Return a list of all the (public only or public and private, depending on user role) collections in a tag set.  Not cached because this can change, and load time isn't terrible.
     :param tag_sets_id: the tag set to query for public collections
     :return: dict of info and list of collections in
     '''
+    info = []
+    user_mc = user_mediacloud_client()
+
+    if user_has_auth_role(ROLE_MEDIA_EDIT) == True:
+        info = _tag_set_with_private_collections(tag_sets_id)
+    else:
+        info = _tag_set_with_public_collections(tag_sets_id)
+
+    _add_user_favorite_flag_to_collections(info['collections'])
+    return jsonify(info)
+
+def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
+
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
@@ -237,7 +245,7 @@ def _tag_set_with_public_collections(tag_sets_id):
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=True)
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=show_only_public_collections)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
@@ -249,6 +257,13 @@ def _tag_set_with_public_collections(tag_sets_id):
         'description': tag_set['description'],
         'collections': collection_list
     }
+
+def _tag_set_with_private_collections(tag_sets_id):
+    return _tag_set_with_collections(tag_sets_id, False)
+
+
+def _tag_set_with_public_collections(tag_sets_id):
+    return _tag_set_with_collections(tag_sets_id, True)
 
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
