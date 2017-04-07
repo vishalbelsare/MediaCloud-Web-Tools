@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/nyt-tags/coverage', methods=['GET'])
 @api_error_handler
 def topic_nyt_tag_coverage(topics_id):
-    coverage = topic_tag_coverage(topics_id, tags_util.NYT_LABELER_1_0_0_TAG_ID)
+    coverage = topic_tag_coverage(topics_id, tags_util.NYT_LABELER_1_0_0_TAG_ID)    # this will respect filters
     if coverage is None:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     return jsonify(coverage)
@@ -37,7 +37,8 @@ def topic_nyt_tag_counts_csv(topics_id):
 def topic_nyt_tag_counts(topics_id):
     timespans_id = request.args["timespanId"]
     tags = _nyt_tag_counts(user_mediacloud_key(), timespans_id)
-    return jsonify({'results': tags})
+    coverage = topic_tag_coverage(topics_id, tags_util.NYT_LABELER_1_0_0_TAG_ID)    # this will respect filters
+    return jsonify({'results': tags, 'coverage': coverage['counts']})
 
 
 def _nyt_tag_counts(user_mc_key, timespans_id):

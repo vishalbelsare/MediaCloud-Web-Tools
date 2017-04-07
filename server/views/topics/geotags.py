@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/geo-tags/coverage', methods=['GET'])
 @api_error_handler
 def topic_geo_tag_coverage(topics_id):
-    coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filter
+    coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filters
     if coverage is None:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     return jsonify(coverage)
@@ -39,7 +39,8 @@ def topic_geo_tag_counts_csv(topics_id):
 def topic_geo_tag_counts(topics_id):
     timespans_id = request.args["timespanId"]
     tags = _geo_tag_counts(user_mediacloud_key(), timespans_id)
-    return jsonify({'results': tags})
+    coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filters
+    return jsonify({'results': tags, 'coverage': coverage['counts']})
 
 
 def _geo_tag_counts(user_mc_key, timespans_id):
