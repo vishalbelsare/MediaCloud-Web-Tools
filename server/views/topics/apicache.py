@@ -224,3 +224,35 @@ def topic_tag_counts(user_mc_key, timespans_id, tag_sets_id, sample_size):
         t['pct'] = float(t['count']) / float(sample_size)
     return tag_counts
 
+
+def topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kwargs):
+    '''
+    Return a sample of sentences based on the filters.
+    '''
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
+    merged_args = {
+        'snapshots_id': snapshots_id,
+        'timespans_id': timespans_id,
+        'foci_id': foci_id,
+        'q': q
+    }
+    merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
+    return _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size, **merged_args)
+
+
+@cache
+def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kwargs):
+    '''
+    Internal helper - don't call this; call topic_sentence_sample instead. This needs user_mc_key in the
+    function signature to make sure the caching is keyed correctly. It includes topics_id in the method
+    signature to make sure caching works reasonably.
+    '''
+    local_mc = None
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_mediacloud_client()
+
+    sentences = local_mc.sentenceList(kwargs['q'], "timespans_id:{}".format(kwargs['timespans_id']),
+                                     rows=sample_size, sort=local_mc.SORT_RANDOM)
+    return sentences
