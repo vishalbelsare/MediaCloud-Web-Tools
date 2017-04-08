@@ -68,7 +68,7 @@ SentenceCountSummaryContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  counts: React.PropTypes.array,  // array of {date: epochMS, count: int]
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
