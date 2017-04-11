@@ -57,6 +57,7 @@ class SourceSearchContainer extends React.Component {
     const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
+
     const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults.slice(0, MAX_COLLECTIONS_TO_SHOW));
@@ -64,16 +65,29 @@ class SourceSearchContainer extends React.Component {
     if (searchSources || searchSources === undefined) {
       results = results.concat(sourceResults.slice(0, MAX_SOURCES_TO_SHOW));
     }
-    let resultsAsComponents = results.map(item => ({
-      text: item.name,
-      value: (
+    let resultsAsComponents = results.map((item) => {
+      let menuItemValue = (
         <MenuItem
           onClick={() => this.handleClick(item)}
           id={`searchResult${item.media_id || item.tags_id}`}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
-      ),
-    }));
+      );
+      if (item.is_static !== 0) {
+        menuItemValue = (
+          <MenuItem
+            id={`searchResult${item.media_id || item.tags_id}`}
+            primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : `${item.name} is static and cannot be added`}
+            style={{ color: '#aaaaaa' }}
+            disabled
+          />
+        );
+      }
+      return ({
+        text: item.name,
+        value: menuItemValue,
+      });
+    });
 
     if (onAdvancedSearchSelected !== undefined) {
       resultsAsComponents = resultsAsComponents.concat({
