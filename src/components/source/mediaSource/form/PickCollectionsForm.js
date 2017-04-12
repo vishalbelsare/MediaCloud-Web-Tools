@@ -40,6 +40,7 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
       </Col>
       <Col sm={6} xs={6}>
         <SourceSearchContainer
+          disableStaticCollections
           searchSources={false}
           searchStaticCollections={false}
           onCollectionSelected={item => fields.push(item)}
