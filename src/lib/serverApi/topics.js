@@ -168,7 +168,7 @@ export function wordWords(topicId, wordstem) {
 
 export function wordSampleSentences(topicId, wordstem, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/sample-sentences`, acceptedParams);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/sample-usage`, acceptedParams);
 }
 
 /*
