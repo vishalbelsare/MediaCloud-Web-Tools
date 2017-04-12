@@ -4,19 +4,23 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessages = {
   title: { id: 'topic.underConsutrction.title', defaultMessage: 'Under Construction' },
-  text: { id: 'topic.underConsutrction.text', defaultMessage: 'We are still building this Topic for you. Check back soon to see if it is ready.' },
+  text: { id: 'topic.underConsutrction.text', defaultMessage: 'Hold on! Our army of kittens in scouring the net for articles to include in your topic. Check back soon to see if it is ready.' },
 };
 
-const TopicUnderConstruction = () => (
+const TopicUnderConstruction = props => (
   <Grid>
     <Row>
-      <Col lg={6} md={6} sm={6}>
+      <Col lg={12}>
         <h1><FormattedMessage {...localMessages.title} /></h1>
       </Col>
     </Row>
     <Row>
-      <Col lg={6} md={6} sm={6}>
+      <Col lg={12}>
         <p><FormattedMessage {...localMessages.text} /></p>
+        <img
+          alt={props.intl.formatMessage(localMessages.title)}
+          src={'/static/img/kittens-searching.gif'}
+        />
       </Col>
     </Row>
   </Grid>

@@ -5,14 +5,13 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
-import { LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, WarningNotice } from '../common/Notice';
+import { LEVEL_WARNING, LEVEL_ERROR, ErrorNotice } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
   hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!  See the notes at the top if this page for more technical details.' },
-  topicRunning: { id: 'topic.topicRunning', defaultMessage: 'We are still scraping the web for all the stories in include!' },
 };
 
 class TopicContainer extends React.Component {
@@ -54,11 +53,6 @@ class TopicContainer extends React.Component {
     let contentToShow = children;
     switch (topicInfo.state) {
       case 'running':
-        notice = (
-          <WarningNotice details={topicInfo.message}>
-            <FormattedMessage {...localMessages.topicRunning} />
-          </WarningNotice>
-        );
         contentToShow = (<TopicUnderConstruction />);
         break;
       case 'error':
