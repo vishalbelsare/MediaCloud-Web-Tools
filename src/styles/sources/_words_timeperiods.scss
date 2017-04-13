@@ -1,0 +1,16 @@
+.words {
+  float: left;
+  font-family: $font-families;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.time-periods {
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+  cursor: pointer !important;
+  font-family: $font-families;
+  font-size: 14px;
+  font-weight: bold;
+}

@@ -27,37 +27,34 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
   render() {
     const { title, words, downloadUrl, targetURL, handleTimePeriodClick, onViewModeClick, helpButton, domId } = this.props;
     const timePeriods = (
-      <div>
+      <div className="time-periods">
         <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_WEEK))}>
           <FormattedMessage {...localMessages.pastWeek} />&nbsp;
         </a>
         <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_MONTH))}>
-          &nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
+          &nbsp;&nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
         </a>
         <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_YEAR))}>
-          &nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
+          &nbsp;&nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
         </a>
         <a tabIndex="0" onClick={() => handleTimePeriodClick()}>
-          &nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
+          &nbsp;&nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
         </a>
       </div>
     );
 
     return (
-      <div>
-
-        <EditableWordCloudDataCard
-          words={words}
-          timePeriod={timePeriods}
-          downloadUrl={downloadUrl}
-          targetURL={targetURL}
-          onViewModeClick={onViewModeClick}
-          domId={domId}
-          width={520}
-          title={title}
-          helpButton={helpButton}
-        />
-      </div>
+      <EditableWordCloudDataCard
+        words={words}
+        timePeriod={timePeriods}
+        downloadUrl={downloadUrl}
+        targetURL={targetURL}
+        onViewModeClick={onViewModeClick}
+        domId={domId}
+        width={520}
+        title={title}
+        helpButton={helpButton}
+      />
     );
   }
 }

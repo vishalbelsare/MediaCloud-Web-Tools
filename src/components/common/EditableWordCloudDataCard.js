@@ -174,11 +174,12 @@ class EditableWordCloudDataCard extends React.Component {
             </ActionMenu>
           </div>
         </Permissioned>
-        <h2>
+
+        <span className="words">
           {titleContent}
-          {timePeriod}
           {helpButton}
-        </h2>
+        </span>
+        {timePeriod}
         {editingWarning}
         {cloudContent}
       </DataCard>
