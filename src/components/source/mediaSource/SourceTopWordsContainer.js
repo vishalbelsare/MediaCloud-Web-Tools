@@ -16,9 +16,14 @@ const localMessages = {
 
 class SourceTopWordsContainer extends React.Component {
 
-  fetchWordsByTimePeriod = (params) => {
+  state = {
+    timePeriod: 1,
+  }
+
+  fetchWordsByTimePeriod = (params, timePeriod) => {
     const { fetchData } = this.props;
-    fetchData(params);
+    const sendParams = { q: params, timePeriod };
+    fetchData(sendParams);
   }
   handleWordClick = (word) => {
     const { source } = this.props;
@@ -35,6 +40,7 @@ class SourceTopWordsContainer extends React.Component {
       <PeriodicEditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
+        selectedTime={this.state && this.state.timePeriod ? this.state.timePeriod : 0}
         downloadUrl={downloadUrl}
         targetURL={`/sources/${source.media_id}`}
         onViewModeClick={this.handleWordClick}
@@ -64,6 +70,7 @@ SourceTopWordsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
   words: state.sources.sources.selected.topWords.list.wordcounts,
+  timePeriod: state.sources.sources.selected.topWords.timePeriod,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

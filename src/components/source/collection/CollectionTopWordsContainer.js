@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 
@@ -26,7 +26,7 @@ class CollectionTopWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
     return (
-      <EditableWordCloudDataCard
+      <PeriodicEditableWordCloudDataCard
         words={words}
         downloadUrl={downloadUrl}
         onViewModeClick={this.handleWordClick}

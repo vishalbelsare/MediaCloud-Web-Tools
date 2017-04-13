@@ -1,4 +1,4 @@
-.words {
+.word-labels {
   float: left;
   font-family: $font-families;
   font-size: 20px;
@@ -13,4 +13,10 @@
   font-family: $font-families;
   font-size: 14px;
   font-weight: bold;
+  color: $material-grey900;
+
+  :hover {
+  	color: $sources-darker;
+  	text-decoration: underline;
+  }
 }

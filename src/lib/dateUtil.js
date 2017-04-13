@@ -93,7 +93,7 @@ export function cleanCoverageGaps(gapList) {
 
 export function calculateTimePeriods(timePeriod) {
   let targetPeriodStart = null;
-  const targetPeriodEnd = moment().format();
+  // const targetPeriodEnd = moment().format('YYYY-MM-DDThh:mm:ssZ');
   const targetYear = moment().subtract(1, 'year');
 
   const targetMonth = moment().subtract(1, 'month');
@@ -116,5 +116,5 @@ export function calculateTimePeriods(timePeriod) {
     default:
       break;
   }
-  return `q='(publish_date:[${targetPeriodStart.format()} TO ${targetPeriodEnd}])'`;
+  return `q='(publish_date:[${targetPeriodStart.format('YYYY-MM-DDThh:mm:ss')}Z TO ${moment().format('YYYY-MM-DDThh:mm:ss')}Z])'`;
 }

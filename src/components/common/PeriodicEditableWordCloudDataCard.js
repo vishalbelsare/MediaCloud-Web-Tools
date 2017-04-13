@@ -15,29 +15,30 @@ const localMessages = {
   modeUnordered: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
 };
 
+const ALL = 0;
+
 class PeriodicEditableWordCloudDataCard extends React.Component {
 
-  state = {
-    editing: false,   // whether you are editing right now or not
-    modifiableWords: null, // all the words, including a boolean display property on each
-    displayOnlyWords: null, // only the words that are being displayed
-    ordered: true,  // whether you are showing an ordered word cloud or circular layout word cloud
-  };
+  saveStateAndTriggerFetch = (timePeriod, e) => {
+    const { handleTimePeriodClick } = this.props;
+    e.target.parentElement.setAttribute('selected', 'true');
+    handleTimePeriodClick(calculateTimePeriods(timePeriod), timePeriod);
+  }
 
   render() {
-    const { title, words, downloadUrl, targetURL, handleTimePeriodClick, onViewModeClick, helpButton, domId } = this.props;
+    const { title, words, downloadUrl, selectedTime, targetURL, onViewModeClick, helpButton, domId } = this.props;
     const timePeriods = (
       <div className="time-periods">
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_WEEK))}>
+        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}>
           <FormattedMessage {...localMessages.pastWeek} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_MONTH))}>
+        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_MONTH, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_YEAR))}>
+        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick()}>
+        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(ALL, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
         </a>
       </div>
@@ -74,6 +75,7 @@ PeriodicEditableWordCloudDataCard.propTypes = {
   helpButton: React.PropTypes.node,
   targetURL: React.PropTypes.string,
   handleTimePeriodClick: React.PropTypes.func.isRequired,
+  selectedTime: React.PropTypes.number,
     // from dispatch
   onViewModeClick: React.PropTypes.func.isRequired,
   domId: React.PropTypes.string.isRequired,
