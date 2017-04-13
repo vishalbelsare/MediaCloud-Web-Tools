@@ -32,7 +32,7 @@ class SourceTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { source, words, helpButton } = this.props;
+    const { source, words, timePeriod, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
 
@@ -40,7 +40,7 @@ class SourceTopWordsContainer extends React.Component {
       <PeriodicEditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
-        selectedTime={this.state && this.state.timePeriod ? this.state.timePeriod : 0}
+        selectedTime={timePeriod}
         downloadUrl={downloadUrl}
         targetURL={`/sources/${source.media_id}`}
         onViewModeClick={this.handleWordClick}
@@ -62,6 +62,7 @@ SourceTopWordsContainer.propTypes = {
   words: React.PropTypes.array,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
+  timePeriod: React.PropTypes.number,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
@@ -70,7 +71,7 @@ SourceTopWordsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
   words: state.sources.sources.selected.topWords.list.wordcounts,
-  timePeriod: state.sources.sources.selected.topWords.timePeriod,
+  timePeriod: parseInt(state.sources.sources.selected.topWords.timePeriod, 10),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

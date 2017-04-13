@@ -29,16 +29,16 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
     const { title, words, downloadUrl, selectedTime, targetURL, onViewModeClick, helpButton, domId } = this.props;
     const timePeriods = (
       <div className="time-periods">
-        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}>
+        <a tabIndex="0" selected={selectedTime === PAST_WEEK} onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}>
           <FormattedMessage {...localMessages.pastWeek} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_MONTH, e)}>
+        <a tabIndex="0" selected={selectedTime === PAST_MONTH} onClick={e => this.saveStateAndTriggerFetch(PAST_MONTH, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}>
+        <a tabIndex="0" selected={selectedTime === PAST_YEAR} onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={e => this.saveStateAndTriggerFetch(ALL, e)}>
+        <a tabIndex="0" selected={selectedTime === ALL} onClick={e => this.saveStateAndTriggerFetch(ALL, e)}>
           &nbsp;&nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
         </a>
       </div>
