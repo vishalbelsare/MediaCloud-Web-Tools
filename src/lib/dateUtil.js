@@ -14,6 +14,11 @@ const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 
+export const PAST_WEEK = 1;
+export const PAST_MONTH = 2;
+export const PAST_YEAR = 3;
+export const PAST_ALL = 0;
+
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }
@@ -84,4 +89,32 @@ export function cleanCoverageGaps(gapList) {
     };
   });
   return plotBands;
+}
+
+export function calculateTimePeriods(timePeriod) {
+  let targetPeriodStart = null;
+  const targetPeriodEnd = moment().format();
+  const targetYear = moment().subtract(1, 'year');
+
+  const targetMonth = moment().subtract(1, 'month');
+
+  const targetWeek = moment().subtract(1, 'week');
+
+  switch (timePeriod) {
+    case PAST_WEEK: // past week
+      targetPeriodStart = targetWeek;
+      break;
+    case PAST_MONTH: // past month
+      targetPeriodStart = targetMonth;
+      break;
+    case PAST_YEAR:
+      targetPeriodStart = targetYear;
+      break;
+    case PAST_ALL:
+      return '';
+
+    default:
+      break;
+  }
+  return `q='(publish_date:[${targetPeriodStart.format()} TO ${targetPeriodEnd}])'`;
 }

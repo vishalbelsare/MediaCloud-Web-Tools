@@ -1,8 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import moment from 'moment';
-
+import { calculateTimePeriods, PAST_WEEK, PAST_MONTH, PAST_YEAR } from '../../lib/dateUtil';
 import EditableWordCloudDataCard from './EditableWordCloudDataCard';
 
 const localMessages = {
@@ -25,54 +24,20 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
     ordered: true,  // whether you are showing an ordered word cloud or circular layout word cloud
   };
 
-  calculateDate = (timePeriod) => {
-    let currentDate = new Date();
-    currentDate = currentDate.getDate();
-
-    const all = moment().subtract(10, 'year');
-    let targetPeriodStart = currentDate;
-    const targetPeriodEnd = moment().format();
-    const targetYear = moment().subtract(1, 'year');
-
-    const targetMonth = moment().subtract(1, 'month');
-
-    const targetWeek = moment().subtract(1, 'week');
-
-    switch (timePeriod) {
-      case 1: // past week
-        targetPeriodStart = targetWeek;
-        break;
-      case 2: // past month
-        targetPeriodStart = targetMonth;
-        break;
-      case 3:
-        targetPeriodStart = targetYear;
-        break;
-      case 0:
-        targetPeriodStart = all;
-        break;
-      default:
-        break;
-    }
-    return `q='(publish_date:[${targetPeriodStart.format()} TO ${targetPeriodEnd}])'`;
-  }
-
   render() {
     const { title, words, downloadUrl, targetURL, handleTimePeriodClick, onViewModeClick, helpButton, domId } = this.props;
-    const locationWithQuery = '(publish_date:[2015-12-11T00:00:00Z TO 2016-03-18T00:00:00Z])';
-
     const timePeriods = (
       <div>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(1))}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_WEEK))}>
           <FormattedMessage {...localMessages.pastWeek} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(2))}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_MONTH))}>
           &nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(3))}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateTimePeriods(PAST_YEAR))}>
           &nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(locationWithQuery)}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick()}>
           &nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
         </a>
       </div>

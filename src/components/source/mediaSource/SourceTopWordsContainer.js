@@ -30,6 +30,7 @@ class SourceTopWordsContainer extends React.Component {
     const { source, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
+
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -67,14 +68,18 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (params) => {
-    dispatch(fetchSourceTopWords(ownProps.source.media_id, params));
+    if (params) {
+      dispatch(fetchSourceTopWords(ownProps.source.media_id, params));
+    } else {
+      dispatch(fetchSourceTopWords(ownProps.source.media_id));
+    }
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps);
+      dispatchProps.fetchData();
     },
   });
 }
