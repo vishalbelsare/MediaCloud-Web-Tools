@@ -1,5 +1,37 @@
-import config from '../../config/test.config';
 import visit from '../helpers/visit';
+import login from '../helpers/login'
+
+describe('From the sources home page...', () => {
+
+  beforeAll(function(done) {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
+    done();
+  });
+
+  test('the user can log in', async() => {
+    let result = await visit('/#/home')
+              .use(login)
+              .wait('.datacard.favorite-sources-collections')
+              .evaluate(() => document.querySelector('.datacard.favorite-sources-collections h2').innerText)
+              .end();
+
+    expect(result).toBe('My Starred Items');
+  });
+
+  test('the user can log out', async() => {
+    let result = await visit('/#/home')
+              .use(login)
+              .wait('.user-menu button')
+              .touchTap('.user-menu button')
+              .wait('#user-logout')
+              .touchTap('#user-logout')
+              .wait('h2 span')
+              .evaluate(() => document.querySelector('h2 span').innerText)
+              .end();
+
+    expect(result).toBe('Login');
+  });
+});
 
 describe('When searching for "Boston" in search bar', () => {
 
@@ -10,9 +42,7 @@ describe('When searching for "Boston" in search bar', () => {
 
   test('it suggests "Boston Globe"', async() => {
   	let result = await visit('/#/home')
-              .type('.login-form input[type=text]', config.username)
-              .type('.login-form input[type=password]', config.password)
-              .click('.login-form .app-button button')
+              .use(login)
               .wait('.source-search input')
               .type('.source-search input', 'Boston')
   					  .evaluate(() => document.querySelector('.source-search input').focus())
@@ -33,13 +63,11 @@ describe('After opening drawer', () => {
   test('it links to Media Cloud sources', async() => {
     let mediaCloudHeader = 'Collections';
     let result = await visit('/#/home')
-              .type('.login-form input[type=text]', config.username)
-              .type('.login-form input[type=password]', config.password)
-              .click('.login-form .app-button button')
+              .use(login)
               .wait('#sources-drawer-button')
-              .click('#sources-drawer-button')
-              .wait('#media-cloud-collections') 
-              .click('#media-cloud-collections')  
+              .touchTap('#sources-drawer-button')
+              .wait('#media-cloud-collections')
+              .touchTap('#media-cloud-collections')
               .wait('.collection-list h2')
               .evaluate(() => document.querySelector('.collection-list h2').innerText)
               .end();
@@ -49,13 +77,11 @@ describe('After opening drawer', () => {
   test('it links to Global Voices', async() => {
     let globalVoicesHeader = 'Global Voices Countries';
     let result = await visit('/#/home')
-              .type('.login-form input[type=text]', config.username)
-              .type('.login-form input[type=password]', config.password)
-              .click('.login-form .app-button button')
+              .use(login)
               .wait('#sources-drawer-button')
-              .click('#sources-drawer-button')
-              .wait('#global-voices-collections') 
-              .click('#global-voices-collections')  
+              .touchTap('#sources-drawer-button')
+              .wait('#global-voices-collections')
+              .touchTap('#global-voices-collections')
               .wait('.collection-list h2')
               .evaluate(() => document.querySelector('.collection-list h2').innerText)
               .end();
@@ -65,13 +91,11 @@ describe('After opening drawer', () => {
   test('it links to European Monitor', async() => {
     let europeMediaMonitorHeader = 'Europe Media Monitor Countries';
     let result = await visit('/#/home')
-              .type('.login-form input[type=text]', config.username)
-              .type('.login-form input[type=password]', config.password)
-              .click('.login-form .app-button button')
+              .use(login)
               .wait('#sources-drawer-button')
-              .click('#sources-drawer-button')
-              .wait('#european-media-monitor-collections') 
-              .click('#european-media-monitor-collections')  
+              .touchTap('#sources-drawer-button')
+              .wait('#european-media-monitor-collections')
+              .touchTap('#european-media-monitor-collections') 
               .wait('.collection-list h2')
               .evaluate(() => document.querySelector('.collection-list h2').innerText)
               .end();
