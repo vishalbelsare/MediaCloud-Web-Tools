@@ -42,3 +42,7 @@ export function filteredLinkTo(to, filters) {
 export function filtersAsUrlParams(filters) {
   return `snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId || ''}&focusId=${filters.focusId || ''}`;
 }
+
+export function urlWithFilters(to, filters) {
+  return `#${to}&${filtersAsUrlParams(filters)}`;
+}

@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { replace } from 'react-router-redux';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { filteredLocation } from '../util/location';
+import { filteredLocation, urlWithFilters } from '../util/location';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
@@ -20,6 +20,7 @@ const localMessages = {
   snapshotImporting: { id: 'snapshotGenerating.warning.importing', defaultMessage: 'We are importing the new snapshot now. Please reload this page in a minute to automatically see the freshest data.' },
   snapshotFailed: { id: 'snapshotFailed.warning', defaultMessage: 'We tried to generate a new snapshot, but it failed.' },
   topicRunning: { id: 'topic.topicRunning', defaultMessage: 'We are scraping the web for all the stories in include in your topic.' },
+  notUsingLatestSnapshot: { id: 'topic.notUsingLatestSnapshot', defaultMessage: 'You are not using the latest snapshot!  If you are not doing this on purpose, <a href="{url}">switch to the latest snapshot</a> to get the best data.' },
 };
 
 class TopicContainer extends React.Component {
@@ -32,11 +33,11 @@ class TopicContainer extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    const { topicId, topicInfo, selectNewTopic, needsNewSnapshot, addAppNotice } = this.props;
+    const { topicId, topicInfo, asyncFetch, needsNewSnapshot, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     // if they edited the topic, or the topic changed then reload
     if ((nextProps.topicInfo !== topicInfo) || (nextProps.topicId !== topicId)) {
-      selectNewTopic(topicId);
+      asyncFetch();
       // warn user if they made changes that require a new snapshot
       if (needsNewSnapshot) {
         addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
@@ -75,7 +76,6 @@ TopicContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  selectNewTopic: React.PropTypes.func.isRequired,
   addAppNotice: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
@@ -97,12 +97,6 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   addAppNotice: (info) => {
     dispatch(addNotice(info));
-  },
-  selectNewTopic: (topicId) => {
-    dispatch(selectTopic(topicId));
-    if (topicId === null) {
-      dispatch(setSubHeaderVisible(false));
-    }
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
@@ -148,10 +142,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         // show any warnings based on the snapshot state
         const snapshots = response.snapshots.list;
         const snapshotJobStatus = response.snapshots.jobStatus;
+        const firstReadySnapshot = snapshots.find(s => snapshotIsUsable(s));
         // if no snapshot specified, pick the first usable snapshot
         if ((snapshotId === null) || (snapshotId === undefined)) {
           // default to the latest ready snapshot if none is specified on url
-          const firstReadySnapshot = snapshots.find(s => snapshotIsUsable(s));
           if (firstReadySnapshot) {
             const newSnapshotId = firstReadySnapshot.snapshots_id;
             const newLocation = filteredLocation(ownProps.location, {
@@ -162,8 +156,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
             dispatch(filterBySnapshot(newSnapshotId));
           }
+        } else if (firstReadySnapshot.snapshots_id !== parseInt(snapshotId, 10)) {
+          // if snaphot is specific in URL, but it is not the latest then show a warning
+          dispatch(addNotice({
+            level: LEVEL_WARNING,
+            htmlMessage: ownProps.intl.formatHTMLMessage(localMessages.notUsingLatestSnapshot, {
+              url: urlWithFilters(ownProps.location.pathname, {
+                snapshotId: firstReadySnapshot.snapshots_id,
+              }),
+            }),
+          }));
         }
-        // if there pending jobs then warn the user about their state
+        // if a snapshot is in progress then show the user a note about its state
         if (snapshotJobStatus && snapshotJobStatus.length > 0) {
           const latestSnapshotJobStatus = response.snapshots.jobStatus[0];
           switch (latestSnapshotJobStatus.state) {
