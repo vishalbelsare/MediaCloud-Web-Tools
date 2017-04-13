@@ -49,7 +49,6 @@ class SourceTopWordsContainer extends React.Component {
 SourceTopWordsContainer.propTypes = {
   // from parent
   source: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
   // from state
   fetchData: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,

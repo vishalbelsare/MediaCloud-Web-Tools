@@ -26,35 +26,35 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
   };
 
   calculateDate = (timePeriod) => {
-    const currentDate = new Date();
-    const currentDate = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getYear();
-    const all = momemt().subtract(10, 'year');
-    let targetPeriod_start = currentDate;
-    let targetPeriod_end = currentDate;
-    let targetYear = moment().subtract(1, 'year');
+    let currentDate = new Date();
+    currentDate = currentDate.getDate();
 
-    let targetMonth = moment().subtract(1, 'month');
+    const all = moment().subtract(10, 'year');
+    let targetPeriodStart = currentDate;
+    const targetPeriodEnd = moment().format();
+    const targetYear = moment().subtract(1, 'year');
 
-    let targetWeek = moment().subtract(1, 'week');
+    const targetMonth = moment().subtract(1, 'month');
 
-    switch (timeperiod) {
-      case 1: //past week
-        targetPeriod_start = targetWeek;
+    const targetWeek = moment().subtract(1, 'week');
+
+    switch (timePeriod) {
+      case 1: // past week
+        targetPeriodStart = targetWeek;
         break;
-      case 2: //past month
-        targetPeriod_start = targetMonth;
+      case 2: // past month
+        targetPeriodStart = targetMonth;
         break;
       case 3:
-        targetPeriod_start = targetYear;
+        targetPeriodStart = targetYear;
         break;
       case 0:
-        targetPeriod_start = all;
+        targetPeriodStart = all;
+        break;
       default:
         break;
     }
-    return " '(publish_date:[" + targetPeriod_start + " TO " + targetPeriod_end + "])'";
+    return `q='(publish_date:[${targetPeriodStart.format()} TO ${targetPeriodEnd}])'`;
   }
 
   render() {
@@ -63,13 +63,13 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
 
     const timePeriods = (
       <div>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateDate(1))}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(1))}>
           <FormattedMessage {...localMessages.pastWeek} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(calculateDate(2))}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(2))}>
           &nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
         </a>
-        <a tabIndex="0" onClick={() => handleTimePeriodClick(locationWithQuery)}>
+        <a tabIndex="0" onClick={() => handleTimePeriodClick(this.calculateDate(3))}>
           &nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
         </a>
         <a tabIndex="0" onClick={() => handleTimePeriodClick(locationWithQuery)}>
