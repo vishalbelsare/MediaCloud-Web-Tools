@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
-import * as api from '../lib/topics';
+import * as api from '../lib/serverApi/topics';
 
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
 export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
@@ -57,7 +57,6 @@ export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const DELETE_FOCUS_DEFINITION = 'DELETE_FOCUS_DEFINITION';
 export const FETCH_TOPIC_STORY_COUNTS = 'FETCH_TOPIC_STORY_COUNTS';
-export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
 export const FETCH_TOPIC_ENGLISH_STORY_COUNTS = 'FETCH_TOPIC_ENGLISH_STORY_COUNTS';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS = 'FETCH_TOPIC_FOCAL_SET_SENTENCE_COUNTS';
@@ -68,10 +67,15 @@ export const FETCH_WORD_SENTENCE_COUNT = 'FETCH_WORD_SENTENCE_COUNT';
 export const FETCH_WORD_STORIES = 'FETCH_WORD_STORIES';
 export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
+export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
 export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 export const CREATE_TOPIC = 'CREATE_TOPIC';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
+export const FETCH_TOPIC_GEOCODED_STORY_COVERAGE = 'FETCH_TOPIC_GEOCODED_STORY_COVERAGE';
+export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
+export const FETCH_TOPIC_NYT_TAG_COVERAGE = 'FETCH_TOPIC_NYT_TAG_COVERAGE';
+export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -110,8 +114,6 @@ export const fetchTopicTopWords = createAsyncAction(FETCH_TOPIC_TOP_WORDS, api.t
 export const fetchTopicSentenceCounts = createAsyncAction(FETCH_TOPIC_SENTENCE_COUNT, api.topicSentenceCounts);
 // pass in topic id, filters
 export const fetchTopicStoryCounts = createAsyncAction(FETCH_TOPIC_STORY_COUNTS, api.topicStoryCounts);
-// pass in topic id, filters
-export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);
 // pass in topic id, filters
 export const fetchTopicEnglishStoryCounts = createAsyncAction(FETCH_TOPIC_ENGLISH_STORY_COUNTS, api.topicEnglishStoryCounts);
 
@@ -216,10 +218,25 @@ export const sortWordStories = createAction(SORT_WORD_STORIES, sort => sort);
 // pass in topic id, media id, snapshot id, timespan id
 export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords);
 
+export const fetchWordSampleSentences = createAsyncAction(FETCH_WORD_SAMPLE_SENTENCES, api.wordSampleSentences);
+
 export const createTopic = createAsyncAction(CREATE_TOPIC, api.createTopic);
 
 export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 // pass in topic id & params (snapshot id, focus id, timespan id)
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 
+// pass in topic id, filters
 export const fetchFullTopicList = createAsyncAction(FETCH_FULL_TOPIC_LIST, api.fetchFullTopicList);
+
+// pass in topic id, filters
+export const fetchTopicNytLabelCoverage = createAsyncAction(FETCH_TOPIC_NYT_TAG_COVERAGE, api.topicNytTaggedStoryCoverage);
+
+// pass in topic id, filters
+export const fetchTopicNytLabelCounts = createAsyncAction(FETCH_TOPIC_NYT_TAG_COUNTS, api.topicNytTaggedStoryCounts);
+
+// pass in topic id, filters
+export const fetchTopicGeocodedStoryCoverage = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COVERAGE, api.topicGeocodedStoryCoverage);
+
+// pass in topic id, filters
+export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);

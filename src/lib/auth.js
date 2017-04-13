@@ -1,12 +1,12 @@
 import cookie from 'react-cookie';
-import { createPostingApiPromise } from './apiUtil';
 
+// persmisisons used WITHIN a topic
 export const PERMISSION_TOPIC_NONE = 'none';
 export const PERMISSION_TOPIC_READ = 'read';
 export const PERMISSION_TOPIC_WRITE = 'write';
 export const PERMISSION_TOPIC_ADMIN = 'admin';
 
-
+// Roles a user can have
 export const PERMISSION_LOGGED_IN = 'user';
 // can do anything
 export const PERMISSION_ADMIN = 'admin';
@@ -17,16 +17,6 @@ export const PERMISSION_STORY_EDIT = 'story-edit';
 
 const COOKIE_USERNAME = 'mediameter_user_username';
 const COOKIE_KEY = 'mediameter_user_key';
-
-export function promiseToLoginWithPassword(email, password) {
-  const params = { email, password };
-  return createPostingApiPromise('/api/login', params);
-}
-
-export function promiseToLoginWithKey(email, key) {
-  const params = { email, key };
-  return createPostingApiPromise('/api/login-with-key', params);
-}
 
 export function saveCookies(email, key) {
   cookie.save(COOKIE_USERNAME, email);

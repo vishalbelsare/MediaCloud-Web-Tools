@@ -7,7 +7,7 @@ import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import BubbleChart, { PLACEMENT_AUTO, TEXT_PLACEMENT_ROLLOVER } from '../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -41,15 +41,23 @@ class FociAttentionComparisonContainer extends React.Component {
   }
   render() {
     const { foci, overallTotal, overallCounts } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     // stich together bubble chart data
     let bubbleData = [];
     if (foci !== undefined && foci.length > 0) {
       bubbleData = [
         ...foci.map((focus, idx) => ({
-          label: focus.name, value: focus.total, color: COLORS[idx + 1],
+          value: focus.total,
+          centerText: focus.name,
+          rolloverText: `${focus.name}: ${formatNumber(focus.total)}`,
+          fill: COLORS[idx + 1],
         })),
-        { label: formatMessage(localMessages.overallSeries), value: overallTotal, color: COLORS[0] },
+        {
+          value: overallTotal,
+          centerText: formatMessage(localMessages.overallSeries),
+          rolloverText: `${formatMessage(localMessages.overallSeries)}: ${formatNumber(overallTotal)}`,
+          fill: COLORS[0],
+        },
       ];
     }
     // stich together line chart data
@@ -103,7 +111,6 @@ class FociAttentionComparisonContainer extends React.Component {
                 placement={PLACEMENT_AUTO}
                 height={400}
                 domId={BUBBLE_CHART_DOM_ID}
-                textPlacement={TEXT_PLACEMENT_ROLLOVER}
               />
             </DataCard>
           </Col>

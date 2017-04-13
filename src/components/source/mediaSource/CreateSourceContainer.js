@@ -5,7 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { createSource, fetchSourceDetails } from '../../../actions/sourceActions';
-import { CREATE_SOURCE_STATUS_ERROR, CREATE_SOURCE_STATUS_NEW, CREATE_SOURCE_STATUS_EXISTING } from '../../../lib/sources';
+import { CREATE_SOURCE_STATUS_ERROR, CREATE_SOURCE_STATUS_NEW, CREATE_SOURCE_STATUS_EXISTING } from '../../../lib/serverApi/sources';
 import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';

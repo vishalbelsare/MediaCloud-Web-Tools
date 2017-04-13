@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
     "sources-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.sources.config.babel.js",
-    "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
     "sources-release": "NODE_ENV=production webpack --progress -p --config config/webpack.sources.config.babel.js",
+    "topics-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.topics.config.babel.js",
+    "topics-release": "NODE_ENV=production webpack --progress -p --config config/webpack.topics.config.babel.js",
+    "tools-dev": "NODE_ENV=dev node_modules/.bin/webpack-dev-server --port 2992 --content-base build/public --hot --inline --history-api-fallback --config config/webpack.tools.config.babel.js",
+    "tools-release": "NODE_ENV=production webpack --progress -p --config config/webpack.tools.config.babel.js",
     "test-acceptance": "react-scripts test --env=jsdom test/acceptance"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
     "react-faux-dom": "3.0.0",
     "react-flexbox-grid": "0.10.2",
     "react-ga": "^2.1.2",
+    "react-google-charts": "^1.5.4-alpha.1",
     "react-highcharts": "11.5.0",
     "react-intl": "2.2.2",
     "react-redux": "5.0.1",
@@ -44,7 +47,7 @@
     "react-title-component": "1.0.1",
     "redux": "3.6.0",
     "redux-actions": "1.2.0",
-    "redux-form": "6.4.3",
+    "redux-form": "6.6.0",
     "redux-logger": "2.7.4",
     "redux-simple-promise": "2.0.2",
     "redux-thunk": "2.1.0"

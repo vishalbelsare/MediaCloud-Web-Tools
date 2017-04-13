@@ -5,7 +5,7 @@ import flask_login
 from server import app
 from server.util.request import  api_error_handler
 from server.cache import cache
-from server.auth import user_mediacloud_client
+from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
 from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
@@ -46,9 +46,10 @@ def collection_search(search_str):
 
 def _cached_collection_search(search_str):
     mc = user_mediacloud_client()
-    mc_results = mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, public_only=True, name_like=search_str)
-    gv_results = mc.tagList(tag_sets_id=GV_TAG_SET_ID, public_only=True, name_like=search_str)
-    emm_results = mc.tagList(tag_sets_id=EMM_TAG_SET_ID, public_only=True, name_like=search_str)
+    show_only_public_collections = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
+    mc_results = mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, public_only=show_only_public_collections, name_like=search_str)
+    gv_results = mc.tagList(tag_sets_id=GV_TAG_SET_ID, public_only=show_only_public_collections, name_like=search_str)
+    emm_results = mc.tagList(tag_sets_id=EMM_TAG_SET_ID, public_only=show_only_public_collections, name_like=search_str)
     return [mc_results, emm_results, gv_results]
 
 

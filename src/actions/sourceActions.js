@@ -1,11 +1,11 @@
 import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../lib/reduxHelpers';
-import * as api from '../lib/sources';
+import * as api from '../lib/serverApi/sources';
 
 export const FETCH_SOURCE_LIST = 'FETCH_SOURCE_LIST';
 export const FETCH_COLLECTION_LIST = 'FETCH_COLLECTION_LIST';
-export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTION_LIST';
-export const FETCH_POPULAR_COLLECTIONS_LIST = 'FETCH_POPULAR_COLLECTION_LIST';
+export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTIONS_LIST';
+export const FETCH_POPULAR_COLLECTIONS_LIST = 'FETCH_POPULAR_COLLECTIONS_LIST';
 export const FETCH_SOURCES_BY_IDS = 'FETCH_SOURCES_BY_IDS';
 export const RESET_SOURCES_BY_IDS = 'RESET_SOURCES_BY_IDS';
 export const FETCH_COLLECTION_SOURCES_BY_IDS = 'FETCH_COLLECTION_SOURCES_BY_IDS';
@@ -14,15 +14,8 @@ export const FETCH_SOURCE_DETAILS = 'FETCH_SOURCE_DETAILS';
 export const FETCH_COLLECTION_DETAILS = 'FETCH_COLLECTION_DETAILS';
 export const SELECT_COLLECTION = 'SELECT_COLLECTION';
 export const SELECT_SOURCE = 'SELECT_SOURCE';
-export const SOURCE_FILTER_BY_SNAPSHOT = 'SOURCE_FILTER_BY_SNAPSHOT';
-export const SOURCE_FILTER_BY_TIMESPAN = 'SOURCE_FILTER_BY_TIMESPAN';
-export const FETCH_SOURCE_SUMMARY = 'FETCH_SOURCE_SUMMARY';
-export const SORT_SOURCE_DETAILS = 'SORT_SOURCE_DETAILS';
-export const SORT_COLLECTION_DETAILS = 'SORT_COLLECTION_DETAILS';
 export const FETCH_SOURCE_TOP_WORDS = 'FETCH_SOURCE_TOP_WORDS';
 export const FETCH_COLLECTION_TOP_WORDS = 'FETCH_COLLECTION_TOP_WORDS';
-export const FETCH_SOURCE_SNAPSHOTS_LIST = 'FETCH_SOURCE_SNAPSHOTS_LIST';
-export const FETCH_SOURCE_TIMESPANS_LIST = 'FETCH_SOURCE_TIMESPANS_LIST';
 export const FETCH_SOURCE_SENTENCE_COUNT = 'FETCH_SOURCE_SENTENCE_COUNT';
 export const FETCH_COLLECTION_SENTENCE_COUNT = 'FETCH_COLLECTION_SENTENCE_COUNT';
 export const FETCH_SOURCE_GEO = 'FETCH_SOURCE_GEO';
@@ -56,6 +49,7 @@ export const SET_FAVORITE_COLLECTION = 'SET_FAVORITE_COLLECTION';
 export const FETCH_FAVORITE_SOURCES = 'FETCH_FAVORITE_SOURCES';
 export const FETCH_SYSTEM_STATS = 'FETCH_SYSTEM_STATS';
 export const SCRAPE_SOURCE_FEEDS = 'SCRAPE_SOURCE_FEEDS';
+export const CREATE_SOURCES_FROM_URLS = 'CREATE_SOURCES_FROM_URLS';
 
 export const fetchSystemStats = createAsyncAction(FETCH_SYSTEM_STATS, api.systemStats);
 
@@ -151,3 +145,5 @@ export const fetchSourceSuggestions = createAsyncAction(FETCH_SOURCE_SUGGESTIONS
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 
 export const scrapeSourceFeeds = createAsyncAction(SCRAPE_SOURCE_FEEDS, api.scrapeSourceFeeds, id => id);
+
+export const createSourcesByUrl = createAsyncAction(CREATE_SOURCES_FROM_URLS, api.createSourcesByUrl, urls => urls);

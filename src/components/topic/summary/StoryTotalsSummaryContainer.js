@@ -7,7 +7,7 @@ import { fetchTopicStoryCounts } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import BubbleChart, { TEXT_PLACEMENT_ABOVE } from '../../vis/BubbleChart';
+import BubbleChart from '../../vis/BubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
@@ -36,20 +36,26 @@ class StoryTotalsSummaryContainer extends React.Component {
   }
   render() {
     const { counts } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     if (counts !== null) {
       const data = [  // format the data for the bubble chart help
-        { label: formatMessage(localMessages.filteredLabel),
+        {
           value: counts.count,
-          color: getBrandDarkColor(),
-          labelColor: 'rgb(255,255,255)' },
-        { label: formatMessage(localMessages.totalLabel), value: counts.total },
+          fill: getBrandDarkColor(),
+          aboveText: formatMessage(localMessages.filteredLabel),
+          aboveTextColor: 'rgb(255,255,255)',
+          rolloverText: `${formatMessage(localMessages.filteredLabel)}: ${formatNumber(counts.count)} stories`,
+        },
+        {
+          value: counts.total,
+          aboveText: formatMessage(localMessages.totalLabel),
+          rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
+        },
       ];
       content = (<BubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
-        textPlacement={TEXT_PLACEMENT_ABOVE}
       />);
     }
     return (

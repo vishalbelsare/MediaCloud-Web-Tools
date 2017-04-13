@@ -77,9 +77,9 @@ MetadataPickerContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.metadata[ownProps.name].fetchStatus,
-  label: state.metadata[ownProps.name].label,
-  tags: state.metadata[ownProps.name].tags,
+  fetchStatus: state.system.metadata[ownProps.name].fetchStatus,
+  label: state.system.metadata[ownProps.name].label,
+  tags: state.system.metadata[ownProps.name].tags,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

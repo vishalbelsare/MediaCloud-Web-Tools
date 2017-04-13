@@ -3,18 +3,16 @@ const messages = {
 
   suiteName: { id: 'suite.name', defaultMessage: 'Media Cloud' },
 
-  blogToolShortName: { id: 'tool.blog.name.short', defaultMessage: 'Blog' },
-  blogToolName: { id: 'tool.blog.name', defaultMessage: 'Blog' },
-  blogToolDescription: { id: 'tool.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
-  dashboardToolShortName: { id: 'tool.dashboard.name.short', defaultMessage: 'Dashboard' },
-  dashboardToolName: { id: 'tool.dashboard.name', defaultMessage: 'Dashboard' },
-  dashboardToolDescription: { id: 'tool.dashboard.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
-  sourcesToolShortName: { id: 'tool.sources.name.short', defaultMessage: 'Source Manager' },
-  sourcesToolName: { id: 'tool.sources.name', defaultMessage: 'Source Manager' },
-  sourcesToolDescription: { id: 'tool.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
-  topicsToolShortName: { id: 'tool.topics.name.short', defaultMessage: 'Topic Mapper' },
-  topicsToolName: { id: 'tool.topics.name', defaultMessage: 'Topic Mapper' },
-  topicsToolDescription: { id: 'tool.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
+  blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
+  blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
+  dashboardToolName: { id: 'app.dashboard.name', defaultMessage: 'Dashboard' },
+  dashboardToolDescription: { id: 'app.dashboard.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
+  sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Source Manager' },
+  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
+  topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topic Mapper' },
+  topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
+  toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
+  toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Find out more about our tools and how to use them' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Klein Center for Internet and Society at Harvard University' },
@@ -139,7 +137,8 @@ const messages = {
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
   filter: { id: 'filter', defaultMessage: 'Filter' },
-  upload: { id: 'filter', defaultMessage: 'Upload' },
+  upload: { id: 'upload', defaultMessage: 'Upload' },
+  other: { id: 'other', defaultMessage: 'Other' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },
@@ -156,6 +155,10 @@ const messages = {
 
   attentionChartHelpText: { id: 'attentionChart.help.text',
     defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
+  },
+
+  wordTreeHelpText: { id: 'wordTree.help.text',
+    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>This is based on a random sample of 1000 sentences, which we haven\'t exhaustively tested to see if is a representative sample. That caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
   },
 
   totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },

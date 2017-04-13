@@ -8,6 +8,7 @@ import WordDetails from './WordDetails';
 import WordWordsContainer from './WordWordsContainer';
 import WordStoriesContainer from './WordStoriesContainer';
 import WordSentenceCountContainer from './WordSentenceCountContainer';
+import WordInContextContainer from './WordInContextContainer';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -30,7 +31,7 @@ class WordContainer extends React.Component {
   }
 
   render() {
-    const { topicId, stem, term } = this.props;
+    const { topicId, stem, term, filters } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = `${formatMessage(messages.word)}`;
 
@@ -39,18 +40,23 @@ class WordContainer extends React.Component {
         <Title render={titleHandler} />
         <Grid>
           <Row>
-            <Col lg={12} md={12} sm={12}>
+            <Col lg={12}>
               <h1>
                 <FormattedMessage {...localMessages.mainTitle} values={{ title: term }} />
               </h1>
             </Col>
           </Row>
           <Row>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={6} xs={12}>
               <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} />
             </Col>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={6} xs={12}>
               <WordWordsContainer topicId={topicId} stem={stem} term={term} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <WordInContextContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
           </Row>
           <Row>
@@ -59,7 +65,7 @@ class WordContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6} md={6} sm={12}>
+            <Col lg={6} xs={12}>
               <WordDetails topicId={topicId} term={term} stem={stem} />
             </Col>
           </Row>
@@ -77,18 +83,20 @@ WordContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  topicId: React.PropTypes.number.isRequired,
   selectNewWord: React.PropTypes.func.isRequired,
   saveParamsToStore: React.PropTypes.func.isRequired,
   // from state
+  topicId: React.PropTypes.number.isRequired,
   stem: React.PropTypes.string,
   term: React.PropTypes.string,
+  filters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: state.topics.selected.id,
   stem: ownProps.location.query.stem,
   term: ownProps.location.query.term,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = dispatch => ({

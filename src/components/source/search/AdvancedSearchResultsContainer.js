@@ -8,9 +8,9 @@ import AdvancedSearchResults from './AdvancedSearchResults';
 import { fetchSourceByMetadata, fetchCollectionByMetadata,
   selectAdvancedSearchCollection, selectAdvancedSearchSource } from '../../../actions/sourceActions';
 
-const ADD_ALL_THIS_PAGE = 1;
-const REMOVE_ALL = 0;
-const ADD_ALL_PAGES = 2;
+export const ADD_ALL_THIS_PAGE = 1;
+export const REMOVE_ALL = 0;
+export const ADD_ALL_PAGES = 2;
 
 // TODO when paging is implemented, we'll have to set these booleans...
 const FIRST_PAGE = true;
@@ -68,9 +68,6 @@ class AdvancedSearchResultsContainer extends React.Component {
           queriedSources={queriedSources}
           queriedCollections={queriedCollections}
           addRemoveAll={this.addOrRemoveAllSelected}
-          ADD_ALL_THIS_PAGE={ADD_ALL_THIS_PAGE}
-          REMOVE_ALL={REMOVE_ALL}
-          ADD_ALL_PAGES={ADD_ALL_PAGES}
           allOrNoneCheck={this.evalStateAndPage()}
           addOrRemoveToSelectedSources={this.addOrRemoveToSelectedSources}
           addOrRemoveToSelectedCollections={this.addOrRemoveToSelectedCollections}

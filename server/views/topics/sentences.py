@@ -6,11 +6,12 @@ import flask_login
 from server import app, TOOL_API_KEY
 import server.util.csv as csv
 from server.util.request import filters_from_args, api_error_handler, json_error_response
-from server.auth import user_mediacloud_key, user_mediacloud_client, is_user_logged_in
+from server.auth import user_mediacloud_key, is_user_logged_in
 from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
+
 
 @app.route('/api/topics/<topics_id>/sentences/count', methods=['GET'])
 @api_error_handler
@@ -20,14 +21,16 @@ def topic_sentence_count(topics_id):
     elif is_user_logged_in():
         response = topic_sentence_counts(user_mediacloud_key(), topics_id)
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     return jsonify(response)
+
 
 @app.route('/api/topics/<topics_id>/sentences/count.csv', methods=['GET'])
 @flask_login.login_required
 def topic_sentence_count_csv(topics_id):
     return stream_sentence_count_csv(user_mediacloud_key(), 'sentence-counts', topics_id)
+
 
 def stream_sentence_count_csv(user_mc_key, filename, topics_id, **kwargs):
     results = topic_sentence_counts(user_mc_key, topics_id, **kwargs)
@@ -36,11 +39,12 @@ def stream_sentence_count_csv(user_mc_key, filename, topics_id, **kwargs):
     props = ['date', 'numFound']
     return csv.stream_response(sorted_results, props, filename)
 
+
 @app.route('/api/topics/<topics_id>/sentences/focal-set/<focal_sets_id>/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
-    snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     all_focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id)
     # need the timespan info, to find the appropriate timespan with each focus
     base_snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)

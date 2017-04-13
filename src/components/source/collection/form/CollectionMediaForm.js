@@ -13,6 +13,8 @@ import { googleFavIconUrl } from '../../../../lib/urlUtil';
 import { RemoveButton } from '../../../common/IconButton';
 import messages from '../../../../resources/messages';
 import CollectionCopyConfirmer from './CollectionCopyConfirmer';
+import AppButton from '../../../common/AppButton';
+import AddByUrlConfirmer from './AddByUrlConfirmer';
 
 // show an extra submit button if source list is longer than this many entries
 const EXTRA_BUTTON_LIST_LENGTH = 7;
@@ -28,19 +30,23 @@ const localMessages = {
   tabCollectionIntro: { id: 'collection.media.addCollection.intro', defaultMessage: 'You can import all the sources from another collection into this one.  This is useful for "merging" collections.  Just search for the collection to import sources from:' },
   tabUpload: { id: 'collection.media.addSpreadsheet', defaultMessage: 'Upload a Spreadsheet' },
   tabUrls: { id: 'collection.media.addURLs', defaultMessage: 'Add URLs Manually' },
+  tabUrlsIntro: { id: 'collection.media.addURLs.intro', defaultMessage: 'You can type in up to 100 urls to add directly' },
   sourceUrlHint: { id: 'collection.media.addURLs.hint', defaultMessage: 'Type in the URLs of each media source, one per line.' },
+  addSourcesByUrl: { id: 'collection.media.addURLs.button', defaultMessage: 'Add These URLs' },
   sourcesAddedFeedback: { id: 'collection.media.sources.addedFeedback',
     defaultMessage: 'Added {sourceCount, plural,\n =0 {nothing}\n =1 {one source}\n other {# sources}}',
   },
 };
 
-class SourceSelectionRenderer extends React.Component {
+class SourceSelectionRendererRaw extends React.Component {
 
   state = {
     collectionId: null, // the id of a collection to copy
+    sourceUrls: null,   // an array of source urls to add by hand
   };
 
   resetCollectionId = () => this.setState({ collectionId: null });
+  resetSourceUrls = () => this.setState({ sourceUrls: null });
 
   pickCollectionToCopy = (collectionId) => {
     this.setState({ collectionId });
@@ -65,13 +71,20 @@ class SourceSelectionRenderer extends React.Component {
     onSourcesAdded(countAdded);
   }
 
+  addSourcesByUrl = () => {
+    const { sourceUrlsToAdd } = this.props;
+    const urls = sourceUrlsToAdd.split('\n');
+    this.setState({ sourceUrls: urls });
+  }
+
   mergeSourcesFromCollectionsOrSearch = (searchResults) => {
     if (searchResults) {
       this.addSources(searchResults);
     }
   }
   render() {
-    const { submitButton, fields, meta: { error }, currentSources, editCollectionId } = this.props;
+    const { submitButton, fields, meta: { error }, currentSources, editCollectionId, renderTextField } = this.props;
+    const { formatMessage } = this.props.intl;
     let copyConfirmation = null;
     if (this.state.collectionId) {
       copyConfirmation = (
@@ -79,6 +92,16 @@ class SourceSelectionRenderer extends React.Component {
           collectionId={this.state.collectionId}
           onConfirm={this.copyCollection}
           onCancel={this.resetCollectionId}
+        />
+      );
+    }
+    let addByUrlConfirmer = null;
+    if (this.state.sourceUrls) {
+      addByUrlConfirmer = (
+        <AddByUrlConfirmer
+          urls={this.state.sourceUrls}
+          onConfirm={this.addSources}
+          onCancel={this.resetSourceUrls}
         />
       );
     }
@@ -112,6 +135,24 @@ class SourceSelectionRenderer extends React.Component {
                     onCollectionSelected={c => this.pickCollectionToCopy(c.tags_id)}
                   />
                   {copyConfirmation}
+                </Tab>
+                <Tab label={<FormattedMessage {...localMessages.tabUrls} />} >
+                  <h3><FormattedMessage {...localMessages.tabUrls} /></h3>
+                  <p><FormattedMessage {...localMessages.tabUrlsIntro} /></p>
+                  <Field
+                    name="sourceUrls"
+                    component={renderTextField}
+                    fullWidth
+                    multiLine
+                    rows={4}
+                    hintText={localMessages.sourceUrlHint}
+                  />
+                  <AppButton
+                    primary
+                    label={formatMessage(localMessages.addSourcesByUrl)}
+                    onClick={this.addSourcesByUrl}
+                  />
+                  {addByUrlConfirmer}
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabUpload} />} >
                   <h3><FormattedMessage {...localMessages.tabUpload} /></h3>
@@ -180,18 +221,25 @@ class SourceSelectionRenderer extends React.Component {
   }
 }
 
-SourceSelectionRenderer.propTypes = {
+SourceSelectionRendererRaw.propTypes = {
   // from form heper
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
   initialValues: React.PropTypes.object,
+  renderTextField: React.PropTypes.func.isRequired,
   // from parent
   submitButton: React.PropTypes.node,
   currentSources: React.PropTypes.array,
+  sourceUrlsToAdd: React.PropTypes.string,
   editCollectionId: React.PropTypes.string,
   onSourcesAdded: React.PropTypes.func.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
+
+const SourceSelectionRenderer =
+  composeIntlForm(
+    SourceSelectionRendererRaw
+  );
 
 const CollectionMediaForm = props => (
   <div>
@@ -199,6 +247,7 @@ const CollectionMediaForm = props => (
       name="sources"
       component={SourceSelectionRenderer}
       currentSources={props.currentSources}
+      sourceUrlsToAdd={props.sourceUrlsToAdd}
       editCollectionId={props.initialValues.id}
       onSourcesAdded={props.handleSourceAdded}
       submitButton={props.submitButton}
@@ -218,12 +267,14 @@ CollectionMediaForm.propTypes = {
   submitButton: React.PropTypes.node,
   // from state
   currentSources: React.PropTypes.array,
+  sourceUrlsToAdd: React.PropTypes.string,
   // from dispatch
   handleSourceAdded: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   currentSources: formSelector(state, 'sources'),
+  sourceUrlsToAdd: formSelector(state, 'sourceUrls'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

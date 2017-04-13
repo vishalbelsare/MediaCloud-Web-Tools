@@ -11,6 +11,8 @@ import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
 import TopicTimespanInfo from './TopicTimespanInfo';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
+import NytLabelSummaryContainer from './NytLabelSummaryContainer';
+import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -31,6 +33,15 @@ class TopicSummaryContainer extends React.Component {
     let intro = null;
     if (!user.isLoggedIn) {
       intro = (<p><FormattedMessage {...localMessages.previewIntro} values={{ name: topicInfo.name }} /></p>);
+    }
+    // only show filtered story counts if you have a filter in place
+    let filteredStoryCountContent = null;
+    if ((timespan && (timespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
+      filteredStoryCountContent = (
+        <Col lg={12}>
+          <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+        </Col>
+      );
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
       content = (
@@ -53,13 +64,21 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} />
             </Col>
+            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+              <Col lg={12}>
+                <NytLabelSummaryContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Permissioned>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               <Col lg={12}>
-                <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+                <GeoTagSummaryContainer topicId={topicId} filters={filters} />
               </Col>
+            </Permissioned>
+            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+              {filteredStoryCountContent}
               <Col lg={12}>
                 <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>

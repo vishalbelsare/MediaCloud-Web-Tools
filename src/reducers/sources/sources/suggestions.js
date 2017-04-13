@@ -1,6 +1,7 @@
-import { FETCH_SOURCE_SUGGESTIONS } from '../../../actions/sourceActions';
+import { FETCH_SOURCE_SUGGESTIONS, UPDATE_SOURCE_SUGGESTION } from '../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 import { sourceSuggestionDateToMoment } from '../../../lib/dateUtil';
+import * as fetchConstants from '../../../lib/fetchConstants';
 
 // dates returned are like this: "2016-03-15 14:23:58.161284"
 
@@ -17,6 +18,10 @@ const suggestions = createAsyncReducer({
       dateMarked: sourceSuggestionDateToMoment(suggestion.date_marked).toDate(),
       dateSubmitted: sourceSuggestionDateToMoment(suggestion.date_submitted).toDate(),
     })),
+  }),
+  [UPDATE_SOURCE_SUGGESTION]: () => ({
+    fetchStatus: fetchConstants.FETCH_ONGOING,
+    list: [],
   }),
 });
 

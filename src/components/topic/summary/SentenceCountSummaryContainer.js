@@ -7,6 +7,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
+import LinkWithFilters from '../LinkWithFilters';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
@@ -33,16 +34,19 @@ class SentenceCountSummaryContainer extends React.Component {
   render() {
     const { total, counts, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
+    const exploreUrl = `/topics/${topicId}/attention`;
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/attention`, filters)} />
+            <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
           </div>
         </Permissioned>
         <h2>
-          <FormattedMessage {...localMessages.title} />
+          <LinkWithFilters to={exploreUrl}>
+            <FormattedMessage {...localMessages.title} />
+          </LinkWithFilters>
         </h2>
         <AttentionOverTimeChart
           total={total}
@@ -64,7 +68,7 @@ SentenceCountSummaryContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  counts: React.PropTypes.array,  // array of {date: epochMS, count: int]
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,

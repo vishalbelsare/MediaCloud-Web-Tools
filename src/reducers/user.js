@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT, SET_LOGIN_ERROR_MESSAGE } from '../actions/userActions';
+import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT } from '../actions/userActions';
 import { saveCookies, deleteCookies } from '../lib/auth';
 import * as fetchConstants from '../lib/fetchConstants';
 
@@ -7,7 +7,6 @@ const INITIAL_STATE = {
   fetchStatus: fetchConstants.FETCH_INVALID,
   isLoggedIn: false,
   key: null,
-  errorMessage: null,
 };
 
 export default function user(state = INITIAL_STATE, action) {
@@ -27,7 +26,6 @@ export default function user(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         isLoggedIn: loginWorked,
-        errorMessage: null,
         ...action.payload,
       });
     case reject(LOGIN_WITH_PASSWORD):
@@ -46,7 +44,6 @@ export default function user(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         isLoggedIn: (action.payload.status !== 401),
-        errorMessage: null,
         ...action.payload,
       });
     case reject(LOGIN_WITH_KEY):
@@ -63,12 +60,6 @@ export default function user(state = INITIAL_STATE, action) {
         isLoggedIn: false,
         key: null,
       });
-
-    case SET_LOGIN_ERROR_MESSAGE:
-      return Object.assign({}, state, {
-        errorMessage: action.payload,
-      });
-
     default:
       return state;
   }

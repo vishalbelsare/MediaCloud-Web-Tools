@@ -1,5 +1,4 @@
 import os
-import logging
 import logging.config
 import ConfigParser
 import json
@@ -20,8 +19,10 @@ from server.database import AppDatabase
 
 SERVER_MODE_DEV = "dev"
 SERVER_MODE_PROD = "prod"
+
 SERVER_APP_TOPICS = "topics"
 SERVER_APP_SOURCES = "sources"
+SERVER_APP_TOOLS = "tools"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -154,6 +155,7 @@ server_app = settings.get('server', 'app')
 if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.collection
     import server.views.sources.source
+    import server.views.sources.suggestions
     import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
@@ -168,3 +170,5 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.foci
     import server.views.topics.permissions
     import server.views.topics.maps
+    import server.views.topics.nyttags
+    import server.views.topics.geotags

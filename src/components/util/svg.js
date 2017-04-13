@@ -1,6 +1,4 @@
 
-export const TEMP = 'TEMP';
-
 export function domElementToSvgString(domIdOrElement) {
   let elem;
   if (typeof domIdOrElement === 'string') {
@@ -17,6 +15,6 @@ export function domElementToSvgString(domIdOrElement) {
   return downloadStr;
 }
 
-export function downloadSvg(domId) {
-  window.open(domElementToSvgString(domId), '_new');
+export function downloadSvg(domIdOrElement) {
+  window.open(domElementToSvgString(domIdOrElement), '_new');
 }

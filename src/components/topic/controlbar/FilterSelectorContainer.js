@@ -95,17 +95,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           if (snapshotId === null) {
             // default to first snapshot (ie. latest) if none is specified
             const firstReadySnapshot = response.list.find(s => snapshotIsUsable(s));
-            const newSnapshotId = firstReadySnapshot.snapshots_id;
-            const newLocation = filteredLocation(ownProps.location, {
-              snapshotId: newSnapshotId,
-              timespanId: null,
-              focusId: null,
-            });
-            dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
-            dispatch(filterBySnapshot(newSnapshotId));
+            if (firstReadySnapshot) { // might not be ready yet!
+              const newSnapshotId = firstReadySnapshot.snapshots_id;
+              const newLocation = filteredLocation(ownProps.location, {
+                snapshotId: newSnapshotId,
+                timespanId: null,
+                focusId: null,
+              });
+              dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
+              dispatch(filterBySnapshot(newSnapshotId));
+            }
           }
           // warn user if snapshot is being pending
-          if (response.jobStatus) {
+          if (response.jobStatus && response.jobStatus.length > 0) {
             const latestSnapshotJobStatus = response.jobStatus[0];
             switch (latestSnapshotJobStatus.state) {
               case TOPIC_SNAPSHOT_STATE_QUEUED:

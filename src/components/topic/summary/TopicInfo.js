@@ -48,7 +48,7 @@ const TopicInfo = (props) => {
       <p>
         <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>
       </p>
-      {sourcesAndCollections.map(object => <SourceOrCollectionChip object={object} />)}
+      {sourcesAndCollections.map((object, idx) => <SourceOrCollectionChip key={idx} object={object} />)}
       <p>
         <b><FormattedHTMLMessage {...messages.topicValidationProp} /></b>
         <code>{topic.pattern}</code>

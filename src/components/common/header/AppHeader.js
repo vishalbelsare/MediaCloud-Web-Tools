@@ -12,83 +12,69 @@ const localMessages = {
   goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
 };
 
-class AppHeader extends React.Component {
-
-  onRouteToLogout = () => {
-    this.context.router.push('/logout');
-  }
-
-  onRouteToLogin = () => {
-    this.context.router.push('/logout');
-  }
-
-  render() {
-    const { drawer, name, subHeader, showSubHeader, description, backgroundColor, navigateToHome } = this.props;
-    const { formatMessage } = this.props.intl;
-    const brandColors = getBrandColors();
-    const styles = {
-      root: {
-        backgroundColor,
-      },
-      right: {
-        float: 'right',
-      },
-      clear: {
-        clear: 'both',
-      },
-    };
-    let content;
-    if (showSubHeader) {
-      content = (
-        <Row>
-          <Col lg={2}>
-            <h1>
-              <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-                <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
-              </a>
-            </h1>
-          </Col>
-          <Col lg={8}>
-            {subHeader}
-          </Col>
-          <Col lg={2} />
-        </Row>
-      );
-    } else {
-      content = (
-        <Row>
-          <Col lg={7}>
-            <h1>
-              <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-                <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
-              </a>
-              <strong>{name}</strong>
-            </h1>
-          </Col>
-          <Col lg={5}>
-            <div style={styles.right} >
-              <small>{description}</small>
-            </div>
-          </Col>
-        </Row>
-      );
-    }
-    return (
-      <div className="app-header">
-        <AppNoticesContainer />
-        <AppToolbar
-          backgroundColor={brandColors.light}
-          drawer={drawer}
-        />
-        <div style={styles.root} >
-          <Grid>
-            {content}
-          </Grid>
-        </div>
-      </div>
+const AppHeader = (props) => {
+  const { drawer, name, subHeader, showSubHeader, description, backgroundColor, navigateToHome } = props;
+  const { formatMessage } = props.intl;
+  const brandColors = getBrandColors();
+  const styles = {  // TODO: refactor this into CSS?
+    root: {
+      backgroundColor,
+    },
+    right: {
+      float: 'right',
+    },
+  };
+  let content;
+  if (showSubHeader) {
+    content = (
+      <Row>
+        <Col lg={2}>
+          <h1>
+            <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+              <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+            </a>
+          </h1>
+        </Col>
+        <Col lg={8}>
+          {subHeader}
+        </Col>
+        <Col lg={2} />
+      </Row>
+    );
+  } else {
+    content = (
+      <Row>
+        <Col lg={7}>
+          <h1>
+            <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
+              <img className="app-logo" alt={formatMessage(messages.suiteName)} src={'/static/img/mediacloud-logo-white-2x.png'} width={65} height={65} />
+            </a>
+            <strong>{name}</strong>
+          </h1>
+        </Col>
+        <Col lg={5}>
+          <div style={styles.right} >
+            <small>{description}</small>
+          </div>
+        </Col>
+      </Row>
     );
   }
-}
+  return (
+    <div className="app-header">
+      <AppNoticesContainer />
+      <AppToolbar
+        backgroundColor={brandColors.light}
+        drawer={drawer}
+      />
+      <div style={styles.root} >
+        <Grid>
+          {content}
+        </Grid>
+      </div>
+    </div>
+  );
+};
 
 AppHeader.propTypes = {
   // from parent

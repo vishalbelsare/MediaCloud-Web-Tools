@@ -6,6 +6,7 @@ import composeDescribedDataCard from '../../common/DescribedDataCard';
 import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
+import LinkWithFilters from '../LinkWithFilters';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
@@ -39,16 +40,19 @@ class StoriesSummaryContainer extends React.Component {
   render() {
     const { stories, sort, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
+    const exploreUrl = `/topics/${topicId}/stories`;
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
-            <ExploreButton linkTo={filteredLinkTo(`/topics/${topicId}/stories`, filters)} />
+            <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
           </div>
         </Permissioned>
         <h2>
-          <FormattedMessage {...localMessages.title} />
+          <LinkWithFilters to={`/topics/${topicId}/stories`}>
+            <FormattedMessage {...localMessages.title} />
+          </LinkWithFilters>
         </h2>
         <StoryTable
           stories={stories}

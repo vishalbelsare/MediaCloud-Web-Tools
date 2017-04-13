@@ -128,12 +128,16 @@ def topic_create():
     media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
     tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
 
-    result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query,
-                                 start_date=start_date, end_date=end_date, media_ids=media_ids_to_add,
-                                 media_tags_ids=tag_ids_to_add, **optional_args)
+    topic_result = user_mc.topicCreate(name=name, description=description, solr_seed_query=solr_seed_query,
+                                       start_date=start_date, end_date=end_date, media_ids=media_ids_to_add,
+                                       media_tags_ids=tag_ids_to_add, **optional_args)['topics'][0]
 
-    return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
+    topic_id = topic_result['topics_id']
+    spider_job = user_mc.topicSpider(topic_id)  # kick off a spider, which will also generate a snapshot
+    results = user_mc.topic(topic_id)
+    results['spider_job_state'] = spider_job
 
+    return jsonify(results)  # give them back new data, so they can update the client
 
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])

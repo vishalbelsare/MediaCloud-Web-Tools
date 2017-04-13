@@ -26,7 +26,7 @@ def map_files(topics_id):
     }
 
     if access_public_topic(topics_id) or is_user_logged_in():
-        snapshots_id, timespans_id, foci_id = filters_from_args(request.args)
+        snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
         map_type = MAP_TYPES[0] # no linkMaps yet
         status = None
         prefix = _get_file_prefix(map_type, topics_id, timespans_id)

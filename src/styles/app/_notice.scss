@@ -17,23 +17,35 @@
     margin-right: 10px;
   }
 
-  &.info-notice {
-    background-color: $material-green500;
-  }
-  &.warning-notice {
-    background-color: $material-orange500;
-  }
-  &.error-notice {
-    background-color: $material-red500;
-  }
-
   small {
-    color: $material-grey900;
+    color: #ffffff;
+    opacity: 0.6;
     font-size: 10px;
     font-family: $body-text-font-families;
     line-height: 12px;
     display: block;
     margin-left: 30px;
+    text-align: left;
+  }
+
+  &.info-notice {
+    background-color: $material-green500;
+  }
+
+  &.warning-notice {
+    background-color: $material-orange500;
+
+    small {
+      color: #000000;
+    }
+  }
+
+  &.error-notice {
+    background-color: $material-red500;
+
+    small {
+      color: #ffffff;
+    }
   }
 
 }

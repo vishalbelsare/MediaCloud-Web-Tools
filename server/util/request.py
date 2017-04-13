@@ -23,7 +23,8 @@ def filters_from_args(request_args):
     '''
     Helper to centralize reading filters from url params
     '''
-    return request_args.get('snapshotId'), request_args.get('timespanId'), request_args.get('focusId')
+    return request_args.get('snapshotId'), request_args.get('timespanId'), request_args.get('focusId'),\
+           request_args.get('q')
 
 def arguments_required(*expected_args):
     '''

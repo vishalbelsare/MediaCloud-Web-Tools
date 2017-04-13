@@ -7,6 +7,7 @@ import AppButton from '../../common/AppButton';
 import { ExploreButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import FilledStarIcon from '../../common/icons/FilledStarIcon';
+import { ADD_ALL_THIS_PAGE, REMOVE_ALL, ADD_ALL_PAGES } from './AdvancedSearchResultsContainer';
 
 const localMessages = {
   title: { id: 'sourceCollectionList.title', defaultMessage: 'Search Results' },
@@ -22,8 +23,7 @@ const localMessages = {
 
 const AdvancedSearchResults = (props) => {
   const { queriedSources, queriedCollections, addOrRemoveToSelectedSources,
-    addOrRemoveToSelectedCollections, addRemoveAll, onAddToCollection,
-    ADD_ALL_THIS_PAGE, REMOVE_ALL, ADD_ALL_PAGES } = props;
+    addOrRemoveToSelectedCollections, addRemoveAll, onAddToCollection } = props;
   const { formatMessage } = props.intl;
   const content = null;
   if (queriedSources === undefined || queriedCollections === undefined) {
@@ -79,34 +79,6 @@ const AdvancedSearchResults = (props) => {
         </Row>
         <div className="search-results-list">
           <Row>
-            {queriedSources.map(source => (
-              <Col lg={12} key={`src_${source.media_id}`} >
-                <div className={`search-result search-result-source ${source.selected ? 'search-result-selected' : ''}`} name={`src_${source.media_id}`}>
-                  <div className="search-result-checkbox">
-                    <Checkbox
-                      checked={source.selected}
-                      key={source.media_id}
-                      name={`src_${source.media_id}`}
-                      onCheck={(...args) => addOrRemoveToSelectedSources(source.media_id, args[1])}
-                    />
-                  </div>
-                  <div className="search-result-actions">
-                    { source.isFavorite ? <FilledStarIcon /> : '' }
-                    <Link to={`/sources/${source.media_id}`}>
-                      <FormattedMessage {...localMessages.exploreSourceInvite} />
-                    </Link>
-                    &nbsp;
-                    <ExploreButton linkTo={`/sources/${source.media_id}`} />
-                  </div>
-                  <div className="search-result-content">
-                    <h2>
-                      <FormattedMessage {...localMessages.sourceHeader} values={{ name: source.name }} />
-                    </h2>
-                    <p><span className="search-result-details"><FormattedMessage {...messages.sourceUrlProp} /></span>: {source.url}</p>
-                  </div>
-                </div>
-              </Col>
-            ))}
             {queriedCollections.map(collection => (
               <Col lg={12} key={`clxn_${collection.tags_id}`} >
                 <div className={`search-result search-result-collection ${collection.selected ? 'search-result-selected' : ''}`} name={`src_${collection.tags_id}`}>
@@ -136,6 +108,34 @@ const AdvancedSearchResults = (props) => {
               </Col>
               )
             )}
+            {queriedSources.map(source => (
+              <Col lg={12} key={`src_${source.media_id}`} >
+                <div className={`search-result search-result-source ${source.selected ? 'search-result-selected' : ''}`} name={`src_${source.media_id}`}>
+                  <div className="search-result-checkbox">
+                    <Checkbox
+                      checked={source.selected}
+                      key={source.media_id}
+                      name={`src_${source.media_id}`}
+                      onCheck={(...args) => addOrRemoveToSelectedSources(source.media_id, args[1])}
+                    />
+                  </div>
+                  <div className="search-result-actions">
+                    { source.isFavorite ? <FilledStarIcon /> : '' }
+                    <Link to={`/sources/${source.media_id}`}>
+                      <FormattedMessage {...localMessages.exploreSourceInvite} />
+                    </Link>
+                    &nbsp;
+                    <ExploreButton linkTo={`/sources/${source.media_id}`} />
+                  </div>
+                  <div className="search-result-content">
+                    <h2>
+                      <FormattedMessage {...localMessages.sourceHeader} values={{ name: source.name }} />
+                    </h2>
+                    <p><span className="search-result-details"><FormattedMessage {...messages.sourceUrlProp} /></span>: {source.url}</p>
+                  </div>
+                </div>
+              </Col>
+            ))}
           </Row>
         </div>
       </Grid>
@@ -151,9 +151,6 @@ AdvancedSearchResults.propTypes = {
   addOrRemoveToSelectedCollections: React.PropTypes.func,
   addRemoveAll: React.PropTypes.func.isRequired,
   allOrNoneCheck: React.PropTypes.bool,
-  ADD_ALL_THIS_PAGE: React.PropTypes.number,
-  REMOVE_ALL: React.PropTypes.number,
-  ADD_ALL_PAGES: React.PropTypes.number,
   onAddToCollection: React.PropTypes.func.isRequired,
 };
 
