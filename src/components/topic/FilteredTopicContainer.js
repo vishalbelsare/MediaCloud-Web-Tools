@@ -23,6 +23,7 @@ class FilteredTopicContainer extends React.Component {
         (snapshots.length === 1 &&
          (snapshots[0].state === 'completed' && snapshots[0].searchable === 1)));
   }
+
   render() {
     const { children, location, topicId, fetchStatus } = this.props;
     let subContent = null;

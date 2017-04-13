@@ -1,29 +1,34 @@
 import React from 'react';
 import Title from 'react-title-component';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { replace } from 'react-router-redux';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { filteredLocation } from '../util/location';
 import composeAsyncContainer from '../common/AsyncContainer';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
-import { LEVEL_WARNING, LEVEL_ERROR, ErrorNotice } from '../common/Notice';
+import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING, TOPIC_SNAPSHOT_STATE_ERROR } from '../../reducers/topics/selected/snapshots';
+import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
-  hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!  See the notes at the top if this page for more technical details.' },
+  hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!' },
+  snapshotQueued: { id: 'snapshotGenerating.warning.queued', defaultMessage: 'We will start creating the new snapshot soon. Please reload this page in a minute to automatically see the freshest data.' },
+  snapshotRunning: { id: 'snapshotGenerating.warning.running', defaultMessage: 'We are creating a new snapshot right now. Please reload this page in a minute to automatically see the freshest data.' },
+  snapshotImporting: { id: 'snapshotGenerating.warning.importing', defaultMessage: 'We are importing the new snapshot now. Please reload this page in a minute to automatically see the freshest data.' },
+  snapshotFailed: { id: 'snapshotFailed.warning', defaultMessage: 'We tried to generate a new snapshot, but it failed.' },
+  topicRunning: { id: 'topic.topicRunning', defaultMessage: 'We are scraping the web for all the stories in include in your topic.' },
 };
 
 class TopicContainer extends React.Component {
   componentWillMount() {
-    const { needsNewSnapshot, addAppNotice, topicInfo } = this.props;
+    const { needsNewSnapshot, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     // warn user if they made changes that require a new snapshot
     if (needsNewSnapshot) {
       addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
-    }
-    if (topicInfo.state === 'error') {
-      addAppNotice({ level: LEVEL_ERROR, message: topicInfo.message });
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -36,9 +41,6 @@ class TopicContainer extends React.Component {
       if (needsNewSnapshot) {
         addAppNotice({ level: LEVEL_WARNING, message: formatMessage(localMessages.needsSnapshotWarning) });
       }
-      if (topicInfo.state === 'error') {
-        addAppNotice({ level: LEVEL_ERROR, message: topicInfo.message });
-      }
     }
   }
   filtersAreSet() {
@@ -46,31 +48,18 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo } = this.props;
+    const { children, topicInfo, snapshotCount } = this.props;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
-    let notice = null;
     let contentToShow = children;
-    switch (topicInfo.state) {
-      case 'running':
-        contentToShow = (<TopicUnderConstruction />);
-        break;
-      case 'error':
-        notice = (
-          <ErrorNotice>
-            <FormattedMessage {...localMessages.hasAnError} />
-          </ErrorNotice>
-        );
-        break;
-      default:
-        notice = null;
-        break;
+    if ((topicInfo.state === 'running') && (snapshotCount === 0)) {
+      // if the topic is running the initial spider and then show under construction message
+      contentToShow = (<TopicUnderConstruction />);
     }
     return (
       <div className="topic-container">
         <div>
           <Title render={titleHandler} />
-          {notice}
           {contentToShow}
         </div>
       </div>
@@ -93,6 +82,7 @@ TopicContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   topicInfo: React.PropTypes.object,
   needsNewSnapshot: React.PropTypes.bool.isRequired,
+  snapshotCount: React.PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -101,6 +91,7 @@ const mapStateToProps = (state, ownProps) => ({
   topicInfo: state.topics.selected.info,
   topicId: parseInt(ownProps.params.topicId, 10),
   needsNewSnapshot: state.topics.selected.needsNewSnapshot,
+  snapshotCount: state.topics.selected.snapshots.list.length,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -117,7 +108,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(selectTopic(ownProps.params.topicId));
     // select any filters that are serialized on the url
     const query = ownProps.location.query;
-    if (ownProps.location.query.snapshotId) {
+    const snapshotId = ownProps.location.query.snapshotId;
+    if (snapshotId) {
       dispatch(filterBySnapshot(query.snapshotId));
     }
     if (ownProps.location.query.focusId) {
@@ -129,8 +121,85 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     if (ownProps.location.query.q) {
       dispatch(filterByQuery(query.q));
     }
+    // now that filters are set, fetch the topic summary info
     dispatch(fetchTopicSummary(ownProps.params.topicId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+      .then((response) => {
+        // show the subheader info
+        dispatch(setSubHeaderVisible(true));
+        // show any warnings based on the topic state
+        switch (response.state) {
+          case 'running':
+            dispatch(addNotice({
+              level: LEVEL_INFO,
+              message: ownProps.intl.formatMessage(localMessages.topicRunning),
+              details: response.message,
+            }));
+            break;
+          case 'error':
+            dispatch(addNotice({
+              level: LEVEL_ERROR,
+              message: ownProps.intl.formatMessage(localMessages.hasAnError),
+              details: response.message,
+            }));
+            break;
+          default:
+            break;
+        }
+        // show any warnings based on the snapshot state
+        const snapshots = response.snapshots.list;
+        const snapshotJobStatus = response.snapshots.jobStatus;
+        // if no snapshot specified, pick the first usable snapshot
+        if ((snapshotId === null) || (snapshotId === undefined)) {
+          // default to the latest ready snapshot if none is specified on url
+          const firstReadySnapshot = snapshots.find(s => snapshotIsUsable(s));
+          if (firstReadySnapshot) {
+            const newSnapshotId = firstReadySnapshot.snapshots_id;
+            const newLocation = filteredLocation(ownProps.location, {
+              snapshotId: newSnapshotId,
+              timespanId: null,
+              focusId: null,
+            });
+            dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
+            dispatch(filterBySnapshot(newSnapshotId));
+          }
+        }
+        // if there pending jobs then warn the user about their state
+        if (snapshotJobStatus && snapshotJobStatus.length > 0) {
+          const latestSnapshotJobStatus = response.snapshots.jobStatus[0];
+          switch (latestSnapshotJobStatus.state) {
+            case TOPIC_SNAPSHOT_STATE_QUEUED:
+              dispatch(addNotice({
+                level: LEVEL_INFO,
+                message: ownProps.intl.formatMessage(localMessages.snapshotQueued),
+              }));
+              break;
+            case TOPIC_SNAPSHOT_STATE_RUNNING:
+              dispatch(addNotice({
+                level: LEVEL_INFO,
+                message: ownProps.intl.formatMessage(localMessages.snapshotRunning),
+              }));
+              break;
+            case TOPIC_SNAPSHOT_STATE_ERROR:
+              dispatch(addNotice({
+                level: LEVEL_ERROR,
+                message: ownProps.intl.formatMessage(localMessages.snapshotFailed),
+                details: latestSnapshotJobStatus.message,
+              }));
+              break;
+            case TOPIC_SNAPSHOT_STATE_COMPLETED:
+              const latestSnapshot = snapshots[0];
+              if (!snapshotIsUsable(latestSnapshot)) {
+                dispatch(addNotice({
+                  level: LEVEL_INFO,
+                  message: ownProps.intl.formatMessage(localMessages.snapshotImporting),
+                }));
+              }
+              break;
+            default:
+              // don't alert user about anything
+          }
+        }
+      });
   },
 });
 

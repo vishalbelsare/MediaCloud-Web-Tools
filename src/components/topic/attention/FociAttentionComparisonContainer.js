@@ -21,6 +21,7 @@ const localMessages = {
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 const COLORS = d3.schemeCategory10;
 const BUBBLE_CHART_DOM_ID = 'total-attention-bubble-chart';
+const TOP_N_LABELS_TO_SHOW = 3; // only the top N bubbles will get a label visible on them (so the text is readable)
 
 function dataAsSeries(data) {
   // clean up the data
@@ -46,9 +47,9 @@ class FociAttentionComparisonContainer extends React.Component {
     let bubbleData = [];
     if (foci !== undefined && foci.length > 0) {
       bubbleData = [
-        ...foci.map((focus, idx) => ({
+        ...foci.sort((a, b) => b.total - a.total).map((focus, idx) => ({
           value: focus.total,
-          centerText: focus.name,
+          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? focus.name : null,
           rolloverText: `${focus.name}: ${formatNumber(focus.total)}`,
           fill: COLORS[idx + 1],
         })),
