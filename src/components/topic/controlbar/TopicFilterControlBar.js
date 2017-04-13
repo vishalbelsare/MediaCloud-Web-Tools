@@ -161,7 +161,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     goToUrl: url => dispatchProps.redirectToUrl(url, ownProps.filters),
     asyncFetch: () => {
-      console.log(ownProps.filters);
       dispatchProps.fetchData(ownProps.topicId, ownProps.filters.snapshotId, stateProps.snapshots);
     },
   });
