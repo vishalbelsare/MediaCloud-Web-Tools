@@ -73,12 +73,14 @@ export function collectionGeography(id) {
   return createApiPromise(`api/collections/${id}/geography`);
 }
 
-export function sourceWordCount(id) {
-  return createApiPromise(`api/sources/${id}/words`);
+export function sourceWordCount(id, params) {
+  const acceptedParams = acceptParams(params, ['q']);
+  return createApiPromise(`api/sources/${id}/words`, acceptedParams);
 }
 
-export function collectionWordCount(id) {
-  return createApiPromise(`api/collections/${id}/words`);
+export function collectionWordCount(id, params) {
+  const acceptedParams = acceptParams(params, ['q']);
+  return createApiPromise(`api/collections/${id}/words`, acceptedParams);
 }
 
 export function similarCollections(id) {

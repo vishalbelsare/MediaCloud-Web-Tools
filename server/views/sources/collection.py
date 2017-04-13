@@ -480,6 +480,8 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
+    if 'q' in request.args:
+        query_arg = request.args.get('q')
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:' + str(collection_id))
     }

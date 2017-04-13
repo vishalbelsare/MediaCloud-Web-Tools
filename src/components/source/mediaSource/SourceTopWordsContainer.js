@@ -5,7 +5,7 @@ import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -15,6 +15,11 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
+
+  fetchWordsByTimePeriod = (params) => {
+    const { fetchData } = this.props;
+    fetchData(params);
+  }
   handleWordClick = (word) => {
     const { source } = this.props;
     const searchStr = `${word.stem}*`;
@@ -26,12 +31,14 @@ class SourceTopWordsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
     return (
-      <EditableWordCloudDataCard
+      <PeriodicEditableWordCloudDataCard
         words={words}
+        handleTimePeriodClick={this.fetchWordsByTimePeriod}
         downloadUrl={downloadUrl}
+        targetURL={`/sources/${source.media_id}`}
         onViewModeClick={this.handleWordClick}
         title={formatMessage(localMessages.title)}
-        domId={`"media-source-top-words-${source.media_id}`}
+        domId={`media-source-top-words-${source.media_id}`}
         width={520}
         helpButton={helpButton}
       />
@@ -42,7 +49,9 @@ class SourceTopWordsContainer extends React.Component {
 SourceTopWordsContainer.propTypes = {
   // from parent
   source: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from state
+  fetchData: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
   // from dispatch
@@ -58,14 +67,23 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchSourceTopWords(ownProps.source.media_id));
+  fetchData: (params) => {
+    dispatch(fetchSourceTopWords(ownProps.source.media_id, params));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps);
+    },
+  });
+}
+
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText])(
         composeAsyncContainer(
           SourceTopWordsContainer

@@ -15,7 +15,12 @@ import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
 
+
 const localMessages = {
+  pastWeek: { id: 'wordcloud.time.pastWeek', defaultMessage: 'past week' },
+  pastMonth: { id: 'wordcloud.time.pastMonth', defaultMessage: 'past month' },
+  pastYear: { id: 'wordcloud.time.pastYear', defaultMessage: 'past year' },
+  all: { id: 'wordcloud.time.all', defaultMessage: 'all' },
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
   modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
@@ -68,7 +73,7 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   render() {
-    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId } = this.props;
+    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId, timePeriod } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
@@ -87,6 +92,7 @@ class EditableWordCloudDataCard extends React.Component {
         editingWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.edited} /></WarningNotice>);
       }
     }
+
     let titleContent = title;
     if (explore) {
       titleContent = (
@@ -170,6 +176,7 @@ class EditableWordCloudDataCard extends React.Component {
         </Permissioned>
         <h2>
           {titleContent}
+          {timePeriod}
           {helpButton}
         </h2>
         {editingWarning}
@@ -192,6 +199,8 @@ EditableWordCloudDataCard.propTypes = {
   explore: React.PropTypes.object,
   download: React.PropTypes.func,
   helpButton: React.PropTypes.node,
+  targetURL: React.PropTypes.string,
+  timePeriod: React.PropTypes.object,
     // from dispatch
   onViewModeClick: React.PropTypes.func.isRequired,
   domId: React.PropTypes.string.isRequired,
