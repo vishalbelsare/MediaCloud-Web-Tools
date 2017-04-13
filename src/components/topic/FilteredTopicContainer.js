@@ -1,52 +1,32 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
 import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
-import { WarningNotice } from '../common/Notice';
-import * as fetchConstants from '../../lib/fetchConstants';
-
-const localMessages = {
-  warning: { id: 'topic.filter.warning', defaultMessage: 'No snapshots are available to use yet.  Please wait a little longer for a valid snapshot of all the content to be generated.' },
-};
 
 class FilteredTopicContainer extends React.Component {
 
-  filtersAreSet() {
+  snapshotIsSet() {
     const { filters, topicId } = this.props;
-    return (topicId && filters.snapshotId && filters.timespanId);
-  }
-
-  snapshotsAreCompletedAndSearchable() {
-    const { snapshots } = this.props;
-    return ((snapshots && snapshots.length > 1) ||
-        (snapshots.length === 1 &&
-         (snapshots[0].state === 'completed' && snapshots[0].searchable === 1)));
+    return (topicId && filters.snapshotId);
   }
 
   render() {
-    const { children, location, topicId, fetchStatus } = this.props;
+    const { children, location, topicId, filters } = this.props;
     let subContent = null;
-    const snapshotsReady = this.snapshotsAreCompletedAndSearchable();
     // If the generation process is still ongoing, ask the user to wait a few minutes
-    if (this.filtersAreSet() || snapshotsReady) {
-      subContent = children;
-    } else if (!snapshotsReady && fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+    if (this.snapshotIsSet()) {
       subContent = (
-        <WarningNotice>
-          <FormattedMessage {...localMessages.warning} />
-        </WarningNotice>
+        <div>
+          <TopicFilterControlBar topicId={topicId} location={location} filters={filters} />
+          {children}
+        </div>
       );
     } else {
       // how to distinguish between fetch-ongoing and a generating snapshot?
       subContent = <LoadingSpinner />;
     }
-    return (
-      <div>
-        <TopicFilterControlBar topicId={topicId} location={location} />
-        {subContent}
-      </div>
-    );
+    return (subContent);
   }
 
 }

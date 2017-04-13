@@ -35,14 +35,15 @@ export function filteredLinkTo(to, filters) {
       snapshotId: filters.snapshotId,
       timespanId: filters.timespanId,
       focusId: filters.focusId,
+      q: filters.q,
     },
   };
 }
 
 export function filtersAsUrlParams(filters) {
-  return `snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId || ''}&focusId=${filters.focusId || ''}`;
+  return `snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId || ''}&focusId=${filters.focusId || ''}&q=${filters.q || ''}`;
 }
 
 export function urlWithFilters(to, filters) {
-  return `#${to}&${filtersAsUrlParams(filters)}`;
+  return `#${to}?${filtersAsUrlParams(filters)}`;
 }

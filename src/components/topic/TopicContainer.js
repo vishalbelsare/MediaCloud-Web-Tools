@@ -21,6 +21,7 @@ const localMessages = {
   snapshotFailed: { id: 'snapshotFailed.warning', defaultMessage: 'We tried to generate a new snapshot, but it failed.' },
   topicRunning: { id: 'topic.topicRunning', defaultMessage: 'We are scraping the web for all the stories in include in your topic.' },
   notUsingLatestSnapshot: { id: 'topic.notUsingLatestSnapshot', defaultMessage: 'You are not using the latest snapshot!  If you are not doing this on purpose, <a href="{url}">switch to the latest snapshot</a> to get the best data.' },
+  otherError: { id: 'topic.state.otherError', defaultMessage: 'Sorry, this topic has an error.  It says it is "{state}".' },
 };
 
 class TopicContainer extends React.Component {
@@ -136,7 +137,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               details: response.message,
             }));
             break;
+          case 'completed':
+            // everything is ok
+            break;
           default:
+            // got some unknown bad state
+            dispatch(addNotice({
+              level: LEVEL_ERROR,
+              message: ownProps.intl.formatMessage(localMessages.otherError, { state: response.state }),
+            }));
             break;
         }
         // show any warnings based on the snapshot state
