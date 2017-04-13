@@ -67,6 +67,7 @@ export const FETCH_WORD_SENTENCE_COUNT = 'FETCH_WORD_SENTENCE_COUNT';
 export const FETCH_WORD_STORIES = 'FETCH_WORD_STORIES';
 export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
+export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
 export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
 export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
 export const CREATE_TOPIC = 'CREATE_TOPIC';
@@ -216,6 +217,8 @@ export const fetchWordStories = createAsyncAction(FETCH_WORD_STORIES, api.wordSt
 export const sortWordStories = createAction(SORT_WORD_STORIES, sort => sort);
 // pass in topic id, media id, snapshot id, timespan id
 export const fetchWordWords = createAsyncAction(FETCH_WORD_WORDS, api.wordWords);
+
+export const fetchWordSampleSentences = createAsyncAction(FETCH_WORD_SAMPLE_SENTENCES, api.wordSampleSentences);
 
 export const createTopic = createAsyncAction(CREATE_TOPIC, api.createTopic);
 

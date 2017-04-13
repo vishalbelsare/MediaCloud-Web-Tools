@@ -54,7 +54,7 @@ class SourceSearchContainer extends React.Component {
   }
 
   resetIfRequested = () => {
-    const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected } = this.props;
+    const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected, disableStaticCollections } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
 
@@ -73,7 +73,7 @@ class SourceSearchContainer extends React.Component {
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
       );
-      if (item.is_static !== 0) {
+      if (disableStaticCollections && item.is_static === 1) {
         menuItemValue = (
           <MenuItem
             id={`searchResult${item.media_id || item.tags_id}`}
@@ -161,6 +161,7 @@ SourceSearchContainer.propTypes = {
   collectionResults: React.PropTypes.array.isRequired,
   // from dispatch
   search: React.PropTypes.func.isRequired,
+  disableStaticCollections: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

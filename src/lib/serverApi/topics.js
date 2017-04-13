@@ -165,6 +165,12 @@ export function wordStories(topicId, wordstem, params) {
 export function wordWords(topicId, wordstem) {
   return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/words`);
 }
+
+export function wordSampleSentences(topicId, wordstem, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/sample-sentences`, acceptedParams);
+}
+
 /*
 export function wordMedia(topicId, word, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);

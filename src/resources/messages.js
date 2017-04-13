@@ -157,6 +157,10 @@ const messages = {
     defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
   },
 
+  wordTreeHelpText: { id: 'wordTree.help.text',
+    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>This is based on a random sample of 1000 sentences, which we haven\'t exhaustively tested to see if is a representative sample. That caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
+  },
+
   totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },
   totalDownloadsStat: { id: 'totalDownloads', defaultMessage: 'Total Downloads' },
   totalSentencesStat: { id: 'totalSentences', defaultMessage: 'Total Sentences' },
