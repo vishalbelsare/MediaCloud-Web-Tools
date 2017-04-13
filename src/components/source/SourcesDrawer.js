@@ -53,38 +53,38 @@ class SourcesDrawer extends React.Component {
     if (user.isLoggedIn) {
       appMenuItems = (
         <div>
-          <MenuItem onClick={() => { this.close(); handleMenuItemClick('/home'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onClick={() => { this.close(); handleMenuItemClick('/search'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/search'); }}>
             <FormattedMessage {...messages.search} />
           </MenuItem>
           <Divider />
-          <MenuItem id="media-cloud-collections" onClick={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
+          <MenuItem id="media-cloud-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
             <FormattedMessage {...localMessages.mc} />
           </MenuItem>
-          <MenuItem id="global-voices-collections" onClick={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
+          <MenuItem id="global-voices-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
             <FormattedMessage {...localMessages.gv} />
           </MenuItem>
-          <MenuItem id="european-media-monitor-collections" onClick={() => { this.close(); handleMenuItemClick('/collections/european-media-monitor'); }}>
+          <MenuItem id="european-media-monitor-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/european-media-monitor'); }}>
             <FormattedMessage {...localMessages.emm} />
           </MenuItem>
           <Divider />
-          <MenuItem onClick={() => { this.close(); handleMenuItemClick('/favorites'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/favorites'); }}>
             <FormattedMessage {...localMessages.favoritedItems} />
           </MenuItem>
-          <MenuItem onClick={() => { this.close(); handleMenuItemClick('/sources/suggest'); }}>
+          <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/suggest'); }}>
             <FormattedMessage {...localMessages.suggestSource} />
           </MenuItem>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-            <MenuItem onClick={() => { this.close(); handleMenuItemClick('/sources/suggestions'); }}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/suggestions'); }}>
               <FormattedMessage {...localMessages.pendingSuggestions} />
             </MenuItem>
             <Divider />
-            <MenuItem onClick={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/sources/create'); }}>
               <FormattedMessage {...localMessages.newSource} />
             </MenuItem>
-            <MenuItem onClick={() => { this.close(); handleMenuItemClick('/collections/create'); }}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/collections/create'); }}>
               <FormattedMessage {...localMessages.newCollection} />
             </MenuItem>
           </Permissioned>
@@ -98,7 +98,7 @@ class SourcesDrawer extends React.Component {
           id="sources-drawer-button"
           iconClassName="material-icons"
           tooltip={formatMessage(messages.menuOpenTooltip)}
-          onClick={this.handleToggle.bind(this)}
+          onTouchTap={this.handleToggle}
           style={{ padding: 8, height: 40, width: 40 }}
         >
           menu
