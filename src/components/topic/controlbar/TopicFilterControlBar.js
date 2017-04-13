@@ -25,10 +25,10 @@ const localMessages = {
 
 class TopicFilterControlBar extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { filters } = this.props;
+    const { filters, snapshots } = this.props;
     if (nextProps.filters.snapshotId !== filters.snapshotId) {
       const { fetchData } = this.props;
-      fetchData(nextProps.topicId, nextProps.filters.snapshotId);
+      fetchData(nextProps.topicId, nextProps.filters.snapshotId, snapshots);
     }
   }
   render() {
@@ -81,6 +81,7 @@ TopicFilterControlBar.propTypes = {
   filters: React.PropTypes.object.isRequired,
   // from state
   fetchStatus: React.PropTypes.string,
+  snapshots: React.PropTypes.array,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   handleFilterToggle: React.PropTypes.func.isRequired,
@@ -91,6 +92,7 @@ TopicFilterControlBar.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.foci.fetchStatus,
+  snapshots: state.topics.selected.snapshots.list,
 //  foci: state.topics.selected.focalSets.foci.list,
 //  selectedFocus: state.topics.selected.focalSets.foci.selected,
 });
@@ -120,6 +122,10 @@ function pendingFocalSetDefinitions(definitions, focalSets) {
   return eachHasMatch.includes(false);
 }
 
+function latestSnapshotIsRunning(snapshots) {
+  return snapshots[0].state === 'running';
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleFilterToggle: () => {
     dispatch(toggleFilterControls());
@@ -131,13 +137,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(filterByFocus(selectedFocusId));
   },
   redirectToUrl: (url, filters) => dispatch(push(filteredLinkTo(url, filters))),
-  fetchData: (topicId, snapshotId) => {
+  fetchData: (topicId, snapshotId, snapshots) => {
     if (topicId !== null) {
       dispatch(fetchTopicFocalSetsList(topicId, snapshotId))
         .then((focalSets) => {
           dispatch(fetchFocalSetDefinitions(topicId))
             .then((focalSetDefinitions) => {
-              if (pendingFocalSetDefinitions(focalSetDefinitions, focalSets)) {
+              if (pendingFocalSetDefinitions(focalSetDefinitions, focalSets) && !latestSnapshotIsRunning(snapshots)) {
                 dispatch(addNotice({
                   level: LEVEL_WARNING,
                   htmlMessage: ownProps.intl.formatHTMLMessage(localMessages.summaryMessage, {
@@ -156,7 +162,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     goToUrl: url => dispatchProps.redirectToUrl(url, ownProps.filters),
     asyncFetch: () => {
       console.log(ownProps.filters);
-      dispatchProps.fetchData(ownProps.topicId, ownProps.filters.snapshotId);
+      dispatchProps.fetchData(ownProps.topicId, ownProps.filters.snapshotId, stateProps.snapshots);
     },
   });
 }

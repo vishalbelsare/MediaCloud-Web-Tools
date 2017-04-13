@@ -184,12 +184,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               dispatch(addNotice({
                 level: LEVEL_INFO,
                 message: ownProps.intl.formatMessage(localMessages.snapshotQueued),
+                details: latestSnapshotJobStatus.message,
               }));
               break;
             case TOPIC_SNAPSHOT_STATE_RUNNING:
               dispatch(addNotice({
                 level: LEVEL_INFO,
                 message: ownProps.intl.formatMessage(localMessages.snapshotRunning),
+                details: latestSnapshotJobStatus.message,
               }));
               break;
             case TOPIC_SNAPSHOT_STATE_ERROR:

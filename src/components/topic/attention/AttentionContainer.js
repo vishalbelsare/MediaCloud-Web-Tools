@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleFocalSetSelected: (evt, idx, focalSetId) => {
-    dispatch(setAttentionFocalSetId(`${focalSetId}`));
+    dispatch(setAttentionFocalSetId(focalSetId));
   },
 });
 
