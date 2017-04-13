@@ -54,7 +54,7 @@ const AppHeader = (props) => {
         </Col>
         <Col lg={5}>
           <div style={styles.right} >
-            <small>{description}</small>
+            <small className="app-description">{description}</small>
           </div>
         </Col>
       </Row>
