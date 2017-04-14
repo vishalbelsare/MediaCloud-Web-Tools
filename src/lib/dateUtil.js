@@ -14,8 +14,14 @@ const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 
+const TEXTUAL_DATE_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
+
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
+}
+
+export function textualFormattedDate(date) {
+  return moment(date, TEXTUAL_DATE_FORMAT).format('LLLL');
 }
 
 export function jobStatusDateToMoment(statusDate, strict = true) {

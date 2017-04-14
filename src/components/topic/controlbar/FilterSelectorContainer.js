@@ -39,13 +39,13 @@ const FilterSelectorContainer = (props) => {
   }
   if (filtersVisible) {
     content = (
-      <div className="filter-selector">
+      <div className="filter">
         <Grid>
-          <Row>
-            <Col lg={4}>
+          <Row className="filter-selector">
+            <Col lg={5} className="focus-selector">
               {focusSelectorContent}
             </Col>
-            <Col lg={4}>
+            <Col lg={7} className="snapshot-selector">
               <SnapshotSelector
                 selectedId={snapshotId}
                 snapshots={snapshots}
