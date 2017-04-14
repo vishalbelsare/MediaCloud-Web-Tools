@@ -31,10 +31,11 @@ const FilterSelectorContainer = (props) => {
       <div className="filter">
         <Grid>
           <Row className="filter-selector">
-            <Col lg={5} className="focus-selector">
+            <Col lg={4} className="focus-selector">
               {focusSelectorContent}
             </Col>
-            <Col lg={7} className="snapshot-selector">
+            <Col lg={1} />
+            <Col lg={4} className="snapshot-selector">
               <SnapshotSelector
                 selectedId={snapshotId}
                 snapshots={snapshots}

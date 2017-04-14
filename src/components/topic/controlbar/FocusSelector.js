@@ -45,6 +45,7 @@ class FocusSelector extends React.Component {
           selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
           labelStyle={{ color: 'rgb(255,255,255)' }}
           value={selectedId}
+          fullWidth
           onChange={this.handleFocusChange}
         >
           {foci.map(focus =>
