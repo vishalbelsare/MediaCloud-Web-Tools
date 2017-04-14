@@ -11,21 +11,33 @@ const localMessages = {
   linktoCreateFocalSet: { id: 'attention.focalSet.selector.none', defaultMessage: "You don't have any subtopics defined. Click this link to build some in order to compare them here." },
 };
 
-const REMOVE_FOCUS_SET = 0;
+export const NO_FOCAL_SET_SELECTED = 0;
 
 const FocusSetSelectorContainer = (props) => {
-  const { selectedFocalSetId, topicId, focalSets, onFocalSetSelected } = props;
+  const { selectedFocalSetId, topicId, focalSets, onFocalSetSelected, hideNoneOption } = props;
   const { formatMessage } = props.intl;
   const linkToNewFoci = `/topics/${topicId}/snapshot/foci`;
+  let noneOption = null;
+  if (hideNoneOption !== true) {
+    noneOption = (<MenuItem value={NO_FOCAL_SET_SELECTED} primaryText={formatMessage(localMessages.noFocalSet)} />);
+  }
   let content = null;
   if (focalSets.length > 0) {
     content = (
-      <SelectField value={selectedFocalSetId !== '0' ? selectedFocalSetId : focalSets[0].focal_sets_id} onChange={onFocalSetSelected}>
-        {focalSets.map(fs =>
-          <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
-        }
-        <MenuItem value={REMOVE_FOCUS_SET} primaryText={formatMessage(localMessages.noFocalSet)} />
-      </SelectField>
+      <div>
+        <p>
+          <FormattedMessage {...localMessages.pick} />
+        </p>
+        <SelectField
+          value={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : focalSets[0].focal_sets_id}
+          onChange={onFocalSetSelected}
+        >
+          {focalSets.map(fs =>
+            <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
+          }
+          {noneOption}
+        </SelectField>
+      </div>
     );
   } else {
     content = (
@@ -36,9 +48,6 @@ const FocusSetSelectorContainer = (props) => {
   }
   return (
     <div className="focalset-selector">
-      <p>
-        <FormattedMessage {...localMessages.pick} />
-      </p>
       {content}
     </div>
   );
@@ -49,13 +58,14 @@ FocusSetSelectorContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   snapshotId: React.PropTypes.number,
   onFocalSetSelected: React.PropTypes.func.isRequired,
-  selectedFocalSetId: React.PropTypes.string,
+  selectedFocalSetId: React.PropTypes.number,
   // from composition
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   // from mergeProps
   // from state
   focalSets: React.PropTypes.array.isRequired,
+  hideNoneOption: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

@@ -124,7 +124,7 @@ class FociAttentionComparisonContainer extends React.Component {
 FociAttentionComparisonContainer.propTypes = {
   // from parent
   filters: React.PropTypes.object.isRequired,
-  selectedFocalSetId: React.PropTypes.string.isRequired,
+  selectedFocalSetId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
