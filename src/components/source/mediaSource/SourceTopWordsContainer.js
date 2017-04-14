@@ -6,6 +6,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
+import { calculateTimePeriods } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'source.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -26,9 +27,9 @@ class SourceTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { source, words, helpButton, timePeriod, query } = this.props;
+    const { source, words, helpButton, timePeriod } = this.props;
     const { formatMessage } = this.props.intl;
-    const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv?${query}`;
+    const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -54,7 +55,6 @@ SourceTopWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
   timePeriod: React.PropTypes.string.isRequired,
-  query: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
@@ -66,7 +66,6 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
   words: state.sources.sources.selected.topWords.list.wordcounts,
   timePeriod: state.sources.sources.selected.topWords.timePeriod,
-  query: state.sources.sources.selected.topWords.query,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -78,7 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.timePeriod);
+      dispatchProps.fetchData(stateProps.timePeriod, calculateTimePeriods(stateProps.timePeriod));
     },
   });
 }

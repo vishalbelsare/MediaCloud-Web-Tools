@@ -15,9 +15,7 @@ const collectionTopWords = createAsyncReducer({
   handleSuccess: payload => ({
     total: payload.total,
     list: payload.results,
-    query: payload.query,
   }),
 });
 
 export default collectionTopWords;
-

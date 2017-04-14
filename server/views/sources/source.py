@@ -164,7 +164,7 @@ def source_geo_csv(media_id):
 def source_wordcount_csv(media_id):
     query_arg = 'media_id:'+str(media_id)
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = request.args.get('q')
+        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, query_arg)
 
 
@@ -178,7 +178,7 @@ def media_source_words(media_id):
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)
     }
-    return jsonify({'results': info, 'query': query_arg})
+    return jsonify({'results': info})
 
 
 @app.route('/api/sources/create', methods=['POST'])

@@ -486,7 +486,7 @@ def collection_words(collection_id):
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
     }
-    return jsonify({'results': info, 'query': query_arg})
+    return jsonify({'results': info})
 
 
 @app.route('/api/collections/<collection_id>/words/wordcount.csv', methods=['GET'])
@@ -495,7 +495,7 @@ def collection_words(collection_id):
 def collection_wordcount_csv(collection_id):
     query_arg = 'tags_id_media:'+str(collection_id)
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = request.args['q']
+        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
 
 

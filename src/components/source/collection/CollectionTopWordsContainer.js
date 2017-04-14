@@ -6,6 +6,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
+import { calculateTimePeriods } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -28,9 +29,9 @@ class CollectionTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { collectionId, timePeriod, query, words, helpButton } = this.props;
+    const { collectionId, timePeriod, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv?${query}`;
+    const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -57,7 +58,6 @@ CollectionTopWordsContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   timePeriod: React.PropTypes.string,
-  query: React.PropTypes.string,
   words: React.PropTypes.array,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -68,7 +68,6 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionTopWords.fetchStatus,
   words: state.sources.collections.selected.collectionTopWords.list.wordcounts,
   timePeriod: state.sources.collections.selected.collectionTopWords.timePeriod,
-  query: state.sources.collections.selected.collectionTopWords.query,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -80,7 +79,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.timePeriod);
+      dispatchProps.fetchData(stateProps.timePeriod, calculateTimePeriods(stateProps.timePeriod));
     },
   });
 }
