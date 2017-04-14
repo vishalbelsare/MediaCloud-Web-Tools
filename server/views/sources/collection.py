@@ -486,15 +486,17 @@ def collection_words(collection_id):
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
     }
-    return jsonify({'results': info})
+    return jsonify({'results': info, 'query': query_arg})
 
 
 @app.route('/api/collections/<collection_id>/words/wordcount.csv', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id,
-                                "tags_id_media")
+    query_arg = 'tags_id_media:'+str(collection_id)
+    if ('q' in request.args) and (len(request.args['q']) > 0):
+        query_arg = request.args['q']
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
 
 
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])

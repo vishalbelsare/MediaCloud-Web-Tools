@@ -28,9 +28,9 @@ class CollectionTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { collectionId, timePeriod, words, helpButton } = this.props;
+    const { collectionId, timePeriod, query, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
+    const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv?${query}`;
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -57,6 +57,7 @@ CollectionTopWordsContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   timePeriod: React.PropTypes.string,
+  query: React.PropTypes.string,
   words: React.PropTypes.array,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -67,6 +68,7 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionTopWords.fetchStatus,
   words: state.sources.collections.selected.collectionTopWords.list.wordcounts,
   timePeriod: state.sources.collections.selected.collectionTopWords.timePeriod,
+  query: state.sources.collections.selected.collectionTopWords.query,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -26,9 +26,9 @@ class SourceTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { source, words, helpButton, timePeriod } = this.props;
+    const { source, words, helpButton, timePeriod, query } = this.props;
     const { formatMessage } = this.props.intl;
-    const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
+    const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv?${query}`;
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -54,6 +54,7 @@ SourceTopWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
   timePeriod: React.PropTypes.string.isRequired,
+  query: React.PropTypes.string,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   // from composition
@@ -65,6 +66,7 @@ const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
   words: state.sources.sources.selected.topWords.list.wordcounts,
   timePeriod: state.sources.sources.selected.topWords.timePeriod,
+  query: state.sources.sources.selected.topWords.query,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

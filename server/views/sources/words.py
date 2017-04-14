@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 DEFAULT_NUM_WORDS = 100
 DEFAULT_SAMPLE_SIZE = 5000
 
-def stream_wordcount_csv(user_mc_key, filename, item_id, which):
-    response = cached_wordcount(user_mc_key, which+":"+str(item_id), 500, 10000)
+def stream_wordcount_csv(user_mc_key, filename, query):
+    response = cached_wordcount(user_mc_key, query, 500, 10000)
     props = ['count', 'term', 'stem']
     return csv.stream_response(response, props, filename)
 
