@@ -480,12 +480,17 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
+    time_period = 0
+    query_arg = 'tags_id_media:'+str(collection_id)
     if 'q' in request.args:
-        query_arg = request.args.get('q')
+        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
+    if 'timePeriod' in request.args:
+        time_period = int(request.args.get('timePeriod'))
+
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:' + str(collection_id))
+        'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
     }
-    return jsonify({'results': info})
+    return jsonify({'results': info, 'timePeriod': time_period})
 
 
 @app.route('/api/collections/<collection_id>/words/wordcount.csv', methods=['GET'])

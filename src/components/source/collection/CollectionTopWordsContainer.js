@@ -15,6 +15,13 @@ const localMessages = {
 };
 
 class CollectionTopWordsContainer extends React.Component {
+
+  fetchWordsByTimePeriod = (params, timePeriod) => {
+    const { fetchData } = this.props;
+    const sendParams = { q: params, timePeriod };
+    fetchData(sendParams);
+  }
+
   handleWordClick = (word) => {
     const { collectionId } = this.props;
     const searchStr = `${word.stem}*`;
@@ -22,16 +29,19 @@ class CollectionTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { collectionId, words, helpButton } = this.props;
+    const { collectionId, timePeriod, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
+        handleTimePeriodClick={this.fetchWordsByTimePeriod}
+        selectedTime={timePeriod}
         downloadUrl={downloadUrl}
+        targetURL={`/collections/${collectionId}`}
         onViewModeClick={this.handleWordClick}
         title={formatMessage(localMessages.title)}
-        domId={`"collection-top-words-${collectionId}`}
+        domId={`collection-top-words-${collectionId}`}
         width={520}
         helpButton={helpButton}
       />
@@ -44,8 +54,10 @@ CollectionTopWordsContainer.propTypes = {
   collectionId: React.PropTypes.number.isRequired,
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
+  timePeriod: React.PropTypes.number,
   words: React.PropTypes.array,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -55,9 +67,17 @@ CollectionTopWordsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionTopWords.fetchStatus,
   words: state.sources.collections.selected.collectionTopWords.list.wordcounts,
+  timePeriod: state.sources.collections.selected.collectionTopWords.timePeriod,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (params) => {
+    if (params) {
+      dispatch(fetchCollectionTopWords(ownProps.collectionId, params));
+    } else {
+      dispatch(fetchCollectionTopWords(ownProps.collectionId));
+    }
+  },
   asyncFetch: () => {
     dispatch(fetchCollectionTopWords(ownProps.collectionId));
   },
