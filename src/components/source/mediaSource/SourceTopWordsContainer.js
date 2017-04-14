@@ -5,7 +5,6 @@ import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import { PAST_ALL } from '../../../lib/dateUtil';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 
 const localMessages = {
@@ -17,8 +16,8 @@ const localMessages = {
 
 class SourceTopWordsContainer extends React.Component {
   fetchWordsByTimePeriod = (dateQuery, timePeriod) => {
-    const { fetchData, source } = this.props;
-    fetchData(source.media_id, timePeriod, dateQuery);
+    const { fetchData } = this.props;
+    fetchData(timePeriod, dateQuery);
   }
   handleWordClick = (word) => {
     const { source } = this.props;
@@ -68,16 +67,16 @@ const mapStateToProps = state => ({
   timePeriod: state.sources.sources.selected.topWords.timePeriod,
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchData: (mediaId, timePeriod, dateQuery) => {
-    dispatch(fetchSourceTopWords(mediaId, { timePeriod, q: dateQuery }));
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (timePeriod, dateQuery) => {
+    dispatch(fetchSourceTopWords(ownProps.sources.media_id, { timePeriod, q: dateQuery }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.source.media_id, PAST_ALL);
+      dispatchProps.fetchData(stateProps.timePeriod);
     },
   });
 }

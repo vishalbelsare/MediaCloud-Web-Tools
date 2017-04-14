@@ -16,10 +16,9 @@ const localMessages = {
 
 class CollectionTopWordsContainer extends React.Component {
 
-  fetchWordsByTimePeriod = (params, timePeriod) => {
+  fetchWordsByTimePeriod = (dateQuery, timePeriod) => {
     const { fetchData } = this.props;
-    const sendParams = { q: params, timePeriod };
-    fetchData(sendParams);
+    fetchData(timePeriod, dateQuery);
   }
 
   handleWordClick = (word) => {
@@ -57,7 +56,7 @@ CollectionTopWordsContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  timePeriod: React.PropTypes.number,
+  timePeriod: React.PropTypes.string,
   words: React.PropTypes.array,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -71,21 +70,22 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (params) => {
-    if (params) {
-      dispatch(fetchCollectionTopWords(ownProps.collectionId, params));
-    } else {
-      dispatch(fetchCollectionTopWords(ownProps.collectionId));
-    }
-  },
-  asyncFetch: () => {
-    dispatch(fetchCollectionTopWords(ownProps.collectionId));
+  fetchData: (timePeriod, dateQuery) => {
+    dispatch(fetchCollectionTopWords(ownProps.collectionId, { timePeriod, q: dateQuery }));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.timePeriod);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText])(
         composeAsyncContainer(
           CollectionTopWordsContainer
