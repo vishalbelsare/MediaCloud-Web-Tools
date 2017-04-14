@@ -17,6 +17,11 @@ const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 // "2017-04-13 12:26:59.649513"
 const SNAPSHOT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
 
+export const PAST_WEEK = 'week';
+export const PAST_MONTH = 'month';
+export const PAST_YEAR = 'year';
+export const PAST_ALL = 'all-time';
+
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }
@@ -91,4 +96,32 @@ export function cleanCoverageGaps(gapList) {
     };
   });
   return plotBands;
+}
+
+export function calculateTimePeriods(timePeriod) {
+  if (![PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
+    const error = { message: `unknown time period passed to calculateTimePeriods: ${timePeriod}` };
+    throw error;
+  }
+  let targetPeriodStart = null;
+  // const targetPeriodEnd = moment().format('YYYY-MM-DDThh:mm:ssZ');
+  const targetYear = moment().subtract(1, 'year');
+  const targetMonth = moment().subtract(1, 'month');
+  const targetWeek = moment().subtract(1, 'week');
+  switch (timePeriod) {
+    case PAST_WEEK: // past week
+      targetPeriodStart = targetWeek;
+      break;
+    case PAST_MONTH: // past month
+      targetPeriodStart = targetMonth;
+      break;
+    case PAST_YEAR:
+      targetPeriodStart = targetYear;
+      break;
+    case PAST_ALL:
+      return '';
+    default:
+      break;
+  }
+  return `(publish_date:[${targetPeriodStart.format('YYYY-MM-DDThh:mm:ss')}Z TO ${moment().format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }

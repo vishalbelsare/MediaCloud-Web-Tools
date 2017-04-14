@@ -395,7 +395,7 @@ def collection_source_sentence_counts_csv(collection_id):
 
 @cache
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
-    sample_size = 2000
+    sample_size = 2000  # kind of arbitrary
     # list all sources first
     sources_by_id = {int(c['media_id']): c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
     sentences = mc.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
@@ -403,7 +403,7 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sentence_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
     if 'docs' in sentences['response']:
         for sentence in sentences['response']['docs']:
-            if int(sentence['media_id']) in sentence_counts:  # safety check
+            if (sentence['media_id'] is not None) and (int(sentence['media_id']) in sentence_counts):  # safety check
                 sentence_counts[int(sentence['media_id'])] = sentence_counts[int(sentence['media_id'])] + 1.
     # add in sentence count info to media info
     for media_id in sentence_counts.keys():
@@ -480,8 +480,11 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
+    query_arg = 'tags_id_media:'+str(collection_id)
+    if ('q' in request.args) and (len(request.args['q']) > 0):
+        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key, 'tags_id_media:' + str(collection_id))
+        'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
     }
     return jsonify({'results': info})
 
@@ -490,8 +493,10 @@ def collection_words(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, collection_id,
-                                "tags_id_media")
+    query_arg = 'tags_id_media:'+str(collection_id)
+    if ('q' in request.args) and (len(request.args['q']) > 0):
+        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
 
 
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])
