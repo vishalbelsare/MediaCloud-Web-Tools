@@ -3,9 +3,10 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { fetchCollectionTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
+import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
+import { calculateTimePeriods } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -15,6 +16,12 @@ const localMessages = {
 };
 
 class CollectionTopWordsContainer extends React.Component {
+
+  fetchWordsByTimePeriod = (dateQuery, timePeriod) => {
+    const { fetchData } = this.props;
+    fetchData(timePeriod, dateQuery);
+  }
+
   handleWordClick = (word) => {
     const { collectionId } = this.props;
     const searchStr = `${word.stem}*`;
@@ -22,16 +29,19 @@ class CollectionTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { collectionId, words, helpButton } = this.props;
+    const { collectionId, timePeriod, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/collections/${collectionId}/words/wordcount.csv`;
     return (
-      <EditableWordCloudDataCard
+      <PeriodicEditableWordCloudDataCard
         words={words}
+        handleTimePeriodClick={this.fetchWordsByTimePeriod}
+        selectedTime={timePeriod}
         downloadUrl={downloadUrl}
+        targetURL={`/collections/${collectionId}`}
         onViewModeClick={this.handleWordClick}
         title={formatMessage(localMessages.title)}
-        domId={`"collection-top-words-${collectionId}`}
+        domId={`collection-top-words-${collectionId}`}
         width={520}
         helpButton={helpButton}
       />
@@ -44,8 +54,10 @@ CollectionTopWordsContainer.propTypes = {
   collectionId: React.PropTypes.number.isRequired,
   // from dispath
   asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
+  timePeriod: React.PropTypes.string,
   words: React.PropTypes.array,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -55,17 +67,26 @@ CollectionTopWordsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.selected.collectionTopWords.fetchStatus,
   words: state.sources.collections.selected.collectionTopWords.list.wordcounts,
+  timePeriod: state.sources.collections.selected.collectionTopWords.timePeriod,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchCollectionTopWords(ownProps.collectionId));
+  fetchData: (timePeriod, dateQuery) => {
+    dispatch(fetchCollectionTopWords(ownProps.collectionId, { timePeriod, q: dateQuery }));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(stateProps.timePeriod, calculateTimePeriods(stateProps.timePeriod));
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.wordcloudHelpText])(
         composeAsyncContainer(
           CollectionTopWordsContainer

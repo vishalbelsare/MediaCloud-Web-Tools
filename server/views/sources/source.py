@@ -162,15 +162,21 @@ def source_geo_csv(media_id):
 @flask_login.login_required
 @api_error_handler
 def source_wordcount_csv(media_id):
-    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, media_id, "media_id")
+    query_arg = 'media_id:'+str(media_id)
+    if ('q' in request.args) and (len(request.args['q']) > 0):
+        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
+    return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Source-'+media_id, query_arg)
 
 
 @app.route('/api/sources/<media_id>/words')
 @flask_login.login_required
 @api_error_handler
 def media_source_words(media_id):
+    query_arg = 'media_id:'+str(media_id)
+    if ('q' in request.args) and (len(request.args['q']) > 0):
+        query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key(), 'media_id:'+str(media_id))
+        'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)
     }
     return jsonify({'results': info})
 
