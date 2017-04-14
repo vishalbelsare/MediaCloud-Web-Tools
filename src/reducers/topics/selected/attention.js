@@ -18,6 +18,7 @@ const attention = createAsyncReducer({
           counts: cleanDateCounts(focus.sentence_counts.split),
           total: focus.sentence_counts.count,
         })),
+        selectedFocalSetId: payload.foci.length > 0 ? payload.foci[0].focal_sets_id : '0',
       };
     }
     return { ...payload, foci: [] };
