@@ -19,13 +19,18 @@ export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
     constructor(props) {
       super(props);
       this.state = {
-        asyncFetchResult: undefined,
+        hasShowResults: false,
       };
     }
     componentDidMount() {
       const { asyncFetch } = this.props;
       const asyncFetchResult = asyncFetch();
       this.state = { asyncFetchResult };
+    }
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.fetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        this.setState({ hasShowResults: true });
+      }
     }
     render() {
       const { fetchStatus, asyncFetch } = this.props;
@@ -34,16 +39,39 @@ export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
         content = null;
       } else {
         switch (fetchStatus) {
+          case fetchConstants.FETCH_ONGOING:
+            if (this.state.hasShowResults) {
+              content = (
+                <div className="async-loading">
+                  <ComposedContainer {...this.props} />
+                  <div className="loading-overlay">
+                    <div className="overlay-content">
+                      <LoadingSpinner size={spinnerSize} />
+                    </div>
+                  </div>
+                </div>
+              );
+            } else if (loadingSpinnerSize !== 0) {
+              content = <LoadingSpinner size={spinnerSize} />;
+            }
+            break;
           case fetchConstants.FETCH_SUCCEEDED:
             content = <ComposedContainer {...this.props} />;
             break;
           case fetchConstants.FETCH_FAILED:
-            content = <ErrorTryAgain onTryAgain={asyncFetch} />;
+            content = (
+              <div className="async-loading">
+                <ComposedContainer {...this.props} />
+                <div className="loading-overlay">
+                  <div className="overlay-content">
+                    <ErrorTryAgain onTryAgain={asyncFetch} />;
+                  </div>
+                </div>
+              </div>
+            );
             break;
           default:
-            if (loadingSpinnerSize !== 0) {
-              content = <LoadingSpinner size={spinnerSize} />;
-            }
+            break;
         }
       }
       return content;
