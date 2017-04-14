@@ -170,16 +170,12 @@ def source_wordcount_csv(media_id):
 @api_error_handler
 def media_source_words(media_id):
     query_arg = 'media_id:'+str(media_id)
-    time_period = 0
-    if 'q' in request.args:
+    if ('q' in request.args) and (len(request.args['q']) > 0):
         query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
-    if 'timePeriod' in request.args:
-        time_period = int(request.args.get('timePeriod'))
-
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)
     }
-    return jsonify({'results': info, 'timePeriod': time_period})
+    return jsonify({'results': info})
 
 
 @app.route('/api/sources/create', methods=['POST'])

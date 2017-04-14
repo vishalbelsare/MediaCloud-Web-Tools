@@ -17,10 +17,6 @@ import { WarningNotice } from '../common/Notice';
 
 
 const localMessages = {
-  pastWeek: { id: 'wordcloud.time.pastWeek', defaultMessage: 'past week' },
-  pastMonth: { id: 'wordcloud.time.pastMonth', defaultMessage: 'past month' },
-  pastYear: { id: 'wordcloud.time.pastYear', defaultMessage: 'past year' },
-  all: { id: 'wordcloud.time.all', defaultMessage: 'all' },
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
   modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },

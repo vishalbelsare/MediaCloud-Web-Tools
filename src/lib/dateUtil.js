@@ -14,10 +14,10 @@ const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 
-export const PAST_WEEK = 1;
-export const PAST_MONTH = 2;
-export const PAST_YEAR = 3;
-export const PAST_ALL = 0;
+export const PAST_WEEK = 'week';
+export const PAST_MONTH = 'month';
+export const PAST_YEAR = 'year';
+export const PAST_ALL = 'all-time';
 
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
@@ -92,14 +92,15 @@ export function cleanCoverageGaps(gapList) {
 }
 
 export function calculateTimePeriods(timePeriod) {
+  if (![PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
+    const error = { message: `unknown time period passed to calculateTimePeriods: ${timePeriod}` };
+    throw error;
+  }
   let targetPeriodStart = null;
   // const targetPeriodEnd = moment().format('YYYY-MM-DDThh:mm:ssZ');
   const targetYear = moment().subtract(1, 'year');
-
   const targetMonth = moment().subtract(1, 'month');
-
   const targetWeek = moment().subtract(1, 'week');
-
   switch (timePeriod) {
     case PAST_WEEK: // past week
       targetPeriodStart = targetWeek;
@@ -112,9 +113,8 @@ export function calculateTimePeriods(timePeriod) {
       break;
     case PAST_ALL:
       return '';
-
     default:
       break;
   }
-  return `q='(publish_date:[${targetPeriodStart.format('YYYY-MM-DDThh:mm:ss')}Z TO ${moment().format('YYYY-MM-DDThh:mm:ss')}Z])'`;
+  return `(publish_date:[${targetPeriodStart.format('YYYY-MM-DDThh:mm:ss')}Z TO ${moment().format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }

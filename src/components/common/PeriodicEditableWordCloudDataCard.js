@@ -1,27 +1,20 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { calculateTimePeriods, PAST_WEEK, PAST_MONTH, PAST_YEAR } from '../../lib/dateUtil';
+import { calculateTimePeriods, PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL } from '../../lib/dateUtil';
 import EditableWordCloudDataCard from './EditableWordCloudDataCard';
 
 const localMessages = {
   pastWeek: { id: 'wordcloud.time.pastWeek', defaultMessage: 'past week' },
   pastMonth: { id: 'wordcloud.time.pastMonth', defaultMessage: 'past month' },
   pastYear: { id: 'wordcloud.time.pastYear', defaultMessage: 'past year' },
-  all: { id: 'wordcloud.time.all', defaultMessage: 'all' },
-  editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
-  edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
-  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
-  modeUnordered: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
+  all: { id: 'wordcloud.time.all', defaultMessage: 'all time' },
 };
-
-const ALL = 0;
 
 class PeriodicEditableWordCloudDataCard extends React.Component {
 
-  saveStateAndTriggerFetch = (timePeriod, e) => {
+  saveStateAndTriggerFetch = (timePeriod) => {
     const { handleTimePeriodClick } = this.props;
-    e.target.parentElement.setAttribute('selected', 'true');
     handleTimePeriodClick(calculateTimePeriods(timePeriod), timePeriod);
   }
 
@@ -29,21 +22,36 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
     const { title, words, downloadUrl, selectedTime, targetURL, onViewModeClick, helpButton, domId } = this.props;
     const timePeriods = (
       <div className="time-periods">
-        <a tabIndex="0" className={selectedTime === PAST_WEEK ? 'selected' : ''} onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}>
-          <FormattedMessage {...localMessages.pastWeek} />&nbsp;
+        <a
+          tabIndex="0"
+          className={selectedTime === PAST_ALL ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_ALL, e)}
+        >
+          <FormattedMessage {...localMessages.all} />
         </a>
-        <a tabIndex="0" className={selectedTime === PAST_MONTH ? 'selected' : ''} onClick={e => this.saveStateAndTriggerFetch(PAST_MONTH, e)}>
-          &nbsp;&nbsp;<FormattedMessage {...localMessages.pastMonth} />&nbsp;
+        <a
+          tabIndex="0"
+          className={selectedTime === PAST_YEAR ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}
+        >
+          <FormattedMessage {...localMessages.pastYear} />
         </a>
-        <a tabIndex="0" className={selectedTime === PAST_YEAR ? 'selected' : ''} onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}>
-          &nbsp;&nbsp;<FormattedMessage {...localMessages.pastYear} />&nbsp;
+        <a
+          tabIndex="0"
+          className={selectedTime === PAST_MONTH ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_MONTH, e)}
+        >
+          <FormattedMessage {...localMessages.pastMonth} />
         </a>
-        <a tabIndex="0" className={selectedTime === ALL ? 'selected' : ''} onClick={e => this.saveStateAndTriggerFetch(ALL, e)}>
-          &nbsp;&nbsp;<FormattedMessage {...localMessages.all} />&nbsp;
+        <a
+          tabIndex="0"
+          className={selectedTime === PAST_WEEK ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}
+        >
+          <FormattedMessage {...localMessages.pastWeek} />
         </a>
       </div>
     );
-
     return (
       <EditableWordCloudDataCard
         words={words}
@@ -75,7 +83,7 @@ PeriodicEditableWordCloudDataCard.propTypes = {
   helpButton: React.PropTypes.node,
   targetURL: React.PropTypes.string,
   handleTimePeriodClick: React.PropTypes.func.isRequired,
-  selectedTime: React.PropTypes.number,
+  selectedTime: React.PropTypes.string.isRequired,
     // from dispatch
   onViewModeClick: React.PropTypes.func.isRequired,
   domId: React.PropTypes.string.isRequired,

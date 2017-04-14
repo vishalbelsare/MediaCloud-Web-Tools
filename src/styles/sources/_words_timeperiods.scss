@@ -1,3 +1,5 @@
+@import '../constants';
+
 .word-labels {
   float: left;
   font-family: $font-families;
@@ -6,20 +8,26 @@
 }
 
 .time-periods {
-  float: left;
+  display: inline-block;
   padding-left: 10px;
-  padding-top: 10px;
   cursor: pointer !important;
   font-family: $font-families;
-  font-size: 14px;
-  font-weight: bold;
-  color: $material-grey900;
+  font-size: 12px;
 
-  :hover, .selected {
-  	color: $sources-darker;
-  	text-decoration: none;
+  a {
+    color: $material-grey500 !important;
+    display: inline-block;
+    margin-right: 10px;
+    text-decoration: none;
   }
-  :hover {
-    text-decoration: underline;
+
+  a.selected {
+    color: $sources-primary !important;
   }
+
+  a:hover,  {
+  	color: $sources-primary;
+    border-bottom: 1px dotted;
+  }
+
 }

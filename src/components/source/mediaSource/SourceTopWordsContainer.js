@@ -5,6 +5,7 @@ import { fetchSourceTopWords } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
+import { PAST_ALL } from '../../../lib/dateUtil';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 
 const localMessages = {
@@ -15,15 +16,9 @@ const localMessages = {
 };
 
 class SourceTopWordsContainer extends React.Component {
-
-  state = {
-    timePeriod: 1,
-  }
-
-  fetchWordsByTimePeriod = (params, timePeriod) => {
-    const { fetchData } = this.props;
-    const sendParams = { q: params, timePeriod };
-    fetchData(sendParams);
+  fetchWordsByTimePeriod = (dateQuery, timePeriod) => {
+    const { fetchData, source } = this.props;
+    fetchData(source.media_id, timePeriod, dateQuery);
   }
   handleWordClick = (word) => {
     const { source } = this.props;
@@ -32,10 +27,9 @@ class SourceTopWordsContainer extends React.Component {
     window.open(url, '_blank');
   }
   render() {
-    const { source, words, timePeriod, helpButton } = this.props;
+    const { source, words, helpButton, timePeriod } = this.props;
     const { formatMessage } = this.props.intl;
     const downloadUrl = `/api/sources/${source.media_id}/words/wordcount.csv`;
-
     return (
       <PeriodicEditableWordCloudDataCard
         words={words}
@@ -60,9 +54,9 @@ SourceTopWordsContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   words: React.PropTypes.array,
+  timePeriod: React.PropTypes.string.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
-  timePeriod: React.PropTypes.number,
   // from composition
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
@@ -74,20 +68,16 @@ const mapStateToProps = state => ({
   timePeriod: state.sources.sources.selected.topWords.timePeriod,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (params) => {
-    if (params) {
-      dispatch(fetchSourceTopWords(ownProps.source.media_id, params));
-    } else {
-      dispatch(fetchSourceTopWords(ownProps.source.media_id));
-    }
+const mapDispatchToProps = dispatch => ({
+  fetchData: (mediaId, timePeriod, dateQuery) => {
+    dispatch(fetchSourceTopWords(mediaId, { timePeriod, q: dateQuery }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData();
+      dispatchProps.fetchData(ownProps.source.media_id, PAST_ALL);
     },
   });
 }
