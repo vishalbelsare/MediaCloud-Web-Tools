@@ -174,7 +174,7 @@ def media_source_words(media_id):
     if 'q' in request.args:
         query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
     if 'timePeriod' in request.args:
-        time_period = request.args.get('timePeriod')
+        time_period = int(request.args.get('timePeriod'))
 
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)

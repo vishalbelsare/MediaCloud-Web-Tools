@@ -71,7 +71,7 @@ SourceTopWordsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.sources.sources.selected.topWords.fetchStatus,
   words: state.sources.sources.selected.topWords.list.wordcounts,
-  timePeriod: parseInt(state.sources.sources.selected.topWords.timePeriod, 10),
+  timePeriod: state.sources.sources.selected.topWords.timePeriod,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

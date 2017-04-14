@@ -15,8 +15,11 @@
   font-weight: bold;
   color: $material-grey900;
 
-  :hover, :selected {
+  :hover, .selected {
   	color: $sources-darker;
-  	text-decoration: underline;
+  	text-decoration: none;
+  }
+  :hover {
+    text-decoration: underline;
   }
 }
