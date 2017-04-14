@@ -69,7 +69,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (timePeriod, dateQuery) => {
-    dispatch(fetchSourceTopWords(ownProps.sources.media_id, { timePeriod, q: dateQuery }));
+    dispatch(fetchSourceTopWords(ownProps.source.media_id, { timePeriod, q: dateQuery }));
   },
 });
 
@@ -80,7 +80,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
   });
 }
-
 
 export default
   injectIntl(

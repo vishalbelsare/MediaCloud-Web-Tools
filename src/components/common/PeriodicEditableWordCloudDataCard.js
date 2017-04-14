@@ -24,17 +24,10 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
       <div className="time-periods">
         <a
           tabIndex="0"
-          className={selectedTime === PAST_ALL ? 'selected' : ''}
-          onClick={e => this.saveStateAndTriggerFetch(PAST_ALL, e)}
+          className={selectedTime === PAST_WEEK ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}
         >
-          <FormattedMessage {...localMessages.all} />
-        </a>
-        <a
-          tabIndex="0"
-          className={selectedTime === PAST_YEAR ? 'selected' : ''}
-          onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}
-        >
-          <FormattedMessage {...localMessages.pastYear} />
+          <FormattedMessage {...localMessages.pastWeek} />
         </a>
         <a
           tabIndex="0"
@@ -45,10 +38,17 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
         </a>
         <a
           tabIndex="0"
-          className={selectedTime === PAST_WEEK ? 'selected' : ''}
-          onClick={e => this.saveStateAndTriggerFetch(PAST_WEEK, e)}
+          className={selectedTime === PAST_YEAR ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_YEAR, e)}
         >
-          <FormattedMessage {...localMessages.pastWeek} />
+          <FormattedMessage {...localMessages.pastYear} />
+        </a>
+        <a
+          tabIndex="0"
+          className={selectedTime === PAST_ALL ? 'selected' : ''}
+          onClick={e => this.saveStateAndTriggerFetch(PAST_ALL, e)}
+        >
+          <FormattedMessage {...localMessages.all} />
         </a>
       </div>
     );
