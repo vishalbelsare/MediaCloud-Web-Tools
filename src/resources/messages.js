@@ -73,6 +73,7 @@ const messages = {
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
+  private: { id: 'common.private', defaultMessage: 'Private' },
   language: { id: 'common.language', defaultMessage: 'Language' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
