@@ -4,8 +4,6 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import { fetchTopicFocalSetsList } from '../../../actions/topicActions';
-import { asyncContainerize } from '../../common/AsyncContainer';
 
 const localMessages = {
   pick: { id: 'attention.focalSet.selector.intro', defaultMessage: 'Pick a Set to compare the attention between the Subtopics.' },
@@ -55,11 +53,8 @@ FocusSetSelectorContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
   focalSets: React.PropTypes.array.isRequired,
 };
 
@@ -68,27 +63,9 @@ const mapStateToProps = state => ({
   focalSets: state.topics.selected.focalSets.all.list,
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchData: (topicId, snapshotId) => {
-    if (topicId !== null) {
-      dispatch(fetchTopicFocalSetsList(topicId, snapshotId));
-    }
-  },
-});
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, ownProps.snapshotId);
-    },
-  });
-}
-
 export default
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    asyncContainerize(
-      injectIntl(
-        FocusSetSelectorContainer
-      )
+  connect(mapStateToProps)(
+    injectIntl(
+      FocusSetSelectorContainer
     )
   );
