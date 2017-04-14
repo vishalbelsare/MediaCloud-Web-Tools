@@ -12,15 +12,22 @@ const localMessages = {
 };
 
 const AttentionContainer = (props) => {
-  const { selectedFocalSetId, filters, topicId, handleFocalSetSelected } = props;
+  const { selectedFocalSetId, filters, focalSets, topicId, handleFocalSetSelected } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   let content = null;
+  const defaultFocalSet = focalSets.length > 0 ? focalSets[0].focal_sets_id : '0';
   if (selectedFocalSetId !== '0') {
     content = (<FociAttentionComparisonContainer
       topicId={topicId}
       filters={filters}
       selectedFocalSetId={selectedFocalSetId}
+    />);
+  } else if (focalSets.length > 0) { // handle case for default if we do have any focal sets
+    content = (<FociAttentionComparisonContainer
+      topicId={topicId}
+      filters={filters}
+      selectedFocalSetId={defaultFocalSet}
     />);
   }
   return (
@@ -34,7 +41,7 @@ const AttentionContainer = (props) => {
               topicId={topicId}
               snapshotId={filters.snapshotId}
               onFocalSetSelected={handleFocalSetSelected}
-              selectedFocalSetId={selectedFocalSetId}
+              selectedFocalSetId={selectedFocalSetId !== '0' ? selectedFocalSetId : defaultFocalSet}
             />
           </Col>
         </Row>
@@ -51,6 +58,7 @@ AttentionContainer.propTypes = {
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
   selectedFocalSetId: React.PropTypes.string,
+  focalSets: React.PropTypes.array,
   // from dispatch
   handleFocalSetSelected: React.PropTypes.func.isRequired,
 };
@@ -58,6 +66,7 @@ AttentionContainer.propTypes = {
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
+  focalSets: state.topics.selected.focalSets.all.list,
   selectedFocalSetId: state.topics.selected.attention.selectedFocalSetId,
 });
 

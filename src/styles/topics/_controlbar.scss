@@ -33,9 +33,16 @@
         }
       }
     }
-
-    .filter-selector {
+    .filter {
       background-color: $material-grey800;
+      .filter-selector {
+
+        .snapshot-selector, .focus-selector {
+          div {
+            width: 450px !important;
+          }
+        }
+      }
     }
   
   }

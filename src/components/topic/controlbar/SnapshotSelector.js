@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { getBrandDarkerColor } from '../../../styles/colors';
+import { textualFormattedDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   pickSnapshot: { id: 'snapshot.pick', defaultMessage: 'Load an Archived Snapshot' },
@@ -25,30 +26,30 @@ class SnapshotSelector extends React.Component {
       selected = snapshots[0];
     }
     return (
-      <div className="snapshot-selector">
-        <SelectField
-          floatingLabelText={formatMessage(localMessages.pickSnapshot)}
-          floatingLabelFixed
-          floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
-          selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
-          labelStyle={{ color: 'rgb(255,255,255)' }}
-          value={selectedId}
-          onChange={this.handleSnapshotSelected}
-        >
-          {snapshots.map((snapshot) => {
-            const dateStr = snapshot.snapshot_date.substr(0, 16);
-            const stateMessage = (snapshot.isUsable) ? '' : formatMessage(localMessages.snapshotNotReady);
-            return (
-              <MenuItem
-                disabled={!snapshot.isUsable}
-                key={snapshot.snapshots_id}
-                value={snapshot.snapshots_id}
-                primaryText={`${dateStr} ${stateMessage}`}
-              />
-            );
-          })}
-        </SelectField>
-      </div>
+      <SelectField
+        floatingLabelText={formatMessage(localMessages.pickSnapshot)}
+        floatingLabelFixed
+        floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
+        selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
+        labelStyle={{ color: 'rgb(255,255,255)' }}
+        value={selectedId}
+        onChange={this.handleSnapshotSelected}
+      >
+        {snapshots.map((snapshot) => {
+          const dateStr = snapshot.snapshot_date.substr(0, 16);
+          const formattedDateStr = textualFormattedDate(dateStr);
+          const stateMessage = (snapshot.isUsable) ? '' : formatMessage(localMessages.snapshotNotReady);
+          return (
+            <MenuItem
+              disabled={!snapshot.isUsable}
+              key={snapshot.snapshots_id}
+              value={snapshot.snapshots_id}
+              primaryText={`${formattedDateStr} ${stateMessage}`}
+            />
+          );
+        })}
+      </SelectField>
+
     );
   }
 
