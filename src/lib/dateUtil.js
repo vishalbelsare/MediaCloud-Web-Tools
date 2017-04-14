@@ -23,6 +23,10 @@ export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }
 
+export function textualFormattedDate(date) {
+  return moment(date, TEXTUAL_DATE_FORMAT).format('LLLL');
+}
+
 export function jobStatusDateToMoment(statusDate, strict = true) {
   return moment(statusDate, JOB_STATUS_DATE_FORMAT, strict);
 }
