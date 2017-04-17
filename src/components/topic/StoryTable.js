@@ -117,7 +117,7 @@ class StoryTable extends React.Component {
                       {!!i && ', '}
                       <Link
                         to={`/topics/${topicId}/summary?focusId=${foci.foci_id}`}
-                        onClick={onChangeFocusSelection}
+                        onClick={() => onChangeFocusSelection(foci.foci_id)}
                       >
                         { foci.focal_set_name }
                       </Link>

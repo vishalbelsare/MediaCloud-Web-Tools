@@ -101,7 +101,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicTopStories(props.topicId, params));
   },
   handleFocusSelected: (focusId) => {
-    const newLocation = filteredLocation(ownProps.location, { focusId, timespanId: null });
+    const params = {
+      ...ownProps.filters,
+      focusId,
+      timespanId: null,
+    };
+    const newLocation = filteredLocation(ownProps.location, params);
     dispatch(push(newLocation));
     dispatch(filterByFocus(focusId));
   },
