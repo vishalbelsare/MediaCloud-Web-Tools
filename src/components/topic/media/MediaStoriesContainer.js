@@ -1,11 +1,13 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchMediaStories, sortMediaStories } from '../../../actions/topicActions';
+import { push } from 'react-router-redux';
+import { fetchMediaStories, sortMediaStories, filterByFocus } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
 import StoryTable from '../StoryTable';
+import { filteredLocation } from '../../util/location';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 
@@ -19,7 +21,8 @@ const localMessages = {
 class MediaStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
+    if ((nextProps.filters.timespanId !== filters.timespanId) ||
+      (nextProps.sort !== sort)) {
       fetchData(nextProps);
     }
   }
@@ -33,7 +36,7 @@ class MediaStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId, helpButton } = this.props;
+    const { inlinkedStories, topicId, helpButton, handleFocusSelected } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -44,7 +47,12 @@ class MediaStoriesContainer extends React.Component {
           <FormattedMessage {...messages.storyPlural} />
           {helpButton}
         </h2>
-        <StoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.onChangeSort} />
+        <StoryTable
+          stories={inlinkedStories}
+          topicId={topicId}
+          onChangeSort={this.onChangeSort}
+          onChangeFocusSelection={handleFocusSelected}
+        />
       </DataCard>
     );
   }
@@ -57,11 +65,13 @@ MediaStoriesContainer.propTypes = {
   // from parent
   mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from fetchData
   fetchData: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
+  handleFocusSelected: React.PropTypes.func.isRequired,
   // from state
   sort: React.PropTypes.string.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -84,6 +94,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       limit: STORIES_TO_SHOW,
     };
     dispatch(fetchMediaStories(ownProps.topicId, ownProps.mediaId, params));
+  },
+  handleFocusSelected: (focusId) => {
+    const newLocation = filteredLocation(ownProps.location, { focusId, timespanId: null });
+    dispatch(push(newLocation));
+    dispatch(filterByFocus(focusId));
   },
   sortData: (sort) => {
     dispatch(sortMediaStories(sort));

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
@@ -9,6 +10,7 @@ import { ReadItNowButton } from '../common/IconButton';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
+  foci: { id: 'story.foci.list', defaultMessage: 'List of Subtopics {list}' },
 };
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
@@ -30,7 +32,7 @@ class StoryTable extends React.Component {
   }
 
   render() {
-    const { stories, onChangeSort, topicId, sortedBy, maxTitleLength } = this.props;
+    const { stories, onChangeSort, onChangeFocusSelection, topicId, sortedBy, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
@@ -89,6 +91,8 @@ class StoryTable extends React.Component {
               <th>{socialHeader}</th>
               <th><FormattedMessage {...messages.facebookShares} /></th>
               <th>{}</th>
+              <th><FormattedMessage {...messages.focus} /></th>
+              <th>{}</th>
             </tr>
             {stories.map((story, idx) => {
               const domain = storyDomainName(story);
@@ -104,6 +108,24 @@ class StoryTable extends React.Component {
                 if (story.date_is_reliable === 0) {
                   dateToShow += '?';
                 }
+              }
+              let listOfFoci = 'none';
+              if (story.foci.length > 0) {
+                listOfFoci = (
+                  story.foci.map((foci, i) => (
+                    <span key={i}>
+                      {!!i && ', '}
+                      <Link
+                        to={`/topics/${topicId}/summary?focusId=${foci.foci_id}`}
+                        onClick={onChangeFocusSelection}
+                      >
+                        { foci.focal_set_name }
+                      </Link>
+                    </span>
+                  ),
+                  )
+                );
+                // listOfFoci = intersperse(listOfFoci, ', ');
               }
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
@@ -126,6 +148,7 @@ class StoryTable extends React.Component {
                   <td><FormattedNumber value={story.bitly_click_count || 0} /></td>
                   <td><FormattedNumber value={story.facebook_share_count || 0} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
+                  <td>{listOfFoci}</td>
                 </tr>
               );
             }
@@ -143,6 +166,7 @@ StoryTable.propTypes = {
   intl: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
   onChangeSort: React.PropTypes.func,
+  onChangeFocusSelection: React.PropTypes.func,
   sortedBy: React.PropTypes.string,
   maxTitleLength: React.PropTypes.number,
 };
