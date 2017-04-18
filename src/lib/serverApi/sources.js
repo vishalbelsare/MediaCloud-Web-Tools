@@ -74,12 +74,12 @@ export function collectionGeography(id) {
 }
 
 export function sourceWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/sources/${id}/words`, acceptedParams);
 }
 
 export function collectionWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/collections/${id}/words`, acceptedParams);
 }
 

@@ -69,7 +69,7 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   render() {
-    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId, timePeriod } = this.props;
+    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId, subtitleContent } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
@@ -175,7 +175,7 @@ class EditableWordCloudDataCard extends React.Component {
           <span className="word-labels">
             {titleContent}
             {helpButton}
-            {timePeriod}
+            {subtitleContent}
           </span>
         </h2>
         {editingWarning}
@@ -199,7 +199,7 @@ EditableWordCloudDataCard.propTypes = {
   download: React.PropTypes.func,
   helpButton: React.PropTypes.node,
   targetURL: React.PropTypes.string,
-  timePeriod: React.PropTypes.object,
+  subtitleContent: React.PropTypes.object,
     // from dispatch
   onViewModeClick: React.PropTypes.func.isRequired,
   domId: React.PropTypes.string.isRequired,
