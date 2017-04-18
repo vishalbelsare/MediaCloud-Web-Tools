@@ -1,0 +1,30 @@
+@import '../_constants';
+
+.periodic-container {
+
+  .periodic-controls {
+    display: inline-block;
+    padding-left: 10px;
+    cursor: pointer !important;
+    font-family: $font-families;
+    font-size: 12px;
+
+    a {
+      color: $material-grey500 !important;
+      display: inline-block;
+      margin-right: 10px;
+      text-decoration: none;
+    }
+
+    a.selected {
+      color: $sources-primary !important;
+    }
+
+    a:hover,  {
+    	color: $sources-primary;
+      border-bottom: 1px dotted;
+    }
+
+  }
+
+}

@@ -398,11 +398,11 @@ def collection_source_sentence_historical_counts_csv(collection_id):
     date_cols = None
     for source in results:
         if date_cols is None:
-            date_cols = sorted(source['sentencesOverTime'].keys())
-        for date, count in source['sentencesOverTime'].iteritems():
+            date_cols = sorted(source['sentences_over_time'].keys())
+        for date, count in source['sentences_over_time'].iteritems():
             source[date] = count
-        del source['sentencesOverTime']
-    props = ['mediaId', 'mediaName', 'mediaUrl', 'totalStories', 'totalSentences'] + date_cols
+        del source['sentences_over_time']
+    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'total_sentences'] + date_cols
     filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
     return csv.stream_response(results, props, filename)
 
@@ -423,12 +423,12 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
         del split_sentence_count['split']['start']
         del split_sentence_count['split']['gap']
         source_data = {
-            'mediaId': m['media_id'],
-            'mediaName': m['name'],
-            'mediaUrl': m['url'],
-            'totalStories': total_story_count,
-            'totalSentences': split_sentence_count['count'],
-            'sentencesOverTime': split_sentence_count['split'],
+            'media_id': m['media_id'],
+            'media_name': m['name'],
+            'media_url': m['url'],
+            'total_stories': total_story_count,
+            'total_sentences': split_sentence_count['count'],
+            'sentences_over_time': split_sentence_count['split'],
         }
         results.append(source_data)
     return results
@@ -503,7 +503,7 @@ def collection_media_list(user_mc_key, tags_id):
         if len(media) > 0:
             max_media_id = media[len(media) - 1]['media_id']
         more_media = len(media) != 0
-    return sorted(all_media, key=lambda t: t['name'])
+    return sorted(all_media, key=lambda t: t['name'].lower())
 
 
 def collection_media_list_page(user_mc_key, tags_id, max_media_id):

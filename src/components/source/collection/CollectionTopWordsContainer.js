@@ -6,6 +6,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
+import { calculateTimePeriods } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -35,7 +36,7 @@ class CollectionTopWordsContainer extends React.Component {
       <PeriodicEditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
-        selectedTime={timePeriod}
+        selectedTimePeriod={timePeriod}
         downloadUrl={downloadUrl}
         targetURL={`/collections/${collectionId}`}
         onViewModeClick={this.handleWordClick}
@@ -78,7 +79,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.timePeriod);
+      // need to calculateTimePeriods here in order to default to week correctly
+      dispatchProps.fetchData(stateProps.timePeriod, calculateTimePeriods(stateProps.timePeriod));
     },
   });
 }
