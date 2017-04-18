@@ -10,10 +10,7 @@ const localMessages = {
   topicFavorited: { id: 'source.favorited', defaultMessage: 'Star this topic' },
   topicUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Unstar this topic' },
 };
-
-
 const TopicsSubHeaderContainer = (props) => {
-
   const { topicId, topicInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let title = '';
