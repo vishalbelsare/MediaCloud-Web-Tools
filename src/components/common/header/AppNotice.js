@@ -17,8 +17,6 @@ class AppNotice extends React.Component {
   render() {
     const { message, htmlMessage, level, details } = this.props.info;
     const { formatMessage } = this.props.intl;
-    let messageContent = message;
-    let detailsContent = details;
     let stringMessage = message;
     if (typeof message === 'object') {
       stringMessage = formatMessage(message);
