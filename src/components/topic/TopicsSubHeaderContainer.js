@@ -11,7 +11,9 @@ const localMessages = {
   topicUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Unstar this topic' },
 };
 
+
 const TopicsSubHeaderContainer = (props) => {
+
   const { topicId, topicInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let title = '';
@@ -42,6 +44,7 @@ const TopicsSubHeaderContainer = (props) => {
 };
 
 TopicsSubHeaderContainer.propTypes = {
+
   // from parent
   // from context
   intl: React.PropTypes.object.isRequired,
@@ -71,5 +74,6 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       TopicsSubHeaderContainer
+
     )
   );
