@@ -16,19 +16,24 @@ class AppNotice extends React.Component {
 
   render() {
     const { message, htmlMessage, level, details } = this.props.info;
+    const { formatMessage } = this.props.intl;
     let messageContent = message;
     let detailsContent = details;
-    if (message) {
-      const isLowLevelError = (message.includes('.pm')) || (message.includes('.py'));  // ie. does it include a stack trace
-      if ((details === undefined) || (details === null)) {
-        if (isLowLevelError) {
-          if (message.includes('Invalid API key or authentication cookie')) {
-            messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
-          } else {
-            messageContent = <FormattedMessage {...localMessages.internalError} />;
-          }
-          detailsContent = message;
+    let stringMessage = message;
+    if (typeof message === 'object') {
+      stringMessage = formatMessage(message);
+    }
+    const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
+    let messageContent = stringMessage;
+    let detailsContent = details;
+    if ((details === undefined) || (details === null)) {
+      if (isLowLevelError) {
+        if (stringMessage.includes('Invalid API key or authentication cookie')) {
+          messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+        } else {
+          messageContent = <FormattedMessage {...localMessages.internalError} />;
         }
+        detailsContent = stringMessage;
       }
     } else if (htmlMessage) {
       messageContent = (<span dangerouslySetInnerHTML={{ __html: htmlMessage }} />);
