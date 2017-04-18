@@ -59,10 +59,10 @@ class TopicSummaryContainer extends React.Component {
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={12}>
-              <StoriesSummaryContainer topicId={topicId} filters={filters} />
+              <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
             <Col lg={12}>
-              <MediaSummaryContainer topicId={topicId} filters={filters} />
+              <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               <Col lg={12}>
@@ -106,6 +106,7 @@ TopicSummaryContainer.propTypes = {
   params: React.PropTypes.object,
   // from state
   timespan: React.PropTypes.object,
+  location: React.PropTypes.object,
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
   topicInfo: React.PropTypes.object,

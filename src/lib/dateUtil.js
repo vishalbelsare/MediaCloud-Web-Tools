@@ -14,6 +14,9 @@ const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 
+// "2017-04-13 12:26:59.649513"
+const SNAPSHOT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
+
 export const PAST_WEEK = 'week';
 export const PAST_MONTH = 'month';
 export const PAST_YEAR = 'year';
@@ -23,8 +26,8 @@ export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }
 
-export function textualFormattedDate(date) {
-  return moment(date, TEXTUAL_DATE_FORMAT).format('LLLL');
+export function snapshotDateToMoment(snapshotDateStr, strict = false) {
+  return moment(snapshotDateStr, SNAPSHOT_DATE_FORMAT, strict);
 }
 
 export function jobStatusDateToMoment(statusDate, strict = true) {

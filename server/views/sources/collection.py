@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify, request, render_template
 import flask_login
+import datetime
 from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from werkzeug import secure_filename
@@ -372,6 +373,80 @@ def api_collection_sources_csv(collection_id):
     return csv.api_download_sources_csv( all_media, file_prefix)
 
 
+@app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
+@arguments_required('start', 'end')
+@flask_login.login_required
+@api_error_handler
+def collection_source_sentence_historical_counts(collection_id):
+    user_mc = user_mediacloud_client()
+    start_date_str = request.args['start']
+    end_date_str = request.args['end']
+    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    return jsonify({'counts': results})
+
+
+@app.route('/api/collections/<collection_id>/sources/stories/historical-counts.csv')
+@arguments_required('start', 'end')
+@flask_login.login_required
+@api_error_handler
+def collection_source_sentence_historical_counts_csv(collection_id):
+    # user_mc = user_mediacloud_client()
+    start_date_str = request.args['start']
+    end_date_str = request.args['end']
+    # collection = user_mc.tag(collection_id)
+    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    date_cols = None
+    for source in results:
+        if date_cols is None:
+            date_cols = sorted(source['sentencesOverTime'].keys())
+        for date, count in source['sentencesOverTime'].iteritems():
+            source[date] = count
+        del source['sentencesOverTime']
+    props = ['mediaId', 'mediaName', 'mediaUrl', 'totalStories', 'totalSentences'] + date_cols
+    filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
+    return csv.stream_response(results, props, filename)
+
+
+def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
+    user_mc = user_mediacloud_client()
+    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
+    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
+    q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
+    media_list = collection_media_list(user_mediacloud_key(), collection_id)
+    results = []
+    for m in media_list:
+        media_query = "(media_id:{}) {}".format(m['media_id'], q)
+        total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
+        split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
+                                                                   start_date_str, end_date_str)
+        del split_sentence_count['split']['end']
+        del split_sentence_count['split']['start']
+        del split_sentence_count['split']['gap']
+        source_data = {
+            'mediaId': m['media_id'],
+            'mediaName': m['name'],
+            'mediaUrl': m['url'],
+            'totalStories': total_story_count,
+            'totalSentences': split_sentence_count['count'],
+            'sentencesOverTime': split_sentence_count['split'],
+        }
+        results.append(source_data)
+    return results
+
+@cache
+def _cached_source_story_count(user_mc_key, query):
+    user_mc = user_mediacloud_client()
+    return user_mc.storyCount(query)['count']
+
+@cache
+def _cached_source_sentence_count(user_mc_key, query):
+    user_mc = user_mediacloud_client()
+    return user_mc.sentenceCount(query)['count']
+
+@cache
+def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
+    user_mc = user_mediacloud_client()
+    return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required

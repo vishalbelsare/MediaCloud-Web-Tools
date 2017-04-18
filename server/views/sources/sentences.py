@@ -15,8 +15,7 @@ def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, filename)
 
-@cache
-def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None):
+def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date_str=None):
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query
     '''
@@ -25,10 +24,13 @@ def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None):
         last_n_days = 365
         start_date = datetime.date.today()-datetime.timedelta(last_n_days)
     else:
-        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')    # throws value error if incorrectly formatted
-    yesterday = datetime.date.today()-datetime.timedelta(1)
-    fq.append(user_mc.publish_date_query(start_date, yesterday))
+        start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+    if end_date_str is None:
+        end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
+    else:
+        end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
+    fq.append(user_mc.publish_date_query(start_date, end_date))
     sentences_over_time = user_mc.sentenceCount('*', solr_filter=fq, split=True,
         split_start_date=datetime.datetime.strftime(start_date, '%Y-%m-%d'),
-        split_end_date=datetime.datetime.strftime(yesterday, '%Y-%m-%d'))['split']
+        split_end_date=datetime.datetime.strftime(end_date, '%Y-%m-%d'))['split']
     return sentences_over_time

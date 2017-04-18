@@ -73,6 +73,7 @@ const messages = {
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
+  private: { id: 'common.private', defaultMessage: 'Private' },
   language: { id: 'common.language', defaultMessage: 'Language' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
@@ -158,7 +159,7 @@ const messages = {
   },
 
   wordTreeHelpText: { id: 'wordTree.help.text',
-    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>This is based on a random sample of 1000 sentences, which we haven\'t exhaustively tested to see if is a representative sample. That caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
+    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>Notes:</p><ul><li>This is based on a random sample of 1000 sentences fragments, which we haven\'t exhaustively tested to see if is a representative sample (but seems to work well).</li><li>This only includes the 5 words before and after the use of the keyword you are looking at (due to copywrite sensitivities).</li><li>This uses the term, not the stem.</li></ul><p>Those caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
   },
 
   totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },

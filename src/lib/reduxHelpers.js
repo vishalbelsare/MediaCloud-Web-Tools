@@ -201,7 +201,7 @@ export function errorReportingMiddleware({ dispatch }) {
         }
       }
     }
-    if (message !== null) {
+    if (message) {
       dispatch(addNotice({ level: LEVEL_ERROR, message }));
     }
     return next(action);  // Call the next dispatch method in the middleware chain.

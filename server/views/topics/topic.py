@@ -34,27 +34,41 @@ def public_topic_list(topic_list):
     sorted_public_topics = sorted(all_public_topics, key=lambda t: t['name'].lower())
     return jsonify({"topics": sorted_public_topics})
 
+
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
     local_mc = None
-    if (access_public_topic(topics_id)):
+    if access_public_topic(topics_id):
         local_mc = mc
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-
     topic = local_mc.topic(topics_id)
+    # add in snapshot and latest snapshot job status
+    topic['snapshots'] = {
+        'list': local_mc.topicSnapshotList(topics_id),
+        'jobStatus': mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
+    }
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
+    # test topic state error msgs
+    # topic['state'] = 'running'  # 'error'
+    # topic['message'] = 'it is all fed up'
+    # test topic snapshot job status
+    # topic['snapshots']['jobStatus'][0]['state'] = 'error' # 'queued', 'running', 'error', 'completed'
+    # topic['snapshots']['list'][0]['state'] = 'completed'
+    # topic['snapshots']['list'][0]['searchable'] = 0
     return jsonify(topic)
+
 
 def _add_user_favorite_flag_to_topics(topics):
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
     for t in topics:
         t['isFavorite'] = t['topics_id'] in user_favorited
     return topics
+
 
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required

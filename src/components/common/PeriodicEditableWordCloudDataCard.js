@@ -55,7 +55,7 @@ class PeriodicEditableWordCloudDataCard extends React.Component {
     return (
       <EditableWordCloudDataCard
         words={words}
-        timePeriod={timePeriods}
+        subtitleContent={timePeriods}
         downloadUrl={`${downloadUrl}?q=${calculateTimePeriods(selectedTime)}`}
         targetURL={targetURL}
         onViewModeClick={onViewModeClick}
