@@ -71,10 +71,6 @@ SelectCollectionContainer.propTypes = {
   collection: React.PropTypes.object,
 };
 
-SelectCollectionContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
   fetchStatus: state.sources.collections.selected.collectionDetails.fetchStatus,
