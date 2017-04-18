@@ -16,7 +16,7 @@ const localMessages = {
  * It gives the child:
  * 1. `timePeriodControls` UI elements
  */
-const composePeriodicContent = (ChildComponent) => {
+const composePeriodicContent = (ChildComponent, hideAllTimeOption = false) => {
   class PeriodicContent extends React.Component {
     saveStateAndTriggerFetch = (timePeriod) => {
       const { handleTimePeriodClick } = this.props;
@@ -24,6 +24,18 @@ const composePeriodicContent = (ChildComponent) => {
     }
     render() {
       const { selectedTimePeriod } = this.props;
+      let allTimeOptionContent;
+      if (!hideAllTimeOption) {
+        allTimeOptionContent = (
+          <a
+            tabIndex="0"
+            className={selectedTimePeriod === PAST_ALL ? 'selected' : ''}
+            onClick={e => this.saveStateAndTriggerFetch(PAST_ALL, e)}
+          >
+            <FormattedMessage {...localMessages.all} />
+          </a>
+        );
+      }
       const timePeriodControls = (
         <div className="periodic-controls">
           <a
@@ -47,13 +59,7 @@ const composePeriodicContent = (ChildComponent) => {
           >
             <FormattedMessage {...localMessages.pastYear} />
           </a>
-          <a
-            tabIndex="0"
-            className={selectedTimePeriod === PAST_ALL ? 'selected' : ''}
-            onClick={e => this.saveStateAndTriggerFetch(PAST_ALL, e)}
-          >
-            <FormattedMessage {...localMessages.all} />
-          </a>
+          {allTimeOptionContent}
         </div>
       );
       return (

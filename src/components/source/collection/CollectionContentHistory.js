@@ -125,7 +125,8 @@ export default
       composePeriodicContent(
         composeAsyncContainer(
           CollectionContentHistory
-        )
+        ),
+        true, // hide the ALL_TIME option
       )
     )
   );
