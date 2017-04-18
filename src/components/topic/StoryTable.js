@@ -91,8 +91,7 @@ class StoryTable extends React.Component {
               <th>{socialHeader}</th>
               <th><FormattedMessage {...messages.facebookShares} /></th>
               <th>{}</th>
-              <th><FormattedMessage {...messages.focus} /></th>
-              <th>{}</th>
+              <th><FormattedMessage {...messages.focusHeader} /></th>
             </tr>
             {stories.map((story, idx) => {
               const domain = storyDomainName(story);
@@ -119,7 +118,7 @@ class StoryTable extends React.Component {
                         to={`/topics/${topicId}/summary?focusId=${foci.foci_id}`}
                         onClick={() => onChangeFocusSelection(foci.foci_id)}
                       >
-                        { foci.focal_set_name }: { foci.name }
+                        { foci.name }
                       </Link>
                     </span>
                   ),
@@ -143,10 +142,10 @@ class StoryTable extends React.Component {
                     </LinkWithFilters>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.media_inlink_count || 0} /></td>
-                  <td><FormattedNumber value={story.outlink_count || 0} /></td>
-                  <td><FormattedNumber value={story.bitly_click_count || 0} /></td>
-                  <td><FormattedNumber value={story.facebook_share_count || 0} /></td>
+                  <td><FormattedNumber value={story.media_inlink_count !== undefined ? story.media_inlink_count : '?'} /></td>
+                  <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
+                  <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
+                  <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>

@@ -86,6 +86,7 @@ const messages = {
   mediaName: { id: 'media.name', defaultMessage: 'Name' },
 
   focus: { id: 'focus', defaultMessage: 'Subtopic' },
+  focusHeader: { id: 'focus', defaultMessage: 'Subtopics' },
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
   addFocus: { id: 'focus.add', defaultMessage: 'Add a New Subtopic' },
