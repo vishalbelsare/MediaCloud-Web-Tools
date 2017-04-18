@@ -98,13 +98,12 @@ export function cleanCoverageGaps(gapList) {
   return plotBands;
 }
 
-export function calculateTimePeriods(timePeriod) {
+export function getDateRange(timePeriod) {
   if (![PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
     const error = { message: `unknown time period passed to calculateTimePeriods: ${timePeriod}` };
     throw error;
   }
   let targetPeriodStart = null;
-  // const targetPeriodEnd = moment().format('YYYY-MM-DDThh:mm:ssZ');
   const targetYear = moment().subtract(1, 'year');
   const targetMonth = moment().subtract(1, 'month');
   const targetWeek = moment().subtract(1, 'week');
@@ -119,9 +118,17 @@ export function calculateTimePeriods(timePeriod) {
       targetPeriodStart = targetYear;
       break;
     case PAST_ALL:
-      return '';
+      return null;
     default:
       break;
   }
-  return `(publish_date:[${targetPeriodStart.format('YYYY-MM-DDThh:mm:ss')}Z TO ${moment().format('YYYY-MM-DDThh:mm:ss')}Z])`;
+  return { start: targetPeriodStart, end: moment() };
+}
+
+export function calculateTimePeriods(timePeriod) {
+  const dates = getDateRange(timePeriod);
+  if (dates === null) { // ie. PAST_ALL
+    return '';
+  }
+  return `(publish_date:[${dates.start.format('YYYY-MM-DDThh:mm:ss')}Z TO ${dates.end.format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }
