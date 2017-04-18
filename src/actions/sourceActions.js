@@ -26,6 +26,7 @@ export const FETCH_COLLECTION_SEARCH = 'FETCH_COLLECTION_SEARCH';
 export const RESET_COLLECTION_SEARCH = 'RESET_COLLECTION_SEARCH';
 export const FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS';
 export const FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS = 'FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS';
+export const SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD = 'SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD';
 export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
 export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
@@ -111,6 +112,8 @@ export const resetCollectionSearch = createAction(RESET_COLLECTION_SEARCH);
 export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_COUNTS, api.collectionSourceSentenceCounts, id => id);
 
 export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS, api.collectionSourceSentenceHistoricalCounts, id => id);
+
+export const setCollectionSourceHistoryTimePeriod = createAction(SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD, timePeriod => timePeriod);
 
 export const createCollection = createAsyncAction(CREATE_NEW_COLLECTION, api.createCollection, props => props);
 
