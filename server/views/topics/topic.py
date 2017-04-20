@@ -4,6 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, db, mc
+from server.cache import cache
 from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.mail import send_email
 from server.util.request import form_fields_required, api_error_handler, arguments_required
@@ -38,17 +39,22 @@ def public_topic_list(topic_list):
 @api_error_handler
 def topic_summary(topics_id):
     local_mc = None
-    if (access_public_topic(topics_id)):
+    if access_public_topic(topics_id):
         local_mc = mc
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-
     topic = local_mc.topic(topics_id)
+    # add in snapshot and latest snapshot job status
+    topic['snapshots'] = {
+        'list': local_mc.topicSnapshotList(topics_id),
+        'jobStatus': mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
+    }
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)
+
 
 def _add_user_favorite_flag_to_topics(topics):
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
@@ -103,7 +109,50 @@ def favorite_topics():
     favorited_topics = [user_mc.topic(topic_id) for topic_id in user_favorited]
     for t in favorited_topics:
         t['isFavorite'] = True
+        t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
     return jsonify({'topics': favorited_topics})
+
+@app.route('/api/topics/personal', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+@cache
+def personal_topics():
+    if is_user_logged_in():
+        user_mc = user_mediacloud_client()
+        link_id = request.args.get('linkId')
+        all_topics = user_mc.topicList(link_id=link_id)
+        _add_user_favorite_flag_to_topics(all_topics['topics'])
+        for t in all_topics:
+            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+        return jsonify({'topics': all_topics})
+    return {}
+
+@app.route('/api/topics/public', methods=['GET'])
+@api_error_handler
+@cache
+def cached_public_topics():
+    return public_topic_list();
+
+
+def get_topic_info_per_snapshot_timespan(topic_id):
+    local_mc = user_mediacloud_client()
+    snapshots = {
+        'list': local_mc.topicSnapshotList(topic_id),
+        'jobStatus': local_mc.topicSnapshotGenerateStatus(topic_id)['job_states']    # need to know if one is running
+    }
+    most_recent_running_snapshot = {}
+    overall_timespan = {}
+    for snp in snapshots['list']:
+        if snp['searchable'] == 1 and snp['state'] == "completed":
+            most_recent_running_snapshot = snp
+            timespans = cached_topic_timespan_list(user_mediacloud_key(), topic_id, most_recent_running_snapshot['snapshots_id'])
+            for ts in timespans:
+                if ts['period'] == "overall":
+                   overall_timespan = ts
+
+    return {'snapshot': most_recent_running_snapshot, 'timespan': overall_timespan}
+
+
 
 @app.route('/api/topics/create', methods=['PUT'])
 @flask_login.login_required
