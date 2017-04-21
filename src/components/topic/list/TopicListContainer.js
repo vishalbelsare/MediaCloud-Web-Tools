@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
+import { SelectField, MenuItem } from 'material-ui';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicsList } from '../../../actions/topicActions';
 import { pagedLocation } from '../../util/location';
@@ -11,27 +12,76 @@ import TopicList from './TopicList';
 
 const localMessages = {
   topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Topics' },
+  topicsListFavorites: { id: 'topics.list.title', defaultMessage: 'Favorite Topics' },
+  topicsListPersonal: { id: 'topics.list.title', defaultMessage: 'Personal Topics' },
 };
 
-const TopicListContainer = (props) => {
-  const { topics, nextButton, previousButton, onSetFavorited } = props;
-  return (
-    <div className="topic-list-container">
-      <Row>
-        <Col lg={12} md={12} sm={12}>
-          <h2><FormattedMessage {...localMessages.topicsListTitle} /></h2>
-        </Col>
-      </Row>
-      <TopicList topics={topics} onSetFavorited={onSetFavorited} />
-      <Row>
-        <Col lg={12} md={12} sm={12}>
-          { previousButton }
-          { nextButton }
-        </Col>
-      </Row>
-    </div>
-  );
-};
+class TopicListContainer extends React.Component {
+
+  state = {
+    currentFilter: null,
+  };
+
+  changeFilter = (filterType) => {
+    this.setState({ currentFilter: filterType });
+  }
+
+  render() {
+    const { topics, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
+    const { formatMessage } = this.props.intl;
+    let whichTopics = topics;
+
+    // the filter will change, just an idea for the moment
+    if (this.state.currentFilter === 'favorites' && topics !== undefined) {
+      whichTopics = topics.favorite;
+    } else if (this.state.currentFilter === 'personal' && topics !== undefined) {
+      whichTopics = topics.personal.topics;
+    }
+    let titleContent = null;
+    if (topics && showFavorites) {
+      titleContent = <h2><FormattedMessage {...localMessages.topicsListFavorites} /></h2>;
+    } else {
+      titleContent = <h2><FormattedMessage {...localMessages.topicsListPersonal} /></h2>;
+    }
+
+    return (
+      <div className="topic-list-container">
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            { titleContent }
+          </Col>
+          <SelectField name="filterTopics" style={{ fontSize: 13 }}>
+            <MenuItem
+              name="favorites"
+              onClick={() => this.changeFilter('favorites')}
+              primaryText={formatMessage(localMessages.topicsListFavorites)}
+              style={{ fontSize: 13 }}
+            />
+            <MenuItem
+              primaryText={formatMessage(localMessages.topicsListPersonal)}
+              onClick={() => this.changeFilter('personal')}
+              style={{ fontSize: 13 }}
+            />
+            <MenuItem
+              name="chkSelectAllPages"
+              onClick={() => this.changeFilter('public')}
+              primaryText={formatMessage(localMessages.topicsListTitle)}
+              style={{ fontSize: 13 }}
+            />
+          </SelectField>
+        </Row>
+
+        <TopicList topics={whichTopics} showFavorites={showFavorites} onSetFavorited={onSetFavorited} />
+        <Row>
+          <Col lg={12} md={12} sm={12}>
+            { previousButton }
+            { nextButton }
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+}
 
 TopicListContainer.propTypes = {
   // from parent
@@ -46,12 +96,14 @@ TopicListContainer.propTypes = {
   // from PagedContainer wrapper
   nextButton: React.PropTypes.node,
   previousButton: React.PropTypes.node,
+  showFavorites: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.all.fetchStatus,
   topics: state.topics.all.topics,
   links: state.topics.all.link_ids,
+  showFavorites: state.topics.all.showFavorites,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

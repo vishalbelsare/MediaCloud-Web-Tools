@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicSearchContainer from './search/TopicSearchContainer';
-import FavoriteTopicsContainer from './list/FavoriteTopicsContainer';
+// import FavoriteTopicsContainer from './list/FavoriteTopicsContainer';
 import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
 import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicActions';
@@ -35,7 +35,6 @@ const HomeContainer = (props) => {
         </div>
       </div>
       <Grid>
-        <FavoriteTopicsContainer onSetFavorited={handleSetFavorited} />
         <TopicListContainer onSetFavorited={handleSetFavorited} />
       </Grid>
     </div>

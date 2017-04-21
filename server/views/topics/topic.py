@@ -27,6 +27,35 @@ def topic_list():
         _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
+@app.route('/api/topics/listFilterCascade', methods=['GET'])
+@api_error_handler
+def topic_filter_cascade_list():
+    if (not is_user_logged_in()):
+        public_topics = public_topic_list(CACHED_TOPICS)
+        for t in public_topics:
+            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+        return {'topics': { 'public': public_topics}}
+    else:
+
+        # this is totally not right TODO
+        user_mc = user_mediacloud_client()
+        link_id = request.args.get('linkId')
+        all_topics = user_mc.topicList(link_id=link_id)
+        favorited_topics = {}
+        user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
+
+        if len(user_favorited) > 0:
+            favorited_topics = [user_mc.topic(topic_id) for topic_id in user_favorited]
+            for t in favorited_topics:
+                t['isFavorite'] = True
+                t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+        else:
+            for t in all_topics:
+                t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+
+    return jsonify({'topics': { 'personal': all_topics, 'favorite': favorited_topics}})
+
+
 def public_topic_list(topic_list):
     all_public_topics = []
     for topic in topic_list:
@@ -54,7 +83,6 @@ def topic_summary(topics_id):
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
     return jsonify(topic)
-
 
 def _add_user_favorite_flag_to_topics(topics):
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
@@ -111,21 +139,6 @@ def favorite_topics():
         t['isFavorite'] = True
         t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
     return jsonify({'topics': favorited_topics})
-
-@app.route('/api/topics/personal', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-@cache
-def personal_topics():
-    if is_user_logged_in():
-        user_mc = user_mediacloud_client()
-        link_id = request.args.get('linkId')
-        all_topics = user_mc.topicList(link_id=link_id)
-        _add_user_favorite_flag_to_topics(all_topics['topics'])
-        for t in all_topics:
-            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
-        return jsonify({'topics': all_topics})
-    return {}
 
 @app.route('/api/topics/public', methods=['GET'])
 @api_error_handler

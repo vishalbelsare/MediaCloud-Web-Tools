@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
+import { GridList, GridTile } from 'material-ui/GridList';
 import Link from 'react-router/lib/Link';
 import DataCard from './DataCard';
 import FilledStarIcon from './icons/FilledStarIcon';
@@ -25,34 +26,42 @@ const TopicContentPreviewList = (props) => {
         const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
         if (c.detailInfo !== undefined && c.detailInfo.timespan !== undefined) {
           subContent = (
-            <Row className="topic-mini-cards">
-              <Col>
+            <GridList
+              cols={3}
+              margin={0}
+              padding={0}
+              cellHeight={100}
+              className="topic-mini-cards"
+            >
+              <GridTile margin={0}>
                 <h3><FormattedMessage {...localMessages.total} /></h3>
                 {c.detailInfo.timespan.story_count}
-              </Col>
-              <Col>
+              </GridTile>
+              <GridTile margin={0}>
                 <h3><FormattedMessage {...localMessages.media} /></h3>
                 {c.detailInfo.timespan.medium_count}
-              </Col>
-              <Col>
+              </GridTile>
+              <GridTile>
                 <h3><FormattedMessage {...localMessages.links} /></h3>
                 {c.detailInfo.timespan.story_link_count}
-              </Col>
-            </Row>
+              </GridTile>
+            </GridList>
           );
         }
         return (
           <Col key={idx} lg={4} xs={12}>
-            <DataCard key={idx} className="" disabled={isDisabled}>
+            <DataCard key={idx} className="topic-browse-items" disabled={isDisabled}>
               {icon}
               <div className="content">
                 <div>
-                  <h2>{title}{ c.isFavorite ? <FilledStarIcon /> : '' }</h2>
+                  <h2>{title}
+                    <div className="actions">
+                      {exploreButton}
+                    </div>
+                    { c.isFavorite ? <FilledStarIcon /> : '' }
+                  </h2>
                   <p>{c.description}</p>
                 </div>
-              </div>
-              <div className="actions">
-                {exploreButton}
               </div>
               {subContent}
             </DataCard>
@@ -62,7 +71,7 @@ const TopicContentPreviewList = (props) => {
     );
   }
   return (
-    <div className="browse-list">
+    <div className="">
       <Row>
         {content}
       </Row>
