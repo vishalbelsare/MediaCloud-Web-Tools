@@ -3,6 +3,7 @@ import { createAsyncAction } from '../lib/reduxHelpers';
 import * as api from '../lib/serverApi/topics';
 
 export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
+export const SET_TOPIC_LIST_FILTER = 'SET_TOPIC_LIST_FILTER';
 export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
@@ -78,6 +79,7 @@ export const FETCH_TOPIC_NYT_TAG_COVERAGE = 'FETCH_TOPIC_NYT_TAG_COVERAGE';
 export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
+export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
 
 export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsList);
 // pass in topicId

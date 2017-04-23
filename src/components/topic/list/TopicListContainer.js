@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { SelectField, MenuItem } from 'material-ui';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicsList } from '../../../actions/topicActions';
+import { fetchTopicsList, setTopicListFilter } from '../../../actions/topicActions';
 import { pagedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
@@ -18,23 +18,20 @@ const localMessages = {
 
 class TopicListContainer extends React.Component {
 
-  state = {
-    currentFilter: null,
-  };
-
   changeFilter = (filterType) => {
-    this.setState({ currentFilter: filterType });
+    const { setFilter } = this.props;
+    setFilter(filterType);
   }
 
   render() {
-    const { topics, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
+    const { topics, currentFilter, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     let whichTopics = topics;
 
     // the filter will change, just an idea for the moment
-    if (this.state.currentFilter === 'favorites' && topics !== undefined) {
+    if (currentFilter === 'favorites' && topics !== undefined) {
       whichTopics = topics.favorite;
-    } else if (this.state.currentFilter === 'personal' && topics !== undefined) {
+    } else if (currentFilter === 'personal' && topics !== undefined) {
       whichTopics = topics.personal.topics;
     }
     let titleContent = null;
@@ -50,14 +47,15 @@ class TopicListContainer extends React.Component {
           <Col lg={12} md={12} sm={12}>
             { titleContent }
           </Col>
-          <SelectField name="filterTopics" style={{ fontSize: 13 }}>
+          <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
             <MenuItem
-              name="favorites"
+              value="favorites"
               onClick={() => this.changeFilter('favorites')}
               primaryText={formatMessage(localMessages.topicsListFavorites)}
               style={{ fontSize: 13 }}
             />
             <MenuItem
+              value="personal"
               primaryText={formatMessage(localMessages.topicsListPersonal)}
               onClick={() => this.changeFilter('personal')}
               style={{ fontSize: 13 }}
@@ -97,6 +95,8 @@ TopicListContainer.propTypes = {
   nextButton: React.PropTypes.node,
   previousButton: React.PropTypes.node,
   showFavorites: React.PropTypes.bool,
+  setFilter: React.PropTypes.func.isRequired,
+  currentFilter: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({
@@ -104,14 +104,18 @@ const mapStateToProps = state => ({
   topics: state.topics.all.topics,
   links: state.topics.all.link_ids,
   showFavorites: state.topics.all.showFavorites,
+  currentFilter: state.topics.all.currentFilter,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchTopicsList());
   },
+  setFilter: (filter) => {
+    dispatch(setTopicListFilter({ currentFilter: filter }));
+  },
   fetchPagedData: (props, linkId) => {
-    dispatch(fetchTopicsList(linkId))
+    dispatch(fetchTopicsList(props.currentFilter, linkId))
       .then(() => {
         dispatch(push(pagedLocation(ownProps.location, linkId)));
       });
