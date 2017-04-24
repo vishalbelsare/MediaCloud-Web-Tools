@@ -7,13 +7,13 @@
 }
 
 .health-gap {
-  color: $not-healthy;
+  color: $warning-color;
 }
 
 .healthy {
   color: rgba(0, 153, 0, 0.6);
 }
 
-.unhealthy {
+.warning-color {
   color: rgba(255, 0, 0, 0.6);
 }
