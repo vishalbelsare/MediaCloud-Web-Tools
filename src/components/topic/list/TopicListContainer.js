@@ -11,9 +11,10 @@ import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
 
 const localMessages = {
-  topicsListTitle: { id: 'topics.list.title', defaultMessage: 'All Topics' },
-  topicsListFavorites: { id: 'topics.list.title', defaultMessage: 'Favorite Topics' },
-  topicsListPersonal: { id: 'topics.list.title', defaultMessage: 'Personal Topics' },
+  topicsListPublic: { id: 'topics.list.public', defaultMessage: 'All Topics' },
+  topicsListFavorites: { id: 'topics.list.favorite', defaultMessage: 'Favorite Topics' },
+  topicsListPersonal: { id: 'topics.list.personal', defaultMessage: 'Personal Topics' },
+  noAccess: { id: 'topics.list.noAccess', defaultMessage: "Sorry, you don't have the permissions to view this list." },
 };
 
 class TopicListContainer extends React.Component {
@@ -27,18 +28,20 @@ class TopicListContainer extends React.Component {
     const { topics, currentFilter, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     let whichTopics = topics;
+    let titleContent = null;
 
-    // the filter will change, just an idea for the moment
+    // if the user has favorites => is logged_in => isn't logged in, show topics by filter
     if (currentFilter === 'favorites' && topics !== undefined) {
+      titleContent = <h2><FormattedMessage {...localMessages.topicsListFavorites} /></h2>;
       whichTopics = topics.favorite;
     } else if (currentFilter === 'personal' && topics !== undefined) {
-      whichTopics = topics.personal.topics;
-    }
-    let titleContent = null;
-    if (topics && showFavorites) {
-      titleContent = <h2><FormattedMessage {...localMessages.topicsListFavorites} /></h2>;
-    } else {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPersonal} /></h2>;
+      whichTopics = topics.personal.topics;
+    } else if (currentFilter === 'public' && topics !== undefined) {
+      titleContent = <h2><FormattedMessage {...localMessages.topicsListPublic} /></h2>;
+      whichTopics = topics.public;
+    } else {
+      titleContent = <h2><FormattedMessage {...localMessages.noAccess} /></h2>;
     }
 
     return (
@@ -61,9 +64,9 @@ class TopicListContainer extends React.Component {
               style={{ fontSize: 13 }}
             />
             <MenuItem
-              name="chkSelectAllPages"
+              value="public"
               onClick={() => this.changeFilter('public')}
-              primaryText={formatMessage(localMessages.topicsListTitle)}
+              primaryText={formatMessage(localMessages.topicsListPublic)}
               style={{ fontSize: 13 }}
             />
           </SelectField>
@@ -85,7 +88,7 @@ TopicListContainer.propTypes = {
   // from parent
   onSetFavorited: React.PropTypes.func.isRequired,
   // from state
-  topics: React.PropTypes.array.isRequired,
+  topics: React.PropTypes.object.isRequired,
   links: React.PropTypes.object,
   // from context
   intl: React.PropTypes.object.isRequired,

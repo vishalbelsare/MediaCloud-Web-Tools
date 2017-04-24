@@ -30,39 +30,46 @@ def topic_list():
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
 @api_error_handler
 def topic_filter_cascade_list():
-    if (not is_user_logged_in()):
-        public_topics = public_topic_list(CACHED_TOPICS)
-        for t in public_topics:
-            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
-        return {'topics': { 'public': public_topics}}
-    else:
 
-        # this is totally not right TODO
+    #get public topics
+    sorted_public_topics = sorted_public_topic_list(CACHED_TOPICS)
+
+    for t in sorted_public_topics:
+        t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+
+    #check if user had favorites or personal
+    all_topics = []
+    favorited_topics = []
+    if (is_user_logged_in()):
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
         all_topics = user_mc.topicList(link_id=link_id)
-        favorited_topics = {}
+
         user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
 
-        if len(user_favorited) > 0:
-            favorited_topics = [user_mc.topic(topic_id) for topic_id in user_favorited]
-            for t in favorited_topics:
+        for t in all_topics['topics']:
+            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
                 t['isFavorite'] = True
-                t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
-        else:
-            for t in all_topics:
-                t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+                favorited_topics.append(t)
 
-    return jsonify({'topics': { 'personal': all_topics, 'favorite': favorited_topics}})
+        for t in sorted_public_topics:
+            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
+                t['isFavorite'] = True
+                favorited_topics.append(t)
+    #return it all together
+    return jsonify({'topics': { 'favorite': favorited_topics, 'personal': all_topics, 'public': sorted_public_topics}})
 
-
-def public_topic_list(topic_list):
+def sorted_public_topic_list(topic_list):
     all_public_topics = []
     for topic in topic_list:
         if (topic['is_public'] == 1):
             all_public_topics.append(topic)
-    sorted_public_topics = sorted(all_public_topics, key=lambda t: t['name'].lower())
-    return jsonify({"topics": sorted_public_topics})
+    return sorted(all_public_topics, key=lambda t: t['name'].lower())
+
+def public_topic_list(topic_list):
+    public_topics = sorted_public_topics(topic_list)
+    return jsonify({"topics": public_topics})
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
