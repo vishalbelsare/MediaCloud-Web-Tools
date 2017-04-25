@@ -41,7 +41,7 @@ class SourceFeedContainer extends React.Component {
   }
 
   render() {
-    const { sourceId, sourceName, feeds, scrapeFeeds } = this.props;
+    const { sourceId, sourceName, feeds, scrapeFeeds, pushToUrl } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${sourceName} | ${parentTitle}`;
     const content = null;
@@ -76,7 +76,7 @@ class SourceFeedContainer extends React.Component {
             <div className="actions" style={{ marginTop: 40 }} >
               <AddButton
                 tooltip={formatMessage(localMessages.add)}
-                onClick={(evt) => { evt.preventDefault(); }}
+                onClick={() => { pushToUrl(`/sources/${sourceId}/feeds/create`); }}
               />
               <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
@@ -99,6 +99,7 @@ SourceFeedContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   scrapeFeeds: React.PropTypes.func.isRequired,
+  pushToUrl: React.PropTypes.func.isRequired,
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
@@ -122,6 +123,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (sourceId) => {
     dispatch(fetchSourceFeeds(sourceId));
   },
+  pushToUrl: url => dispatch(push(url)),
   asyncFetch: () => {
     dispatch(fetchSourceFeeds(ownProps.params.sourceId));
   },
