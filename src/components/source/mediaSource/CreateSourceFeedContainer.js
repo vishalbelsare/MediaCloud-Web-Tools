@@ -10,17 +10,15 @@ import SourceFeedForm from './form/SourceFeedForm';
 const localMessages = {
   sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: Feeds' },
   add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
+  createButton: { id: 'source.deatils.feeds.update.button', defaultMessage: 'Create' },
 };
 
 const CreateSourceFeedContainer = (props) => {
-  const { feed, handleSave } = props;
+  const { sourceId, handleSave } = props;
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${feed.name} | ${parentTitle}`;
+  const titleHandler = parentTitle => `${parentTitle}`;
   const content = null;
-  const intialValues = {
-    ...feed,
-  };
-  if (feed === undefined) {
+  if (sourceId === undefined) {
     return (
       <div>
         { content }
@@ -31,9 +29,8 @@ const CreateSourceFeedContainer = (props) => {
     <Grid className="details source-feed-details">
       <Title render={titleHandler} />
       <SourceFeedForm
-        initialValues={intialValues}
         onSave={handleSave}
-        buttonLabel={formatMessage(localMessages.updateButton)}
+        buttonLabel={formatMessage(localMessages.createButton)}
       />
     </Grid>
   );
@@ -47,20 +44,26 @@ CreateSourceFeedContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  sourceId: React.PropTypes.string,
+  sourceId: React.PropTypes.number.isRequired,
   feed: React.PropTypes.object,
-  feedId: React.PropTypes.string,
+  feedId: React.PropTypes.number,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.sources.sources.selected.feed.fetchStatus,
-  feed: state.sources.sources.selected.feed,
-  feedId: state.sources.sources.selected.feed.feedId,
+const mapStateToProps = (state, ownProps) => ({
+  fetchStatus: state.sources.sources.selected.feed.feeds.fetchStatus,
+  feed: state.sources.sources.selected.feed.info.feed,
+  feedId: state.sources.sources.selected.feed.info.feedId,
+  sourceId: parseInt(ownProps.params.sourceId, 10),
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    // try to save it
-    dispatch(createFeed(values))
+    const infoToSave = {
+      name: values.name,
+      url: values.url,
+      feed_status: values.feed_status,
+      feed_type: values.feed_type,
+    };
+    dispatch(createFeed(ownProps.params.mediaId, infoToSave))
       .then((result) => {
         if (result.success === 1) {
           // let them know it worked
@@ -68,7 +71,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // need to fetch it again because something may have changed
           dispatch(fetchSourceFeed(ownProps.params.feedId))
             .then(() =>
-              dispatch(push(`/sources/${ownProps.params.feedId}`))
+              dispatch(push(`/sources/${ownProps.params.feedId}/edit`))
             );
         }
       });
