@@ -1,21 +1,12 @@
 import logging
 
 import server.util.csv as csv
-from server import app
 from server.cache import cache
-from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.auth import user_mediacloud_client
 from flask import request, jsonify
 import flask_login
 
 logger = logging.getLogger(__name__)
-
-@app.route('/api/sources/feeds/single', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def feed_details(feed_id):
-    user_mc = user_mediacloud_client()
-    return user_mc.feed(feed_id)
 
 @cache
 def source_feed_list(media_id):

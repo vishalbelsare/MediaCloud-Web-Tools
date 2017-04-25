@@ -125,6 +125,10 @@ export function sourceFeeds(id) {
   return createApiPromise(`api/sources/${id}/feeds`);
 }
 
+export function sourceFeed(mediaId, feedId) {
+  return createApiPromise(`api/sources/${mediaId}/feeds/${feedId}/single`);
+}
+
 export function createFeed(mediaId, params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'feed_status']);
   return createPostingApiPromise(`/api/sources/${mediaId}/feeds/create`, acceptedParams);

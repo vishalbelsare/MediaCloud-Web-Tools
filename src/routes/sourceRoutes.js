@@ -55,8 +55,8 @@ const sourceRoutes = (
         <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditSourceContainer} onEnter={requireAuth} />
         <Route path="feeds" component={SourceFeedContainer} onEnter={requireAuth} />
-        <Route path="feeds/edits" component={EditSourceFeedContainer} onEnter={requireAuth} />
         <Route path="feeds/create" component={CreateSourceFeedContainer} onEnter={requireAuth} />
+        <Route path="feeds/:feedId/edit" component={EditSourceFeedContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

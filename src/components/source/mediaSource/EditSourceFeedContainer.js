@@ -5,12 +5,13 @@ import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { selectFeed, updateFeed, updateFeedback, fetchSourceFeed } from '../../../actions/sourceActions';
+import { selectSourceFeed, updateFeed, updateFeedback, fetchSourceFeed } from '../../../actions/sourceActions';
 import SourceFeedForm from './form/SourceFeedForm';
 
 const localMessages = {
   sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: Feeds' },
-  add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
+  add: { id: 'source.deatils.feeds.add', defaultMessage: 'Update A Feed' },
+  updateButton: { id: 'source.deatils.feeds.update.button', defaultMessage: 'Update' },
 };
 
 class EditSourceFeedContainer extends React.Component {
@@ -67,20 +68,26 @@ EditSourceFeedContainer.propTypes = {
   params: React.PropTypes.object.isRequired,       // params from router
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  sourceId: React.PropTypes.string,
+  sourceId: React.PropTypes.number,
   feed: React.PropTypes.object,
-  feedId: React.PropTypes.string,
+  feedId: React.PropTypes.number,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.sources.sources.selected.feed.fetchStatus,
-  feed: state.sources.sources.selected.feed,
-  feedId: state.sources.sources.selected.feed.feedId,
+const mapStateToProps = (state, ownProps) => ({
+  fetchStatus: state.sources.sources.selected.feed.info.fetchStatus,
+  feed: state.sources.sources.selected.feed.info.feed,
+  sourceId: parseInt(ownProps.params.sourceId, 10),
+  feedId: parseInt(ownProps.params.feedId, 10),
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    // try to save it
-    dispatch(updateFeed(values))
+    const infoToSave = {
+      name: values.name,
+      url: values.url,
+      feed_status: values.feed_status,
+      feed_type: values.feed_type,
+    };
+    dispatch(updateFeed(ownProps.params.feedId, infoToSave))
       .then((result) => {
         if (result.success === 1) {
           // let them know it worked
@@ -94,12 +101,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
   },
   fetchData: (feedId) => {
-    dispatch(selectFeed(feedId));
+    dispatch(selectSourceFeed(feedId));
     dispatch(fetchSourceFeed(feedId));
   },
   asyncFetch: () => {
-    dispatch(selectFeed(ownProps.params.feed_id));
-    dispatch(fetchSourceFeed(ownProps.params.feed_id));
+    dispatch(selectSourceFeed(ownProps.params.feedId));
+    dispatch(fetchSourceFeed(ownProps.params.sourceId, ownProps.params.feedId));
   },
 });
 

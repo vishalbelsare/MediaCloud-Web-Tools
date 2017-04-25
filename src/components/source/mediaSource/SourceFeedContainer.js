@@ -113,9 +113,9 @@ SourceFeedContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   sourceName: state.sources.sources.selected.sourceDetails.name,
-  fetchStatus: state.sources.sources.selected.feed.fetchStatus,
-  feeds: state.sources.sources.selected.feed.list,
-  feedcount: state.sources.sources.selected.feed.count,
+  fetchStatus: state.sources.sources.selected.feed.feeds.fetchStatus,
+  feeds: state.sources.sources.selected.feed.feeds.list,
+  feedcount: state.sources.sources.selected.feed.feeds.count,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -21,7 +21,7 @@ const localMessages = {
 };
 
 const SourceFeedForm = (props) => {
-  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave, saveFeed } = props;
+  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave } = props;
   const { formatMessage } = props.intl;
   return (
     <form className="app-form source-feed-form" name="sourceFeedForm" onSubmit={handleSubmit(onSave.bind(this))}>
@@ -60,9 +60,9 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name="type" component={renderSelectField} floatingLabelText={localMessages.type}>
-            <MenuItem value="syndicated" primaryText={localMessages.typeSydicated} />
-            <MenuItem value="web_page" primaryText={localMessages.typeWebPage} />
+          <Field name="feed_type" component={renderSelectField} floatingLabelText={formatMessage(localMessages.type)}>
+            <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
+            <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
         </Col>
       </Row>
@@ -73,18 +73,18 @@ const SourceFeedForm = (props) => {
           </span>
         </Col>
         <Col md={8}>
-          <Field name={name} component={renderSelectField} floatingLabelText={localMessages.status}>
-            <MenuItem value="Active" primaryText={localMessages.statusActive} />
-            <MenuItem value="Inactive" primaryText={localMessages.statusInactive} />
-            <MenuItem value="Skipped" primaryText={localMessages.statusSkipped} />
+          <Field name="feed_status" component={renderSelectField}>
+            <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
+            <MenuItem value="inactive" primaryText={formatMessage(localMessages.statusInactive)} />
+            <MenuItem value="skipped" primaryText={formatMessage(localMessages.statusSkipped)} />
           </Field>
         </Col>
       </Row>
       <AppButton
         className="source-feed-updated"
-        label={formatMessage(buttonLabel)}
+        type="submit"
+        label={buttonLabel}
         primary
-        onClick={saveFeed}
       />
     </form>
   );
@@ -100,7 +100,6 @@ SourceFeedForm.propTypes = {
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
   onSave: React.PropTypes.func.isRequired,
-  saveFeed: React.PropTypes.func.isRequired,
   buttonLabel: React.PropTypes.string.isRequired,
 };
 

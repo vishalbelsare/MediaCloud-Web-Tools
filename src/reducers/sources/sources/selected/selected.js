@@ -4,7 +4,7 @@ import sourceDetails from './sourceDetails';
 import topWords from './topWords';
 import sentenceCount from './sentenceCount';
 import geoTag from './geoTag';
-import feed from './feeds';
+import feed from './feed/feed';
 
 const INITIAL_STATE = null;
 
