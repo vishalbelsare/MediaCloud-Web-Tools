@@ -125,6 +125,16 @@ export function sourceFeeds(id) {
   return createApiPromise(`api/sources/${id}/feeds`);
 }
 
+export function createFeed(mediaId, params) {
+  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'feed_status']);
+  return createPostingApiPromise(`/api/sources/${mediaId}/feeds/create`, acceptedParams);
+}
+
+export function updateFeed(feedId, params) {
+  const acceptedParams = acceptParams(params, ['name', 'url', 'feed_type', 'feed_status']);
+  return createPostingApiPromise(`/api/sources/feeds/${feedId}/update`, acceptedParams);
+}
+
 export function suggestSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'feedurl', 'reason', 'collections[]']);
   return createPostingApiPromise('/api/sources/suggestions/submit', acceptedParams);

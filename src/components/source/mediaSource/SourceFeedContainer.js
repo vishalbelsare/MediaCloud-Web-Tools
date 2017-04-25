@@ -10,7 +10,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import SourceFeedTable from '../SourceFeedTable';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
+import { DownloadButton, AddButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -22,6 +22,7 @@ const localMessages = {
   scrapeFeeds: { id: 'source.details.feeds.scrape', defaultMessage: 'Scrape for New Feeds' },
   scraping: { id: 'source.deatils.feeds.scraping', defaultMessage: 'We\'ve started to scrape this source' },
   scrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
+  add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
 };
 
 class SourceFeedContainer extends React.Component {
@@ -73,6 +74,10 @@ class SourceFeedContainer extends React.Component {
           </Col>
           <Col lg={1} xs={1}>
             <div className="actions" style={{ marginTop: 40 }} >
+              <AddButton
+                tooltip={formatMessage(localMessages.add)}
+                onClick={(evt) => { evt.preventDefault(); }}
+              />
               <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
           </Col>

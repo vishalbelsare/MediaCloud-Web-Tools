@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
+import { EditButton } from '../common/IconButton';
+
 
 const SourceFeedTable = (props) => {
   const { feeds } = props;
@@ -32,6 +34,11 @@ const SourceFeedTable = (props) => {
               </td>
               <td>
                 <Link to={`/sources/${feed.url}`}>{feed.url}</Link>
+              </td>
+              <td>
+                <Link to={`/sources/${feed.feeds_id}/feeds/edit`} >
+                  <EditButton />
+                </Link>
               </td>
             </tr>
             )

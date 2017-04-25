@@ -38,6 +38,9 @@ export const SELECT_ADVANCED_SEARCH_COLLECTION = 'SELECT_ADVANCED_SEARCH_COLLECT
 export const RESET_ADVANCED_SEARCH_COLLECTION = 'RESET_ADVANCED_SEARCH_COLLECTION';
 export const RESET_ADVANCED_SEARCH_SOURCE = 'RESET_ADVANCED_SEARCH_SOURCE';
 export const FETCH_SOURCE_FEEDS = 'FETCH_SOURCE_FEEDS';
+export const FETCH_SOURCE_FEED = 'FETCH_SOURCE_FEED';
+export const CREATE_FEED = 'CREATE_FEED';
+export const UPDATE_FEED = 'UPDATE_FEED';
 export const FETCH_SIMILAR_COLLECTIONS = 'FETCH_SIMILAR_COLLECTIONS';
 export const SUGGEST_SOURCE = 'SUGGEST_SOURCE';
 export const UPDATE_SOURCE_SUGGESTION = 'UPDATE_SOURCE_SUGGESTION';
@@ -132,6 +135,12 @@ export const resetAdvancedSearchSource = createAction(RESET_ADVANCED_SEARCH_SOUR
 export const resetAdvancedSearchCollection = createAction(RESET_ADVANCED_SEARCH_COLLECTION);
 
 export const fetchSourceFeeds = createAsyncAction(FETCH_SOURCE_FEEDS, api.sourceFeeds, id => id);
+
+export const fetchSourceFeed = createAsyncAction(FETCH_SOURCE_FEED, api.sourceFeed, id => id);
+
+export const createFeed = createAsyncAction(CREATE_FEED, api.createFeed, id => id);
+
+export const updateFeed = createAsyncAction(UPDATE_FEED, api.updateFeed, id => id);
 
 export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIONS, api.similarCollections, id => id);
 

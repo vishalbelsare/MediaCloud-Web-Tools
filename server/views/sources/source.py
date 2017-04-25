@@ -65,6 +65,35 @@ def api_source_feed(media_id):
 def source_feed_csv(media_id):
     return stream_feed_csv('feeds-Source-' + media_id, media_id)
 
+@app.route('/api/sources/<media_id>/feeds/create', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+# name=None, url=None, feed_type='syndicated', feed_status='active'
+def feed_create(media_id):
+    user_mc = user_mediacloud_client()
+    name = request.form['name']
+    url = request.form['url']
+    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
+    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
+
+    return user_mc.feedCreate(media_id, name, url, feed_type, feed_status)
+
+
+
+@app.route('/api/sources/<media_id>/feeds/<feed_id>/update', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+# name=None, url=None, feed_type='syndicated', feed_status='active'
+def feed_update(feed_id):
+    user_mc = user_mediacloud_client()
+    name = request.form['name']
+    url = request.form['url']
+    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
+    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
+
+    return user_mc.feedUpdate(feed_id, name, url, feed_type, feed_status)
+
+
 
 @cache
 def _cached_media_source_health(user_mc_key, media_id):
