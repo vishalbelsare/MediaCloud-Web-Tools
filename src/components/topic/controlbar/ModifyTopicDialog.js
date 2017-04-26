@@ -5,7 +5,7 @@ import Link from 'react-router/lib/Link';
 import messages from '../../../resources/messages';
 import AppButton from '../../common/AppButton';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
 import DescriptiveButton from '../../common/DescriptiveButton';
 import FocusIcon from '../../common/icons/FocusIcon';
@@ -21,6 +21,8 @@ const localMessages = {
   changeSettings: { id: 'topic.changeSettings', defaultMessage: 'Change Settings' },
   changeSettingsDetails: { id: 'topic.changeSettings.details', defaultMessage: 'Edit this topic\'s configuration and visibility' },
   generateSnapshotDetails: { id: 'topic.generateSnapshot.details', defaultMessage: 'Your topic needs to be updated!' },
+  runSpider: { id: 'topic.runSpider', defaultMessage: 'Run a Spider' },
+  runSpiderDetails: { id: 'topic.runSpider.details', defaultMessage: 'Start the spidering manually now if you need to (admin only)' },
 };
 
 class ModifyTopicDialog extends React.Component {
@@ -41,7 +43,7 @@ class ModifyTopicDialog extends React.Component {
   };
 
   render() {
-    const { topicId, onUrlChange, allowSnapshot } = this.props;
+    const { topicId, onUrlChange, needsNewSnapshot, onSpiderRequest } = this.props;
     const { formatMessage } = this.props.intl;
     const dialogActions = [
       <AppButton
@@ -50,16 +52,15 @@ class ModifyTopicDialog extends React.Component {
       />,
     ];
     let snapshotButton = null;
-    if (allowSnapshot) {
-      snapshotButton = (
-        <DescriptiveButton
-          svgIcon={(<SnapshotIcon height={40} />)}
-          label={formatMessage(messages.snapshotGenerate)}
-          description={formatMessage(localMessages.generateSnapshotDetails)}
-          onClick={() => onUrlChange(`/topics/${topicId}/snapshot/generate`)}
-        />
-      );
-    }
+    snapshotButton = (
+      <DescriptiveButton
+        svgIcon={(<SnapshotIcon height={40} />)}
+        label={formatMessage(messages.snapshotGenerate)}
+        description={(needsNewSnapshot) ? formatMessage(localMessages.generateSnapshotDetails) : ''}
+        onClick={() => onUrlChange(`/topics/${topicId}/snapshot/generate`)}
+        className={(needsNewSnapshot) ? 'warning' : ''}
+      />
+    );
     return (
       <div className="modify-topic">
         <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
@@ -84,6 +85,16 @@ class ModifyTopicDialog extends React.Component {
           autoDetectWindowHeight={false}
         >
           {snapshotButton}
+          <Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>
+            <DescriptiveButton
+              label={formatMessage(localMessages.runSpider)}
+              description={formatMessage(localMessages.runSpiderDetails)}
+              onClick={() => {
+                onSpiderRequest();
+                this.handleRemoveDialogClose();
+              }}
+            />
+          </Permissioned>
           <DescriptiveButton
             svgIcon={(<FocusIcon height={50} />)}
             label={formatMessage(messages.addFocus)}
@@ -112,7 +123,8 @@ ModifyTopicDialog.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   topicId: React.PropTypes.number,
-  allowSnapshot: React.PropTypes.bool.isRequired,
+  needsNewSnapshot: React.PropTypes.bool.isRequired,
+  onSpiderRequest: React.PropTypes.func.isRequired,
   // from dispatch
   onUrlChange: React.PropTypes.func.isRequired,
 };

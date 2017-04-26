@@ -5,7 +5,6 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { fetchTopicSentenceCounts } from '../../../actions/topicActions';
-import composeSaveableContainer from '../../common/SaveableContainer';
 import messages from '../../../resources/messages';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
@@ -33,26 +32,15 @@ class SentenceCountSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { total, counts, topicId, filters, savedFeedback, saveToNotebookButton, setDataToSave } = this.props;
+    const { total, counts, topicId, filters } = this.props;
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/attention`;
-    if (counts) { // if there is data, make it ready to save
-      // update data on save container if you need to
-      setDataToSave({
-        type: 'AttentionOverTimeChart',
-        data: counts,
-        topicId,
-        title: formatMessage(localMessages.title),
-        ...filters,
-      });
-    }
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
             <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-            {saveToNotebookButton}
           </div>
         </Permissioned>
         <h2>
@@ -60,7 +48,6 @@ class SentenceCountSummaryContainer extends React.Component {
             <FormattedMessage {...localMessages.title} />
           </LinkWithFilters>
         </h2>
-        {savedFeedback}
         <AttentionOverTimeChart
           total={total}
           data={counts}
@@ -75,9 +62,6 @@ class SentenceCountSummaryContainer extends React.Component {
 SentenceCountSummaryContainer.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
-  saveToNotebookButton: React.PropTypes.node.isRequired,
-  savedFeedback: React.PropTypes.node.isRequired,
-  setDataToSave: React.PropTypes.func.isRequired,
   // passed in
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
@@ -115,9 +99,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
         composeAsyncContainer(
-          composeSaveableContainer(
-            SentenceCountSummaryContainer
-          )
+          SentenceCountSummaryContainer
         )
       )
     )
