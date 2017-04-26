@@ -5,13 +5,13 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import AppButton from '../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
 
 const localMessages = {
   searchSuggestion: { id: 'search.advanced.searchTip', defaultMessage: 'match these words' },
   pubCountrySuggestion: { id: 'search.advanced.pubCountryTip', defaultMessage: 'published in' },
+  pubStateSuggestion: { id: 'search.advanced.pubStateTip', defaultMessage: 'state published in' },
 };
-
 const AdvancedSearchForm = (props) => {
   const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
   const { formatMessage } = props.intl;
@@ -35,6 +35,15 @@ const AdvancedSearchForm = (props) => {
             name={'publicationCountry'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
+            autocomplete
+          />
+        </Col>
+        <Col lg={10}>
+          <MetadataPickerContainer
+            id={TAG_SET_PUBLICATION_STATE}
+            name={'publicationState'}
+            form="advancedQueryForm"
+            floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
             autocomplete
           />
         </Col>

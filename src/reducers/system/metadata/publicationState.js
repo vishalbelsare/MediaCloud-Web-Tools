@@ -1,7 +1,7 @@
 import { FETCH_METADATA_VALUES } from '../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
-const publicationCountry = createAsyncReducer({
+const publicationState = createAsyncReducer({
   initialState: {
     tags: [],
     label: null,
@@ -14,4 +14,4 @@ const publicationCountry = createAsyncReducer({
   }),
 });
 
-export default publicationCountry;
+export default publicationState;

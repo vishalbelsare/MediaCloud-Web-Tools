@@ -20,7 +20,7 @@ def api_metadata_values(tag_sets_id):
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     tag_set['tags'] = _cached_tags_in_tag_set(tag_sets_id)
-    return jsonify(tag_set)
+    return jsonify({'name': tag_set['name'], 'tags': tag_set})
 
 @cache
 def _cached_tags_in_tag_set(tag_sets_id):
