@@ -3,7 +3,7 @@ import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import FocusSetSelectorContainer from './FocusSetSelectorContainer';
+import FocusSetSelectorContainer, { NO_FOCAL_SET_SELECTED } from './FocusSetSelectorContainer';
 import FociAttentionComparisonContainer from './FociAttentionComparisonContainer';
 import { setAttentionFocalSetId } from '../../../actions/topicActions';
 
@@ -16,8 +16,8 @@ const AttentionContainer = (props) => {
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   let content = null;
-  const defaultFocalSet = focalSets.length > 0 ? focalSets[0].focal_sets_id : '0';
-  if (selectedFocalSetId !== '0') {
+  const defaultFocalSet = focalSets.length > 0 ? focalSets[0].focal_sets_id : NO_FOCAL_SET_SELECTED;
+  if (selectedFocalSetId !== NO_FOCAL_SET_SELECTED) {
     content = (<FociAttentionComparisonContainer
       topicId={topicId}
       filters={filters}
@@ -41,7 +41,8 @@ const AttentionContainer = (props) => {
               topicId={topicId}
               snapshotId={filters.snapshotId}
               onFocalSetSelected={handleFocalSetSelected}
-              selectedFocalSetId={selectedFocalSetId !== '0' ? selectedFocalSetId : defaultFocalSet}
+              selectedFocalSetId={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : defaultFocalSet}
+              hideNoneOption
             />
           </Col>
         </Row>
@@ -57,7 +58,7 @@ AttentionContainer.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number,
-  selectedFocalSetId: React.PropTypes.string,
+  selectedFocalSetId: React.PropTypes.number,
   focalSets: React.PropTypes.array,
   // from dispatch
   handleFocalSetSelected: React.PropTypes.func.isRequired,
@@ -72,7 +73,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleFocalSetSelected: (evt, idx, focalSetId) => {
-    dispatch(setAttentionFocalSetId(`${focalSetId}`));
+    dispatch(setAttentionFocalSetId(parseInt(focalSetId, 10)));
   },
 });
 

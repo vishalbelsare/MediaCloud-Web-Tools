@@ -73,6 +73,7 @@ const messages = {
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
+  private: { id: 'common.private', defaultMessage: 'Private' },
   language: { id: 'common.language', defaultMessage: 'Language' },
 
   topWords: { id: 'topWords', defaultMessage: 'Top Words' },
@@ -85,6 +86,7 @@ const messages = {
   mediaName: { id: 'media.name', defaultMessage: 'Name' },
 
   focus: { id: 'focus', defaultMessage: 'Subtopic' },
+  focusHeader: { id: 'focus', defaultMessage: 'Subtopics' },
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
   addFocus: { id: 'focus.add', defaultMessage: 'Add a New Subtopic' },
@@ -152,13 +154,21 @@ const messages = {
 
   userEmail: { id: 'user.email', defaultMessage: 'Email' },
   userPassword: { id: 'user.password', defaultMessage: 'Password' },
+  userOldPassword: { id: 'user.oldpPassword', defaultMessage: 'Old Password' },
+  userNewPassword: { id: 'user.newPassword', defaultMessage: 'New Password' },
+  userConfirmPassword: { id: 'user.confirmPassword', defaultMessage: 'Confirm Password' },
+  userChangePassword: { id: 'user.changePassword', defaultMessage: 'Change Password' },
+  userRecoverPassword: { id: 'user.recoverPassword', defaultMessage: 'Recover Password' },
+  userSignup: { id: 'user.signup', defaultMessage: 'Sign Up' },
+  userFullName: { id: 'user.fullName', defaultMessage: 'Full Name' },
+  userNotes: { id: 'user.notes', defaultMessage: 'Notes' },
 
   attentionChartHelpText: { id: 'attentionChart.help.text',
     defaultMessage: '<p>This chart shows sentences over time. The vertical axis shows the number of sentences that are about the topic in the stories we have collected.</p><p>Roll over the line chart to see the sentences per day in each timespan shown on the graph.</p><p>Click the download button in the top right to download the raw counts in a CSV spreadsheet.  Click the three lines in the top right of the chart to export the chart as an image file.</p>',
   },
 
   wordTreeHelpText: { id: 'wordTree.help.text',
-    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>This is based on a random sample of 1000 sentences, which we haven\'t exhaustively tested to see if is a representative sample. That caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
+    defaultMessage: '<p>This "word tree" visualization lets you explore the use of this word in context.  Revealing the words it is used with can be far more revealing than the simple word cloud presented.  The word is at the center, with the words that are most often used just before it on the left, and the words used most often just after on the right.</p><p>Notes:</p><ul><li>This is based on a random sample of 1000 sentences fragments, which we haven\'t exhaustively tested to see if is a representative sample (but seems to work well).</li><li>This only includes the 5 words before and after the use of the keyword you are looking at (due to copywrite sensitivities).</li><li>This uses the term, not the stem.</li></ul><p>Those caveat noted, it can still be useful to get a sense of <b>how</b> this word is being used.</p>',
   },
 
   totalStoriesStat: { id: 'totalStories', defaultMessage: 'Total Stories' },

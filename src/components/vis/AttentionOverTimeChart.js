@@ -73,7 +73,7 @@ class AttentionOverTimeChart extends React.Component {
   }
 
   render() {
-    const { total, data, series, height, onDataPointClick, lineColor, health, filename } = this.props;
+    const { total, data, series, height, onDataPointClick, lineColor, health, filename, showLegend } = this.props;
     const { formatMessage } = this.props.intl;
     // setup up custom chart configuration
     const config = this.getConfig();
@@ -117,6 +117,7 @@ class AttentionOverTimeChart extends React.Component {
         data: values,
         pointStart: dates[0],
         pointInterval: intervalMs,
+        showInLegend: showLegend !== false,
       }];
     } else if (series !== undefined && series.length > 0) {
       allSeries = series;
@@ -156,6 +157,7 @@ AttentionOverTimeChart.propTypes = {
   onDataPointClick: React.PropTypes.func, // (date0, date1, evt, chartObj)
   total: React.PropTypes.number,
   filename: React.PropTypes.string,
+  showLegend: React.PropTypes.bool,
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };

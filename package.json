@@ -36,6 +36,7 @@
     "react-flexbox-grid": "0.10.2",
     "react-ga": "^2.1.2",
     "react-google-charts": "^1.5.4-alpha.1",
+    "react-google-recaptcha": "^0.6.0",
     "react-highcharts": "11.5.0",
     "react-intl": "2.2.2",
     "react-redux": "5.0.1",
