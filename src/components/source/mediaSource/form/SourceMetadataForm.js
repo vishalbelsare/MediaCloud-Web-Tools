@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-import { TAG_SET_PUBLICATION_COUNTRY } from '../../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
@@ -20,6 +20,13 @@ const SourceMetadataForm = props => (
         <MetadataPickerContainer
           id={TAG_SET_PUBLICATION_COUNTRY}
           name={'publicationCountry'}
+          form="sourceForm"
+          autocomplete // don't think this is what we want
+          initialValues={props.initialValues}
+        />
+        <MetadataPickerContainer
+          id={TAG_SET_PUBLICATION_STATE}
+          name={'publicationState'}
           form="sourceForm"
           autocomplete
           initialValues={props.initialValues}

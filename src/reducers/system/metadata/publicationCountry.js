@@ -1,4 +1,4 @@
-import { FETCH_METADATA_VALUES } from '../../../actions/sourceActions';
+import { FETCH_METADATA_VALUES_FOR_COUNTRY } from '../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const publicationCountry = createAsyncReducer({
@@ -6,12 +6,7 @@ const publicationCountry = createAsyncReducer({
     tags: [],
     label: null,
   },
-  action: FETCH_METADATA_VALUES,
-  handleSuccess: payload => ({
-    label: payload.tags.label,
-    tags: payload.tags.tags,
-    name: payload.tags.name,
-  }),
+  action: FETCH_METADATA_VALUES_FOR_COUNTRY,
 });
 
 export default publicationCountry;

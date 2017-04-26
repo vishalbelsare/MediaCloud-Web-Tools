@@ -31,7 +31,8 @@ export const CREATE_NEW_COLLECTION = 'CREATE_NEW_COLLECTION';
 export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
-export const FETCH_METADATA_VALUES = 'FETCH_METADATA_VALUES';
+export const FETCH_METADATA_VALUES_FOR_COUNTRY = 'FETCH_METADATA_VALUES_FOR_COUNTRY';
+export const FETCH_METADATA_VALUES_FOR_STATE = 'FETCH_METADATA_VALUES_FOR_STATE';
 export const FETCH_COLLECTION_TO_COPY = 'FETCH_COLLECTION_TO_COPY';
 export const FETCH_SOURCE_BY_METADATA = 'FETCH_SOURCE_BY_METADATA';
 export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
@@ -123,7 +124,9 @@ export const createSource = createAsyncAction(CREATE_NEW_SOURCE, api.createSourc
 
 export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, props => props);
 
-export const fetchMetadataValues = createAsyncAction(FETCH_METADATA_VALUES, api.metadataValues);
+export const fetchMetadataValuesForCountry = createAsyncAction(FETCH_METADATA_VALUES_FOR_COUNTRY, api.metadataValuesForCountry);
+
+export const fetchMetadataValuesForState = createAsyncAction(FETCH_METADATA_VALUES_FOR_STATE, api.metadataValuesForState);
 
 export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceAdvancedSearch, payload => payload);
 
