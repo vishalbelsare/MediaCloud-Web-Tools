@@ -95,6 +95,17 @@ def _safely_get_health_start_date(health):
         start_date = health['start_date'][:10]
     return start_date
 
+def _safely_get_health_end_date(health):
+    """
+    The health might be empty, so call this to default to today
+    """
+    if health is None:  # maybe no health exists yet, go with one year ago
+        now = datetime.now()
+        start_date = "{0}-{1}-{2}".format(now.year, now.month, now.day)
+    else:
+        start_date = health['end_date'][:10]
+    return start_date
+
 
 @app.route('/api/sources/<media_id>/details')
 @flask_login.login_required
@@ -132,11 +143,13 @@ def source_sentence_count_csv(media_id):
 @api_error_handler
 def api_media_source_sentence_count(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
+    counts = cached_recent_sentence_counts(user_mediacloud_key(),
+                                           ['media_id:'+str(media_id)],
+                                           _safely_get_health_start_date(health),
+                                           _safely_get_health_end_date(health))
     info = {
         'health': health,
-        'sentenceCounts': cached_recent_sentence_counts(user_mediacloud_key(),
-            ['media_id:'+str(media_id)],
-            _safely_get_health_start_date(health))
+        'sentenceCounts': counts
     }
     return jsonify({'results':info})
 

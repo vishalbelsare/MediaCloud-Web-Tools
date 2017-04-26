@@ -38,7 +38,7 @@ class WordInContextContainer extends React.Component {
     downloadSvg(svgNode);
   }
   render() {
-    const { term, sentences, helpButton } = this.props;
+    const { term, fragments, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const uniqueDomId = this.getUniqueDomId();
     return (
@@ -52,7 +52,7 @@ class WordInContextContainer extends React.Component {
         </h2>
         <WordTree
           domId={uniqueDomId}
-          sentences={sentences}
+          sentences={fragments}
           startWord={term}
           height="400px"
         />
@@ -68,7 +68,7 @@ WordInContextContainer.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
   // from store
-  sentences: React.PropTypes.array.isRequired,
+  fragments: React.PropTypes.array.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   // from context
@@ -79,15 +79,15 @@ WordInContextContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.sampleSentences.fetchStatus,
-  sentences: state.topics.selected.word.sampleSentences.sentences,
+  fragments: state.topics.selected.word.sampleSentences.fragments,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
-    dispatch(fetchWordSampleSentences(props.topicId, props.stem, props.filters));
+    dispatch(fetchWordSampleSentences(props.topicId, props.term, props.filters));
   },
   asyncFetch: () => {
-    dispatch(fetchWordSampleSentences(ownProps.topicId, ownProps.stem, ownProps.filters));
+    dispatch(fetchWordSampleSentences(ownProps.topicId, ownProps.term, ownProps.filters));
   },
 });
 

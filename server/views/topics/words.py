@@ -12,6 +12,8 @@ from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
+WORD_CONTEXT_SIZE = 5   # for sentence fragments, this is the amount of words before & after that we return
+
 
 @app.route('/api/topics/<topics_id>/words/<word>', methods=['GET'])
 @flask_login.login_required
@@ -102,17 +104,46 @@ def topic_word_associated_words_csv(topics_id, word):
     return csv.stream_response(response, props, 'word-'+word+'-sampled-words')
 
 
-@app.route('/api/topics/<topics_id>/words/<word>/sample-sentences', methods=['GET'])
+@app.route('/api/topics/<topics_id>/words/<word>/sample-usage', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def topic_word_sentence_sample(topics_id, word):
+def topic_word_usage_sample(topics_id, word):
     # gotta respect the manual query if there is one
     q = request.args['q'] if 'q' in request.args else None
     if (q is not None) and (len(q) > 0):
         q = u"({}) AND ({})".format(word, q)
+    else:
+        q = word
     results = topic_sentence_sample(user_mediacloud_key(), topics_id, sample_size=1000, q=q)
-    sentences = [s['sentence'] for s in results['response']['docs']]
-    return jsonify({'sentences': sentences})
+    # TODO: only pull the 5 words before and after so we
+    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results['response']['docs']]
+    fragments = [f for f in fragments if f is not None]
+    return jsonify({'fragments': fragments})
+
+
+def _sentence_fragment_around(keyword, sentence):
+    '''
+    Turn a sentence into a sentence fragment, including just the 5 words before and after the keyword we are looking at.
+    We do this to enforce our rule that full sentences (even without metadata) never leave our servers).
+    Warning: this makes simplistic assumptions about word tokenization
+    ::return:: a sentence fragment around keyword, or None if keyword can't be found
+    '''
+    words = sentence.split()    # super naive, but works ok
+    try:
+        keyword_index = None
+        for index, word in enumerate(words):
+            if keyword_index is not None:
+                continue
+            if word.lower().startswith(keyword.replace("*", "").lower()):
+                keyword_index = index
+        if keyword_index is None:
+            return None
+        min_word_index = max(0, keyword_index - WORD_CONTEXT_SIZE)
+        max_word_index = min(len(words), keyword_index + WORD_CONTEXT_SIZE)
+        fragment_words = words[min_word_index:max_word_index]
+        return " ".join(fragment_words)
+    except ValueError:
+        return None
 
 
 # Can't do this yet because topics/media/list doesn't support q as a parameter :-(
