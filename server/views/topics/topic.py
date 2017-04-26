@@ -34,8 +34,8 @@ def topic_filter_cascade_list():
     #get public topics
     sorted_public_topics = sorted_public_topic_list(CACHED_TOPICS)
 
-    for t in sorted_public_topics:
-        t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+    # for t in sorted_public_topics:
+    #    t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
 
     #check if user had favorites or personal
     all_topics = []
@@ -48,7 +48,7 @@ def topic_filter_cascade_list():
         user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
 
         for t in all_topics['topics']:
-            t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+            # t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
             if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
                 t['isFavorite'] = True
                 favorited_topics.append(t)
@@ -168,7 +168,6 @@ def get_topic_info_per_snapshot_timespan(topic_id):
     local_mc = user_mediacloud_client()
     snapshots = {
         'list': local_mc.topicSnapshotList(topic_id),
-        'jobStatus': local_mc.topicSnapshotGenerateStatus(topic_id)['job_states']    # need to know if one is running
     }
     most_recent_running_snapshot = {}
     overall_timespan = {}
