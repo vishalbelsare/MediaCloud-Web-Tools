@@ -1,21 +1,21 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { GridList, GridTile } from 'material-ui/GridList';
 import Link from 'react-router/lib/Link';
 import DataCard from './DataCard';
 import FilledStarIcon from './icons/FilledStarIcon';
-import { ExploreButton } from './IconButton';
 
 const localMessages = {
   total: { id: 'topic.list.totalStories', defaultMessage: 'Total Stories' },
   media: { id: 'topic.list.mediaCount', defaultMessage: 'Media Sources' },
   links: { id: 'topic.list.links', defaultMessage: 'Story Links' },
+  range: { id: 'topic.list.range', defaultMessage: '{start} - {end}' },
 };
 
 const TopicContentPreviewList = (props) => {
-  const { items, icon, linkInfo, linkDisplay, disabled } = props;
+  const { items, linkInfo, linkDisplay, disabled } = props;
   let content = null;
   let subContent = null;
   if (items && items.length > 0) {
@@ -23,7 +23,6 @@ const TopicContentPreviewList = (props) => {
       items.map((c, idx) => {
         const isDisabled = disabled ? disabled(c) : false;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
-        const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
         if (c.detailInfo !== undefined && c.detailInfo.timespan !== undefined) {
           subContent = (
             <GridList
@@ -51,15 +50,18 @@ const TopicContentPreviewList = (props) => {
         return (
           <Col key={idx} lg={4} xs={12}>
             <DataCard key={idx} className="topic-browse-items" disabled={isDisabled}>
-              {icon}
               <div className="content">
                 <div>
+                  <div>{ c.isFavorite ? <FilledStarIcon /> : '' }</div>
                   <h2>{title}
-                    <div className="actions">
-                      {exploreButton}
-                    </div>
-                    { c.isFavorite ? <FilledStarIcon /> : '' }
                   </h2>
+                  <FormattedMessage
+                    {...localMessages.range}
+                    values={{
+                      start: <FormattedDate value={c.start_date} month="short" year="numeric" day="numeric" />,
+                      end: <FormattedDate value={c.end_date} month="short" year="numeric" day="numeric" />,
+                    }}
+                  />
                   <p>{c.description}</p>
                 </div>
               </div>
