@@ -11,6 +11,7 @@ import composePagedContainer from '../../common/PagedContainer';
 import TopicList from './TopicList';
 
 const localMessages = {
+  topicsListFilter: { id: 'topics.list.filter', defaultMessage: 'Filter Topics By: ' },
   topicsListPublic: { id: 'topics.list.public', defaultMessage: 'All Topics' },
   topicsListFavorites: { id: 'topics.list.favorite', defaultMessage: 'Favorite Topics' },
   topicsListPersonal: { id: 'topics.list.personal', defaultMessage: 'Personal Topics' },
@@ -40,36 +41,44 @@ class TopicListContainer extends React.Component {
     } else if (currentFilter === 'public' && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPublic} /></h2>;
       whichTopics = topics.public;
-    } else {
+    } else { // when user is not logged in and clicks the other options
       titleContent = <h2><FormattedMessage {...localMessages.noAccess} /></h2>;
     }
 
     return (
       <div className="topic-list-container">
         <Row>
-          <Col lg={12} md={12} sm={12}>
+          <Col lg={2} md={2} sm={12}>
             { titleContent }
           </Col>
-          <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
-            <MenuItem
-              value="favorites"
-              onClick={() => this.changeFilter('favorites')}
-              primaryText={formatMessage(localMessages.topicsListFavorites)}
-              style={{ fontSize: 13 }}
-            />
-            <MenuItem
-              value="personal"
-              primaryText={formatMessage(localMessages.topicsListPersonal)}
-              onClick={() => this.changeFilter('personal')}
-              style={{ fontSize: 13 }}
-            />
-            <MenuItem
-              value="public"
-              onClick={() => this.changeFilter('public')}
-              primaryText={formatMessage(localMessages.topicsListPublic)}
-              style={{ fontSize: 13 }}
-            />
-          </SelectField>
+          <Col lg={2} md={2} sm={12}>
+            <span className="label unlabeled-field-label">
+              <FormattedMessage {...localMessages.topicsListFilter} />
+            </span>
+          </Col>
+          <Col lg={7} md={7} sm={12}>
+            <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
+              <MenuItem
+                value="favorites"
+                onClick={() => this.changeFilter('favorites')}
+                primaryText={formatMessage(localMessages.topicsListFavorites)}
+                style={{ fontSize: 13 }}
+              />
+              <MenuItem
+                value="personal"
+                primaryText={formatMessage(localMessages.topicsListPersonal)}
+                onClick={() => this.changeFilter('personal')}
+                style={{ fontSize: 13 }}
+              />
+              <MenuItem
+                value="public"
+                onClick={() => this.changeFilter('public')}
+                primaryText={formatMessage(localMessages.topicsListPublic)}
+                style={{ fontSize: 13 }}
+              />
+            </SelectField>
+          </Col>
+
         </Row>
 
         <TopicList topics={whichTopics} showFavorites={showFavorites} onSetFavorited={onSetFavorited} />
@@ -88,7 +97,7 @@ TopicListContainer.propTypes = {
   // from parent
   onSetFavorited: React.PropTypes.func.isRequired,
   // from state
-  topics: React.PropTypes.object.isRequired,
+  topics: React.PropTypes.array.isRequired,
   links: React.PropTypes.object,
   // from context
   intl: React.PropTypes.object.isRequired,
