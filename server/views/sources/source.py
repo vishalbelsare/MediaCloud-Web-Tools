@@ -83,7 +83,8 @@ def feed_create(media_id):
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
     feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
 
-    return user_mc.feedCreate(media_id, name, url, feed_type, feed_status)
+    result = user_mc.feedCreate(media_id, name, url, feed_type, feed_status)
+    return jsonify(result)
 
 @app.route('/api/sources/feeds/<feed_id>/update', methods=['POST'])
 @flask_login.login_required
@@ -95,8 +96,8 @@ def feed_update(feed_id):
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
     feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
 
-    return user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, feed_status=feed_status)
-
+    result = user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, feed_status=feed_status)
+    return jsonify(result)
 
 
 @cache

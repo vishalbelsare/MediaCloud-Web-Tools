@@ -63,7 +63,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       feed_status: values.feed_status,
       feed_type: values.feed_type,
     };
-    dispatch(createFeed(ownProps.params.mediaId, infoToSave))
+    dispatch(createFeed(ownProps.params.sourceId, infoToSave))
       .then((result) => {
         if (result.success === 1) {
           // let them know it worked

@@ -54,11 +54,6 @@ const SourceFeedForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md={2}>
-          <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.type} />
-          </span>
-        </Col>
         <Col md={8}>
           <Field name="feed_type" component={renderSelectField} floatingLabelText={formatMessage(localMessages.type)}>
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
@@ -67,13 +62,8 @@ const SourceFeedForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md={2}>
-          <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.status} />
-          </span>
-        </Col>
         <Col md={8}>
-          <Field name="feed_status" component={renderSelectField}>
+          <Field name="feed_status" value="active" component={renderSelectField} floatingLabelText={formatMessage(localMessages.status)}>
             <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
             <MenuItem value="inactive" primaryText={formatMessage(localMessages.statusInactive)} />
             <MenuItem value="skipped" primaryText={formatMessage(localMessages.statusSkipped)} />
