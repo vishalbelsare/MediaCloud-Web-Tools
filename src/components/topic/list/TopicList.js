@@ -1,16 +1,16 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TopicIcon from '../../common/icons/TopicIcon';
-import ContentPreview from '../../common/ContentPreview';
+import TopicContentPreviewList from '../../common/TopicContentPreviewList';
 import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const TopicList = (props) => {
   const { topics, onSetFavorited } = props;
   return (
-    <ContentPreview
+    <TopicContentPreviewList
       items={topics}
       onSetFavorited={onSetFavorited}
-      classStyle="topic-list"
+      className="topic-list"
       icon={<TopicIcon height={25} />}
       linkInfo={t => `topics/${t.topics_id}/summary`}
       linkDisplay={t => t.name}
