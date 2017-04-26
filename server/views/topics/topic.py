@@ -71,6 +71,7 @@ def public_topic_list(topic_list):
     public_topics = sorted_public_topics(topic_list)
     return jsonify({"topics": public_topics})
 
+
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
@@ -89,13 +90,22 @@ def topic_summary(topics_id):
     }
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
+    # test topic state error msgs
+    # topic['state'] = 'running'  # 'error'
+    # topic['message'] = 'it is all fed up'
+    # test topic snapshot job status
+    # topic['snapshots']['jobStatus'][0]['state'] = 'error' # 'queued', 'running', 'error', 'completed'
+    # topic['snapshots']['list'][0]['state'] = 'completed'
+    # topic['snapshots']['list'][0]['searchable'] = 0
     return jsonify(topic)
+
 
 def _add_user_favorite_flag_to_topics(topics):
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
     for t in topics:
         t['isFavorite'] = t['topics_id'] in user_favorited
     return topics
+
 
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required

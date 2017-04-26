@@ -6,7 +6,8 @@ import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import ArrowDropUpIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import OpenInNewIcon from 'material-ui/svg-icons/action/open-in-new';
 import ErrorIcon from 'material-ui/svg-icons/alert/error';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
+import SaveIcon from 'material-ui/svg-icons/content/save';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -130,7 +131,7 @@ export const EditButton = composeIconButton(EditIcon, messages.edit, true);
 
 export const ErrorButton = composeIconButton(ErrorIcon, messages.error, false);
 
-export const ViewButton = composeIconButton(RemoveRedEye, messages.monitored, false);
+export const EyeButton = composeIconButton(RemoveRedEyeIcon, messages.monitored, false);
 
 export const MoreOptionsButton = composeIconButton(MoreOptionsIcon, messages.moreOptions);
 
@@ -139,3 +140,5 @@ export const CloseButton = composeIconButton(CloseIcon, messages.close);
 export const ResetButton = composeIconButton(ResetIcon, messages.reset);
 
 export const FilterButton = composeIconButton(FilterIcon, messages.filter, false, 45, 45);
+
+export const SaveButton = composeIconButton(SaveIcon, messages.save);

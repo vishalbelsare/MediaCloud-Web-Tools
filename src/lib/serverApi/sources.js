@@ -74,12 +74,12 @@ export function collectionGeography(id) {
 }
 
 export function sourceWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/sources/${id}/words`, acceptedParams);
 }
 
 export function collectionWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/collections/${id}/words`, acceptedParams);
 }
 
@@ -87,8 +87,13 @@ export function similarCollections(id) {
   return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
-export function collectionSourceStoryCounts(id) {
+export function collectionSourceSentenceCounts(id) {
   return createApiPromise(`api/collections/${id}/sources/sentences/count`);
+}
+
+export function collectionSourceSentenceHistoricalCounts(id, params) {
+  const acceptedParams = acceptParams(params, ['start', 'end']);
+  return createApiPromise(`/api/collections/${id}/sources/sentences/historical-counts`, acceptedParams);
 }
 
 export function createCollection(params) {

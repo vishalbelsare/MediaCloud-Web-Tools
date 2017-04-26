@@ -76,6 +76,8 @@ class MediaTable extends React.Component {
               <th>{inlinkHeader}</th>
               <th><FormattedMessage {...messages.outlinks} /></th>
               <th>{socialHeader}</th>
+              <th><FormattedMessage {...messages.facebookShares} /></th>
+              <th>{}</th>
             </tr>
             {media.map((m, idx) =>
               (<tr key={m.media_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
@@ -87,10 +89,11 @@ class MediaTable extends React.Component {
                     {m.name}
                   </LinkWithFilters>
                 </td>
-                <td><FormattedNumber value={m.story_count} /></td>
-                <td><FormattedNumber value={m.media_inlink_count} /></td>
-                <td><FormattedNumber value={m.outlink_count} /></td>
-                <td><FormattedNumber value={m.bitly_click_count} /></td>
+                <td><FormattedNumber value={m.story_count !== undefined ? m.story_count : '?'} /></td>
+                <td><FormattedNumber value={m.media_inlink_count !== undefined ? m.media_inlink_count : '?'} /></td>
+                <td><FormattedNumber value={m.outlink_count !== undefined ? m.outlink_count : '?'} /></td>
+                <td><FormattedNumber value={m.bitly_click_count !== undefined ? m.bitly_click_count : '?'} /></td>
+                <td><FormattedNumber value={m.facebook_share_count !== undefined ? m.facebook_share_count : '?'} /></td>
               </tr>)
             )}
           </tbody>

@@ -9,7 +9,7 @@ import DataCard from '../../common/DataCard';
 import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActions';
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import { DownloadButton } from '../../common/IconButton';
+import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ActionMenu from '../../common/ActionMenu';
@@ -46,7 +46,7 @@ class CollectionSourceRepresentation extends React.Component {
   }
 
   render() {
-    const { helpButton, sources } = this.props;
+    const { helpButton, sources, collectionId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
 
     let content = null;
@@ -92,6 +92,7 @@ class CollectionSourceRepresentation extends React.Component {
     return (
       <DataCard>
         <div className="actions">
+          <ExploreButton linkTo={`/collections/${collectionId}/content-history`} />
           <ActionMenu>
             <MenuItem
               className="action-icon-menu-item"
