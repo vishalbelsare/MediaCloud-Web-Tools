@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
-import { createFeed, updateFeedback, fetchSourceFeed } from '../../../actions/sourceActions';
+import { SubmissionError } from 'redux-form';
+import { createFeed, fetchSourceFeed } from '../../../actions/sourceActions';
+import { updateFeedback } from '../../../actions/appActions';
 import SourceFeedForm from './form/SourceFeedForm';
 
 const localMessages = {
@@ -65,14 +67,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(createFeed(ownProps.params.sourceId, infoToSave))
       .then((result) => {
-        if (result.success === 1) {
+        if (result.feed !== undefined) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
-          dispatch(fetchSourceFeed(ownProps.params.feedId))
+          dispatch(fetchSourceFeed(ownProps.params.mediaId, ownProps.params.feedId))
             .then(() =>
-              dispatch(push(`/sources/${ownProps.params.feedId}/edit`))
+              dispatch(push(`/sources/${ownProps.params.sourceId}/feed/${ownProps.params.feedId}`))
             );
+        } else if (result.message && result.message.indexOf('duplicate key') > 0) {
+          throw new SubmissionError({ username: 'Duplicate Key error', _error: 'Login failed!' });
         }
       });
   },

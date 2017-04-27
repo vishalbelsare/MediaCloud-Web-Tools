@@ -3,15 +3,18 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
+import { SubmissionError } from 'redux-form';
 import Title from 'react-title-component';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { selectSourceFeed, updateFeed, updateFeedback, fetchSourceFeed } from '../../../actions/sourceActions';
+import { selectSourceFeed, updateFeed, fetchSourceFeed } from '../../../actions/sourceActions';
+import { updateFeedback } from '../../../actions/appActions';
 import SourceFeedForm from './form/SourceFeedForm';
 
 const localMessages = {
   sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: Feeds' },
   add: { id: 'source.deatils.feeds.add', defaultMessage: 'Update A Feed' },
   updateButton: { id: 'source.deatils.feeds.update.button', defaultMessage: 'Update' },
+  feedback: { id: 'source.deatils.feeds.feedback', defaultMessage: 'Successfully updated this feed.' },
 };
 
 class EditSourceFeedContainer extends React.Component {
@@ -89,14 +92,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     };
     dispatch(updateFeed(ownProps.params.feedId, infoToSave))
       .then((result) => {
-        if (result.success === 1) {
+        if (result.feed !== undefined) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
-          dispatch(fetchSourceFeed(ownProps.params.feedId))
+          dispatch(fetchSourceFeed(ownProps.params.mediaId, ownProps.params.feedId))
             .then(() =>
-              dispatch(push(`/sources/${ownProps.params.feedId}`))
+              dispatch(push(`/sources/${ownProps.params.sourceId}/feed/${ownProps.params.feedId}`))
             );
+        } else if (result.message && result.message.indexOf('duplicate key') > 0) {
+          throw new SubmissionError({ username: 'Duplicate Key error', _error: 'Login failed!' });
         }
       });
   },
