@@ -12,7 +12,7 @@ import TopicList from './TopicList';
 
 const localMessages = {
   topicsListFilter: { id: 'topics.list.filter', defaultMessage: 'Filter Topics By: ' },
-  topicsListPublic: { id: 'topics.list.public', defaultMessage: 'All Topics' },
+  topicsListPublic: { id: 'topics.list.public', defaultMessage: 'Public Topics' },
   topicsListFavorites: { id: 'topics.list.favorite', defaultMessage: 'Favorite Topics' },
   topicsListPersonal: { id: 'topics.list.personal', defaultMessage: 'Personal Topics' },
   noAccess: { id: 'topics.list.noAccess', defaultMessage: "Sorry, you don't have the permissions to view this list." },
