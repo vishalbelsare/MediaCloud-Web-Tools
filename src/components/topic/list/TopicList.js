@@ -1,15 +1,16 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TopicIcon from '../../common/icons/TopicIcon';
-import ContentPreview from '../../common/ContentPreview';
+import TopicContentPreviewList from '../../common/TopicContentPreviewList';
 import { PERMISSION_TOPIC_NONE } from '../../../lib/auth';
 
 const TopicList = (props) => {
-  const { topics } = props;
+  const { topics, onSetFavorited } = props;
   return (
-    <ContentPreview
+    <TopicContentPreviewList
       items={topics}
-      classStyle="topic-list"
+      onSetFavorited={onSetFavorited}
+      className="topic-list"
       icon={<TopicIcon height={25} />}
       linkInfo={t => `topics/${t.topics_id}/summary`}
       linkDisplay={t => t.name}
@@ -20,6 +21,7 @@ const TopicList = (props) => {
 
 TopicList.propTypes = {
   topics: React.PropTypes.array.isRequired,
+  showFavorites: React.PropTypes.bool,
   intl: React.PropTypes.object.isRequired,
   onSetFavorited: React.PropTypes.func.isRequired,
 };
