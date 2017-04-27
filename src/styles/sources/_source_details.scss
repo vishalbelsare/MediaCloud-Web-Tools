@@ -1,0 +1,8 @@
+@import '../_constants';
+
+.metadata-picker {
+
+	input:focus {
+		background-color: $material-orange500 !important;
+	}
+}

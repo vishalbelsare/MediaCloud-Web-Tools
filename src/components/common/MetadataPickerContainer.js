@@ -39,6 +39,7 @@ const MetadataPickerContainer = (props) => {
       }
       content = (
         <Field
+          className="metadata-picker"
           searchText={initialText}
           name={name}
           component={renderAutoComplete}

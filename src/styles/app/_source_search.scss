@@ -11,3 +11,10 @@
     display: inline-block;
   }
 }
+
+.metadata-picker {
+    background-color: #ff0000;
+}
+.metadata-picker:focus {
+    background-color: #fff000;
+}

@@ -280,13 +280,16 @@ def source_update(media_id):
     ]
     for metadata_item in valid_metadata:
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
-        existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
-            if t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE]
-        if metadata_tag_id is None:
+        existing_tag_ids = [t for t in source['media_source_tags']
+            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE)]
+        if metadata_tag_id in [None,'']:
             # we want to remove it if there was one there
             if len(existing_tag_ids) > 0:
-                tag = MediaTag(media_id, tags_id=existing_tag_ids[0], action=TAG_ACTION_REMOVE)
-                user_mc.tagMedia([tag])
+                for remove_if_empty in existing_tag_ids:
+                    if metadata_item['tag_sets_id'] == remove_if_empty['tag_sets_id']:
+                        tag = MediaTag(media_id, tags_id=remove_if_empty['tags_id'], action=TAG_ACTION_REMOVE)
+                        user_mc.tagMedia([tag])
+
         elif metadata_tag_id not in existing_tag_ids:
             # need to add it and clear out the other
             tag = MediaTag(media_id, tags_id=metadata_tag_id, action=TAG_ACTION_ADD)
