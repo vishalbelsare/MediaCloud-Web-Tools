@@ -156,6 +156,7 @@ def topic_create():
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
+# require any fields?
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):
@@ -185,12 +186,3 @@ def topic_update(topics_id):
     result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
     return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
-
-
-@app.route("/api/topics/<topics_id>/spider", methods=['POST'])
-@flask_login.login_required
-@api_error_handler
-def topic_spider(topics_id):
-    user_mc = user_mediacloud_client()
-    spider_job = user_mc.topicSpider(topics_id) # kick off a spider, which will also generate a snapshot
-    return jsonify(spider_job)

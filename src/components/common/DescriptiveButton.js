@@ -4,7 +4,7 @@ import React from 'react';
  *
  */
 const DescriptiveButton = (props) => {
-  const { imageUrl, label, svgIcon, description, onClick, className } = props;
+  const { imageUrl, label, svgIcon, description, onClick } = props;
   let visualContent = null;
   if (imageUrl) {
     visualContent = (<img src={imageUrl} alt={label} width={50} height={50} />);
@@ -12,7 +12,7 @@ const DescriptiveButton = (props) => {
     visualContent = svgIcon;
   }
   return (
-    <div className={`descriptive-button ${className || ''}`} onTouchTap={onClick}>
+    <div className="descriptive-button" onTouchTap={onClick}>
       <div className="image">
         {visualContent}
       </div>
@@ -29,7 +29,6 @@ DescriptiveButton.propTypes = {
   label: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
   onClick: React.PropTypes.func.isRequired,
-  className: React.PropTypes.string,
 };
 
 export default DescriptiveButton;
