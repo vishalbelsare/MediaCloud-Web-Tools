@@ -42,7 +42,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     content = (
       <div className="collection-sub-header">
         <AppSubHeader
-          title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label}`}
+          title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('collection', collectionId, isFav)}

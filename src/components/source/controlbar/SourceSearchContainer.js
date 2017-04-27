@@ -8,8 +8,8 @@ import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
 const MAX_SUGGESTION_CHARS = 40;
-const MAX_SOURCES_TO_SHOW = 5;
-const MAX_COLLECTIONS_TO_SHOW = 3;
+const DEFAULT_MAX_SOURCES_TO_SHOW = 5;
+const DEFAULT_MAX_COLLECTIONS_TO_SHOW = 3;
 
 const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a search
 
@@ -27,6 +27,16 @@ class SourceSearchContainer extends React.Component {
       lastKeypress: 0,
       searchTimeout: null,
     };
+  }
+
+  getMaxSourcesToShow = () => {
+    const { maxSources } = this.props;
+    return maxSources || DEFAULT_MAX_SOURCES_TO_SHOW;
+  }
+
+  getMaxCollectionsToShow = () => {
+    const { maxCollections } = this.props;
+    return maxCollections || DEFAULT_MAX_COLLECTIONS_TO_SHOW;
   }
 
   handleClick = (item) => {
@@ -60,10 +70,10 @@ class SourceSearchContainer extends React.Component {
 
     const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
     if (searchCollections || searchCollections === undefined) {
-      results = results.concat(collectionResults.slice(0, MAX_COLLECTIONS_TO_SHOW));
+      results = results.concat(collectionResults.slice(0, this.getMaxCollectionsToShow()));
     }
     if (searchSources || searchSources === undefined) {
-      results = results.concat(sourceResults.slice(0, MAX_SOURCES_TO_SHOW));
+      results = results.concat(sourceResults.slice(0, this.getMaxSourcesToShow()));
     }
     let resultsAsComponents = results.map((item) => {
       let menuItemValue = (
@@ -91,8 +101,8 @@ class SourceSearchContainer extends React.Component {
 
     if (onAdvancedSearchSelected !== undefined) {
       resultsAsComponents = resultsAsComponents.concat({
-        text: 'Advanced Search',
-        key: 'Advanced Search',
+        text: formatMessage(localMessages.advancedSearch),
+        key: formatMessage(localMessages.advancedSearch),
         value: <MenuItem
           value={advancedSearchTitle}
           onClick={() => this.handleClick(advancedSearchTitle)}
@@ -136,7 +146,7 @@ class SourceSearchContainer extends React.Component {
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
           onNewRequest={this.handleNewRequest}
-          maxSearchResults={10}
+          maxSearchResults={this.getMaxSourcesToShow() + this.getMaxCollectionsToShow()}
           filter={() => true}
         />
       </div>
@@ -154,6 +164,8 @@ SourceSearchContainer.propTypes = {
   onMediaSourceSelected: React.PropTypes.func,
   onCollectionSelected: React.PropTypes.func,
   onAdvancedSearchSelected: React.PropTypes.func,
+  maxSources: React.PropTypes.number,
+  maxCollections: React.PropTypes.number,
   // from state
   sourceFetchStatus: React.PropTypes.array.isRequired,
   collectionFetchStatus: React.PropTypes.array.isRequired,
