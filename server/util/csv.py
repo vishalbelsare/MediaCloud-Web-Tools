@@ -4,8 +4,10 @@ import flask
 
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 
-SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored']
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
+SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored']
+SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored', 'editor_notes']
+
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored', 'editor_notes']
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +80,8 @@ def api_download_sources_csv(all_media, file_prefix):
             src['is_monitored'] = ''
         if 'public_notes' not in src:
             src['public_notes'] = ''
+        if 'pub_state' not in src:
+            src['pub_state'] = ''
 
     what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
 

@@ -1,4 +1,3 @@
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 # some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
 GV_TAG_SET_ID = 556
