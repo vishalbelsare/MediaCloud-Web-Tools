@@ -25,6 +25,8 @@ const TopicForm = (props) => {
         form="topicForm"
         initialValues={initialValues}
         allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+        maxSources={10}
+        maxCollections={10}
       />
       <Row>
         <Col lg={12}>
