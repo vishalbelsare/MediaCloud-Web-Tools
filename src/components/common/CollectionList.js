@@ -27,8 +27,8 @@ const CollectionList = (props) => {
       <h2>{title}{helpButton}</h2>
       <p>{intro}</p>
       <div className="collection-list-item-wrapper">
-        {validCollections.map((c, idx) =>
-          <SourceOrCollectionChip key={idx} object={c} onClick={() => handleClick(c.tags_id)}>
+        {validCollections.map(c =>
+          <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}

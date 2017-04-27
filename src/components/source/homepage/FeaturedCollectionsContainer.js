@@ -28,8 +28,8 @@ const FeaturedCollectionsContainer = (props) => {
   if (collections && collections.length > 0) {
     content = (
       <Slider {...settings} style={{ width: 80, height: 100, margin: 10, padding: 20 }}>
-        {collections.map((slide, idx) =>
-          <div key={idx}><FeaturedItem key={idx} collection={slide} /></div>
+        {collections.map(collection =>
+          <div key={collection.tags_id}><FeaturedItem collection={collection} /></div>
         )}
       </Slider>
     );

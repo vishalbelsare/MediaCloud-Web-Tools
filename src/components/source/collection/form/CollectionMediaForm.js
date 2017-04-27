@@ -186,7 +186,7 @@ class SourceSelectionRendererRaw extends React.Component {
                   </tr>
                   {fields.map((source, idx) =>
                     <Field
-                      key={`c${idx}`}
+                      key={source.media_id}
                       name={source}
                       component={info => (
                         <tr key={info.input.value.media_id ? info.input.value.media_id : info.input.value.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
