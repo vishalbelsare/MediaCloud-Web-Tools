@@ -19,7 +19,7 @@ const renderCollectionSelector = ({ intro, allowRemoval, fields, meta: { error }
       <Col lg={8}>
         {fields.map((name, index) => (
           <Field
-            key={`c${index}`}
+            key={name}
             name={name}
             component={(info) => {
               const handleDelete = (allowRemoval || info.meta.dirty) ? () => fields.remove(index) : undefined;
