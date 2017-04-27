@@ -28,6 +28,7 @@
     "isomorphic-fetch": "2.2.1",
     "material-ui": "0.17.4",
     "moment": "2.18.1",
+    "prop-types": "^15.5.8",
     "react": "15.5.4",
     "react-async-script": "^0.9.1",
     "react-cookie": "1.0.4",
