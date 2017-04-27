@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY } from '../../../lib/tagUtil';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.metadatacoverage.chart.title', defaultMessage: 'Metadata' },
@@ -22,9 +22,6 @@ const localMessages = {
   pubCountryTitle: { id: 'collection.summary.metadatacoverage.pubCountry.title', defaultMessage: 'Country of Publication' },
   pubCountryTagged: { id: 'collection.summary.metadatacoverage.pubCountry.tagged', defaultMessage: 'with a country' },
   pubCountryNotTagged: { id: 'collection.summary.metadatacoverage.pubCountry.notTagged', defaultMessage: 'unknown country' },
-  pubStateTitle: { id: 'collection.summary.metadatacoverage.pubState.title', defaultMessage: 'State of Publication' },
-  pubStateTagged: { id: 'collection.summary.metadatacoverage.pubState.tagged', defaultMessage: 'with a state' },
-  pubStateNotTagged: { id: 'collection.summary.metadatacoverage.pubState.notTagged', defaultMessage: 'unknown state' },
 };
 
 class CollectionMetadataCoverageSummaryContainer extends React.Component {
@@ -46,26 +43,15 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
       content = <p><FormattedMessage {...localMessages.cantShow} /></p>;
     } else {
       content = (
-        <Row>
-          <Col lg={6}>
-            <MetadataCoverageItem
-              title={formatMessage(localMessages.pubCountryTitle)}
-              sources={sources}
-              metadataId={TAG_SET_PUBLICATION_COUNTRY}
-              taggedText={formatMessage(localMessages.pubCountryTagged)}
-              notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
-            />
-          </Col>
-          <Col lg={6}>
-            <MetadataCoverageItem
-              title={formatMessage(localMessages.pubStateTitle)}
-              sources={sources}
-              metadataId={TAG_SET_PUBLICATION_STATE}
-              taggedText={formatMessage(localMessages.pubStateTagged)}
-              notTaggedText={formatMessage(localMessages.pubStateNotTagged)}
-            />
-          </Col>
-        </Row>
+        <Col lg={4}>
+          <MetadataCoverageItem
+            title={formatMessage(localMessages.pubCountryTitle)}
+            sources={sources}
+            metadataId={TAG_SET_PUBLICATION_COUNTRY}
+            taggedText={formatMessage(localMessages.pubCountryTagged)}
+            notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
+          />
+        </Col>
       );
     }
     return (
@@ -81,7 +67,9 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
             </h2>
           </Col>
         </Row>
-        {content}
+        <Row>
+          {content}
+        </Row>
       </DataCard>
     );
   }
