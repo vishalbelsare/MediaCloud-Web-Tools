@@ -126,7 +126,7 @@ class SourceSearchContainer extends React.Component {
     const isFetching = (sourceFetchStatus === FETCH_ONGOING) || (collectionFetchStatus === FETCH_ONGOING);
     const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
     return (
-      <div className="source-search">
+      <div className="async-search source-search">
         <div className="fetching">{fetchingStatus}</div>
         <AutoComplete
           hintText={formatMessage(localMessages.searchHint)}

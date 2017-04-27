@@ -198,8 +198,8 @@ export function fetchCustomMap(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/map-files/fetchCustomMap`, acceptedParams);
 }
 
-export function fetchFullTopicList() {
-  return createApiPromise('/api/topics/fetchFullTopicList');
+export function fetchTopicSearchResults(searchStr) {
+  return createApiPromise('/api/topics/search', { searchStr });
 }
 
 export function topicNytTaggedStoryCoverage(topicId, params) {

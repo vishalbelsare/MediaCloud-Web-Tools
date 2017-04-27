@@ -5,21 +5,21 @@ import flask_login
 
 from server import app, db, mc
 from server.cache import cache
-from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param, _media_tag_ids_from_collections_param
-from server.util.mail import send_email
-from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
+from server.util.request import form_fields_required, arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
-from server.views.topics import access_public_topic, CACHED_TOPICS
+from server.views.topics import access_public_topic
 
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/topics/list', methods=['GET'])
 @api_error_handler
 def topic_list():
-    if (not is_user_logged_in()):
-        return public_topic_list(CACHED_TOPICS)
+    if not is_user_logged_in():
+        return jsonify(sorted_public_topic_list())
     else:
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
@@ -27,12 +27,13 @@ def topic_list():
         _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
+
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
 @api_error_handler
 def topic_filter_cascade_list():
 
     #get public topics
-    sorted_public_topics = sorted_public_topic_list(CACHED_TOPICS)
+    sorted_public_topics = sorted_public_topic_list()
 
     # for t in sorted_public_topics:
     #    t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
@@ -60,16 +61,11 @@ def topic_filter_cascade_list():
     #return it all together
     return jsonify({'topics': { 'favorite': favorited_topics, 'personal': all_topics, 'public': sorted_public_topics}})
 
-def sorted_public_topic_list(topic_list):
-    all_public_topics = []
-    for topic in topic_list:
-        if (topic['is_public'] == 1):
-            all_public_topics.append(topic)
-    return sorted(all_public_topics, key=lambda t: t['name'].lower())
 
-def public_topic_list(topic_list):
-    public_topics = sorted_public_topics(topic_list)
-    return jsonify({"topics": public_topics})
+def sorted_public_topic_list():
+    user_mc = user_mediacloud_client()
+    public_topics = user_mc.topicList(public=True)['topics']
+    return sorted(public_topics, key=lambda t: t['name'].lower())
 
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
@@ -160,8 +156,9 @@ def favorite_topics():
 @app.route('/api/topics/public', methods=['GET'])
 @api_error_handler
 @cache
-def cached_public_topics():
-    return public_topic_list();
+def public_topics():
+    public_topics = sorted_public_topic_list()
+    return jsonify({"topics": public_topics})
 
 
 def get_topic_info_per_snapshot_timespan(topic_id):
@@ -258,3 +255,14 @@ def topic_spider(topics_id):
     user_mc = user_mediacloud_client()
     spider_job = user_mc.topicSpider(topics_id) # kick off a spider, which will also generate a snapshot
     return jsonify(spider_job)
+
+@app.route('/api/topics/search', methods=['GET'])
+@flask_login.login_required
+@arguments_required('searchStr')
+@api_error_handler
+def topic_search():
+    search_str = request.args['searchStr']
+    user_mc = user_mediacloud_client()
+    matching_topics = user_mc.topicList(name=search_str)
+    results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
+    return jsonify({'topics': results})

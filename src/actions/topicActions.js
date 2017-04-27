@@ -70,7 +70,7 @@ export const SORT_WORD_STORIES = 'SORT_WORD_STORIES';
 export const FETCH_WORD_WORDS = 'FETCH_WORD_WORDS';
 export const FETCH_WORD_SAMPLE_SENTENCES = 'FETCH_WORD_SAMPLE_SENTENCES';
 export const FETCH_TOPIC_MAP_FILES = 'FETCH_TOPIC_MAP_FILES';
-export const FETCH_FULL_TOPIC_LIST = 'FETCH_FULL_TOPIC_LIST';
+export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
 export const CREATE_TOPIC = 'CREATE_TOPIC';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
 export const FETCH_TOPIC_GEOCODED_STORY_COVERAGE = 'FETCH_TOPIC_GEOCODED_STORY_COVERAGE';
@@ -230,7 +230,7 @@ export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 export const fetchTopicMapFiles = createAsyncAction(FETCH_TOPIC_MAP_FILES, api.topicMapFiles);
 
 // pass in topic id, filters
-export const fetchFullTopicList = createAsyncAction(FETCH_FULL_TOPIC_LIST, api.fetchFullTopicList);
+export const fetchTopicSearchResults = createAsyncAction(FETCH_TOPIC_SEARCH_RESULTS, api.fetchTopicSearchResults, searchStr => searchStr);
 
 // pass in topic id, filters
 export const fetchTopicNytLabelCoverage = createAsyncAction(FETCH_TOPIC_NYT_TAG_COVERAGE, api.topicNytTaggedStoryCoverage);
