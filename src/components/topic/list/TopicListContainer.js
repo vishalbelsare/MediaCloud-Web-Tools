@@ -97,7 +97,7 @@ TopicListContainer.propTypes = {
   // from parent
   onSetFavorited: React.PropTypes.func.isRequired,
   // from state
-  topics: React.PropTypes.array.isRequired,
+  topics: React.PropTypes.object.isRequired,
   links: React.PropTypes.object,
   // from context
   intl: React.PropTypes.object.isRequired,
