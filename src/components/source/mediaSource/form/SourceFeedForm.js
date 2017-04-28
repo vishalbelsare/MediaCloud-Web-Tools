@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
+import { emptyString, invalidUrl } from '../../../../lib/formValidators';
 
 const localMessages = {
   nameLabel: { id: 'source.feed.add.name.label', defaultMessage: 'Name of Feed' },
@@ -16,8 +17,9 @@ const localMessages = {
   statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
   statusInactive: { id: 'source.feed.add.status.inactive', defaultMessage: 'Inactive' },
   statusSkipped: { id: 'source.feed.add.status.skipped', defaultMessage: 'Skipped' },
-  nameError: { id: 'source.feed.add.name.error', defaultMessage: 'You have to enter a name for this source.' },
-  urlError: { id: 'source.feed.add.url.error', defaultMessage: 'You have to enter a url for this source.' },
+  nameError: { id: 'source.feed.add.name.error', defaultMessage: 'You have to enter a name for this feed.' },
+  urlError: { id: 'source.feed.add.url.error', defaultMessage: 'You have to enter a url for this feed.' },
+  urlInvalid: { id: 'source.feed.add.url.error.invalid', defaultMessage: 'You need to entry a fully qualified url.' },
 };
 
 const SourceFeedForm = (props) => {
@@ -93,8 +95,23 @@ SourceFeedForm.propTypes = {
   buttonLabel: React.PropTypes.string.isRequired,
 };
 
+function validate(values) {
+  const errors = {};
+  if (emptyString(values.name)) {
+    errors.name = localMessages.nameError;
+  }
+  if (emptyString(values.url)) {
+    errors.url = localMessages.urlError;
+  }
+  if (invalidUrl(values.url)) {
+    errors.url = localMessages.urlInvalid;
+  }
+  return errors;
+}
+
 const reduxFormConfig = {
   form: 'sourceFeedForm',
+  validate,
 };
 
 export default
