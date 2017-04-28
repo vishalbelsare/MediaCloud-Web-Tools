@@ -47,7 +47,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
     } else {
       content = (
         <Row>
-          <Col lg={6}>
+          <Col lg={3}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubCountryTitle)}
               sources={sources}
@@ -56,7 +56,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
             />
           </Col>
-          <Col lg={6}>
+          <Col lg={3}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubStateTitle)}
               sources={sources}
