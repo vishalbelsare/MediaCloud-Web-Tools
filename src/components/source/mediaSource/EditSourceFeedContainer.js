@@ -55,7 +55,7 @@ class EditSourceFeedContainer extends React.Component {
       <Grid className="details source-feed-details">
         <h2>
           <MediaSourceIcon height={32} />
-          <Link to={`/sources/${sourceId}`} >
+          <Link to={`/sources/${sourceId}/feeds`} >
             <FormattedMessage {...localMessages.sourceFeedsTitle} values={{ name: sourceName }} />
           </Link>
           <FormattedMessage {...localMessages.updateFeedsTitle} />
