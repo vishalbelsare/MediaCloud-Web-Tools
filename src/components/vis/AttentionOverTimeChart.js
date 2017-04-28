@@ -84,7 +84,7 @@ class AttentionOverTimeChart extends React.Component {
       config.exporting.filename = formatMessage(localMessages.seriesTitle);
     }
     if ((health !== null) && (health !== undefined)) {
-      config.xAxis.plotLines = health;
+      config.xAxis.plotLines = health.map(h => ({ className: 'health-plot-line', ...h }));
     }
     if (onDataPointClick) {
       config.plotOptions.series.allowPointSelect = true;
