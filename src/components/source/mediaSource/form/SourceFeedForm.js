@@ -7,7 +7,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
 
 const localMessages = {
-  nameLabel: { id: 'source.feed.add.name.label', defaultMessage: 'Name of Source' },
+  nameLabel: { id: 'source.feed.add.name.label', defaultMessage: 'Name of Feed' },
   urlLabel: { id: 'source.feed.add.url.label', defaultMessage: 'URL' },
   type: { id: 'source.feed.add.type', defaultMessage: 'Type' },
   typeSyndicated: { id: 'source.feed.add.type.syndicated', defaultMessage: 'Syndicated' },

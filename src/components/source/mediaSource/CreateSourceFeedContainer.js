@@ -1,24 +1,30 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
+import Link from 'react-router/lib/Link';
 import { push } from 'react-router-redux';
-import Title from 'react-title-component';
 import { SubmissionError } from 'redux-form';
+import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import { createFeed, fetchSourceFeed } from '../../../actions/sourceActions';
-import { updateFeedback } from '../../../actions/appActions';
+import { updateFeedback, addNotice } from '../../../actions/appActions';
+import { LEVEL_ERROR } from '../../common/Notice';
 import SourceFeedForm from './form/SourceFeedForm';
 
 const localMessages = {
-  sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: Feeds' },
-  add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
+  sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: ' },
+  createFeedsTitle: { id: 'source.details.feeds.title.create', defaultMessage: 'Add A Feed' },
   createButton: { id: 'source.deatils.feeds.update.button', defaultMessage: 'Create' },
+  feedback: { id: 'source.deatils.feeds.feedback', defaultMessage: 'Successfully created this feed.' },
+  duplicateKey: { id: 'source.deatils.feeds.feedback.error.duplicate', defaultMessage: 'Duplicate key error' },
+  notValidRss: { id: 'source.deatils.feeds.feedback.error.notValidRss', defaultMessage: 'Not Valid Rss error' },
+  didNotWork: { id: 'source.deatils.feeds.feedback.error.didNotWork', defaultMessage: 'Did not work' },
+
 };
 
 const CreateSourceFeedContainer = (props) => {
-  const { sourceId, handleSave } = props;
+  const { sourceId, handleSave, sourceName } = props;
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${parentTitle}`;
   const content = null;
   if (sourceId === undefined) {
     return (
@@ -29,9 +35,16 @@ const CreateSourceFeedContainer = (props) => {
   }
   return (
     <Grid className="details source-feed-details">
-      <Title render={titleHandler} />
+      <h2>
+        <MediaSourceIcon height={32} />
+        <Link to={`/sources/${sourceId}/feeds`} >
+          <FormattedMessage {...localMessages.sourceFeedsTitle} values={{ name: sourceName }} />
+        </Link>
+        <FormattedMessage {...localMessages.createFeedsTitle} />
+      </h2>
       <SourceFeedForm
         onSave={handleSave}
+        sourceName={sourceName}
         buttonLabel={formatMessage(localMessages.createButton)}
       />
     </Grid>
@@ -47,6 +60,7 @@ CreateSourceFeedContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   sourceId: React.PropTypes.number.isRequired,
+  sourceName: React.PropTypes.string.isRequired,
   feed: React.PropTypes.object,
   feedId: React.PropTypes.number,
 };
@@ -56,6 +70,7 @@ const mapStateToProps = (state, ownProps) => ({
   feed: state.sources.sources.selected.feed.info.feed,
   feedId: state.sources.sources.selected.feed.info.feedId,
   sourceId: parseInt(ownProps.params.sourceId, 10),
+  sourceName: state.sources.sources.selected.sourceDetails.name,
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
@@ -71,12 +86,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
-          dispatch(fetchSourceFeed(ownProps.params.mediaId, ownProps.params.feedId))
+          dispatch(fetchSourceFeed(result.feed.media_id, result.feed.feeds_id))
             .then(() =>
-              dispatch(push(`/sources/${ownProps.params.sourceId}/feed/${ownProps.params.feedId}`))
+              dispatch(push(`/sources/${result.feed.media_id}/feeds/${result.feed.feeds_id}/edit`))
             );
-        } else if (result.message && result.message.indexOf('duplicate key') > 0) {
-          throw new SubmissionError({ username: 'Duplicate Key error', _error: 'Login failed!' });
+        } else if (result.message && result.message.includes('duplicate key')) {
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateKey) }));
+          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.duplicateKey) });
+        } else if (result.message && result.message.includes('invalid')) {
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notValidRss) }));
+          throw new SubmissionError({ username: 'Invalid error', _error: ownProps.intl.formatMessage(localMessages.notValidRss) });
+        } else {
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.didNotWork) }));
+          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.didNotWork) });
         }
       });
   },
