@@ -1,38 +1,19 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
-import Link from 'react-router/lib/Link';
-import DataCard from './DataCard';
-import { ExploreButton } from './IconButton';
+import { Row } from 'react-flexbox-grid/lib';
+import TopicContentPreviewList from './TopicContentPreviewList';
+import SourceContentPreviewList from './SourceContentPreviewList';
 
 const ContentPreview = (props) => {
-  const { items, icon, linkInfo, linkDisplay, disabled } = props;
+  const { items, icon, linkInfo, linkDisplay, classStyle, disabled } = props;
   let content = null;
   if (items && items.length > 0) {
-    content = (
-      items.map((c, idx) => {
-        const isDisabled = disabled ? disabled(c) : false;
-        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
-        const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
-        return (
-          <Col key={idx} lg={4} xs={12}>
-            <DataCard key={idx} className="browse-items" disabled={isDisabled}>
-              {icon}
-              <div className="content">
-                <div>
-                  <h2>{title}</h2>
-                  <p>{c.description}</p>
-                </div>
-              </div>
-              <div className="actions">
-                {exploreButton}
-              </div>
-            </DataCard>
-          </Col>
-        );
-      })
-    );
+    if (classStyle === 'topic-list') {
+      content = <TopicContentPreviewList items={items} linkInfo={linkInfo} linkDisplay={linkDisplay} />;
+    } else {
+      content = <SourceContentPreviewList items={items} linkInfo={linkInfo} linkDisplay={linkDisplay} icon={icon} disabled={disabled} />;
+    }
   }
   return (
     <div className="browse-list">
@@ -55,6 +36,7 @@ ContentPreview.propTypes = {
   disabled: React.PropTypes.func,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
+  contentType: React.PropTypes.string,
 };
 
 

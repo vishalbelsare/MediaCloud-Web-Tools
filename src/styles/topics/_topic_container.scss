@@ -21,4 +21,12 @@
     font-style: italic;
   }
 
+  .app-icon-filled-star {
+    svg {
+      margin-left: 5px;
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+
 }

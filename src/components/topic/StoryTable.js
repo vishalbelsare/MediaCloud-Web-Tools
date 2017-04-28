@@ -112,7 +112,7 @@ class StoryTable extends React.Component {
               if (story.foci.length > 0) {
                 listOfFoci = (
                   story.foci.map((foci, i) => (
-                    <span key={i}>
+                    <span key={foci.foci_id}>
                       {!!i && ', '}
                       <Link
                         to={`/topics/${topicId}/summary?focusId=${foci.foci_id}`}

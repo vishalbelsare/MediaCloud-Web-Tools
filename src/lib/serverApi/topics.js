@@ -1,7 +1,7 @@
 import { createApiPromise, createPostingApiPromise, acceptParams } from '../apiUtil';
 
 export function topicsList(linkId) {
-  return createApiPromise('/api/topics/list', linkId ? { linkId } : undefined);
+  return createApiPromise('/api/topics/listFilterCascade', linkId ? { linkId } : undefined);
 }
 
 export function topicSummary(topicId) {
@@ -198,8 +198,8 @@ export function fetchCustomMap(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/map-files/fetchCustomMap`, acceptedParams);
 }
 
-export function fetchFullTopicList() {
-  return createApiPromise('/api/topics/fetchFullTopicList');
+export function fetchTopicSearchResults(searchStr) {
+  return createApiPromise('/api/topics/search', { searchStr });
 }
 
 export function topicNytTaggedStoryCoverage(topicId, params) {
