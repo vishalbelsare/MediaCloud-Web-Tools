@@ -31,14 +31,12 @@ def topic_list():
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
 @api_error_handler
 def topic_filter_cascade_list():
-
-    #get public topics
     sorted_public_topics = sorted_public_topic_list()
 
     # for t in sorted_public_topics:
     #    t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
 
-    #check if user had favorites or personal
+    # check if user had favorites or personal
     all_topics = []
     favorited_topics = []
     if (is_user_logged_in()):
@@ -58,20 +56,19 @@ def topic_filter_cascade_list():
             if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
                 t['isFavorite'] = True
                 favorited_topics.append(t)
-    #return it all together
+    # return it all together
     return jsonify({'topics': { 'favorite': favorited_topics, 'personal': all_topics, 'public': sorted_public_topics}})
 
 
 def sorted_public_topic_list():
     user_mc = user_mediacloud_client()
-    public_topics = user_mc.topicList(public=True)['topics']
-    return sorted(public_topics, key=lambda t: t['name'].lower())
+    public_topics_list = user_mc.topicList(public=True)['topics']
+    return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
-    local_mc = None
     if access_public_topic(topics_id):
         local_mc = mc
     elif is_user_logged_in():
@@ -112,6 +109,7 @@ def topic_snapshots_list(topics_id):
     snapshot_status = mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
     return jsonify({'list': snapshots, 'jobStatus': snapshot_status})
 
+
 @app.route('/api/topics/<topics_id>/snapshots/generate', methods=['POST'])
 @flask_login.login_required
 @api_error_handler
@@ -120,6 +118,7 @@ def topic_snapshot_generate(topics_id):
     results = user_mc.topicGenerateSnapshot(topics_id)
     return jsonify(results)
 
+
 @app.route('/api/topics/<topics_id>/snapshots/<snapshots_id>/timespans/list', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -127,6 +126,7 @@ def topic_timespan_list(topics_id, snapshots_id):
     foci_id = request.args.get('focusId')
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id, foci_id)
     return jsonify({'list':timespans})
+
 
 @app.route('/api/topics/<topics_id>/favorite', methods=['PUT'])
 @flask_login.login_required
@@ -141,6 +141,7 @@ def topic_set_favorited(topics_id):
         db.remove_item_from_users_list(username, 'favoriteTopics', int(topics_id))
     return jsonify({'isFavorite':favorite})
 
+
 @app.route('/api/topics/favorite', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -153,12 +154,13 @@ def favorite_topics():
         t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
     return jsonify({'topics': favorited_topics})
 
+
 @app.route('/api/topics/public', methods=['GET'])
 @api_error_handler
 @cache
 def public_topics():
-    public_topics = sorted_public_topic_list()
-    return jsonify({"topics": public_topics})
+    public_topics_list = sorted_public_topic_list()
+    return jsonify({"topics": public_topics_list})
 
 
 def get_topic_info_per_snapshot_timespan(topic_id):
@@ -177,7 +179,6 @@ def get_topic_info_per_snapshot_timespan(topic_id):
                    overall_timespan = ts
 
     return {'snapshot': most_recent_running_snapshot, 'timespan': overall_timespan}
-
 
 
 @app.route('/api/topics/create', methods=['PUT'])
@@ -217,6 +218,7 @@ def topic_create():
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
+# require any fields?
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):
@@ -255,6 +257,7 @@ def topic_spider(topics_id):
     user_mc = user_mediacloud_client()
     spider_job = user_mc.topicSpider(topics_id) # kick off a spider, which will also generate a snapshot
     return jsonify(spider_job)
+
 
 @app.route('/api/topics/search', methods=['GET'])
 @flask_login.login_required

@@ -17,26 +17,21 @@ class AppNotice extends React.Component {
   render() {
     const { message, htmlMessage, level, details } = this.props.info;
     const { formatMessage } = this.props.intl;
-    let messageContent;
+    let stringMessage = message;
+    if (typeof message === 'object') {
+      stringMessage = formatMessage(message);
+    }
+    const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
+    let messageContent = stringMessage;
     let detailsContent = details;
-    if (message) {
-      let stringMessage;
-      if (typeof message === 'object') {
-        stringMessage = formatMessage(message);
-      } else {
-        stringMessage = message;
-      }
-      const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
-      messageContent = stringMessage;
-      if ((details === undefined) || (details === null)) {
-        if (isLowLevelError) {
-          if (stringMessage.includes('Invalid API key or authentication cookie')) {
-            messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
-          } else {
-            messageContent = <FormattedMessage {...localMessages.internalError} />;
-          }
-          detailsContent = stringMessage;
+    if ((details === undefined) || (details === null)) {
+      if (isLowLevelError) {
+        if (stringMessage.includes('Invalid API key or authentication cookie')) {
+          messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+        } else {
+          messageContent = <FormattedMessage {...localMessages.internalError} />;
         }
+        detailsContent = stringMessage;
       }
     } else if (htmlMessage) {
       messageContent = (<span dangerouslySetInnerHTML={{ __html: htmlMessage }} />);

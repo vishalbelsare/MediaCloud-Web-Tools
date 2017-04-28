@@ -1,4 +1,3 @@
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 # some useful tag sets
 COLLECTIONS_TAG_SET_ID = 5
 GV_TAG_SET_ID = 556
@@ -11,7 +10,7 @@ POPULAR_COLLECTION_LIST = [9272347, 9201395, 8877968, 9315147, 9353688, 9173065,
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935
 TAG_SETS_ID_PUBLICATION_STATE = 1962
 
-VALID_METADATA_IDS = [{'pub_country': TAG_SETS_ID_PUBLICATION_COUNTRY}]
+VALID_METADATA_IDS = [{'pub_country': TAG_SETS_ID_PUBLICATION_COUNTRY}, {'pub_state': TAG_SETS_ID_PUBLICATION_STATE}]
 
 def isMetaDataTagSet(metadataTagSetsId):
   for eachMetadataItem in VALID_METADATA_IDS:
