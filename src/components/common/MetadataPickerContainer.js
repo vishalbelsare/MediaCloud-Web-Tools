@@ -22,7 +22,11 @@ const MetadataPickerContainer = (props) => {
   switch (mode) {
     case MODE_SELECT:
       content = (
-        <Field name={name} component={renderSelectField} floatingLabelText={floatingLabelText || label}>
+        <Field
+          fullWidth name={name}
+          component={renderSelectField}
+          floatingLabelText={floatingLabelText || label}
+        >
           <MenuItem value={null} primaryText={''} />
           {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
         </Field>
@@ -46,6 +50,7 @@ const MetadataPickerContainer = (props) => {
           hintText={formatMessage(localMessages.hintText, { label })}
           floatingLabelText={floatingLabelText || label}
           openOnFocus
+          fullWidth
           dataSource={tags}
           dataSourceConfig={{ text: 'label', value: 'tags_id' }}
           maxSearchResults={10}
@@ -87,7 +92,6 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     switch (ownProps.id) {
-
       case TAG_SET_PUBLICATION_COUNTRY:
         dispatch(fetchMetadataValuesForCountry(ownProps.id));
         break;
