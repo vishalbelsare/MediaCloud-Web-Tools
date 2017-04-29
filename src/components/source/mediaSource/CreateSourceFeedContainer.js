@@ -43,6 +43,10 @@ const CreateSourceFeedContainer = (props) => {
         <FormattedMessage {...localMessages.createFeedsTitle} />
       </h2>
       <SourceFeedForm
+        initialValues={{
+          feed_type: 'syndicated',
+          feed_status: 'active',
+        }}
         onSave={handleSave}
         sourceName={sourceName}
         buttonLabel={formatMessage(localMessages.createButton)}
@@ -88,17 +92,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // need to fetch it again because something may have changed
           dispatch(fetchSourceFeed(result.feed.media_id, result.feed.feeds_id))
             .then(() =>
-              dispatch(push(`/sources/${result.feed.media_id}/feeds/${result.feed.feeds_id}/edit`))
+              dispatch(push(`/sources/${result.feed.media_id}/feeds`))
             );
         } else if (result.message && result.message.includes('duplicate key')) {
           dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateKey) }));
-          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.duplicateKey) });
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.duplicateKey) });
         } else if (result.message && result.message.includes('invalid')) {
           dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notValidRss) }));
-          throw new SubmissionError({ username: 'Invalid error', _error: ownProps.intl.formatMessage(localMessages.notValidRss) });
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.notValidRss) });
         } else {
-          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.didNotWork) }));
-          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.didNotWork) });
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.didNotWork), details: result.message }));
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.didNotWork) });
         }
       });
   },
