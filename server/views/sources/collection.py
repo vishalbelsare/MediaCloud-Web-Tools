@@ -8,8 +8,9 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE,  \
-    isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, VALID_METADATA_IDS
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, is_metadata_tag_set
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
@@ -19,14 +20,16 @@ from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.metadata import _cached_tags_in_tag_set
+from server.views.sources.metadata import cached_tags_in_tag_set
 from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
 
 logger = logging.getLogger(__name__)
 
+
 def allowed_file(filename):
     filename, file_extension = os.path.splitext(filename)
     return file_extension.lower() in ['.csv']
+
 
 @app.route('/api/collections/upload-sources', methods=['POST'])
 def upload_file():
@@ -172,16 +175,16 @@ def update_source_list_metadata(source_list):
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
         mkey = m.keys()[0]
-        tag_codes = _cached_tags_in_tag_set(mid)
+        tag_codes = cached_tags_in_tag_set(mid)
         for source in source_list:
             if mkey in source:
                 metadata_tag_name = source[mkey] 
                 if metadata_tag_name not in ['', None]:
                     # hack until we have a better match check
                     matching = []
-                    if metadata_tag_type == 'pub_country': # template pub_###
+                    if metadata_tag_type == METADATA_PUB_COUNTRY_NAME:  # template pub_###
                         matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_id]
-                    elif metadata_tag_type == 'pub_state': # template ###_##
+                    elif metadata_tag_type == METADATA_PUB_STATE_NAME:  # template ###_##
                         matching = [t for t in tag_codes if t['tag'] == metadata_tag_id]
 
                     if matching and matching not in ['', None]:
@@ -206,7 +209,7 @@ def api_metadata_download(collection_id):
     metadata_items = []
     for each_dict in all_media:
         for eachItem in each_dict['media_source_tags']:
-            if isMetaDataTagSet(eachItem['tag_sets_id']):
+            if is_metadata_tag_set(eachItem['tag_sets_id']):
                 found = False
                 for dictItem in metadata_items:
                     if dictItem['metadataId'] == eachItem['tag_sets_id']:
@@ -372,7 +375,7 @@ def api_collection_sources_csv(collection_id):
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
     for src in all_media:
         for tag in src['media_source_tags']:
-            if isMetaDataTagSet(tag['tag_sets_id']):
+            if is_metadata_tag_set(tag['tag_sets_id']):
                 if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
                     src['pub_country'] = tag['tag'][-3:]
                 elif tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE:

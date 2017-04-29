@@ -6,7 +6,7 @@ from server import app
 from server.util.request import  api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
+from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
 from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)

@@ -9,6 +9,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/metadata/<tag_sets_id>/values', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -19,11 +20,12 @@ def api_metadata_values(tag_sets_id):
     '''
     user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
-    tag_set['tags'] = _cached_tags_in_tag_set(tag_sets_id)
+    tag_set['tags'] = cached_tags_in_tag_set(tag_sets_id)
     return jsonify(tag_set)
 
+
 @cache
-def _cached_tags_in_tag_set(tag_sets_id):
+def cached_tags_in_tag_set(tag_sets_id):
     '''
     This is cached at the app level, so it doesn't need a user key.  This is because
     the list of tags here shouldn't change (ie. metadata values don't change within a category)
