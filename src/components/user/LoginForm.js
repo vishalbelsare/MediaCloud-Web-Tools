@@ -3,15 +3,16 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { loginWithPassword } from '../../actions/userActions';
-// import { addNotice } from '../../actions/appActions';
+import { getAppName } from '../../config';
 import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { emptyString, invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
+
+const MEDIACLOUD_REGISTER_URL = 'https://core.mediacloud.org/login/register';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
@@ -59,20 +60,12 @@ const LoginFormComponent = (props) => {
       <Row>
         <Col lg={12}>
           <br />
-          <Link to="/user/signup">
+          <a href={`${MEDIACLOUD_REGISTER_URL}?from=${getAppName()}`}>
             <AppButton
               flat
               label={formatMessage(localMessages.signUpNow)}
             />
-          </Link>
-        </Col>
-        <Col lg={12}>
-          <Link to="/user/recover-password">
-            <AppButton
-              flat
-              label={formatMessage(localMessages.forgotPassword)}
-            />
-          </Link>
+          </a>
         </Col>
       </Row>
     </form>
