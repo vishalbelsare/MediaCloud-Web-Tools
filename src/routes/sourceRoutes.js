@@ -5,6 +5,7 @@ import IndexRoute from 'react-router/lib/IndexRoute';
 import Redirect from 'react-router/lib/Redirect';
 import SourceDetailsContainer from '../components/source/mediaSource/SourceDetailsContainer';
 import CollectionDetailsContainer from '../components/source/collection/CollectionDetailsContainer';
+import CollectionContentHistory from '../components/source/collection/CollectionContentHistory';
 import CreateCollectionContainer from '../components/source/collection/CreateCollectionContainer';
 import AdvancedSearchContainer from '../components/source/search/AdvancedSearchContainer';
 import SelectCollectionContainer from '../components/source/collection/SelectCollectionContainer';
@@ -69,6 +70,7 @@ const sourceRoutes = (
       <Route path=":collectionId" component={SelectCollectionContainer} >
         <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
+        <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
       </Route>
     </Route>
 

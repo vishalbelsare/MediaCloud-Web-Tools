@@ -10,7 +10,7 @@ const localMessages = {
   add: { id: 'source.add.collections.add', defaultMessage: 'You can search for Sources and Collections to add to this topic:' },
 };
 
-const renderCollectionSelector = ({ intro, allowRemoval, fields, meta: { error } }) => (
+const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollections, fields, meta: { error } }) => (
   <div>
     <Row>
       <Col sm={2}>
@@ -19,7 +19,7 @@ const renderCollectionSelector = ({ intro, allowRemoval, fields, meta: { error }
       <Col lg={8}>
         {fields.map((name, index) => (
           <Field
-            key={`c${index}`}
+            key={name}
             name={name}
             component={(info) => {
               const handleDelete = (allowRemoval || info.meta.dirty) ? () => fields.remove(index) : undefined;
@@ -45,6 +45,8 @@ const renderCollectionSelector = ({ intro, allowRemoval, fields, meta: { error }
           searchStaticCollections
           onCollectionSelected={item => fields.push(item)}
           onMediaSourceSelected={item => fields.push(item)}
+          maxSources={maxSources}
+          maxCollections={maxCollections}
         />
       </Col>
     </Row>
@@ -55,10 +57,12 @@ renderCollectionSelector.propTypes = {
   meta: React.PropTypes.object,
   intro: React.PropTypes.string.isRequired,
   allowRemoval: React.PropTypes.bool,
+  maxSources: React.PropTypes.number,
+  maxCollections: React.PropTypes.number,
 };
 
 const SourceCollectionsForm = (props) => {
-  const { title, intro, initialValues, allowRemoval } = props;
+  const { title, intro, initialValues, allowRemoval, maxSources, maxCollections } = props;
   return (
     <div className="form-section source-collection-form">
       <Row>
@@ -72,18 +76,22 @@ const SourceCollectionsForm = (props) => {
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}
         initialValues={initialValues}
+        maxSources={maxSources}
+        maxCollections={maxCollections}
       />
     </div>
   );
 };
 
 SourceCollectionsForm.propTypes = {
-  // from compositional chain
+  // from parent
   intl: React.PropTypes.object.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
   allowRemoval: React.PropTypes.bool,
+  maxSources: React.PropTypes.number,
+  maxCollections: React.PropTypes.number,
 };
 
 export default

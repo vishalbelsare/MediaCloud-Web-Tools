@@ -21,7 +21,7 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
       <Col sm={6} xs={12}>
         {fields.map((collection, index) =>
           <Field
-            key={`c${index}`}
+            key={collection.tags_id}
             name={collection}
             component={info => (
               <SourceOrCollectionChip object={info.input.value} onDelete={() => fields.remove(index)} />

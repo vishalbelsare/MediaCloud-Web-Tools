@@ -13,15 +13,13 @@ export const NO_SPINNER = 0;
  * (via mergeProps).
  * Pass in a loadingSpinnerSize of 0 to not display it at all.
  */
-export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
+export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
   const spinnerSize = (loadingSpinnerSize !== undefined) ? loadingSpinnerSize : null;
   class ComposedAsyncContainer extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        hasShowResults: false,
-      };
-    }
+    state = {
+      asyncFetchResult: undefined,
+      hasShowResults: false,
+    };
     componentDidMount() {
       const { asyncFetch } = this.props;
       const asyncFetchResult = asyncFetch();
@@ -34,6 +32,10 @@ export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
     }
     render() {
       const { fetchStatus, asyncFetch } = this.props;
+      if (asyncFetch === undefined) {
+        const error = { message: 'No asyncFetch defined for your container!', child: ChildComponent };
+        throw error;
+      }
       let content = null;
       if (this.state.asyncFetchResult === 'hide') {
         content = null;
@@ -43,7 +45,7 @@ export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
             if (this.state.hasShowResults) {
               content = (
                 <div className="async-loading">
-                  <ComposedContainer {...this.props} />
+                  <ChildComponent {...this.props} />
                   <div className="loading-overlay">
                     <div className="overlay-content">
                       <LoadingSpinner size={spinnerSize} />
@@ -56,12 +58,12 @@ export const asyncContainerize = (ComposedContainer, loadingSpinnerSize) => {
             }
             break;
           case fetchConstants.FETCH_SUCCEEDED:
-            content = <ComposedContainer {...this.props} />;
+            content = <ChildComponent {...this.props} />;
             break;
           case fetchConstants.FETCH_FAILED:
             content = (
               <div className="async-loading">
-                <ComposedContainer {...this.props} />
+                <ChildComponent {...this.props} />
                 <div className="loading-overlay">
                   <div className="overlay-content">
                     <ErrorTryAgain onTryAgain={asyncFetch} />;

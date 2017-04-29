@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 COOKIE_USER_KEY = "mediameter_user_key"
 
-ROLE_ADMIN = 'admin'                # Do everything, including editing users
-ROLE_ADMIN = 'admin-readonly'       # Read access to admin interface
-ROLE_MEDIA_EDIT = 'media-edit'      # Add / edit media; includes feeds
-ROLE_STORY_EDIT = 'story-edit'      # Add / edit stories
-ROLE_TM = 'tm'                      # Topic mapper; includes media and story editing
-ROLE_STORIES_API = 'stories-api'    # Access to the stories api
-ROLE_SEARCH = 'search'              # Access to the /search pages
-ROLE_TM_READ_ONLY = 'tm-readonly'   # Topic mapper; excludes media and story editing
+ROLE_ADMIN = 'admin'                        # Do everything, including editing users
+ROLE_ADMIN_READ_ONLY = 'admin-readonly'     # Read access to admin interface
+ROLE_MEDIA_EDIT = 'media-edit'              # Add / edit media; includes feeds
+ROLE_STORY_EDIT = 'story-edit'              # Add / edit stories
+ROLE_TM = 'tm'                              # Topic mapper; includes media and story editing
+ROLE_STORIES_API = 'stories-api'            # Access to the stories api
+ROLE_SEARCH = 'search'                      # Access to the /search pages
+ROLE_TM_READ_ONLY = 'tm-readonly'           # Topic mapper; excludes media and story editing
 
 
 # User class
@@ -102,7 +102,8 @@ def login_user(user):
 
 def user_has_auth_role(role):
     user = load_user_from_request(request)
-    return (ROLE_ADMIN in user.profile['auth_roles']) or (role in user.profile['auth_roles'])
+    roles = user.profile['auth_roles']
+    return (ROLE_ADMIN in roles) or (role in roles)
 
 
 def create_and_cache_user(username, key):

@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchMetadataValues } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../lib/tagUtil';
 
 const MODE_SELECT = 'MODE_SELECT';
 const MODE_AUTOCOMPLETE = 'MODE_AUTOCOMPLETE';
@@ -21,7 +22,11 @@ const MetadataPickerContainer = (props) => {
   switch (mode) {
     case MODE_SELECT:
       content = (
-        <Field name={name} component={renderSelectField} floatingLabelText={floatingLabelText || label}>
+        <Field
+          fullWidth name={name}
+          component={renderSelectField}
+          floatingLabelText={floatingLabelText || label}
+        >
           <MenuItem value={null} primaryText={''} />
           {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
         </Field>
@@ -38,12 +43,14 @@ const MetadataPickerContainer = (props) => {
       }
       content = (
         <Field
+          className="metadata-picker"
           searchText={initialText}
           name={name}
           component={renderAutoComplete}
           hintText={formatMessage(localMessages.hintText, { label })}
           floatingLabelText={floatingLabelText || label}
           openOnFocus
+          fullWidth
           dataSource={tags}
           dataSourceConfig={{ text: 'label', value: 'tags_id' }}
           maxSearchResults={10}
@@ -84,7 +91,16 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchMetadataValues(ownProps.id));
+    switch (ownProps.id) {
+      case TAG_SET_PUBLICATION_COUNTRY:
+        dispatch(fetchMetadataValuesForCountry(ownProps.id));
+        break;
+      case TAG_SET_PUBLICATION_STATE:
+        dispatch(fetchMetadataValuesForState(ownProps.id));
+        break;
+      default:
+        break;
+    }
   },
 });
 

@@ -4,16 +4,28 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchFullTopicList } from '../../../actions/topicActions';
+import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import LoadingSpinner from '../../common/LoadingSpinner';
+import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 
-const MAX_SUGGESTION_CHARS = 40;
+const MAX_SUGGESTION_CHARS = 60;
+
+const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a search
 
 const localMessages = {
   searchHint: { id: 'topics.search.hint', defaultMessage: 'Search by topic name' },
 };
 
 class TopicSearchContainer extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      lastSearchString: '',
+      lastKeypress: 0,
+      searchTimeout: null,
+    };
+  }
 
   handleClick = (item) => {
     const { onTopicSelected } = this.props;
@@ -22,6 +34,22 @@ class TopicSearchContainer extends React.Component {
         onTopicSelected(item);
       }
     }
+  }
+
+  fireSearchIfNeeded = () => {
+    const { search } = this.props;
+    const shouldSearch = this.state.lastSearchString.length > 3;
+    if (shouldSearch) {
+      search(this.state.lastSearchString);
+    }
+  }
+
+  handleUpdateInput = (searchString) => {
+    clearTimeout(this.state.searchTimeout); // cancel any pending searches
+    this.setState({
+      lastSearchString: searchString,
+      searchTimeout: setTimeout(this.fireSearchIfNeeded, DELAY_BEFORE_SEARCH_MS),  // schedule a search for when they stop typing
+    });
   }
 
   handleMenuItemKeyDown = (item, event) => {
@@ -51,25 +79,27 @@ class TopicSearchContainer extends React.Component {
   }
 
   render() {
-    const { topicsCached } = this.props;
+    const { fetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
     const resultsAsComponents = this.resetIfRequested();
-    if (topicsCached) {
-      return (
-        <div className="topic-search">
-          <AutoComplete
-            hintText={formatMessage(localMessages.searchHint)}
-            fullWidth
-            openOnFocus={false}
-            onClick={this.resetIfRequested}
-            dataSource={resultsAsComponents}
-            maxSearchResults={10}
-            filter={AutoComplete.fuzzyFilter}
-          />
-        </div>
-      );
-    }
-    return (<div className="topic-search" />);
+    const isFetching = fetchStatus === FETCH_ONGOING;
+    const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
+    return (
+      <div className="async-search topic-search">
+        <div className="fetching">{fetchingStatus}</div>
+        <AutoComplete
+          hintText={formatMessage(localMessages.searchHint)}
+          fullWidth
+          openOnFocus={false}
+          onClick={this.resetIfRequested}
+          dataSource={resultsAsComponents}
+          onUpdateInput={this.handleUpdateInput}
+          onNewRequest={this.handleNewRequest}
+          maxSearchResults={10}
+          filter={() => true}
+        />
+      </div>
+    );
   }
 }
 
@@ -79,32 +109,28 @@ TopicSearchContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   topicResults: React.PropTypes.array.isRequired,
-  topicsCached: React.PropTypes.bool.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
   onTopicSelected: React.PropTypes.func.isRequired,
+  search: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.full.fetchStatus,
-  topicResults: state.topics.full.list.topics,
-  topicsCached: state.topics.full.list.cached,
+  fetchStatus: state.topics.search.fetchStatus,
+  topicResults: state.topics.search.topics,
 });
 
 const mapDispatchToProps = dispatch => ({
-  asyncFetch: () => {
-    dispatch(fetchFullTopicList());
-  },
   onTopicSelected: (item) => {
     dispatch(push(`/topics/${item.id}/summary`));
+  },
+  search: (searchString) => {
+    dispatch(fetchTopicSearchResults(searchString));
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        TopicSearchContainer
-      )
+      TopicSearchContainer
     )
   );

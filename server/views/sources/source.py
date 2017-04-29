@@ -11,7 +11,7 @@ from server import app, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
-from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY
+from server.views.sources import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
@@ -129,6 +129,17 @@ def _safely_get_health_start_date(health):
         start_date = health['start_date'][:10]
     return start_date
 
+def _safely_get_health_end_date(health):
+    """
+    The health might be empty, so call this to default to today
+    """
+    if health is None:  # maybe no health exists yet, go with one year ago
+        now = datetime.now()
+        start_date = "{0}-{1}-{2}".format(now.year, now.month, now.day)
+    else:
+        start_date = health['end_date'][:10]
+    return start_date
+
 
 @app.route('/api/sources/<media_id>/details')
 @flask_login.login_required
@@ -166,11 +177,13 @@ def source_sentence_count_csv(media_id):
 @api_error_handler
 def api_media_source_sentence_count(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
+    counts = cached_recent_sentence_counts(user_mediacloud_key(),
+                                           ['media_id:'+str(media_id)],
+                                           _safely_get_health_start_date(health),
+                                           _safely_get_health_end_date(health))
     info = {
         'health': health,
-        'sentenceCounts': cached_recent_sentence_counts(user_mediacloud_key(),
-            ['media_id:'+str(media_id)],
-            _safely_get_health_start_date(health))
+        'sentenceCounts': counts
     }
     return jsonify({'results':info})
 
@@ -229,7 +242,8 @@ def source_create():
     # parse out any tag to add (ie. collections and metadata)
     tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     valid_metadata = [
-        {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY}
+        {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
+        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE}
     ]
     source_to_create = {
         'name': name,
@@ -295,17 +309,21 @@ def source_update(media_id):
         user_mc.tagMedia(tags=tags)
     # now update the metadata too
     valid_metadata = [
-        {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY}
+        {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
+        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE}
     ]
     for metadata_item in valid_metadata:
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
-        existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
-            if t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY]
-        if metadata_tag_id is None:
+        existing_tag_ids = [t for t in source['media_source_tags']
+            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE)]
+        if metadata_tag_id in [None,'']:
             # we want to remove it if there was one there
             if len(existing_tag_ids) > 0:
-                tag = MediaTag(media_id, tags_id=existing_tag_ids[0], action=TAG_ACTION_REMOVE)
-                user_mc.tagMedia([tag])
+                for remove_if_empty in existing_tag_ids:
+                    if metadata_item['tag_sets_id'] == remove_if_empty['tag_sets_id']:
+                        tag = MediaTag(media_id, tags_id=remove_if_empty['tags_id'], action=TAG_ACTION_REMOVE)
+                        user_mc.tagMedia([tag])
+
         elif metadata_tag_id not in existing_tag_ids:
             # need to add it and clear out the other
             tag = MediaTag(media_id, tags_id=metadata_tag_id, action=TAG_ACTION_ADD)

@@ -74,12 +74,12 @@ export function collectionGeography(id) {
 }
 
 export function sourceWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/sources/${id}/words`, acceptedParams);
 }
 
 export function collectionWordCount(id, params) {
-  const acceptedParams = acceptParams(params, ['q', 'timePeriod']);
+  const acceptedParams = acceptParams(params, ['q']);
   return createApiPromise(`api/collections/${id}/words`, acceptedParams);
 }
 
@@ -87,8 +87,13 @@ export function similarCollections(id) {
   return createApiPromise(`api/collections/${id}/similar-collections`);
 }
 
-export function collectionSourceStoryCounts(id) {
+export function collectionSourceSentenceCounts(id) {
   return createApiPromise(`api/collections/${id}/sources/sentences/count`);
+}
+
+export function collectionSourceSentenceHistoricalCounts(id, params) {
+  const acceptedParams = acceptParams(params, ['start', 'end']);
+  return createApiPromise(`/api/collections/${id}/sources/sentences/historical-counts`, acceptedParams);
 }
 
 export function createCollection(params) {
@@ -106,17 +111,21 @@ export function addSourceToCollection(params) {
   return acceptedParams;
 }
 
-export function metadataValues(id) {
+export function metadataValuesForCountry(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+
+export function metadataValuesForState(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
 
 export function createSource(params) {
-  const acceptedParams = acceptParams(params, ['name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry', 'collections[]']);
+  const acceptedParams = acceptParams(params, ['name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry', 'publicationState', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
 }
 
 export function updateSource(params) {
-  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry']);
+  const acceptedParams = acceptParams(params, ['id', 'name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry', 'publicationState']);
   acceptedParams['collections[]'] = params.collections.map(c => c.tags_id);
   return createPostingApiPromise(`/api/sources/${acceptedParams.id}/update`, acceptedParams);
 }

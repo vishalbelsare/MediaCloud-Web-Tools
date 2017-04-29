@@ -3,23 +3,22 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { loginWithPassword } from '../../actions/userActions';
 // import { addNotice } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
-import { getAppName } from '../../config';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
-import { emptyString } from '../../lib/formValidators';
+import { emptyString, invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
-
-const MEDIACLOUD_REGISTER_URL = 'https://core.mediacloud.org/login/register';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
   missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
-  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
+  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now!' },
+  forgotPassword: { id: 'user.forgotPassword', defaultMessage: 'Forgot Your Password?' },
 };
 
 const LoginFormComponent = (props) => {
@@ -60,12 +59,20 @@ const LoginFormComponent = (props) => {
       <Row>
         <Col lg={12}>
           <br />
-          <a href={`${MEDIACLOUD_REGISTER_URL}?from=${getAppName()}`}>
+          <Link to="/user/signup">
             <AppButton
               flat
               label={formatMessage(localMessages.signUpNow)}
             />
-          </a>
+          </Link>
+        </Col>
+        <Col lg={12}>
+          <Link to="/user/recover-password">
+            <AppButton
+              flat
+              label={formatMessage(localMessages.forgotPassword)}
+            />
+          </Link>
         </Col>
       </Row>
     </form>
@@ -114,7 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 // in-browser validation callback
 function validate(values) {
   const errors = {};
-  if (emptyString(values.email)) {
+  if (invalidEmail(values.email)) {
     errors.email = localMessages.missingEmail;
   }
   if (emptyString(values.password)) {

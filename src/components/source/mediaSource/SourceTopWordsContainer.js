@@ -34,7 +34,7 @@ class SourceTopWordsContainer extends React.Component {
       <PeriodicEditableWordCloudDataCard
         words={words}
         handleTimePeriodClick={this.fetchWordsByTimePeriod}
-        selectedTime={timePeriod}
+        selectedTimePeriod={timePeriod}
         downloadUrl={downloadUrl}
         targetURL={`/sources/${source.media_id}`}
         onViewModeClick={this.handleWordClick}
@@ -77,6 +77,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
+      // need to calculateTimePeriods here in order to default to week correctly
       dispatchProps.fetchData(stateProps.timePeriod, calculateTimePeriods(stateProps.timePeriod));
     },
   });

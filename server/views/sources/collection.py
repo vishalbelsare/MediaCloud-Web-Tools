@@ -1,14 +1,15 @@
 import logging
 from flask import jsonify, request, render_template
 import flask_login
+import datetime
 from operator import itemgetter
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY,  \
-    isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
+from server.views.sources import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE,  \
+    isMetaDataTagSet, POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, VALID_METADATA_IDS
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
@@ -22,7 +23,6 @@ from server.views.sources.metadata import _cached_tags_in_tag_set
 from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
 
 logger = logging.getLogger(__name__)
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'public_notes', 'is_monitored', 'editor_notes']
 
 def allowed_file(filename):
     filename, file_extension = os.path.splitext(filename)
@@ -40,7 +40,7 @@ def upload_file():
         if uploaded_file.filename == '':
             return json_error_response('No selected file')
         if uploaded_file and allowed_file(uploaded_file.filename):
-            props = COLLECTIONS_TEMPLATE_PROPS_EDIT
+            props = csv.COLLECTIONS_TEMPLATE_PROPS_EDIT
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(uploaded_file.filename))
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             uploaded_file.save(filepath)
@@ -107,7 +107,7 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     results = []
     for src in source_list_from_csv:
         # remove pub_country, will modify below
-        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country'}
+        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
             src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
@@ -168,19 +168,24 @@ def _email_batch_source_update_results(audit_feedback):
 # this only adds/replaces metadata with values (does not remove)
 def update_source_list_metadata(source_list):
     user_mc = user_mediacloud_client()
-    tagISOs = _cached_tags_in_tag_set(TAG_SETS_ID_PUBLICATION_COUNTRY)
-    for source in source_list:
-        if 'pub_country' in source:
-            metadata_tag_id = source['pub_country'] 
-            if metadata_tag_id not in ['', None]:
-                matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id]
-                if matching and matching not in ['', None]:
-                    metadata_tag_id = matching[0]['tags_id']
-                    logger.debug('found metadata to add %s', metadata_tag_id)
-                    user_mc.tagMedia(
-                        tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
-                        clear_others=True)  # make sure to clear any other values set in this metadata tag set
-                    logger.debug("success adding metadata")
+
+    for m in VALID_METADATA_IDS:
+        mid = m.values()[0]
+        mkey = m.keys()[0]
+        tagISOs = _cached_tags_in_tag_set(mid)
+        for source in source_list:
+            if mkey in source:
+                metadata_tag_id = source[mkey] 
+                if metadata_tag_id not in ['', None]:
+                    # hack until we have a better match check
+                    matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id or t['tag'] == "USA_" + metadata_tag_id]
+                    if matching and matching not in ['', None]:
+                        metadata_tag_id = matching[0]['tags_id']
+                        logger.debug('found metadata to add %s', metadata_tag_id)
+                        user_mc.tagMedia(
+                            tags=[MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD)],
+                            clear_others=True)  # make sure to clear any other values set in this metadata tag set
+                        logger.debug("success adding metadata")
     # with the results, combine ids with metadata tag list
 
     # return newly created or updated source list with media_ids filled in
@@ -363,7 +368,10 @@ def api_collection_sources_csv(collection_id):
     for src in all_media:
         for tag in src['media_source_tags']:
             if isMetaDataTagSet(tag['tag_sets_id']):
-                src['pub_country'] = tag['tag'][-3:]
+                if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
+                    src['pub_country'] = tag['tag'][-3:]
+                elif tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE:
+                    src['pub_state'] = tag['tag'][-2:]
 
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
@@ -372,6 +380,80 @@ def api_collection_sources_csv(collection_id):
     return csv.api_download_sources_csv( all_media, file_prefix)
 
 
+@app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
+@arguments_required('start', 'end')
+@flask_login.login_required
+@api_error_handler
+def collection_source_sentence_historical_counts(collection_id):
+    user_mc = user_mediacloud_client()
+    start_date_str = request.args['start']
+    end_date_str = request.args['end']
+    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    return jsonify({'counts': results})
+
+
+@app.route('/api/collections/<collection_id>/sources/stories/historical-counts.csv')
+@arguments_required('start', 'end')
+@flask_login.login_required
+@api_error_handler
+def collection_source_sentence_historical_counts_csv(collection_id):
+    # user_mc = user_mediacloud_client()
+    start_date_str = request.args['start']
+    end_date_str = request.args['end']
+    # collection = user_mc.tag(collection_id)
+    results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
+    date_cols = None
+    for source in results:
+        if date_cols is None:
+            date_cols = sorted(source['sentences_over_time'].keys())
+        for date, count in source['sentences_over_time'].iteritems():
+            source[date] = count
+        del source['sentences_over_time']
+    props = ['media_id', 'media_name', 'media_url', 'total_stories', 'total_sentences'] + date_cols
+    filename = "{} - source content count ({} to {})".format(collection_id, start_date_str, end_date_str)
+    return csv.stream_response(results, props, filename)
+
+
+def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
+    user_mc = user_mediacloud_client()
+    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
+    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
+    q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
+    media_list = collection_media_list(user_mediacloud_key(), collection_id)
+    results = []
+    for m in media_list:
+        media_query = "(media_id:{}) {}".format(m['media_id'], q)
+        total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
+        split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
+                                                                   start_date_str, end_date_str)
+        del split_sentence_count['split']['end']
+        del split_sentence_count['split']['start']
+        del split_sentence_count['split']['gap']
+        source_data = {
+            'media_id': m['media_id'],
+            'media_name': m['name'],
+            'media_url': m['url'],
+            'total_stories': total_story_count,
+            'total_sentences': split_sentence_count['count'],
+            'sentences_over_time': split_sentence_count['split'],
+        }
+        results.append(source_data)
+    return results
+
+@cache
+def _cached_source_story_count(user_mc_key, query):
+    user_mc = user_mediacloud_client()
+    return user_mc.storyCount(query)['count']
+
+@cache
+def _cached_source_sentence_count(user_mc_key, query):
+    user_mc = user_mediacloud_client()
+    return user_mc.sentenceCount(query)['count']
+
+@cache
+def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
+    user_mc = user_mediacloud_client()
+    return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
@@ -428,7 +510,7 @@ def collection_media_list(user_mc_key, tags_id):
         if len(media) > 0:
             max_media_id = media[len(media) - 1]['media_id']
         more_media = len(media) != 0
-    return sorted(all_media, key=lambda t: t['name'])
+    return sorted(all_media, key=lambda t: t['name'].lower())
 
 
 def collection_media_list_page(user_mc_key, tags_id, max_media_id):

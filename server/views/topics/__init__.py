@@ -26,14 +26,6 @@ def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
         return default_sort
     return desired_sort
 
-@app.route('/api/topics/fetchFullTopicList', methods=['GET'])
-@flask_login.login_required
-def topic_search():
-    results = {}
-    results['topics'] = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, CACHED_TOPICS)
-    results['cached'] = IS_CACHED
-    return jsonify({'list': results})
-
 def topic_is_public(topics_id):
     topic = mc.topic(topics_id)
     is_public = topic['is_public']

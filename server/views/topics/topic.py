@@ -4,21 +4,22 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, db, mc
-from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param, _media_tag_ids_from_collections_param
-from server.util.mail import send_email
-from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.cache import cache
+from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
+from server.util.request import form_fields_required, arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
-from server.views.topics import access_public_topic, CACHED_TOPICS
+from server.views.topics import access_public_topic
 
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/topics/list', methods=['GET'])
 @api_error_handler
 def topic_list():
-    if (not is_user_logged_in()):
-        return public_topic_list(CACHED_TOPICS)
+    if not is_user_logged_in():
+        return jsonify(sorted_public_topic_list())
     else:
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
@@ -26,35 +27,78 @@ def topic_list():
         _add_user_favorite_flag_to_topics(all_topics['topics'])
     return jsonify(all_topics)
 
-def public_topic_list(topic_list):
-    all_public_topics = []
-    for topic in topic_list:
-        if (topic['is_public'] == 1):
-            all_public_topics.append(topic)
-    sorted_public_topics = sorted(all_public_topics, key=lambda t: t['name'].lower())
-    return jsonify({"topics": sorted_public_topics})
+
+@app.route('/api/topics/listFilterCascade', methods=['GET'])
+@api_error_handler
+def topic_filter_cascade_list():
+    sorted_public_topics = sorted_public_topic_list()
+
+    # for t in sorted_public_topics:
+    #    t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+
+    # check if user had favorites or personal
+    all_topics = []
+    favorited_topics = []
+    if (is_user_logged_in()):
+        user_mc = user_mediacloud_client()
+        link_id = request.args.get('linkId')
+        all_topics = user_mc.topicList(link_id=link_id)
+
+        user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
+
+        for t in all_topics['topics']:
+            # t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
+            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
+                t['isFavorite'] = True
+                favorited_topics.append(t)
+
+        for t in sorted_public_topics:
+            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
+                t['isFavorite'] = True
+                favorited_topics.append(t)
+    # return it all together
+    return jsonify({'topics': { 'favorite': favorited_topics, 'personal': all_topics, 'public': sorted_public_topics}})
+
+
+def sorted_public_topic_list():
+    user_mc = user_mediacloud_client()
+    public_topics_list = user_mc.topicList(public=True)['topics']
+    return sorted(public_topics_list, key=lambda t: t['name'].lower())
+
 
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
-    local_mc = None
-    if (access_public_topic(topics_id)):
+    if access_public_topic(topics_id):
         local_mc = mc
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-
     topic = local_mc.topic(topics_id)
+    # add in snapshot and latest snapshot job status
+    topic['snapshots'] = {
+        'list': local_mc.topicSnapshotList(topics_id),
+        'jobStatus': mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
+    }
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
+    # test topic state error msgs
+    # topic['state'] = 'running'  # 'error'
+    # topic['message'] = 'it is all fed up'
+    # test topic snapshot job status
+    # topic['snapshots']['jobStatus'][0]['state'] = 'error' # 'queued', 'running', 'error', 'completed'
+    # topic['snapshots']['list'][0]['state'] = 'completed'
+    # topic['snapshots']['list'][0]['searchable'] = 0
     return jsonify(topic)
+
 
 def _add_user_favorite_flag_to_topics(topics):
     user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
     for t in topics:
         t['isFavorite'] = t['topics_id'] in user_favorited
     return topics
+
 
 @app.route('/api/topics/<topics_id>/snapshots/list', methods=['GET'])
 @flask_login.login_required
@@ -65,6 +109,7 @@ def topic_snapshots_list(topics_id):
     snapshot_status = mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
     return jsonify({'list': snapshots, 'jobStatus': snapshot_status})
 
+
 @app.route('/api/topics/<topics_id>/snapshots/generate', methods=['POST'])
 @flask_login.login_required
 @api_error_handler
@@ -73,6 +118,7 @@ def topic_snapshot_generate(topics_id):
     results = user_mc.topicGenerateSnapshot(topics_id)
     return jsonify(results)
 
+
 @app.route('/api/topics/<topics_id>/snapshots/<snapshots_id>/timespans/list', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -80,6 +126,7 @@ def topic_timespan_list(topics_id, snapshots_id):
     foci_id = request.args.get('focusId')
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id, foci_id)
     return jsonify({'list':timespans})
+
 
 @app.route('/api/topics/<topics_id>/favorite', methods=['PUT'])
 @flask_login.login_required
@@ -94,6 +141,7 @@ def topic_set_favorited(topics_id):
         db.remove_item_from_users_list(username, 'favoriteTopics', int(topics_id))
     return jsonify({'isFavorite':favorite})
 
+
 @app.route('/api/topics/favorite', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -103,7 +151,35 @@ def favorite_topics():
     favorited_topics = [user_mc.topic(topic_id) for topic_id in user_favorited]
     for t in favorited_topics:
         t['isFavorite'] = True
+        t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
     return jsonify({'topics': favorited_topics})
+
+
+@app.route('/api/topics/public', methods=['GET'])
+@api_error_handler
+@cache
+def public_topics():
+    public_topics_list = sorted_public_topic_list()
+    return jsonify({"topics": public_topics_list})
+
+
+def get_topic_info_per_snapshot_timespan(topic_id):
+    local_mc = user_mediacloud_client()
+    snapshots = {
+        'list': local_mc.topicSnapshotList(topic_id),
+    }
+    most_recent_running_snapshot = {}
+    overall_timespan = {}
+    for snp in snapshots['list']:
+        if snp['searchable'] == 1 and snp['state'] == "completed":
+            most_recent_running_snapshot = snp
+            timespans = cached_topic_timespan_list(user_mediacloud_key(), topic_id, most_recent_running_snapshot['snapshots_id'])
+            for ts in timespans:
+                if ts['period'] == "overall":
+                   overall_timespan = ts
+
+    return {'snapshot': most_recent_running_snapshot, 'timespan': overall_timespan}
+
 
 @app.route('/api/topics/create', methods=['PUT'])
 @flask_login.login_required
@@ -172,3 +248,24 @@ def topic_update(topics_id):
     result = user_mc.topicUpdate(topics_id,  media_ids=media_ids_to_add, media_tags_ids=tag_ids_to_add, **args)
 
     return topic_summary(result['topics'][0]['topics_id']) # give them back new data, so they can update the client
+
+
+@app.route("/api/topics/<topics_id>/spider", methods=['POST'])
+@flask_login.login_required
+@api_error_handler
+def topic_spider(topics_id):
+    user_mc = user_mediacloud_client()
+    spider_job = user_mc.topicSpider(topics_id) # kick off a spider, which will also generate a snapshot
+    return jsonify(spider_job)
+
+
+@app.route('/api/topics/search', methods=['GET'])
+@flask_login.login_required
+@arguments_required('searchStr')
+@api_error_handler
+def topic_search():
+    search_str = request.args['searchStr']
+    user_mc = user_mediacloud_client()
+    matching_topics = user_mc.topicList(name=search_str)
+    results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
+    return jsonify({'topics': results})

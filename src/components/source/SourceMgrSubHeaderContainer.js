@@ -37,12 +37,12 @@ const SourceMgrSubHeaderContainer = (props) => {
   } else if (collectionId !== null) {
     let details = '';
     details += `ID #${collectionId}`;
-    details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : '';
+    details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
     details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
       <div className="collection-sub-header">
         <AppSubHeader
-          title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label}`}
+          title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('collection', collectionId, isFav)}

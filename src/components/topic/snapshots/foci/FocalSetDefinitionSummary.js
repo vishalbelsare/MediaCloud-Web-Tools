@@ -72,8 +72,8 @@ class FocalSetDefinitionSummary extends React.Component {
           </Col>
         </Row>
         <Row>
-          {focalSetDefinition.focus_definitions.map((focusDef, index) => (
-            <Col lg={4} md={4} sm={6} xs={12} key={`fs-${index}`}>
+          {focalSetDefinition.focus_definitions.map(focusDef => (
+            <Col lg={4} md={4} sm={6} xs={12} key={`fs-${focusDef.focus_definitions_id}`}>
               <FocusDefinition
                 topicId={topicId}
                 key={focusDef.focus_definitions_id}

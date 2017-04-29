@@ -3,11 +3,10 @@ import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { getBrandDarkerColor } from '../../../styles/colors';
-import { textualFormattedDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   pickSnapshot: { id: 'snapshot.pick', defaultMessage: 'Load an Archived Snapshot' },
-  snapshotNotReady: { id: 'snapshot.notReady', defaultMessage: 'Not ready yet.' },
+  snapshotNotReady: { id: 'snapshot.notReady', defaultMessage: 'Not ready ({state})' },
 };
 
 class SnapshotSelector extends React.Component {
@@ -19,7 +18,7 @@ class SnapshotSelector extends React.Component {
 
   render() {
     const { snapshots, selectedId } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { formatMessage, formatDate } = this.props.intl;
     // default to select first if you need to
     let selected = snapshots.find(snapshot => (snapshot.snapshots_id === selectedId));
     if (selected === null) {
@@ -33,18 +32,19 @@ class SnapshotSelector extends React.Component {
         selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
         labelStyle={{ color: 'rgb(255,255,255)' }}
         value={selectedId}
+        fullWidth
         onChange={this.handleSnapshotSelected}
       >
         {snapshots.map((snapshot) => {
-          const dateStr = snapshot.snapshot_date.substr(0, 16);
-          const formattedDateStr = textualFormattedDate(dateStr);
-          const stateMessage = (snapshot.isUsable) ? '' : formatMessage(localMessages.snapshotNotReady);
+          const formattedDateStr = formatDate(snapshot.snapshotDate, { month: 'short', year: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+          const stateMessage = (snapshot.isUsable) ? '' : `: ${formatMessage(localMessages.snapshotNotReady, { state: snapshot.state })}`;
+          const noteMessage = (snapshot.note && snapshot.note.length > 0) ? `(${snapshot.note})` : '';
           return (
             <MenuItem
               disabled={!snapshot.isUsable}
               key={snapshot.snapshots_id}
               value={snapshot.snapshots_id}
-              primaryText={`${formattedDateStr} ${stateMessage}`}
+              primaryText={`${formattedDateStr} ${stateMessage} ${noteMessage}`}
             />
           );
         })}

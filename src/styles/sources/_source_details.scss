@@ -1,0 +1,15 @@
+@import '../_constants';
+
+.metadata-picker {
+
+  background-color: #ff0000;
+
+	input:focus {
+		background-color: $material-orange500 !important;
+	}
+
+  &:focus {
+    background-color: #fff000;
+  }
+
+}

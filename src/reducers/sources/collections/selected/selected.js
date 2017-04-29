@@ -6,6 +6,7 @@ import collectionSentenceCount from './collectionSentenceCount';
 import collectionGeoTag from './collectionGeoTag';
 import collectionSourceSentenceCounts from './collectionSourceSentenceCounts';
 import collectionSimilar from './collectionSimilar';
+import historicalSentenceCounts from './historicalSentenceCounts';
 
 const INITIAL_STATE = null;
 
@@ -26,6 +27,7 @@ const selected = combineReducers({
   collectionGeoTag,
   collectionSourceSentenceCounts,
   collectionSimilar,
+  historicalSentenceCounts,
 });
 
 export default selected;

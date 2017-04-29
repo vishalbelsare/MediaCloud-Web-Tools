@@ -8,7 +8,11 @@ export function emptyString(value) {
 }
 
 export function validEmail(value) {
-  return (value && /^[^@]+@[^@]+\.[^@]+$/i.test(value.email));
+  return notEmptyString(value) && /^[^@]+@[^@]+\.[^@]+$/i.test(value);
+}
+
+export function invalidEmail(value) {
+  return !validEmail(value);
 }
 
 export function nullOrUndefined(value) {

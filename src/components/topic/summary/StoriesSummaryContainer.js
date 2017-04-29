@@ -1,9 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import { fetchTopicTopStories, sortTopicTopStories } from '../../../actions/topicActions';
+import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
@@ -11,7 +12,7 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import StoryTable from '../StoryTable';
 import messages from '../../../resources/messages';
-import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { filteredLinkTo, filteredLocation, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
@@ -38,7 +39,7 @@ class StoriesSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, filters } = this.props;
+    const { stories, sort, topicId, filters, handleFocusSelected } = this.props;
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/stories`;
     return (
@@ -58,6 +59,7 @@ class StoriesSummaryContainer extends React.Component {
           stories={stories}
           topicId={topicId}
           onChangeSort={this.onChangeSort}
+          onChangeFocusSelection={handleFocusSelected}
           sortedBy={sort}
           maxTitleLength={50}
         />
@@ -72,8 +74,10 @@ StoriesSummaryContainer.propTypes = {
   // from parent
   topicId: React.PropTypes.number.isRequired,
   filters: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
+  handleFocusSelected: React.PropTypes.func.isRequired,
   sortData: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
@@ -87,7 +91,7 @@ const mapStateToProps = state => ({
   stories: state.topics.selected.summary.topStories.stories,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     const params = {
       ...props.filters,
@@ -95,6 +99,16 @@ const mapDispatchToProps = dispatch => ({
       limit: NUM_TO_SHOW,
     };
     dispatch(fetchTopicTopStories(props.topicId, params));
+  },
+  handleFocusSelected: (focusId) => {
+    const params = {
+      ...ownProps.filters,
+      focusId,
+      timespanId: null,
+    };
+    const newLocation = filteredLocation(ownProps.location, params);
+    dispatch(push(newLocation));
+    dispatch(filterByFocus(focusId));
   },
   sortData: (sort) => {
     dispatch(sortTopicTopStories(sort));

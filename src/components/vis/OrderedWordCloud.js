@@ -188,7 +188,7 @@ class OrderedWordCloud extends React.Component {
         </div>
       );
     }
-    return (<i>{formatMessage(localMessages.wordCloudError)}</i>);
+    return (<div><i>{formatMessage(localMessages.wordCloudError)}</i></div>);
   }
 
 }

@@ -13,9 +13,9 @@
 @import '_advanced_search';
 @import '_slider';
 @import '_source_home';
-@import '_featured_collections.scss';
-@import '_popular_collections.scss';
-@import '_words_timeperiods.scss';
+@import '_featured_collections';
+@import '_popular_collections';
+@import '_periodic';
 
 .details {
   padding-top: 15px;

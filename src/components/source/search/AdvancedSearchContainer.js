@@ -57,6 +57,9 @@ class AdvancedSearchContainer extends React.Component {
               if ('publicationCountry' in values) {
                 info.tags.push(values.publicationCountry);
               }
+              if ('publicationState' in values) {
+                info.tags.push(values.publicationState);
+              }
               this.setState(info);
             }}
           />

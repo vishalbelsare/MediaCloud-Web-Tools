@@ -1,0 +1,7 @@
+@import '../_constants';
+
+.sentences-over-time-chart {
+  .health-plot-line {
+    fill: $warning-color;
+  }
+}
