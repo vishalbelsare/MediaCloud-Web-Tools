@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
@@ -39,17 +39,22 @@ class SelectSourceContainer extends React.Component {
         <Title render={titleHandler} />
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-            <span className="source-edit-link">
-              <Link to={`/sources/${source.media_id}/edit`} >
-                <EditButton />
-                <FormattedMessage {...localMessages.editSource} />
-              </Link>
-              &nbsp;
-              <Link to={`/sources/${source.media_id}/feeds`} >
-                <EditButton />
-                <FormattedMessage {...localMessages.editFeeds} />
-              </Link>
-            </span>
+            <Row>
+              <Col lg={3}>
+                <span className="source-edit-link">
+                  <Link to={`/sources/${source.media_id}/edit`} >
+                    <EditButton />
+                    <FormattedMessage {...localMessages.editSource} />
+                  </Link>
+                </span>
+              </Col>
+              <Col lg={3}>
+                <Link to={`/sources/${source.media_id}/feeds`} >
+                  <EditButton />
+                  <FormattedMessage {...localMessages.editFeeds} />
+                </Link>
+              </Col>
+            </Row>
           </Permissioned>
         </SourceControlBar>
         <Grid className="details source-details">
