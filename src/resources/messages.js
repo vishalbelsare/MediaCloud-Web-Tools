@@ -141,6 +141,7 @@ const messages = {
   filter: { id: 'filter', defaultMessage: 'Filter' },
   upload: { id: 'upload', defaultMessage: 'Upload' },
   other: { id: 'other', defaultMessage: 'Other' },
+  required: { id: 'required', defaultMessage: 'Required' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },

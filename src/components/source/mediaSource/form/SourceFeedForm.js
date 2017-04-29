@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../../common/IntlForm';
 import AppButton from '../../../common/AppButton';
 import { emptyString, invalidUrl } from '../../../../lib/formValidators';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   nameLabel: { id: 'source.feed.add.name.label', defaultMessage: 'Name of Feed' },
@@ -17,13 +18,11 @@ const localMessages = {
   statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
   statusInactive: { id: 'source.feed.add.status.inactive', defaultMessage: 'Inactive' },
   statusSkipped: { id: 'source.feed.add.status.skipped', defaultMessage: 'Skipped' },
-  nameError: { id: 'source.feed.add.name.error', defaultMessage: 'You have to enter a name for this feed.' },
-  urlError: { id: 'source.feed.add.url.error', defaultMessage: 'You have to enter a url for this feed.' },
-  urlInvalid: { id: 'source.feed.add.url.error.invalid', defaultMessage: 'You need to entry a fully qualified url.' },
+  urlInvalid: { id: 'source.feed.url.invalid', defaultMessage: 'That isn\'t a valid feed URL. Please enter just the full url of one RSS or Atom feed.' },
 };
 
 const SourceFeedForm = (props) => {
-  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave } = props;
+  const { renderTextField, renderSelectField, buttonLabel, handleSubmit, onSave, pristine, submitting } = props;
   const { formatMessage } = props.intl;
   return (
     <form className="app-form source-feed-form" name="sourceFeedForm" onSubmit={handleSubmit(onSave.bind(this))}>
@@ -33,7 +32,7 @@ const SourceFeedForm = (props) => {
             <FormattedMessage {...localMessages.nameLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={8}>
           <Field
             name="name"
             component={renderTextField}
@@ -47,7 +46,7 @@ const SourceFeedForm = (props) => {
             <FormattedMessage {...localMessages.urlLabel} />
           </span>
         </Col>
-        <Col md={4}>
+        <Col md={8}>
           <Field
             name="url"
             component={renderTextField}
@@ -56,16 +55,26 @@ const SourceFeedForm = (props) => {
         </Col>
       </Row>
       <Row>
+        <Col md={2}>
+          <span className="label unlabeled-field-label">
+            <FormattedMessage {...localMessages.type} />
+          </span>
+        </Col>
         <Col md={8}>
-          <Field name="feed_type" component={renderSelectField} floatingLabelText={formatMessage(localMessages.type)}>
+          <Field name="feed_type" component={renderSelectField} >
             <MenuItem key="syndicated" value="syndicated" primaryText={formatMessage(localMessages.typeSyndicated)} />
             <MenuItem key="web_page" value="web_page" primaryText={formatMessage(localMessages.typeWebPage)} />
           </Field>
         </Col>
       </Row>
       <Row>
+        <Col md={2}>
+          <span className="label unlabeled-field-label">
+            <FormattedMessage {...localMessages.status} />
+          </span>
+        </Col>
         <Col md={8}>
-          <Field name="feed_status" value="active" component={renderSelectField} floatingLabelText={formatMessage(localMessages.status)}>
+          <Field name="feed_status" value="active" component={renderSelectField} >
             <MenuItem value="active" primaryText={formatMessage(localMessages.statusActive)} />
             <MenuItem value="inactive" primaryText={formatMessage(localMessages.statusInactive)} />
             <MenuItem value="skipped" primaryText={formatMessage(localMessages.statusSkipped)} />
@@ -77,6 +86,7 @@ const SourceFeedForm = (props) => {
         type="submit"
         label={buttonLabel}
         primary
+        disabled={pristine || submitting}
       />
     </form>
   );
@@ -97,11 +107,17 @@ SourceFeedForm.propTypes = {
 
 function validate(values) {
   const errors = {};
+  if (emptyString(values.feed_status)) {
+    errors.feed_status = messages.required;
+  }
+  if (emptyString(values.feed_type)) {
+    errors.feed_type = messages.required;
+  }
   if (emptyString(values.name)) {
-    errors.name = localMessages.nameError;
+    errors.name = messages.required;
   }
   if (emptyString(values.url)) {
-    errors.url = localMessages.urlError;
+    errors.url = messages.required;
   }
   if (invalidUrl(values.url)) {
     errors.url = localMessages.urlInvalid;
