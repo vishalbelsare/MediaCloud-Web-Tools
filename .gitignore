@@ -20,4 +20,4 @@ update_mc_api.sh
 env
 *.csv
 *.gexf
-.idea/workspace.xml
+.idea
