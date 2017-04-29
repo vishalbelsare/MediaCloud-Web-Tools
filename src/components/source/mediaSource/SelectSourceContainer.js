@@ -14,6 +14,7 @@ import { EditButton } from '../../common/IconButton';
 
 const localMessages = {
   editSource: { id: 'source.edit', defaultMessage: 'Modify this Source' },
+  editFeeds: { id: 'source.feeds.edit', defaultMessage: 'Modify this Source\'s Feeds' },
 };
 
 class SelectSourceContainer extends React.Component {
@@ -42,6 +43,11 @@ class SelectSourceContainer extends React.Component {
               <Link to={`/sources/${source.media_id}/edit`} >
                 <EditButton />
                 <FormattedMessage {...localMessages.editSource} />
+              </Link>
+              &nbsp;
+              <Link to={`/sources/${source.media_id}/feeds`} >
+                <EditButton />
+                <FormattedMessage {...localMessages.editFeeds} />
               </Link>
             </span>
           </Permissioned>
