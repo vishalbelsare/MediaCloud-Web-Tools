@@ -36,8 +36,14 @@ class TopicContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { topicId, topicInfo, asyncFetch, needsNewSnapshot, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
-    // if they edited the topic, or the topic changed then reload
-    if ((nextProps.topicInfo !== topicInfo) || (nextProps.topicId !== topicId)) {
+    // if they edited the topic, or the topic changed then reload (unless it is just a isFav change)
+    let topicInfoHasChanged = false;
+    Object.keys(topicInfo).forEach((key) => {
+      if ((key !== 'isFavorite') && (topicInfo[key] !== nextProps.topicInfo[key])) {
+        topicInfoHasChanged = true;
+      }
+    });
+    if (topicInfoHasChanged || (nextProps.topicId !== topicId)) {
       asyncFetch();
       // warn user if they made changes that require a new snapshot
       if (needsNewSnapshot) {
