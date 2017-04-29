@@ -10,7 +10,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import MediaSourceIcon from '../../common/icons/MediaSourceIcon';
 import SourceFeedTable from '../SourceFeedTable';
 import messages from '../../../resources/messages';
-import { DownloadButton } from '../../common/IconButton';
+import { DownloadButton, AddButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -22,6 +22,7 @@ const localMessages = {
   scrapeFeeds: { id: 'source.details.feeds.scrape', defaultMessage: 'Scrape for New Feeds' },
   scraping: { id: 'source.deatils.feeds.scraping', defaultMessage: 'We\'ve started to scrape this source' },
   scrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
+  add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
 };
 
 class SourceFeedContainer extends React.Component {
@@ -40,7 +41,7 @@ class SourceFeedContainer extends React.Component {
   }
 
   render() {
-    const { sourceId, sourceName, feeds, scrapeFeeds } = this.props;
+    const { sourceId, sourceName, feeds, scrapeFeeds, pushToUrl } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${sourceName} | ${parentTitle}`;
     const content = null;
@@ -73,6 +74,10 @@ class SourceFeedContainer extends React.Component {
           </Col>
           <Col lg={1} xs={1}>
             <div className="actions" style={{ marginTop: 40 }} >
+              <AddButton
+                tooltip={formatMessage(localMessages.add)}
+                onClick={() => { pushToUrl(`/sources/${sourceId}/feeds/create`); }}
+              />
               <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
           </Col>
@@ -94,6 +99,7 @@ SourceFeedContainer.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   asyncFetch: React.PropTypes.func.isRequired,
   scrapeFeeds: React.PropTypes.func.isRequired,
+  pushToUrl: React.PropTypes.func.isRequired,
   // from context
   params: React.PropTypes.object.isRequired,       // params from router
   sourceId: React.PropTypes.number.isRequired,
@@ -108,15 +114,16 @@ SourceFeedContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   sourceName: state.sources.sources.selected.sourceDetails.name,
-  fetchStatus: state.sources.sources.selected.feed.fetchStatus,
-  feeds: state.sources.sources.selected.feed.list,
-  feedcount: state.sources.sources.selected.feed.count,
+  fetchStatus: state.sources.sources.selected.feed.feeds.fetchStatus,
+  feeds: state.sources.sources.selected.feed.feeds.list,
+  feedcount: state.sources.sources.selected.feed.feeds.count,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (sourceId) => {
     dispatch(fetchSourceFeeds(sourceId));
   },
+  pushToUrl: url => dispatch(push(url)),
   asyncFetch: () => {
     dispatch(fetchSourceFeeds(ownProps.params.sourceId));
   },

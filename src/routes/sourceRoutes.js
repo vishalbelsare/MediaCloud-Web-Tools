@@ -16,6 +16,8 @@ import AllSuggestionsContainer from '../components/source/mediaSource/suggest/Al
 import PendingSuggestionsContainer from '../components/source/mediaSource/suggest/PendingSuggestionsContainer';
 import EditSourceContainer from '../components/source/mediaSource/EditSourceContainer';
 import SourceFeedContainer from '../components/source/mediaSource/SourceFeedContainer';
+import CreateSourceFeedContainer from '../components/source/mediaSource/CreateSourceFeedContainer';
+import EditSourceFeedContainer from '../components/source/mediaSource/EditSourceFeedContainer';
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
 import Homepage from '../components/source/homepage/Homepage';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
@@ -47,11 +49,15 @@ const sourceRoutes = (
       <Route path="suggest" component={SuggestSourceContainer} onEnter={requireAuth} />
       <Route path="suggestions" component={PendingSuggestionsContainer} onEnter={requireAuth} />
       <Route path="suggestions/history" component={AllSuggestionsContainer} onEnter={requireAuth} />
+      <Route path="feeds/create" component={EditSourceFeedContainer} onEnter={requireAuth} />
+
       <Redirect from="details" to=":sourceId" />
       <Route path="/sources/:sourceId" component={SelectSourceContainer} >
         <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditSourceContainer} onEnter={requireAuth} />
         <Route path="feeds" component={SourceFeedContainer} onEnter={requireAuth} />
+        <Route path="feeds/create" component={CreateSourceFeedContainer} onEnter={requireAuth} />
+        <Route path="feeds/:feedId/edit" component={EditSourceFeedContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

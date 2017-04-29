@@ -1,5 +1,6 @@
-import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-import { FETCH_SOURCE_FEEDS } from '../../../../actions/sourceActions';
+import { createAsyncReducer } from '../../../../../lib/reduxHelpers';
+import { FETCH_SOURCE_FEEDS } from '../../../../../actions/sourceActions';
+
 
 const feeds = createAsyncReducer({
   initialState: {
