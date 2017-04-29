@@ -172,13 +172,18 @@ def update_source_list_metadata(source_list):
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
         mkey = m.keys()[0]
-        tagISOs = _cached_tags_in_tag_set(mid)
+        tag_codes = _cached_tags_in_tag_set(mid)
         for source in source_list:
             if mkey in source:
-                metadata_tag_id = source[mkey] 
-                if metadata_tag_id not in ['', None]:
+                metadata_tag_name = source[mkey] 
+                if metadata_tag_name not in ['', None]:
                     # hack until we have a better match check
-                    matching = [t for t in tagISOs if t['tag'] == 'pub_' + metadata_tag_id or t['tag'] == "USA_" + metadata_tag_id]
+                    matching = []
+                    if metadata_tag_type == 'pub_country': # template pub_###
+                        matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_id]
+                    elif metadata_tag_type == 'pub_state': # template ###_##
+                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_id]
+
                     if matching and matching not in ['', None]:
                         metadata_tag_id = matching[0]['tags_id']
                         logger.debug('found metadata to add %s', metadata_tag_id)
