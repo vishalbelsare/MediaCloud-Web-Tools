@@ -16,7 +16,6 @@ const localMessages = {
   missingOldPassword: { id: 'user.missingOldPassword', defaultMessage: 'You need to enter your old password.' },
   missingNewPassword: { id: 'user.missingNewPassword', defaultMessage: 'You need to enter a new password.' },
   passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
-  signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now' },
   failed: { id: 'user.passwordChange.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
 
