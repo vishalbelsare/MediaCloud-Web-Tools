@@ -45,6 +45,10 @@ class TopicContainer extends React.Component {
       }
     }
   }
+  componentWillUnmount() {
+    const { removeTopicId } = this.props;
+    removeTopicId();
+  }
   filtersAreSet() {
     const { filters, topicId } = this.props;
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
@@ -78,6 +82,7 @@ TopicContainer.propTypes = {
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   addAppNotice: React.PropTypes.func.isRequired,
+  removeTopicId: React.PropTypes.func.isRequired,
   // from state
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
@@ -98,6 +103,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   addAppNotice: (info) => {
     dispatch(addNotice(info));
+  },
+  removeTopicId: () => {
+    dispatch(selectTopic(null));
+    dispatch(setSubHeaderVisible(false));
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
