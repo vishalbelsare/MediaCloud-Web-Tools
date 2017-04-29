@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import json
 from flask import request, jsonify
 import flask_login
 from datetime import datetime
@@ -10,13 +9,12 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from server import app, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
+from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
     TAG_SETS_ID_PUBLICATION_STATE
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.feeds import stream_feed_csv, source_feed_list
 from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
 
@@ -49,56 +47,6 @@ def source_set_favorited(media_id):
     else:
         db.remove_item_from_users_list(username, 'favoriteSources', int(media_id))
     return jsonify({'isFavorite': favorite})
-
-
-@app.route('/api/sources/<media_id>/feeds', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def api_source_feed(media_id):
-    feed_list = source_feed_list(media_id)
-    feed_count = len(feed_list)
-    return jsonify({'results': feed_list, 'count': feed_count})
-
-@app.route('/api/sources/<media_id>/feeds/<feed_id>/single', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def feed_details(media_id, feed_id):
-    user_mc = user_mediacloud_client()
-    feed = user_mc.feed(feed_id)
-    return jsonify({'feed': feed })
-
-@app.route('/api/sources/<media_id>/feeds/feeds.csv', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def source_feed_csv(media_id):
-    return stream_feed_csv('feeds-Source-' + media_id, media_id)
-
-@app.route('/api/sources/<media_id>/feeds/create', methods=['POST'])
-@flask_login.login_required
-@api_error_handler
-# name=None, url=None, feed_type='syndicated', feed_status='active'
-def feed_create(media_id):
-    user_mc = user_mediacloud_client()
-    name = request.form['name']
-    url = request.form['url']
-    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
-    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
-
-    result = user_mc.feedCreate(media_id, name, url, feed_type, feed_status)
-    return jsonify(result)
-
-@app.route('/api/sources/feeds/<feed_id>/update', methods=['POST'])
-@flask_login.login_required
-@api_error_handler
-def feed_update(feed_id):
-    user_mc = user_mediacloud_client()
-    name = request.form['name']
-    url = request.form['url']
-    feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
-    feed_status = request.form['feed_status'] if 'feed_status' in request.form else None  # this is optional
-
-    result = user_mc.feedUpdate(feeds_id=feed_id, name=name, url=url, feed_type=feed_type, feed_status=feed_status)
-    return jsonify(result)
 
 
 @cache
