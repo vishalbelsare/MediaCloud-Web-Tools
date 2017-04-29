@@ -42,10 +42,10 @@ def topic_filter_cascade_list():
     if is_user_logged_in():
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
-        all_topics = user_mc.topicList(link_id=link_id)
+        user_topics = user_mc.topicList(link_id=link_id)
         # map from favorited topic ids to topic objects
         favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
-        for t in all_topics['topics']:
+        for t in user_topics['topics']:
             # t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
             if len(favorite_topic_ids) > 0 and t['topics_id'] in favorite_topic_ids:
                 t['isFavorite'] = True
@@ -69,6 +69,11 @@ def sorted_public_topic_list():
 @app.route('/api/topics/<topics_id>/summary', methods=['GET'])
 @api_error_handler
 def topic_summary(topics_id):
+    topic = _topic_summary(topics_id)
+    return jsonify(topic)
+
+
+def _topic_summary(topics_id):
     if access_public_topic(topics_id):
         local_mc = mc
     elif is_user_logged_in():
@@ -83,14 +88,7 @@ def topic_summary(topics_id):
     }
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
-    # test topic state error msgs
-    # topic['state'] = 'running'  # 'error'
-    # topic['message'] = 'it is all fed up'
-    # test topic snapshot job status
-    # topic['snapshots']['jobStatus'][0]['state'] = 'error' # 'queued', 'running', 'error', 'completed'
-    # topic['snapshots']['list'][0]['state'] = 'completed'
-    # topic['snapshots']['list'][0]['searchable'] = 0
-    return jsonify(topic)
+    return topic
 
 
 def _add_user_favorite_flag_to_topics(topics):
@@ -133,13 +131,13 @@ def topic_timespan_list(topics_id, snapshots_id):
 @form_fields_required('favorite')
 @api_error_handler
 def topic_set_favorited(topics_id):
-    favorite = request.form["favorite"]
+    favorite = int(request.form["favorite"])
     username = user_name()
-    if int(favorite) == 1:
+    if favorite == 1:
         db.add_item_to_users_list(username, 'favoriteTopics', int(topics_id))
     else:
         db.remove_item_from_users_list(username, 'favoriteTopics', int(topics_id))
-    return jsonify({'isFavorite':favorite})
+    return jsonify({'isFavorite': favorite == 1})
 
 
 @app.route('/api/topics/favorite', methods=['GET'])
