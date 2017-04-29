@@ -132,7 +132,7 @@ const messages = {
   downloadSVG: { id: 'downloadsvg', defaultMessage: 'Download a SVG' },
   downloadCSV: { id: 'downloadcsv', defaultMessage: 'Download a CSV' },
   favorite: { id: 'favorite', defaultMessage: 'Star' },
-  unfavorite: { id: 'unfavorite', defaultMessage: 'Unstar' },
+  unfavorite: { id: 'unfavorite', defaultMessage: 'Un-star' },
   explore: { id: 'explore', defaultMessage: 'Explore' },
   nextPage: { id: 'paging.next', defaultMessage: 'Next Page' },
   previousPage: { id: 'paging.previous', defaultMessage: 'Previous Page' },

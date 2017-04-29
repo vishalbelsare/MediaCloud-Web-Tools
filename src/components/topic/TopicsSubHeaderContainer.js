@@ -7,8 +7,8 @@ import { updateFeedback } from '../../actions/appActions';
 import messages from '../../resources/messages';
 
 const localMessages = {
-  topicFavorited: { id: 'source.favorited', defaultMessage: 'Star this topic' },
-  topicUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Unstar this topic' },
+  topicFavorited: { id: 'source.favorited', defaultMessage: 'Starred this topic' },
+  topicUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Un-starred this topic' },
 };
 
 const TopicMgrSubHeaderContainer = (props) => {
