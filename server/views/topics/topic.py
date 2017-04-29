@@ -31,33 +31,33 @@ def topic_list():
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
 @api_error_handler
 def topic_filter_cascade_list():
-    sorted_public_topics = sorted_public_topic_list()
+    public_topics = sorted_public_topic_list()
 
     # for t in sorted_public_topics:
     #    t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
 
     # check if user had favorites or personal
-    all_topics = []
+    user_topics = []
     favorited_topics = []
-    if (is_user_logged_in()):
+    if is_user_logged_in():
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
         all_topics = user_mc.topicList(link_id=link_id)
-
-        user_favorited = db.get_users_lists(user_name(), 'favoriteTopics')
-
+        # map from favorited topic ids to topic objects
+        favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
         for t in all_topics['topics']:
             # t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
-            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
+            if len(favorite_topic_ids) > 0 and t['topics_id'] in favorite_topic_ids:
                 t['isFavorite'] = True
                 favorited_topics.append(t)
-
-        for t in sorted_public_topics:
-            if len(user_favorited) > 0 and t['topics_id'] in user_favorited:
+                favorite_topic_ids.remove(t['topics_id'])  # make sure not to double list
+        for t in public_topics:
+            if len(favorite_topic_ids) > 0 and t['topics_id'] in favorite_topic_ids:
                 t['isFavorite'] = True
                 favorited_topics.append(t)
-    # return it all together
-    return jsonify({'topics': { 'favorite': favorited_topics, 'personal': all_topics, 'public': sorted_public_topics}})
+                favorite_topic_ids.remove(t['topics_id'])  # make sure not to double list
+        # note: at this point favorite_topic_ids should be empty
+    return jsonify({'topics': {'favorite': favorited_topics, 'personal': user_topics, 'public': public_topics}})
 
 
 def sorted_public_topic_list():
