@@ -17,25 +17,35 @@ class AppNotice extends React.Component {
   render() {
     const { message, htmlMessage, level, details } = this.props.info;
     const { formatMessage } = this.props.intl;
-    let stringMessage = message;
-    if (typeof message === 'object') {
-      stringMessage = formatMessage(message);
-    }
-    const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
-    let messageContent = stringMessage;
+    let messageContent;
     let detailsContent = details;
-    if ((details === undefined) || (details === null)) {
-      if (isLowLevelError) {
-        if (stringMessage.includes('Invalid API key or authentication cookie')) {
-          messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
-        } else {
-          messageContent = <FormattedMessage {...localMessages.internalError} />;
-        }
-        detailsContent = stringMessage;
+    // handle normal string messages, or intl objects
+    if (message) {
+      // set a string, or parse an intl message object
+      let stringMessage;
+      if (typeof message === 'object') {
+        stringMessage = formatMessage(message);
+      } else {
+        stringMessage = message;
       }
+      messageContent = stringMessage;
+      // set the stack trace as the expandable details if it is a low-level message
+      const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
+      if ((details === undefined) || (details === null)) {
+        if (isLowLevelError) {
+          if (stringMessage.includes('Invalid API key or authentication cookie')) {
+            messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+          } else {
+            messageContent = <FormattedMessage {...localMessages.internalError} />;
+          }
+          detailsContent = stringMessage;
+        }
+      }
+    // handle html messages
     } else if (htmlMessage) {
       messageContent = (<span dangerouslySetInnerHTML={{ __html: htmlMessage }} />);
     }
+    // each level will render differently
     let content = null;
     switch (level) {
       case LEVEL_INFO:
