@@ -17,3 +17,36 @@
 .warning-color {
   color: rgba(255, 0, 0, 0.6);
 }
+
+.details {
+  padding-top: 15px;
+}
+
+h1 {
+
+  small.subtitle {
+    display: inline-block;
+    margin-left: 20px;
+    color: $sources-primary;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+}
+
+.google-icon {
+  padding-left: 10px;
+}
+
+.fav-toggle-button {
+  display: inline-block;
+  margin-left: 13px;
+  color: $sources-primary;
+  fill: $sources-primary;
+}
+
+div.app-icon.app-icon-filled-star > svg {
+  color: $sources-primary;
+  fill: $sources-primary;
+}
