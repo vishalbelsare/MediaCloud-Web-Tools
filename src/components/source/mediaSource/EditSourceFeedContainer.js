@@ -111,17 +111,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // need to fetch it again because something may have changed
           dispatch(fetchSourceFeed(ownProps.params.mediaId, ownProps.params.feedId))
             .then(() =>
-              dispatch(push(`/sources/${ownProps.params.sourceId}/feeds/${ownProps.params.feedId}`))
+              dispatch(push(`/sources/${ownProps.params.sourceId}/feeds`))
             );
-        } else if (result.message && result.message.indexOf('duplicate key')) {
+        } else if (result.message && result.message.includes('duplicate key')) {
           dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateKey) }));
-          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.duplicateKey) });
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.duplicateKey) });
         } else if (result.message && result.message.includes('invalid')) {
           dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notValidRss) }));
-          throw new SubmissionError({ username: 'Invalid error', _error: ownProps.intl.formatMessage(localMessages.notValidRss) });
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.notValidRss) });
         } else {
-          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.didNotWork) }));
-          throw new SubmissionError({ username: 'Duplicate Key error', _error: ownProps.intl.formatMessage(localMessages.didNotWork) });
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.didNotWork), details: result.message }));
+          throw new SubmissionError({ url: ownProps.intl.formatMessage(localMessages.didNotWork) });
         }
       });
   },
