@@ -10,7 +10,6 @@ const localMessages = {
   urlLabel: { id: 'source.suggest.url.label', defaultMessage: 'Homepage (required)' },
   feedUrlLabel: { id: 'source.suggest.feedurl.label', defaultMessage: 'RSS feed URL' },
   feedUrlHint: { id: 'source.suggest.feedurl.hint', defaultMessage: 'if you know the url of an RSS feed, enter it here' },
-  invalidFeedUrl: { id: 'source.suggest.feedurl.invalid', defaultMessage: 'That isn\'t a valid URL. Please enter just one full url here.' },
   reasonLabel: { id: 'source.suggest.reasons.label', defaultMessage: 'Reasons' },
   reasonHint: { id: 'source.suggest.reasons.hint', defaultMessage: 'why do you want us to add this source' },
   addLabel: { id: 'source.suggest.collection.label', defaultMessage: 'Add to these Collection' },
