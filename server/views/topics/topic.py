@@ -221,7 +221,6 @@ def topic_create():
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
-# require any fields?
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):

@@ -225,3 +225,7 @@ export function topicGeocodedStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/geo-tags/counts`, acceptedParams);
 }
+
+export function topicSpider(topicId) {
+  return createPostingApiPromise(`/api/topics/${topicId}/spider`);
+}
