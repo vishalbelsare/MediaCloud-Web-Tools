@@ -81,7 +81,7 @@ export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
 
-export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsList);
+export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsPublicList);
 // pass in topicId
 export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 

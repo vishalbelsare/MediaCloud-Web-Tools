@@ -4,6 +4,10 @@ export function topicsList(linkId) {
   return createApiPromise('/api/topics/listFilterCascade', linkId ? { linkId } : undefined);
 }
 
+export function topicsPublicList() {
+  return createApiPromise('/api/topics/list');
+}
+
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }

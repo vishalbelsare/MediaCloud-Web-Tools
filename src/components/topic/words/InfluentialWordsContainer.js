@@ -10,7 +10,7 @@ import { fetchTopicTopWords } from '../../../actions/topicActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import TimespanDateRange from '../../common/TimespanDateRange';
+import TimespanDateRange from '../TimespanDateRange';
 
 const localMessages = {
   title: { id: 'topic.influentialWords.title', defaultMessage: 'Influential Words' },
