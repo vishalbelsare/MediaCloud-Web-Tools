@@ -121,7 +121,6 @@ ModifyTopicDialog.propTypes = {
   topicId: React.PropTypes.number,
   needsNewSnapshot: React.PropTypes.bool.isRequired,
   onSpiderRequest: React.PropTypes.func.isRequired,
-  allowSnapshot: React.PropTypes.bool.isRequired,
   // from dispatch
   onUrlChange: React.PropTypes.func.isRequired,
 };
