@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicsList, setTopicListFilter } from '../../../actions/topicActions';
 import { pagedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
-import TopicList from './TopicList';
+import TopicPreviewList from './TopicPreviewList';
 
 const localMessages = {
   topicsListFilter: { id: 'topics.list.filter', defaultMessage: 'Filter Topics By: ' },
@@ -26,7 +26,7 @@ class TopicListContainer extends React.Component {
   }
 
   render() {
-    const { topics, currentFilter, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
+    const { topics, currentFilter, nextButton, previousButton, onSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     let whichTopics = topics;
     let titleContent = null;
@@ -47,6 +47,7 @@ class TopicListContainer extends React.Component {
 
     return (
       <div className="topic-list-container">
+
         <Row>
           <Col lg={2} md={2} sm={12}>
             { titleContent }
@@ -78,16 +79,21 @@ class TopicListContainer extends React.Component {
               />
             </SelectField>
           </Col>
-
         </Row>
 
-        <TopicList topics={whichTopics} showFavorites={showFavorites} onSetFavorited={onSetFavorited} />
+        <TopicPreviewList
+          topics={whichTopics}
+          linkGenerator={t => `topics/${t.topics_id}/summary`}
+          onSetFavorited={onSetFavorited}
+        />
+
         <Row>
           <Col lg={12} md={12} sm={12}>
             { previousButton }
             { nextButton }
           </Col>
         </Row>
+
       </div>
     );
   }
@@ -115,7 +121,6 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.all.fetchStatus,
   topics: state.topics.all.topics,
   links: state.topics.all.link_ids,
-  showFavorites: state.topics.all.showFavorites,
   currentFilter: state.topics.all.currentFilter,
 });
 

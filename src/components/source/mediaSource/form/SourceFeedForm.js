@@ -9,12 +9,8 @@ import { emptyString, invalidUrl } from '../../../../lib/formValidators';
 import messages from '../../../../resources/messages';
 
 const localMessages = {
-  nameLabel: { id: 'source.feed.add.name.label', defaultMessage: 'Name of Feed' },
-  urlLabel: { id: 'source.feed.add.url.label', defaultMessage: 'URL' },
-  type: { id: 'source.feed.add.type', defaultMessage: 'Type' },
   typeSyndicated: { id: 'source.feed.add.type.syndicated', defaultMessage: 'Syndicated' },
   typeWebPage: { id: 'source.feed.add.type.webpage', defaultMessage: 'Web Page' },
-  status: { id: 'source.feed.add.status', defaultMessage: 'Status' },
   statusActive: { id: 'source.feed.add.status.active', defaultMessage: 'Active' },
   statusInactive: { id: 'source.feed.add.status.inactive', defaultMessage: 'Inactive' },
   statusSkipped: { id: 'source.feed.add.status.skipped', defaultMessage: 'Skipped' },
@@ -29,7 +25,7 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.nameLabel} />
+            <FormattedMessage {...messages.feedName} />
           </span>
         </Col>
         <Col md={8}>
@@ -43,7 +39,7 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.urlLabel} />
+            <FormattedMessage {...messages.feedUrl} />
           </span>
         </Col>
         <Col md={8}>
@@ -57,7 +53,7 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.type} />
+            <FormattedMessage {...messages.feedType} />
           </span>
         </Col>
         <Col md={8}>
@@ -70,7 +66,7 @@ const SourceFeedForm = (props) => {
       <Row>
         <Col md={2}>
           <span className="label unlabeled-field-label">
-            <FormattedMessage {...localMessages.status} />
+            <FormattedMessage {...messages.feedStatus} />
           </span>
         </Col>
         <Col md={8}>

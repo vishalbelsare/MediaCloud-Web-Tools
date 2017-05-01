@@ -19,13 +19,14 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_list():
     if not is_user_logged_in():
-        return jsonify(sorted_public_topic_list())
+        topics = sorted_public_topic_list()
+        return jsonify({'topics': {'public': topics}})
     else:
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
-        all_topics = user_mc.topicList(link_id=link_id)
-        _add_user_favorite_flag_to_topics(all_topics['topics'])
-    return jsonify(all_topics)
+        topics = user_mc.topicList(link_id=link_id)
+        _add_user_favorite_flag_to_topics(topics['topics'])
+        return jsonify({'topics': {'personal': topics}})
 
 
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
@@ -61,8 +62,12 @@ def topic_filter_cascade_list():
 
 
 def sorted_public_topic_list():
-    user_mc = user_mediacloud_client()
-    public_topics_list = user_mc.topicList(public=True)['topics']
+    # needs to support logged in or not
+    if is_user_logged_in():
+        local_mc = user_mediacloud_client()
+    else:
+        local_mc = mc
+    public_topics_list = local_mc.topicList(public=True)['topics']
     return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
@@ -216,7 +221,6 @@ def topic_create():
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
-# require any fields?
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):

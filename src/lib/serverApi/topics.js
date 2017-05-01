@@ -4,6 +4,10 @@ export function topicsList(linkId) {
   return createApiPromise('/api/topics/listFilterCascade', linkId ? { linkId } : undefined);
 }
 
+export function topicsPublicList() {
+  return createApiPromise('/api/topics/list');
+}
+
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }
@@ -220,4 +224,8 @@ export function topicGeocodedStoryCoverage(topicId, params) {
 export function topicGeocodedStoryCounts(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/geo-tags/counts`, acceptedParams);
+}
+
+export function topicSpider(topicId) {
+  return createPostingApiPromise(`/api/topics/${topicId}/spider`);
 }

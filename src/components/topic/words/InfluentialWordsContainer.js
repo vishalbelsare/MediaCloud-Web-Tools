@@ -10,7 +10,7 @@ import { fetchTopicTopWords } from '../../../actions/topicActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
-import TimespanDateRange from '../../common/TimespanDateRange';
+import TimespanDateRange from '../TimespanDateRange';
 
 const localMessages = {
   title: { id: 'topic.influentialWords.title', defaultMessage: 'Influential Words' },
@@ -22,8 +22,8 @@ const localMessages = {
 class InfluentialWordsContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    const { fetchData, filters, selectedTimespan } = this.props;
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.selectedTimespan !== selectedTimespan)) {
       fetchData(nextProps);
     }
   }
@@ -31,6 +31,9 @@ class InfluentialWordsContainer extends React.Component {
   render() {
     const { wordCounts, totalWordCounts, handleWordCloudClick, selectedTimespan } = this.props;
     const { formatMessage } = this.props.intl;
+    if ((selectedTimespan === undefined) || (selectedTimespan === null)) {
+      return (<div />);
+    }
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     let comparisonContent;
     if (selectedTimespan.period === 'overall') {
@@ -96,7 +99,7 @@ InfluentialWordsContainer.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   wordCounts: React.PropTypes.array.isRequired,
   totalWordCounts: React.PropTypes.array.isRequired,
-  selectedTimespan: React.PropTypes.object.isRequired,
+  selectedTimespan: React.PropTypes.object,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   handleWordCloudClick: React.PropTypes.func.isRequired,
