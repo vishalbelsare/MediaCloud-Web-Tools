@@ -1,4 +1,17 @@
+@import '../_constants';
 
 .source-feed-table {
   margin-top: 20px;
+  
+  tr {
+    &.feed-inactive {
+      background-color: $warning-color;
+    }
+    &.feed-skipped {
+      background-color: $material-grey500;
+    }
+    &.feed-active {
+    }
+  }
+
 }

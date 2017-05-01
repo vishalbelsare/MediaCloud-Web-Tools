@@ -22,15 +22,19 @@ const SourceFeedTable = (props) => {
           <tr>
             <th><FormattedMessage {...messages.feedName} /></th>
             <th><FormattedMessage {...messages.feedType} /></th>
-            <th><FormattedMessage {...messages.feedDescription} /></th>
+            <th><FormattedMessage {...messages.feedStatus} /></th>
+            <th><FormattedMessage {...messages.feedUrl} /></th>
           </tr>
           {feeds.map((feed, idx) =>
-            (<tr key={feed.feeds_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+            (<tr key={feed.feeds_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} feed-${feed.feed_status}`}>
               <td>
                 {feed.name}
               </td>
               <td>
                 {feed.feed_type}
+              </td>
+              <td>
+                {feed.feed_status}
               </td>
               <td>
                 <Link to={`/sources/${feed.url}`}>{feed.url}</Link>
