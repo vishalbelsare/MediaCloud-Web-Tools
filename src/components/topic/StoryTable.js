@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
+// import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
@@ -32,7 +32,7 @@ class StoryTable extends React.Component {
   }
 
   render() {
-    const { stories, onChangeSort, onChangeFocusSelection, topicId, sortedBy, maxTitleLength } = this.props;
+    const { stories, onChangeSort, topicId, sortedBy, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
     let inlinkHeader = null;
     let socialHeader = null;
@@ -110,7 +110,7 @@ class StoryTable extends React.Component {
               }
               let listOfFoci = 'none';
               if (story.foci.length > 0) {
-                listOfFoci = (
+                /* listOfFoci = (
                   story.foci.map((foci, i) => (
                     <span key={foci.foci_id}>
                       {!!i && ', '}
@@ -123,8 +123,8 @@ class StoryTable extends React.Component {
                     </span>
                   ),
                   )
-                );
-                // listOfFoci = intersperse(listOfFoci, ', ');
+                );*/
+                listOfFoci = story.foci.map(f => f.name).join(', ');
               }
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
@@ -146,7 +146,7 @@ class StoryTable extends React.Component {
                   <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
                   <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
                   <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
-                  <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
+                  <td><ReadItNowButton onClick={this.handleReadItClick} /></td>
                   <td>{listOfFoci}</td>
                 </tr>
               );
