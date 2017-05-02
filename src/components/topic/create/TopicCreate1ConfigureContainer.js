@@ -65,34 +65,14 @@ TopicCreate1ConfigureContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  formData: formSelector(state, 'focalTechnique', 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
 });
 
 const mapDispatchToProps = dispatch => ({
   goToStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
-  handlePreview: (values) => {
-    const infoToQuery = {
-      name: values.name,
-      description: values.description,
-      start_date: values.start_date,
-      end_date: values.end_date,
-      solr_seed_query: values.solr_seed_query,
-      max_iterations: values.max_iterations,
-      ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
-      is_public: values.is_public === undefined ? false : values.is_public,
-      twitter_topics_id: values.twitter_topics_id,
-    };
-    infoToQuery.is_public = infoToQuery.is_public ? 1 : 0;
-    if ('sourcesAndCollections' in values) {
-      infoToQuery['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
-      infoToQuery['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
-    } else {
-      infoToQuery['sources[]'] = '';
-      infoToQuery['collections[]'] = '';
-    }
-  },
+  // TODO, I think this will go in the final confirmation page...
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {

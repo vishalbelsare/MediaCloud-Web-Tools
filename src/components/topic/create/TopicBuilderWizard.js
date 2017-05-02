@@ -5,14 +5,14 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import TopicCreate1ConfigureContainer from './TopicCreate1ConfigureContainer';
 import TopicCreate2PreviewContainer from './TopicCreate2PreviewContainer';
-// import TopicCreate3ConfirmContainer from './TopicCreate3ConfirmContainer';
+import TopicCreate3ConfirmContainer from './TopicCreate3ConfirmContainer';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 
 const localMessages = {
-  backToFociManager: { id: 'backToFociManager', defaultMessage: 'back to Topic Builder' },
-  step0Name: { id: 'focus.create.step0Name', defaultMessage: 'Create A Topic' },
-  step1Name: { id: 'focus.create.step1Name', defaultMessage: 'Preview' },
-  step2Name: { id: 'focus.create.step3Name', defaultMessage: 'Confirm' },
+  backToTopicManager: { id: 'backToTopicManager', defaultMessage: 'back to Topic Builder' },
+  step0Name: { id: 'topic.create.step0Name', defaultMessage: 'Create A Topic' },
+  step1Name: { id: 'topic.create.step1Name', defaultMessage: 'Preview' },
+  step2Name: { id: 'topic.create.step3Name', defaultMessage: 'Confirm' },
 };
 
 class TopicBuilderWizard extends React.Component {
@@ -32,13 +32,13 @@ class TopicBuilderWizard extends React.Component {
     const steps = [
       TopicCreate1ConfigureContainer,
       TopicCreate2PreviewContainer,
-      // TopicCreate3ConfirmContainer,
+      TopicCreate3ConfirmContainer,
     ];
     const CurrentStepComponent = steps[currentStep];
     const stepLabelStyle = { height: 45 };
     return (
       <div className="topic-builder-wizard">
-        <BackLinkingControlBar message={localMessages.backToFociManager} linkTo={'/topics/'} >
+        <BackLinkingControlBar message={localMessages.backToTopicManager} linkTo={'/topics/'} >
           <Stepper activeStep={currentStep}>
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>
