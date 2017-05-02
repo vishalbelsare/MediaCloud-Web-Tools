@@ -42,6 +42,7 @@ export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const TOGGLE_FILTER_CONTROLS = 'TOGGLE_FILTER_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
+export const GO_TO_CREATE_TOPIC_STEP = 'GO_TO_CREATE_TOPIC_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
 export const FETCH_CREATE_FOCUS_KEYWORD_ATTENTION = 'FETCH_CREATE_FOCUS_KEYWORD_ATTENTION';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS = 'FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS';
@@ -168,6 +169,7 @@ export const toggleFilterControls = createAction(TOGGLE_FILTER_CONTROLS, isVisib
 
 // pass in the number of the step to go to
 export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);
+
 // pass in topicId, limit, q
 export const fetchCreateFocusKeywordStories = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_STORIES, api.topicTopStories);
 // pass in topicId, q
@@ -242,3 +244,6 @@ export const fetchTopicGeocodedStoryCoverage = createAsyncAction(FETCH_TOPIC_GEO
 
 // pass in topic id, filters
 export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);
+
+// pass in the number of the step to go to
+export const goToCreateTopicStep = createAction(GO_TO_CREATE_TOPIC_STEP, step => step);

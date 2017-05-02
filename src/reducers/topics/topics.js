@@ -4,6 +4,7 @@ import favorite from './favorite';
 import publiclist from './publiclist';
 import selected from './selected/selected';
 import search from './search';
+import create from './create/create';
 
 const rootReducer = combineReducers({
   all,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   selected,
   search,
   publiclist,
+  create,
 });
 
 export default rootReducer;
