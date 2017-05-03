@@ -3,8 +3,8 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import StoryTable from '../../StoryTable';
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
@@ -13,12 +13,16 @@ import { filteredLocation } from '../../../util/location';
 
 const NUM_TO_SHOW = 20;
 
+// TODO check all these messages
+
 const localMessages = {
-  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Attention' },
-  helpTitle: { id: 'topic.create.preview.attention.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.create.preview.attention.help.text',
+  title: { id: 'topic.create.preview.stories.title', defaultMessage: 'Story Samples' },
+  helpTitle: { id: 'topic.create.preview.stories.help.title', defaultMessage: 'About Story Samples' },
+  helpText: { id: 'topic.create.preview.stories.help.text',
     defaultMessage: '<p>This chart shows you estimated coverage of your seed query</p>',
   },
+  descriptionIntro: { id: 'topic.summary.stories.help.title', defaultMessage: 'This is a random sample of stories. We recommend that at least 90% of the stories you see here should be the type of story you desire. Any less than that and you are unlikely to get good results. If not enough stories match, consider adding more of the top words shown above to narrow in on the stuff you care about.' },
+
 };
 
 class TopicStorySamplePreview extends React.Component {
@@ -29,12 +33,11 @@ class TopicStorySamplePreview extends React.Component {
     }
   }
   render() {
-    const { stories, helpButton, handleStorySelection } = this.props;
+    const { stories, handleStorySelection } = this.props;
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         <StoryTable
           stories={stories}
@@ -49,7 +52,6 @@ class TopicStorySamplePreview extends React.Component {
 TopicStorySamplePreview.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // passed in
   query: React.PropTypes.string.isRequired,
   // from state
@@ -106,7 +108,7 @@ export default
   injectIntl(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
           composeAsyncContainer(
             TopicStorySamplePreview
           )

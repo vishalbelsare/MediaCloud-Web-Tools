@@ -2,19 +2,19 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
+import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
 import BubbleChart from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
+import messages from '../../../../resources/messages';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 
 const localMessages = {
-  title: { id: 'topic.create.preview.storyCount.title', defaultMessage: 'Story Counts' },
-  helpTitle: { id: 'topic.create.preview.storyCount.help.title', defaultMessage: 'About Story Counts' },
-  helpText: { id: 'topic.create.preview.storyCount.help.text',
-    defaultMessage: '<p>This is a visualization showing the how many of the stories from the total Topic would be included within this Subtopic.</p>',
+  title: { id: 'topic.create.preview.storyCount.title', defaultMessage: 'Seed Stories' },
+  descriptionIntro: { id: 'topic.create.preview.storyCount.help.into',
+    defaultMessage: "<p>Your topic can include up to 100,000 stories. This includes the stories we already have, and the stories we will spider once you create the topic. Spidering can add anywhere from 0 to 4 times the total number of stories, so be careful that you don't include too many seed stories.</p>",
   },
   filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Matching Stories' },
   totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories' },
@@ -22,13 +22,13 @@ const localMessages = {
 
 class TopicStoryCountPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { keywords, fetchData } = this.props;
-    if (nextProps.keywords !== keywords) {
-      fetchData(nextProps.keywords);
+    const { query, fetchData } = this.props;
+    if (nextProps.query !== query) {
+      fetchData(nextProps.query);
     }
   }
   render() {
-    const { counts, helpButton } = this.props;
+    const { counts } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     if (counts !== null) {
@@ -56,7 +56,6 @@ class TopicStoryCountPreview extends React.Component {
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         {content}
       </DataCard>
@@ -67,10 +66,8 @@ class TopicStoryCountPreview extends React.Component {
 TopicStoryCountPreview.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  keywords: React.PropTypes.string.isRequired,
+  query: React.PropTypes.string.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
@@ -84,9 +81,9 @@ const mapStateToProps = state => ({
   counts: state.topics.create.preview.matchingStoryCounts.counts,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (keywords) => {
-    dispatch(fetchStoryCountByQuery(ownProps.topicId, { q: keywords }));
+const mapDispatchToProps = dispatch => ({
+  fetchData: (query) => {
+    dispatch(fetchStoryCountByQuery({ q: query }));
   },
 });
 
@@ -101,7 +98,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+       composeDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
         composeAsyncContainer(
           TopicStoryCountPreview
         )

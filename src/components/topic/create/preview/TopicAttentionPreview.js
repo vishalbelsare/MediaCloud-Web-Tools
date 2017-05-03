@@ -3,9 +3,9 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
 import { fetchAttentionByQuery } from '../../../../actions/topicActions';
+import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
 import messages from '../../../../resources/messages';
 import { getBrandDarkColor } from '../../../../styles/colors';
@@ -16,6 +16,7 @@ const localMessages = {
   helpText: { id: 'topic.create.preview.attention.help.text',
     defaultMessage: '<p>This chart shows you estimated coverage of your seed query</p>',
   },
+  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
 };
 
 class TopicAttentionPreview extends React.Component {
@@ -26,12 +27,11 @@ class TopicAttentionPreview extends React.Component {
     }
   }
   render() {
-    const { total, counts, helpButton } = this.props;
+    const { total, counts } = this.props;
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         <AttentionOverTimeChart
           total={total}
@@ -47,7 +47,6 @@ class TopicAttentionPreview extends React.Component {
 TopicAttentionPreview.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
   // passed in
   query: React.PropTypes.string.isRequired,
   // from state
@@ -89,7 +88,7 @@ export default
   injectIntl(
     reduxForm(reduxFormConfig)(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+        composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
           composeAsyncContainer(
             TopicAttentionPreview
           )
