@@ -26,7 +26,7 @@ const TopicCreate1ConfigureContainer = (props) => {
   const { finishStep } = props;
   const { formatMessage } = props.intl;
   // TODO where to put: const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
-  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.save) };
+  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
   return (
     <Grid>
       <Title render={formatMessage(localMessages.title)} />

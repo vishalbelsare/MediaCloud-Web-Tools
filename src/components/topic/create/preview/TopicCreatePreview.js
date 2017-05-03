@@ -2,9 +2,9 @@ import React from 'react';
 import { reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-// import KeywordStoryCountPreviewContainer from './KeywordStoryCountPreviewContainer';
+import TopicStoryCountPreview from './TopicStoryCountPreview';
 import TopicAttentionPreview from './TopicAttentionPreview';
-// import KeywordStoryPreviewContainer from './KeywordStoryPreviewContainer';
+import TopicStorySamplePreview from './TopicStorySamplePreview';
 
 
 const TopicCreatePreview = (props) => {
@@ -13,7 +13,17 @@ const TopicCreatePreview = (props) => {
     <div className="">
       <Row>
         <Col lg={10} md={10} xs={12}>
+          <TopicStoryCountPreview query={formData.solr_seed_query} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10} md={10} xs={12}>
           <TopicAttentionPreview query={formData.solr_seed_query} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10} md={10} xs={12}>
+          <TopicStorySamplePreview query={formData.solr_seed_query} />
         </Col>
       </Row>
     </div>

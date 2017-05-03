@@ -81,6 +81,7 @@ export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
 export const FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE = 'FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE';
 export const FETCH_CREATE_TOPIC_QUERY_ATTENTION = 'FETCH_CREATE_TOPIC_QUERY_ATTENTION';
 export const FETCH_CREATE_TOPIC_QUERY_STORY_COUNT = 'FETCH_CREATE_TOPIC_QUERY_STORY_COUNT';
+export const FETCH_CREATE_TOPIC_QUERY_WORDS = 'FETCH_CREATE_TOPIC_QUERY_WORDS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
@@ -256,3 +257,6 @@ export const fetchStoryCountByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY
 export const fetchAttentionByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_ATTENTION, api.fetchAttentionByQuery);
 
 export const fetchStorySampleByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE, api.fetchStorySampleByQuery);
+
+export const fetchWordsByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_WORDS, api.fetchWordsByQuery);
+

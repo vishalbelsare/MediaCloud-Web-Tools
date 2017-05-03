@@ -4,7 +4,7 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import composeIntlForm from '../../common/IntlForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
-import TopicCreatePreview from './TopicCreatePreview';
+import TopicCreatePreview from './preview/TopicCreatePreview';
 
 const formSelector = formValueSelector('topicForm');
 

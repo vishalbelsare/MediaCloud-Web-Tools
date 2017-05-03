@@ -1,4 +1,4 @@
-import { FETCH_WORD_SENTENCE_COUNT_BY_MATCH } from '../../../../actions/topicActions';
+import { FETCH_CREATE_TOPIC_QUERY_ATTENTION } from '../../../../actions/topicActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 import { cleanDateCounts } from '../../../../lib/dateUtil';
 
@@ -7,7 +7,7 @@ const matchingAttention = createAsyncReducer({
     total: null,
     counts: [],
   },
-  action: FETCH_WORD_SENTENCE_COUNT_BY_MATCH,
+  action: FETCH_CREATE_TOPIC_QUERY_ATTENTION,
   handleSuccess: payload => ({
     total: payload.count,
     counts: cleanDateCounts(payload.split),

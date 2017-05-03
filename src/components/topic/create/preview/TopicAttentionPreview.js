@@ -2,13 +2,13 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
-import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchAttentionByQuery } from '../../../actions/topicActions';
-import DataCard from '../../common/DataCard';
-import messages from '../../../resources/messages';
-import { getBrandDarkColor } from '../../../styles/colors';
+import composeAsyncContainer from '../../../common/AsyncContainer';
+import composeHelpfulContainer from '../../../common/HelpfulContainer';
+import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
+import { fetchAttentionByQuery } from '../../../../actions/topicActions';
+import DataCard from '../../../common/DataCard';
+import messages from '../../../../resources/messages';
+import { getBrandDarkColor } from '../../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Attention' },

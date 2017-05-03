@@ -34,6 +34,7 @@ const TopicForm = (props) => {
             style={{ marginTop: 30 }}
             type="submit"
             disabled={pristine || submitting}
+            label={initialValues.buttonLabel}
             primary
           />
         </Col>
@@ -67,9 +68,6 @@ function validate(values) {
   }
   if (emptyString(values.solr_seed_query)) {
     errors.seedQuery = localMessages.seedQueryError;
-  }
-  if (emptyString(values.reason)) {
-    errors.reason = localMessages.reasonError;
   }
   return errors;
 }
