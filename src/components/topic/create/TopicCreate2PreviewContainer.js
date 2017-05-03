@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import composeIntlForm from '../../common/IntlForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import TopicCreatePreview from './TopicCreatePreview';
 
-// const formSelector = formValueSelector('topicForm');
+const formSelector = formValueSelector('topicForm');
 
 const TopicCreate2PreviewContainer = (props) => {
-  const { handleNextStep, handlePreviousStep, formValues } = props;
+  const { handleNextStep, handlePreviousStep, formData } = props;
 
   const content = (<TopicCreatePreview
-    formData={formValues}
+    formData={formData}
     onPreviousStep={handlePreviousStep}
     onNextStep={handleNextStep}
   />);
@@ -37,14 +37,13 @@ TopicCreate2PreviewContainer.propTypes = {
   // from dispatch
   finishStep: React.PropTypes.func.isRequired,
   // from form
-  formValues: React.PropTypes.object,
+  formData: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  // grab the results of the query here I think to give to each component?
-  // no I think just access the form data
-  formValues: state.form.topicForm.values,
   currentStep: state.topics.create.preview.workflow.currentStep,
+  // TODO I should be able to get this from state.form.topicForm but am trying to deal with the destroyOnUnmount fail
+  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,6 +65,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'topicForm',
+  destroyOnUnmount: false,
 };
 
 export default

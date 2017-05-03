@@ -196,6 +196,7 @@ function validate(values) {
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
+  destroyOnUnmount: false,
 };
 
 export default

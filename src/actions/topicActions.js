@@ -78,6 +78,9 @@ export const FETCH_TOPIC_GEOCODED_STORY_COVERAGE = 'FETCH_TOPIC_GEOCODED_STORY_C
 export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
 export const FETCH_TOPIC_NYT_TAG_COVERAGE = 'FETCH_TOPIC_NYT_TAG_COVERAGE';
 export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
+export const FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE = 'FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE';
+export const FETCH_CREATE_TOPIC_QUERY_ATTENTION = 'FETCH_CREATE_TOPIC_QUERY_ATTENTION';
+export const FETCH_CREATE_TOPIC_QUERY_STORY_COUNT = 'FETCH_CREATE_TOPIC_QUERY_STORY_COUNT';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
@@ -247,3 +250,9 @@ export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCO
 
 // pass in the number of the step to go to
 export const goToCreateTopicStep = createAction(GO_TO_CREATE_TOPIC_STEP, step => step);
+
+export const fetchStoryCountByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_STORY_COUNT, api.fetchStoryCountByQuery);
+
+export const fetchAttentionByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_ATTENTION, api.fetchAttentionByQuery);
+
+export const fetchStorySampleByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE, api.fetchStorySampleByQuery);

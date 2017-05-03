@@ -1,10 +1,11 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import { fetchTopicAttentionPreview } from '../../../actions/topicActions';
+import { fetchAttentionByQuery } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import messages from '../../../resources/messages';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -19,9 +20,9 @@ const localMessages = {
 
 class TopicAttentionPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { keywords, fetchData } = this.props;
-    if (nextProps.keywords !== keywords) {
-      fetchData(nextProps.keywords);
+    const { fetchData, query } = this.props;
+    if (nextProps.query !== query) {
+      fetchData(nextProps.query);
     }
   }
   render() {
@@ -48,8 +49,7 @@ TopicAttentionPreview.propTypes = {
   intl: React.PropTypes.object.isRequired,
   helpButton: React.PropTypes.node.isRequired,
   // passed in
-  topicId: React.PropTypes.number.isRequired,
-  keywords: React.PropTypes.string.isRequired,
+  query: React.PropTypes.string.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
@@ -66,25 +66,33 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (keywords) => {
-    dispatch(fetchTopicAttentionPreview({ q: keywords }));
+  fetchData: (query) => {
+    dispatch(fetchAttentionByQuery({ q: query }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.keywords);
+      dispatchProps.fetchData(ownProps.query);
     },
   });
 }
 
+// TODO this should not be necessary - I will just pass in the values, but am experimenting
+const reduxFormConfig = {
+  form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
+};
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
-        composeAsyncContainer(
-          TopicAttentionPreview
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+          composeAsyncContainer(
+            TopicAttentionPreview
+          )
         )
       )
     )

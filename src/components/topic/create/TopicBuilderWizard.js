@@ -1,4 +1,5 @@
 import React from 'react';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -60,7 +61,7 @@ class TopicBuilderWizard extends React.Component {
 
 TopicBuilderWizard.propTypes = {
   // from parent
-  topicId: React.PropTypes.number,
+  formData: React.PropTypes.object,
   initialValues: React.PropTypes.object,
   startStep: React.PropTypes.number,
   location: React.PropTypes.object,
@@ -84,9 +85,16 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+const reduxFormConfig = {
+  form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
+};
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      TopicBuilderWizard
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps)(
+        TopicBuilderWizard
+      )
     )
   );

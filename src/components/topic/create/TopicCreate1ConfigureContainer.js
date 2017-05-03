@@ -9,6 +9,7 @@ import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'topic.create.setup.title', defaultMessage: 'Step 1: Create A Topic' },
@@ -22,10 +23,10 @@ const localMessages = {
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { finishStep, initialValues } = props;
+  const { finishStep } = props;
   const { formatMessage } = props.intl;
   // TODO where to put: const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
-
+  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.save) };
   return (
     <Grid>
       <Title render={formatMessage(localMessages.title)} />
@@ -37,8 +38,8 @@ const TopicCreate1ConfigureContainer = (props) => {
       </Row>
       <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
         <TopicForm
-          onSaveTopic={finishStep}
           initialValues={initialValues}
+          onSaveTopic={finishStep}
           title={formatMessage(localMessages.addCollectionsTitle)}
           intro={formatMessage(localMessages.addCollectionsIntro)}
           mode={TOPIC_FORM_MODE_CREATE}
@@ -77,8 +78,10 @@ const mapDispatchToProps = dispatch => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: () => {
-      dispatchProps.goToStep(1);
+    finishStep: (values) => {
+      // push the form data into state?
+      // I thought I didn't have to b/c of the form data
+      dispatchProps.goToStep(1, values);
     },
   });
 }

@@ -121,6 +121,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
 };
 
 export default

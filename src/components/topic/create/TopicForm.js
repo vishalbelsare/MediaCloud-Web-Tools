@@ -34,7 +34,6 @@ const TopicForm = (props) => {
             style={{ marginTop: 30 }}
             type="submit"
             disabled={pristine || submitting}
-            label={initialValues.buttonLabel}
             primary
           />
         </Col>
@@ -66,7 +65,7 @@ function validate(values) {
   if (emptyString(values.description)) {
     errors.description = localMessages.descriptionError;
   }
-  if (emptyString(values.seedQuery)) {
+  if (emptyString(values.solr_seed_query)) {
     errors.seedQuery = localMessages.seedQueryError;
   }
   if (emptyString(values.reason)) {
@@ -78,6 +77,7 @@ function validate(values) {
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
+  destroyOnUnmount: false,
 };
 
 export default
