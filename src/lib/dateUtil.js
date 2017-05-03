@@ -98,6 +98,10 @@ export function cleanCoverageGaps(gapList) {
   return plotBands;
 }
 
+export function prepDateForSolrQuery(startDate, endDate) {
+  return `(publish_date:[${topicDateToMoment(startDate).format('YYYY-MM-DDThh:mm:ss')}Z TO ${topicDateToMoment(endDate).format('YYYY-MM-DDThh:mm:ss')}Z])`;
+}
+
 export function getDateRange(timePeriod) {
   if (![PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
     const error = { message: `unknown time period passed to calculateTimePeriods: ${timePeriod}` };

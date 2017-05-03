@@ -23,6 +23,7 @@ const TopicForm = (props) => {
         title={title}
         intro={intro}
         form="topicForm"
+        destroyOnUnmount={false}
         initialValues={initialValues}
         allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
         maxSources={10}
@@ -59,6 +60,7 @@ TopicForm.propTypes = {
 };
 
 function validate(values) {
+  // TODO maybe check collections or sources here bc this validation is already done in detail form
   const errors = {};
   if (emptyString(values.name)) {
     errors.name = localMessages.nameError;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, formValueSelector } from 'redux-form';
+// import { reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
@@ -9,7 +9,7 @@ import { goToCreateTopicStep } from '../../../actions/topicActions';
 import TopicCreatePreview from './preview/TopicCreatePreview';
 import messages from '../../../resources/messages';
 
-const formSelector = formValueSelector('topicForm');
+// const formSelector = formValueSelector('topicForm');
 
 const localMessages = {
   title: { id: 'topic.create.preview.title', defaultMessage: 'Step 2: Preview Your Topic' },
@@ -62,7 +62,8 @@ TopicCreate2PreviewContainer.propTypes = {
 const mapStateToProps = state => ({
   currentStep: state.topics.create.preview.workflow.currentStep,
   // TODO I should be able to get this from state.form.topicForm but am trying to deal with the destroyOnUnmount fail
-  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  // formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  formData: state.form.topicForm.values,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -85,18 +86,13 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
-const reduxFormConfig = {
-  form: 'topicForm',
-  destroyOnUnmount: false,
-};
-
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm(reduxFormConfig)(
+      // reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
           TopicCreate2PreviewContainer
         )
-      )
+      // )
     )
   );

@@ -90,7 +90,7 @@ const mapDispatchToProps = dispatch => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.keywords);
+      dispatchProps.fetchData(ownProps.query);
     },
   });
 }

@@ -184,20 +184,19 @@ export function createTopic(params) {
 }
 
 export function fetchStoryCountByQuery(params) {
-  const acceptedParams = acceptParams(params, ['solr_seed_query']);
-  return createPostingApiPromise('/api/topics/preview/stories/count', acceptedParams, 'put');
+  const acceptedParams = acceptParams(params, ['q']);
+  return createApiPromise('/api/topics/preview/story/count', acceptedParams, 'post');
 }
 
 export function fetchAttentionByQuery(params) {
-  const acceptedParams = acceptParams(params, ['solr_seed_query']);
-  return createPostingApiPromise('/api/topics/preview/sentences/count', acceptedParams, 'put');
+  const acceptedParams = acceptParams(params, ['q']);
+  return createApiPromise('/api/topics/preview/sentences/count', acceptedParams, 'post');
 }
 
 export function fetchStorySampleByQuery(params) {
-  const acceptedParams = acceptParams(params, ['solr_seed_query']);
-  return createPostingApiPromise('/api/topics/preview/stories/sample', acceptedParams, 'put');
+  const acceptedParams = acceptParams(params, ['q']);
+  return createApiPromise('/api/topics/preview/stories/sample', acceptedParams, 'post');
 }
-
 
 export function updateTopic(topicId, params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations', 'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]']);

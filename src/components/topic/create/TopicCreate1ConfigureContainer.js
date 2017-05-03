@@ -73,7 +73,6 @@ const mapDispatchToProps = dispatch => ({
   goToStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
-  // TODO, I think this will go in the final confirmation page...
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
