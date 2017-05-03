@@ -119,6 +119,7 @@ const messages = {
   delete: { id: 'delete', defaultMessage: 'Delete' },
   save: { id: 'save', defaultMessage: 'Save' },
   preview: { id: 'preview', defaultMessage: 'Preview' },
+  confirm: { id: 'confirm', defaultMessage: 'Confirm' },
   remove: { id: 'remove', defaultMessage: 'Remove' },
   add: { id: 'add', defaultMessage: 'Add' },
   open: { id: 'open', defaultMessage: 'Open' },

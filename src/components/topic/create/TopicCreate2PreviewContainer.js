@@ -1,15 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
+import AppButton from '../../common/AppButton';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import TopicCreatePreview from './preview/TopicCreatePreview';
+import messages from '../../../resources/messages';
 
 const formSelector = formValueSelector('topicForm');
 
+const localMessages = {
+  title: { id: 'topic.create.preview.title', defaultMessage: 'Step 2: Preview Your Topic' },
+  about: { id: 'topic.create.preview.about',
+    defaultMessage: '<b>Make sure your topic looks right before you create it</b>.  We start your topic by finding all the stories in our database that match your query. From there we follow all the links and download them. We check if they match your keywords, and if they do then we add them to your topic (this is called "spidering"). Check the result below and make sure your topic is finding you the stories you want before creating it.' },
+};
+
 const TopicCreate2PreviewContainer = (props) => {
-  const { handleNextStep, handlePreviousStep, formData } = props;
+  const { handleNextStep, handlePreviousStep, formData, goToStep } = props;
+  const { formatMessage } = props.intl;
 
   const content = (<TopicCreatePreview
     formData={formData}
@@ -18,9 +28,17 @@ const TopicCreate2PreviewContainer = (props) => {
   />);
 
   return (
-    <div>
+    <Grid>
+      <p><FormattedMessage {...localMessages.about} /></p>
       { content }
-    </div>
+      <Row>
+        <Col lg={12} md={12} sm={12} >
+          <AppButton flat label={formatMessage(messages.previous)} onClick={() => goToStep(1)} />
+          &nbsp; &nbsp;
+          <AppButton type="submit" label={formatMessage(messages.confirm)} primary />
+        </Col>
+      </Row>
+    </Grid>
   );
 };
 
@@ -36,6 +54,7 @@ TopicCreate2PreviewContainer.propTypes = {
   handleNextStep: React.PropTypes.func.isRequired,
   // from dispatch
   finishStep: React.PropTypes.func.isRequired,
+  goToStep: React.PropTypes.func.isRequired,
   // from form
   formData: React.PropTypes.object,
 };
@@ -52,6 +71,9 @@ const mapDispatchToProps = dispatch => ({
   },
   handleNextStep: () => {
     dispatch(goToCreateTopicStep(2));
+  },
+  goToStep: (step) => {
+    dispatch(goToCreateTopicStep(step));
   },
 });
 
