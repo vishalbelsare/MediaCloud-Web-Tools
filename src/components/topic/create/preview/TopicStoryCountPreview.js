@@ -8,8 +8,11 @@ import DataCard from '../../../common/DataCard';
 import BubbleChart from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
+import { updateFeedback } from '../../../../actions/appActions';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
+const MAX_RECOMMENDED_STORIES = 100000;
+const MIN_RECOMMENDED_STORIES = 500;
 
 const localMessages = {
   title: { id: 'topic.create.preview.storyCount.title', defaultMessage: 'Seed Stories' },
@@ -18,6 +21,8 @@ const localMessages = {
   },
   filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Matching Stories' },
   totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories' },
+  toomany: { id: 'topic.create.preview.storyCount.toomany', defaultMessage: 'Too many stories' },
+  notenough: { id: 'topic.create.preview.storyCount.feedback.notenough', defaultMessage: 'Not enough stories' },
 };
 
 class TopicStoryCountPreview extends React.Component {
@@ -28,22 +33,22 @@ class TopicStoryCountPreview extends React.Component {
     }
   }
   render() {
-    const { counts } = this.props;
+    const { count } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
-    if (counts !== null) {
+    if (count !== null) {
       const data = [  // format the data for the bubble chart help
         {
-          value: counts.count,
+          value: count,
           fill: getBrandDarkColor(),
           aboveText: formatMessage(localMessages.filteredLabel),
           aboveTextColor: 'rgb(255,255,255)',
-          rolloverText: `${formatMessage(localMessages.filteredLabel)}: ${formatNumber(counts.count)} stories`,
+          rolloverText: `${formatMessage(localMessages.filteredLabel)}: ${formatNumber(count)} stories`,
         },
         {
-          value: counts.total,
+          value: MAX_RECOMMENDED_STORIES,
           aboveText: formatMessage(localMessages.totalLabel),
-          rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
+          rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
         },
       ];
       content = (<BubbleChart
@@ -72,18 +77,28 @@ TopicStoryCountPreview.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   // from state
-  counts: React.PropTypes.object,
+  count: React.PropTypes.object,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.create.preview.matchingStoryCounts.fetchStatus,
-  counts: state.topics.create.preview.matchingStoryCounts.counts,
+  count: state.topics.create.preview.matchingStoryCounts.count,
 });
 
-const mapDispatchToProps = dispatch => ({
+// TODO do some evaluation here where we look at the admin role and tell the user about the 100K limit
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (query) => {
-    dispatch(fetchStoryCountByQuery({ q: query }));
+    dispatch(fetchStoryCountByQuery({ q: query }))
+      .then((result) => {
+        if (result.count > MAX_RECOMMENDED_STORIES) { // TODO and user not an admin
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.toomany) }));
+        } else if (result.count < MIN_RECOMMENDED_STORIES) {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notenough) }));
+        }
+      });
   },
 });
 

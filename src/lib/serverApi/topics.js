@@ -185,17 +185,17 @@ export function createTopic(params) {
 
 export function fetchStoryCountByQuery(params) {
   const acceptedParams = acceptParams(params, ['q']);
-  return createApiPromise('/api/topics/preview/story/count', acceptedParams, 'post');
+  return createPostingApiPromise('/api/topics/create/preview/story/count', acceptedParams);
 }
 
 export function fetchAttentionByQuery(params) {
   const acceptedParams = acceptParams(params, ['q']);
-  return createApiPromise('/api/topics/preview/sentences/count', acceptedParams, 'post');
+  return createApiPromise('/api/topics/create/preview/sentences/count', acceptedParams);
 }
 
 export function fetchStorySampleByQuery(params) {
   const acceptedParams = acceptParams(params, ['q']);
-  return createApiPromise('/api/topics/preview/stories/sample', acceptedParams, 'post');
+  return createApiPromise('/api/topics/create/preview/stories/sample', acceptedParams);
 }
 
 export function updateTopic(topicId, params) {
