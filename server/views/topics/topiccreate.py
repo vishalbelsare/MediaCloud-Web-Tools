@@ -9,14 +9,14 @@ from server.util.request import form_fields_required, api_error_handler
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/topics/create/preview/sentences/count', methods=['GET'])
+@app.route('/api/topics/create/preview/sentences/count', methods=['POST'])
 @flask_login.login_required
 @form_fields_required('q')
 @api_error_handler
 def api_topics_preview_sentences_count():
     user_mc = user_mediacloud_client()
     solr_query = request.form['q']
-    sentence_count_result = user_mc.sentenceList(solr_query=solr_query)
+    sentence_count_result = user_mc.sentenceList(solr_query=solr_query)['response']
     return jsonify(sentence_count_result)  # give them back new data, so they can update the client
 
 @app.route('/api/topics/create/preview/story/count', methods=['POST'])

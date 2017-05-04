@@ -71,12 +71,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (query) => {
-    const params = {
-      q: query,
-      limit: NUM_TO_SHOW,
-    };
-    dispatch(fetchStorySampleByQuery(params));
+  fetchData: (q) => {
+    dispatch(fetchStorySampleByQuery({ q, limit: NUM_TO_SHOW }));
   },
   handleStorySelection: () => {
     // TODO get target, push that link
@@ -91,9 +87,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData({
-        query: ownProps.query,
-      });
+      dispatchProps.fetchData(ownProps.query);
     },
   });
 }
