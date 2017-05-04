@@ -5,6 +5,7 @@ This is a shared repository for all the front-facing [Media Cloud](https://media
 This includes:
  * [Source Manager](https://sources.mediacloud.org)
  * [Topic Mapper](https://topics.mediacloud.org)
+
 Check out the `doc` folder for more documentation.
 
 Dev Installation
