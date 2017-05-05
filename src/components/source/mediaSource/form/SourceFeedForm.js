@@ -109,9 +109,6 @@ function validate(values) {
   if (emptyString(values.feed_type)) {
     errors.feed_type = messages.required;
   }
-  if (emptyString(values.name)) {
-    errors.name = messages.required;
-  }
   if (emptyString(values.url)) {
     errors.url = messages.required;
   }
