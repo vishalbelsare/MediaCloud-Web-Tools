@@ -22,7 +22,21 @@ const localMessages = {
 
 class TopicListContainer extends React.Component {
 
-  changeFilter = (filterType) => {
+  componentWillMount() {
+    const { topics, currentFilter } = this.props;
+    // if user hasn't set filter, set it smartly
+    if (currentFilter === null) {
+      if (topics.favorite.length > 0) {
+        this.handleSetFilter('favorites');
+      } else if (topics.personal.length > 0) {
+        this.handleSetFilter('personal');
+      } else {
+        this.handleSetFilter('public');
+      }
+    }
+  }
+
+  handleSetFilter = (filterType) => {
     const { setFilter } = this.props;
     setFilter(filterType);
   }
@@ -30,7 +44,7 @@ class TopicListContainer extends React.Component {
   render() {
     const { topics, currentFilter, nextButton, previousButton, handleSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
-    let whichTopics = topics;
+    let whichTopics = topics.public;
     let titleContent = null;
 
     // if the user has favorites => is logged_in => isn't logged in, show topics by filter
@@ -63,19 +77,19 @@ class TopicListContainer extends React.Component {
             <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
               <MenuItem
                 value="favorites"
-                onClick={() => this.changeFilter('favorites')}
+                onClick={() => this.handleSetFilter('favorites')}
                 primaryText={formatMessage(localMessages.topicsListFavorites)}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
                 value="personal"
                 primaryText={formatMessage(localMessages.topicsListPersonal)}
-                onClick={() => this.changeFilter('personal')}
+                onClick={() => this.handleSetFilter('personal')}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
                 value="public"
-                onClick={() => this.changeFilter('public')}
+                onClick={() => this.handleSetFilter('public')}
                 primaryText={formatMessage(localMessages.topicsListPublic)}
                 style={{ fontSize: 13 }}
               />

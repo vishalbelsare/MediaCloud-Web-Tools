@@ -14,7 +14,7 @@ const all = createAsyncReducer({
   initialState: {
     topics: [],
     link_ids: {},
-    currentFilter: 'favorites',
+    currentFilter: null,
   },
   action: FETCH_TOPIC_LIST,
   [SET_TOPIC_LIST_FILTER]: payload => ({
