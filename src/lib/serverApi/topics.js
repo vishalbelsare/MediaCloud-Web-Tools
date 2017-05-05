@@ -184,17 +184,17 @@ export function createTopic(params) {
 }
 
 export function fetchStoryCountByQuery(params) {
-  const acceptedParams = acceptParams(params, ['q']);
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/story/count', acceptedParams);
 }
 
 export function fetchAttentionByQuery(params) {
-  const acceptedParams = acceptParams(params, ['q']);
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/sentences/count', acceptedParams);
 }
 
 export function fetchStorySampleByQuery(params) {
-  const acceptedParams = acceptParams(params, ['q']);
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/stories/sample', acceptedParams);
 }
 

@@ -66,7 +66,18 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (query) => {
-    dispatch(fetchAttentionByQuery({ q: query }));
+    const infoForQuery = {
+      q: query.solr_seed_query,
+      start_date: query.start_date,
+      end_date: query.end_date,
+    };
+    // TODO
+    if ('collections' in query) {  // the collections are a FieldArray on the form
+      infoForQuery['collections[]'] = query.collections.map(s => s.id);
+    } else {
+      infoForQuery['collections[]'] = [];
+    }
+    dispatch(fetchAttentionByQuery(infoForQuery));
   },
 });
 

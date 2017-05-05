@@ -22,7 +22,7 @@ const TopicCreatePreview = (props) => {
       </Row>
       <Row>
         <Col lg={10} md={10} xs={12}>
-          <TopicAttentionPreview query={queryString} />
+          <TopicAttentionPreview query={formData} />
         </Col>
       </Row>
       <Row>
