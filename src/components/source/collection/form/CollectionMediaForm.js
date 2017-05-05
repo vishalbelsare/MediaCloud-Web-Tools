@@ -125,6 +125,7 @@ class SourceSelectionRendererRaw extends React.Component {
                   <SourceSearchContainer
                     searchCollections={false}
                     onMediaSourceSelected={item => this.addSources([item])}
+                    maxSources={12}
                   />
                 </Tab>
                 <Tab label={<FormattedMessage {...localMessages.tabCollection} />} >
