@@ -50,7 +50,7 @@ class SourceDetailsContainer extends React.Component {
   searchOnDashboard = () => {
     const { source } = this.props;
     let dashboardUrl = `https://dashboard.mediacloud.org/#query/["*"]/[{"sources":[${source.media_id}]}]/`;
-    if (source.health) {
+    if (source.health && source.health.start_date && source.health.end_date) {
       dashboardUrl += `["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/`;
     } else {
       dashboardUrl += '[""]/[""]/';
@@ -122,22 +122,22 @@ class SourceDetailsContainer extends React.Component {
               <FormattedMessage
                 {...localMessages.dateInfo}
                 values={{
-                  startDate: (source.health) ? source.health.start_date.substring(0, 10) : formatMessage(localMessages.unknown),
-                  endDate: (source.health) ? source.health.end_date.substring(0, 10) : formatMessage(localMessages.unknown),
+                  startDate: (source.health && source.health.start_date) ? source.health.start_date.substring(0, 10) : formatMessage(localMessages.unknown),
+                  endDate: (source.health && source.health.end_date) ? source.health.end_date.substring(0, 10) : formatMessage(localMessages.unknown),
                 }}
               />
               &nbsp;
               <FormattedMessage
                 {...localMessages.contentInfo}
                 values={{
-                  storyCount: (source.health) ? formatNumber(source.health.num_stories_w) : formatMessage(localMessages.unknown),
-                  sentenceCount: (source.health) ? formatNumber(source.health.num_sentences_w) : formatMessage(localMessages.unknown),
+                  storyCount: (source.health && source.health.num_stories_w) ? formatNumber(source.health.num_stories_w) : formatMessage(localMessages.unknown),
+                  sentenceCount: (source.health && source.health.num_sentences_w) ? formatNumber(source.health.num_sentences_w) : formatMessage(localMessages.unknown),
                 }}
               />
               &nbsp;
               <FormattedHTMLMessage
                 {...localMessages.gapInfo}
-                values={{ gapCount: (source.health) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
+                values={{ gapCount: (source.health && source.health.coverage_gaps) ? formatNumber(source.health.coverage_gaps) : formatMessage(localMessages.unknown) }}
               />
               &nbsp;
               <Link to={`/sources/${source.media_id}/feeds`} >
