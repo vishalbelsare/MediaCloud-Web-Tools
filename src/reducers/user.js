@@ -19,13 +19,16 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_PASSWORD):
-      const loginWorked = (action.payload.status !== 401);
-      if (loginWorked) {
+      const passwordLoginWorked = (action.payload.status !== 401);
+      if (passwordLoginWorked) {
         saveCookies(action.payload.email, action.payload.key);
+      } else {
+        // for safety, delete any cookies that might be there
+        deleteCookies();
       }
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        isLoggedIn: loginWorked,
+        isLoggedIn: passwordLoginWorked,
         ...action.payload,
       });
     case reject(LOGIN_WITH_PASSWORD):
@@ -41,9 +44,13 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_KEY):
+      const keyLoginWorked = (action.payload.status !== 401);
+      if (!keyLoginWorked) {
+        deleteCookies();
+      }
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
-        isLoggedIn: (action.payload.status !== 401),
+        isLoggedIn: keyLoginWorked,
         ...action.payload,
       });
     case reject(LOGIN_WITH_KEY):
