@@ -146,7 +146,7 @@ class StoryTable extends React.Component {
                   <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
                   <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
                   <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
-                  <td><ReadItNowButton onClick={this.handleReadItClick} /></td>
+                  <td><ReadItNowButton onClick={() => this.handleReadItClick(story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>
               );
