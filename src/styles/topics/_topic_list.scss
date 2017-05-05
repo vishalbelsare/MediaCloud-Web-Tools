@@ -24,13 +24,15 @@
 		}
 	}
 
-	.app-icon-filled-star {
+	.fav-toggle-button {
 		float: right;
 		margin-top: -10px;
-		svg {
-		  margin-left: 5px;
-		  width: 15px !important;
-		  height: 15px !important;
+		.app-icon {
+			svg {
+			  margin-left: 5px;
+			  width: 15px !important;
+			  height: 15px !important;
+			}
 		}
 	}
 

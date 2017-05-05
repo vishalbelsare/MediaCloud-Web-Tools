@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicSearchContainer from './search/TopicSearchContainer';
 import TopicListContainer from './list/TopicListContainer';
 import { updateFeedback } from '../../actions/appActions';
-import { setTopicFavorite, fetchFavoriteTopics } from '../../actions/topicActions';
+import { setTopicFavorite } from '../../actions/topicActions';
 import messages from '../../resources/messages';
 
 const localMessages = {
@@ -53,7 +53,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then(() => {
         const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
-        dispatch(fetchFavoriteTopics());  // to update the list of favorites
       });
   },
 });
