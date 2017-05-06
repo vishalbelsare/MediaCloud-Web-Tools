@@ -92,15 +92,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
-// TODO this should not be necessary - I will just pass in the values, but am experimenting
-const reduxFormConfig = {
-  form: 'topicForm',
-  destroyOnUnmount: false,  // so the wizard works
-};
-
 export default
   injectIntl(
-    reduxForm(reduxFormConfig)(
+    reduxForm()(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
         composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
           composeAsyncContainer(

@@ -96,7 +96,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.toomany) }));
         } else if (result.count < MIN_RECOMMENDED_STORIES) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notenough) }));
+          dispatch(updateFeedback({
+            open: true,
+            message: ownProps.intl.formatMessage(localMessages.notenough),
+          }));
         }
       });
   },

@@ -13,6 +13,7 @@ const TopicCreatePreview = (props) => {
   if (formData !== undefined) {
     queryString = `${formData.solr_seed_query} AND ${prepDateForSolrQuery(formData.start_date, formData.end_date)}`;
   }
+
   return (
     <div className="">
       <Row>

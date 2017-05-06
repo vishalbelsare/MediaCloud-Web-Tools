@@ -71,11 +71,12 @@ const mapDispatchToProps = dispatch => ({
       start_date: query.start_date,
       end_date: query.end_date,
     };
-    // TODO
-    if ('collections' in query) {  // the collections are a FieldArray on the form
-      infoForQuery['collections[]'] = query.collections.map(s => s.id);
-    } else {
-      infoForQuery['collections[]'] = [];
+    infoForQuery['collections[]'] = [];
+    infoForQuery['sources[]'] = [];
+
+    if ('sourcesAndCollections' in query) {  // in FieldArrays on the form
+      infoForQuery['collections[]'] = query.sourcesAndCollections.map(s => s.tags_id);
+      infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
     }
     dispatch(fetchAttentionByQuery(infoForQuery));
   },
@@ -89,15 +90,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
-// TODO this should not be necessary - I will just pass in the values, but am experimenting
-const reduxFormConfig = {
-  form: 'topicForm',
-  destroyOnUnmount: false,  // so the wizard works
-};
-
 export default
   injectIntl(
-    reduxForm(reduxFormConfig)(
+    reduxForm()(
       connect(mapStateToProps, mapDispatchToProps, mergeProps)(
         composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
           composeAsyncContainer(
