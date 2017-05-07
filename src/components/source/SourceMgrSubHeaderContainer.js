@@ -23,7 +23,7 @@ const SourceMgrSubHeaderContainer = (props) => {
 
   if (!nullOrUndefined(sourceId) || currentSelection.includes('sources')) { // for multiple pathways
     let details = '';
-    details += `ID #${sourceId}`;
+    details += `ID #${sourceInfo.id}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     details += (sourceInfo.is_monitored) ? ` • ${formatMessage(messages.monitored)}` : '';
     content = (
@@ -32,13 +32,13 @@ const SourceMgrSubHeaderContainer = (props) => {
           title={`${formatMessage(messages.sourceName)}: ${sourceInfo.name}`}
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
-          onSetFavorited={isFav => handleSetFavorited('source', sourceId, isFav)}
+          onSetFavorited={isFav => handleSetFavorited('source', sourceInfo.id, isFav)}
         />
       </div>
     );
   } else if (!nullOrUndefined(collectionId) || currentSelection.includes('collections')) {
     let details = '';
-    details += `ID #${collectionId}`;
+    details += `ID #${collectionInfo.id}`;
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
     details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
@@ -47,7 +47,7 @@ const SourceMgrSubHeaderContainer = (props) => {
           title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
-          onSetFavorited={isFav => handleSetFavorited('collection', collectionId, isFav)}
+          onSetFavorited={isFav => handleSetFavorited('collection', collectionInfo.id, isFav)}
         />
       </div>
     );
