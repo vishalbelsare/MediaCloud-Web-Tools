@@ -5,7 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { GridList, GridTile } from 'material-ui/GridList';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
-import FilledStarIcon from '../../common/icons/FilledStarIcon';
+import FavoriteToggler from '../../common/FavoriteToggler';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const TopicPreviewList = (props) => {
-  const { topics, linkGenerator } = props;
+  const { topics, linkGenerator, onSetFavorited } = props;
   let content = null;
   let subContent = null;
   if (topics && topics.length > 0) {
@@ -50,7 +50,10 @@ const TopicPreviewList = (props) => {
             <DataCard className="topic-preview-list-item">
               <div className="content">
                 <div>
-                  <div>{ topic.isFavorite ? <FilledStarIcon /> : '' }</div>
+                  <FavoriteToggler
+                    isFavorited={topic.isFavorite}
+                    onSetFavorited={isFav => onSetFavorited(topic.topics_id, isFav)}
+                  />
                   <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
                   <FormattedMessage
                     {...localMessages.range}

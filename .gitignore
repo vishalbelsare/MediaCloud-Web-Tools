@@ -21,3 +21,5 @@ env
 *.csv
 *.gexf
 .idea
+sketches/*
+
