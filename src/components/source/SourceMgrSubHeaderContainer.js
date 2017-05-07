@@ -17,10 +17,11 @@ const localMessages = {
 };
 
 const SourceMgrSubHeaderContainer = (props) => {
-  const { sourceId, sourceInfo, collectionId, collectionInfo, handleSetFavorited } = props;
+  const { currentSelection, sourceId, sourceInfo, collectionId, collectionInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
-  if (!nullOrUndefined(sourceId) || !nullOrUndefined(sourceInfo.id)) { // for multiple pathways
+
+  if (!nullOrUndefined(sourceId) || currentSelection.includes('sources')) { // for multiple pathways
     let details = '';
     details += `ID #${sourceId}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
@@ -35,7 +36,7 @@ const SourceMgrSubHeaderContainer = (props) => {
         />
       </div>
     );
-  } else if (!nullOrUndefined(collectionId) || !nullOrUndefined(collectionInfo.id)) {
+  } else if (!nullOrUndefined(collectionId) || currentSelection.includes('collections')) {
     let details = '';
     details += `ID #${collectionId}`;
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
@@ -63,6 +64,8 @@ const SourceMgrSubHeaderContainer = (props) => {
 SourceMgrSubHeaderContainer.propTypes = {
   // from parent
   // from context
+  params: React.PropTypes.object,       // params from router
+  location: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   // state
   sourceId: React.PropTypes.number,
@@ -71,6 +74,8 @@ SourceMgrSubHeaderContainer.propTypes = {
   collectionInfo: React.PropTypes.object,
   // from dispatch
   handleSetFavorited: React.PropTypes.func.isRequired,
+  // from url
+  currentSelection: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({
@@ -78,6 +83,7 @@ const mapStateToProps = state => ({
   sourceInfo: state.sources.sources.selected.sourceDetails,
   collectionId: state.sources.collections.selected.id,
   collectionInfo: state.sources.collections.selected.collectionDetails.object,
+  currentSelection: state.routing.locationBeforeTransitions.pathname,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
