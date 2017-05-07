@@ -55,7 +55,7 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState'];
     const infoToSave = {
       url: values.url,
       name: values.name,

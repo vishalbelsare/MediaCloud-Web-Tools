@@ -73,7 +73,25 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    // try to save it
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState'];
+    const infoToSave = {
+      id: ownProps.params.collectionId,
+      name: values.name,
+      description: values.description,
+      static: values.static,
+      showOnMedia: values.showOnMedia,
+      showOnStories: values.showOnStories,
+    };
+    metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
+      if (key in values) {
+        infoToSave[key] = values[key];
+      }
+    });
+    if ('sources' in values) {
+      infoToSave['collections[]'] = values.sources.map(s => (s.id ? s.id : s.tags_id));
+    } else {
+      infoToSave['collections[]'] = [];
+    }
     dispatch(updateSource(values))
       .then((result) => {
         if (result.success === 1) {
