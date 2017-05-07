@@ -10,6 +10,7 @@ import SourceForm from './form/SourceForm';
 import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
+import { nullOrUndefined } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Modify this Source' },
@@ -78,13 +79,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       id: ownProps.params.collectionId,
       name: values.name,
       description: values.description,
-      static: values.static,
-      showOnMedia: values.showOnMedia,
-      showOnStories: values.showOnStories,
+      editor_notes: nullOrUndefined(values.editor_notes) ? '' : values.editor_notes,
+      public_notes: nullOrUndefined(values.public_notes) ? '' : values.public_notes,
+      monitored: values.monitored,
     };
     metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
       if (key in values) {
-        infoToSave[key] = values[key];
+        infoToSave[key] = nullOrUndefined(values[key]) ? '' : values[key];
       }
     });
     if ('sources' in values) {

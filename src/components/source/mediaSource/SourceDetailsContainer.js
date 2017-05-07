@@ -67,7 +67,7 @@ class SourceDetailsContainer extends React.Component {
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
-    if (source.media_source_tags[0].tags_id === 8875452 && !isCollectionTagSet(source.media_source_tags[0].tags_id) && !source.is_healthy) {
+    if (!source.is_healthy && source.media_source_tags.length > 0 && !isCollectionTagSet(source.media_source_tags[0].tags_id)) {
       unhealthySourceWarning = (
         <span>
           <WarningNotice>
