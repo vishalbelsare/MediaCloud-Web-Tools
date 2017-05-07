@@ -4,21 +4,15 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import TopicStoryCountPreview from './TopicStoryCountPreview';
 import TopicAttentionPreview from './TopicAttentionPreview';
 import TopicStorySamplePreview from './TopicStorySamplePreview';
-import { prepDateForSolrQuery } from '../../../../lib/dateUtil';
 
 const TopicCreatePreview = (props) => {
   const { formData } = props;
-  // TODO make sure we are validating this query String, making sure no rogue code is in there etc.
-  let queryString = null;
-  if (formData !== undefined) {
-    queryString = `${formData.solr_seed_query} AND ${prepDateForSolrQuery(formData.start_date, formData.end_date)}`;
-  }
 
   return (
     <div className="">
       <Row>
         <Col lg={10} md={10} xs={12}>
-          <TopicStoryCountPreview query={queryString} />
+          <TopicStoryCountPreview query={formData} />
         </Col>
       </Row>
       <Row>
@@ -28,7 +22,7 @@ const TopicCreatePreview = (props) => {
       </Row>
       <Row>
         <Col lg={10} md={10} xs={12}>
-          <TopicStorySamplePreview query={queryString} />
+          <TopicStorySamplePreview query={formData} />
         </Col>
       </Row>
     </div>

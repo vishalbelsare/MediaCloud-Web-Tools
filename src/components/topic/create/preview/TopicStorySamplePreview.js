@@ -71,8 +71,21 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (q) => {
-    dispatch(fetchStorySampleByQuery({ q, limit: NUM_TO_SHOW }));
+  fetchData: (query) => {
+    const infoForQuery = {
+      q: query.solr_seed_query,
+      start_date: query.start_date,
+      end_date: query.end_date,
+      limit: NUM_TO_SHOW,
+    };
+    infoForQuery['collections[]'] = [];
+    infoForQuery['sources[]'] = [];
+
+    if ('sourcesAndCollections' in query) {  // in FieldArrays on the form
+      infoForQuery['collections[]'] = query.sourcesAndCollections.map(s => s.tags_id);
+      infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
+    }
+    dispatch(fetchStorySampleByQuery(query));
   },
   handleStorySelection: () => {
     // TODO get target, push that link
