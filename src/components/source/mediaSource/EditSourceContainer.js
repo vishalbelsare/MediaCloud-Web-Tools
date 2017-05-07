@@ -96,11 +96,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(updateSource(values))
       .then((result) => {
         if (result.success === 1) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
           dispatch(fetchSourceDetails(ownProps.params.sourceId))
             .then(() => {
               dispatch(setSubHeaderVisible(true));
+              dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
               dispatch(push(`/sources/${ownProps.params.sourceId}`));
             });
         }

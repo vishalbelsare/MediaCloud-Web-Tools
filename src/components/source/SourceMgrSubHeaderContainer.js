@@ -5,6 +5,7 @@ import messages from '../../resources/messages';
 import AppSubHeader from '../common/header/AppSubHeader';
 import { favoriteSource, favoriteCollection } from '../../actions/sourceActions';
 import { updateFeedback } from '../../actions/appActions';
+import { nullOrUndefined } from '../../lib/formValidators';
 
 const localMessages = {
   sourceFavorited: { id: 'source.favorited', defaultMessage: 'Starred this source' },
@@ -19,7 +20,7 @@ const SourceMgrSubHeaderContainer = (props) => {
   const { sourceId, sourceInfo, collectionId, collectionInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
-  if (sourceId !== null) {
+  if (!nullOrUndefined(sourceId) || !nullOrUndefined(sourceInfo.id)) { // for multiple pathways
     let details = '';
     details += `ID #${sourceId}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
@@ -34,7 +35,7 @@ const SourceMgrSubHeaderContainer = (props) => {
         />
       </div>
     );
-  } else if (collectionId !== null) {
+  } else if (!nullOrUndefined(collectionId) || !nullOrUndefined(collectionInfo.id)) {
     let details = '';
     details += `ID #${collectionId}`;
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;

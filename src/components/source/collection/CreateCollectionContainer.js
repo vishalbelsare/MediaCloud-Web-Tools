@@ -11,6 +11,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
+import { nullOrUndefined } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'collection.maintitle', defaultMessage: 'Create New Collection' },
@@ -113,7 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     const infoToSave = {
       name: values.name,
-      description: values.description,
+      description: nullOrUndefined(values.description) ? '' : values.description,
       static: values.static,
       showOnMedia: values.showOnMedia,
       showOnStories: values.showOnStories,
