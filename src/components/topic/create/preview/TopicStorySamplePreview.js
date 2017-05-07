@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoForQuery['collections[]'] = query.sourcesAndCollections.map(s => s.tags_id);
       infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
     }
-    dispatch(fetchStorySampleByQuery(query));
+    dispatch(fetchStorySampleByQuery(infoForQuery));
   },
   handleStorySelection: () => {
     // TODO get target, push that link

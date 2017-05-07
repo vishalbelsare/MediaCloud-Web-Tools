@@ -14,12 +14,13 @@ logger = logging.getLogger(__name__)
 # TODO lets get a good set of helpers here then move out to a query/solr util
 def concatenate_query_for_solr(args):
     query = ''
-    query_media_id = ''
-    query_tags_id = ''
+    query_media_id = " +".join(map(str, args['media_id']))
+    query_tags_id = " +".join(map(str, args['tags_id']))
 
     query = args['solr_seed_query']
-    query_media_id = " AND media_id:{}".format(args['media_id'])
-    query_tags_id = " AND tags_id:{}".format(args['tags_id'])
+
+    query_media_id = " AND media_id:({})".format(query_media_id)
+    query_tags_id = " AND tags_id_media:({})".format(query_tags_id)
     query = query + query_media_id + query_tags_id
 
     # solr_query += concatenate_query_and_dates()
