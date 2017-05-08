@@ -72,12 +72,12 @@ TopicStoryCountPreview.propTypes = {
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
   // from parent
-  query: React.PropTypes.string.isRequired,
+  query: React.PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   // from state
-  count: React.PropTypes.object,
+  count: React.PropTypes.number,
   fetchStatus: React.PropTypes.string.isRequired,
 };
 

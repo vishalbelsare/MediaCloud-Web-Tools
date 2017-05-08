@@ -109,7 +109,7 @@ class StoryTable extends React.Component {
                 }
               }
               let listOfFoci = 'none';
-              if (story.foci.length > 0) {
+              if (story.foci && story.foci.length > 0) {
                 listOfFoci = (
                   story.foci.map((foci, i) => (
                     <span key={foci.foci_id}>
@@ -163,7 +163,7 @@ class StoryTable extends React.Component {
 StoryTable.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number, // not required as this table is now also used by query routine
   onChangeSort: React.PropTypes.func,
   onChangeFocusSelection: React.PropTypes.func,
   sortedBy: React.PropTypes.string,

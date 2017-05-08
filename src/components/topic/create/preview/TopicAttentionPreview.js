@@ -1,6 +1,5 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
@@ -48,7 +47,7 @@ TopicAttentionPreview.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
   // passed in
-  query: React.PropTypes.string.isRequired,
+  query: React.PropTypes.object.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
@@ -92,12 +91,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   injectIntl(
-    reduxForm()(
-      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
-          composeAsyncContainer(
-            TopicAttentionPreview
-          )
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+        composeAsyncContainer(
+          TopicAttentionPreview
         )
       )
     )

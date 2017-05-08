@@ -33,7 +33,7 @@ const TopicCreate2PreviewContainer = (props) => {
       { content }
       <Row>
         <Col lg={12} md={12} sm={12} >
-          <AppButton flat label={formatMessage(messages.previous)} onClick={() => goToStep(1)} />
+          <AppButton flat label={formatMessage(messages.previous)} onClick={() => goToStep(0)} />
           &nbsp; &nbsp;
           <AppButton type="submit" label={formatMessage(messages.confirm)} primary />
         </Col>
@@ -47,7 +47,6 @@ TopicCreate2PreviewContainer.propTypes = {
   location: React.PropTypes.object.isRequired,
   // form composition
   intl: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
   // from state
   currentStep: React.PropTypes.number,
   handlePreviousStep: React.PropTypes.func.isRequired,
@@ -89,10 +88,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     composeIntlForm(
-      // reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          TopicCreate2PreviewContainer
-        )
-      // )
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        TopicCreate2PreviewContainer
+      )
     )
   );

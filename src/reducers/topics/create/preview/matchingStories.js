@@ -3,10 +3,14 @@ import { createAsyncReducer } from '../../../../lib/reduxHelpers';
 
 const matchingStorySamples = createAsyncReducer({
   initialState: {
-    stories: [],
+    list: [],
     links_ids: {},
   },
   action: FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE,
+  handleSuccess: payload => ({
+    total: payload.length,
+    list: payload,
+  }),
 });
 
 export default matchingStorySamples;

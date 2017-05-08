@@ -6,7 +6,7 @@ from server import app, db, mc
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
-
+import datetime
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -14,25 +14,29 @@ logger = logging.getLogger(__name__)
 # TODO lets get a good set of helpers here then move out to a query/solr util
 def concatenate_query_for_solr(args):
     query = ''
-    query_media_id = " +".join(map(str, args['media_id']))
-    query_tags_id = " +".join(map(str, args['tags_id']))
-
     query = args['solr_seed_query']
 
-    query_media_id = " AND media_id:({})".format(query_media_id)
-    query_tags_id = " AND tags_id_media:({})".format(query_tags_id)
-    query = query + query_media_id + query_tags_id
+    if len(args['media_id']) > 0:
+        query_media_id = " +".join(map(str, args['media_id']))
+        query_media_id = " AND media_id:({})".format(query_media_id)
+        query += query_media_id
+    
+    if len(args['tags_id']) > 0:
+        query_tags_id = " +".join(map(str, args['tags_id']))
+        query_tags_id = " AND tags_id_media:({})".format(query_tags_id)
+        query += query_tags_id
 
-    # solr_query += concatenate_query_and_dates()
+    if 'start_date' in args:
+        query += " " + concatenate_query_and_dates(args['start_date'], args['end_date'])
+    
     return query
 
-def concatenate_query_and_dates(args, start_date, end_date):
-    query = ''
+def concatenate_query_and_dates(start_date, end_date):
+    publish_date = ''
     user_mc = user_mediacloud_client()
-    query = args['solr_seed_query']
-    query += user_mc.publish_date_query(start_date,end_date)
+    publish_date += user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),datetime.datetime.strptime(end_date, '%Y-%m-%d').date())
 
-    return query
+    return publish_date
 
 @app.route('/api/topics/create/preview/sentences/count', methods=['POST'])
 @flask_login.login_required
@@ -81,7 +85,6 @@ def api_topics_preview_story_count():
 @api_error_handler
 def api_topics_preview_story_sample():
     user_mc = user_mediacloud_client()
-    solr_query = request.form['q']
 
     # TODO
     args = {
@@ -91,7 +94,7 @@ def api_topics_preview_story_sample():
         'media_id': _media_ids_from_sources_param(request.form['sources[]']),
         'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
     }
-    # concatenate_publish_date_for_solr(request.form['start_date'], request.form['end_date'])
+    
     solr_query = concatenate_query_for_solr(args);
     story_count_result = user_mc.storyList(solr_query=solr_query)
 

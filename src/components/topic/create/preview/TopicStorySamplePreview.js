@@ -1,6 +1,5 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
@@ -53,7 +52,7 @@ TopicStorySamplePreview.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
   // passed in
-  query: React.PropTypes.string.isRequired,
+  query: React.PropTypes.object.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   total: React.PropTypes.number,
@@ -67,7 +66,7 @@ TopicStorySamplePreview.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.create.preview.matchingStories.fetchStatus,
   sort: state.topics.create.preview.matchingStories.total,
-  stories: state.topics.create.preview.matchingStories.stories,
+  stories: state.topics.create.preview.matchingStories.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -107,12 +106,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   injectIntl(
-    reduxForm()(
-      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-        composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
-          composeAsyncContainer(
-            TopicStorySamplePreview
-          )
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
+        composeAsyncContainer(
+          TopicStorySamplePreview
         )
       )
     )
