@@ -68,9 +68,7 @@ TopicForm.propTypes = {
   submitting: React.PropTypes.bool.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
-  errors: React.PropTypes.func.isRequired,
   validate: React.PropTypes.func.isRequired,
-  reduxFormConfig: React.PropTypes.func.isRequired,
   mode: React.PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
 };
 

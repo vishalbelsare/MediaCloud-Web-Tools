@@ -11,18 +11,22 @@ import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
+import { PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 
 const localMessages = {
   title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Topic' },
   name: { id: 'topic.create.confirm.name', defaultMessage: '<b>Name</b>: {name}' },
   description: { id: 'topic.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
   state: { id: 'topic.create.state', defaultMessage: 'Not yet saved.' }, // or newly saved?
+  storyCount: { id: 'topic.create.story.count', defaultMessage: 'You have selected {count} stories.' },
   topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your new Topic.' },
   topicNotSaved: { id: 'topic.create.notSaved', defaultMessage: 'That didn\'t work!' },
+  feedback: { id: 'topic.create.feedback', defaultMessage: 'Successfully created your new topic!' },
+  createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
 };
 
 const TopicCreate3ConfirmContainer = (props) => {
-  const { formValues, finishStep, handlePreviousStep } = props;
+  const { formValues, finishStep, handlePreviousStep, storyCount } = props;
   const { formatMessage } = props.intl;
 
   let sourcesAndCollections = [];
@@ -43,6 +47,8 @@ const TopicCreate3ConfirmContainer = (props) => {
         <b><FormattedMessage {...messages.topicStartDateProp} /></b>: {formValues.start_date}
         <br />
         <b><FormattedMessage {...messages.topicEndDateProp} /></b>: {formValues.end_date}
+        <br />
+        <b><FormattedMessage {...localMessages.storyCount} values={{ count: storyCount }} /></b>
       </p>
       <p>
         <b><FormattedHTMLMessage {...messages.topicQueryProp} /></b>
@@ -51,10 +57,11 @@ const TopicCreate3ConfirmContainer = (props) => {
       <p>
         <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>
       </p>
-      {sourcesAndCollections.map(object => <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />)}
+      {formValues.sourcesAndCollections.map(object => <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />)}
       <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
       &nbsp; &nbsp;
-      <AppButton type="submit" label={formatMessage(messages.confirm)} primary onClick={() => finishStep()} />
+      <br />
+      <AppButton type="submit" label={formatMessage(localMessages.createTopic)} primary onClick={() => finishStep()} />
     </DataCard>
     // TODO make sure ok to take out pattern. Otherwise could reuse TopicInfo
   );
@@ -73,52 +80,58 @@ TopicCreate3ConfirmContainer.propTypes = {
   // from dispatch
   finishStep: React.PropTypes.func.isRequired,
   handlePreviousStep: React.PropTypes.func.isRequired,
+  storyCount: React.PropTypes.number,
 };
 
 const mapStateToProps = state => ({
   formValues: state.form.topicForm.values,
+  canSave: state.topics.create.preview.matchingStoryCounts.canSave,
+  storyCount: state.topics.create.preview.matchingStoryCounts.count,
+  userPermission: state.user.profile.auth_roles,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
     dispatch(goToCreateTopicStep(1));
   },
-  handleCreateTopic: (values) => {
-    const queryInfo = {
-      name: values.name,
-      description: values.description,
-      start_date: values.start_date,
-      end_date: values.end_date,
-      solr_seed_query: values.solr_seed_query,
-      max_iterations: values.max_iterations,
-      ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
-      is_public: values.is_public === undefined ? false : values.is_public,
-      twitter_topics_id: values.twitter_topics_id,
-    };
-    queryInfo.is_public = queryInfo.is_public ? 1 : 0;
-    if ('sourcesAndCollections' in values) {
-      queryInfo['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
-      queryInfo['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
-    } else {
-      queryInfo['sources[]'] = '';
-      queryInfo['collections[]'] = '';
-    }
-    dispatch(createTopic(queryInfo)).then((results) => {
-      if (results.topics_id) {
-        // let them know it worked
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        dispatch(push(`/topics/${results.topics_id}/summary`));
+  handleCreateTopic: (canSave, permission, values) => {
+    if (canSave || (permission.includes(PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
+      const queryInfo = {
+        name: values.name,
+        description: values.description,
+        start_date: values.start_date,
+        end_date: values.end_date,
+        solr_seed_query: values.solr_seed_query,
+        max_iterations: values.max_iterations,
+        ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
+        is_public: values.is_public === undefined ? false : values.is_public,
+        twitter_topics_id: values.twitter_topics_id,
+      };
+      queryInfo.is_public = queryInfo.is_public ? 1 : 0;
+      if ('sourcesAndCollections' in values) {
+        queryInfo['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
+        queryInfo['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
       } else {
-        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+        queryInfo['sources[]'] = '';
+        queryInfo['collections[]'] = '';
       }
-    });
+      dispatch(createTopic(queryInfo)).then((results) => {
+        if (results.topics_id) {
+          // let them know it worked
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(push(`/topics/${results.topics_id}/summary`));
+        } else {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+        }
+      });
+    }
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     finishStep: () => {
-      dispatchProps.handleCreateTopic(stateProps.formValues);
+      dispatchProps.handleCreateTopic(stateProps.canSave, stateProps.userPermission, stateProps.formValues);
     },
   });
 }

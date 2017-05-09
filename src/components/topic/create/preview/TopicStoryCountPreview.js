@@ -10,10 +10,11 @@ import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
 import { addNotice, updateFeedback } from '../../../../actions/appActions';
 import { LEVEL_ERROR, WarningNotice } from '../../../common/Notice';
+import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
+import { PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
-const MAX_RECOMMENDED_STORIES = 100000;
-const MIN_RECOMMENDED_STORIES = 500;
+
 
 const localMessages = {
   title: { id: 'topic.create.preview.storyCount.title', defaultMessage: 'Seed Stories' },
@@ -34,7 +35,7 @@ class TopicStoryCountPreview extends React.Component {
     }
   }
   render() {
-    const { count } = this.props;
+    const { count, userPermission } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
     let storySizeWarning = null;
@@ -53,7 +54,7 @@ class TopicStoryCountPreview extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
         },
       ];
-      if (count > MAX_RECOMMENDED_STORIES) {
+      if (count > MAX_RECOMMENDED_STORIES && !userPermission.includes(PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.toomany} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notenough} /></WarningNotice>);
@@ -87,11 +88,14 @@ TopicStoryCountPreview.propTypes = {
   // from state
   count: React.PropTypes.number,
   fetchStatus: React.PropTypes.string.isRequired,
+  userPermission: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.create.preview.matchingStoryCounts.fetchStatus,
   count: state.topics.create.preview.matchingStoryCounts.count,
+  canSave: state.topics.create.preview.matchingStoryCounts.canSave,
+  userPermission: state.user.profile.auth_roles,
 });
 
 // TODO do some evaluation here where we look at the admin role and tell the user about the 100K limit

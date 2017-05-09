@@ -58,8 +58,6 @@ TopicCreate2PreviewContainer.propTypes = {
 
 const mapStateToProps = state => ({
   currentStep: state.topics.create.preview.workflow.currentStep,
-  // TODO I should be able to get this from state.form.topicForm but am trying to deal with the destroyOnUnmount fail
-  // formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
   formData: state.form.topicForm.values,
 });
 
