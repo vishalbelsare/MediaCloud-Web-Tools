@@ -1,17 +1,18 @@
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { emptyString } from '../../../lib/formValidators';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
+import { emptyString } from '../../../lib/formValidators';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
 
 const localMessages = {
   name: { id: 'topic.name', defaultMessage: 'Name' },
+  sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
 const TopicForm = (props) => {
@@ -60,16 +61,10 @@ TopicForm.propTypes = {
 };
 
 function validate(values) {
-  // TODO maybe check collections or sources here bc this validation is already done in detail form
+  // TODO
   const errors = {};
-  if (emptyString(values.name)) {
-    errors.name = localMessages.nameError;
-  }
-  if (emptyString(values.description)) {
-    errors.description = localMessages.descriptionError;
-  }
-  if (emptyString(values.solr_seed_query)) {
-    errors.seedQuery = localMessages.seedQueryError;
+  if (!emptyString(values.name) && (!values.sourcesAndCollections || values.sourcesAndCollections.length < 1)) {
+    errors.sourceCollections = localMessages.sourceCollectionsError;
   }
   return errors;
 }

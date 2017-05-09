@@ -18,13 +18,11 @@ const localMessages = {
 };
 
 const TopicCreate2PreviewContainer = (props) => {
-  const { handleNextStep, handlePreviousStep, formData, goToStep } = props;
+  const { handleNextStep, handlePreviousStep, formData } = props;
   const { formatMessage } = props.intl;
 
   const content = (<TopicCreatePreview
     formData={formData}
-    onPreviousStep={handlePreviousStep}
-    onNextStep={handleNextStep}
   />);
 
   return (
@@ -33,9 +31,9 @@ const TopicCreate2PreviewContainer = (props) => {
       { content }
       <Row>
         <Col lg={12} md={12} sm={12} >
-          <AppButton flat label={formatMessage(messages.previous)} onClick={() => goToStep(0)} />
+          <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
           &nbsp; &nbsp;
-          <AppButton type="submit" label={formatMessage(messages.confirm)} primary />
+          <AppButton type="submit" label={formatMessage(messages.confirm)} primary onClick={() => handleNextStep()} />
         </Col>
       </Row>
     </Grid>

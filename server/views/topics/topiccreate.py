@@ -16,18 +16,24 @@ def concatenate_query_for_solr(args):
     query = ''
     query = args['solr_seed_query']
 
+    if len(args['media_id']) > 0 or len(args['tags_id']) > 0:
+        query += " AND "
+
     if len(args['media_id']) > 0:
-        query_media_id = " +".join(map(str, args['media_id']))
-        query_media_id = " AND media_id:({})".format(query_media_id)
+        query_media_id = " ".join(map(str, args['media_id']))
+        query_media_id = " media_id:({})".format(query_media_id)
         query += query_media_id
     
+    if len(args['media_id']) > 0 and len(args['tags_id']) > 0:
+        query += " OR "
+
     if len(args['tags_id']) > 0:
-        query_tags_id = " +".join(map(str, args['tags_id']))
-        query_tags_id = " AND tags_id_media:({})".format(query_tags_id)
+        query_tags_id = " ".join(map(str, args['tags_id']))
+        query_tags_id = " tags_id_media:({})".format(query_tags_id)
         query += query_tags_id
 
     if 'start_date' in args:
-        query += " " + concatenate_query_and_dates(args['start_date'], args['end_date'])
+        query += " AND (+" + concatenate_query_and_dates(args['start_date'], args['end_date']) + ")"
     
     return query
 

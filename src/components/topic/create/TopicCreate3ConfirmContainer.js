@@ -10,6 +10,7 @@ import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
+import AppButton from '../../common/AppButton';
 
 const localMessages = {
   title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New "{name}" Topic' },
@@ -21,16 +22,16 @@ const localMessages = {
 };
 
 const TopicCreate3ConfirmContainer = (props) => {
-  const { formValues } = props;
+  const { formValues, finishStep, handlePreviousStep } = props;
   const { formatMessage } = props.intl;
 
   let sourcesAndCollections = [];
   sourcesAndCollections = formValues.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
-  sourcesAndCollections.update(formValues.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id));
+  sourcesAndCollections.concat(formValues.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id));
   return (
     <DataCard className="topic-info">
       <h2>
-        <FormattedMessage {...localMessages.title} />
+        <FormattedMessage {...localMessages.title} values={formValues.name} />
       </h2>
       <p>{formValues.description}</p>
       <p>
@@ -51,6 +52,9 @@ const TopicCreate3ConfirmContainer = (props) => {
         <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>
       </p>
       {sourcesAndCollections.map(object => <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />)}
+      <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
+      &nbsp; &nbsp;
+      <AppButton type="submit" label={formatMessage(messages.confirm)} primary onClick={() => finishStep()} />
     </DataCard>
     // TODO make sure ok to take out pattern. Otherwise could reuse TopicInfo
   );
@@ -62,7 +66,7 @@ TopicCreate3ConfirmContainer.propTypes = {
   initialValues: React.PropTypes.object,
   // form context
   intl: React.PropTypes.object.isRequired,
-  handlePreview: React.PropTypes.func.isRequired,
+  handleCreateTopic: React.PropTypes.func.isRequired,
   submitting: React.PropTypes.bool,
   // from state
   formValues: React.PropTypes.object.isRequired,
@@ -77,9 +81,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
-    dispatch(goToCreateTopicStep(2));
+    dispatch(goToCreateTopicStep(1));
   },
-  createTopic: (values) => {
+  handleCreateTopic: (values) => {
     const queryInfo = {
       name: values.name,
       description: values.description,
@@ -113,8 +117,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      dispatchProps.createTopic(values);
+    finishStep: () => {
+      dispatchProps.handleCreateTopic(stateProps.formValues);
     },
   });
 }

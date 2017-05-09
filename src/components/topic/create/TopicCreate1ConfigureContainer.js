@@ -18,6 +18,7 @@ const localMessages = {
   createTopicText: { id: 'topic.create.text', defaultMessage: 'You can create a new Topic to add to the MediaCloud system.' },
   addCollectionsTitle: { id: 'topic.create.addCollectionsTitle', defaultMessage: 'Select Sources And Collections' },
   addCollectionsIntro: { id: 'topic.create.addCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic:' },
+  sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
 const formSelector = formValueSelector('topicForm');
@@ -78,16 +79,23 @@ const mapDispatchToProps = dispatch => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     finishStep: (values) => {
-      // push the form data into state?
-      // I thought I didn't have to b/c of the form data
       dispatchProps.goToStep(1, values);
     },
   });
+}
+function validate(values) {
+  // TODO maybe check collections or sources here bc this validation is already done in detail form
+  const errors = {};
+  if (values.sourcesAndCollections && values.sourcesAndCollections.length < 1) {
+    errors.sourceCollections = localMessages.sourceCollectionsError;
+  }
+  return errors;
 }
 
 const reduxFormConfig = {
   form: 'topicForm',
   destroyOnUnmount: false,  // so the wizard works
+  validate,
 };
 
 export default

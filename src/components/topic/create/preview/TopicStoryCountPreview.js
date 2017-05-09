@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
@@ -8,7 +8,8 @@ import DataCard from '../../../common/DataCard';
 import BubbleChart from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
-import { updateFeedback } from '../../../../actions/appActions';
+import { addNotice, updateFeedback } from '../../../../actions/appActions';
+import { LEVEL_ERROR, WarningNotice } from '../../../common/Notice';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 const MAX_RECOMMENDED_STORIES = 100000;
@@ -36,6 +37,7 @@ class TopicStoryCountPreview extends React.Component {
     const { count } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     let content = null;
+    let storySizeWarning = null;
     if (count !== null) {
       const data = [  // format the data for the bubble chart help
         {
@@ -51,6 +53,11 @@ class TopicStoryCountPreview extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
         },
       ];
+      if (count > MAX_RECOMMENDED_STORIES) {
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.toomany} /></WarningNotice>);
+      } else if (count < MIN_RECOMMENDED_STORIES) {
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notenough} /></WarningNotice>);
+      }
       content = (<BubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
@@ -62,6 +69,7 @@ class TopicStoryCountPreview extends React.Component {
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
+        {storySizeWarning}
         {content}
       </DataCard>
     );
@@ -107,11 +115,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (result.count > MAX_RECOMMENDED_STORIES) { // TODO and user not an admin
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.toomany) }));
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.toomany) }));
         } else if (result.count < MIN_RECOMMENDED_STORIES) {
           dispatch(updateFeedback({
             open: true,
             message: ownProps.intl.formatMessage(localMessages.notenough),
           }));
+          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notenough) }));
         }
       });
   },
