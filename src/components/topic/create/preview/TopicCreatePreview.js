@@ -4,6 +4,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import TopicStoryCountPreview from './TopicStoryCountPreview';
 import TopicAttentionPreview from './TopicAttentionPreview';
 import TopicStorySamplePreview from './TopicStorySamplePreview';
+import TopicWordsPreview from './TopicWordsPreview';
 
 const TopicCreatePreview = (props) => {
   const { formData } = props;
@@ -18,6 +19,11 @@ const TopicCreatePreview = (props) => {
       <Row>
         <Col lg={10} md={10} xs={12}>
           <TopicAttentionPreview query={formData} />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={10} md={10} xs={12}>
+          <TopicWordsPreview query={formData} />
         </Col>
       </Row>
       <Row>

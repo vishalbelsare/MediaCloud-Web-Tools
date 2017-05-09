@@ -58,9 +58,9 @@ const TopicCreate3ConfirmContainer = (props) => {
         <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>
       </p>
       {formValues.sourcesAndCollections.map(object => <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />)}
+      <br />
       <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
       &nbsp; &nbsp;
-      <br />
       <AppButton type="submit" label={formatMessage(localMessages.createTopic)} primary onClick={() => finishStep()} />
     </DataCard>
     // TODO make sure ok to take out pattern. Otherwise could reuse TopicInfo
