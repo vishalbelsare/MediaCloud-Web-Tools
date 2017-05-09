@@ -1,10 +1,9 @@
 import React from 'react';
 import { FormattedHTMLMessage } from 'react-intl';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, propTypes, validate } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
-import { emptyString, invalidDate } from '../../../lib/formValidators';
 import composeIntlForm from '../../common/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
@@ -173,35 +172,9 @@ TopicDetailForm.propTypes = {
   initialValues: React.PropTypes.object,
 };
 
-function validate(values) {
-  const errors = {};
-  if (emptyString(values.name)) {
-    errors.name = localMessages.nameError;
-  }
-  if (emptyString(values.description)) {
-    errors.description = localMessages.descriptionError;
-  }
-  if (emptyString(values.solr_seed_query)) {
-    errors.solr_seed_query = localMessages.seedQueryError;
-  }
-  if (invalidDate(values.start_date)) {
-    errors.start_date = localMessages.dateError;
-  }
-  if (invalidDate(values.end_date)) {
-    errors.end_date = localMessages.dateError;
-  }
-  return errors;
-}
-
-const reduxFormConfig = {
-  form: 'topicForm',
-  validate,
-  destroyOnUnmount: false,
-};
-
 export default
   composeIntlForm(
-    reduxForm(reduxFormConfig)(
+    reduxForm({ propTypes, validate })(
       TopicDetailForm
     )
   );

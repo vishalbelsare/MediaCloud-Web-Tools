@@ -31,7 +31,7 @@ const TopicCreate3ConfirmContainer = (props) => {
   return (
     <DataCard className="topic-info">
       <h2>
-        <FormattedMessage {...localMessages.title} values={formValues.name} />
+        <FormattedMessage {...localMessages.title} values={{ name: formValues.name }} />
       </h2>
       <p>{formValues.description}</p>
       <p>

@@ -1,4 +1,11 @@
+@import '../constants';
 
 .create-topic {
   margin-bottom: 500px;
+}
+
+.error {
+  font-size: 12px !important;
+  line-height: 12px !important;
+  color: rgb(244, 67, 54) !important;
 }

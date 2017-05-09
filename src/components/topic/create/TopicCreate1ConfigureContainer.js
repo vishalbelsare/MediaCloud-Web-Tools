@@ -7,8 +7,6 @@ import Title from 'react-title-component';
 import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -37,15 +35,13 @@ const TopicCreate1ConfigureContainer = (props) => {
           <p><FormattedMessage {...localMessages.createTopicText} /></p>
         </Col>
       </Row>
-      <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
-        <TopicForm
-          initialValues={initialValues}
-          onSaveTopic={finishStep}
-          title={formatMessage(localMessages.addCollectionsTitle)}
-          intro={formatMessage(localMessages.addCollectionsIntro)}
-          mode={TOPIC_FORM_MODE_CREATE}
-        />
-      </Permissioned>
+      <TopicForm
+        initialValues={initialValues}
+        onSaveTopic={finishStep}
+        title={formatMessage(localMessages.addCollectionsTitle)}
+        intro={formatMessage(localMessages.addCollectionsIntro)}
+        mode={TOPIC_FORM_MODE_CREATE}
+      />
     </Grid>
   );
 };
@@ -83,19 +79,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
   });
 }
-function validate(values) {
-  // TODO maybe check collections or sources here bc this validation is already done in detail form
-  const errors = {};
-  if (values.sourcesAndCollections && values.sourcesAndCollections.length < 1) {
-    errors.sourceCollections = localMessages.sourceCollectionsError;
-  }
-  return errors;
-}
 
 const reduxFormConfig = {
   form: 'topicForm',
   destroyOnUnmount: false,  // so the wizard works
-  validate,
 };
 
 export default
