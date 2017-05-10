@@ -15,7 +15,7 @@ const localMessages = {
 
 const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
-class TopicTopicStoryTable extends React.Component {
+class TopicStoryTable extends React.Component {
 
   sortBySocial = () => {
     const { onChangeSort } = this.props;
@@ -160,7 +160,7 @@ class TopicTopicStoryTable extends React.Component {
 
 }
 
-TopicTopicStoryTable.propTypes = {
+TopicStoryTable.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number, // not required as this table is now also used by query routine
@@ -170,4 +170,4 @@ TopicTopicStoryTable.propTypes = {
   maxTitleLength: React.PropTypes.number,
 };
 
-export default injectIntl(TopicTopicStoryTable);
+export default injectIntl(TopicStoryTable);

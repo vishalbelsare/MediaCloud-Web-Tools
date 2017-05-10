@@ -1,12 +1,9 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
-import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
-import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
-import { ReadItNowButton } from '../common/IconButton';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -22,39 +19,11 @@ class StoryTable extends React.Component {
     onChangeSort('social');
   }
 
-  sortByInlinks = () => {
-    const { onChangeSort } = this.props;
-    onChangeSort('inlink');
-  }
-
-  handleReadItClick = (story) => {
-    window.open(story.url, '_blank');
-  }
-
   render() {
-    const { stories, onChangeSort, onChangeFocusSelection, topicId, sortedBy, maxTitleLength } = this.props;
+    const { stories, onChangeSort, sortedBy, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
-    let inlinkHeader = null;
     let socialHeader = null;
     if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
-      if (sortedBy === 'inlink') {
-        inlinkHeader = (
-          <div>
-            <FormattedMessage {...messages.mediaInlinks} />
-            <ArrowDropDownIcon style={ICON_STYLE} />
-          </div>
-        );
-      } else {
-        inlinkHeader = (
-          <a
-            href={`#${formatMessage(messages.sortByMediaInlinks)}`}
-            onClick={(e) => { e.preventDefault(); this.sortByInlinks(); }}
-            title={formatMessage(messages.sortByMediaInlinks)}
-          >
-            <FormattedMessage {...messages.mediaInlinks} />
-          </a>
-        );
-      }
       if (sortedBy === 'social') {
         socialHeader = (
           <div>
@@ -74,7 +43,6 @@ class StoryTable extends React.Component {
         );
       }
     } else {
-      inlinkHeader = <FormattedMessage {...messages.mediaInlinks} />;
       socialHeader = <FormattedMessage {...messages.bitlyClicks} />;
     }
     return (
@@ -86,12 +54,9 @@ class StoryTable extends React.Component {
               <th>{}</th>
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
-              <th>{inlinkHeader}</th>
-              <th><FormattedMessage {...messages.outlinks} /></th>
               <th>{socialHeader}</th>
               <th><FormattedMessage {...messages.facebookShares} /></th>
               <th>{}</th>
-              <th><FormattedMessage {...messages.focusHeader} /></th>
             </tr>
             {stories.map((story, idx) => {
               const domain = storyDomainName(story);
@@ -108,46 +73,21 @@ class StoryTable extends React.Component {
                   dateToShow += '?';
                 }
               }
-              let listOfFoci = 'none';
-              if (story.foci && story.foci.length > 0) {
-                listOfFoci = (
-                  story.foci.map((foci, i) => (
-                    <span key={foci.foci_id}>
-                      {!!i && ', '}
-                      <Link
-                        to={`/topics/${topicId}/summary?focusId=${foci.foci_id}`}
-                        onClick={() => onChangeFocusSelection(foci.foci_id)}
-                      >
-                        { foci.name }
-                      </Link>
-                    </span>
-                  ),
-                  )
-                );
-                // listOfFoci = intersperse(listOfFoci, ', ');
-              }
+
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
-                    <LinkWithFilters to={`/topics/${topicId}/stories/${story.stories_id}`}>
-                      {title}
-                    </LinkWithFilters>
+                    <a href={story.url}>{title}</a>
                   </td>
                   <td>
                     <img className="google-icon" src={googleFavIconUrl(domain)} alt={domain} />
                   </td>
                   <td>
-                    <LinkWithFilters to={`/topics/${topicId}/media/${story.media_id}`}>
-                      {story.media_name}
-                    </LinkWithFilters>
+                    <a href={story.media_url}>{story.media_name}</a>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.media_inlink_count !== undefined ? story.media_inlink_count : '?'} /></td>
-                  <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
                   <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
                   <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
-                  <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
-                  <td>{listOfFoci}</td>
                 </tr>
               );
             }

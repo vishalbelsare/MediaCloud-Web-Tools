@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import TopicStoryTable from '../../TopicStoryTable';
+import StoryTable from '../../StoryTable';
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
 import messages from '../../../../resources/messages';
@@ -38,7 +38,7 @@ class TopicStorySamplePreview extends React.Component {
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
-        <TopicStoryTable
+        <StoryTable
           stories={stories}
           onChangeFocusSelection={handleStorySelection}
           maxTitleLength={50}
