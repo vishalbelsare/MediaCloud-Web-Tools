@@ -186,7 +186,7 @@ def update_source_list_metadata(source_list):
                     if mkey == METADATA_PUB_COUNTRY_NAME:  # template pub_###
                         matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_name]
                     elif mkey == METADATA_PUB_STATE_NAME:  # template ###_##
-                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_name + "_USA"]
+                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_name]
 
                     if matching and matching not in ['', None]:
                         metadata_tag_id = matching[0]['tags_id']
