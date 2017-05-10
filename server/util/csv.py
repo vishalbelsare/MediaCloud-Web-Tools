@@ -2,8 +2,6 @@ import logging
 import datetime
 import flask
 
-from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
-
 logger = logging.getLogger(__name__)
 
 
