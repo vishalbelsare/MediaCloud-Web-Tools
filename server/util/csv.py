@@ -4,11 +4,6 @@ import flask
 
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 
-SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored']
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
-
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
-
 logger = logging.getLogger(__name__)
 
 
@@ -64,4 +59,3 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         dict_keys = ','.join(dict_keys) + '\n'
         return flask.Response(dict_keys,
                               mimetype='text/csv; charset=utf-8', headers=headers)
-

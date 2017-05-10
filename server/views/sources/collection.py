@@ -8,8 +8,8 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, api_download_sources_csv
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, api_download_sources_csv
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
     VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set
 
 from server import app, mc, db, settings
@@ -43,7 +43,7 @@ def upload_file():
         if uploaded_file.filename == '':
             return json_error_response('No selected file')
         if uploaded_file and allowed_file(uploaded_file.filename):
-            props = csv.COLLECTIONS_TEMPLATE_PROPS_EDIT
+            props = COLLECTIONS_TEMPLATE_PROPS_EDIT
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(uploaded_file.filename))
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             uploaded_file.save(filepath)
@@ -363,7 +363,7 @@ def api_collection_details(collection_id):
 def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
 
-    what_type_download = csv.SOURCES_TEMPLATE_PROPS_EDIT
+    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
     
     return csv.stream_response(what_type_download, what_type_download, filename)
 
