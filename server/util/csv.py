@@ -4,10 +4,10 @@ import flask
 
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 
-SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored']
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored', 'editor_notes']
+SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored']
+SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
 
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'public_notes', 'is_monitored', 'editor_notes']
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
 
 logger = logging.getLogger(__name__)
 
@@ -65,29 +65,3 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         return flask.Response(dict_keys,
                               mimetype='text/csv; charset=utf-8', headers=headers)
 
-
-def api_download_sources_csv(all_media, file_prefix):
-
-    # info = user_mc.tag(int(collection_id))
-    for src in all_media:
-
-        # handle nulls
-        if 'pub_country' not in src:
-            src['pub_country'] = ''
-        if 'editor_notes' not in src:
-            src['editor_notes'] = ''
-        if 'is_monitored' not in src:
-            src['is_monitored'] = ''
-        if 'public_notes' not in src:
-            src['public_notes'] = ''
-        if 'pub_state' not in src:
-            src['pub_state'] = ''
-
-    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
-
-    if user_has_auth_role(ROLE_MEDIA_EDIT):
-        what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
-    else:
-        what_type_download = SOURCES_TEMPLATE_PROPS_VIEW # no editor_notes
-
-    return stream_response(all_media, what_type_download, file_prefix, what_type_download)
