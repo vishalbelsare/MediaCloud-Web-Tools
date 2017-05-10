@@ -39,35 +39,37 @@ def access_public_topic(topics_id):
         return True
     return False
 
+
 # TODO is this the best place or in util? this is topic specific....
 def concatenate_query_for_solr(args):
-    query = ''
-    query = args['solr_seed_query']
+    query = '({})'.format(args['solr_seed_query'])
 
     if len(args['media_id']) > 0 or len(args['tags_id']) > 0:
-        query += " AND "
+        query += " AND ("
+        # add in the media sources they specified
+        if len(args['media_id']) > 0:
+            query_media_id = " ".join(map(str, args['media_id']))
+            query_media_id = " media_id:({})".format(query_media_id)
+            query += '('+query_media_id+')'
 
-    if len(args['media_id']) > 0:
-        query_media_id = " ".join(map(str, args['media_id']))
-        query_media_id = " media_id:({})".format(query_media_id)
-        query += query_media_id
-    
-    if len(args['media_id']) > 0 and len(args['tags_id']) > 0:
-        query += " OR "
-
-    if len(args['tags_id']) > 0:
-        query_tags_id = " ".join(map(str, args['tags_id']))
-        query_tags_id = " tags_id_media:({})".format(query_tags_id)
-        query += query_tags_id
+        if len(args['media_id']) > 0 and len(args['tags_id']) > 0:
+            query += " OR "
+        # add in the collections they specified
+        if len(args['tags_id']) > 0:
+            query_tags_id = " ".join(map(str, args['tags_id']))
+            query_tags_id = " tags_id_media:({})".format(query_tags_id)
+            query += '('+query_tags_id+')'
+        query += ')'
 
     if 'start_date' in args:
         query += " AND (+" + concatenate_query_and_dates(args['start_date'], args['end_date']) + ")"
     
     return query
 
+
 def concatenate_query_and_dates(start_date, end_date):
-    publish_date = ''
     user_mc = user_mediacloud_client()
-    publish_date += user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),datetime.datetime.strptime(end_date, '%Y-%m-%d').date())
+    publish_date = user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),
+                                              datetime.datetime.strptime(end_date, '%Y-%m-%d').date())
 
     return publish_date

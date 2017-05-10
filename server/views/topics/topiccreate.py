@@ -22,11 +22,13 @@ def api_topics_preview_sentences_count():
 
     args = {
         'solr_seed_query': request.form['q'],
+        'start_date': request.form['start_date'],
+        'end_date': request.form['end_date'],
         'media_id': _media_ids_from_sources_param(request.form['sources[]']),
         'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
     }
 
-    solr_query = concatenate_query_for_solr(args);
+    solr_query = concatenate_query_for_solr(args)
 
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.form['start_date'], split_end_date=request.form['end_date'], split=True)
     return jsonify(sentence_count_result)  # give them back new data, so they can update the client
