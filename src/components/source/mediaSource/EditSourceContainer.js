@@ -33,7 +33,7 @@ const EditSourceContainer = (props) => {
       .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
     publicationState: pubState ? pubState.tags_id : undefined,
-    pLanguage: pLanguage ? pLanguage.tags_id : undefined,
+    primaryLanguage: pLanguage ? pLanguage.tags_id : undefined,
   };
   return (
     <div className="edit-source">

@@ -37,6 +37,7 @@ const SourceMetadataForm = props => (
           id={TAG_SET_PRIMARY_LANGUAGE}
           name={'primaryLanguage'}
           form="sourceForm"
+          disabled
           initialValues={props.initialValues}
         />
       </Col>
