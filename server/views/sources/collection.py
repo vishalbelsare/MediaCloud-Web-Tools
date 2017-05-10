@@ -8,7 +8,7 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, api_download_sources_csv
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv
 from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
     VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set
 
@@ -388,7 +388,7 @@ def api_collection_sources_csv(collection_id):
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
 
-    return api_download_sources_csv( all_media, file_prefix)
+    return download_sources_csv( all_media, file_prefix)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
