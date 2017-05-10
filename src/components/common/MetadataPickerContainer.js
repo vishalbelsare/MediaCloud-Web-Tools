@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchMetadataValuesForCountry, fetchMetadataValuesForState } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../lib/tagUtil';
 
 const MODE_SELECT = 'MODE_SELECT';
 const MODE_AUTOCOMPLETE = 'MODE_AUTOCOMPLETE';
@@ -97,6 +97,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         break;
       case TAG_SET_PUBLICATION_STATE:
         dispatch(fetchMetadataValuesForState(ownProps.id));
+        break;
+      case TAG_SET_PRIMARY_LANGUAGE:
+        dispatch(fetchMetadataValuesForPrimaryLanguage(ownProps.id));
         break;
       default:
         break;

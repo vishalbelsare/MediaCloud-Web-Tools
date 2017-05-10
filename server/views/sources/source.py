@@ -192,7 +192,8 @@ def source_create():
     tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
-        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE}
+        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE},
+        {'form_key': 'primaryLanguageg', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE}
     ]
     source_to_create = {
         'name': name,
@@ -259,12 +260,15 @@ def source_update(media_id):
     # now update the metadata too
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
-        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE}
+        {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE},
+        {'form_key': 'primaryLanguage', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE}
     ]
     for metadata_item in valid_metadata:
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
         existing_tag_ids = [t for t in source['media_source_tags']
-            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE)]
+            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY \
+                or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE \
+                or t['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE)]
         # form field check 
         if metadata_tag_id in [None,'','null','undefined']:
             # we want to remove it if there was one there

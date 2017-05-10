@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
-import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
+import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import { nullOrUndefined } from '../../../lib/formValidators';
@@ -24,6 +24,7 @@ const EditSourceContainer = (props) => {
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   const pubCountry = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_COUNTRY);
   const pubState = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_STATE);
+  const pLanguage = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PRIMARY_LANGUAGE);
   const intialValues = {
     ...source,
     // if user cannot edit media, disabled=true
@@ -32,6 +33,7 @@ const EditSourceContainer = (props) => {
       .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
     publicationState: pubState ? pubState.tags_id : undefined,
+    pLanguage: pLanguage ? pLanguage.tags_id : undefined,
   };
   return (
     <div className="edit-source">
@@ -74,7 +76,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry', 'publicationState'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage'];
     const infoToSave = {
       id: ownProps.params.collectionId,
       name: values.name,
