@@ -6,7 +6,7 @@ import { fetchMediaStories, sortMediaStories, filterByFocus } from '../../../act
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import StoryTable from '../StoryTable';
+import TopicStoryTable from '../TopicStoryTable';
 import { filteredLocation } from '../../util/location';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
@@ -47,7 +47,7 @@ class MediaStoriesContainer extends React.Component {
           <FormattedMessage {...messages.storyPlural} />
           {helpButton}
         </h2>
-        <StoryTable
+        <TopicStoryTable
           stories={inlinkedStories}
           topicId={topicId}
           onChangeSort={this.onChangeSort}

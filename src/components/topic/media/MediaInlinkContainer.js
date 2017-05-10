@@ -5,7 +5,7 @@ import { fetchMediaInlinks, sortMediaInlinks } from '../../../actions/topicActio
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import StoryTable from '../StoryTable';
+import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 
@@ -44,7 +44,7 @@ class MediaInlinksContainer extends React.Component {
           <FormattedMessage {...messages.inlinks} />
           {helpButton}
         </h2>
-        <StoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.onChangeSort} />
+        <TopicStoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.onChangeSort} />
       </DataCard>
     );
   }

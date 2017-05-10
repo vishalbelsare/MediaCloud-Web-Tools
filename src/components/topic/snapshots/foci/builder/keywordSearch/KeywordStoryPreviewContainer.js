@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
 import { fetchCreateFocusKeywordStories } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
-import StoryTable from '../../../../StoryTable';
+import TopicStoryTable from '../../../../TopicStoryTable';
 import messages from '../../../../../../resources/messages';
 
 const localMessages = {
@@ -30,7 +30,7 @@ class KeywordStoryPreviewContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <StoryTable stories={stories} topicId={topicId} />
+        <TopicStoryTable stories={stories} topicId={topicId} />
       </DataCard>
     );
   }

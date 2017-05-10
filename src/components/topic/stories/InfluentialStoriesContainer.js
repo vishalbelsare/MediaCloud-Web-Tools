@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import StoryTable from '../StoryTable';
+import TopicStoryTable from '../TopicStoryTable';
 import { fetchTopicInfluentialStories, sortTopicInfluentialStories } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
@@ -58,7 +58,7 @@ class InfluentialStoriesContainer extends React.Component {
                   <FormattedMessage {...localMessages.exploreLink} />
                 </LinkWithFilters>
               </p>
-              <StoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <TopicStoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
               { previousButton }
               { nextButton }
             </DataCard>
