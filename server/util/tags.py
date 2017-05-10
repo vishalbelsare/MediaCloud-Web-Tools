@@ -17,7 +17,7 @@ EMM_TAG_SET_ID = 597        # holds country collections made from scraping Europ
 # Source metadata tag sets
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935  # holds the country of publication of a source
 TAG_SETS_ID_PUBLICATION_STATE = 1962    # holds the state of publication of a source (only US and India right now)
-TAG_SETS_ID_PRIMARY_LANGUAGE = 2000     # holds the primary language of a source
+TAG_SETS_ID_PRIMARY_LANGUAGE = 1967     # holds the primary language of a source
 
 METADATA_PUB_COUNTRY_NAME = 'pub_country'
 METADATA_PUB_STATE_NAME = 'pub_state'
