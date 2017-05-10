@@ -109,7 +109,8 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
 
     results = []
     for src in source_list_from_csv:
-        # remove pub_country, will modify below
+        # remove metadata for now, will modify below
+        # we take out primary_language BTW and ignore it
         source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state' and k != 'primary_language'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
@@ -182,12 +183,10 @@ def update_source_list_metadata(source_list):
                 if metadata_tag_name not in ['', None]:
                     # hack until we have a better match check
                     matching = []
-                    if metadata_tag_type == METADATA_PUB_COUNTRY_NAME:  # template pub_###
-                        matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_id]
-                    elif metadata_tag_type == METADATA_PUB_STATE_NAME:  # template ###_##
-                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_id]
-                    elif metadata_tag_type == METADATA_PRIMARY_LANGUAGE_NAME:  # template ###_##
-                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_id]
+                    if mkey == METADATA_PUB_COUNTRY_NAME:  # template pub_###
+                        matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_name]
+                    elif mkey == METADATA_PUB_STATE_NAME:  # template ###_##
+                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_name + "_USA"]
 
                     if matching and matching not in ['', None]:
                         metadata_tag_id = matching[0]['tags_id']
@@ -381,9 +380,9 @@ def api_collection_sources_csv(collection_id):
                 if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
                     src['pub_country'] = tag['tag'][-3:]
                 elif tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE:
-                    src['pub_state'] = tag['tag'][-2:]
+                    src['pub_state'] = tag['tag']
                 elif tag['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE:
-                    src['primary_language'] = tag['tag'][-2:]
+                    src['primary_language'] = tag['tag']
 
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
