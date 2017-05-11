@@ -67,3 +67,7 @@ export function getCookies() {
     key: cookie.load(COOKIE_KEY),
   };
 }
+
+export function hasPermissions(user, target) {
+  return target && user;
+}

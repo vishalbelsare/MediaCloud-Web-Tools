@@ -10,8 +10,8 @@ import TopicCreate3ConfirmContainer from './TopicCreate3ConfirmContainer';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 
 const localMessages = {
-  backToTopicManager: { id: 'backToTopicManager', defaultMessage: 'back to Topic Builder' },
-  step0Name: { id: 'topic.create.step0Name', defaultMessage: 'Create A Topic' },
+  backToTopicManager: { id: 'backToTopicManager', defaultMessage: 'back to Home' },
+  step0Name: { id: 'topic.create.step0Name', defaultMessage: 'Configure' },
   step1Name: { id: 'topic.create.step1Name', defaultMessage: 'Preview' },
   step2Name: { id: 'topic.create.step3Name', defaultMessage: 'Confirm' },
 };
@@ -39,7 +39,7 @@ class TopicBuilderWizard extends React.Component {
     const stepLabelStyle = { height: 45 };
     return (
       <div className="topic-builder-wizard">
-        <BackLinkingControlBar message={localMessages.backToTopicManager} linkTo={'/topics/'} >
+        <BackLinkingControlBar message={localMessages.backToTopicManager} linkTo={'/topics/#/home'} >
           <Stepper activeStep={currentStep}>
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>

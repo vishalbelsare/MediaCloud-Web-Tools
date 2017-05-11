@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
@@ -27,6 +27,9 @@ class TopicWordsPreview extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
+        <h2>
+          <FormattedMessage {...messages.topWords} />
+        </h2>
         <OrderedWordCloud
           words={words}
           title={formatMessage(messages.topWords)}

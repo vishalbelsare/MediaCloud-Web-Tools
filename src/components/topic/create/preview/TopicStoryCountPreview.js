@@ -11,7 +11,7 @@ import messages from '../../../../resources/messages';
 import { addNotice, updateFeedback } from '../../../../actions/appActions';
 import { LEVEL_ERROR, WarningNotice } from '../../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
-import { PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
+import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 
@@ -19,10 +19,12 @@ const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 const localMessages = {
   title: { id: 'topic.create.preview.storyCount.title', defaultMessage: 'Seed Stories' },
   descriptionIntro: { id: 'topic.create.preview.storyCount.help.into',
-    defaultMessage: "<p>Your topic can include up to 100,000 stories. This includes the stories we already have, and the stories we will spider once you create the topic. Spidering can add anywhere from 0 to 4 times the total number of stories, so be careful that you don't include too many seed stories.</p>",
+    defaultMessage: "Your topic can include up to 100,000 stories. This includes the stories we already have, and the stories we will spider once you create the topic. Spidering can add anywhere from 0 to 4 times the total number of stories, so be careful that you don't include too many seed stories.",
   },
-  filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Matching Stories' },
-  totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories' },
+  totalRolloverLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories' },
+  filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Queried Seed Stories' },
+  totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max 100K Total Stories' },
+  adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
   toomany: { id: 'topic.create.preview.storyCount.toomany', defaultMessage: 'Too many stories' },
   notenough: { id: 'topic.create.preview.storyCount.feedback.notenough', defaultMessage: 'Not enough stories' },
 };
@@ -35,8 +37,9 @@ class TopicStoryCountPreview extends React.Component {
     }
   }
   render() {
-    const { count, userPermission } = this.props;
+    const { count, user } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
+    const whichLabel = hasPermissions(user, PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel) : formatMessage(localMessages.totalLabel);
     let content = null;
     let storySizeWarning = null;
     if (count !== null) {
@@ -50,11 +53,11 @@ class TopicStoryCountPreview extends React.Component {
         },
         {
           value: MAX_RECOMMENDED_STORIES,
-          aboveText: formatMessage(localMessages.totalLabel),
-          rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
+          aboveText: whichLabel,
+          rolloverText: `${formatMessage(localMessages.totalRolloverLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
         },
       ];
-      if (count > MAX_RECOMMENDED_STORIES && !userPermission.includes(PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
+      if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(user, PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.toomany} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notenough} /></WarningNotice>);
@@ -88,14 +91,14 @@ TopicStoryCountPreview.propTypes = {
   // from state
   count: React.PropTypes.number,
   fetchStatus: React.PropTypes.string.isRequired,
-  userPermission: React.PropTypes.array,
+  user: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.create.preview.matchingStoryCounts.fetchStatus,
   count: state.topics.create.preview.matchingStoryCounts.count,
   canSave: state.topics.create.preview.matchingStoryCounts.canSave,
-  userPermission: state.user.profile.auth_roles,
+  user: state.user,
 });
 
 // TODO do some evaluation here where we look at the admin role and tell the user about the 100K limit

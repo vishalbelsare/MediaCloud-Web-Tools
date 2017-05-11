@@ -8,6 +8,7 @@ import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
+import { getCurrentDate, getMomentDateSubtraction } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'topic.create.setup.title', defaultMessage: 'Step 1: Create A Topic' },
@@ -23,9 +24,10 @@ const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
   const { finishStep } = props;
-  const { formatMessage } = props.intl;
-  // TODO where to put: const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
-  const initialValues = { start_date: '2017-01-02', end_date: '2017-12-31', max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
+  const { formatMessage, formatDate } = props.intl;
+  const endDate = formatDate(getCurrentDate());
+  const startDate = formatDate(getMomentDateSubtraction(endDate, 3, 'months'));
+  const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
   return (
     <Grid>
       <Title render={formatMessage(localMessages.title)} />

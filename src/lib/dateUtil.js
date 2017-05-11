@@ -22,6 +22,14 @@ export const PAST_MONTH = 'month';
 export const PAST_YEAR = 'year';
 export const PAST_ALL = 'all-time';
 
+export function getCurrentDate() {
+  return moment();
+}
+
+export function getMomentDateSubtraction(date, num, timeUnit) {
+  return moment(date).subtract(num, timeUnit);
+}
+
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }

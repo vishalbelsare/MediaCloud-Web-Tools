@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // import { reduxForm, formValueSelector } from 'redux-form';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
@@ -27,8 +27,14 @@ const TopicCreate2PreviewContainer = (props) => {
 
   return (
     <Grid>
-      <p><FormattedMessage {...localMessages.about} /></p>
+      <h1>
+        <FormattedHTMLMessage {...localMessages.title} />
+      </h1>
+      <p>
+        <FormattedHTMLMessage {...localMessages.about} />
+      </p>
       { content }
+      <br />
       <Row>
         <Col lg={12} md={12} sm={12} >
           <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
