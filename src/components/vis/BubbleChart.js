@@ -54,8 +54,9 @@ class BubbleChart extends React.Component {
     }
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
+    const minValue = d3.min(data.map(d => d.value));
     const maxValue = d3.max(data.map(d => d.value));
-    const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
+    const radius = d3.scaleSqrt().domain([minValue, maxValue]).range([0, options.maxBubbleRadius]);
     let circles = null;
     switch (options.placement) {
       case PLACEMENT_HORIZONTAL:
