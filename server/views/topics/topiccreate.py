@@ -18,20 +18,15 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_topics_preview_sentences_count():
     user_mc = user_mediacloud_client()
-    solr_query = ''
 
-    args = {
-        'solr_seed_query': request.form['q'],
-        'start_date': request.form['start_date'],
-        'end_date': request.form['end_date'],
-        'media_id': _media_ids_from_sources_param(request.form['sources[]']),
-        'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
-    }
-
-    solr_query = concatenate_query_for_solr(args)
+    solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
+        start_date= request.form['start_date'],
+        end_date=request.form['end_date'],
+        media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
+        tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
 
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.form['start_date'], split_end_date=request.form['end_date'], split=True)
-    return jsonify(sentence_count_result)  # give them back new data, so they can update the client
+    return jsonify(sentence_count_result)
 
 @app.route('/api/topics/create/preview/story/count', methods=['POST'])
 @flask_login.login_required
@@ -40,19 +35,14 @@ def api_topics_preview_sentences_count():
 def api_topics_preview_story_count():
     user_mc = user_mediacloud_client()
 
-    # TODO
-    args = {
-        'solr_seed_query': request.form['q'],
-        'start_date': request.form['start_date'],
-        'end_date': request.form['end_date'],
-        'media_id': _media_ids_from_sources_param(request.form['sources[]']),
-        'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
-    }
-    solr_query = concatenate_query_for_solr(args);
+    solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
+        start_date= request.form['start_date'],
+        end_date=request.form['end_date'],
+        media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
+        tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
+    
     story_count_result = user_mc.storyCount(solr_query=solr_query)
-
-    # do some evaluation here where we look at the admin role and determine max
-    # for admin, they can have > 100K seed stories.
+    # maybe check admin role before we run this?
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 
 @app.route('/api/topics/create/preview/stories/sample', methods=['POST'])
@@ -62,18 +52,14 @@ def api_topics_preview_story_count():
 def api_topics_preview_story_sample():
     user_mc = user_mediacloud_client()
 
-    args = {
-        'solr_seed_query': request.form['q'],
-        'start_date': request.form['start_date'],
-        'end_date': request.form['end_date'],
-        'media_id': _media_ids_from_sources_param(request.form['sources[]']),
-        'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
-    }
+    solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
+        start_date= request.form['start_date'],
+        end_date=request.form['end_date'],
+        media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
+        tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
     
-    solr_query = concatenate_query_for_solr(args);
     story_count_result = user_mc.storyList(solr_query=solr_query)
-
-    return jsonify(story_count_result)  # give them back new data, so they can update the client
+    return jsonify(story_count_result)  
 
 
 @app.route('/api/topics/create/preview/words/count', methods=['POST'])
@@ -83,15 +69,12 @@ def api_topics_preview_story_sample():
 def api_topics_preview_word_count():
     user_mc = user_mediacloud_client()
 
-    args = {
-        'solr_seed_query': request.form['q'],
-        'start_date': request.form['start_date'],
-        'end_date': request.form['end_date'],
-        'media_id': _media_ids_from_sources_param(request.form['sources[]']),
-        'tags_id': _media_tag_ids_from_collections_param(request.form['collections[]'])
-    }
+    solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
+        start_date= request.form['start_date'],
+        end_date=request.form['end_date'],
+        media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
+        tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
     
-    solr_query = concatenate_query_for_solr(args);
     word_count_result = user_mc.wordCount(solr_query=solr_query)
 
     return jsonify(word_count_result)  # give them back new data, so they can update the client

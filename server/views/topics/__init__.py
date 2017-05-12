@@ -40,29 +40,29 @@ def access_public_topic(topics_id):
     return False
 
 
-# TODO is this the best place or in util? this is topic specific....
-def concatenate_query_for_solr(args):
-    query = '({})'.format(args['solr_seed_query'])
+# helper for topic preview queries
+def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
+    query = '({})'.format(solr_seed_query)
 
-    if len(args['media_id']) > 0 or len(args['tags_id']) > 0:
+    if len(media_ids) > 0 or len(tags_ids) > 0:
         query += " AND ("
         # add in the media sources they specified
-        if len(args['media_id']) > 0:
-            query_media_id = " ".join(map(str, args['media_id']))
-            query_media_id = " media_id:({})".format(query_media_id)
-            query += '('+query_media_id+')'
+        if len(media_ids) > 0:
+            query_media_ids = " ".join(map(str, media_ids))
+            query_media_ids = " media_id:({})".format(query_media_ids)
+            query += '('+query_media_ids+')'
 
-        if len(args['media_id']) > 0 and len(args['tags_id']) > 0:
+        if len(media_ids) > 0 and len(tags_ids) > 0:
             query += " OR "
         # add in the collections they specified
-        if len(args['tags_id']) > 0:
-            query_tags_id = " ".join(map(str, args['tags_id']))
-            query_tags_id = " tags_id_media:({})".format(query_tags_id)
-            query += '('+query_tags_id+')'
+        if len(tags_ids) > 0:
+            query_tags_ids = " ".join(map(str, tags_ids))
+            query_tags_ids = " tags_id_media:({})".format(query_tags_ids)
+            query += '('+query_tags_ids+')'
         query += ')'
 
-    if 'start_date' in args:
-        query += " AND (+" + concatenate_query_and_dates(args['start_date'], args['end_date']) + ")"
+    if start_date:
+        query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
     
     return query
 

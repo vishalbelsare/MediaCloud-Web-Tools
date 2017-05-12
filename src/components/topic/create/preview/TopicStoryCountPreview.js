@@ -8,8 +8,8 @@ import DataCard from '../../../common/DataCard';
 import BubbleChart from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
-import { addNotice, updateFeedback } from '../../../../actions/appActions';
-import { LEVEL_ERROR, WarningNotice } from '../../../common/Notice';
+import { updateFeedback } from '../../../../actions/appActions';
+import { WarningNotice } from '../../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
 import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
 
@@ -25,8 +25,9 @@ const localMessages = {
   filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Queried Seed Stories' },
   totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max 100K Total Stories' },
   adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
-  toomany: { id: 'topic.create.preview.storyCount.toomany', defaultMessage: 'Too many stories' },
-  notenough: { id: 'topic.create.preview.storyCount.feedback.notenough', defaultMessage: 'Not enough stories' },
+  notEnoughStories: { id: 'topic.create.notenough', defaultMessage: 'You need to select a minimum of 500 seed stories.' },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100K seed stories.' },
+
 };
 
 class TopicStoryCountPreview extends React.Component {
@@ -58,9 +59,9 @@ class TopicStoryCountPreview extends React.Component {
         },
       ];
       if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(user, PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
-        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.toomany} /></WarningNotice>);
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
-        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notenough} /></WarningNotice>);
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
       }
       content = (<BubbleChart
         data={data}
@@ -97,7 +98,6 @@ TopicStoryCountPreview.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.create.preview.matchingStoryCounts.fetchStatus,
   count: state.topics.create.preview.matchingStoryCounts.count,
-  canSave: state.topics.create.preview.matchingStoryCounts.canSave,
   user: state.user,
 });
 
@@ -121,14 +121,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((result) => {
         if (result.count > MAX_RECOMMENDED_STORIES) { // TODO and user not an admin
           // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.toomany) }));
-          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.toomany) }));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
         } else if (result.count < MIN_RECOMMENDED_STORIES) {
           dispatch(updateFeedback({
             open: true,
-            message: ownProps.intl.formatMessage(localMessages.notenough),
+            message: ownProps.intl.formatMessage(localMessages.notEnoughStories),
           }));
-          dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notenough) }));
         }
       });
   },

@@ -6,23 +6,26 @@ import { push } from 'react-router-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
-// import TopicInfo from '../summary/TopicInfo';
 import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
-import { updateFeedback } from '../../../actions/appActions';
+import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
 import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
+import { LEVEL_ERROR, WarningNotice } from '../../common/Notice';
+import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New Topic' },
   name: { id: 'topic.create.confirm.name', defaultMessage: 'Name' },
   description: { id: 'topic.create.confirm.description', defaultMessage: 'Description' },
-  state: { id: 'topic.create.state', defaultMessage: 'Not yet saved.' }, // or newly saved?
+  state: { id: 'topic.create.state', defaultMessage: 'Not yet saved.' },
   storyCount: { id: 'topic.create.story.count', defaultMessage: 'Seed Stories' },
   topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your new Topic.' },
   topicNotSaved: { id: 'topic.create.notSaved', defaultMessage: 'That didn\'t work!' },
   feedback: { id: 'topic.create.feedback', defaultMessage: 'Successfully created your new topic!' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
+  notEnoughStories: { id: 'topic.create.notenough', defaultMessage: "Sorry, we can't save this topic because you need a minimum of 500 seed stories." },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100K seed stories." },
 };
 
 const TopicCreate3ConfirmContainer = (props) => {
@@ -33,17 +36,15 @@ const TopicCreate3ConfirmContainer = (props) => {
   sourcesAndCollections = formValues.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
   sourcesAndCollections.concat(formValues.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id));
   return (
-    <Grid>
+    <Grid className="topic-container">
       <h2>
         <FormattedMessage {...localMessages.title} />
       </h2>
+      <WarningNotice ><FormattedMessage {...localMessages.state} /></WarningNotice >
       <p>
         <b><FormattedMessage {...localMessages.name} /></b>: {formValues.name}
         <br />
         <b><FormattedMessage {...localMessages.description} /></b>: {formValues.description}
-      </p>
-      <p>
-        <b><FormattedMessage {...localMessages.state} /></b>
       </p>
       <p>
         <b><FormattedMessage {...messages.topicPublicProp} /></b>: { formValues.is_public ? formatMessage(messages.yes) : formatMessage(messages.no) }
@@ -66,7 +67,6 @@ const TopicCreate3ConfirmContainer = (props) => {
       &nbsp; &nbsp;
       <AppButton type="submit" label={formatMessage(localMessages.createTopic)} primary onClick={() => finishStep()} />
     </Grid>
-    // TODO make sure ok to take out pattern. Otherwise could reuse TopicInfo
   );
 };
 
@@ -88,7 +88,6 @@ TopicCreate3ConfirmContainer.propTypes = {
 
 const mapStateToProps = state => ({
   formValues: state.form.topicForm.values,
-  canSave: state.topics.create.preview.matchingStoryCounts.canSave,
   storyCount: state.topics.create.preview.matchingStoryCounts.count,
   user: state.user,
 });
@@ -97,8 +96,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
     dispatch(goToCreateTopicStep(1));
   },
-  handleCreateTopic: (canSave, user, values) => {
-    if (canSave || (hasPermissions(user, PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
+  handleCreateTopic: (storyCount, user, values) => {
+    if (storyCount > MIN_RECOMMENDED_STORIES &&
+      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(user, PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
       const queryInfo = {
         name: values.name,
         description: values.description,
@@ -127,6 +127,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
       });
+    } else if (storyCount < MIN_RECOMMENDED_STORIES) {
+      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
+      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
+    } else if (storyCount > MAX_RECOMMENDED_STORIES) {
+      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
     }
   },
 });
@@ -134,7 +140,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     finishStep: () => {
-      dispatchProps.handleCreateTopic(stateProps.canSave, stateProps.user, stateProps.formValues);
+      dispatchProps.handleCreateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues);
     },
   });
 }

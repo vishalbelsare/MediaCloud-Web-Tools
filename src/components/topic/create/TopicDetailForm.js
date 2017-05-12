@@ -29,7 +29,7 @@ const localMessages = {
 
 const TopicDetailForm = (props) => {
   const { renderTextField, renderCheckbox, renderSelectField, mode } = props;
-  const { formatMessage, formatDate } = props.intl;
+  const { formatMessage } = props.intl;
   const iterations = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   let queryWarning = null;
   if (mode === TOPIC_FORM_MODE_EDIT) {
@@ -69,7 +69,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={formatMessage(localMessages.startDate)}
             label={formatMessage(localMessages.startDate)}
-            hintText={formatDate(localMessages.startDate)}
+            hintText={formatMessage(localMessages.startDate)}
           />
         </Col>
         <Col lg={5}>
@@ -80,7 +80,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={formatMessage(localMessages.endDate)}
             label={formatMessage(localMessages.endDate)}
-            hintText={formatDate(localMessages.endDate)}
+            hintText={formatMessage(localMessages.endDate)}
           />
         </Col>
       </Row>

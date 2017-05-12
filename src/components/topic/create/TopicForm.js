@@ -91,7 +91,8 @@ function validate(values, props) {
   if (invalidDate(values.end_date)) {
     errors.end_date = localMessages.dateError;
   }
-  if (values.sourcesAndCollections && values.sourcesAndCollections.length < 1) {
+  // not triggered if empty so we have to force a check
+  if ((values.name && values.solr_seed_query && !values.sourcesAndCollections) || (values.sourcesAndCollections && values.sourcesAndCollections.length < 1)) {
     // errors.sourcesAndCollections = localMessages.sourceCollectionsError;
     const msg = formatMessage(localMessages.sourceCollectionsError);
     errors.sourcesAndCollections = { _error: msg };

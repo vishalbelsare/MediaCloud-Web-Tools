@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import { reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
@@ -8,8 +7,6 @@ import AppButton from '../../common/AppButton';
 import { goToCreateTopicStep } from '../../../actions/topicActions';
 import TopicCreatePreview from './preview/TopicCreatePreview';
 import messages from '../../../resources/messages';
-
-// const formSelector = formValueSelector('topicForm');
 
 const localMessages = {
   title: { id: 'topic.create.preview.title', defaultMessage: 'Step 2: Preview Your Topic' },

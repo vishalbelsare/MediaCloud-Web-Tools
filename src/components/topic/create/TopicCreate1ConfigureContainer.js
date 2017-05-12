@@ -24,9 +24,9 @@ const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
   const { finishStep } = props;
-  const { formatMessage, formatDate } = props.intl;
-  const endDate = formatDate(getCurrentDate());
-  const startDate = formatDate(getMomentDateSubtraction(endDate, 3, 'months'));
+  const { formatMessage } = props.intl;
+  const endDate = getCurrentDate();
+  const startDate = getMomentDateSubtraction(endDate, 3, 'months');
   const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
   return (
     <Grid>
