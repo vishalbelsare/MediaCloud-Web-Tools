@@ -23,7 +23,8 @@ def topic_focal_set_list(topics_id):
 @api_error_handler
 def topic_focal_set_definitions_list(topics_id):
     user_mc = user_mediacloud_client()
-    return jsonify(user_mc.topicFocalSetDefinitionList(topics_id))
+    definitions = user_mc.topicFocalSetDefinitionList(topics_id)
+    return jsonify(definitions)
 
 @app.route('/api/topics/<topics_id>/focal-set-definitions/create', methods=['POST'])
 @form_fields_required('focalSetName', 'focalSetDescription', 'focalTechnique')

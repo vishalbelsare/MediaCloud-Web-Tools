@@ -7,7 +7,14 @@ const list = createAsyncReducer({
   },
   action: FETCH_FOCAL_SET_DEFINITIONS,
   handleSuccess: payload => ({
-    list: payload,
+    list: payload.map((def) => {
+      // make up for the fact that the API *doesn't* return an empty list if there aren't any definitions :-(
+      const updatedDef = def;
+      if (def.focus_definitions === undefined) {
+        updatedDef.focus_definitions = [];
+      }
+      return def;
+    }),
   }),
 });
 
