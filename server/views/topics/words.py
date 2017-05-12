@@ -29,11 +29,11 @@ def topic_word(topics_id, word):
 def topic_words(topics_id):
 
     if access_public_topic(topics_id):
-        results = topic_word_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None,q=None)
+        results = topic_word_counts(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, q=None)
     elif is_user_logged_in():
         results = topic_word_counts(user_mediacloud_key(), topics_id)[:200]
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     totals = [] # important so that these get reset on the client when they aren't requested
     logger.info(request.args)
