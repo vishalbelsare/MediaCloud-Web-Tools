@@ -265,7 +265,8 @@ def source_update(media_id):
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
         existing_tag_ids = [t for t in source['media_source_tags']
             if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE)]
-        if metadata_tag_id in [None,'']:
+        # form field check 
+        if metadata_tag_id in [None,'','null','undefined']:
             # we want to remove it if there was one there
             if len(existing_tag_ids) > 0:
                 for remove_if_empty in existing_tag_ids:

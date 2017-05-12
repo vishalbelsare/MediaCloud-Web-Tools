@@ -4,6 +4,7 @@ import ReactFauxDOM from 'react-faux-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const DEFAULT_WIDTH = 530;
+const DEFAULT_MIN_BUBBLE_RADIUS = 5;
 const DEFAULT_MAX_BUBBLE_RADIUS = 70;
 const DEFAULT_HEIGHT = 200;
 
@@ -22,7 +23,7 @@ const localMessages = {
 class BubbleChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, placement, domId } = this.props;
+    const { data, width, height, maxBubbleRadius, minBubbleRadius, placement, domId } = this.props;
 
     // bail if no data
     if (data.length === 0) {
@@ -38,6 +39,7 @@ class BubbleChart extends React.Component {
       width,
       height,
       maxBubbleRadius,
+      minBubbleRadius,
       placement,
     };
     if ((width === null) || (width === undefined)) {
@@ -45,6 +47,9 @@ class BubbleChart extends React.Component {
     }
     if ((height === null) || (height === undefined)) {
       options.height = DEFAULT_HEIGHT;
+    }
+    if ((minBubbleRadius === null) || (minBubbleRadius === undefined)) {
+      options.minBubbleRadius = DEFAULT_MIN_BUBBLE_RADIUS;
     }
     if ((maxBubbleRadius === null) || (maxBubbleRadius === undefined)) {
       options.maxBubbleRadius = DEFAULT_MAX_BUBBLE_RADIUS;
@@ -54,8 +59,9 @@ class BubbleChart extends React.Component {
     }
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
+    const minValue = d3.min(data.map(d => d.value));
     const maxValue = d3.max(data.map(d => d.value));
-    const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
+    const radius = d3.scaleSqrt().domain([minValue, maxValue]).range([options.minBubbleRadius, options.maxBubbleRadius]);
     let circles = null;
     switch (options.placement) {
       case PLACEMENT_HORIZONTAL:
@@ -187,6 +193,7 @@ BubbleChart.propTypes = {
   height: React.PropTypes.number,
   placement: React.PropTypes.string,
   maxBubbleRadius: React.PropTypes.number,
+  minBubbleRadius: React.PropTypes.number,
 };
 
 export default injectIntl(BubbleChart);

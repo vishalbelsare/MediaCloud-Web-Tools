@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -10,6 +10,8 @@ import CollectionGeographyContainer from './CollectionGeographyContainer';
 import CollectionSourceRepresentation from './CollectionSourceRepresentation';
 import CollectionSimilarContainer from './CollectionSimilarContainer';
 import CollectionMetadataCoverageSummaryContainer from './CollectionMetadataCoverageSummaryContainer';
+import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { WarningNotice } from '../../common/Notice';
 
 const localMessages = {
   searchNow: { id: 'collection.details.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -25,6 +27,7 @@ const localMessages = {
   collectionShowOn: { id: 'collection.details.showOn', defaultMessage: 'This collection {onMedia, plural,\n =0 {does not show}\n =1 {shows}\n} up on media and {onStories, plural,\n =0 {does not show}\n =1 {shows}\n other {does not show}\n} up on stories.' },
   collectionFavorited: { id: 'collection.favorited', defaultMessage: 'Marked this as a starred collection' },
   collectionUnFavorited: { id: 'collection.unfavorited', defaultMessage: 'Remove this as a starred collection' },
+  notPermitted: { id: 'collection.notPermitted', defaultMessage: 'Sorry, this is a private collection.' },
 };
 
 class CollectionDetailsContainer extends React.Component {
@@ -36,9 +39,16 @@ class CollectionDetailsContainer extends React.Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, user } = this.props;
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
+
+    if (collection && !collection.is_public && !hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT)) {
+      return (
+        <WarningNotice><FormattedHTMLMessage {...localMessages.notPermitted} /></WarningNotice>
+      );
+    }
+
     return (
       <div>
         <Row>
@@ -93,11 +103,13 @@ CollectionDetailsContainer.propTypes = {
   collectionId: React.PropTypes.number.isRequired,
   // from state
   collection: React.PropTypes.object,
+  user: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
   collection: state.sources.collections.selected.collectionDetails.object,
+  user: state.user,
 });
 
 export default

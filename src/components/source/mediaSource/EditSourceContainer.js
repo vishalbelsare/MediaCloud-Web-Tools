@@ -5,11 +5,12 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
-import { updateFeedback } from '../../../actions/appActions';
+import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
+import { nullOrUndefined } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Modify this Source' },
@@ -73,17 +74,35 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    // try to save it
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState'];
+    const infoToSave = {
+      id: ownProps.params.collectionId,
+      name: values.name,
+      description: values.description,
+      editor_notes: nullOrUndefined(values.editor_notes) ? '' : values.editor_notes,
+      public_notes: nullOrUndefined(values.public_notes) ? '' : values.public_notes,
+      monitored: values.monitored,
+    };
+    metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
+      if (key in values) {
+        infoToSave[key] = nullOrUndefined(values[key]) ? '' : values[key];
+      }
+    });
+    if ('sources' in values) {
+      infoToSave['collections[]'] = values.sources.map(s => (s.id ? s.id : s.tags_id));
+    } else {
+      infoToSave['collections[]'] = [];
+    }
     dispatch(updateSource(values))
       .then((result) => {
         if (result.success === 1) {
-          // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // need to fetch it again because something may have changed
           dispatch(fetchSourceDetails(ownProps.params.sourceId))
-            .then(() =>
-              dispatch(push(`/sources/${ownProps.params.sourceId}`))
-            );
+            .then(() => {
+              dispatch(setSubHeaderVisible(true));
+              dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+              dispatch(push(`/sources/${ownProps.params.sourceId}`));
+            });
         }
       });
   },
