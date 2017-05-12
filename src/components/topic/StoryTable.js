@@ -60,7 +60,6 @@ class StoryTable extends React.Component {
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
               <th>{socialHeader}</th>
-              <th><FormattedMessage {...messages.facebookShares} /></th>
               <th>{}</th>
             </tr>
             {stories.map((story, idx) => {
@@ -100,7 +99,6 @@ class StoryTable extends React.Component {
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
                   <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
-                  <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
                 </tr>
               );
             }
