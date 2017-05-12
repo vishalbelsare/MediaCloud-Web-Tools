@@ -10,7 +10,7 @@ import server.util.csv as csv
 import os
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv
 from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
@@ -607,7 +607,7 @@ def similarCollections(collection_id):
 @api_error_handler
 def collection_create():
     user_mc = user_mediacloud_client()
-    name = request.form['name']
+    label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
@@ -615,8 +615,10 @@ def collection_create():
     source_ids = []
     if len(request.form['sources[]']) > 0:
         source_ids = request.form['sources[]'].split(',')
+
+    formatted_name = format_name_from_label(label)
     # first create the collection
-    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description,
+    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, formatted_name, label, description,
                                        is_static=(static == 'true'),
                                        show_on_stories=(show_on_stories == 'true'),
                                        show_on_media=(show_on_media == 'true'))
@@ -633,16 +635,19 @@ def collection_create():
 @api_error_handler
 def collection_update(collection_id):
     user_mc = user_mediacloud_client()
-    name = request.form['name']
+    label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
+
+    formatted_name = format_name_from_label(label)
+
     source_ids = []
     if len(request.form['sources[]']) > 0:
         source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
     # first update the collection
-    updated_collection = user_mc.updateTag(collection_id, name, name, description,
+    updated_collection = user_mc.updateTag(collection_id, formatted_name, label, description,
                                            is_static=(static == 'true'),
                                            show_on_stories=(show_on_stories == 'true'),
                                            show_on_media=(show_on_media == 'true'))

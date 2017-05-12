@@ -1,4 +1,4 @@
-
+import re
 # constants related to NYT labels (ie. tags on stories indicating what they are about)
 NYT_LABELER_1_0_0_TAG_ID = 9360669  # the tag that indicates a story was tagged by the NYT labeller version 1
 NYT_LABELS_TAG_SET_ID = 1963        # the tag set all the descriptor tags are in
@@ -41,3 +41,8 @@ def is_metadata_tag_set(tag_sets_id):
         if int(tag_sets_id) in name_to_tags_sets_id.values():
             return True
     return False
+
+def format_name_from_label(user_label):
+
+    formatted_name = re.sub('\W|^(?=\d)','_', user_label)
+    return formatted_name

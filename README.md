@@ -1,8 +1,12 @@
-MediaMeter BoilerPlate Web App
-==============================
+Media Cloud Web Tools
+=====================
 
-This is a boilerplate app combining a bunch of tech we will be using as the basis
-for some of our new web apps.  Check out the `doc` folder for more documentation.
+This is a shared repository for all the front-facing [Media Cloud](https://mediacloud.org) web tools.
+This includes:
+ * [Source Manager](https://sources.mediacloud.org)
+ * [Topic Mapper](https://topics.mediacloud.org)
+
+Check out the `doc` folder for more documentation.
 
 Dev Installation
 ----------------

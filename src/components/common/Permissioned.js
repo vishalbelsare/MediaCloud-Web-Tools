@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN,
+import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN, hasPermissions, getUserRoles,
          PERMISSION_ADMIN, PERMISSION_MEDIA_EDIT, PERMISSION_STORY_EDIT, PERMISSION_LOGGED_IN } from '../../lib/auth';
 
 /**
@@ -8,11 +8,8 @@ import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN,
  **/
 const Permissioned = (props) => {
   const { children, onlyTopic, onlyRole, userTopicPermission, user } = props;
-  let userRolePermissions = [];
-  if (('profile' in user) && ('auth_roles' in user.profile)) {
-    // need to check this carefully because if they aren't logged in these sub-objects won't exist
-    userRolePermissions = user.profile.auth_roles;
-  }
+  const userRolePermissions = getUserRoles(user);
+
   let allowed = false;
   if (onlyTopic) {
     // check topic-level permissions
@@ -39,26 +36,7 @@ const Permissioned = (props) => {
       const error = { message: `Invalid permission (${onlyRole})` };
       throw error;
     }
-    if (userRolePermissions.includes(PERMISSION_ADMIN)) {
-      allowed = true; // because admins are allowed to do anything
-    } else {
-      switch (onlyRole) {
-        case PERMISSION_LOGGED_IN:
-          allowed = user.isLoggedIn;
-          break;
-        case PERMISSION_ADMIN:
-          allowed = userRolePermissions.includes(PERMISSION_ADMIN);
-          break;
-        case PERMISSION_MEDIA_EDIT:
-          allowed = userRolePermissions.includes(PERMISSION_MEDIA_EDIT);
-          break;
-        case PERMISSION_STORY_EDIT:
-          allowed = userRolePermissions.includes(PERMISSION_STORY_EDIT);
-          break;
-        default:
-          allowed = false;
-      }
-    }
+    allowed = hasPermissions(userRolePermissions, onlyRole);
   }
   let content = null;
   if (allowed) {

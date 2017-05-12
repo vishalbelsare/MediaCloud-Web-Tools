@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import messages from '../../resources/messages';
 import AppSubHeader from '../common/header/AppSubHeader';
 import { favoriteSource, favoriteCollection } from '../../actions/sourceActions';
@@ -17,11 +18,11 @@ const localMessages = {
 };
 
 const SourceMgrSubHeaderContainer = (props) => {
-  const { currentSelection, sourceId, sourceInfo, collectionId, collectionInfo, handleSetFavorited } = props;
+  const { sourceId, sourceInfo, collectionId, collectionInfo, location, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
 
-  if (!nullOrUndefined(sourceId) || currentSelection.includes('sources')) { // for multiple pathways
+  if (!nullOrUndefined(sourceId) || location.pathname.includes('sources')) { // for multiple pathways
     let details = '';
     details += `ID #${sourceInfo.id}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
@@ -36,7 +37,7 @@ const SourceMgrSubHeaderContainer = (props) => {
         />
       </div>
     );
-  } else if (!nullOrUndefined(collectionId) || currentSelection.includes('collections')) {
+  } else if (!nullOrUndefined(collectionId) || location.pathname.includes('collections')) {
     let details = '';
     details += `ID #${collectionInfo.id}`;
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
@@ -74,8 +75,6 @@ SourceMgrSubHeaderContainer.propTypes = {
   collectionInfo: React.PropTypes.object,
   // from dispatch
   handleSetFavorited: React.PropTypes.func.isRequired,
-  // from url
-  currentSelection: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({
@@ -83,7 +82,6 @@ const mapStateToProps = state => ({
   sourceInfo: state.sources.sources.selected.sourceDetails,
   collectionId: state.sources.collections.selected.id,
   collectionInfo: state.sources.collections.selected.collectionDetails.object,
-  currentSelection: state.routing.locationBeforeTransitions.pathname,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -113,6 +111,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SourceMgrSubHeaderContainer
+      withRouter(SourceMgrSubHeaderContainer)
     )
   );
