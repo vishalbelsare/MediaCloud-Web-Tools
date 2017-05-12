@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.metadatacoverage.chart.title', defaultMessage: 'Metadata' },
@@ -25,6 +25,10 @@ const localMessages = {
   pubStateTitle: { id: 'collection.summary.metadatacoverage.pubState.title', defaultMessage: 'State of Publication' },
   pubStateTagged: { id: 'collection.summary.metadatacoverage.pubState.tagged', defaultMessage: 'with a state' },
   pubStateNotTagged: { id: 'collection.summary.metadatacoverage.pubState.notTagged', defaultMessage: 'unknown state' },
+  pLanguageTitle: { id: 'collection.summary.metadatacoverage.pLanguage.title', defaultMessage: 'Primary Language' },
+  pLanguageTagged: { id: 'collection.summary.metadatacoverage.pLanguage.tagged', defaultMessage: 'with language' },
+  pLanguageNotTagged: { id: 'collection.summary.metadatacoverage.pLanguage.notTagged', defaultMessage: 'unknown language' },
+
 };
 
 class CollectionMetadataCoverageSummaryContainer extends React.Component {
@@ -63,6 +67,15 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               metadataId={TAG_SET_PUBLICATION_STATE}
               taggedText={formatMessage(localMessages.pubStateTagged)}
               notTaggedText={formatMessage(localMessages.pubStateNotTagged)}
+            />
+          </Col>
+          <Col lg={3}>
+            <MetadataCoverageItem
+              title={formatMessage(localMessages.pLanguageTitle)}
+              sources={sources}
+              metadataId={TAG_SET_PRIMARY_LANGUAGE}
+              taggedText={formatMessage(localMessages.pLanguageTagged)}
+              notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
             />
           </Col>
         </Row>

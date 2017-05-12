@@ -6,6 +6,7 @@ from server import app, mc, db
 from server.util.request import  api_error_handler
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.views.sources import download_sources_csv
 logger = logging.getLogger(__name__)
 
 
@@ -53,7 +54,7 @@ def download_favorite_sources():
         s['isFavorite'] = True
 
     filename = "FavoriteSources.csv"
-    return csv.api_download_sources_csv( favorited_s, filename)
+    return download_sources_csv( favorited_s, filename)
 
 
 @app.route('/api/favorites/sources', methods=['GET'])
