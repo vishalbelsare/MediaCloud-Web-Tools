@@ -5,7 +5,7 @@ import { fetchStoryInlinks } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import StoryTable from '../StoryTable';
+import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 
@@ -38,7 +38,7 @@ class StoryInlinksContainer extends React.Component {
           <FormattedMessage {...messages.inlinks} />
           {helpButton}
         </h2>
-        <StoryTable stories={inlinkedStories} topicId={topicId} />
+        <TopicStoryTable stories={inlinkedStories} topicId={topicId} />
       </DataCard>
     );
   }

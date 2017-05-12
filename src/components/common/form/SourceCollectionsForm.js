@@ -22,14 +22,13 @@ const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollecti
             key={name}
             name={name}
             component={(info) => {
-              const handleDelete = (allowRemoval || info.meta.dirty) ? () => fields.remove(index) : undefined;
+              const handleDelete = (allowRemoval || info.meta.dirty) ? () => { fields.remove(index); } : undefined;
               return (
                 <SourceOrCollectionChip object={info.input.value} onDelete={handleDelete} />
               );
             }}
           />
         ))}
-        {error && <div className="error">{error}</div>}
       </Col>
     </Row>
     <Row>
@@ -39,7 +38,7 @@ const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollecti
       <Col lg={2}>
         <span className="label field-label"><FormattedMessage {...localMessages.add} /></span>
       </Col>
-      <Col lg={8}>
+      <Col lg={8} className="form-field-text">
         <SourceSearchContainer
           searchSources
           searchStaticCollections
@@ -48,6 +47,7 @@ const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollecti
           maxSources={maxSources}
           maxCollections={maxCollections}
         />
+        {error && <span className="error">{error}</span>}
       </Col>
     </Row>
   </div>
@@ -59,6 +59,7 @@ renderCollectionSelector.propTypes = {
   allowRemoval: React.PropTypes.bool,
   maxSources: React.PropTypes.number,
   maxCollections: React.PropTypes.number,
+  validate: React.PropTypes.func,
 };
 
 const SourceCollectionsForm = (props) => {
@@ -71,8 +72,10 @@ const SourceCollectionsForm = (props) => {
         </Col>
       </Row>
       <FieldArray
+        form={propTypes.form}
         name="sourcesAndCollections"
         intro={intro}
+        validate={propTypes.validate}
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}
         initialValues={initialValues}

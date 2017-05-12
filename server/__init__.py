@@ -174,3 +174,4 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.maps
     import server.views.topics.nyttags
     import server.views.topics.geotags
+    import server.views.topics.topiccreate

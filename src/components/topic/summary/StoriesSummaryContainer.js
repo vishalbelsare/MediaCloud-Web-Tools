@@ -10,7 +10,7 @@ import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
-import StoryTable from '../StoryTable';
+import TopicStoryTable from '../TopicStoryTable';
 import messages from '../../../resources/messages';
 import { filteredLinkTo, filteredLocation, filtersAsUrlParams } from '../../util/location';
 
@@ -55,7 +55,7 @@ class StoriesSummaryContainer extends React.Component {
             <FormattedMessage {...localMessages.title} />
           </LinkWithFilters>
         </h2>
-        <StoryTable
+        <TopicStoryTable
           stories={stories}
           topicId={topicId}
           onChangeSort={this.onChangeSort}

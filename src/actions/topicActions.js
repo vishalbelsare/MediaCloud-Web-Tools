@@ -42,6 +42,7 @@ export const TOGGLE_TIMESPAN_CONTROLS = 'TOGGLE_TIMESPAN_CONTROLS';
 export const TOGGLE_FILTER_CONTROLS = 'TOGGLE_FILTER_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
+export const GO_TO_CREATE_TOPIC_STEP = 'GO_TO_CREATE_TOPIC_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
 export const FETCH_CREATE_FOCUS_KEYWORD_ATTENTION = 'FETCH_CREATE_FOCUS_KEYWORD_ATTENTION';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS = 'FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS';
@@ -77,6 +78,10 @@ export const FETCH_TOPIC_GEOCODED_STORY_COVERAGE = 'FETCH_TOPIC_GEOCODED_STORY_C
 export const FETCH_TOPIC_GEOCODED_STORY_COUNTS = 'FETCH_TOPIC_GEOCODED_STORY_COUNTS';
 export const FETCH_TOPIC_NYT_TAG_COVERAGE = 'FETCH_TOPIC_NYT_TAG_COVERAGE';
 export const FETCH_TOPIC_NYT_TAG_COUNTS = 'FETCH_TOPIC_NYT_TAG_COUNTS';
+export const FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE = 'FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE';
+export const FETCH_CREATE_TOPIC_QUERY_ATTENTION = 'FETCH_CREATE_TOPIC_QUERY_ATTENTION';
+export const FETCH_CREATE_TOPIC_QUERY_STORY_COUNT = 'FETCH_CREATE_TOPIC_QUERY_STORY_COUNT';
+export const FETCH_CREATE_TOPIC_QUERY_WORDS = 'FETCH_CREATE_TOPIC_QUERY_WORDS';
 export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
@@ -169,6 +174,7 @@ export const toggleFilterControls = createAction(TOGGLE_FILTER_CONTROLS, isVisib
 
 // pass in the number of the step to go to
 export const goToCreateFocusStep = createAction(GO_TO_CREATE_FOCUS_STEP, step => step);
+
 // pass in topicId, limit, q
 export const fetchCreateFocusKeywordStories = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_STORIES, api.topicTopStories);
 // pass in topicId, q
@@ -243,5 +249,16 @@ export const fetchTopicGeocodedStoryCoverage = createAsyncAction(FETCH_TOPIC_GEO
 
 // pass in topic id, filters
 export const fetchTopicGeocodedStoryCounts = createAsyncAction(FETCH_TOPIC_GEOCODED_STORY_COUNTS, api.topicGeocodedStoryCounts);
+
+// pass in the number of the step to go to
+export const goToCreateTopicStep = createAction(GO_TO_CREATE_TOPIC_STEP, step => step);
+
+export const fetchStoryCountByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_STORY_COUNT, api.fetchStoryCountByQuery);
+
+export const fetchAttentionByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_ATTENTION, api.fetchAttentionByQuery);
+
+export const fetchStorySampleByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE, api.fetchStorySampleByQuery);
+
+export const fetchWordsByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_WORDS, api.fetchWordsByQuery);
 
 export const topicStartSpider = createAsyncAction(TOPIC_START_SPIDER, api.topicSpider, id => id);

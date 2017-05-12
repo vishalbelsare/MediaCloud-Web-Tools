@@ -187,6 +187,26 @@ export function createTopic(params) {
   return createPostingApiPromise('/api/topics/create', acceptedParams, 'put');
 }
 
+export function fetchStoryCountByQuery(params) {
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
+  return createPostingApiPromise('/api/topics/create/preview/story/count', acceptedParams);
+}
+
+export function fetchAttentionByQuery(params) {
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
+  return createPostingApiPromise('/api/topics/create/preview/sentences/count', acceptedParams);
+}
+
+export function fetchStorySampleByQuery(params) {
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
+  return createPostingApiPromise('/api/topics/create/preview/stories/sample', acceptedParams);
+}
+
+export function fetchWordsByQuery(params) {
+  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
+  return createPostingApiPromise('/api/topics/create/preview/words/count', acceptedParams);
+}
+
 export function updateTopic(topicId, params) {
   const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations', 'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]']);
   return createPostingApiPromise(`/api/topics/${topicId}/update`, acceptedParams, 'put');

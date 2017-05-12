@@ -24,7 +24,7 @@ const localMessages = {
   inlinkChartTitle: { id: 'topic.influentialStoryExplorer.inlinkChart.title', defaultMessage: 'Media Inlinks' },
   inlinkChartY: { id: 'topic.influentialStoryExplorer.inlinkChart.y', defaultMessage: 'stories' },
   inlinkChartX: { id: 'topic.influentialStoryExplorer.inlinkChart.x', defaultMessage: 'media inlinks' },
-  storyTableTitle: { id: 'topic.influentialStoryExplorer.storyTable.title', defaultMessage: 'Selected Stories' },
+  TopicStoryTableTitle: { id: 'topic.influentialStoryExplorer.TopicStoryTable.title', defaultMessage: 'Selected Stories' },
 };
 
 const FACEBOOK_BIN_COUNT = 15;
@@ -101,7 +101,7 @@ class InfluentialStoryExplorer extends React.Component {
     const storiesOverTimeChart = dc.barChart('#stories-over-time-chart');
     const storyCount = dc.dataCount('#story-counts');
     const languageChart = dc.pieChart('#language-chart');
-    const storyTable = dc.dataTable('#story-table');
+    const TopicStoryTable = dc.dataTable('#story-table');
     const facebookShareChart = dc.barChart('#facebook-share-chart');
     const bitlyClickChart = dc.barChart('#bitly-click-chart');
     const inlinkChart = dc.barChart('#inlink-chart');
@@ -200,7 +200,7 @@ class InfluentialStoryExplorer extends React.Component {
         .dimension(ndx)
         .group(all);
       // and set up the story table
-      storyTable
+      TopicStoryTable
         .dimension(publishDateDimension)
         .size(50)
         .group((d) => {
@@ -310,7 +310,7 @@ class InfluentialStoryExplorer extends React.Component {
             </Row>
             <Row>
               <Col lg={12}>
-                <h2><FormattedMessage {...localMessages.storyTableTitle} /></h2>
+                <h2><FormattedMessage {...localMessages.TopicStoryTableTitle} /></h2>
                 <table id="story-table">
                   <thead>
                     <tr className="header">

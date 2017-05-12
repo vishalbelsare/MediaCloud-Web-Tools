@@ -22,6 +22,15 @@ export const PAST_MONTH = 'month';
 export const PAST_YEAR = 'year';
 export const PAST_ALL = 'all-time';
 
+export function getCurrentDate() {
+  const testdate = moment().format(TOPIC_DATE_FORMAT);
+  return testdate;
+}
+
+export function getMomentDateSubtraction(date, num, timeUnit) {
+  return moment(date).subtract(num, timeUnit).format(TOPIC_DATE_FORMAT);
+}
+
 export function topicDateToMoment(topicDate, strict = true) {
   return moment(topicDate, TOPIC_DATE_FORMAT, strict);
 }
@@ -96,6 +105,10 @@ export function cleanCoverageGaps(gapList) {
     };
   });
   return plotBands;
+}
+
+export function prepDateForSolrQuery(startDate, endDate) {
+  return `(publish_date:[${topicDateToMoment(startDate).format('YYYY-MM-DDThh:mm:ss')}Z TO ${topicDateToMoment(endDate).format('YYYY-MM-DDThh:mm:ss')}Z])`;
 }
 
 export function getDateRange(timePeriod) {
