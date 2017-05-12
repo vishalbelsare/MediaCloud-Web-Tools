@@ -82,11 +82,12 @@ export const FETCH_CREATE_TOPIC_QUERY_STORY_SAMPLE = 'FETCH_CREATE_TOPIC_QUERY_S
 export const FETCH_CREATE_TOPIC_QUERY_ATTENTION = 'FETCH_CREATE_TOPIC_QUERY_ATTENTION';
 export const FETCH_CREATE_TOPIC_QUERY_STORY_COUNT = 'FETCH_CREATE_TOPIC_QUERY_STORY_COUNT';
 export const FETCH_CREATE_TOPIC_QUERY_WORDS = 'FETCH_CREATE_TOPIC_QUERY_WORDS';
+export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
 
-export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsList);
+export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsPublicList);
 // pass in topicId
 export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));
 
@@ -260,3 +261,4 @@ export const fetchStorySampleByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUER
 
 export const fetchWordsByQuery = createAsyncAction(FETCH_CREATE_TOPIC_QUERY_WORDS, api.fetchWordsByQuery);
 
+export const topicStartSpider = createAsyncAction(TOPIC_START_SPIDER, api.topicSpider, id => id);

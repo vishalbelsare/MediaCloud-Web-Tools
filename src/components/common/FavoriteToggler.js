@@ -28,6 +28,7 @@ const FavoriteToggler = (props) => {
 
 FavoriteToggler.propTypes = {
   intl: React.PropTypes.object.isRequired,
+  // form parent
   isFavorited: React.PropTypes.bool.isRequired,
   onSetFavorited: React.PropTypes.func.isRequired,
 };

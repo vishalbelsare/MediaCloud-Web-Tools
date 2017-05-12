@@ -19,13 +19,14 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_list():
     if not is_user_logged_in():
-        return jsonify(sorted_public_topic_list())
+        topics = sorted_public_topic_list()
+        return jsonify({'topics': {'public': topics}})
     else:
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
-        all_topics = user_mc.topicList(link_id=link_id)
-        _add_user_favorite_flag_to_topics(all_topics['topics'])
-    return jsonify(all_topics)
+        topics = user_mc.topicList(link_id=link_id)
+        _add_user_favorite_flag_to_topics(topics['topics'])
+        return jsonify({'topics': {'personal': topics}})
 
 
 @app.route('/api/topics/listFilterCascade', methods=['GET'])
@@ -42,27 +43,28 @@ def topic_filter_cascade_list():
     if is_user_logged_in():
         user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
-        user_topics = user_mc.topicList(link_id=link_id)
-        # map from favorited topic ids to topic objects
+        user_topics = user_mc.topicList(link_id=link_id)['topics']
         favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
-        for t in user_topics['topics']:
-            # t['detailInfo'] = get_topic_info_per_snapshot_timespan(t['topics_id'])
-            if len(favorite_topic_ids) > 0 and t['topics_id'] in favorite_topic_ids:
-                t['isFavorite'] = True
-                favorited_topics.append(t)
-                favorite_topic_ids.remove(t['topics_id'])  # make sure not to double list
+        # mark all the public topics as favorite or not
         for t in public_topics:
-            if len(favorite_topic_ids) > 0 and t['topics_id'] in favorite_topic_ids:
-                t['isFavorite'] = True
-                favorited_topics.append(t)
-                favorite_topic_ids.remove(t['topics_id'])  # make sure not to double list
-        # note: at this point favorite_topic_ids should be empty
+            t['isFavorite'] = t['topics_id'] in favorite_topic_ids
+        # mark all the user's topics as favorite or not
+        for t in user_topics:
+            t['isFavorite'] = t['topics_id'] in favorite_topic_ids
+        # fill in the list of favorite topics (need to hit server because they might no be in the other results)
+        favorited_topics = [user_mc.topic(tid) for tid in favorite_topic_ids]
+        for t in favorited_topics:
+            t['isFavorite'] = True
     return jsonify({'topics': {'favorite': favorited_topics, 'personal': user_topics, 'public': public_topics}})
 
 
 def sorted_public_topic_list():
-    user_mc = user_mediacloud_client()
-    public_topics_list = user_mc.topicList(public=True)['topics']
+    # needs to support logged in or not
+    if is_user_logged_in():
+        local_mc = user_mediacloud_client()
+    else:
+        local_mc = mc
+    public_topics_list = local_mc.topicList(public=True)['topics']
     return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
@@ -216,7 +218,6 @@ def topic_create():
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required
-# require any fields?
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_update(topics_id):

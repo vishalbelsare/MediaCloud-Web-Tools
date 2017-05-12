@@ -10,6 +10,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
+import { nullOrUndefined } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
@@ -55,18 +56,17 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage'];
     const infoToSave = {
       url: values.url,
       name: values.name,
-      notes: values.notes,
-      editor_notes: values.editor_notes,
-      public_notes: values.public_notes,
-      montitored: values.monitored,
+      editor_notes: nullOrUndefined(values.editor_notes) ? '' : values.editor_notes,
+      public_notes: nullOrUndefined(values.public_notes) ? '' : values.public_notes,
+      monitored: values.monitored,
     };
     metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
       if (key in values) {
-        infoToSave[key] = values[key];
+        infoToSave[key] = !nullOrUndefined(values[key]) ? values[key] : '';
       }
     });
     if ('collections' in values) {  // the collections are a FieldArray on the form

@@ -4,21 +4,16 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPublicTopicsList } from '../../../actions/topicActions';
-import TopicIcon from '../../common/icons/TopicIcon';
-import ContentPreview from '../../common/ContentPreview';
+import TopicPreviewList from './TopicPreviewList';
 
 const PublicTopicListContainer = (props) => {
   const { topics } = props;
   return (
     <Row>
-      <Col lg={12} md={12} sm={12}>
-        <ContentPreview
-          items={topics}
-          itemType="topics"
-          classStyle="browse-items"
-          icon={<TopicIcon height={25} />}
-          linkInfo={c => `/topics/public/${c.topics_id}/summary`}
-          linkDisplay={c => c.name}
+      <Col lg={12}>
+        <TopicPreviewList
+          topics={topics}
+          linkGenerator={c => `/topics/public/${c.topics_id}/summary`}
         />
       </Col>
     </Row>
@@ -36,7 +31,7 @@ PublicTopicListContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.publiclist.fetchStatus,
-  topics: state.topics.publiclist.topics,
+  topics: state.topics.publiclist.topics.public,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -44,7 +39,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchPublicTopicsList());
   },
 });
-
 
 export default
   injectIntl(

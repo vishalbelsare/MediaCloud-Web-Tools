@@ -33,6 +33,7 @@ export const CREATE_NEW_SOURCE = 'CREATE_NEW_SOURCE';
 export const UPDATE_SOURCE = 'UPDATE_SOURCE';
 export const FETCH_METADATA_VALUES_FOR_COUNTRY = 'FETCH_METADATA_VALUES_FOR_COUNTRY';
 export const FETCH_METADATA_VALUES_FOR_STATE = 'FETCH_METADATA_VALUES_FOR_STATE';
+export const FETCH_METADATA_VALUES_FOR_PRIMARY_LANGUAGE = 'FETCH_METADATA_VALUES_FOR_PRIMARY_LANGUAGE';
 export const FETCH_COLLECTION_TO_COPY = 'FETCH_COLLECTION_TO_COPY';
 export const FETCH_SOURCE_BY_METADATA = 'FETCH_SOURCE_BY_METADATA';
 export const FETCH_COLLECTION_BY_METADATA = 'FETCH_COLLECTION_BY_METADATA';
@@ -131,6 +132,8 @@ export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, p
 export const fetchMetadataValuesForCountry = createAsyncAction(FETCH_METADATA_VALUES_FOR_COUNTRY, api.metadataValuesForCountry);
 
 export const fetchMetadataValuesForState = createAsyncAction(FETCH_METADATA_VALUES_FOR_STATE, api.metadataValuesForState);
+
+export const fetchMetadataValuesForPrimaryLanguage = createAsyncAction(FETCH_METADATA_VALUES_FOR_PRIMARY_LANGUAGE, api.metadataValuesForPrimaryLanguage);
 
 export const fetchSourceByMetadata = createAsyncAction(FETCH_SOURCE_BY_METADATA, api.sourceAdvancedSearch, payload => payload);
 

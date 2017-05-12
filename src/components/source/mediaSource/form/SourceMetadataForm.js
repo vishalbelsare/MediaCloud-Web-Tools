@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE } from '../../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
@@ -29,6 +29,15 @@ const SourceMetadataForm = props => (
           id={TAG_SET_PUBLICATION_STATE}
           name={'publicationState'}
           form="sourceForm"
+          initialValues={props.initialValues}
+        />
+      </Col>
+      <Col lg={4} xs={12}>
+        <MetadataPickerContainer
+          id={TAG_SET_PRIMARY_LANGUAGE}
+          name={'primaryLanguage'}
+          form="sourceForm"
+          disabled
           initialValues={props.initialValues}
         />
       </Col>

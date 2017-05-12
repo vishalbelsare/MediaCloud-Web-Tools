@@ -9,6 +9,7 @@ import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
+import { nullOrUndefined } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Modify this Collection' },
@@ -71,7 +72,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const infoToSave = {
       id: ownProps.params.collectionId,
       name: values.name,
-      description: values.description,
+      description: nullOrUndefined(values.description) ? '' : values.description,
       static: values.static,
       showOnMedia: values.showOnMedia,
       showOnStories: values.showOnStories,

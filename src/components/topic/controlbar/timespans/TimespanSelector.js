@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 import composeHelpfulContainer from '../../../common/HelpfulContainer';
 import VisualTimespanSelector from './VisualTimespanSelector';
 import TimespanPeriodSelector from './TimespanPeriodSelector';
-import TimespanDateRange from '../../../common/TimespanDateRange';
+import TimespanDateRange from '../../TimespanDateRange';
 
 const localMessages = {
   timespansHelpTitle: { id: 'timespans.help.title', defaultMessage: 'About Timespans' },

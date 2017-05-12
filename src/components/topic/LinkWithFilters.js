@@ -8,9 +8,14 @@ import { filteredLinkTo } from '../util/location';
  * replacement for the react-router Link tag.
  **/
 const LinkWithFilters = (props) => {
-  const { to, style, children, defaultFilters, filters } = props;
-  const filtersToUse = ((filters !== undefined) && (filters !== null)) ? filters : defaultFilters;
-  const linkLocation = filteredLinkTo(to, filtersToUse);
+  const { to, style, children, existingFilters, filters } = props;
+  let updatedFilters;
+  if (filters) {
+    updatedFilters = { ...existingFilters, ...filters };
+  } else {
+    updatedFilters = existingFilters;
+  }
+  const linkLocation = filteredLinkTo(to, updatedFilters);
   return (
     <Link to={linkLocation} style={style}>{children}</Link>
   );
@@ -23,11 +28,11 @@ LinkWithFilters.propTypes = {
   style: React.PropTypes.object,
   filters: React.PropTypes.object,  // use this to override
   // from state
-  defaultFilters: React.PropTypes.object.isRequired,
+  existingFilters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  defaultFilters: state.topics.selected.filters,
+  existingFilters: state.topics.selected.filters,
 });
 
 export default

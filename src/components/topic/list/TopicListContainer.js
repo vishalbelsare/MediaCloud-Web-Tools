@@ -5,10 +5,12 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { SelectField, MenuItem } from 'material-ui';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicsList, setTopicListFilter } from '../../../actions/topicActions';
+import { fetchTopicsList, setTopicListFilter, setTopicFavorite } from '../../../actions/topicActions';
 import { pagedLocation } from '../../util/location';
 import composePagedContainer from '../../common/PagedContainer';
-import TopicList from './TopicList';
+import TopicPreviewList from './TopicPreviewList';
+import { updateFeedback } from '../../../actions/appActions';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   topicsListFilter: { id: 'topics.list.filter', defaultMessage: 'Filter Topics By: ' },
@@ -20,15 +22,29 @@ const localMessages = {
 
 class TopicListContainer extends React.Component {
 
-  changeFilter = (filterType) => {
+  componentWillMount() {
+    const { topics, currentFilter } = this.props;
+    // if user hasn't set filter, set it smartly
+    if (currentFilter === null) {
+      if (topics.favorite.length > 0) {
+        this.handleSetFilter('favorites');
+      } else if (topics.personal.length > 0) {
+        this.handleSetFilter('personal');
+      } else {
+        this.handleSetFilter('public');
+      }
+    }
+  }
+
+  handleSetFilter = (filterType) => {
     const { setFilter } = this.props;
     setFilter(filterType);
   }
 
   render() {
-    const { topics, currentFilter, nextButton, previousButton, showFavorites, onSetFavorited } = this.props;
+    const { topics, currentFilter, nextButton, previousButton, handleSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
-    let whichTopics = topics;
+    let whichTopics = topics.public;
     let titleContent = null;
 
     // if the user has favorites => is logged_in => isn't logged in, show topics by filter
@@ -37,7 +53,7 @@ class TopicListContainer extends React.Component {
       whichTopics = topics.favorite;
     } else if (currentFilter === 'personal' && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPersonal} /></h2>;
-      whichTopics = topics.personal.topics;
+      whichTopics = topics.personal;
     } else if (currentFilter === 'public' && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPublic} /></h2>;
       whichTopics = topics.public;
@@ -47,6 +63,7 @@ class TopicListContainer extends React.Component {
 
     return (
       <div className="topic-list-container">
+
         <Row>
           <Col lg={2} md={2} sm={12}>
             { titleContent }
@@ -60,42 +77,45 @@ class TopicListContainer extends React.Component {
             <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
               <MenuItem
                 value="favorites"
-                onClick={() => this.changeFilter('favorites')}
+                onClick={() => this.handleSetFilter('favorites')}
                 primaryText={formatMessage(localMessages.topicsListFavorites)}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
                 value="personal"
                 primaryText={formatMessage(localMessages.topicsListPersonal)}
-                onClick={() => this.changeFilter('personal')}
+                onClick={() => this.handleSetFilter('personal')}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
                 value="public"
-                onClick={() => this.changeFilter('public')}
+                onClick={() => this.handleSetFilter('public')}
                 primaryText={formatMessage(localMessages.topicsListPublic)}
                 style={{ fontSize: 13 }}
               />
             </SelectField>
           </Col>
-
         </Row>
 
-        <TopicList topics={whichTopics} showFavorites={showFavorites} onSetFavorited={onSetFavorited} />
+        <TopicPreviewList
+          topics={whichTopics}
+          linkGenerator={t => `topics/${t.topics_id}/summary`}
+          onSetFavorited={handleSetFavorited}
+        />
+
         <Row>
           <Col lg={12} md={12} sm={12}>
             { previousButton }
             { nextButton }
           </Col>
         </Row>
+
       </div>
     );
   }
 }
 
 TopicListContainer.propTypes = {
-  // from parent
-  onSetFavorited: React.PropTypes.func.isRequired,
   // from state
   topics: React.PropTypes.object.isRequired,
   links: React.PropTypes.object,
@@ -103,6 +123,7 @@ TopicListContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: React.PropTypes.func.isRequired,
+  handleSetFavorited: React.PropTypes.func.isRequired,
   // from PagedContainer wrapper
   nextButton: React.PropTypes.node,
   previousButton: React.PropTypes.node,
@@ -115,7 +136,6 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.all.fetchStatus,
   topics: state.topics.all.topics,
   links: state.topics.all.link_ids,
-  showFavorites: state.topics.all.showFavorites,
   currentFilter: state.topics.all.currentFilter,
 });
 
@@ -130,6 +150,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicsList(props.currentFilter, linkId))
       .then(() => {
         dispatch(push(pagedLocation(ownProps.location, linkId)));
+      });
+  },
+  handleSetFavorited: (topicId, isFavorite) => {
+    dispatch(setTopicFavorite(topicId, isFavorite))
+      .then(() => {
+        const msg = (isFavorite) ? messages.topicFavorited : messages.topicUnfavorited;
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(msg) }));
+        dispatch(fetchTopicsList());  // need to update the list
       });
   },
 });

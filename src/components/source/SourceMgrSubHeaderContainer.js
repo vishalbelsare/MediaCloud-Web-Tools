@@ -1,10 +1,12 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import messages from '../../resources/messages';
 import AppSubHeader from '../common/header/AppSubHeader';
 import { favoriteSource, favoriteCollection } from '../../actions/sourceActions';
 import { updateFeedback } from '../../actions/appActions';
+import { nullOrUndefined } from '../../lib/formValidators';
 
 const localMessages = {
   sourceFavorited: { id: 'source.favorited', defaultMessage: 'Starred this source' },
@@ -16,12 +18,13 @@ const localMessages = {
 };
 
 const SourceMgrSubHeaderContainer = (props) => {
-  const { sourceId, sourceInfo, collectionId, collectionInfo, handleSetFavorited } = props;
+  const { sourceId, sourceInfo, collectionId, collectionInfo, location, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
-  if (sourceId !== null) {
+
+  if (!nullOrUndefined(sourceId) || location.pathname.includes('sources')) { // for multiple pathways
     let details = '';
-    details += `ID #${sourceId}`;
+    details += `ID #${sourceInfo.id}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     details += (sourceInfo.is_monitored) ? ` • ${formatMessage(messages.monitored)}` : '';
     content = (
@@ -30,13 +33,13 @@ const SourceMgrSubHeaderContainer = (props) => {
           title={`${formatMessage(messages.sourceName)}: ${sourceInfo.name}`}
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
-          onSetFavorited={isFav => handleSetFavorited('source', sourceId, isFav)}
+          onSetFavorited={isFav => handleSetFavorited('source', sourceInfo.id, isFav)}
         />
       </div>
     );
-  } else if (collectionId !== null) {
+  } else if (!nullOrUndefined(collectionId) || location.pathname.includes('collections')) {
     let details = '';
-    details += `ID #${collectionId}`;
+    details += `ID #${collectionInfo.id}`;
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
     details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
@@ -45,7 +48,7 @@ const SourceMgrSubHeaderContainer = (props) => {
           title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}
-          onSetFavorited={isFav => handleSetFavorited('collection', collectionId, isFav)}
+          onSetFavorited={isFav => handleSetFavorited('collection', collectionInfo.id, isFav)}
         />
       </div>
     );
@@ -62,6 +65,8 @@ const SourceMgrSubHeaderContainer = (props) => {
 SourceMgrSubHeaderContainer.propTypes = {
   // from parent
   // from context
+  params: React.PropTypes.object,       // params from router
+  location: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   // state
   sourceId: React.PropTypes.number,
@@ -106,6 +111,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SourceMgrSubHeaderContainer
+      withRouter(SourceMgrSubHeaderContainer)
     )
   );

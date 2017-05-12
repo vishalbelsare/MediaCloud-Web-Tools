@@ -60,6 +60,9 @@ class AdvancedSearchContainer extends React.Component {
               if ('publicationState' in values) {
                 info.tags.push(values.publicationState);
               }
+              if ('primaryLanguage' in values) {
+                info.tags.push(values.primaryLanguage);
+              }
               this.setState(info);
             }}
           />

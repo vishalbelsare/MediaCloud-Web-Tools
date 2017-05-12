@@ -8,9 +8,9 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, is_metadata_tag_set
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
@@ -43,7 +43,7 @@ def upload_file():
         if uploaded_file.filename == '':
             return json_error_response('No selected file')
         if uploaded_file and allowed_file(uploaded_file.filename):
-            props = csv.COLLECTIONS_TEMPLATE_PROPS_EDIT
+            props = COLLECTIONS_TEMPLATE_PROPS_EDIT
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(uploaded_file.filename))
             # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
             uploaded_file.save(filepath)
@@ -109,8 +109,9 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
 
     results = []
     for src in source_list_from_csv:
-        # remove pub_country, will modify below
-        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state'}
+        # remove metadata for now, will modify below
+        # we take out primary_language BTW and ignore it
+        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state' and k != 'primary_language'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
             src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
@@ -182,10 +183,10 @@ def update_source_list_metadata(source_list):
                 if metadata_tag_name not in ['', None]:
                     # hack until we have a better match check
                     matching = []
-                    if metadata_tag_type == METADATA_PUB_COUNTRY_NAME:  # template pub_###
-                        matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_id]
-                    elif metadata_tag_type == METADATA_PUB_STATE_NAME:  # template ###_##
-                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_id]
+                    if mkey == METADATA_PUB_COUNTRY_NAME:  # template pub_###
+                        matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_name]
+                    elif mkey == METADATA_PUB_STATE_NAME:  # template ###_##
+                        matching = [t for t in tag_codes if t['tag'] == metadata_tag_name]
 
                     if matching and matching not in ['', None]:
                         metadata_tag_id = matching[0]['tags_id']
@@ -361,7 +362,7 @@ def api_collection_details(collection_id):
 def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
 
-    what_type_download = csv.SOURCES_TEMPLATE_PROPS_EDIT
+    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
     
     return csv.stream_response(what_type_download, what_type_download, filename)
 
@@ -379,13 +380,15 @@ def api_collection_sources_csv(collection_id):
                 if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
                     src['pub_country'] = tag['tag'][-3:]
                 elif tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE:
-                    src['pub_state'] = tag['tag'][-2:]
+                    src['pub_state'] = tag['tag']
+                elif tag['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE:
+                    src['primary_language'] = tag['tag']
 
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
 
-    return csv.api_download_sources_csv( all_media, file_prefix)
+    return download_sources_csv( all_media, file_prefix)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
@@ -604,7 +607,7 @@ def similarCollections(collection_id):
 @api_error_handler
 def collection_create():
     user_mc = user_mediacloud_client()
-    name = request.form['name']
+    label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
@@ -612,8 +615,10 @@ def collection_create():
     source_ids = []
     if len(request.form['sources[]']) > 0:
         source_ids = request.form['sources[]'].split(',')
+
+    formatted_name = format_name_from_label(label)
     # first create the collection
-    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, name, name, description,
+    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, formatted_name, label, description,
                                        is_static=(static == 'true'),
                                        show_on_stories=(show_on_stories == 'true'),
                                        show_on_media=(show_on_media == 'true'))
@@ -630,16 +635,19 @@ def collection_create():
 @api_error_handler
 def collection_update(collection_id):
     user_mc = user_mediacloud_client()
-    name = request.form['name']
+    label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
     show_on_stories = request.form['showOnStories'] if 'showOnStories' in request.form else None
     show_on_media = request.form['showOnMedia'] if 'showOnMedia' in request.form else None
+
+    formatted_name = format_name_from_label(label)
+
     source_ids = []
     if len(request.form['sources[]']) > 0:
         source_ids = [int(sid) for sid in request.form['sources[]'].split(',')]
     # first update the collection
-    updated_collection = user_mc.updateTag(collection_id, name, name, description,
+    updated_collection = user_mc.updateTag(collection_id, formatted_name, label, description,
                                            is_static=(static == 'true'),
                                            show_on_stories=(show_on_stories == 'true'),
                                            show_on_media=(show_on_media == 'true'))

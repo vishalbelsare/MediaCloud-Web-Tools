@@ -1,4 +1,4 @@
-
+import re
 # constants related to NYT labels (ie. tags on stories indicating what they are about)
 NYT_LABELER_1_0_0_TAG_ID = 9360669  # the tag that indicates a story was tagged by the NYT labeller version 1
 NYT_LABELS_TAG_SET_ID = 1963        # the tag set all the descriptor tags are in
@@ -17,14 +17,17 @@ EMM_TAG_SET_ID = 597        # holds country collections made from scraping Europ
 # Source metadata tag sets
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935  # holds the country of publication of a source
 TAG_SETS_ID_PUBLICATION_STATE = 1962    # holds the state of publication of a source (only US and India right now)
+TAG_SETS_ID_PRIMARY_LANGUAGE = 1967     # holds the primary language of a source
 
 METADATA_PUB_COUNTRY_NAME = 'pub_country'
 METADATA_PUB_STATE_NAME = 'pub_state'
+METADATA_PRIMARY_LANGUAGE_NAME = 'primary_language'
 
 # map from metadata category name, to metadata tag set id
 VALID_METADATA_IDS = [
     {METADATA_PUB_COUNTRY_NAME: TAG_SETS_ID_PUBLICATION_COUNTRY},
-    {METADATA_PUB_STATE_NAME: TAG_SETS_ID_PUBLICATION_STATE}
+    {METADATA_PUB_STATE_NAME: TAG_SETS_ID_PUBLICATION_STATE},
+    {METADATA_PRIMARY_LANGUAGE_NAME: TAG_SETS_ID_PRIMARY_LANGUAGE}
 ]
 
 
@@ -38,3 +41,8 @@ def is_metadata_tag_set(tag_sets_id):
         if int(tag_sets_id) in name_to_tags_sets_id.values():
             return True
     return False
+
+def format_name_from_label(user_label):
+
+    formatted_name = re.sub('\W|^(?=\d)','_', user_label)
+    return formatted_name

@@ -77,7 +77,6 @@ class StoryTable extends React.Component {
                   dateToShow += '?';
                 }
               }
-
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
@@ -114,7 +113,6 @@ class StoryTable extends React.Component {
 StoryTable.propTypes = {
   stories: React.PropTypes.array.isRequired,
   intl: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number, // not required as this table is now also used by query routine
   onChangeSort: React.PropTypes.func,
   onChangeFocusSelection: React.PropTypes.func,
   sortedBy: React.PropTypes.string,

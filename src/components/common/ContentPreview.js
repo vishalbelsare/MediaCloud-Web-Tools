@@ -2,21 +2,16 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row } from 'react-flexbox-grid/lib';
-import TopicContentPreviewList from './TopicContentPreviewList';
 import SourceContentPreviewList from './SourceContentPreviewList';
 
 const ContentPreview = (props) => {
   const { items, icon, linkInfo, linkDisplay, classStyle, disabled } = props;
   let content = null;
   if (items && items.length > 0) {
-    if (classStyle === 'topic-list') {
-      content = <TopicContentPreviewList items={items} linkInfo={linkInfo} linkDisplay={linkDisplay} />;
-    } else {
-      content = <SourceContentPreviewList items={items} linkInfo={linkInfo} linkDisplay={linkDisplay} icon={icon} disabled={disabled} />;
-    }
+    content = <SourceContentPreviewList items={items} linkInfo={linkInfo} linkDisplay={linkDisplay} icon={icon} disabled={disabled} />;
   }
   return (
-    <div className="browse-list">
+    <div className={`browse-list ${classStyle}`}>
       <Row>
         {content}
       </Row>
