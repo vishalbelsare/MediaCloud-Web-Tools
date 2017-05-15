@@ -27,6 +27,11 @@ export function getCurrentDate() {
   return testdate;
 }
 
+export function isMoreThanAYearInPast(dateInPast) {
+  const yearPriorToNow = moment().subtract(1, 'years');
+  return yearPriorToNow.isAfter(dateInPast);
+}
+
 export function getMomentDateSubtraction(date, num, timeUnit) {
   return moment(date).subtract(num, timeUnit).format(TOPIC_DATE_FORMAT);
 }

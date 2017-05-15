@@ -31,12 +31,14 @@ function composeIntlForm(Component) {
       return intlCustom;
     };
 
-    renderTextField = ({ input, meta: { touched, error }, ...custom }) => {
+    renderTextField = ({ input, meta: { touched, error, warning }, ...custom }) => {
       const intlCustom = this.intlCustomProps(custom);
       return (
         <TextField
           className="form-field-text"
-          errorText={touched && (error ? this.intlIfObject(error) : null)}
+          errorText={touched &&
+            ((error ? this.intlIfObject(error) : null)
+              || (warning ? this.intlIfObject(warning) : null))}
           {...input}
           {...intlCustom}
         />

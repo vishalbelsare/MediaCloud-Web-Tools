@@ -6,6 +6,7 @@ import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 import { emptyString, invalidDate } from '../../../lib/formValidators';
+import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
@@ -17,7 +18,7 @@ const localMessages = {
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
-
+  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 18 months." },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
@@ -73,7 +74,6 @@ TopicForm.propTypes = {
 };
 
 function validate(values, props) {
-  // TODO
   const errors = {};
   const { formatMessage } = props.intl;
   if (emptyString(values.name)) {
@@ -100,10 +100,20 @@ function validate(values, props) {
   return errors;
 }
 
+const warn = (values) => {
+  let warnings = {};
+  // const { formatMessage } = props.intl;
+  if (!invalidDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
+    warnings = { start_date: localMessages.startDateWarning };
+  }
+  return warnings;
+};
+
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
   destroyOnUnmount: false,
+  warn,
 };
 
 export default
