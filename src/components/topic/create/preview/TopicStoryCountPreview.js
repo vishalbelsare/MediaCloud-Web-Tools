@@ -11,7 +11,7 @@ import messages from '../../../../resources/messages';
 import { updateFeedback } from '../../../../actions/appActions';
 import { WarningNotice } from '../../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
-import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
+import { hasPermissions, getUserRoles, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
 
@@ -40,7 +40,7 @@ class TopicStoryCountPreview extends React.Component {
   render() {
     const { count, user } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const whichLabel = hasPermissions(user, PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel) : formatMessage(localMessages.totalLabel);
+    const whichLabel = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel) : formatMessage(localMessages.totalLabel);
     let content = null;
     let storySizeWarning = null;
     if (count !== null) {
@@ -58,7 +58,7 @@ class TopicStoryCountPreview extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalRolloverLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
         },
       ];
-      if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(user, PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
+      if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
