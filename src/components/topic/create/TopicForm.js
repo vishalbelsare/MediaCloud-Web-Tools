@@ -5,7 +5,7 @@ import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
-import { emptyString, invalidDate } from '../../../lib/formValidators';
+import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
@@ -101,10 +101,9 @@ function validate(values, props) {
 }
 
 const warn = (values) => {
-  let warnings = {};
-  // const { formatMessage } = props.intl;
-  if (!invalidDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
-    warnings = { start_date: localMessages.startDateWarning };
+  const warnings = {};
+  if (validDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
+    warnings.start_date = localMessages.startDateWarning;
   }
   return warnings;
 };
