@@ -6,6 +6,8 @@ import { GridList, GridTile } from 'material-ui/GridList';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
@@ -50,10 +52,12 @@ const TopicPreviewList = (props) => {
             <DataCard className="topic-preview-list-item">
               <div className="content">
                 <div>
-                  <FavoriteToggler
-                    isFavorited={topic.isFavorite}
-                    onSetFavorited={isFav => onSetFavorited(topic.topics_id, isFav)}
-                  />
+                  <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                    <FavoriteToggler
+                      isFavorited={topic.isFavorite}
+                      onSetFavorited={isFav => onSetFavorited(topic.topics_id, isFav)}
+                    />
+                  </Permissioned>
                   <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
                   <FormattedMessage
                     {...localMessages.range}
@@ -85,7 +89,7 @@ TopicPreviewList.propTypes = {
   // from parent
   linkGenerator: React.PropTypes.func,
   topics: React.PropTypes.array.isRequired,
-  onSetFavorited: React.PropTypes.func.isRequired,
+  onSetFavorited: React.PropTypes.func,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
 };
