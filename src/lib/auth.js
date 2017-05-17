@@ -81,7 +81,7 @@ export function getUserRoles(user) {
 
 export function hasPermissions(userRoles, targetRole) {
   let allowed = false;
-  if (userRoles.includes(PERMISSION_ADMIN)) {
+  if (userRoles && userRoles.includes(PERMISSION_ADMIN)) {
     allowed = true; // because admins are allowed to do anything
   } else {
     switch (targetRole) {
@@ -89,13 +89,13 @@ export function hasPermissions(userRoles, targetRole) {
         allowed = userRoles !== null;
         break;
       case PERMISSION_ADMIN:
-        allowed = userRoles.includes(PERMISSION_ADMIN);
+        allowed = userRoles && userRoles.includes(PERMISSION_ADMIN);
         break;
       case PERMISSION_MEDIA_EDIT:
-        allowed = userRoles.includes(PERMISSION_MEDIA_EDIT);
+        allowed = userRoles && userRoles.includes(PERMISSION_MEDIA_EDIT);
         break;
       case PERMISSION_STORY_EDIT:
-        allowed = userRoles.includes(PERMISSION_STORY_EDIT);
+        allowed = userRoles && userRoles.includes(PERMISSION_STORY_EDIT);
         break;
       default:
         allowed = false;
