@@ -68,6 +68,9 @@ export function getCookies() {
   };
 }
 
+/**
+ * Returns the list of the user's roles, or null if they are not logged in
+ */
 export function getUserRoles(user) {
   if (('profile' in user) && ('auth_roles' in user.profile)) {
     // need to check this carefully because if they aren't logged in these sub-objects won't exist
@@ -76,23 +79,23 @@ export function getUserRoles(user) {
   return null;
 }
 
-export function hasPermissions(userRole, targetRole) {
+export function hasPermissions(userRoles, targetRole) {
   let allowed = false;
-  if (userRole.includes(PERMISSION_ADMIN)) {
+  if (userRoles && userRoles.includes(PERMISSION_ADMIN)) {
     allowed = true; // because admins are allowed to do anything
   } else {
     switch (targetRole) {
       case PERMISSION_LOGGED_IN:
-        allowed = userRole.isLoggedIn;
+        allowed = userRoles !== null;
         break;
       case PERMISSION_ADMIN:
-        allowed = userRole.includes(PERMISSION_ADMIN);
+        allowed = userRoles && userRoles.includes(PERMISSION_ADMIN);
         break;
       case PERMISSION_MEDIA_EDIT:
-        allowed = userRole.includes(PERMISSION_MEDIA_EDIT);
+        allowed = userRoles && userRoles.includes(PERMISSION_MEDIA_EDIT);
         break;
       case PERMISSION_STORY_EDIT:
-        allowed = userRole.includes(PERMISSION_STORY_EDIT);
+        allowed = userRoles && userRoles.includes(PERMISSION_STORY_EDIT);
         break;
       default:
         allowed = false;

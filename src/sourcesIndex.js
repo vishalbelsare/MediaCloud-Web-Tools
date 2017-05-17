@@ -10,7 +10,7 @@ import initializeApp from './index';
 
 ReactGA.initialize('UA-60744513-8');
 
-setVersion('1.6.1');
+setVersion('1.7.0');
 
 setAppName('sources');
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
-import Link from 'react-router/lib/Link';
 import messages from '../../resources/messages';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
@@ -18,10 +17,6 @@ class StoryTable extends React.Component {
   sortBySocial = () => {
     const { onChangeSort } = this.props;
     onChangeSort('social');
-  }
-
-  openInNewWindow = (link) => {
-    window.open(link, '_blank');
   }
 
   render() {
@@ -80,21 +75,15 @@ class StoryTable extends React.Component {
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
-                    <Link
-                      to={story.url}
-                      onClick={(e) => { e.preventDefault(); this.openInNewWindow(e.target.href); }}
-                    >{title}
-                    </Link>
+                    <a href={story.url} rel="noopener noreferrer" target="_blank">{title}</a>
                   </td>
                   <td>
-                    <img className="google-icon" src={googleFavIconUrl(domain)} alt={domain} />
+                    <a href={story.media_url} rel="noopener noreferrer" target="_blank">
+                      <img className="google-icon" src={googleFavIconUrl(domain)} alt={domain} />
+                    </a>
                   </td>
                   <td>
-                    <Link
-                      to={story.media_url}
-                      onClick={(e) => { e.preventDefault(); this.openInNewWindow(e.target.href); }}
-                    >{story.media_name}
-                    </Link>
+                    <a href={story.media_url} rel="noopener noreferrer" target="_blank">{story.media_name}</a>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
                   <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
