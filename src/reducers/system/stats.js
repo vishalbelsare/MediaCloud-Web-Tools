@@ -1,4 +1,4 @@
-import { FETCH_SYSTEM_STATS } from '../../actions/sourceActions';
+import { FETCH_SYSTEM_STATS } from '../../actions/systemActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
 
 const stats = createAsyncReducer({

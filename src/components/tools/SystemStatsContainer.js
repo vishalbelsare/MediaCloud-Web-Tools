@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import StatBar from '../common/statbar/StatBar';
 import messages from '../../resources/messages';
-import { fetchSystemStats } from '../../actions/sourceActions';
+import { fetchSystemStats } from '../../actions/systemActions';
 
 const SystemStatsContainer = (props) => {
   const { formatNumber } = props.intl;
