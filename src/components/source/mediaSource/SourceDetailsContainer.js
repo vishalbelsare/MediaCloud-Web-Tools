@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import CollectionList from '../../common/CollectionList';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
@@ -15,6 +13,8 @@ import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
+import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
@@ -60,9 +60,10 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source } = this.props;
+    const { source, user } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
-    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
+    const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
+    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
     const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
@@ -200,11 +201,13 @@ SourceDetailsContainer.propTypes = {
   sourceId: React.PropTypes.number.isRequired,
   // from state
   source: React.PropTypes.object,
+  user: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   source: state.sources.sources.selected.sourceDetails,
+  user: state.user,
 });
 
 export default

@@ -8,7 +8,7 @@ import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions
 import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
-import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import { nullOrUndefined } from '../../../lib/formValidators';
 
@@ -19,18 +19,19 @@ const localMessages = {
 };
 
 const EditSourceContainer = (props) => {
-  const { handleSave, source } = props;
+  const { handleSave, source, user } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   const pubCountry = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_COUNTRY);
   const pubState = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_STATE);
   const pLanguage = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PRIMARY_LANGUAGE);
+  const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
   const intialValues = {
     ...source,
     // if user cannot edit media, disabled=true
     collections: source.media_source_tags
       .map(t => ({ ...t, name: t.label }))
-      .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1))),
+      .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1 || canSeePrivateCollections))),
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
     publicationState: pubState ? pubState.tags_id : undefined,
     primaryLanguage: pLanguage ? pLanguage.tags_id : undefined,
@@ -65,13 +66,14 @@ EditSourceContainer.propTypes = {
   sourceId: React.PropTypes.number.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   source: React.PropTypes.object,
+  user: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   fetchStatus: state.sources.sources.selected.sourceDetails.fetchStatus,
   source: state.sources.sources.selected.sourceDetails,
-  // user: state.user,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
