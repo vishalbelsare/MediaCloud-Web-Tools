@@ -43,7 +43,7 @@ class CollectionDetailsContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const filename = `SentencesOverTime-Collection-${collection.tags_id}`;
 
-    if (collection && !collection.show_on_media && !hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT)) {
+    if (collection && (collection.show_on_media === 0) && !hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT)) {
       return (
         <WarningNotice><FormattedHTMLMessage {...localMessages.notPermitted} /></WarningNotice>
       );
