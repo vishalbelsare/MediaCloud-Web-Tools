@@ -1,3 +1,4 @@
+@import '../constants';
 
 .collection-list-item-wrapper {
   display: flex;
@@ -20,6 +21,7 @@
 
   .app-icon-lock {
     svg {
+      fill: $material-grey800;
       margin-left: 5px;
       width: 15px !important;
       height: 15px !important;
