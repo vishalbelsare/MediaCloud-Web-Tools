@@ -113,7 +113,8 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'snapshots_id': snapshots_id,
         'timespans_id': timespans_id,
         'foci_id': foci_id,
-        'q': q
+        'q': q,
+        'sample_size': 1000
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     return _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
