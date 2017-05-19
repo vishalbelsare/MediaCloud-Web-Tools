@@ -59,10 +59,12 @@ class BubbleChart extends React.Component {
     }
 
     // prep the data and some config (scale by sqrt of value so we map to area, not radius)
-    const minValue = d3.min(data.map(d => d.value));
     const maxValue = d3.max(data.map(d => d.value));
-    const radius = d3.scaleSqrt().domain([minValue, maxValue]).range([options.minBubbleRadius, options.maxBubbleRadius]);
+    const radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     let circles = null;
+    let hierarchialData = null;
+    let pack = null;
+
     switch (options.placement) {
       case PLACEMENT_HORIZONTAL:
         circles = data.map((d, idx, list) => {
@@ -82,8 +84,17 @@ class BubbleChart extends React.Component {
         });
         break;
       case PLACEMENT_AUTO:
-        const bubbleData = data.map(d => ({ ...d, r: radius(d.value) }));
-        circles = d3.packSiblings(bubbleData);
+
+        hierarchialData = [].concat(data).concat([{ name: 'top', id: 'top', value: 0, x: 0, y: 0 }]);
+        hierarchialData = d3.stratify()
+          .id((d, idx) => ((d.centerText ? d.centerText : d.name) ? d.name : idx))
+          .parentId(d => (d.centerText || d.name === undefined ? 'top' : undefined))(hierarchialData)
+          .sum(d => d.value)
+          .sort((a, b) => b.value - a.value);
+
+        pack = d3.pack().size([options.width, options.height]);
+
+        circles = pack(hierarchialData).descendants();
         break;
       default:
         const error = { message: `BubbleChart received invalid placement option of ${options.placement}` };
@@ -103,12 +114,7 @@ class BubbleChart extends React.Component {
       const rollover = d3.select('body').append('div')
         .attr('class', 'bubble-chart-tooltip')
         .style('opacity', 0);
-      /*
-      // figure out the total width, to support centering for bubble packed ones
-      const minX = d3.min(circles.map(c => c.x - c.r));
-      const maxX = d3.max(circles.map(c => c.x + c.r));
-      const totalWidth = maxX - minX;
-      */
+
       // only center align if auto layout
       const horizontalTranslaton = (options.placement === PLACEMENT_HORIZONTAL) ? 0 : options.width / 2;
       const bubbles = svg.append('g')
@@ -116,18 +122,34 @@ class BubbleChart extends React.Component {
           .selectAll('.bubble')
           .data(circles)
           .enter();
-      // create the bubbles
-      bubbles.append('circle')
-        .attr('r', d => d.r)
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y)
-        .style('fill', d => d.fill || '');
 
+      // create the bubbles
+      /* Note:
+       * for horizontal placement, the we calc the placement and the attr fields are accessed at top level,
+         for AUTO, it is auto-packed and the attr fields we want are stored in the data obj
+       */
+      const midW = options.width / 2;
+      const midH = options.height / 2;
+
+      if (options.placement === PLACEMENT_HORIZONTAL) {
+        bubbles.append('circle')
+          .attr('r', d => d.r)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y)
+          .style('fill', d => d.fill || '');
+      } else if (options.placement === PLACEMENT_AUTO) {
+        bubbles.append('circle')
+          .style('fill', d => ((d.fill ? d.fill : d.data) ? d.data.fill : ''))
+          .style('fill-opacity', d => (d.parent !== null ? 1 : 0))
+          .style('display', d => (d.parent !== null ? 'inline' : 'none'))
+          .attr('transform', d => `translate(${d.x - midW},${d.y - midH})`)
+          .attr('r', d => d.r);
+      }
       // add tooltip to bubbles
       bubbles.selectAll('circle').on('mouseover', (d) => {
         const pixel = 'px';
         rollover.transition().duration(200).style('opacity', 0.9);
-        rollover.html(d.rolloverText)
+        rollover.html((d.rolloverText ? d.rolloverText : d.data) ? d.data.rolloverText : '')
           .style('left', d3.event.pageX + pixel)
           .style('top', d3.event.pageY + pixel);
       })
@@ -137,13 +159,13 @@ class BubbleChart extends React.Component {
 
       // add center labels
       bubbles.append('text')
-        .attr('x', d => d.x)
-        .attr('y', d => d.y + 5)
+        .attr('x', d => d.x - midW)
+        .attr('y', d => (d.y - midH))
         .attr('text-anchor', 'middle')
         .attr('fill', d => `${d.centerTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => d.centerText);
+        .text(d => ((d.centerText ? d.centerText : d.data) ? d.data.centerText : ''));
 
       // add top labels
       bubbles.append('text')
@@ -153,7 +175,7 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.aboveTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => d.aboveText);
+        .text(d => ((d.aboveText ? d.aboveText : d.data) ? d.data.aboveText : ''));
 
       // add bottom labels
       bubbles.append('text')
@@ -163,7 +185,7 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.belowTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => d.belowText);
+        .text(d => ((d.belowText ? d.belowText : d.data) ? d.data.belowText : ''));
 
       content = node.toReact();
     }

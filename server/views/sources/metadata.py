@@ -38,4 +38,5 @@ def cached_tags_in_tag_set(tag_sets_id):
         last_id = current_list[-1]['tags_id']
         more = (len(current_list) == 100) and (len(current_list) != 0)
         all_tags = all_tags + current_list
+    all_tags = sorted(all_tags, key=lambda tag: tag['label'])
     return all_tags
