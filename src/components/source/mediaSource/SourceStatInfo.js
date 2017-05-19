@@ -7,9 +7,9 @@ import StatBar from '../../common/statbar/StatBar';
 
 const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
-  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'Geo coded' },
+  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'With Geography' },
   collections: { id: 'source.summary.statbar.collections', defaultMessage: 'Collections' },
-  isHealthy: { id: 'source.summary.statbar.isHealthy', defaultMessage: '{value, plural,\n =1{Is healthy}\n =0{Is not healthy}\n}' },
+  isHealthy: { id: 'source.summary.statbar.isHealthy', defaultMessage: '{value, plural,\n =1{healthy}\n =0{not healthy}\n}' },
   health: { id: 'source.summary.statbar.health', defaultMessage: 'Health' },
   coveredSince: { id: 'source.summary.statbar.coveredSince', defaultMessage: 'Covered Since' },
   storyCount: { id: 'source.summary.statbar.storyCount', defaultMessage: 'Total Stories' },
@@ -22,7 +22,7 @@ const SourceStatInfo = (props) => {
     return null;
   }
   const isHealthy = (
-    <div className={`${!sourceInfo.isHealthy ? 'health-gap' : ''}`}>
+    <div className={`${!sourceInfo.isHealthy ? 'source-stat-health-gap' : ''}`}>
       <FormattedMessage {...localMessages.isHealthy} values={{ value: sourceInfo.is_healthy }} />
     </div>
   );

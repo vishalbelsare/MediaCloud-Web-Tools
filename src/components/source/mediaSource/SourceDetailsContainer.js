@@ -112,7 +112,7 @@ class SourceDetailsContainer extends React.Component {
     return (
       <Grid className="details source-details">
         <Row>
-          <Col lg={10} xs={12}>
+          <Col lg={9} xs={12}>
             {notice}
             {unhealthySourceWarning}
             {publicNotes}
@@ -146,10 +146,12 @@ class SourceDetailsContainer extends React.Component {
               </Link>
               {feedScrapeMsg}
             </p>
+          </Col>
+          <Col lg={3} xs={12} className="search-section">
+            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
             <p>
               <a href={source.url}> {source.url} </a>
             </p>
-            <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
         </Row>
         <SourceStatInfo sourceId={source.media_id} />
