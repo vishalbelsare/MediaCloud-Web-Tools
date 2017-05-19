@@ -5,10 +5,10 @@ import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import CollectionList from '../../common/CollectionList';
+import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import HealthBadge from '../HealthBadge';
 import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
@@ -151,10 +151,8 @@ class SourceDetailsContainer extends React.Component {
             </p>
             <AppButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
           </Col>
-          <Col lg={2} xs={12}>
-            <HealthBadge isHealthy={(source.health) ? source.health.is_healthy === 1 : true} />
-          </Col>
         </Row>
+        <SourceStatInfo sourceId={source.media_id} />
         <Row>
           <Col lg={6} xs={12}>
             <SourceTopWordsContainer source={source} />
