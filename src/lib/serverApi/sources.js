@@ -200,3 +200,7 @@ export function scrapeSourceFeeds(mediaId) {
 export function createSourcesByUrl(urls) {
   return createPostingApiPromise('/api/sources/create-from-urls', { urls }, 'put');
 }
+
+export function fetchSourceStats(mediaId) {
+  return createApiPromise(`/api/sources/${mediaId}/getStats`);
+}
