@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import FaqItem from './FaqItem';
+import FaqItem from '../../common/FaqItem';
 
 const localMessages = {
   title: { id: 'faq.title', defaultMessage: 'FAQ' },
@@ -30,7 +30,7 @@ const localMessages = {
 
 const NUM_ITEMS = 11;
 
-const Faq = () => {
+const ToolsFaq = () => {
   const items = [];
   for (let i = 1; i <= NUM_ITEMS; i += 1) {
     items.push((
@@ -45,12 +45,12 @@ const Faq = () => {
   );
 };
 
-Faq.propTypes = {
+ToolsFaq.propTypes = {
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };
 
 export default
   injectIntl(
-    Faq
+    ToolsFaq
   );

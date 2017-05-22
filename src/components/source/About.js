@@ -2,6 +2,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import SourceManagerFaq from './faq/SourceManagerFaq';
 
 const localMessages = {
   aboutTitle: { id: 'about.title', defaultMessage: 'About Source Manager' },
@@ -22,6 +23,11 @@ const About = (props) => {
       <Row>
         <Col lg={6} md={6} sm={6}>
           <p><FormattedMessage {...localMessages.aboutText} /></p>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          <SourceManagerFaq />
         </Col>
       </Row>
     </Grid>
