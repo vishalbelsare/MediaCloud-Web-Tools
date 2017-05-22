@@ -149,9 +149,13 @@ class BubbleChart extends React.Component {
       bubbles.selectAll('circle').on('mouseover', (d) => {
         const pixel = 'px';
         rollover.transition().duration(200).style('opacity', 0.9);
-        rollover.html((d.rolloverText ? d.rolloverText : d.data) ? d.data.rolloverText : '')
-          .style('left', d3.event.pageX + pixel)
-          .style('top', d3.event.pageY + pixel);
+        rollover.html(() => {
+          if (d.rolloverText) return d.rolloverText;
+          else if (d.data && d.data.rolloverText) return d.data.rolloverText;
+          return '';
+        })
+        .style('left', d3.event.pageX + pixel)
+        .style('top', d3.event.pageY + pixel);
       })
       .on('mouseout', () => {
         rollover.transition().duration(500).style('opacity', 0);
@@ -165,8 +169,11 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.centerTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => ((d.centerText ? d.centerText : d.data) ? d.data.centerText : ''));
-
+        .text((d) => {
+          if (d.centerText) return d.centerText;
+          else if (d.data && d.data.centerText) return d.data.centerText;
+          return '';
+        });
       // add top labels
       bubbles.append('text')
         .attr('x', d => d.x)
@@ -175,7 +182,11 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.aboveTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => ((d.aboveText ? d.aboveText : d.data) ? d.data.aboveText : ''));
+        .text((d) => {
+          if (d.aboveText) return d.aboveText;
+          else if (d.data && d.data.aboveText) return d.data.aboveText;
+          return '';
+        });
 
       // add bottom labels
       bubbles.append('text')
@@ -185,8 +196,11 @@ class BubbleChart extends React.Component {
         .attr('fill', d => `${d.belowTextColor} !important` || '')
         .attr('font-family', 'Lato, Helvetica, sans')
         .attr('font-size', '10px')
-        .text(d => ((d.belowText ? d.belowText : d.data) ? d.data.belowText : ''));
-
+        .text((d) => {
+          if (d.belowText) return d.belowText;
+          else if (d.data && d.data.belowText) return d.data.belowText;
+          return '';
+        });
       content = node.toReact();
     }
 
