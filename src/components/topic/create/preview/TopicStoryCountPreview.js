@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
-import BubbleChart from '../../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_HORIZONTAL } from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
 import { updateFeedback } from '../../../../actions/appActions';
@@ -65,6 +65,7 @@ class TopicStoryCountPreview extends React.Component {
       }
       content = (<BubbleChart
         data={data}
+        placement={PLACEMENT_HORIZONTAL}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
       />);
