@@ -11,8 +11,8 @@ import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions'
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
 import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
-import { LEVEL_ERROR, WarningNotice } from '../../common/Notice';
-import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../lib/formValidators';
+import { LEVEL_ERROR, LEVEL_WARNING, WarningNotice } from '../../common/Notice';
+import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES } from '../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New Topic' },
@@ -22,10 +22,12 @@ const localMessages = {
   storyCount: { id: 'topic.create.story.count', defaultMessage: 'Seed Stories' },
   topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your new Topic.' },
   topicNotSaved: { id: 'topic.create.notSaved', defaultMessage: 'That didn\'t work!' },
-  feedback: { id: 'topic.create.feedback', defaultMessage: 'Successfully created your new topic!' },
+  feedback: { id: 'topic.create.failed', defaultMessage: 'Successfully created your new topic!' },
+  failed: { id: 'topic.create.feedback', defaultMessage: 'Sorry, something went wrong.' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: "Sorry, we can't save this topic because you need a minimum of 500 seed stories." },
   tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100K seed stories." },
+  warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'Approaching story limit. Proceed with caution.' },
 };
 
 const TopicCreate3ConfirmContainer = (props) => {
@@ -130,6 +132,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     } else if (storyCount < MIN_RECOMMENDED_STORIES) {
       dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
       dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
+    } else if (storyCount > WARNING_LIMIT_RECOMMENDED_STORIES && storyCount < MAX_RECOMMENDED_STORIES) {
+      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+      dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
     } else if (storyCount > MAX_RECOMMENDED_STORIES) {
       dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
       dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
