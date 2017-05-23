@@ -249,3 +249,7 @@ export function topicGeocodedStoryCounts(topicId, params) {
 export function topicSpider(topicId) {
   return createPostingApiPromise(`/api/topics/${topicId}/spider`);
 }
+
+export function userQueuedAndRunningTopics() {
+  return createApiPromise('/api/topics/queued-and-running');
+}

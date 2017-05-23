@@ -23,6 +23,7 @@ export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
+export const FETCH_USER_QUEUED_RUNNING_TOPICS = 'FETCH_USER_QUEUED_RUNNING_TOPICS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -77,3 +78,5 @@ export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHO
 
 // pass in topic Id
 export const generateSnapshot = createAsyncAction(TOPIC_GENERATE_SNAPSHOT, api.topicGenerateSnapshot);
+
+export const fetchUserQueuedAndRunningTopics = createAsyncAction(FETCH_USER_QUEUED_RUNNING_TOPICS, api.userQueuedAndRunningTopics);
