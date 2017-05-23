@@ -121,7 +121,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchStoryCountByQuery(infoForQuery))
       .then((result) => {
         if (!hasPermissions(getUserRoles(ownProps.user), PERMISSION_TOPIC_ADMIN)) {
-          if (result.count > MAX_RECOMMENDED_STORIES) { // show this regardless of role - good info and it is only up for a second
+          if (result.count > MAX_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
           } else if (result.count < MAX_RECOMMENDED_STORIES && result.count > WARNING_LIMIT_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
