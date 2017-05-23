@@ -34,3 +34,5 @@ export function invalidUrl(value) {
 
 export const MAX_RECOMMENDED_STORIES = 100000;
 export const MIN_RECOMMENDED_STORIES = 500;
+export const WARNING_LIMIT_RECOMMENDED_STORIES = 70000;
+

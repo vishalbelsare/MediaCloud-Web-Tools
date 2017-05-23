@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import SourceOrCollectionChip from './SourceOrCollectionChip';
 import FilledStarIcon from './icons/FilledStarIcon';
+import LockIcon from './icons/LockIcon';
 import { isCollectionTagSet } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
@@ -31,6 +32,7 @@ const CollectionList = (props) => {
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
           <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
+            { c.show_on_media === 1 ? <LockIcon /> : '' }
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}

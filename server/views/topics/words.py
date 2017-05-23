@@ -35,7 +35,7 @@ def topic_words(topics_id):
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
-    totals = [] # important so that these get reset on the client when they aren't requested
+    totals = []  # important so that these get reset on the client when they aren't requested
     logger.info(request.args)
     if (is_user_logged_in()) and ('withTotals' in request.args) and (request.args['withTotals'] == "true"):
         # handle requests to return these results

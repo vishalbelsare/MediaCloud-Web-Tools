@@ -5,12 +5,12 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
-import BubbleChart from '../../../vis/BubbleChart';
+import BubbleChart, { PLACEMENT_HORIZONTAL } from '../../../vis/BubbleChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
 import { updateFeedback } from '../../../../actions/appActions';
 import { WarningNotice } from '../../../common/Notice';
-import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
+import { MAX_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES } from '../../../../lib/formValidators';
 import { hasPermissions, getUserRoles, PERMISSION_TOPIC_ADMIN } from '../../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
@@ -27,7 +27,7 @@ const localMessages = {
   adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: 'You need to select a minimum of 500 seed stories.' },
   tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100K seed stories.' },
-
+  warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'With this many seed stories, it is likely that the spidering will cause you to run into your 100,000 story limit. Try searching over a narrower time period, or for more specific keywords.' },
 };
 
 class TopicStoryCountPreview extends React.Component {
@@ -60,11 +60,14 @@ class TopicStoryCountPreview extends React.Component {
       ];
       if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} /></WarningNotice>);
+      } else if (count < MAX_RECOMMENDED_STORIES && count > WARNING_LIMIT_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.warningLimitStories} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
       }
       content = (<BubbleChart
         data={data}
+        placement={PLACEMENT_HORIZONTAL}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
       />);
@@ -101,8 +104,6 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-// TODO do some evaluation here where we look at the admin role and tell the user about the 100K limit
-
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (query) => {
     const infoForQuery = {
@@ -119,9 +120,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     dispatch(fetchStoryCountByQuery(infoForQuery))
       .then((result) => {
-        if (result.count > MAX_RECOMMENDED_STORIES) { // TODO and user not an admin
-          // let them know it worked
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+        if (!hasPermissions(getUserRoles(ownProps.user), PERMISSION_TOPIC_ADMIN)) {
+          if (result.count > MAX_RECOMMENDED_STORIES) {
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+          } else if (result.count < MAX_RECOMMENDED_STORIES && result.count > WARNING_LIMIT_RECOMMENDED_STORIES) {
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+          }
         } else if (result.count < MIN_RECOMMENDED_STORIES) {
           dispatch(updateFeedback({
             open: true,
