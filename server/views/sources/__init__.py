@@ -1,5 +1,6 @@
 from server.util.csv import stream_response
-from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_mediacloud_client
+from server.cache import cache
 
 SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored']
 SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
@@ -39,3 +40,8 @@ def download_sources_csv(all_media, file_prefix):
         what_type_download = SOURCES_TEMPLATE_PROPS_VIEW # no editor_notes
 
     return stream_response(all_media, what_type_download, file_prefix, what_type_download)
+
+@cache
+def _cached_source_story_count(user_mc_key, query):
+    user_mc = user_mediacloud_client()
+    return user_mc.storyCount(query)['count']

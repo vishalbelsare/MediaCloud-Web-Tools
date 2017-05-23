@@ -5,6 +5,7 @@ import topWords from './topWords';
 import sentenceCount from './sentenceCount';
 import geoTag from './geoTag';
 import feed from './feed/feed';
+import stats from './stats';
 
 const INITIAL_STATE = null;
 
@@ -24,6 +25,7 @@ const selected = combineReducers({
   sentenceCount,
   geoTag,
   feed,
+  stats,
 });
 
 export default selected;

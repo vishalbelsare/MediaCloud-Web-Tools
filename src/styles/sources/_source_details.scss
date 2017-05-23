@@ -13,3 +13,17 @@
   }
 
 }
+
+.source-stat-health-gap {
+	color: $warning-color;
+	font-weight: bold;
+	font-size: 20px;
+	line-height: 32px;
+}
+
+.search-section {
+	margin-top: 5px;
+	p {
+		margin-top: 30px;
+	}
+}
