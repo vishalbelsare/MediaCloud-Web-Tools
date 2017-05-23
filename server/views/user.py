@@ -4,7 +4,7 @@ import flask_login
 import json
 
 from server import app, auth, db, auth, mc
-from server.auth import user_mediacloud_client
+from server.auth import user_admin_mediacloud_client
 from server.util.mail import send_html_email
 from server.util.request import api_error_handler
 from server.util.request import api_error_handler, form_fields_required, arguments_required, json_error_response
@@ -48,7 +48,7 @@ def login_with_key():
 @flask_login.login_required
 @api_error_handler 
 def permissions_for_user():
-    user_mc = auth.user_mediacloud_client()
+    user_mc = auth.user_admin_mediacloud_client()
     return user_mc.userPermissionsList()
 
 
@@ -112,7 +112,7 @@ def reset_password():
 @flask_login.login_required
 @api_error_handler
 def change_password():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = user_mc.authChangePassword(request.form['old_password'], request.form['new_password'])
     return jsonify(results)
 
@@ -121,6 +121,6 @@ def change_password():
 @flask_login.login_required
 @api_error_handler
 def reset_api_key():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = user_mc.authResetApiKey()
     return jsonify(results)

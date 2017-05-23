@@ -4,7 +4,7 @@ import flask_login
 
 from server import app
 from server.util.request import form_fields_required, api_error_handler
-from server.auth import user_mediacloud_client
+from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def topic_focus_definition_create(topics_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     name = request.form['focusName']
     description = request.form['focusDescription']
     query = request.form['keywords']
@@ -26,6 +26,6 @@ def topic_focus_definition_create(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_focus_definition_delete(topics_id, foci_definition_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = user_mc.topicFocusDefinitionDelete(topics_id, foci_definition_id)
     return jsonify(results)

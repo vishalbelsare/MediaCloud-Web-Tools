@@ -4,7 +4,7 @@ import flask_login
 
 from server import app
 import server.util.csv as csv
-from server.auth import user_mediacloud_client
+from server.auth import user_admin_mediacloud_client
 from server.util.request import api_error_handler
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def api_source_feed(media_id):
 @flask_login.login_required
 @api_error_handler
 def feed_details(media_id, feed_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     feed = user_mc.feed(feed_id)
     return jsonify({'feed': feed })
 
@@ -40,7 +40,7 @@ def source_feed_csv(media_id):
 @api_error_handler
 # name=None, url=None, feed_type='syndicated', feed_status='active'
 def feed_create(media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
@@ -54,7 +54,7 @@ def feed_create(media_id):
 @flask_login.login_required
 @api_error_handler
 def feed_update(feed_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
     feed_type = request.form['feed_type'] if 'feed_type' in request.form else None  # this is optional
@@ -84,7 +84,7 @@ def source_feed_list(media_id):
 
 
 def source_feed_list_page(media_id, max_feed_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.feedList(media_id=media_id, rows=100, last_feeds_id=max_feed_id)
 
 

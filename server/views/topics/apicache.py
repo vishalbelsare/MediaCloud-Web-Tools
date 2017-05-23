@@ -3,7 +3,7 @@ from flask import request
 
 from server import mc, TOOL_API_KEY
 from server.cache import cache
-from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in
+from server.auth import user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
 
@@ -38,7 +38,7 @@ def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
     return local_mc.topicMediaList(topics_id, **kwargs)
 
 
@@ -68,7 +68,7 @@ def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryCount(topics_id, **kwargs)
 
 
@@ -100,7 +100,7 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryList(topics_id, **kwargs)
 
 
@@ -130,7 +130,7 @@ def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
     return local_mc.topicWordCount(topics_id, **kwargs)
 
 
@@ -159,7 +159,7 @@ def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
 
     # grab the timespan because we need the start and end dates
     timespan = local_mc.topicTimespanList(topics_id,
@@ -174,7 +174,7 @@ def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
     '''
     This needs user_mc_key in the function signature to make sure the caching is keyed correctly.
     '''
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     response = user_mc.topicFocalSetList(topics_id, snapshots_id=snapshots_id)
     return response
 
@@ -182,7 +182,7 @@ def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
 @cache
 def cached_topic_timespan_list(user_mc_key, topics_id, snapshots_id, foci_id=None):
     # this includes the user_mc_key as a first param so the cache works right
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     timespans = user_mc.topicTimespanList(topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
     return timespans
 
@@ -217,7 +217,7 @@ def topic_tag_counts(user_mc_key, timespans_id, tag_sets_id, sample_size):
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
     query = "timespans_id:{}".format(timespans_id)
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)
     # add in the pct so we can show relative values within the sample
@@ -252,7 +252,7 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_mediacloud_client()
+        local_mc = user_admin_mediacloud_client()
 
     sentences = local_mc.sentenceList(kwargs['q'], "timespans_id:{}".format(kwargs['timespans_id']),
                                      rows=sample_size, sort=local_mc.SORT_RANDOM)

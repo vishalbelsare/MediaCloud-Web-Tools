@@ -4,7 +4,7 @@ import flask_login
 from datetime import datetime
 
 from server import app
-from server.auth import user_mediacloud_client, user_name
+from server.auth import user_admin_mediacloud_client, user_name
 from server.util.mail import send_html_email
 from server.util.request import form_fields_required, api_error_handler, json_error_response
 from server.views.sources.source import tag_ids_from_collections_param
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @flask_login.login_required
 @api_error_handler
 def source_suggestions():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     show_all = request.args['all'] == '1' if 'all' in request.args else False
     suggestions = user_mc.mediaSuggestionsList(all=show_all)
     return jsonify({'list': suggestions})
@@ -35,7 +35,7 @@ def _media_suggestion(user_mc, suggestion_id):
 @flask_login.login_required
 @api_error_handler
 def source_suggestion_update(suggestion_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     suggestion = _media_suggestion(user_mc, suggestion_id)
     if suggestion is None:
         return json_error_response("Unknown suggestion id {}".format(suggestion_id))
@@ -90,7 +90,7 @@ def source_suggestion_update(suggestion_id):
 @flask_login.login_required
 @api_error_handler
 def source_suggest():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     url = request.form['url']
     feed_url = request.form['feedurl'] if 'feedurl' in request.form else None
     name = request.form['name'] if 'name' in request.form else None

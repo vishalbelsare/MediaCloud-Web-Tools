@@ -5,7 +5,7 @@ import server.util.csv as csv
 from server import app, mc, db
 from server.util.request import  api_error_handler
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name
 from server.views.sources import download_sources_csv
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def _add_user_favorite_flag_to_collections(collections):
 @flask_login.login_required
 @api_error_handler
 def favorite_collections():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
     favorited_collections = [user_mc.tag(tag_id) for tag_id in user_favorited]
     for s in favorited_collections:
@@ -47,7 +47,7 @@ def download_favorite_collections():
 @flask_login.login_required
 @api_error_handler
 def download_favorite_sources():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
     favorited_s = [user_mc.media(media_id) for media_id in user_favorited]
     for s in favorited_s:
@@ -61,7 +61,7 @@ def download_favorite_sources():
 @flask_login.login_required
 @api_error_handler
 def favorite_sources():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
     favorited_s = [user_mc.media(media_id) for media_id in user_favorited]
     for s in favorited_s:

@@ -15,7 +15,7 @@ from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COU
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -101,7 +101,7 @@ def upload_file():
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
 
 def _create_or_update_sources_from_template(source_list_from_csv, create_new):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     successful = []
     errors = []
     logger.debug("@@@@@@@@@@@@@@@@@@@@@@")
@@ -171,7 +171,7 @@ def _email_batch_source_update_results(audit_feedback):
 
 # this only adds/replaces metadata with values (does not remove)
 def update_source_list_metadata(source_list):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
 
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
@@ -240,7 +240,7 @@ def api_collection_set(tag_sets_id):
     :return: dict of info and list of collections in
     '''
     info = []
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
 
     if user_has_auth_role(ROLE_MEDIA_EDIT) == True:
         info = _tag_set_with_private_collections(tag_sets_id)
@@ -252,7 +252,7 @@ def api_collection_set(tag_sets_id):
 
 def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
 
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
     more_tags = True
@@ -345,7 +345,7 @@ def collection_set_favorited(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_details(collection_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     info = user_mc.tag(collection_id)
     _add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
@@ -371,7 +371,7 @@ def api_download_sources_template():
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     # info = user_mc.tag(int(collection_id))
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
     for src in all_media:
@@ -396,7 +396,7 @@ def api_collection_sources_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_historical_counts(collection_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     start_date_str = request.args['start']
     end_date_str = request.args['end']
     results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
@@ -426,7 +426,7 @@ def collection_source_sentence_historical_counts_csv(collection_id):
 
 
 def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
@@ -453,12 +453,12 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
 
 @cache
 def _cached_source_sentence_count(user_mc_key, query):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.sentenceCount(query)['count']
 
 @cache
 def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
@@ -473,7 +473,7 @@ def collection_source_sentence_counts(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_counts_csv(collection_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     info = user_mc.tag(collection_id)
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
@@ -501,7 +501,7 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
 
 
 def _tag_set_info(user_mc_key, tag_sets_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
 
 
@@ -524,7 +524,7 @@ def collection_media_list_page(user_mc_key, tags_id, max_media_id):
     We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
     and some of the collections have TONS of sources
     '''
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
 
 
@@ -601,7 +601,7 @@ def similarCollections(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_create():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
@@ -629,7 +629,7 @@ def collection_create():
 @flask_login.login_required
 @api_error_handler
 def collection_update(collection_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None

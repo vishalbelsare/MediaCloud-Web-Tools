@@ -1,5 +1,5 @@
 from server.util.csv import stream_response
-from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_mediacloud_client
+from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_admin_mediacloud_client
 from server.cache import cache
 
 SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored']
@@ -43,5 +43,5 @@ def download_sources_csv(all_media, file_prefix):
 
 @cache
 def _cached_source_story_count(user_mc_key, query):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     return user_mc.storyCount(query)['count']

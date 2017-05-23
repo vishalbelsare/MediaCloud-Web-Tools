@@ -7,7 +7,7 @@ from multiprocessing import Process
 
 from server import app, base_dir, mc
 import server.util.csv as csv
-from server.auth import user_mediacloud_key, is_user_logged_in, user_mediacloud_client
+from server.auth import user_mediacloud_key, is_user_logged_in, user_admin_mediacloud_client
 from server.util.request import arguments_required, filters_from_args, api_error_handler
 from server.util import mapwriter
 from server.views.topics import access_public_topic
@@ -68,7 +68,7 @@ def map_files_download(topics_id, map_type, map_format):
 @arguments_required( 'timespanId', 'color_field', 'num_media', 'include_weights')
 # @flask_login.login_required
 def map_files_download_custom(topics_id):
-    user_mc= user_mediacloud_client()
+    user_mc= user_admin_mediacloud_client()
     # how to treat these as req or default?
     optional_args = {
         'timespans_id': request.args['timespanId'] if 'timespanId' in request.args else None,

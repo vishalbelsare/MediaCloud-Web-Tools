@@ -3,7 +3,7 @@ import datetime
 from operator import itemgetter
 import server.util.csv as csv
 from server.cache import cache
-from server.auth import user_mediacloud_client
+from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query
     '''
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     if start_date_str is None:
         last_n_days = 365
         start_date = datetime.date.today()-datetime.timedelta(last_n_days)

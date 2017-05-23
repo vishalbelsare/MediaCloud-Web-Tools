@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, db, mc
-from server.auth import user_mediacloud_key, user_mediacloud_client
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.views.topics import concatenate_query_for_solr 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @form_fields_required('q')
 @api_error_handler
 def api_topics_preview_sentences_count():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
 
     solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
         start_date= request.form['start_date'],
@@ -33,7 +33,7 @@ def api_topics_preview_sentences_count():
 @form_fields_required('q')
 @api_error_handler
 def api_topics_preview_story_count():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
 
     solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
         start_date= request.form['start_date'],
@@ -67,7 +67,7 @@ def api_topics_preview_story_sample():
 @form_fields_required('q')
 @api_error_handler
 def api_topics_preview_word_count():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
 
     solr_query = concatenate_query_for_solr(solr_seed_query=request.form['q'],
         start_date= request.form['start_date'],
@@ -85,7 +85,7 @@ def api_topics_preview_word_count():
 @form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
 @api_error_handler
 def topic_create():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     description = request.form['description']
     solr_seed_query = request.form['solr_seed_query']

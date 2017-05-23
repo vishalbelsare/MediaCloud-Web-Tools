@@ -4,7 +4,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, TOOL_API_KEY
-from server.auth import user_mediacloud_key, user_mediacloud_client, is_user_logged_in
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
 from server.views.topics import validated_sort
 from server.views.topics.sentences import stream_sentence_count_csv
@@ -31,7 +31,7 @@ def topic_media(topics_id):
 @flask_login.login_required
 @api_error_handler
 def media(topics_id, media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     combined_media_info = topic_media_list(user_mediacloud_key(), topics_id, media_id=media_id)['media'][0]
     media_info = user_mc.media(media_id)
     for key in media_info.keys():
@@ -62,7 +62,7 @@ def topic_media_sentence_count_csv(topics_id, media_id):
 @flask_login.login_required
 @api_error_handler
 def media_stories(topics_id, media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     timespans_id = request.args.get('timespanId')
@@ -79,7 +79,7 @@ def media_stories_csv(topics_id, media_id):
 @flask_login.login_required
 @api_error_handler
 def media_inlinks(topics_id, media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     timespans_id = request.args.get('timespanId')
@@ -96,7 +96,7 @@ def media_inlinks_csv(topics_id, media_id):
 @flask_login.login_required
 @api_error_handler
 def media_outlinks(topics_id, media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     sort = validated_sort(request.args.get('sort'))
     limit = request.args.get('limit')
     timespans_id = request.args.get('timespanId')

@@ -4,7 +4,7 @@ import flask_login
 import os
 from server import app, base_dir, mc
 from flask import jsonify
-from server.auth import is_user_logged_in, user_mediacloud_client
+from server.auth import is_user_logged_in, user_admin_mediacloud_client
 import datetime
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
 
 
 def concatenate_query_and_dates(start_date, end_date):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     publish_date = user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),
                                               datetime.datetime.strptime(end_date, '%Y-%m-%d').date())
 

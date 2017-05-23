@@ -8,7 +8,7 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
 from server import app, db
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
     TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SET_GEOCODER_VERSION, TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE
@@ -55,7 +55,7 @@ def source_set_favorited(media_id):
 @api_error_handler
 def source_get_stats(media_id):
     username = user_name()
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = {}
 # story count
     media_query = "(media_id:{})".format(media_id)
@@ -81,7 +81,7 @@ def source_get_stats(media_id):
 
 @cache
 def _cached_media_source_health(user_mc_key, media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = None
     try:
         results = user_mc.mediaHealth(media_id)
@@ -91,7 +91,7 @@ def _cached_media_source_health(user_mc_key, media_id):
 
 
 def _media_source_details(media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     info = user_mc.media(media_id)
     info['id'] = media_id
     return info
@@ -127,7 +127,7 @@ def api_media_source_details(media_id):
     health = _cached_media_source_health(user_mediacloud_key(), media_id)
     info = _media_source_details(media_id)
     info['health'] = health
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     if user_has_auth_role(ROLE_MEDIA_EDIT):
         info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
     else:
@@ -140,7 +140,7 @@ def api_media_source_details(media_id):
 @flask_login.login_required
 @api_error_handler
 def api_media_source_scrape_feeds(media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     results = user_mc.feedsScrape(media_id)
     return jsonify(results)
 
@@ -212,7 +212,7 @@ def media_source_words(media_id):
 @flask_login.login_required
 @api_error_handler  
 def source_create():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     name = request.form['name']
     url = request.form['url']
     editor_notes = request.form['editor_notes'] if 'editor_notes' in request.form else None    # this is optional
@@ -254,7 +254,7 @@ def source_create():
 @flask_login.login_required
 @api_error_handler
 def source_create_from_urls():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     urls = request.form['urls'].split(",")
     sources_to_create = [{'url': url} for url in urls]
     results = user_mc.mediaCreate(sources_to_create)
@@ -266,7 +266,7 @@ def source_create_from_urls():
 @flask_login.login_required
 @api_error_handler  
 def source_update(media_id):
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()
     # update the basic info
     name = request.form['name']
     url = request.form['url']
