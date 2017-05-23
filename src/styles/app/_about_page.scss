@@ -1,0 +1,27 @@
+
+.about-page {
+
+  h1 {
+    text-align: center;
+    font-size: 56px;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 28px;
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 25px;
+  }
+
+  p {
+    &.intro {
+      text-align: center;
+      font-size: 28px;
+      margin: 0px;
+      padding: 0px;
+      margin-bottom: 40px;
+    }
+  }
+
+}

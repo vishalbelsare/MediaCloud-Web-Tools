@@ -43,7 +43,7 @@ const ToolsHomeContainer = (props) => {
   );
   const content = (isLoggedIn) ? loggedInContent : notLoggedInContent;
   return (
-    <div className="tools-home">
+    <div className="tools-home about-page">
       <Grid>
         <Title render={titleHandler} />
         <Row>
