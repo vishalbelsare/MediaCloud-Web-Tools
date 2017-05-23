@@ -70,11 +70,11 @@ def source_get_stats(media_id):
 
     # geography tags
     geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_geo_tagged_count = float(geoRes[0]['count']) * 100 / float(total_story_count) if len(geoRes) > 0 else 0
+    ratio_geo_tagged_count = float(geoRes[0]['count']) / float(total_story_count) if len(geoRes) > 0 else 0
     results['geoPct'] = ratio_geo_tagged_count
     # nyt theme
     nytRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_NYT_LABELS_VERSION, sample_size=GEO_SAMPLE_SIZE)
-    ratio_nyt_tagged_count = float(nytRes[0]['count']) * 100 / float(total_story_count) if len(nytRes) > 0 else 0
+    ratio_nyt_tagged_count = float(nytRes[0]['count']) / float(total_story_count) if len(nytRes) > 0 else 0
     results['nytPct'] = ratio_nyt_tagged_count
 
     return jsonify(results)

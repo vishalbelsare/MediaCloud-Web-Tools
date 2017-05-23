@@ -34,8 +34,8 @@ const SourceStatInfo = (props) => {
         { message: localMessages.coveredSince, data: formatDate(sourceInfo.start_date) },
         { message: localMessages.health, data: isHealthy },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
-        { message: localMessages.geoPct, data: formatNumber(sourceInfo.geoPct, { style: 'percent' }) },
-        { message: localMessages.nytPct, data: formatNumber(sourceInfo.nytPct, { style: 'percent' }) },
+        { message: localMessages.geoPct, data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }) },
+        { message: localMessages.nytPct, data: formatNumber(sourceInfo.nytPct, { style: 'percent', maximumFractionDigits: 2 }) },
       ]}
     />
   );
