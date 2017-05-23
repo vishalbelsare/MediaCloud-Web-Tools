@@ -10,7 +10,7 @@ import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
-import { hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
+import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 import { LEVEL_ERROR, LEVEL_WARNING, WarningNotice } from '../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES } from '../../../lib/formValidators';
 
@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleCreateTopic: (storyCount, user, values) => {
     if (storyCount > MIN_RECOMMENDED_STORIES &&
-      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(user, PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
+      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
       const queryInfo = {
         name: values.name,
         description: values.description,
@@ -132,12 +132,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     } else if (storyCount < MIN_RECOMMENDED_STORIES) {
       dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
       dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
-    } else if (storyCount > WARNING_LIMIT_RECOMMENDED_STORIES && storyCount < MAX_RECOMMENDED_STORIES) {
-      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
-      dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
-    } else if (storyCount > MAX_RECOMMENDED_STORIES) {
-      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
-      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+    } else if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+      if (storyCount > WARNING_LIMIT_RECOMMENDED_STORIES && storyCount < MAX_RECOMMENDED_STORIES) {
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+        dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+      } else if (storyCount > MAX_RECOMMENDED_STORIES) {
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+        dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+      }
     }
   },
 });
