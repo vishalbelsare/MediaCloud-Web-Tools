@@ -7,7 +7,7 @@ import { fetchTopicSentenceCounts, fetchTopicFocalSetSetenceCounts } from '../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
+import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -107,9 +107,8 @@ class FociAttentionComparisonContainer extends React.Component {
                 />
               </div>
               <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
-              <BubbleChart
+              <PackedBubbleChart
                 data={bubbleData}
-                placement={PLACEMENT_AUTO}
                 height={400}
                 domId={BUBBLE_CHART_DOM_ID}
               />

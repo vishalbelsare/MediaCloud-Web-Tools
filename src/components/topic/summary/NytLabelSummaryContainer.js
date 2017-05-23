@@ -6,7 +6,7 @@ import { schemeCategory10 } from 'd3';
 import { fetchTopicNytLabelCounts } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import BubbleChart, { PLACEMENT_HORIZONTAL } from '../../vis/BubbleChart';
+import BubbleRowChart from '../../vis/BubbleRowChart';
 import { downloadSvg } from '../../util/svg';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
@@ -83,9 +83,8 @@ class NytLabelSummaryContainer extends React.Component {
           <h2>
             <FormattedMessage {...localMessages.title} />
           </h2>
-          <BubbleChart
+          <BubbleRowChart
             data={bubbleData}
-            placement={PLACEMENT_HORIZONTAL}
             width={800}
             height={220}
             domId={BUBBLE_CHART_DOM_ID}

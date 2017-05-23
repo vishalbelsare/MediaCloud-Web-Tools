@@ -7,7 +7,7 @@ import { fetchTopicStoryCounts } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import BubbleChart from '../../vis/BubbleChart';
+import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import { getBrandDarkColor } from '../../../styles/colors';
 import messages from '../../../resources/messages';
@@ -53,7 +53,7 @@ class StoryTotalsSummaryContainer extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
         },
       ];
-      content = (<BubbleChart
+      content = (<PackedBubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
       />);

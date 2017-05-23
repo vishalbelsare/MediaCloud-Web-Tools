@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
 import { fetchCreateFocusKeywordStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
-import BubbleChart from '../../../../../vis/BubbleChart';
+import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
@@ -46,7 +46,7 @@ class KeywordStoryCountPreviewContainer extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
         },
       ];
-      content = (<BubbleChart
+      content = (<PackedBubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}

@@ -10,7 +10,7 @@ import { fetchCollectionSourceSentenceCounts } from '../../../actions/sourceActi
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
-import BubbleChart, { PLACEMENT_AUTO } from '../../vis/BubbleChart';
+import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ActionMenu from '../../common/ActionMenu';
 import { downloadSvg } from '../../util/svg';
@@ -81,9 +81,8 @@ class CollectionSourceRepresentation extends React.Component {
       }
 
       content = (
-        <BubbleChart
+        <PackedBubbleChart
           data={bubbleData}
-          placement={PLACEMENT_AUTO}
           height={400}
           domId={BUBBLE_CHART_DOM_ID}
         />
