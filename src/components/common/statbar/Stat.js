@@ -15,7 +15,10 @@ const Stat = props => (
 Stat.propTypes = {
   // from parent
   message: React.PropTypes.object.isRequired,
-  data: React.PropTypes.string.isRequired,
+  data: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object,
+  ]).isRequired,
   columnWidth: React.PropTypes.number,
   // from context
   intl: React.PropTypes.object.isRequired,
