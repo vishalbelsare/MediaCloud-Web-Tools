@@ -35,3 +35,7 @@ export function isMetaDataTagSet(metadataTagSetsId) {
 export function isCollectionTagSet(tagSetsId) {
   return VALID_COLLECTION_IDS.includes(tagSetsId);
 }
+
+export function anyCollectionTagSets(tagSetIdList) {
+  return tagSetIdList.reduce((any, tagSetId) => isCollectionTagSet(tagSetId) || any, false);
+}

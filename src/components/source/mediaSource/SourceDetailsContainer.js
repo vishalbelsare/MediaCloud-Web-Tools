@@ -9,7 +9,7 @@ import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { isMetaDataTagSet, isCollectionTagSet } from '../../../lib/tagUtil';
+import { isMetaDataTagSet, isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
@@ -68,7 +68,7 @@ class SourceDetailsContainer extends React.Component {
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
-    if (!source.is_healthy && source.media_source_tags.length > 0 && !isCollectionTagSet(source.media_source_tags[0].tags_id)) {
+    if ((source.is_healthy === 0) && (source.media_source_tags.length > 0 && !anyCollectionTagSets(source.media_source_tags.map(m => m.tag_sets_id)))) {
       unhealthySourceWarning = (
         <span>
           <WarningNotice>
