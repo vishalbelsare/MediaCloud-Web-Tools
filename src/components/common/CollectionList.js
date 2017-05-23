@@ -5,14 +5,17 @@ import { connect } from 'react-redux';
 import DataCard from './DataCard';
 import SourceOrCollectionChip from './SourceOrCollectionChip';
 import FilledStarIcon from './icons/FilledStarIcon';
+import LockIcon from './icons/LockIcon';
 import { isCollectionTagSet } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
+import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../lib/auth';
 
 const CollectionList = (props) => {
-  const { title, intro, collections, handleClick, onDownload, helpButton } = props;
+  const { title, intro, collections, handleClick, onDownload, helpButton, user } = props;
   const { formatMessage } = props.intl;
-  const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && c.show_on_media === 1));
+  const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
+  const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
   let actions = null;
   if (onDownload) {
     actions = (
@@ -29,6 +32,7 @@ const CollectionList = (props) => {
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
           <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
+            { c.show_on_media === 1 ? <LockIcon /> : '' }
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}
@@ -49,7 +53,12 @@ CollectionList.propTypes = {
   handleClick: React.PropTypes.func.isRequired,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
+  user: React.PropTypes.object,
 };
+
+const mapStateToProps = state => ({
+  user: state.user,
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleClick: (collectionId) => {
@@ -63,7 +72,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 export default
   injectIntl(
-    connect(null, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       CollectionList
     )
   );

@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppToolbar';
 import ToolDescription from './ToolDescription';
-import Faq from './faq/Faq';
+import Faq from './faq/ToolsFaq';
 import SystemStatsContainer from './SystemStatsContainer';
 import LoginForm from '../user/LoginForm';
 import DataCard from '../common/DataCard';
