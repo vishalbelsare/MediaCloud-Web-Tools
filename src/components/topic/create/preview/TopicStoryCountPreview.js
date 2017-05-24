@@ -5,7 +5,7 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchStoryCountByQuery } from '../../../../actions/topicActions';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
-import BubbleChart, { PLACEMENT_HORIZONTAL } from '../../../vis/BubbleChart';
+import BubbleRowChart from '../../../vis/BubbleRowChart';
 import { getBrandDarkColor } from '../../../../styles/colors';
 import messages from '../../../../resources/messages';
 import { updateFeedback } from '../../../../actions/appActions';
@@ -65,9 +65,9 @@ class TopicStoryCountPreview extends React.Component {
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
       }
-      content = (<BubbleChart
+      content = (<BubbleRowChart
         data={data}
-        placement={PLACEMENT_HORIZONTAL}
+        padding={220}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
       />);
