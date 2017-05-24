@@ -3,12 +3,12 @@ import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const userRunningTopicStatus = createAsyncReducer({
   initialState: {
-    runningTopic: null,
+    runningTopics: null,
     allowed: true,
   },
   action: FETCH_USER_QUEUED_RUNNING_TOPICS,
   handleSuccess: payload => ({
-    runningTopic: payload,
+    runningTopics: payload,
     allowed: payload == null || payload.length === 0,
   }),
 });

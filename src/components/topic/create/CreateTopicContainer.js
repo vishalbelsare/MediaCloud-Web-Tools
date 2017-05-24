@@ -30,7 +30,7 @@ CreateTopicContainer.propTypes = {
   location: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   canCreateTopic: React.PropTypes.bool,
-  runningTopics: React.PropTypes.object,
+  runningTopics: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
