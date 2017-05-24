@@ -53,7 +53,8 @@ def topic_filter_cascade_list():
     if is_user_logged_in():
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
-        user_topics = user_mc.topicList(link_id=link_id)['topics']
+        results = user_mc.topicList(link_id=link_id)
+        user_topics = results['topics']
         favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
         # mark all the public topics as favorite or not
         for t in public_topics:
@@ -65,7 +66,7 @@ def topic_filter_cascade_list():
         favorited_topics = [user_mc.topic(tid) for tid in favorite_topic_ids]
         for t in favorited_topics:
             t['isFavorite'] = True
-    return jsonify({'topics': {'favorite': favorited_topics, 'personal': user_topics, 'public': public_topics}})
+    return jsonify({'topics': {'favorite': favorited_topics, 'personal': user_topics, 'public': public_topics}, 'link_ids': results['link_ids']})
 
 
 def sorted_public_topic_list():

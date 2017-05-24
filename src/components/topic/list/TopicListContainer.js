@@ -1,5 +1,6 @@
 import React from 'react';
 import { push } from 'react-router-redux';
+import { withRouter } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -11,6 +12,8 @@ import composePagedContainer from '../../common/PagedContainer';
 import TopicPreviewList from './TopicPreviewList';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
+
+const PAGED_LENGTH = 19;
 
 const localMessages = {
   topicsListFilter: { id: 'topics.list.filter', defaultMessage: 'Filter Topics By: ' },
@@ -46,6 +49,12 @@ class TopicListContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     let whichTopics = topics.public;
     let titleContent = null;
+    let showPrevNextButtons = (
+      <Col lg={12} md={12} sm={12}>
+        {previousButton}
+        {nextButton}
+      </Col>
+    );
 
     // if the user has favorites => is logged_in => isn't logged in, show topics by filter
     if (currentFilter === 'favorites' && topics !== undefined) {
@@ -59,6 +68,10 @@ class TopicListContainer extends React.Component {
       whichTopics = topics.public;
     } else { // when user is not logged in and clicks the other options
       titleContent = <h2><FormattedMessage {...localMessages.noAccess} /></h2>;
+    }
+
+    if (whichTopics.length < PAGED_LENGTH) {
+      showPrevNextButtons = null;
     }
 
     return (
@@ -104,10 +117,7 @@ class TopicListContainer extends React.Component {
         />
 
         <Row>
-          <Col lg={12} md={12} sm={12}>
-            { previousButton }
-            { nextButton }
-          </Col>
+          { showPrevNextButtons }
         </Row>
 
       </div>
@@ -127,6 +137,8 @@ TopicListContainer.propTypes = {
   // from PagedContainer wrapper
   nextButton: React.PropTypes.node,
   previousButton: React.PropTypes.node,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object.isRequired,
   showFavorites: React.PropTypes.bool,
   setFilter: React.PropTypes.func.isRequired,
   currentFilter: React.PropTypes.string,
@@ -147,7 +159,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(setTopicListFilter({ currentFilter: filter }));
   },
   fetchPagedData: (props, linkId) => {
-    dispatch(fetchTopicsList(props.currentFilter, linkId))
+    dispatch(fetchTopicsList(linkId))
       .then(() => {
         dispatch(push(pagedLocation(ownProps.location, linkId)));
       });
@@ -178,7 +190,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composePagedContainer(
         composeAsyncContainer(
-          TopicListContainer
+          withRouter(TopicListContainer)
         )
       )
     )
