@@ -187,10 +187,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composePagedContainer(
-        composeAsyncContainer(
-          withRouter(TopicListContainer)
+    withRouter(
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        composePagedContainer(
+          composeAsyncContainer(
+            TopicListContainer
+          )
         )
       )
     )
