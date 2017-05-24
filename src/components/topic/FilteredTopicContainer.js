@@ -1,18 +1,29 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { WarningNotice } from '../common/Notice';
 import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
+import * as fetchConstants from '../../lib/fetchConstants';
+
+const localMessages = {
+  noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
+};
 
 class FilteredTopicContainer extends React.Component {
 
+  hasUsableSnapshot() {
+    const { snapshots } = this.props;
+    const hasUsableSnapshot = snapshots.filter(d => d.isUsable);
+    return (hasUsableSnapshot.length > 0);
+  }
   snapshotIsSet() {
     const { filters, topicId } = this.props;
-    return (topicId && filters.snapshotId);
+    return (topicId && (filters.snapshotId && this.hasUsableSnapshot()));
   }
 
   render() {
-    const { children, location, topicId, filters } = this.props;
+    const { children, location, topicId, filters, fetchStatusInfo, fetchStatusSnapshot } = this.props;
     let subContent = null;
     // If the generation process is still ongoing, ask the user to wait a few minutes
     if (this.snapshotIsSet()) {
@@ -22,9 +33,15 @@ class FilteredTopicContainer extends React.Component {
           {children}
         </div>
       );
-    } else {
+    } else if (fetchStatusInfo !== fetchConstants.FETCH_SUCCEEDED &&
+      fetchStatusSnapshot !== fetchConstants.FETCH_SUCCEEDED) {
       // how to distinguish between fetch-ongoing and a generating snapshot?
       subContent = <LoadingSpinner />;
+    } else if (fetchStatusInfo === fetchConstants.FETCH_SUCCEEDED &&
+      fetchStatusSnapshot === fetchConstants.FETCH_INVALID &&
+      !this.hasUsableSnapshot()) {
+      // how to distinguish between fetch-ongoing and a generating snapshot?
+      subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.noUsableSnapshot} /></WarningNotice>;
     }
     return (subContent);
   }
@@ -37,7 +54,8 @@ FilteredTopicContainer.propTypes = {
   children: React.PropTypes.node,
   location: React.PropTypes.object.isRequired,
   params: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string,
+  fetchStatusInfo: React.PropTypes.string,
+  fetchStatusSnapshot: React.PropTypes.string,
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
@@ -47,7 +65,8 @@ FilteredTopicContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
-  fetchStatus: state.topics.selected.snapshots.fetchStatus,
+  fetchStatusInfo: state.topics.selected.info.fetchStatus,
+  fetchStatusSnapshot: state.topics.selected.snapshots.fetchStatus,
   topicInfo: state.topics.selected.info,
   params: ownProps.params,
   snapshots: state.topics.selected.snapshots.list,
