@@ -22,16 +22,19 @@ EMM_TAG_SET_ID = 597        # holds country collections made from scraping Europ
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935  # holds the country of publication of a source
 TAG_SETS_ID_PUBLICATION_STATE = 1962    # holds the state of publication of a source (only US and India right now)
 TAG_SETS_ID_PRIMARY_LANGUAGE = 1969     # holds the primary language of a source
+TAG_SETS_ID_COUNTRY_OF_FOCUS = 1970     # holds the primary focus on what country for a source
 
 METADATA_PUB_COUNTRY_NAME = 'pub_country'
 METADATA_PUB_STATE_NAME = 'pub_state'
 METADATA_PRIMARY_LANGUAGE_NAME = 'primary_language'
+METADATA_PRIMARY_COUNTRY_OF_FOCUS_NAME = 'subject_country'
 
 # map from metadata category name, to metadata tag set id
 VALID_METADATA_IDS = [
     {METADATA_PUB_COUNTRY_NAME: TAG_SETS_ID_PUBLICATION_COUNTRY},
     {METADATA_PUB_STATE_NAME: TAG_SETS_ID_PUBLICATION_STATE},
-    {METADATA_PRIMARY_LANGUAGE_NAME: TAG_SETS_ID_PRIMARY_LANGUAGE}
+    {METADATA_PRIMARY_LANGUAGE_NAME: TAG_SETS_ID_PRIMARY_LANGUAGE},
+    {METADATA_PRIMARY_COUNTRY_OF_FOCUS_NAME, TAG_SETS_ID_COUNTRY_OF_FOCUS}
 ]
 
 
