@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.metadatacoverage.chart.title', defaultMessage: 'Metadata' },
@@ -28,6 +28,9 @@ const localMessages = {
   pLanguageTitle: { id: 'collection.summary.metadatacoverage.pLanguage.title', defaultMessage: 'Primary Language' },
   pLanguageTagged: { id: 'collection.summary.metadatacoverage.pLanguage.tagged', defaultMessage: 'with language' },
   pLanguageNotTagged: { id: 'collection.summary.metadatacoverage.pLanguage.notTagged', defaultMessage: 'unknown language' },
+  pCountryOfFocusTitle: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.title', defaultMessage: 'Country of Focus' },
+  pCountryOfFocusTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.tagged', defaultMessage: 'with country of focus' },
+  pCountryOfFocusNotTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.notTagged', defaultMessage: 'unknown country of focus' },
 
 };
 
@@ -76,6 +79,15 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               metadataId={TAG_SET_PRIMARY_LANGUAGE}
               taggedText={formatMessage(localMessages.pLanguageTagged)}
               notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
+            />
+          </Col>
+          <Col lg={3}>
+            <MetadataCoverageItem
+              title={formatMessage(localMessages.pCountryOfFocusTitle)}
+              sources={sources}
+              metadataId={TAG_SET_COUNTRY_OF_FOCUS}
+              taggedText={formatMessage(localMessages.pCountryOfFocusTagged)}
+              notTaggedText={formatMessage(localMessages.pCountryOfFocusNotTagged)}
             />
           </Col>
         </Row>

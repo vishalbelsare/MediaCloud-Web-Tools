@@ -100,7 +100,7 @@ class SourceDetailsContainer extends React.Component {
     if (metadata.length > 0) {
       metadataContent = (
         <ul>{ metadata.map(item =>
-          <li key={`metadata-${item.label}`}>
+          <li key={`metadata-${item.tag_sets_id}`}>
             <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
           </li>
           )}
