@@ -7,6 +7,7 @@ import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
+  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your query maxed out the 100K limit on stories. Try to better constrain your seed stories next time.' },
   noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
 };
 
@@ -23,7 +24,7 @@ class FilteredTopicContainer extends React.Component {
   }
 
   render() {
-    const { children, location, topicId, filters, fetchStatusInfo, fetchStatusSnapshot } = this.props;
+    const { children, location, topicId, topicInfo, filters, fetchStatusInfo, fetchStatusSnapshot } = this.props;
     let subContent = null;
     // If the generation process is still ongoing, ask the user to wait a few minutes
     if (this.snapshotIsSet()) {
@@ -41,7 +42,13 @@ class FilteredTopicContainer extends React.Component {
       fetchStatusSnapshot === fetchConstants.FETCH_INVALID &&
       !this.hasUsableSnapshot()) {
       // how to distinguish between fetch-ongoing and a generating snapshot?
-      subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.noUsableSnapshot} /></WarningNotice>;
+      if (topicInfo && topicInfo.message) {
+        if (topicInfo.message.includes('exceeds')) {
+          subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></WarningNotice>;
+        }
+      } else {
+        subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.noUsableSnapshot} /></WarningNotice>;
+      }
     }
     return (subContent);
   }
@@ -59,6 +66,7 @@ FilteredTopicContainer.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   topicId: React.PropTypes.number.isRequired,
+  topicInfo: React.PropTypes.object.isRequired,
   snapshots: React.PropTypes.array.isRequired,
 };
 
