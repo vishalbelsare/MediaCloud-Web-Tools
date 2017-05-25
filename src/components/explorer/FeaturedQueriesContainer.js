@@ -1,11 +1,11 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import Slider from 'react-slick';
-import DataCard from '../../common/DataCard';
+import ItemSlider from '../common/ItemSlider';
+import DataCard from '../common/DataCard';
 import FeaturedItem from './FeaturedItem';
-import { fetchFeaturedQueryList } from '../../../actions/explorerActions';
-import composeAsyncContainer from '../../common/AsyncContainer';
+// import { fetchFeaturedQueries } from '../../actions/explorerActions';
+import composeAsyncContainer from '../common/AsyncContainer';
 
 const localMessages = {
   mainTitle: { id: 'explorer.featured.mainTitle', defaultMessage: 'Featured Queries' },
@@ -15,8 +15,17 @@ const localMessages = {
 const FeaturedQueriesContainer = (props) => {
   const { queries } = props;
   let content = null;
-
+  const dummyQuery = { id: 1, label: 'something' };
+  const dummyQuery2 = { id: 2, label: 'something else' };
+  const fixedQuerySlides = (
+    <div>
+      <div key={1}><FeaturedItem query={dummyQuery} /></div>
+      <div key={2}><FeaturedItem query={dummyQuery2} /></div>
+      <div key={3}><FeaturedItem query={dummyQuery} /></div>
+    </div>
+  );
   if (queries && queries.length > 0) {
+    content = (
       <ItemSlider slides={fixedQuerySlides} />
     );
   }
@@ -37,21 +46,22 @@ const FeaturedQueriesContainer = (props) => {
 
 FeaturedQueriesContainer.propTypes = {
   queries: React.PropTypes.array,
+  fetchStatus: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.explorer.queries.featured.fetchStatus,
-  queries: state.explorer.queries.featured.list,
+const mapStateToProps = () => ({
+  // fetchStatus: state.explorer.queries.featured.fetchStatus,
+  // queries: state.explorer.queries.featured.list,
 });
 
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = () => ({
   fetchData: () => {
-    dispatch(fetchFeaturedQueryList());
+    // dispatch(fetchFeaturedQueries());
   },
   asyncFetch: () => {
-    dispatch(fetchFeaturedQueryList());
+    // dispatch(fetchFeaturedQueries());
   },
 });
 

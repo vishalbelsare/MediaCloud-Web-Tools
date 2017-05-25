@@ -1,26 +1,21 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
-import IndexRoute from 'react-router/lib/IndexRoute';
-import Redirect from 'react-router/lib/Redirect';
-import HomeContainer from '../components/explorer/HomeContainer';
+import Homepage from '../components/explorer/Homepage';
 // import QueryBuilderContainer from '../components/explorer/QueryBuilderContainer';
-import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
-import SourcesApp from '../components/explorer/explorerApp';
-import About from '../components/explorer/About';
+import ExplorerApp from '../components/explorer/ExplorerApp';
+// import About from '../components/explorer/About';
 
-const sourceRoutes = (
+const explorerRoutes = (
   <Route path="/" component={ExplorerApp}>
 
     <IndexRedirect to="/home" />
 
     {userRoutes}
 
-    <Route path="/home" component={HomeContainer} />
-    // <Route path="/queryBuilder" component={QueryBuilderContainer}/>
-    
+    <Route path="/home" component={Homepage} />
   </Route>
 );
 
-export default sourceRoutes;
+export default explorerRoutes;

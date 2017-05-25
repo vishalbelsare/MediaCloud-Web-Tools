@@ -4,11 +4,10 @@ import Title from 'react-title-component';
 import AppContainer from '../AppContainer';
 // import SourcesDrawer from './SourcesDrawer';
 import messages from '../../resources/messages';
-import ExplorerSubHeaderContainer from './ExplorerSubHeaderContainer';
 
 const ExplorerApp = (props) => {
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(messages.sourcesToolName)} | ${parentTitle}`;
+  const titleHandler = parentTitle => `${formatMessage(messages.dashboardToolName)} | ${parentTitle}`;
   // const drawer = <SourcesDrawer />;
   return (
     <div>
