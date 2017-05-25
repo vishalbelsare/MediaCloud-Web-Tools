@@ -5,13 +5,14 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import AppButton from '../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
 
 const localMessages = {
   searchSuggestion: { id: 'search.advanced.searchTip', defaultMessage: 'match these words' },
   pubCountrySuggestion: { id: 'search.advanced.pubCountryTip', defaultMessage: 'published in' },
   pubStateSuggestion: { id: 'search.advanced.pubStateTip', defaultMessage: 'state published in' },
   pLanguageSuggestion: { id: 'search.advanced.pLanguageTip', defaultMessage: 'primary language' },
+  pCountryOfFocusSuggestion: { id: 'search.advanced.pCountryOfFocusTip', defaultMessage: 'country of focus' },
 };
 const AdvancedSearchForm = (props) => {
   const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
@@ -54,6 +55,15 @@ const AdvancedSearchForm = (props) => {
             name={'primaryLanguage'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
+            autocomplete
+          />
+        </Col>
+        <Col lg={10}>
+          <MetadataPickerContainer
+            id={TAG_SET_COUNTRY_OF_FOCUS}
+            name={'countryOfFocus'}
+            form="advancedQueryForm"
+            floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
             autocomplete
           />
         </Col>
