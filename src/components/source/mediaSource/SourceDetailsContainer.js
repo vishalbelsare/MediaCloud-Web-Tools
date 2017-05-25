@@ -3,19 +3,19 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import DataCard from '../../common/DataCard';
 import CollectionList from '../../common/CollectionList';
 import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { isMetaDataTagSet, isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
+import { isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
+import StatBar from '../../common/statbar/StatBar';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -43,6 +43,10 @@ const localMessages = {
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
   unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
+  pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
+  pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
+  primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
+  countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -64,7 +68,6 @@ class SourceDetailsContainer extends React.Component {
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
     const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
     const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
-    const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
@@ -93,18 +96,6 @@ class SourceDetailsContainer extends React.Component {
           {...localMessages.feedLastScrapeDate}
           values={{ date: formatDate(jobStatusDateToMoment(source.scrape_status.job_states[0].last_updated)) }}
         />
-      );
-    }
-    // gather up metadata nicely
-    let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />;
-    if (metadata.length > 0) {
-      metadataContent = (
-        <ul>{ metadata.map(item =>
-          <li key={`metadata-${item.tag_sets_id}`}>
-            <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
-          </li>
-          )}
-        </ul>
       );
     }
     const publicNotes = (source.public_notes) ? <FormattedHTMLMessage {...localMessages.publicNotes} values={{ notes: source.public_notes }} /> : null;
@@ -180,12 +171,15 @@ class SourceDetailsContainer extends React.Component {
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
-            <DataCard>
-              <h2>
-                <FormattedMessage {...localMessages.metadataLabel} />
-              </h2>
-              {metadataContent}
-            </DataCard>
+            <StatBar
+              columnWidth={6}
+              stats={[
+                { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
+                { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
+                { message: localMessages.primaryLanguage, data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?' },
+                { message: localMessages.countryOfFocus, data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?' },
+              ]}
+            />
           </Col>
         </Row>
       </Grid>
