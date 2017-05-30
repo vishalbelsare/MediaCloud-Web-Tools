@@ -22,7 +22,7 @@ def topic_list():
         topics = sorted_public_topic_list()
         return jsonify({'topics': {'public': topics}})
     else:
-        user_mc = user_admin_mediacloud_client()
+        user_mc = user_mediacloud_client()
         link_id = request.args.get('linkId')
         topics = user_mc.topicList(link_id=link_id)
         _add_user_favorite_flag_to_topics(topics['topics'])
