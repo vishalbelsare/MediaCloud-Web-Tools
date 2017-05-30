@@ -7,7 +7,7 @@ from server import app, db, mc
 from server.cache import cache
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, is_user_logged_in
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
 
