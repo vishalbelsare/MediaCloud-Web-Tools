@@ -2,12 +2,12 @@ import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { WarningNotice } from '../common/Notice';
+import { ErrorNotice } from '../common/Notice';
 import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
-  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your query maxed out the 100K limit on stories. Try to better constrain your seed stories next time.' },
+  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your topic has collected more than the 100,000 story limit! You\'ll need to make a new topic with fewer seed stories if you want to investigate this.' },
   noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
 };
 
@@ -44,7 +44,9 @@ class FilteredTopicContainer extends React.Component {
       // how to distinguish between fetch-ongoing and a generating snapshot?
       if (topicInfo && topicInfo.message) {
         if (topicInfo.message.includes('exceeds')) {
-          subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></WarningNotice>;
+          subContent = (
+            <ErrorNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></ErrorNotice>
+          );
         }
       }
     }
