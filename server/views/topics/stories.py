@@ -8,7 +8,7 @@ from server.auth import is_user_logged_in
 from server.cache import cache
 import server.util.csv as csv
 from server.util.request import api_error_handler
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
 from server.views.topics import access_public_topic
 
@@ -26,7 +26,7 @@ def story(topics_id, stories_id):
         local_mc = mc
         story_topic_info = topic_story_list(TOOL_API_KEY, topics_id, stories_id=stories_id)['stories'][0]
     elif is_user_logged_in():
-        local_mc = user_admin_mediacloud_client()
+        local_mc = user_mediacloud_client()
         story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
