@@ -179,6 +179,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             });
             dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
             dispatch(filterBySnapshot(newSnapshotId));
+          } else if (snapshots.length > 0) {
+            // first snapshot doesn't show up as a job, so we gotta check for status here and alert if it is importing :-(
+            const firstSnapshot = snapshots[0];
+            if (!snapshotIsUsable(firstSnapshot)) {
+              dispatch(addNotice({
+                level: LEVEL_INFO,
+                message: ownProps.intl.formatMessage(localMessages.snapshotImporting),
+              }));
+            }
           }
         } else if (firstReadySnapshot.snapshots_id !== parseInt(snapshotId, 10)) {
           // if snaphot is specific in URL, but it is not the latest then show a warning

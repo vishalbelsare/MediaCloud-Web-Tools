@@ -46,8 +46,6 @@ class FilteredTopicContainer extends React.Component {
         if (topicInfo.message.includes('exceeds')) {
           subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></WarningNotice>;
         }
-      } else {
-        subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.noUsableSnapshot} /></WarningNotice>;
       }
     }
     return (subContent);
