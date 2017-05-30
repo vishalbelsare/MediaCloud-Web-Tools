@@ -50,6 +50,9 @@ def topic_filter_cascade_list():
     # check if user had favorites or personal
     user_topics = []
     favorited_topics = []
+    results = {
+        'link_ids': []
+    }
     if is_user_logged_in():
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
