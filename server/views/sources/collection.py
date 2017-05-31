@@ -9,7 +9,7 @@ import csv as pycsv
 import server.util.csv as csv
 import os
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, \
     VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label
 
 from server import app, mc, db, settings
@@ -110,8 +110,8 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     results = []
     for src in source_list_from_csv:
         # remove metadata for now, will modify below
-        # we take out primary_language BTW and ignore it
-        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state' and k != 'primary_language'}
+        # we take out primary_language and subject_country BTW and ignore it
+        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state' and k != 'primary_language' and k != 'subject_country'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
             src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
@@ -383,6 +383,8 @@ def api_collection_sources_csv(collection_id):
                     src['pub_state'] = tag['tag']
                 elif tag['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE:
                     src['primary_language'] = tag['tag']
+                elif tag['tag_sets_id'] == TAG_SETS_ID_COUNTRY_OF_FOCUS:
+                    src['subject_country'] = tag['tag']
 
         # if from details page, don't include editor_notes
         # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
