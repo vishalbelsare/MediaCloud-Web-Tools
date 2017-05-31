@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceStats } from '../../../actions/sourceActions';
 import StatBar from '../../common/statbar/StatBar';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
-  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'With Geography' },
+  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'Geocoded' },
   collections: { id: 'source.summary.statbar.collections', defaultMessage: 'Collections' },
   isHealthy: { id: 'source.summary.statbar.isHealthy', defaultMessage: '{value, plural,\n =1{healthy}\n =0{not healthy}\n}' },
   health: { id: 'source.summary.statbar.health', defaultMessage: 'Health' },
@@ -34,8 +35,16 @@ const SourceStatInfo = (props) => {
         { message: localMessages.coveredSince, data: formatDate(sourceInfo.start_date) },
         { message: localMessages.health, data: isHealthy },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
-        { message: localMessages.geoPct, data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }) },
-        { message: localMessages.nytPct, data: formatNumber(sourceInfo.nytPct, { style: 'percent', maximumFractionDigits: 2 }) },
+        { message: localMessages.geoPct,
+          data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }),
+          helpTitleMsg: messages.geoHelpTitle,
+          helpContentMsg: messages.geoHelpContent,
+        },
+        { message: localMessages.nytPct,
+          data: formatNumber(sourceInfo.nytPct, { style: 'percent', maximumFractionDigits: 2 }),
+          helpTitleMsg: messages.themeHelpTitle,
+          helpContentMsg: messages.themeHelpContent,
+        },
       ]}
     />
   );

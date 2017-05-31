@@ -102,6 +102,11 @@ const messages = {
   heatMapHelpText: { id: 'heatmap.help.text',
     defaultMessage: '<p>The country map shows you an intensity of how often countries are mentioned in the results. This uses our CLIFF-CLAVIN geolocation engine to find mentions of known places in the text of the news articles. The darker the color, the more it was mentioned. Note that this is using a sampling of the sentences, not all of them. If you download a CSV of the results, the counts you see are also based on this sampling.</p><p>We have been tagging all english language stories with the places they mention since June 1, 2016.</p>',
   },
+  geoHelpTitle: { id: 'source.summary.geo.help.title', defaultMessage: 'Geographic Focus' },
+  geoHelpContent: { id: 'source.summary.geo.help.content', defaultMessage: '<p>We can analyze how often countries are mentioned in a story. This uses our CLIFF-CLAVIN geolocation engine to find mentions of known places in the text of the news articles. We have been tagging all english language stories with the places they mention since June 1, 2016.</p>' },
+  themeHelpTitle: { id: 'source.summary.geo.theme.title', defaultMessage: 'Thematic Focus' },
+  themeHelpContent: { id: 'source.summary.geo.theme.title', defaultMessage: '<p>We can analyze the main themes covered in a story.  We\'ve trained a set of machine learning models based on the NYT Corpus.  This lets us take an article and have these models guess what themes the article is about.  We filter for themes that have the highest relevace scores, and tag each story with those themes.</p>' },
+
   word: { id: 'word', defaultMessage: 'Word Source' },
   ok: { id: 'ok', defaultMessage: 'OK' },
   cancel: { id: 'cancel', defaultMessage: 'Cancel' },
