@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-// import search from './search';
-// import queries from './queries';
+import selected from './selected';
+import queries from './queries';
 
 const rootReducer = combineReducers({
-  // search,
-  // queries,
+  selected,
+  queries,
 });
 
 export default rootReducer;

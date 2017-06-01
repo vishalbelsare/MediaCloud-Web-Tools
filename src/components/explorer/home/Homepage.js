@@ -2,9 +2,9 @@ import React from 'react';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import DataCard from '../common/DataCard';
-import LoginForm from '../user/LoginForm';
-import FeaturedQueriesContainer from './FeaturedQueriesContainer';
+import DataCard from '../../common/DataCard';
+import LoginForm from '../../user/LoginForm';
+import SampleQueryContainer from './SampleQueryContainer';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -38,7 +38,7 @@ const Homepage = (props) => {
       </Row>
       <Row>
         <Col lg={7} xs={12}>
-          <FeaturedQueriesContainer />
+          <SampleQueryContainer />
         </Col>
       </Row>
       {sideBarContent}
