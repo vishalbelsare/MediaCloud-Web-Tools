@@ -1,7 +1,7 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import DataCard from '../../common/DataCard';
+// import DataCard from '../../common/DataCard';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { selectQuery } from '../../../actions/explorerActions';
@@ -12,38 +12,54 @@ const localMessages = {
 };
 
 class QueryPicker extends React.Component {
+
+  constructor(props) {
+    super(props);
+    const queryList = (props.queries) ? props.queries : null;
+    this.state = { queryList };
+  }
+
   componentDidMount() {
   }
 
+  addACustomQuery(newQueryObj) {
+    const queryList = this.state.queryList;
+    queryList.push(newQueryObj);
+  }
+
   render() {
-    const { queries, selected, setSelectedQuery, isEditable } = this.props;
+    const { selected, setSelectedQuery, isEditable } = this.props;
+    const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
+    let customQuerySlide = null;
     // if DEMO_MODE isEditable = true
-    if (queries && queries.length > 0 && selected) {
-      fixedQuerySlides = queries.map((query, index) => (
+    const queryList = this.state.queryList;
+    if (queryList && queryList.length > 0 && selected) {
+      fixedQuerySlides = queryList.map((query, index) => (
         <div key={index} className={selected.id === query.id ? 'selected' : ''}>
-          <QueryPickerItem query={query} isEditable={isEditable} onTouchTap={setSelectedQuery} />
+          <QueryPickerItem query={query} isEditable={isEditable} selectThisQuery={() => setSelectedQuery(index)} />
         </div>
       ));
+      const customEmptyQuery = { id: queryList.length, label: 'empty query', queryParams: '{}', imagePath: '.' };
+      customQuerySlide = (
+        <div key={queryList.length} className={selected.id === queryList.length ? 'selected' : ''}>
+          <QueryPickerItem query={customEmptyQuery} isEditable={isEditable} selectThisQuery={() => this.addACustomQuery(queryList.length)} />
+        </div>
+      );
+
+      fixedQuerySlides.push(customQuerySlide);
 
       content = (
-        <ItemSlider slides={fixedQuerySlides} settings={{ dots: false, slidesToShow: 3, slidesToScroll: 1 }} />
+        <ItemSlider title={formatMessage(localMessages.intro)} slides={fixedQuerySlides} settings={{ height: 60, dots: false, slidesToShow: 3, slidesToScroll: 1 }} />
       );
     }
 
     // indicate which queryPickerItem is selected -
 
     return (
-      <div className="featured-collections">
-        <DataCard>
-          <h2>
-            <FormattedMessage {...localMessages.mainTitle} />
-          </h2>
-          <div>
-            {content}
-          </div>
-        </DataCard>
+      <div className="query-picker">
+        {content}
       </div>
     );
   }
@@ -59,13 +75,12 @@ QueryPicker.propTypes = {
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
-  queries: state.explorer.queries.list,
 });
 
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (index) => {
-    dispatch(selectQuery(state.explorer.queries[index]));
+    dispatch(selectQuery(index));
   },
 });
 

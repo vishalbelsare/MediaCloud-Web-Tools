@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm, Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
+import DataCard from '../../common/DataCard';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 // import SourceDetailsForm from './SourceDetailsForm';
@@ -13,56 +14,60 @@ const localMessages = {
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
 };
 
-const renderQueryForm = (props) => {
-  const { currentQuery, renderTextField } = props;
-  return (
-    <div>
-      <h4>Query</h4>
-      <Field
-        name={`${currentQuery.query}`}
-        type="text"
-        component={renderTextField}
-        label="First Name"
-      />
-      <Field
-        name={`${currentQuery.color}`}
-        type="text"
-        component={renderTextField}
-        label="Color"
-      />
-    </div>
-  );
-};
-
-renderQueryForm.propTypes = {
-  renderTextField: React.PropTypes.func.isRequired,
-  currentQuery: React.PropTypes.object.isRequired,
-};
-
 const QueryForm = (props) => {
-  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave } = props;
+  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField, renderSelectField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
     cleanedInitialValues.disabled = false;
   }
 
-
+// we may have a query or a query object for initialValues
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <h3>{`${initialValues.label}`}</h3>
-      {renderQueryForm}
-      <Row>
-        <Col lg={12}>
-          <AppButton
-            style={{ marginTop: 30 }}
-            type="submit"
-            label={buttonLabel}
-            disabled={pristine || submitting}
-            primary
+      <DataCard>
+        <Row>
+          <Col lg={6}>
+            <Field
+              name={`${initialValues.queryParams}`}
+              value={`${initialValues.queryParams}`}
+              type="text"
+              multiLine
+              component={renderTextField}
+              label="Edit Query"
+              floatingLabelText="edit query"
+            />
+          </Col>
+          <Col lg={6}>
+            <Field
+              name={`${initialValues.color}`}
+              type="text"
+              component={renderSelectField}
+              label="S and C"
+              floatingLabelText="edit sources and collections"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Field
+            name={`${initialValues.color}`}
+            type="text"
+            component={renderTextField}
+            label="Color"
+            floatingLabelText="choose a color"
           />
-        </Col>
-      </Row>
+        </Row>
+      </DataCard>
+      <Col lg={12}>
+        <AppButton
+          style={{ marginTop: 30 }}
+          type="submit"
+          label={buttonLabel}
+          disabled={pristine || submitting}
+          primary
+        />
+      </Col>
     </form>
   );
 };

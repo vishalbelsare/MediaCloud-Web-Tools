@@ -1,20 +1,20 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
-import GridList from 'material-ui/GridList';
 
 const QueryPickerItem = (props) => {
-  const { query, isEditable, selectThisQuery } = props;
+  const { query, isEditable } = props;
   let nameInfo = null;
   if (isEditable) {
-    nameInfo = <TextField id="name" value={query.label} />;
+    nameInfo = <TextField id="name" value={query.label} class="glyphicon glyphicon-certificate query-color" />;
   } else {
     nameInfo = <h2>{query.label}</h2>;
   }
   return (
-    <GridList className="query-picker-item" cols={3} onClick={() => selectThisQuery()}>
+    <div className="query-picker-item">
       {nameInfo}
-    </GridList>
+      <p>Summary Info</p>
+    </div>
   );
 };
 
@@ -22,7 +22,6 @@ QueryPickerItem.propTypes = {
   // from parent
   query: React.PropTypes.object,
   isEditable: React.PropTypes.bool.isRequired,
-  selectThisQuery: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

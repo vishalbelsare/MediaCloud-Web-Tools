@@ -12,9 +12,9 @@ const localMessages = {
 };
 
 const sampleQueryList = [
-  { id: 1, label: 'public health query', queryParams: '{"keyword":"public"}', imagePath: '.' },
-  { id: 2, label: 'chocolate query', queryParams: '{"keyword":"chocolate and dessert"}', imagePath: '.' },
-  { id: 3, label: 'bike safety query', queryParams: '{"keyword":"bike or safety"}', imagePath: '.' },
+  { id: 1, label: 'public health query', queryParams: '{"keyword":"public"}', imagePath: '.', color: 'green' },
+  { id: 2, label: 'chocolate query', queryParams: '{"keyword":"chocolate and dessert"}', imagePath: '.', color: 'blue' },
+  { id: 3, label: 'bike safety query', queryParams: '{"keyword":"bike or safety"}', imagePath: '.', color: 'red' },
 ];
 
 class SampleQueryContainer extends React.Component {
@@ -25,6 +25,7 @@ class SampleQueryContainer extends React.Component {
 
   render() {
     const { queries } = this.props;
+    const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
 
@@ -32,7 +33,7 @@ class SampleQueryContainer extends React.Component {
       fixedQuerySlides = queries.map((query, index) => (<div key={index}><SampleQueryItem query={query} /></div>));
 
       content = (
-        <ItemSlider slides={fixedQuerySlides} />
+        <ItemSlider title={formatMessage(localMessages.intro)} slides={fixedQuerySlides} />
       );
     }
 
