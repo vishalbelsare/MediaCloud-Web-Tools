@@ -22,6 +22,7 @@ def api_explorer_sentences_count():
 
     solr_query = solr_query_from_request(request.form) 
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.form['start_date'], split_end_date=request.form['end_date'], split=True)
+    # make sure we return the query and the id passed in..
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count', methods=['POST'])

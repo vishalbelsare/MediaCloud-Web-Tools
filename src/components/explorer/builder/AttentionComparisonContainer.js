@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { fetchSentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts } from '../../../actions/explorerActions';
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -137,16 +137,16 @@ AttentionComparisonContainer.propTypes = {
   overallCounts: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.explorer.selected.attention.fetchStatus,
-  overallTotal: state.explorer.selected.sentenceCount.total,
-  overallCounts: state.explorer.selected.sentenceCount.counts,
+const mapStateToProps = (state, ownProps) => ({
+  fetchStatus: state.explorer.queries[ownProps.index].attention.fetchStatus,
+  overallTotal: state.explorer.queries[ownProps.index].sentenceCount.total,
+  overallCounts: state.explorer.queries[ownProps.index].sentenceCount.counts,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (query) => {
-    // for n queries, run the dispatch
-        dispatch(fetchExplorerSentenceCounts(query))
+    // for n queries, run the dispatch with each parsed query
+        dispatch(fetchExplorerSentenceCounts(query, index))
       }
     }
   },
@@ -154,7 +154,7 @@ const mapDispatchToProps = dispatch => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    // for n queries, run the dispatch
+    // for n queries, run the dispatch with each parsed query
     asyncFetch: () => {
       dispatchProps.fetchData();
     },
