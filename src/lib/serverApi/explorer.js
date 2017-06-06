@@ -1,4 +1,4 @@
-import { createApiPromise, createPostingApiPromise } from '../apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams } from '../apiUtil';
 
 
 export function fetchSavedQueries() {

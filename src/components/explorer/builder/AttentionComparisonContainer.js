@@ -138,17 +138,16 @@ AttentionComparisonContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.explorer.queries[ownProps.index].attention.fetchStatus,
-  overallTotal: state.explorer.queries[ownProps.index].sentenceCount.total,
-  overallCounts: state.explorer.queries[ownProps.index].sentenceCount.counts,
+  fetchStatus: state.explorer.queries.list[ownProps.index].attention.fetchStatus,
+  overallTotal: state.explorer.queries.list[ownProps.index].sentenceCount.total,
+  overallCounts: state.explorer.queries.list[ownProps.index].sentenceCount.counts,
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (query) => {
+  fetchData: (query, index) => {
     // for n queries, run the dispatch with each parsed query
-        dispatch(fetchExplorerSentenceCounts(query, index))
-      }
-    }
+    // queries.map((query, index) => (
+    dispatch(fetchQuerySentenceCounts(query, index));
   },
 });
 

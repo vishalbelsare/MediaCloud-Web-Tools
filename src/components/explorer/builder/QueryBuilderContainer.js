@@ -5,6 +5,7 @@ import { Grid } from 'react-flexbox-grid/lib';
 import { selectQuery, setQueryList } from '../../../actions/explorerActions';
 import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
+import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -21,12 +22,11 @@ class QueryBuilderContainer extends React.Component {
     // if a query is clicked or if the url is edited...
     // THis is definitely not working right..
     if (selected === null || nextProps.selected === null) {
-      // make sure this is a valid query string
-      // if not logged in, ignore/strip out anything but keywords?
-      // const var1 = '{"keyword": "public"}';
-      // TODO formatting of query or param
+      // if logged in, get any URL and parse it
+      // if not, assume if anything is in the url, parseInt it and select it
 
-      // but what if clicked? this is changing the selection, not the query string
+      // if something else is clicked, then if logged in, we will push this into URL?
+      // queryParams = selected
       const qObject = JSON.parse(nextProps.urlQueryString.query);
       setSelectedQuery(qObject);
     }
@@ -47,6 +47,8 @@ class QueryBuilderContainer extends React.Component {
         <div>
           <QueryPicker selected={selected} queries={queries} isEditable={isNotLoggedInUser} onClick={setSelectedQuery} />
           <QueryForm initialValues={selected} buttonLabel={formatMessage(localMessages.querySearch)} onSave={handleSearch} isEditable={isNotLoggedInUser} />
+
+          <QueryResultsContainer queries={queries} />
         </div>
       );
     }
