@@ -5,6 +5,7 @@ import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, Warnin
 const localMessages = {
   internalError: { id: 'errors.internal', defaultMessage: 'Internal Error' },
   notLoggedIn: { id: 'errors.notLoggedIn', defaultMessage: 'You need to login' },
+  badLoginAttempt: { id: 'errors.badLoginAttempt', defaultMessage: 'Your email or password was wrong' },
   details: { id: 'errors.internal.details', defaultMessage: 'details' },
 };
 
@@ -33,12 +34,15 @@ class AppNotice extends React.Component {
       const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
       if ((details === undefined) || (details === null)) {
         if (isLowLevelError) {
+          detailsContent = stringMessage;
           if (stringMessage.includes('Invalid API key or authentication cookie')) {
             messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+          } else if (stringMessage.includes('was not found or password is incorrect.')) {
+            messageContent = <FormattedMessage {...localMessages.badLoginAttempt} />;
+            detailsContent = null;  // don't show them the gnarly details if they just got their password wrong
           } else {
             messageContent = <FormattedMessage {...localMessages.internalError} />;
           }
-          detailsContent = stringMessage;
         }
       }
     // handle html messages

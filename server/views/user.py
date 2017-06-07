@@ -1,18 +1,16 @@
 import logging
-from flask import jsonify, request, redirect, render_template
+from flask import jsonify, request, redirect
 import flask_login
-import json
 
-from server import app, auth, db, auth, mc
+from server import app, auth, mc
 from server.auth import user_admin_mediacloud_client
-from server.util.mail import send_html_email
-from server.util.request import api_error_handler
 from server.util.request import api_error_handler, form_fields_required, arguments_required, json_error_response
 
 logger = logging.getLogger(__name__)
 
 ACTIVATION_URL = "https://tools.mediacloud.org/api/user/activate/confirm"
 PASSWORD_RESET_URL = "https://tools.mediacloud.org/#/reset-password"
+
 
 @app.route('/api/login', methods=['POST'])
 @form_fields_required('email', 'password')
@@ -21,26 +19,23 @@ def login_with_password():
     username = request.form["email"]
     logger.debug("login request from %s", username)
     password = request.form["password"]
-    user = auth.authenticate_by_password(username, password)
-    if user.is_anonymous:   # login failed
-        logger.debug("  login failed (%s)", user.is_anonymous)
-        return json_error_response("Login failed", 401)
+    # try to log them in
+    results = mc.authLogin(username, password)
+    if 'error' in results:
+        return json_error_response(results['error'], 401)
+    user = auth.create_and_cache_user(results['profile'])
+    logger.debug("  succeeded - got a key (user.is_anonymous=%s)", user.is_anonymous)
     auth.login_user(user)
     return jsonify(user.get_properties())
 
 
-@app.route('/api/login-with-key', methods=['POST'])
-@form_fields_required('email', 'key')
-@api_error_handler 
-def login_with_key():
-    username = request.form["email"]
-    logger.debug("login request from %s", username)
-    key = request.form["key"]
-    user = auth.authenticate_by_key(username, key)
-    if user.is_anonymous:   # login failed
+@app.route('/api/login-with-cookie')
+@api_error_handler
+def login_with_cookie():
+    user = flask_login.current_user
+    if user.is_anonymous:   # no user session
         logger.debug("  login failed (%s)", user.is_anonymous)
         return json_error_response("Login failed", 401)
-    auth.login_user(user)
     return jsonify(user.get_properties())
 
 

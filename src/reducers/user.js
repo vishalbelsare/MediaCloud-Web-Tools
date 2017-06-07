@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { LOGIN_WITH_PASSWORD, LOGIN_WITH_KEY, LOGOUT } from '../actions/userActions';
+import { LOGIN_WITH_PASSWORD, LOGIN_WITH_COOKIE, LOGOUT } from '../actions/userActions';
 import { saveCookies, deleteCookies } from '../lib/auth';
 import * as fetchConstants from '../lib/fetchConstants';
 
@@ -19,9 +19,9 @@ export default function user(state = INITIAL_STATE, action) {
         ...action.payload,
       });
     case resolve(LOGIN_WITH_PASSWORD):
-      const passwordLoginWorked = (action.payload.status !== 401);
+      const passwordLoginWorked = (action.payload.status !== 500);
       if (passwordLoginWorked) {
-        saveCookies(action.payload.email, action.payload.key);
+        saveCookies(action.payload.email);
       } else {
         // for safety, delete any cookies that might be there
         deleteCookies();
@@ -37,13 +37,13 @@ export default function user(state = INITIAL_STATE, action) {
         isLoggedIn: false,
       });
 
-    case LOGIN_WITH_KEY:
+    case LOGIN_WITH_COOKIE:
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_ONGOING,
         isLoggedIn: false,
         ...action.payload,
       });
-    case resolve(LOGIN_WITH_KEY):
+    case resolve(LOGIN_WITH_COOKIE):
       const keyLoginWorked = (action.payload.status !== 401);
       if (!keyLoginWorked) {
         deleteCookies();
@@ -53,7 +53,7 @@ export default function user(state = INITIAL_STATE, action) {
         isLoggedIn: keyLoginWorked,
         ...action.payload,
       });
-    case reject(LOGIN_WITH_KEY):
+    case reject(LOGIN_WITH_COOKIE):
       deleteCookies();
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
