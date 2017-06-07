@@ -9,7 +9,7 @@ from server.util.request import api_error_handler, form_fields_required, argumen
 logger = logging.getLogger(__name__)
 
 ACTIVATION_URL = "https://tools.mediacloud.org/api/user/activate/confirm"
-PASSWORD_RESET_URL = "https://tools.mediacloud.org/#/reset-password"
+PASSWORD_RESET_URL = "https://tools.mediacloud.org/#/user/reset-password"
 
 
 @app.route('/api/login', methods=['POST'])
@@ -84,25 +84,25 @@ def activation_resend():
     return jsonify(results)
 
 
-@app.route('/api/user/recover_password', methods=['POST'])
+@app.route('/api/user/reset-password-request', methods=['POST'])
 @form_fields_required('email')
 @api_error_handler
-def recover_password():
-    logger.debug("recover password request from %s", request.form['email'])
+def request_password_reset():
+    logger.debug("request password reset from %s", request.form['email'])
     results = mc.authSendPasswordResetLink(request.form["email"], PASSWORD_RESET_URL)
     return jsonify(results)
 
 
-@app.route('/api/user/reset_password', methods=['POST'])
-@form_fields_required('email', 'password_reset_token', 'password')
+@app.route('/api/user/reset-password', methods=['POST'])
+@form_fields_required('email', 'password_reset_token', 'new_password')
 @api_error_handler
 def reset_password():
-    logger.debug("reset password request from %s", request.form['email'])
-    results = mc.authResetPassword(request.form["email"], request.form['password_reset_token'], request.form['password'])
+    logger.debug("reset password for %s", request.form['email'])
+    results = mc.authResetPassword(request.form["email"], request.form['password_reset_token'], request.form['new_password'])
     return jsonify(results)
 
 
-@app.route('/api/user/change_password', methods=['POST'])
+@app.route('/api/user/change-password', methods=['POST'])
 @form_fields_required('old_password', 'new_password')
 @flask_login.login_required
 @api_error_handler

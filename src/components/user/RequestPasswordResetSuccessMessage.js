@@ -8,7 +8,7 @@ const localMessages = {
   sendAgain: { id: 'error.sendAgain', defaultMessage: 'Click here to send the email again' },
 };
 
-const RecoverPasswordSuccessMessage = () => (
+const RequestPasswordResetSuccessMessage = () => (
   <div className="reset-password-confirm">
     <Grid>
       <Row>
@@ -22,8 +22,8 @@ const RecoverPasswordSuccessMessage = () => (
 );
 
 
-RecoverPasswordSuccessMessage.propTypes = {
+RequestPasswordResetSuccessMessage.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(RecoverPasswordSuccessMessage);
+export default injectIntl(RequestPasswordResetSuccessMessage);

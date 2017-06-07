@@ -28,7 +28,7 @@ const localMessages = {
     '<p><a href="post-to-recover-password">Click here to send the email again</a>.</p>.' },
 };
 
-class SignupForm extends React.Component {
+class SignupContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = { allowSignup: false };
@@ -37,11 +37,11 @@ class SignupForm extends React.Component {
     this.setState({ passedCaptcha: true });
   }
   render() {
-    const { handleSubmit, onSubmitSignupForm, pristine, submitting, renderTextField, renderCheckbox } = this.props;
+    const { handleSubmit, handleSignupSubmission, pristine, submitting, renderTextField, renderCheckbox } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <Grid>
-        <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="app-form signup-form">
+        <form onSubmit={handleSubmit(handleSignupSubmission.bind(this))} className="app-form signup-form">
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...messages.userSignup} /></h1>
@@ -133,7 +133,7 @@ class SignupForm extends React.Component {
   }
 }
 
-SignupForm.propTypes = {
+SignupContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   location: React.PropTypes.object,
@@ -146,7 +146,7 @@ SignupForm.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   // from dispatch
-  onSubmitSignupForm: React.PropTypes.func.isRequired,
+  handleSignupSubmission: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -154,7 +154,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSubmitSignupForm: (values) => {
+  handleSignupSubmission: (values) => {
     dispatch(signupUser(values))
     .then((response) => {
       if (response.success !== 1) {
@@ -194,7 +194,7 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
-          SignupForm
+          SignupContainer
         )
       )
     )

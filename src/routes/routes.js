@@ -16,5 +16,7 @@ export function redirectHomeIfLoggedIn(nextState, replace) {
       pathname: '/home',
       state: { nextPathname: nextState.location.pathname },
     });
+    return true;
   }
+  return false;
 }

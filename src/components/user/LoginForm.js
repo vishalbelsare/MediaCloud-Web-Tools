@@ -67,7 +67,7 @@ const LoginFormComponent = (props) => {
           </Link>
         </Col>
         <Col lg={12}>
-          <Link to="/user/recover-password">
+          <Link to="/user/request-password-reset">
             <AppButton
               flat
               label={formatMessage(localMessages.forgotPassword)}

@@ -166,7 +166,7 @@ const messages = {
   userNewPassword: { id: 'user.newPassword', defaultMessage: 'New Password' },
   userConfirmPassword: { id: 'user.confirmPassword', defaultMessage: 'Confirm Password' },
   userChangePassword: { id: 'user.changePassword', defaultMessage: 'Change Password' },
-  userRecoverPassword: { id: 'user.recoverPassword', defaultMessage: 'Recover Password' },
+  userResetPassword: { id: 'user.resetPassword', defaultMessage: 'Reset Password' },
   userSignup: { id: 'user.signup', defaultMessage: 'Sign Up' },
   userFullName: { id: 'user.fullName', defaultMessage: 'Full Name' },
   userNotes: { id: 'user.notes', defaultMessage: 'Notes' },
