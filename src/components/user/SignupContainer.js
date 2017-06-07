@@ -100,7 +100,7 @@ class SignupContainer extends React.Component {
                 rows={2}
                 rowsMax={4}
                 component={renderTextField}
-                hintText={localMessages.notesHint}
+                hintText={formatMessage(localMessages.notesHint)}
                 floatingLabelText={messages.userNotes}
               />
             </Col>
