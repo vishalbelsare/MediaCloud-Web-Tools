@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 
 ### MAY NOT BE A FORM TODO
 
+@app.route('/api/explorer/example_queries', methods=['GET'])
+@api_error_handler
+def api_explorer_example_queries():
+    example_queries = [{id: 1, image:'an_image.jpg', query:'bike and safety'}, {id: 2, image:'another_image.jpg', query: 'dessert'}]
+    return jsonify(example_queries)
+
 @app.route('/api/explorer/sentences/count', methods=['POST'])
 @flask_login.login_required
 @form_fields_required('q')
