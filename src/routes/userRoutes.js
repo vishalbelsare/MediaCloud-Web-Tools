@@ -18,7 +18,7 @@ import { logout } from '../actions/userActions';
 // Lets us have a fake '/logout' route
 function onEnterLogout(nextState, replaceState) {
   store.dispatch(logout());
-  replaceState('/login');
+  replaceState('/home');
 }
 
 const userRoutes = (
