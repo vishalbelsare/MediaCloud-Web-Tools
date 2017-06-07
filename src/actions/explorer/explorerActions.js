@@ -10,7 +10,13 @@ export const fetchSavedQueryList = createAsyncAction(FETCH_SAVED_QUERY_LIST, api
 
 
 export const SELECT_QUERY = 'SELECT_QUERY';
-export const selectQuery = createAction(SELECT_QUERY, query => query);
+export const selectQuery = createAction(SELECT_QUERY, index => index);
+
+export const ADD_CUSTOM_QUERY = 'ADD_CUSTOM_QUERY';
+export const addCustomQuery = createAction(ADD_CUSTOM_QUERY, query => query);
 
 export const PREPARE_QUERIES = 'PREPARE_QUERIES';
 export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQueries);
+
+export const FETCH_QUERY_SENTENCE_COUNTS = 'FETCH_QUERY_SENTENCE_COUNTS';
+export const fetchQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchQuerySentenceCounts, params => params);

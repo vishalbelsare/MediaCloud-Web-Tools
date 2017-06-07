@@ -137,10 +137,10 @@ AttentionComparisonContainer.propTypes = {
   overallCounts: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  fetchStatus: state.explorer.queries.list[ownProps.index].attention.fetchStatus,
-  overallTotal: state.explorer.queries.list[ownProps.index].sentenceCount.total,
-  overallCounts: state.explorer.queries.list[ownProps.index].sentenceCount.counts,
+const mapStateToProps = () => ({
+  /* fetchStatus: state.explorer.queries.sentenceCount.fetchStatus,
+  overallTotal: state.explorer.queries.list[0].sentenceCount.total,
+  overallCounts: state.explorer.queries.list[0].sentenceCount.counts,*/
 });
 
 const mapDispatchToProps = dispatch => ({
