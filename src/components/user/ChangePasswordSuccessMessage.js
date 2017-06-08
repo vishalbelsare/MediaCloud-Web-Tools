@@ -11,7 +11,7 @@ const ChangePasswordSuccessMessage = () => (
   <div className="change-password-success">
     <Grid>
       <Row>
-        <Col log={12}>
+        <Col lg={12}>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.intro} /></p>
         </Col>

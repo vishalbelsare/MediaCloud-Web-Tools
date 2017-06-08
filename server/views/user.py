@@ -1,9 +1,10 @@
 import logging
 from flask import jsonify, request, redirect
 import flask_login
+from mediacloud.error import MCException
 
 from server import app, auth, mc
-from server.auth import user_admin_mediacloud_client
+from server.auth import user_mediacloud_client
 from server.util.request import api_error_handler, form_fields_required, arguments_required, json_error_response
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def login_with_cookie():
 @flask_login.login_required
 @api_error_handler 
 def permissions_for_user():
-    user_mc = auth.user_admin_mediacloud_client()
+    user_mc = auth.user_mediacloud_client()
     return user_mc.userPermissionsList()
 
 
@@ -107,8 +108,13 @@ def reset_password():
 @flask_login.login_required
 @api_error_handler
 def change_password():
-    user_mc = user_admin_mediacloud_client()
-    results = user_mc.authChangePassword(request.form['old_password'], request.form['new_password'])
+    user_mc = user_mediacloud_client()
+    try:
+        results = user_mc.authChangePassword(request.form['old_password'], request.form['new_password'])
+    except MCException as e:
+        logger.exception(e)
+        if 'Unable to change password: Old password is incorrect' in e.message:
+            return json_error_response('Unable to change password: Old password is incorrect')
     return jsonify(results)
 
 
@@ -116,6 +122,6 @@ def change_password():
 @flask_login.login_required
 @api_error_handler
 def reset_api_key():
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     results = user_mc.authResetApiKey()
     return jsonify(results)
