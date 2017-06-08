@@ -118,10 +118,11 @@ def change_password():
     return jsonify(results)
 
 
-@app.route('/api/user/reset_api_key', methods=['POST'])
+@app.route('/api/user/reset-api-key', methods=['POST'])
 @flask_login.login_required
 @api_error_handler
 def reset_api_key():
     user_mc = user_mediacloud_client()
     results = user_mc.authResetApiKey()
+    flask_login.current_user.profile = results['profile']   # update server api key too
     return jsonify(results)

@@ -36,3 +36,7 @@ export function signupUser(params) {
 export function resendActionationEmail(email) {
   return createPostingApiPromise('/api/user/activation/resend', email);
 }
+
+export function resetApiKey() {
+  return createPostingApiPromise('/api/user/reset-api-key');
+}

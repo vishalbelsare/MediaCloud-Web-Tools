@@ -10,6 +10,7 @@ export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
 export const SIGNUP = 'SIGNUP';
 export const RESEND_ACTIVATION_EMAIL = 'RESEND_ACTIVATION_EMAIL';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const RESET_API_KEY = 'RESET_API_KEY';
 
 // pass in email and password
 export const loginWithPassword = createAsyncAction(LOGIN_WITH_PASSWORD, api.loginWithPassword);
@@ -27,3 +28,5 @@ export const resendActivation = createAsyncAction(RESEND_ACTIVATION_EMAIL, api.r
 export const loginWithCookie = createAsyncAction(LOGIN_WITH_COOKIE, api.loginWithCookie);
 
 export const sendPasswordReset = createAsyncAction(RESET_PASSWORD, api.resetPassword, props => props);
+
+export const resetApiKey = createAsyncAction(RESET_API_KEY, api.resetApiKey);

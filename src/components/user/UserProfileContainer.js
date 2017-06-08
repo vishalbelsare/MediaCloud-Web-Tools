@@ -4,6 +4,10 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
+import AppButton from '../common/AppButton';
+import { resetApiKey } from '../../actions/userActions';
+import { addNotice, updateFeedback } from '../../actions/appActions';
+import { LEVEL_ERROR } from '../common/Notice';
 
 const API_REQUESTS_UNLIMITED = 0;
 
@@ -13,10 +17,13 @@ const localMessages = {
   name: { id: 'user.profile.name', defaultMessage: '<b>Name:</b> {name}' },
   apiRequests: { id: 'user.profile.apiRequests', defaultMessage: '<b>API Weekly Requests:</b> {requested} / {allowed}' },
   apiRequestedItems: { id: 'user.profile.apiRequestedItems', defaultMessage: '<b>API Weekly Requested Items:</b> {requested} / {allowed}' },
+  apiKey: { id: 'user.profile.apiKey', defaultMessage: '<b>API Key:</b> {key}' },
+  resetKey: { id: 'user.profile.apiKey.reset', defaultMessage: 'Reset API Key' },
+  resetWorked: { id: 'user.profile.apiKey.resetWorked', defaultMessage: 'We reset your API key successfully' },
 };
 
 const UserProfileContainer = (props) => {
-  const { profile } = props;
+  const { profile, handleResetApiKey } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(messages.userProfile)} | ${parentTitle}`;
   const adminContent = (profile.auth_roles.includes('admin')) ? <FormattedHTMLMessage {...localMessages.admin} /> : null;
@@ -48,7 +55,12 @@ const UserProfileContainer = (props) => {
                 allowed: (profile.weekly_requested_items_limit === API_REQUESTS_UNLIMITED) ? formatMessage(messages.unlimited) : profile.weekly_requests_limit,
               }}
             /></li>
+            <li><FormattedHTMLMessage {...localMessages.apiKey} values={{ key: profile.api_key }} /></li>
           </ul>
+          <AppButton
+            label={formatMessage(localMessages.resetKey)}
+            onClick={handleResetApiKey}
+          />
         </Col>
       </Row>
     </Grid>
@@ -57,7 +69,9 @@ const UserProfileContainer = (props) => {
 
 UserProfileContainer.propTypes = {
   // from state
-  profile: React.PropTypes.object,
+  profile: React.PropTypes.object.isRequired,
+  // from dispatch
+  handleResetApiKey: React.PropTypes.func.isRequired,
   // from compositional chain
   intl: React.PropTypes.object.isRequired,
 };
@@ -66,9 +80,22 @@ const mapStateToProps = state => ({
   profile: state.user.profile,
 });
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleResetApiKey: () => {
+    dispatch(resetApiKey())
+    .then((results) => {
+      if (results.error) {
+        dispatch(addNotice({ message: results.error, level: LEVEL_ERROR }));
+      } else {
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetWorked) }));
+      }
+    });
+  },
+});
+
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       UserProfileContainer
     )
   );
