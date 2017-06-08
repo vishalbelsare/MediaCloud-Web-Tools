@@ -34,9 +34,9 @@ VALID_METADATA_IDS = [
     {METADATA_PUB_COUNTRY_NAME: TAG_SETS_ID_PUBLICATION_COUNTRY},
     {METADATA_PUB_STATE_NAME: TAG_SETS_ID_PUBLICATION_STATE},
     {METADATA_PRIMARY_LANGUAGE_NAME: TAG_SETS_ID_PRIMARY_LANGUAGE},
-    {METADATA_PRIMARY_COUNTRY_OF_FOCUS_NAME, TAG_SETS_ID_COUNTRY_OF_FOCUS}
+    {METADATA_PRIMARY_COUNTRY_OF_FOCUS_NAME: TAG_SETS_ID_COUNTRY_OF_FOCUS}
 ]
-
+ 
 
 def is_metadata_tag_set(tag_sets_id):
     '''
@@ -53,3 +53,13 @@ def format_name_from_label(user_label):
 
     formatted_name = re.sub('\W|^(?=\d)','_', user_label)
     return formatted_name
+
+
+def format_metadata_fields(media_dict, field, value):
+    if field == TAG_SETS_ID_PUBLICATION_COUNTRY:
+        media_dict['pub_country'] = value[-3:]
+    elif field == TAG_SETS_ID_PUBLICATION_STATE:
+        media_dict['pub_state'] = value
+    elif field == TAG_SETS_ID_PRIMARY_LANGUAGE:
+        media_dict['primary_language'] = value
+
