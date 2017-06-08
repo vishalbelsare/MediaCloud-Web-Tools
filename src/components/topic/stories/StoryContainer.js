@@ -9,6 +9,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
+import StoryEntitiesContainer from './StoryEntitiesContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
@@ -123,7 +124,12 @@ class StoryContainer extends React.Component {
               <StoryDetails topicId={topicId} story={story} />
             </Col>
             <Col lg={6}>
-              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === 1011)} />
+              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === 1011)} geocoderVersion={story.geocoderVersion} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} >
+              <StoryEntitiesContainer topicId={topicId} storiesId={storiesId} />
             </Col>
           </Row>
         </Grid>
