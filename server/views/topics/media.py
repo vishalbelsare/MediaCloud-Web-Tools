@@ -6,12 +6,14 @@ import flask_login
 from server import app, TOOL_API_KEY
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util import csv
-from server.views.topics import validated_sort
+from server.util.tags import is_metadata_tag_set, format_metadata_fields
+from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts
 from server.util.request import filters_from_args, api_error_handler
 from server.views.topics import access_public_topic
+
 
 logger = logging.getLogger(__name__)
 
@@ -121,16 +123,25 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     try:
         while more_media:
             page = topic_media_list(user_mediacloud_key(), topics_id, **params)
-            all_media = all_media + page['media']
+            media_list = page['media']
+            user_mc = user_admin_mediacloud_client()
+
+            for media_item in media_list:
+                media_info = user_mc.media(media_item['media_id'])
+                print media_info['media_id']# add metadata fields
+                for eachItem in media_info['media_source_tags']:
+                    if is_metadata_tag_set(eachItem['tag_sets_id']):
+                        format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
+
+            all_media = all_media + media_list
+
             if 'next' in page['link_ids']:
                 params['link_id'] = page['link_ids']['next']
                 more_media = True
             else:
                 more_media = False
-        props = ['media_id', 'name', 'url', 'story_count',
-                 'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
-                 'outlink_count', 'bitly_click_count'] # 'facebook_share_count']
-        return csv.stream_response(all_media, props, filename)
+
+        return csv.download_media_csv(all_media, filename, TOPICS_TEMPLATE_PROPS)
     except Exception as exception:
         return json.dumps({'error':str(exception)}, separators=(',', ':')), 400
 

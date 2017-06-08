@@ -15,23 +15,6 @@ POPULAR_COLLECTION_LIST = [9272347, 9201395, 8877968, 9315147, 9353688, 9173065,
 
 def download_sources_csv(all_media, file_prefix):
 
-    # info = user_mc.tag(int(collection_id))
-    for src in all_media:
-
-        # handle nulls
-        if 'pub_country' not in src:
-            src['pub_country'] = ''
-        if 'editor_notes' not in src:
-            src['editor_notes'] = ''
-        if 'is_monitored' not in src:
-            src['is_monitored'] = ''
-        if 'public_notes' not in src:
-            src['public_notes'] = ''
-        if 'pub_state' not in src:
-            src['pub_state'] = ''
-        if 'primary_language' not in src:
-            src['primary_language'] = ''
-
     what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
 
     if user_has_auth_role(ROLE_MEDIA_EDIT):
@@ -39,7 +22,7 @@ def download_sources_csv(all_media, file_prefix):
     else:
         what_type_download = SOURCES_TEMPLATE_PROPS_VIEW # no editor_notes
 
-    return stream_response(all_media, what_type_download, file_prefix, what_type_download)
+    return download_media_csv(all_media, file_prefix, what_type_download)
 
 @cache
 def _cached_source_story_count(user_mc_key, query):

@@ -57,3 +57,24 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         dict_keys = ','.join(dict_keys) + '\n'
         return flask.Response(dict_keys,
                               mimetype='text/csv; charset=utf-8', headers=headers)
+
+def download_media_csv(all_media, file_prefix, what_type_download):
+
+    # info = user_mc.tag(int(collection_id))
+    for src in all_media:
+        if 'editor_notes' in what_type_download and 'editor_notes' not in src:
+            src['editor_notes'] = ''
+        if 'is_monitored' in what_type_download and 'is_monitored' not in src:
+            src['is_monitored'] = ''
+        if 'public_notes' in what_type_download and 'public_notes' not in src:
+            src['public_notes'] = ''
+        # handle nulls
+        if 'pub_country' not in src:
+            src['pub_country'] = ''
+        if 'pub_state' not in src:
+            src['pub_state'] = ''
+        if 'primary_language' not in src:
+            src['primary_language'] = ''
+
+    return stream_response(all_media, what_type_download, file_prefix, what_type_download)
+

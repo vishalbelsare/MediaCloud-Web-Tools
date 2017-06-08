@@ -377,15 +377,8 @@ def api_collection_sources_csv(collection_id):
     for src in all_media:
         for tag in src['media_source_tags']:
             if is_metadata_tag_set(tag['tag_sets_id']):
-                if tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY:
-                    src['pub_country'] = tag['tag'][-3:]
-                elif tag['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE:
-                    src['pub_state'] = tag['tag']
-                elif tag['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE:
-                    src['primary_language'] = tag['tag']
+                format_metadata_fields(src, tag['tag_sets_id'], tag['tag'])
 
-        # if from details page, don't include editor_notes
-        # src_no_editor_notes = {k: v for k, v in src.items() if k != 'editor_notes'}
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
 
     return download_sources_csv( all_media, file_prefix)
