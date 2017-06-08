@@ -10,7 +10,7 @@ import server.util.csv as csv
 import os
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
 from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label, format_metadata_fields
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
@@ -379,8 +379,8 @@ def api_collection_sources_csv(collection_id):
             if is_metadata_tag_set(tag['tag_sets_id']):
                 format_metadata_fields(src, tag['tag_sets_id'], tag['tag'])
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
-
-    return download_sources_csv( all_media, file_prefix)
+    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    return csv.download_media_csv(all_media, file_prefix, what_type_download)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')

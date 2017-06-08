@@ -62,4 +62,5 @@ def format_metadata_fields(media_dict, field, value):
         media_dict['pub_state'] = value
     elif field == TAG_SETS_ID_PRIMARY_LANGUAGE:
         media_dict['primary_language'] = value
-
+    elif field == TAG_SETS_ID_COUNTRY_OF_FOCUS:
+        media_dict['subject_country'] = value
