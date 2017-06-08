@@ -16,10 +16,12 @@ import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import StoryDetails from './StoryDetails';
 import StoryPlaces from './StoryPlaces';
+import StoryThemes from './StoryThemes';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -27,6 +29,7 @@ const localMessages = {
   mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
+  unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
 };
 
 class StoryContainer extends React.Component {
@@ -107,7 +110,7 @@ class StoryContainer extends React.Component {
                   { message: messages.outlinks, data: formatNumber(story.outlink_count) },
                   { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
                   { message: messages.bitlyClicks, data: formatNumber(story.bitly_click_count) },
-                  { message: messages.language, data: story.language },
+                  { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
                 ]}
               />
             </Col>
@@ -121,10 +124,13 @@ class StoryContainer extends React.Component {
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
             <Col lg={6}>
-              <StoryDetails topicId={topicId} story={story} />
+              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)} geocoderVersion={story.geocoderVersion} />
             </Col>
             <Col lg={6}>
-              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === 1011)} geocoderVersion={story.geocoderVersion} />
+              <StoryThemes tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)} nytThemesVersion={story.nytThemesVersion} />
+            </Col>
+            <Col lg={6}>
+              <StoryDetails topicId={topicId} story={story} />
             </Col>
           </Row>
           <Row>

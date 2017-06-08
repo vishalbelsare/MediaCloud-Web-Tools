@@ -7,9 +7,13 @@ export const TAG_SET_EXTRACTOR_VERSION = 1354;
 
 // tags indicating which version of the geocoder this was geocoded with
 export const TAG_SET_GEOCODER_VERSION = 1937;
+// tags for each geonames place
+export const TAG_SET_GEOGRAPHIC_PLACES = 1011;
 
 // tags indicating which version of the nyt theme engine the story was processed with
-export const TAG_SET_NYT_LABELS_VERSION = 1964;
+export const TAG_SET_NYT_THEMES_VERSION = 1964;
+// tags for each nyt theme
+export const TAG_SET_NYT_THEMES = 1963;
 
 // tag sets that hold collections we want to show to the user
 export const TAGS_SET_MC_ID = 5;
