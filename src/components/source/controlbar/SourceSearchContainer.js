@@ -53,6 +53,11 @@ class SourceSearchContainer extends React.Component {
         if (onAdvancedSearchSelected) onAdvancedSearchSelected(this.state.lastSearchString);
       }
     }
+    // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
+    // @see https://stackoverflow.com/questions/34387787/how-to-clear-the-text-in-a-material-ui-auto-complete-field
+    setTimeout(() => {
+      this.setState({ lastSearchString: '' });
+    }, 300);
   }
 
   fireSearchIfNeeded = () => {
@@ -60,6 +65,15 @@ class SourceSearchContainer extends React.Component {
     const shouldSearch = this.state.lastSearchString.length > 3;
     if (shouldSearch) {
       search(this.state.lastSearchString);
+    }
+  }
+
+  handleMenuItemKeyDown = (item, event) => {
+    switch (event.key) {
+      case 'Enter':
+        this.handleClick(item);
+        break;
+      default: break;
     }
   }
 
@@ -79,6 +93,7 @@ class SourceSearchContainer extends React.Component {
       let menuItemValue = (
         <MenuItem
           onClick={() => this.handleClick(item)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, item)}
           id={`searchResult${item.media_id || item.tags_id}`}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
@@ -106,6 +121,7 @@ class SourceSearchContainer extends React.Component {
         value: <MenuItem
           value={advancedSearchTitle}
           onClick={() => this.handleClick(advancedSearchTitle)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, advancedSearchTitle)}
           primaryText={formatMessage(localMessages.advancedSearch)}
         />,
       });
@@ -142,6 +158,7 @@ class SourceSearchContainer extends React.Component {
           hintText={formatMessage(localMessages.searchHint)}
           fullWidth
           openOnFocus
+          searchText={this.state.lastSearchString}
           onClick={this.resetIfRequested}
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
