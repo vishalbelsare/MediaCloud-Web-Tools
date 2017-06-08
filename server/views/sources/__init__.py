@@ -1,11 +1,11 @@
-from server.util.csv import stream_response
+from server.util.csv import stream_response, download_media_csv
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_admin_mediacloud_client
 from server.cache import cache
 
-SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored']
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
+SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored']
+SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored', 'editor_notes']
 
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'public_notes', 'is_monitored', 'editor_notes']
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored', 'editor_notes']
 
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage
 FEATURED_COLLECTION_LIST = [8875027, 2453107, 8878332, 9201395]

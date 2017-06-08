@@ -128,7 +128,6 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
 
             for media_item in media_list:
                 media_info = user_mc.media(media_item['media_id'])
-                print media_info['media_id']# add metadata fields
                 for eachItem in media_info['media_source_tags']:
                     if is_metadata_tag_set(eachItem['tag_sets_id']):
                         format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
