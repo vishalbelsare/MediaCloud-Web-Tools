@@ -17,6 +17,7 @@ const localMessages = {
   dateIsReliable: { id: 'story.details.dateReliable', defaultMessage: '<b>Date is Reliable?</b>: {isReliable}' },
   apSyndicated: { id: 'story.details.apSyndicated', defaultMessage: '<b>AP Story?</b> {apSyndicated}' },
   wordCount: { id: 'story.details.wordCount', defaultMessage: '<b>Word Count</b>: {wordCount}' },
+  fbDate: { id: 'story.details.fbDate', defaultMessage: '<b>Facebook Collection Date</b>: {fbDate}' },
   unknown: { id: 'story.details.unknown', defaultMessage: 'Unknown' },
 };
 
@@ -73,6 +74,12 @@ const StoryDetails = (props) => {
           <FormattedHTMLMessage
             {...localMessages.wordCount}
             values={{ wordCount: story.word_count || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.fbDate}
+            values={{ fbDate: story.facebook_collection_date || formatMessage(localMessages.unknown) }}
           />
         </li>
       </ul>
