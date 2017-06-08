@@ -193,7 +193,8 @@ def story_entities(topics_id, stories_id):
     # we don't care about money, number, duration, date, misc, ordinal
     useful_entity_types = ['PERSON', 'LOCATION', 'ORGANIZATION']
     entities = cached_entities(user_mediacloud_key(), stories_id)
-    entities = [e for e in entities if e['type'] in useful_entity_types]
+    if entities is not None:
+        entities = [e for e in entities if e['type'] in useful_entity_types]
     return jsonify({'list': entities})
 
 
@@ -201,6 +202,8 @@ def story_entities(topics_id, stories_id):
 def cached_entities(user_mediacloud_key, stories_id):
     user_mc = user_mediacloud_client()
     nlp_results = user_mc.storyCoreNlpList(story_id_list=[stories_id])
+    if nlp_results[0]['corenlp'] == "story is not annotated":
+        return None
     story_nlp = nlp_results[0]['corenlp']['_']['corenlp']
     # set up for entity counting
     entities = []

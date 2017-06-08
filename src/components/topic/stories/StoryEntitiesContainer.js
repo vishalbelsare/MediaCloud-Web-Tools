@@ -17,6 +17,7 @@ const localMessages = {
   entityOrganizations: { id: 'story.entities.organizations', defaultMessage: 'Organizations' },
   entityPeople: { id: 'story.entities.people', defaultMessage: 'People' },
   entityLocations: { id: 'story.entities.locations', defaultMessage: 'Locations' },
+  notProcessed: { id: 'story.entities.notProcessed', defaultMessage: 'This story has not been processed by our named entity engine.' },
 };
 
 class StoryEntitiesContainer extends React.Component {
@@ -29,15 +30,9 @@ class StoryEntitiesContainer extends React.Component {
   render() {
     const { entities, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    return (
-      <DataCard>
-        <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-        </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-          {helpButton}
-        </h2>
+    let entitiesContent = null;
+    if (entities) {
+      entitiesContent = (
         <Row>
           <Col lg={4}>
             <h3><FormattedMessage {...localMessages.entityOrganizations} /></h3>
@@ -52,6 +47,24 @@ class StoryEntitiesContainer extends React.Component {
             <NamedEntitiesTable entities={entities.filter(e => e.type === 'LOCATION')} />
           </Col>
         </Row>
+      );
+    } else {
+      entitiesContent = (
+        <p>
+          <i><FormattedMessage {...localMessages.notProcessed} /></i>
+        </p>
+      );
+    }
+    return (
+      <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          {helpButton}
+        </h2>
+        {entitiesContent}
       </DataCard>
     );
   }
@@ -71,7 +84,7 @@ StoryEntitiesContainer.propTypes = {
   // from state
   filters: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
-  entities: React.PropTypes.array.isRequired,
+  entities: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
