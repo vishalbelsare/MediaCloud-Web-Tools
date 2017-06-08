@@ -101,7 +101,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
       // error reporting is handled by error reporting middleware, so you only need to handle success here
-      if (response.status !== 401) {
+      if (response.status === 200) {
         // redirect to destination if there is one
         const loc = ownProps.location;
         let redirect;
