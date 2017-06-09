@@ -21,8 +21,13 @@ export function saveCookies(email) {
   cookie.save(COOKIE_USERNAME, email);
 }
 
-export function deleteCookies() {
+function deleteCookies() {
   cookie.remove(COOKIE_USERNAME);
+}
+
+export function logout() {
+  deleteCookies();
+  window.location = '/api/user/logout';
 }
 
 export function hasCookies() {

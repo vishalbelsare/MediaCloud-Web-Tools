@@ -1,5 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { LOGIN_WITH_PASSWORD, LOGIN_WITH_COOKIE, LOGOUT, RESET_API_KEY } from '../actions/userActions';
+import { LOGIN_WITH_PASSWORD, LOGIN_WITH_COOKIE, RESET_API_KEY } from '../actions/userActions';
 import { saveCookies, deleteCookies } from '../lib/auth';
 import * as fetchConstants from '../lib/fetchConstants';
 
@@ -57,13 +57,6 @@ export default function user(state = INITIAL_STATE, action) {
       deleteCookies();
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
-        isLoggedIn: false,
-        key: null,
-      });
-    case LOGOUT:
-      deleteCookies();
-      return Object.assign({}, state, {
-        fetchStatus: fetchConstants.FETCH_INVALID,
         isLoggedIn: false,
         key: null,
       });

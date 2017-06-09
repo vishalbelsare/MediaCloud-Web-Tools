@@ -53,35 +53,41 @@ def permissions_for_user():
 @api_error_handler 
 def signup():
     logger.debug("reg request from %s", request.form['email'])
+    subscribe_to_newsletter = 1 if request.form['subscribeToNewsletter'] == 'true' else 0
     results = mc.authRegister(request.form['email'],
                               request.form['password'],
                               request.form['fullName'],
                               request.form['notes'],
-                              request.form['subscribe_to_newsletter'] == '1',
+                              subscribe_to_newsletter,
                               ACTIVATION_URL)
     return jsonify(results)
 
 
-@app.route('/api/user/activation/confirm', methods=['GET'])
+@app.route('/api/user/activate/confirm', methods=['GET'])
 @arguments_required('email', 'activation_token')
-@api_error_handler
 def activation_confirm():
     logger.debug("activation request from %s", request.args['email'])
-    results = mc.activate(request.args['email'],
-                          request.args['activation_token'])
-    if results['success'] is 1:
-        # TODO: do we have enough profile info to log them in here?
-        redirect('https://tools.mediacloud.org/#/activate?success=1')
-    else:
-        redirect('https://tools.mediacloud.org/#/activate?success=0&msg='+results['error'])
+    domain = 'https://localhost:5000' # https://tools.mediacloud.org
+    redirect_to_return = None
+    try:
+        results = mc.authActivate(request.args['email'], request.args['activation_token'])
+        if results['success'] is 1:
+            redirect_to_return = redirect(domain + '/#/user/activated?success=1')
+        else:
+            redirect_to_return = redirect(domain + '/#/user/activated?success=0&msg=' + results['error'])
+    except MCException as mce:
+        # this is long strack trace so we have to trim it for url length support
+        redirect_to_return = redirect(domain + '/#/user/activated?success=0&msg=' + str(mce[:300]))
+    return redirect_to_return
 
 
 @app.route('/api/user/activation/resend', methods=['POST'])
 @form_fields_required('email')
 @api_error_handler
 def activation_resend():
-    logger.debug("activation request from %s", request.form['email'])
-    results = mc.authResendActivationLink(request.args['email'], ACTIVATION_URL)
+    email = request.form['email']
+    logger.debug("activation request from %s", email)
+    results = mc.authResendActivationLink(email, ACTIVATION_URL)
     return jsonify(results)
 
 
@@ -126,3 +132,10 @@ def reset_api_key():
     results = user_mc.authResetApiKey()
     flask_login.current_user.profile = results['profile']   # update server api key too
     return jsonify(results)
+
+
+@app.route('/api/user/logout')
+@flask_login.login_required
+def logout():
+    flask_login.logout_user()
+    return redirect("/")

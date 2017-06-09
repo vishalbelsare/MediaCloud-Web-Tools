@@ -39,9 +39,9 @@ class SourcesDrawer extends React.Component {
     const { user, handleMenuItemClick } = this.props;
     const { formatMessage } = this.props.intl;
     // gotta show extra login invivation based on the user state
-    let logoutMenuItem = null;
+    let loginMenuItem = null;
     if (!user.isLoggedIn) {
-      logoutMenuItem = (
+      loginMenuItem = (
         <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/login'); }}>
           <FormattedMessage {...messages.userLogin} />
         </MenuItem>
@@ -116,7 +116,7 @@ class SourcesDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
           </MenuItem>
-          {logoutMenuItem}
+          {loginMenuItem}
         </Drawer>
       </div>
     );
