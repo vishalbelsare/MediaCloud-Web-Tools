@@ -1,10 +1,8 @@
-import { createAction } from 'redux-actions';
 import * as api from '../lib/serverApi/user';
 import { createAsyncAction } from '../lib/reduxHelpers';
 
 export const LOGIN_WITH_PASSWORD = 'LOGIN_WITH_PASSWORD';
 export const LOGIN_WITH_COOKIE = 'LOGIN_WITH_COOKIE';
-export const LOGOUT = 'LOGOUT';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
 export const SIGNUP = 'SIGNUP';
@@ -14,8 +12,6 @@ export const RESET_API_KEY = 'RESET_API_KEY';
 
 // pass in email and password
 export const loginWithPassword = createAsyncAction(LOGIN_WITH_PASSWORD, api.loginWithPassword);
-
-export const logout = createAction(LOGOUT);
 
 export const changePassword = createAsyncAction(CHANGE_PASSWORD, api.changePassword);
 
