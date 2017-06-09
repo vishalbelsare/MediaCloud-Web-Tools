@@ -34,7 +34,7 @@ class TopicWordsPreview extends React.Component {
           words={words}
           title={formatMessage(messages.topWords)}
           domId={WORD_CLOUD_DOM_ID}
-          width={500}
+          width={700}
         />
       </DataCard>
     );

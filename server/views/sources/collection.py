@@ -8,14 +8,18 @@ from werkzeug import secure_filename
 import csv as pycsv
 import server.util.csv as csv
 import os
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label, format_metadata_fields
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
+    COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
+    TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, \
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, \
+    is_metadata_tag_set, format_name_from_label, format_metadata_fields
 
 from server import app, mc, db, settings
 from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
+    ROLE_MEDIA_EDIT
 from server.util.mail import send_html_email
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -61,11 +65,11 @@ def upload_file():
                         updatedSrc = line['media_id'] not in ['', None]
                         # decode all keys as long as there is a key  re Unicode vs ascii
                         newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
-                                   k, v in line.items() if k not in ['', None] }
+                                   k, v in line.items() if k not in ['', None]}
                         newline_decoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
-                                   k, v in newline.items() if v not in ['', None] }
-                        empties = {k: v for k, v in newline.items() if v in ['', None] }
-                        
+                                           k, v in newline.items() if v not in ['', None]}
+                        empties = {k: v for k, v in newline.items() if v in ['', None]}
+
                         if updatedSrc:
                             newline_decoded.update(empties)
                             updated_only.append(newline_decoded)
@@ -95,10 +99,12 @@ def upload_file():
                             _email_batch_source_update_results(audit)
                     for media in all_results:
                         if 'media_id' in media:
-                            media['media_id'] = int(media['media_id'])  # make sure they are ints so no-dupes logic works on front end
+                            media['media_id'] = int(
+                                media['media_id'])  # make sure they are ints so no-dupes logic works on front end
                     return jsonify({'results': all_results})
 
     return json_error_response('Something went wrong. Check your CSV file for formatting errors')
+
 
 def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     user_mc = user_admin_mediacloud_client()
@@ -111,13 +117,14 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
     for src in source_list_from_csv:
         # remove metadata for now, will modify below
         # we take out primary_language and subject_country BTW and ignore it
-        source_no_meta = {k: v for k, v in src.items() if k != 'pub_country' and k != 'pub_state' and k != 'primary_language' and k != 'subject_country'}
+        source_no_meta = {k: v for k, v in src.items() if
+                          k != 'pub_country' and k != 'pub_state' and k != 'primary_language' and k != 'subject_country'}
         if create_new:
             temp = user_mc.mediaCreate([source_no_meta])[0]
             src['status'] = 'found and updated this source' if temp['status'] == 'existing' else temp['status']
             if 'error' in temp:
-                src['status_message'] = temp['error'] 
-            else: 
+                src['status_message'] = temp['error']
+            else:
                 src['status_message'] = src['status']
             if temp['status'] != 'error':
                 successful.append(src)
@@ -128,29 +135,30 @@ def _create_or_update_sources_from_template(source_list_from_csv, create_new):
             source_no_meta_no_id = {k: v for k, v in source_no_meta.items() if k != 'media_id'}
             temp = user_mc.mediaUpdate(media_id, source_no_meta_no_id)
             src['status'] = 'existing' if temp['success'] == 1 else 'error'
-            src['status_message'] = 'unable to update existing source' if temp['success'] == 0 else 'updated existing source'
+            src['status_message'] = 'unable to update existing source' if temp[
+                                                                              'success'] == 0 else 'updated existing source'
             if temp['success'] == 1:
                 successful.append(src)
             else:
                 errors.append(src)
-        
+
         results.append(src)
 
     logger.debug("successful :  %s", successful)
     logger.debug("errors :  %s", errors)
     # for new sources we have status, media_id, url, error in result, merge with source_list so we have metadata and the fields we need for the return
     if create_new:
-        info_by_url = { source['url']:source for source in successful}
+        info_by_url = {source['url']: source for source in successful}
         for source in source_list_from_csv:
             if source['url'] in info_by_url:
                 info_by_url[source['url']].update(source)
         return results, update_source_list_metadata(info_by_url), errors
 
-    #if a successful update, just return what we have, success
+    # if a successful update, just return what we have, success
     return results, update_source_list_metadata(successful), errors
 
-def _email_batch_source_update_results(audit_feedback):
 
+def _email_batch_source_update_results(audit_feedback):
     email_title = "Source Batch Updates "
     content_title = "You just uploaded {} sources to a collection.".format(len(audit_feedback))
     updated_sources = []
@@ -164,10 +172,13 @@ def _email_batch_source_update_results(audit_feedback):
     send_html_email(email_title,
                     [user_name(), 'noreply@mediacloud.org'],
                     render_template("emails/source_batch_upload_ack.txt",
-                                    content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url),
+                                    content_title=content_title, content_body=content_body, action_text=action_text,
+                                    action_url=action_url),
                     render_template("emails/source_batch_upload_ack.html",
-                                    email_title=email_title, content_title=content_title, content_body=content_body, action_text=action_text, action_url=action_url)
+                                    email_title=email_title, content_title=content_title, content_body=content_body,
+                                    action_text=action_text, action_url=action_url)
                     )
+
 
 # this only adds/replaces metadata with values (does not remove)
 def update_source_list_metadata(source_list):
@@ -179,7 +190,7 @@ def update_source_list_metadata(source_list):
         tag_codes = cached_tags_in_tag_set(mid)
         for source in source_list:
             if mkey in source:
-                metadata_tag_name = source[mkey] 
+                metadata_tag_name = source[mkey]
                 if metadata_tag_name not in ['', None]:
                     # hack until we have a better match check
                     matching = []
@@ -250,8 +261,8 @@ def api_collection_set(tag_sets_id):
     _add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
-def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
 
+def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
     user_mc = user_admin_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
@@ -259,12 +270,14 @@ def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=show_only_public_collections)
+        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100,
+                               public_only=show_only_public_collections)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
         more_tags = len(tags) != 0
-    collection_list = [t for t in all_tags if t['show_on_media'] is 1]  # double check the show_on_media because that controls public or not
+    collection_list = [t for t in all_tags if
+                       t['show_on_media'] is 1]  # double check the show_on_media because that controls public or not
     collection_list = sorted(collection_list, key=itemgetter('label'))
     return {
         'name': tag_set['label'],
@@ -272,12 +285,14 @@ def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
         'collections': collection_list
     }
 
+
 def _tag_set_with_private_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, False)
 
 
 def _tag_set_with_public_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, True)
+
 
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
 @app.route('/api/collections/list', methods=['GET'])
@@ -289,7 +304,8 @@ def api_collections_by_ids():
     sources_list = []
     for tagsId in collIdArray:
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
-        info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes':m['public_notes']} for m in all_media]
+        info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes': m['public_notes']} for m
+                in all_media]
         _add_user_favorite_flag_to_sources(info)
         sources_list += info;
     return jsonify({'results': sources_list})
@@ -301,22 +317,27 @@ def api_featured_collections():
     featured_collections = _cached_featured_collections()
     return jsonify({'results': featured_collections})
 
+
 @cache
 def _cached_featured_collections():
     featured_collections = []
     for tagsId in FEATURED_COLLECTION_LIST:
         info = mc.tag(tagsId)
         info['id'] = tagsId
-        info['wordcount'] = cached_wordcount(None, 'tags_id_media:'+str(tagsId))    # use None here to use app-level mc object
+        info['wordcount'] = cached_wordcount(None,
+                                             'tags_id_media:' + str(tagsId))  # use None here to use app-level mc object
         featured_collections += [info]
     return featured_collections
+
 
 @app.route('/api/collections/popular', methods=['GET'])
 @api_error_handler
 def api_popular_collections():
     popular_collections = _cached_popular_collections()
-    sorted_popular_collections = sorted(popular_collections, key=lambda t: t['label'].lower() if t['label'] is not None else None)
+    sorted_popular_collections = sorted(popular_collections,
+                                        key=lambda t: t['label'].lower() if t['label'] is not None else None)
     return jsonify({'results': sorted_popular_collections})
+
 
 @cache
 def _cached_popular_collections():
@@ -326,6 +347,7 @@ def _cached_popular_collections():
         info['id'] = tagsId
         popular_collections += [info]
     return popular_collections
+
 
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
 @flask_login.login_required
@@ -356,6 +378,7 @@ def api_collection_details(collection_id):
 
     return jsonify({'results': info})
 
+
 @app.route('/api/template/sources.csv')
 @flask_login.login_required
 @api_error_handler
@@ -363,7 +386,7 @@ def api_download_sources_template():
     filename = "Collection_Template_for_sources.csv"
 
     what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
-    
+
     return csv.stream_response(what_type_download, what_type_download, filename)
 
 
@@ -443,15 +466,18 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
         results.append(source_data)
     return results
 
+
 @cache
 def _cached_source_sentence_count(user_mc_key, query):
     user_mc = user_admin_mediacloud_client()
     return user_mc.sentenceCount(query)['count']
 
+
 @cache
 def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
     user_mc = user_admin_mediacloud_client()
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
+
 
 @app.route('/api/collections/<collection_id>/sources/sentences/count')
 @flask_login.login_required
@@ -560,9 +586,9 @@ def collection_geo_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_words(collection_id):
-    query_arg = 'tags_id_media:'+str(collection_id)
+    query_arg = 'tags_id_media:' + str(collection_id)
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
+        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
     info = {
         'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
     }
@@ -573,9 +599,9 @@ def collection_words(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_wordcount_csv(collection_id):
-    query_arg = 'tags_id_media:'+str(collection_id)
+    query_arg = 'tags_id_media:' + str(collection_id)
     if ('q' in request.args) and (len(request.args['q']) > 0):
-        query_arg = 'tags_id_media:'+str(collection_id) + " AND " + request.args.get('q')
+        query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
     return stream_wordcount_csv(user_mediacloud_key(), 'wordcounts-Collection-' + collection_id, query_arg)
 
 

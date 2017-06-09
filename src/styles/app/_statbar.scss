@@ -7,6 +7,11 @@ div.stat {
     font-size: 12px;
     font-weight: bold;
     padding-bottom: 5px;
+    button {
+      width: auto !important;
+      height: auto !important;
+      margin-left: 8px important;
+    }
   }
   em {
     display: block;

@@ -16,6 +16,7 @@ import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../li
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
 import StatBar from '../../common/statbar/StatBar';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -47,6 +48,8 @@ const localMessages = {
   pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
   primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
   countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
+  languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
+  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.  We automatically detect the countries and states talked about in our content.</p>' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -176,8 +179,16 @@ class SourceDetailsContainer extends React.Component {
               stats={[
                 { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
                 { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
-                { message: localMessages.primaryLanguage, data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?' },
-                { message: localMessages.countryOfFocus, data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?' },
+                { message: localMessages.primaryLanguage,
+                  data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?',
+                  helpTitleMsg: localMessages.primaryLanguage,
+                  helpContentMsg: localMessages.languageHelpContent,
+                },
+                { message: localMessages.countryOfFocus,
+                  data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?',
+                  helpTitleMsg: messages.geoHelpTitle,
+                  helpContentMsg: [localMessages.geoHelpDetailedContent, messages.geoHelpContent],
+                },
               ]}
             />
           </Col>

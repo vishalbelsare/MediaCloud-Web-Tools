@@ -13,9 +13,9 @@ SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
 TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
-                 'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
-                 'outlink_count', 'bitly_click_count', 'facebook_share_count',
-                 'pub_country', 'pub_state', 'primary_language']
+                         'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
+                         'outlink_count', 'bitly_click_count', 'facebook_share_count',
+                         'pub_country', 'pub_state', 'primary_language']
 
 
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
@@ -28,7 +28,7 @@ def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
 def topic_is_public(topics_id):
     topic = mc.topic(topics_id)
     is_public = topic['is_public']
-    return int(is_public)== 1
+    return int(is_public) == 1
 
 
 def access_public_topic(topics_id):
@@ -48,7 +48,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         if len(media_ids) > 0:
             query_media_ids = " ".join(map(str, media_ids))
             query_media_ids = " media_id:({})".format(query_media_ids)
-            query += '('+query_media_ids+')'
+            query += '(' + query_media_ids + ')'
 
         if len(media_ids) > 0 and len(tags_ids) > 0:
             query += " OR "
@@ -56,12 +56,12 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         if len(tags_ids) > 0:
             query_tags_ids = " ".join(map(str, tags_ids))
             query_tags_ids = " tags_id_media:({})".format(query_tags_ids)
-            query += '('+query_tags_ids+')'
+            query += '(' + query_tags_ids + ')'
         query += ')'
 
     if start_date:
         query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
-    
+
     return query
 
 
