@@ -16,7 +16,7 @@ class HomeContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     // make sure logout on home goes to public home
     const { redirectToPublicHome } = this.props;
-    if (nextProps.isLoggedIn === false) {
+    if (!nextProps.isLoggedIn) {
       redirectToPublicHome();
     }
   }
@@ -50,6 +50,8 @@ class HomeContainer extends React.Component {
 }
 
 HomeContainer.propTypes = {
+  // from context
+  intl: React.PropTypes.object.isRequired,
   // from state
   isLoggedIn: React.PropTypes.bool.isRequired,
   // from dispatch
@@ -66,11 +68,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(push('/topics/public/home'));
   },
 });
-
-HomeContainer.propTypes = {
-  // from context
-  intl: React.PropTypes.object.isRequired,
-};
 
 export default
   injectIntl(
