@@ -253,3 +253,7 @@ export function topicSpider(topicId) {
 export function userQueuedAndRunningTopics() {
   return createApiPromise('/api/topics/queued-and-running');
 }
+
+export function topicStoryEntities(topicId, storyId) {
+  return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
+}

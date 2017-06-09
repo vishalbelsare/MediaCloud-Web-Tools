@@ -13,6 +13,7 @@ export const FETCH_TOPIC_INFLUENTIAL_STORIES = 'FETCH_TOPIC_INFLUENTIAL_STORIES'
 export const SORT_TOPIC_INFLUENTIAL_STORIES = 'SORT_TOPIC_INFLUENTIAL_STORIES';
 export const FETCH_TOPIC_TOP_STORIES = 'FETCH_TOPIC_TOP_STORIES';
 export const FETCH_TOPIC_ENGLISH_STORY_COUNTS = 'FETCH_TOPIC_ENGLISH_STORY_COUNTS';
+export const FETCH_STORY_ENTITIES = 'FETCH_STORY_ENTITIES';
 
 // pass in stories id
 export const selectStory = createAction(SELECT_STORY, id => id);
@@ -46,3 +47,6 @@ export const sortTopicInfluentialStories = createAction(SORT_TOPIC_INFLUENTIAL_S
 
 // pass in topic id, filters
 export const fetchTopicEnglishStoryCounts = createAsyncAction(FETCH_TOPIC_ENGLISH_STORY_COUNTS, api.topicEnglishStoryCounts);
+
+// pass in topic id, story id
+export const fetchStoryEntities = createAsyncAction(FETCH_STORY_ENTITIES, api.topicStoryEntities);

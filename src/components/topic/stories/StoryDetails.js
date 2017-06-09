@@ -13,6 +13,7 @@ const localMessages = {
   publishDate: { id: 'story.details.publishDate', defaultMessage: '<b>Published on</b>: {date}' },
   extractorVersion: { id: 'story.details.extractorVersion', defaultMessage: '<b>Extractor Version</b>: {version}' },
   geocoderVersion: { id: 'story.details.geocoderVersion', defaultMessage: '<b>Geocoder Version</b>: {version}' },
+  nytThemesVersion: { id: 'story.details.nytThemesVersion', defaultMessage: '<b>NYT Themes Version</b>: {version}' },
   dateGuessMethod: { id: 'story.details.dateGuess', defaultMessage: '<b>Date Guessed From</b>: {method}' },
   dateIsReliable: { id: 'story.details.dateReliable', defaultMessage: '<b>Date is Reliable?</b>: {isReliable}' },
   apSyndicated: { id: 'story.details.apSyndicated', defaultMessage: '<b>AP Story?</b> {apSyndicated}' },
@@ -62,6 +63,12 @@ const StoryDetails = (props) => {
           <FormattedHTMLMessage
             {...localMessages.geocoderVersion}
             values={{ version: story.geocoderVersion || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
+            {...localMessages.nytThemesVersion}
+            values={{ version: story.nytThemesVersion || formatMessage(localMessages.unknown) }}
           />
         </li>
         <li>

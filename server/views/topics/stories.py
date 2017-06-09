@@ -240,7 +240,6 @@ def story_entities(topics_id, stories_id):
     return jsonify({'list': entities})
 
 
-@cache
 def cached_entities(user_mediacloud_key, stories_id):
     user_mc = user_mediacloud_client()
     nlp_results = user_mc.storyCoreNlpList(story_id_list=[stories_id])

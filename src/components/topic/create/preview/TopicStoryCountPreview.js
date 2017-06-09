@@ -26,7 +26,7 @@ const localMessages = {
   totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max 100K Total Stories' },
   adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: 'You need to select a minimum of 500 seed stories.' },
-  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100K seed stories.' },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100,000 seed stories. Go back and make a more focused query, choose a shorter timespan, or fewer media sources.' },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'With this many seed stories, it is likely that the spidering will cause you to run into your 100,000 story limit. Try searching over a narrower time period, or for more specific keywords.' },
 };
 
@@ -67,9 +67,9 @@ class TopicStoryCountPreview extends React.Component {
       }
       content = (<BubbleRowChart
         data={data}
-        padding={220}
+        padding={30}
         domId={BUBBLE_CHART_DOM_ID}
-        width={440}
+        width={700}
       />);
     }
     return (

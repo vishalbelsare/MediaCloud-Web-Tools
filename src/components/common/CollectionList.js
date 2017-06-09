@@ -32,7 +32,7 @@ const CollectionList = (props) => {
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
           <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
-            { c.show_on_media === 1 ? <LockIcon /> : '' }
+            { c.show_on_media === 0 ? <LockIcon /> : '' }
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}
