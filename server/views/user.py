@@ -67,7 +67,7 @@ def signup():
 @arguments_required('email', 'activation_token')
 def activation_confirm():
     logger.debug("activation request from %s", request.args['email'])
-    domain = 'https://localhost:5000' # https://tools.mediacloud.org
+    domain = 'https://tools.mediacloud.org'
     redirect_to_return = None
     try:
         results = mc.authActivate(request.args['email'], request.args['activation_token'])

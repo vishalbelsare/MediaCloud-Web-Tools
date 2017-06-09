@@ -2,7 +2,6 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { loginWithPassword } from '../../actions/userActions';
@@ -136,12 +135,10 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    composeIntlForm(
-      reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps)(
-          LoginFormComponent
-        )
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps)(
+        LoginFormComponent
       )
     )
   );

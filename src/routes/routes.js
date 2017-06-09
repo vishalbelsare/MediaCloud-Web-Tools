@@ -12,11 +12,19 @@ export function requireAuth(nextState, replace) {
 
 export function redirectHomeIfLoggedIn(nextState, replace) {
   if (hasCookies()) {
-    replace({
-      pathname: '/home',
-      state: { nextPathname: nextState.location.pathname },
-    });
+    replace({ pathname: '/home' });
     return true;
   }
   return false;
+}
+
+export function requiresUrlParams(...params) {
+  return (nextState, replaceState) => {
+    for (let i = 0; i < params.length; i += 1) {
+      if (nextState.location.query[params[i]] === undefined) {
+        replaceState('/home');
+        return;
+      }
+    }
+  };
 }

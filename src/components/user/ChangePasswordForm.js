@@ -4,18 +4,14 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage } from 'react-intl';
 import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
-import { emptyString } from '../../lib/formValidators';
+import { emptyString, passwordTooShort, stringsDoNotMatch } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 
 const localMessages = {
   missingOldPassword: { id: 'user.missingOldPassword', defaultMessage: 'You need to enter your old password.' },
   missingNewPassword: { id: 'user.missingNewPassword', defaultMessage: 'You need to enter a new password.' },
-  passwordTooShort: { id: 'user.paswordTooShort', defaultMessage: 'Your password must be at least 8 characters.' },
-  passwordsMismatch: { id: 'user.mismatchPassword', defaultMessage: 'Passwords do not match.' },
   failed: { id: 'user.passwordChange.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
-
-const MIN_PASSWORD_LENGTH = 8;
 
 const ChangePasswordContainer = (props) => {
   const { handleSubmit, onSubmit, pristine, submitting, renderTextField, titleMsg, buttonMsg, showOldPassword } = props;
@@ -102,17 +98,17 @@ function validate(values) {
   if (emptyString(values.old_password)) {
     errors.old_password = localMessages.missingOldPassword;
   }
-  if (values.old_password && values.old_password.length < MIN_PASSWORD_LENGTH) {
-    errors.old_password = localMessages.passwordTooShort;
+  if (passwordTooShort(values.old_password)) {
+    errors.old_password = messages.passwordTooShort;
   }
   if (emptyString(values.new_password)) {
     errors.new_password = localMessages.missingNewPassword;
   }
-  if (values.new_password && values.new_password.length < MIN_PASSWORD_LENGTH) {
-    errors.new_password = localMessages.passwordTooShort;
+  if (passwordTooShort(values.new_password)) {
+    errors.new_password = messages.passwordTooShort;
   }
-  if ((values.new_password !== undefined && values.confirm_password !== undefined) && values.new_password !== values.confirm_password) {
-    errors.confirm_password = localMessages.passwordsMismatch;
+  if (stringsDoNotMatch(values.new_password, values.confirm_password)) {
+    errors.confirm_password = messages.passwordsMismatch;
   }
   return errors;
 }

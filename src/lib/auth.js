@@ -17,11 +17,12 @@ export const PERMISSION_STORY_EDIT = 'story-edit';
 
 const COOKIE_USERNAME = 'mediameter_user_username';
 
-export function saveCookies(email) {
-  cookie.save(COOKIE_USERNAME, email);
+export function saveCookies(username) {
+  // note: this is actually your email address, since username is email in our system
+  cookie.save(COOKIE_USERNAME, username);
 }
 
-function deleteCookies() {
+export function deleteCookies() {
   cookie.remove(COOKIE_USERNAME);
 }
 
