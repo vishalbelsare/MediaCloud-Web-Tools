@@ -135,7 +135,6 @@ def reset_api_key():
 
 
 @app.route('/api/user/logout')
-@flask_login.login_required
 def logout():
     flask_login.logout_user()
     return redirect("/")
