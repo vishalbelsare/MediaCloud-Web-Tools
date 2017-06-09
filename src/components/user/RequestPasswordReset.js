@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { LEVEL_ERROR } from '../common/Notice';
-import { recoverPassword } from '../../actions/userActions';
+import { sendRecoverPasswordRequest } from '../../actions/userActions';
 import { addNotice } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
 import messages from '../../resources/messages';
@@ -13,19 +13,23 @@ import { invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 
 const localMessages = {
+  title: { id: 'user.forgotPassword.title', defaultMessage: 'Forgot Your Password?' },
+  intro: { id: 'user.forgotPassword.intro', defaultMessage: 'Enter your email address and we will send you a link to reset your password.' },
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter a valid email address.' },
+  mailMeALink: { id: 'user.forgotPassword.mailMeALink', defaultMessage: 'Send Password Reset Email' },
   failed: { id: 'user.recoverPassword.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
 
-const RecoverPasswordForm = (props) => {
+const RequestPasswordReset = (props) => {
   const { handleSubmit, onSubmitRecovery, pristine, renderTextField } = props;
   const { formatMessage } = props.intl;
   return (
     <Grid>
-      <form onSubmit={handleSubmit(onSubmitRecovery.bind(this))} className="app-form recover-password-form">
+      <form onSubmit={handleSubmit(onSubmitRecovery.bind(this))} className="app-form request-password-reset-form">
         <Row>
           <Col lg={12}>
-            <h1><FormattedMessage {...messages.userRecoverPassword} /></h1>
+            <h1><FormattedMessage {...localMessages.title} /></h1>
+            <p><FormattedMessage {...localMessages.intro} /></p>
           </Col>
         </Row>
         <Row>
@@ -42,7 +46,7 @@ const RecoverPasswordForm = (props) => {
           <Col lg={12}>
             <AppButton
               type="submit"
-              label={formatMessage(messages.userRecoverPassword)}
+              label={formatMessage(localMessages.mailMeALink)}
               primary
               disabled={pristine}
             />
@@ -53,7 +57,7 @@ const RecoverPasswordForm = (props) => {
   );
 };
 
-RecoverPasswordForm.propTypes = {
+RequestPasswordReset.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   location: React.PropTypes.object,
@@ -74,14 +78,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onSubmitRecovery: (values) => {
-    dispatch(recoverPassword(values))
+    dispatch(sendRecoverPasswordRequest(values))
     .then((response) => {
-      if (response.status !== 200) {
-        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
-      } else if (response.success === 1) {
-        dispatch(addNotice({ message: response.error, level: LEVEL_ERROR }));
-      } else {
-        dispatch(push('/user/recover-password-success'));
+      if (response.success) {
+        if (response.success === 1) {
+          dispatch(push('/user/request-password-reset-success'));
+        } else {
+          dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
+        }
       }
     });
   },
@@ -97,7 +101,7 @@ function validate(values) {
 }
 
 const reduxFormConfig = {
-  form: 'recover-password-form',
+  form: 'requestPasswordReset',
   validate,
 };
 
@@ -106,7 +110,7 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps)(
-          RecoverPasswordForm
+          RequestPasswordReset
         )
       )
     )

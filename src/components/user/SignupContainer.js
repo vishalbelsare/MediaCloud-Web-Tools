@@ -2,16 +2,17 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { replace } from 'react-router-redux';
 import { signupUser } from '../../actions/userActions';
 // import { updateFeedback } from '../../actions/appActions';
 import AppButton from '../common/AppButton';
 import Captcha from '../common/form/Captcha';
 import messages from '../../resources/messages';
-import { emptyString, invalidEmail } from '../../lib/formValidators';
+import { emptyString, invalidEmail, passwordTooShort, stringsDoNotMatch } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
 import { addNotice } from '../../actions/appActions';
+import { LEVEL_ERROR } from '../../components/common/Notice';
 
 const localMessages = {
   intro: { id: 'user.signup.intro', defaultMessage: 'Create an account to use all our tools for free.' },
@@ -22,13 +23,14 @@ const localMessages = {
   feedback: { id: 'user.signUp.feedback', defaultMessage: 'Successfully signed up.' },
   notesHint: { id: 'user.notes.hint', defaultMessage: 'Tell us a little about what you want to use Media Cloud for' },
   subscribeToNewsletter: { id: 'user.signUp.subscribeToNewsletter', defaultMessage: 'Subscribe to Newsletter?' },
+  userAlreadyExists: { id: 'user.signUp.error.alreadyExists', defaultMessage: 'Sorry, but a user with that email already exists! Did you <a href="/#/request-password-reset">need to reset your password</a>?' },
   signupSuccess: { id: 'user.signUp.success',
     defaultMessage: '<h1>Clink the link we just emailed you</h1>' +
     '<p>To make sure your email is valid, we have sent you a message with a magic link for you to click.  Click the link in the email to confirm that we got your email right.<p>' +
     '<p><a href="post-to-recover-password">Click here to send the email again</a>.</p>.' },
 };
 
-class SignupForm extends React.Component {
+class SignupContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = { allowSignup: false };
@@ -37,11 +39,11 @@ class SignupForm extends React.Component {
     this.setState({ passedCaptcha: true });
   }
   render() {
-    const { handleSubmit, onSubmitSignupForm, pristine, submitting, renderTextField, renderCheckbox } = this.props;
+    const { handleSubmit, handleSignupSubmission, pristine, submitting, renderTextField, renderCheckbox } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <Grid>
-        <form onSubmit={handleSubmit(onSubmitSignupForm.bind(this))} className="app-form signup-form">
+        <form onSubmit={handleSubmit(handleSignupSubmission.bind(this))} className="app-form signup-form">
           <Row>
             <Col lg={12}>
               <h1><FormattedMessage {...messages.userSignup} /></h1>
@@ -100,7 +102,7 @@ class SignupForm extends React.Component {
                 rows={2}
                 rowsMax={4}
                 component={renderTextField}
-                hintText={localMessages.notesHint}
+                hintText={formatMessage(localMessages.notesHint)}
                 floatingLabelText={messages.userNotes}
               />
             </Col>
@@ -133,7 +135,7 @@ class SignupForm extends React.Component {
   }
 }
 
-SignupForm.propTypes = {
+SignupContainer.propTypes = {
   // from composition
   intl: React.PropTypes.object.isRequired,
   location: React.PropTypes.object,
@@ -146,21 +148,25 @@ SignupForm.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   // from dispatch
-  onSubmitSignupForm: React.PropTypes.func.isRequired,
+  handleSignupSubmission: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.user.fetchStatus,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onSubmitSignupForm: (values) => {
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleSignupSubmission: (values) => {
     dispatch(signupUser(values))
     .then((response) => {
       if (response.success !== 1) {
-        dispatch(addNotice(response.error));
+        if (response.message.includes('already exists')) {
+          dispatch(addNotice({ level: LEVEL_ERROR, htmlMessage: ownProps.intl.formatMessage(localMessages.userAlreadyExists) }));
+        } else {
+          dispatch(addNotice({ level: LEVEL_ERROR, message: response.message }));
+        }
       } else {
-        dispatch(replace('/#/user/signup-success'));
+        dispatch(replace('/user/signup-success'));
       }
     });
   },
@@ -172,30 +178,34 @@ function validate(values) {
   if (invalidEmail(values.email)) {
     errors.email = localMessages.missingEmail;
   }
-  if (emptyString(values.full_name)) {
-    errors.email = localMessages.missingName;
+  if (emptyString(values.fullName)) {
+    errors.fullName = localMessages.missingName;
   }
   if (emptyString(values.password)) {
     errors.password = localMessages.missingPassword;
   }
-  if ((values.password !== undefined && values.confirm_password !== undefined) && values.password !== values.confirm_password) {
+  if (passwordTooShort(values.password)) {
+    errors.password = messages.passwordTooShort;
+  }
+  if (passwordTooShort(values.confirmPassword)) {
+    errors.confirmPassword = messages.passwordTooShort;
+  }
+  if (stringsDoNotMatch(values.password, values.confirmPassword)) {
     errors.password = localMessages.passwordsMismatch;
   }
   return errors;
 }
 
 const reduxFormConfig = {
-  form: 'signup-form',
+  form: 'signup',
   validate,
 };
 
 export default
-  injectIntl(
-    composeIntlForm(
-      reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps)(
-          SignupForm
-        )
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps)(
+        SignupContainer
       )
     )
   );

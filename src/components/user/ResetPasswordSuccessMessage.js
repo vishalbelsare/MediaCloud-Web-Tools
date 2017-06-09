@@ -3,11 +3,11 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
-  title: { id: 'success.email', defaultMessage: 'Password Changed' },
-  intro: { id: 'success.emailInfo', defaultMessage: 'We changed your password. We emailed you just to confirm that you did this on purpose - don\'t be suprised.' },
+  title: { id: 'success.email', defaultMessage: 'We Reset Your Password' },
+  intro: { id: 'success.emailInfo', defaultMessage: 'We rest your password. We emailed you just to confirm that you did this on purpose - don\'t be suprised.' },
 };
 
-const ChangePasswordSuccessMessage = () => (
+const ResetPasswordSuccessMessage = () => (
   <div className="change-password-success">
     <Grid>
       <Row>
@@ -20,8 +20,8 @@ const ChangePasswordSuccessMessage = () => (
   </div>
 );
 
-ChangePasswordSuccessMessage.propTypes = {
+ResetPasswordSuccessMessage.propTypes = {
   intl: React.PropTypes.object.isRequired,
 };
 
-export default injectIntl(ChangePasswordSuccessMessage);
+export default injectIntl(ResetPasswordSuccessMessage);

@@ -16,7 +16,6 @@ const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter a valid email address.' },
   title: { id: 'user.resendActivation.title', defaultMessage: 'Didn\'t get the activation email?' },
   intro: { id: 'user.resendActivation.intro', defaultMessage: 'Sorry about that! Enter your email address again and we\'ll send you another activation email.' },
-  resendActivation: { id: 'user.resendActivation.action', defaultMessage: 'Resend Activation Email' },
   failed: { id: 'user.resendActivation.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
 
@@ -46,7 +45,7 @@ const ResendActivationForm = (props) => {
           <Col lg={12}>
             <AppButton
               type="submit"
-              label={formatMessage(localMessages.resendActivation)}
+              label={formatMessage(messages.resendActivation)}
               primary
               disabled={pristine || submitting}
             />
@@ -78,12 +77,12 @@ const mapDispatchToProps = dispatch => ({
   handleFormSubmission: (values) => {
     dispatch(resendActivation(values))
     .then((response) => {
-      if (response.status !== 200) {
-        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
-      } else if (response.success === 1) {
+      if (response.success === 1) {
+        dispatch(push('/user/resend-activation-success'));
+      } else if (response.error) {
         dispatch(addNotice({ message: response.error, level: LEVEL_ERROR }));
-      } else {
-        dispatch(push('/#/user/resend-activation-success'));
+      } else if (response.success !== 1) {
+        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
       }
     });
   },

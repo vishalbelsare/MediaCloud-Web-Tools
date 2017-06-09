@@ -6,7 +6,7 @@ import IconMenu from 'material-ui/IconMenu';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { PERMISSION_LOGGED_IN, logout } from '../../../lib/auth';
 import Permissioned from '../Permissioned';
 import messages from '../../../resources/messages';
 
@@ -28,7 +28,10 @@ const UserMenuContainer = (props) => {
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>
             <FormattedMessage {...messages.userProfile} />
           </MenuItem>
-          <MenuItem id="user-logout" onTouchTap={() => { routeToUrl('/logout'); }}>
+          <MenuItem onTouchTap={() => { routeToUrl('/user/change-password'); }}>
+            <FormattedMessage {...messages.userChangePassword} />
+          </MenuItem>
+          <MenuItem id="user-logout" onTouchTap={logout}>
             <FormattedMessage {...messages.userLogout} />
           </MenuItem>
         </IconMenu>
