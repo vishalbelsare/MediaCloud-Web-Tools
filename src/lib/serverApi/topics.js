@@ -13,7 +13,7 @@ export function topicSummary(topicId) {
 }
 
 export function topicTopStories(topicId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId', 'fbData']);
   return createApiPromise(`/api/topics/${topicId}/stories`, acceptedParams);
 }
 
