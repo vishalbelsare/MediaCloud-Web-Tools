@@ -42,9 +42,9 @@ class StoriesSummaryContainer extends React.Component {
     const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}`;
     window.location = url;
   }
-  downloadWithFBData = () => {
+  downloadCsvWithFBData = () => {
     const { filters, sort, topicId } = this.props;
-    const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}&fbData=true`;
+    const url = `/api/topics/${topicId}/stories.csv?${filtersAsUrlParams(filters)}&sort=${sort}&fbData=1`;
     window.location = url;
   }
   render() {

@@ -166,11 +166,14 @@ def topic_stories(topics_id):
 @flask_login.login_required
 def topic_stories_csv(topics_id):
     as_attachment = True
+    fb_data = False
     if ('attach' in request.args):
         as_attachment = request.args['attach'] == 1
+    if ('fbData' in request.args):
+        fb_data = int(request.args['fbData']) == 1
     user_mc = user_admin_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment, fb_data=fb_data)
 
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
@@ -179,11 +182,14 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     simply be passed on to a call to topicStoryList.
     '''
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
+    fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
     all_stories = []
     more_stories = True
     params = kwargs
     if 'as_attachment' in params:
         del params['as_attachment']
+    if 'fb_data' in params:
+        del params['fb_data']
 
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     props = ['stories_id', 'publish_date', 'date_is_reliable', 
@@ -202,7 +208,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
             else:
                 more_stories = False
 
-        if params['fbData']:
+        if fb_data:
             all_fb_count = []
             more_fb_count = True
             link_id = 0
@@ -222,7 +228,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
               for fb_item in all_fb_count:
                 if int(fb_item['stories_id']) == int(story['stories_id']):
                     story['facebook_collection_date'] = fb_item['facebook_api_collect_date']
-            props += 'facebook_collection_date'
+            props.append('facebook_collection_date')
 
 
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
