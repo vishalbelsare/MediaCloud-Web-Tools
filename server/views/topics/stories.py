@@ -30,7 +30,7 @@ def story(topics_id, stories_id):
     elif is_user_logged_in():
         local_mc = user_mediacloud_client()
         story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
-        
+        '''
         all_fb_count = []
         more_fb_count = True
         link_id = 0
@@ -47,7 +47,7 @@ def story(topics_id, stories_id):
         for fb_item in all_fb_count:
             if int(fb_item['stories_id']) == int(stories_id):
                 story_topic_info['facebook_collection_date'] = fb_item['facebook_api_collect_date']
-        
+        '''
     else:
         return jsonify({'status':'Error', 'message': 'Invalid attempt'})
 
