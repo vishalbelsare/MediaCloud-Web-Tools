@@ -38,12 +38,20 @@ class AppDatabase():
     def remove_item_from_users_list(self, username, list_name, item):
         return self._conn.users.update_one({'username': username}, {'$pull': {list_name: item}})
 
-    def save_notebook_entry(self, username, entry):
+    def save_notebook_clipping(self, username, entry):
         return self._conn.notebook.insert({
             'username': username,
             'createdDate': datetime.datetime.now(),
             'entry': entry
         })
 
-    def load_notebook_entry(self, entry_id):
+    def list_notebook_clippings(self, username, app=None):
+        filters = {
+            'username': username
+        }
+        if app is not None:
+            filters['entry.app'] = app
+        return self._conn.notebook.find(filters)
+
+    def load_notebook_clipping(self, entry_id):
         return self._conn.users.find_one({'_id': ObjectId(entry_id)})
