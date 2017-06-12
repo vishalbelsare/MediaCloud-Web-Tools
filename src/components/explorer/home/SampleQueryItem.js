@@ -4,10 +4,11 @@ import Link from 'react-router/lib/Link';
 
 const SampleQueryItem = (props) => {
   const { query } = props;
+  // TODO change this for non-logged in user - pass the id, not the query info
   return (
     <div className="featured-query">
       <h2>{query.label}</h2>
-      <Link to={`/queryBuilder/?query=${query.queryParams}`}>{query.label}</Link>
+      <Link to={`/queryBuilder/?q=${query.q}&start_date=${query.start_date}&end_date=${query.end_date}`}>{query.label}</Link>
     </div>
   );
 };

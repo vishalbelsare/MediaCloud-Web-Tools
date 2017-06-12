@@ -38,7 +38,7 @@ class QueryPicker extends React.Component {
     if (queryList && queryList.length > 0 && selected) {
       fixedQuerySlides = queryList.map((query, index) => (
         <div key={index} className={selected.id === query.id ? 'selected' : ''}>
-          <QueryPickerItem query={query} isEditable={isEditable} selectThisQuery={() => setSelectedQuery(index)} />
+          <QueryPickerItem query={query} isEditable={isEditable} selectThisQuery={() => setSelectedQuery(query, index)} />
         </div>
       ));
       const customEmptyQuery = { id: queryList.length, label: 'empty query', queryParams: '{}', imagePath: '.' };
@@ -79,8 +79,9 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedQuery: (index) => {
-    dispatch(selectQuery(index));
+  setSelectedQuery: (query) => {
+    // TODO make this correct
+    dispatch(selectQuery(query));
   },
 });
 

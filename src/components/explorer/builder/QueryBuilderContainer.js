@@ -21,13 +21,16 @@ class QueryBuilderContainer extends React.Component {
     // TODO better comparison
     // if a query is clicked or if the url is edited...
     // THis is definitely not working right..
-    if (selected === null || nextProps.selected === null) {
+    if (selected === null || nextProps.selected === null ||
+      selected.q !== nextProps.selected.q ||
+      selected.start_date !== nextProps.selected.start_date ||
+      selected.end_date !== nextProps.selected.end_date) {
       // if logged in, get any URL and parse it
       // if not, assume if anything is in the url, parseInt it and select it
 
       // if something else is clicked, then if logged in, we will push this into URL?
       // queryParams = selected
-      const qObject = JSON.parse(nextProps.urlQueryString.query);
+      const qObject = nextProps.selected ? nextProps.selected : nextProps.urlQueryString;
       setSelectedQuery(qObject);
     }
   }
@@ -46,7 +49,7 @@ class QueryBuilderContainer extends React.Component {
       content = (
         <div>
           <QueryPicker selected={selected} queries={queries} isEditable={isNotLoggedInUser} onClick={setSelectedQuery} />
-          <QueryForm initialValues={selected} buttonLabel={formatMessage(localMessages.querySearch)} onSave={handleSearch} isEditable={isNotLoggedInUser} />
+          <QueryForm initialValues={selected} selected={selected} buttonLabel={formatMessage(localMessages.querySearch)} onSave={handleSearch} isEditable={isNotLoggedInUser} />
 
           <QueryResultsContainer queries={queries} />
         </div>
@@ -78,6 +81,7 @@ QueryBuilderContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
+  selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
   queries: state.explorer.queries.list,
   urlQueryString: ownProps.location.query,
   user: state.user,
@@ -99,9 +103,9 @@ const mapDispatchToProps = dispatch => ({
 
     // if (isLoggedInUser) {
     //  dispatch(selectQuery(queryType)); // query string - we will select the custom tab for them unless there is an id in url
-      // dispatch(fetchSavedQueryList());
+      // dispatch(fetchSavedSearches());
     // } else {
-    dispatch(selectQuery(queryType)); // query id
+    dispatch(selectQuery(queryType)); // query obj
       // dispatch(fetchExampleQueryList());
     // }
   },

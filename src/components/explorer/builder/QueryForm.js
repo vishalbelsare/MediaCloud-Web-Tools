@@ -22,16 +22,18 @@ const QueryForm = (props) => {
     cleanedInitialValues.disabled = false;
   }
 
+  // const queryParam = `${initialValues.q}`;
+
 // we may have a query or a query object for initialValues
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))}>
-      <h3>{`${initialValues.label}`}</h3>
+      <h3>{`${cleanedInitialValues.label}`}</h3>
       <DataCard>
         <Row>
           <Col lg={6}>
             <Field
-              name={`${initialValues.queryParams}`}
-              value={`${initialValues.queryParams}`}
+              name="q"
+              value="try"
               type="text"
               multiLine
               component={renderTextField}
@@ -40,13 +42,35 @@ const QueryForm = (props) => {
             />
           </Col>
           <Col lg={6}>
-            <Field
-              name={`${initialValues.color}`}
-              type="text"
-              component={renderSelectField}
-              label="S and C"
-              floatingLabelText="edit sources and collections"
-            />
+            <Row>
+              <Field
+                name="sources"
+                type="text"
+                component={renderSelectField}
+                label="Color"
+                floatingLabelText="choose sources and collections"
+              />
+            </Row>
+            <Row>
+              <Col lg={2}>
+                <Field
+                  name="start_date"
+                  type="text"
+                  component={renderTextField}
+                  label="Start Date"
+                  floatingLabelText="Start Date"
+                />
+              </Col>
+              <Col lg={2}>
+                <Field
+                  name="end_date"
+                  type="text"
+                  component={renderTextField}
+                  label="End Date"
+                  floatingLabelText="End Date"
+                />
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row>
@@ -103,6 +127,8 @@ function validate(values) {
 const reduxFormConfig = {
   form: 'queryForm',
   validate,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
   // may need to add the initialValues here...
 };
 

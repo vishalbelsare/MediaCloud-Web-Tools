@@ -12,8 +12,11 @@ const QueryPickerItem = (props) => {
     nameInfo = <h2>{query.label}</h2>;
   }
   return (
-    <GridList className="query-picker-item" cols={3} onClick={() => selectThisQuery()}>
+    <GridList className="query-picker-item" onClick={() => selectThisQuery()}>
+      <span className="query-picker-item-color" style={{ width: 10, height: 10, backgroundColor: `${query.label}`, display: 'block' }} />
       {nameInfo}
+      <p>{query.description}</p>
+      <p>{query.startDate}</p>
     </GridList>
   );
 };
