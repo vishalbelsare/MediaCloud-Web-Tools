@@ -44,6 +44,7 @@ class AttentionComparisonContainer extends React.Component {
     const { results, overallTotal, overallCounts } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     // stich together bubble chart data
+    // TODO check something like overallCount >= results.length so we wait until we get fetch all the data
     let bubbleData = [];
     if (results !== undefined && results.length > 0) {
       bubbleData = [
@@ -143,19 +144,39 @@ const mapStateToProps = () => ({
   overallCounts: state.explorer.queries.list[0].sentenceCount.counts,*/
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, state) => ({
   fetchData: (query, index) => {
+    // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // queries.map((query, index) => (
-    dispatch(fetchQuerySentenceCounts(query, index));
+    // at this point, we assume any changes to queries from QueryForm has been integrated
+
+
+    /* const infoToQuery = {
+      start_date: query.start_date,
+      end_date: query.end_date,
+      solr_seed_query: query.q,
+      color: query.color,
+    };
+    if ('sourcesAndCollections' in query) {
+      infoToQuery['sources[]'] = query.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
+      infoToQuery['collections[]'] = query.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
+    } else {
+      infoToQuery['sources[]'] = '';
+      infoToQuery['collections[]'] = '';
+    }
+    */
+    if (index) { // specific change/update here
+      dispatch(fetchQuerySentenceCounts(query, index));
+    } else { // get all results
+      state.queries.map((q, idx) => dispatch(fetchQuerySentenceCounts(q, idx)));
+    }
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    // for n queries, run the dispatch with each parsed query
     asyncFetch: () => {
-      dispatchProps.fetchData();
+      // dispatchProps.fetchData();
     },
   });
 }

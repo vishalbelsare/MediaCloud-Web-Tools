@@ -11,6 +11,15 @@
 
 .query-picker-item {
 	border: 1px solid lightgray;
-	margin: 0;
+	margin: 0 !important;
 	padding: 5px;
+    height: 100px;
+    text-align: center;
+
+    query-picker-item-color {
+        width: 10px !important;
+        height: 10px;
+        display: block !important;
+        float: right;
+    }
 }
