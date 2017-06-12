@@ -5,12 +5,12 @@ import * as api from '../../lib/serverApi/explorer';
 export const SET_QUERY_LIST = 'SET_QUERY_LIST';
 export const setQueryList = createAction(SET_QUERY_LIST, queries => queries);
 
-export const FETCH_SAVED_QUERY_LIST = 'FETCH_SAVED_QUERY_LIST';
-export const fetchSavedQueryList = createAsyncAction(FETCH_SAVED_QUERY_LIST, api.fetchSavedQueryList);
+export const FETCH_SAVED_SEARCHES = 'FETCH_SAVED_SEARCHES';
+export const fetchSavedSearches = createAsyncAction(FETCH_SAVED_SEARCHES, api.fetchSavedSearches);
 
 
 export const SELECT_QUERY = 'SELECT_QUERY';
-export const selectQuery = createAction(SELECT_QUERY, index => index);
+export const selectQuery = createAction(SELECT_QUERY, query => query);
 
 export const ADD_CUSTOM_QUERY = 'ADD_CUSTOM_QUERY';
 export const addCustomQuery = createAction(ADD_CUSTOM_QUERY, query => query);

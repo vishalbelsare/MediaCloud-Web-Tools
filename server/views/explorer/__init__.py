@@ -3,6 +3,7 @@ import logging
 import flask_login
 import os
 from server import app, base_dir, mc
+from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param
 from flask import jsonify
 from server.auth import is_user_logged_in, user_admin_mediacloud_client
 import datetime
@@ -33,11 +34,13 @@ def access_public_topic(topics_id):
     return False
 
 def solr_query_from_request(request):
-    solr_seed_query=request['q'],
-    start_date= request['start_date'],
-    end_date=request['end_date'],
-    media_ids=_media_ids_from_sources_param(request['sources[]']) if 'sources[]' in request else None,
-    tags_ids=_media_tag
+    solr_seed_query=request['q']
+    start_date= request['start_date']
+    end_date=request['end_date']
+
+    # TODO it is an error if no sources or collections
+    media_ids=_media_ids_from_sources_param(request['sources[]']) if 'sources[]' in request else []
+    tags_ids=_tag_ids_from_collections_param(request['collections[]']) if 'collections[]' in request else []
     return concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids)
 
 # helper for topic preview queries -- TODO move up
@@ -62,14 +65,17 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         query += ')'
 
     if start_date:
+        start_date = '{}'.format(start_date)
+        end_date = '{}'.format(end_date)
         query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
     
     return query
 
-
+# TODO defaults cause an error
 def concatenate_query_and_dates(start_date, end_date):
     user_mc = user_admin_mediacloud_client()
     publish_date = user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),
-                                              datetime.datetime.strptime(end_date, '%Y-%m-%d').date())
+                                              datetime.datetime.strptime(end_date, '%Y-%m-%d').date(),
+                                              True, True)
 
     return publish_date

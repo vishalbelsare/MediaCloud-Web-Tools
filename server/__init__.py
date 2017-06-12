@@ -23,6 +23,7 @@ SERVER_MODE_PROD = "prod"
 SERVER_APP_TOPICS = "topics"
 SERVER_APP_SOURCES = "sources"
 SERVER_APP_TOOLS = "tools"
+SERVER_APP_EXPLORER = "explorer"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -175,3 +176,6 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.nyttags
     import server.views.topics.geotags
     import server.views.topics.topiccreate
+if (server_app == SERVER_APP_EXPLORER) or isDevMode():
+    import server.views.explorer.explorer_query
+    import server.views.explorer.sentences
