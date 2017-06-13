@@ -166,11 +166,14 @@ def topic_stories(topics_id):
 @flask_login.login_required
 def topic_stories_csv(topics_id):
     as_attachment = True
+    fb_data = False
     if ('attach' in request.args):
         as_attachment = request.args['attach'] == 1
+    if ('fbData' in request.args):
+        fb_data = int(request.args['fbData']) == 1
     user_mc = user_admin_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment, fb_data=fb_data)
 
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
@@ -179,12 +182,21 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     simply be passed on to a call to topicStoryList.
     '''
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
+    fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
     all_stories = []
     more_stories = True
     params = kwargs
     if 'as_attachment' in params:
         del params['as_attachment']
+    if 'fb_data' in params:
+        del params['fb_data']
+
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
+    props = ['stories_id', 'publish_date', 'date_is_reliable', 
+            'title', 'url', 'media_id', 'media_name',
+            'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
+             'facebook_share_count', 'language']
+
     try:
         while more_stories:
             page = topic_story_list(user_mc_key, topics_id, **params)
@@ -196,33 +208,31 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
             else:
                 more_stories = False
 
+        if fb_data:
+            all_fb_count = []
+            more_fb_count = True
+            link_id = 0
+            local_mc = user_admin_mediacloud_client()
+            while more_fb_count:
+                fb_page = local_mc.topicStoryListFacebookData(topics_id, limit=100, link_id=link_id)
 
-        all_fb_count = []
-        more_fb_count = True
-        link_id = 0
-        local_mc = user_admin_mediacloud_client()
-        while more_fb_count:
-            fb_page = local_mc.topicStoryListFacebookData(topics_id, limit=100, link_id=link_id)
-
-            all_fb_count = all_fb_count + fb_page['counts']
-            if 'next' in fb_page['link_ids']:
-                link_id = fb_page['link_ids']['next']
-                more_fb_count = True
-            else:
-                more_fb_count = False
+                all_fb_count = all_fb_count + fb_page['counts']
+                if 'next' in fb_page['link_ids']:
+                    link_id = fb_page['link_ids']['next']
+                    more_fb_count = True
+                else:
+                    more_fb_count = False
    
+            # now iterate through each list and set up the fb collection date
+            for story in all_stories:
+              for fb_item in all_fb_count:
+                if int(fb_item['stories_id']) == int(story['stories_id']):
+                    story['facebook_collection_date'] = fb_item['facebook_api_collect_date']
+            props.append('facebook_collection_date')
 
-    # now iterate through each list and set up the fb collection date
-        for story in all_stories:
-          for fb_item in all_fb_count:
-            if int(fb_item['stories_id']) == int(story['stories_id']):
-                story['facebook_collection_date'] = fb_item['facebook_api_collect_date']
 
-        props = ['stories_id', 'publish_date', 'date_is_reliable', 
-            'title', 'url', 'media_id', 'media_name',
-            'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
-             'facebook_share_count', 'facebook_collection_date', 'language']
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
+
     except Exception as e:
         logger.exception(e)
         return json.dumps({'error': str(e)}, separators=(',', ':')), 400
