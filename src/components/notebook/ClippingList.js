@@ -1,19 +1,17 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import ClippingList from './ClippingList';
 import Clipping from './Clipping';
 
-const ClippingListContainer = props => (
-  <div className="notebook-clippings-list">
+const ClippingList = props => (
+  <div className="notebook-clipping-list">
     {props.clippings.map(clipping => (
-      <Clipping clipping={clipping} />
+      <Clipping key={clipping.id} clipping={clipping} />
     ))}
   </div>
 );
 
-ClippingListContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  clippings: React.PropTypes.object.isRequired,
+ClippingList.propTypes = {
+  clippings: React.PropTypes.array.isRequired,
 };
 
 export default

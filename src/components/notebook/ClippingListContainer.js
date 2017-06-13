@@ -9,19 +9,18 @@ const ClippingListContainer = props => (
 );
 
 ClippingListContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
   // from parent
   app: React.PropTypes.string,
   // from state
-  clippings: React.PropTypes.object.isRequired,
+  clippings: React.PropTypes.array.isRequired,
   fetchStatus: React.PropTypes.string.isRequired,
   // from dipatch
   asyncFetch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.stats.fetchStatus,
-  clippings: state.notebook.clippings,
+  fetchStatus: state.notebook.clippings.fetchStatus,
+  clippings: state.notebook.clippings.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

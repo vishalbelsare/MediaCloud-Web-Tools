@@ -25,6 +25,9 @@ const UserMenuContainer = (props) => {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
+          <MenuItem onTouchTap={() => { routeToUrl('/user/notebook'); }}>
+            <FormattedMessage {...messages.userNotebook} />
+          </MenuItem>
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>
             <FormattedMessage {...messages.userProfile} />
           </MenuItem>

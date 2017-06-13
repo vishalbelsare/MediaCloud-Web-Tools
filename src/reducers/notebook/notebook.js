@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import entries from './entries';
+import clippings from './clippings';
 
 const rootReducer = combineReducers({
-  entries,
+  clippings,
 });
 
 export default rootReducer;

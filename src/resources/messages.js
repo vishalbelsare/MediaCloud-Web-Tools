@@ -19,7 +19,8 @@ const messages = {
   userLogin: { id: 'user.login', defaultMessage: 'Login' },
   userLogout: { id: 'user.logout', defaultMessage: 'Logout' },
   unlimited: { id: 'user.unlimited', defaultMessage: 'Unlimited' },
-  userProfile: { id: 'user.profile', defaultMessage: 'Profile' },
+  userProfile: { id: 'user.profile', defaultMessage: 'My Profile' },
+  userNotebook: { id: 'user.notebook', defaultMessage: 'My Notebook' },
 
   topicName: { id: 'topic.title.default', defaultMessage: 'Topic' },
   topicSnapshot: { id: 'topic.snapshot', defaultMessage: 'Snapshot' },

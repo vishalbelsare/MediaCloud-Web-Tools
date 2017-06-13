@@ -29,7 +29,8 @@ def notebook_clippings():
     clippings = db.list_notebook_clippings(username, app)
     clippings = [c for c in clippings]
     for c in clippings:
-        c['_id'] = str(c['_id'])    # need to convert ObjectId to something that can be jsonified
+        c['id'] = str(c['_id'])    # need to convert ObjectId to something that can be jsonified
+        del c['_id']
     return jsonify({'list': clippings})
 
 
