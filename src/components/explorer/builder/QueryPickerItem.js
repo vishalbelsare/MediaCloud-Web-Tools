@@ -1,23 +1,36 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
-import GridList from 'material-ui/GridList';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 const QueryPickerItem = (props) => {
-  const { query, isEditable, selectThisQuery } = props;
+  const { query, isEditable, selectThisQuery, updateQuery } = props;
   let nameInfo = null;
   if (isEditable) {
-    nameInfo = <TextField id="name" value={query.label} />;
+    nameInfo = (
+      <div>
+        <span style={{ width: 10, height: 10, backgroundColor: `${query.label}`, display: 'inline-block' }} />
+        <TextField
+          id="q"
+          name="q"
+          hintText={query.label}
+          onChange={updateQuery}
+        />
+      </div>
+    );
   } else {
-    nameInfo = <h2>{query.label}</h2>;
+    nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.label}</div>;
   }
   return (
-    <GridList className="query-picker-item" onClick={() => selectThisQuery()}>
-      <span className="query-picker-item-color" style={{ width: 10, height: 10, backgroundColor: `${query.label}`, display: 'block' }} />
-      {nameInfo}
-      <p>{query.description}</p>
-      <p>{query.startDate}</p>
-    </GridList>
+    <Card className="query-picker-item" onClick={() => selectThisQuery()}>
+      <CardHeader
+        title={nameInfo}
+        subtitle={query.description}
+      />
+      <CardText>
+        {query.start_date}
+      </CardText>
+    </Card>
   );
 };
 
@@ -26,6 +39,7 @@ QueryPickerItem.propTypes = {
   query: React.PropTypes.object,
   isEditable: React.PropTypes.bool.isRequired,
   selectThisQuery: React.PropTypes.func,
+  updateQuery: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

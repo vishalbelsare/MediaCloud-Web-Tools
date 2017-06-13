@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
+import messages from '../../../resources/messages';
 // import SourceDetailsForm from './SourceDetailsForm';
 import { emptyString } from '../../../lib/formValidators';
 
@@ -12,10 +13,15 @@ const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
   addButton: { id: 'explorer.queryBuilder.saveAll', defaultMessage: 'Search' },
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
+  query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
+  selectSandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Select media' },
+  color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
+  dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
 };
 
 const QueryForm = (props) => {
-  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField, renderSelectField } = props;
+  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, renderTextField, renderSelectField } = props;
+  const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -27,18 +33,18 @@ const QueryForm = (props) => {
 // we may have a query or a query object for initialValues
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))}>
-      <h3>{`${cleanedInitialValues.label}`}</h3>
       <DataCard>
         <Row>
           <Col lg={6}>
             <Field
               name="q"
-              value="try"
               type="text"
               multiLine
+              rows={3}
+              rowsMax={4}
               component={renderTextField}
-              label="Edit Query"
-              floatingLabelText="edit query"
+              label={formatMessage(localMessages.query)}
+              floatingLabelText={formatMessage(localMessages.query)}
             />
           </Col>
           <Col lg={6}>
@@ -48,26 +54,26 @@ const QueryForm = (props) => {
                 type="text"
                 component={renderSelectField}
                 label="Color"
-                floatingLabelText="choose sources and collections"
+                floatingLabelText={formatMessage(localMessages.selectSandC)}
               />
             </Row>
             <Row>
-              <Col lg={2}>
+              <Col lg={3}>
                 <Field
                   name="start_date"
-                  type="text"
+                  type="inline"
                   component={renderTextField}
-                  label="Start Date"
-                  floatingLabelText="Start Date"
+                  label={formatMessage(messages.startDate)}
+                  floatingLabelText={formatMessage(messages.startDate)}
                 />
               </Col>
-              <Col lg={2}>
+              <Col lg={3}>
                 <Field
                   name="end_date"
-                  type="text"
+                  type="inline"
                   component={renderTextField}
-                  label="End Date"
-                  floatingLabelText="End Date"
+                  label={formatMessage(messages.endDate)}
+                  floatingLabelText={formatMessage(messages.endDate)}
                 />
               </Col>
             </Row>
@@ -75,7 +81,7 @@ const QueryForm = (props) => {
         </Row>
         <Row>
           <Field
-            name={`${initialValues.color}`}
+            name="color"
             type="text"
             component={renderTextField}
             label="Color"
@@ -88,7 +94,7 @@ const QueryForm = (props) => {
           style={{ marginTop: 30 }}
           type="submit"
           label={buttonLabel}
-          disabled={pristine || submitting}
+          disabled={submitting}
           primary
         />
       </Col>

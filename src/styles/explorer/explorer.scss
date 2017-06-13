@@ -1,3 +1,5 @@
+@import '../constants';
+
 .glyphicon {
     position: relative;
     top: 1px;
@@ -10,10 +12,10 @@
 }
 
 .query-picker-item {
-	border: 1px solid lightgray;
+	border: 1px solid $material-grey200;
 	margin: 0 !important;
-	padding: 5px;
-    height: 100px;
+	padding: 5px !important;
+    height: 110px;
     text-align: center;
 
     query-picker-item-color {
@@ -22,4 +24,8 @@
         display: block !important;
         float: right;
     }
+}
+
+.query-picker-item-selected > div {
+    background-color: $material-grey200 !important;
 }

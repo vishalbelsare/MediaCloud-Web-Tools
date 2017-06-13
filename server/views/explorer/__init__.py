@@ -74,8 +74,11 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
 # TODO defaults cause an error
 def concatenate_query_and_dates(start_date, end_date):
     user_mc = user_admin_mediacloud_client()
-    publish_date = user_mc.publish_date_query(datetime.datetime.strptime(start_date, '%Y-%m-%d').date(),
-                                              datetime.datetime.strptime(end_date, '%Y-%m-%d').date(),
+
+    testa = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+    testb = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+    publish_date = user_mc.publish_date_query(testa,
+                                              testb,
                                               True, True)
 
     return publish_date

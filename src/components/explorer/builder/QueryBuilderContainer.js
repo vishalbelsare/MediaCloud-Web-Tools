@@ -3,16 +3,16 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import { selectQuery, setQueryList } from '../../../actions/explorerActions';
-import QueryForm from './QueryForm';
+// import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
-const localMessages = {
+/* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
-};
+}; */
 
 class QueryBuilderContainer extends React.Component {
 
@@ -40,7 +40,7 @@ class QueryBuilderContainer extends React.Component {
 
   render() {
     const { selected, queries, handleSearch, setSelectedQuery, user } = this.props;
-    const { formatMessage } = this.props.intl;
+    // const { formatMessage } = this.props.intl;
     const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
     let content = <div>Error</div>;
 
@@ -48,9 +48,7 @@ class QueryBuilderContainer extends React.Component {
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
-          <QueryPicker selected={selected} queries={queries} isEditable={isNotLoggedInUser} onClick={setSelectedQuery} />
-          <QueryForm initialValues={selected} selected={selected} buttonLabel={formatMessage(localMessages.querySearch)} onSave={handleSearch} isEditable={isNotLoggedInUser} />
-
+          <QueryPicker selected={selected} queries={queries} isEditable={isNotLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
           <QueryResultsContainer queries={queries} />
         </div>
       );
@@ -94,10 +92,12 @@ const mapDispatchToProps = dispatch => ({
     // TODO if in Demo mode, constrain by two-week period
     // assimilate field array level query info
     // will push new/custom query into list as well
+    // get state.queryList and push into state.queries
     dispatch(setQueryList(infoToQuery));
   },
   // this will push selected into state
   // either an id (demo) or a query url (loggedin)
+  // BUT will not handle updates to fields- so we will have to eval changes in handleSearch
   setSelectedQuery: (queryType) => {
     // const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
 
