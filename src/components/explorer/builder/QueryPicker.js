@@ -37,6 +37,16 @@ class QueryPicker extends React.Component {
     setSelectedQuery(newQueryObj);
   }
 
+  updateQueryFromEditablePicker(q, currentQueryObj, index) {
+    const queryList = this.state.queryList;
+    // get data from form, update queryList
+    const editedFieldName = 'q';
+    const editedFieldVal = q.target.value;
+
+    queryList[index][editedFieldName] = editedFieldVal;
+  }
+
+
   updateQueryList(event, currentQueryObj) {
     const queryList = this.state.queryList;
     // get data from form, update queryList
@@ -68,7 +78,7 @@ class QueryPicker extends React.Component {
             selected={selected}
             isEditable={isEditable}
             selectThisQuery={() => setSelectedQuery(query, index)}
-            updateQuery={q => this.updateQuery(q, query, index)}
+            updateQuery={q => this.updateQueryFromEditablePicker(q, query, index)}
           />
         </div>
       ));

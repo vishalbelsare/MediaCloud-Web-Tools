@@ -12,9 +12,9 @@ const localMessages = {
 };
 
 const sampleQueryList = [
-  { id: 1, label: 'public health query', description: 'lorem epsum', q: 'public', start_date: '2016-02-02', end_date: '2017-02-02', imagePath: '.', color: 'green' },
-  { id: 2, label: 'chocolate query', description: 'lorem epsum', q: 'chocolate and dessert', start_date: '2016-02-026', end_date: '2017-02-02', imagePath: '.', color: 'blue' },
-  { id: 3, label: 'bike safety query', description: 'lorem epsum', q: 'bike or safety', start_date: '2016-02-026', end_date: '2017-02-02', imagePath: '.', color: 'red' },
+  { id: 0, label: 'public health query', description: 'lorem epsum', q: 'public', start_date: '2016-02-02', end_date: '2017-02-02', imagePath: '.', color: 'green' },
+  { id: 1, label: 'chocolate query', description: 'lorem epsum', q: 'chocolate and dessert', start_date: '2016-02-026', end_date: '2017-02-02', imagePath: '.', color: 'blue' },
+  { id: 2, label: 'bike safety query', description: 'lorem epsum', q: 'bike or safety', start_date: '2016-02-026', end_date: '2017-02-02', imagePath: '.', color: 'red' },
 ];
 
 class SampleQueryContainer extends React.Component {
