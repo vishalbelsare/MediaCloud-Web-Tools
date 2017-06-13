@@ -20,7 +20,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, renderTextField, renderSelectField } = props;
+  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
@@ -32,7 +32,7 @@ const QueryForm = (props) => {
 
 // we may have a query or a query object for initialValues
   return (
-    <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))}>
+    <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
       <DataCard>
         <Row>
           <Col lg={6}>
@@ -105,6 +105,7 @@ const QueryForm = (props) => {
 QueryForm.propTypes = {
   // from parent
   onSave: React.PropTypes.func.isRequired,
+  onChange: React.PropTypes.func,
   buttonLabel: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
   // from context
@@ -114,6 +115,7 @@ QueryForm.propTypes = {
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
   // from form healper
+  updateQuery: React.PropTypes.func,
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,

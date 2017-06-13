@@ -13,7 +13,7 @@ const QueryPickerItem = (props) => {
         <TextField
           id="q"
           name="q"
-          hintText={query.label}
+          hintText={query.q}
           onChange={updateQuery}
         />
       </div>

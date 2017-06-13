@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-// import DataCard from '../../common/DataCard';
+import { reduxForm, formValueSelector } from 'redux-form';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -15,6 +15,8 @@ const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
 };
+
+const formSelector = formValueSelector('queryForm');
 
 class QueryPicker extends React.Component {
 
@@ -35,12 +37,16 @@ class QueryPicker extends React.Component {
     setSelectedQuery(newQueryObj);
   }
 
-  updateCustomQuery(editedField, queryObj, index) {
+  updateQueryList(event, currentQueryObj) {
     const queryList = this.state.queryList;
-    // create a new empty one if this is a user created one ?
-    if (queryObj.custom) {
-      queryList[index].q = editedField.currentTarget.value;
-    }
+    // get data from form, update queryList
+    const editedFieldName = event.target.name;
+    const editedFieldVal = event.target.value;
+
+    const editedObj = queryList.filter(q => q.id === currentQueryObj.id)[0];
+
+    editedObj[editedFieldName] = editedFieldVal;
+    return editedObj;
   }
 
   // TODO, how to read in updated fields from form
@@ -48,7 +54,7 @@ class QueryPicker extends React.Component {
   // change the queryList, not the state.queries until Search is hit...
 
   render() {
-    const { selected, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, formData, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
@@ -58,10 +64,11 @@ class QueryPicker extends React.Component {
       fixedQuerySlides = queryList.map((query, index) => (
         <div key={index} className={selected.id === query.id ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
-            query={query}
+            query={query.id === selected.id ? formData : query}
+            selected={selected}
             isEditable={isEditable}
             selectThisQuery={() => setSelectedQuery(query, index)}
-            updateQuery={q => this.updateCustomQuery(q, query, index)}
+            updateQuery={q => this.updateQuery(q, query, index)}
           />
         </div>
       ));
@@ -86,7 +93,13 @@ class QueryPicker extends React.Component {
     return (
       <div className="query-picker">
         {content}
-        <QueryForm initialValues={selected} selected={selected} buttonLabel={formatMessage(localMessages.querySearch)} onSave={handleSearch} isEditable />
+        <QueryForm
+          initialValues={selected}
+          buttonLabel={formatMessage(localMessages.querySearch)}
+          onSave={handleSearch}
+          onChange={event => this.updateQueryList(event, selected)}
+          isEditable
+        />
       </div>
     );
   }
@@ -99,24 +112,33 @@ QueryPicker.propTypes = {
   setSelectedQuery: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
+  formData: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
+  formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 
 
 const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (query) => {
-    // TODO make this correct
+    // grab form data, stick it in queryList, select Next?
     dispatch(selectQuery(query));
   },
 });
 
+const reduxFormConfig = {
+  form: 'queryForm',
+  destroyOnUnmount: true,  // so the wizard works
+};
+
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      QueryPicker
+      reduxForm(reduxFormConfig)(
+        QueryPicker
+      )
     )
   );
 
