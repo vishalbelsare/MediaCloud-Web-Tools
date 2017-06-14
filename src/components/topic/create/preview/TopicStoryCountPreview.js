@@ -32,9 +32,9 @@ const localMessages = {
 
 class TopicStoryCountPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { query, fetchData } = this.props;
+    const { query, fetchData, user } = this.props;
     if (nextProps.query !== query) {
-      fetchData(nextProps.query);
+      fetchData(nextProps.query, user);
     }
   }
   render() {
@@ -105,7 +105,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (query) => {
+  fetchData: (query, user) => {
     const infoForQuery = {
       q: query.solr_seed_query,
       start_date: query.start_date,
@@ -120,7 +120,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     dispatch(fetchStoryCountByQuery(infoForQuery))
       .then((result) => {
-        if (!hasPermissions(getUserRoles(ownProps.user), PERMISSION_TOPIC_ADMIN)) {
+        if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
           if (result.count > MAX_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
           } else if (result.count < MAX_RECOMMENDED_STORIES && result.count > WARNING_LIMIT_RECOMMENDED_STORIES) {
@@ -139,7 +139,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.query);
+      dispatchProps.fetchData(ownProps.query, stateProps.user);
     },
   });
 }
