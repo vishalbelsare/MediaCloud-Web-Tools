@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
-import { selectQuery, setQueryList } from '../../../actions/explorerActions';
+import { selectQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -39,7 +39,7 @@ class QueryBuilderContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, handleSearch, setSelectedQuery, user } = this.props;
+    const { selected, queries, setSelectedQuery, handleSearch, user } = this.props;
     // const { formatMessage } = this.props.intl;
     const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
     let content = <div>Error</div>;
@@ -87,17 +87,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
-  handleSearch: (queries) => {
-    const infoToQuery = queries;
-    // TODO if in Demo mode, constrain by two-week period
-    // assimilate field array level query info
-    // will push new/custom query into list as well
-    // get state.queryList and push into state.queries
-    dispatch(setQueryList(infoToQuery));
-  },
-  // this will push selected into state
-  // either an id (demo) or a query url (loggedin)
-  // BUT will not handle updates to fields- so we will have to eval changes in handleSearch
   setSelectedQuery: (queryType) => {
     // const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
 
@@ -108,6 +97,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectQuery(queryType)); // query obj
       // dispatch(fetchExampleQueryList());
     // }
+  },
+  handleSearch: () => {
+    dispatch(updateTimestampForQueries());
   },
 });
 

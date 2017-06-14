@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ItemSlider from '../../common/ItemSlider';
 import DataCard from '../../common/DataCard';
 import SampleQueryItem from './SampleQueryItem';
-import { setQueryList } from '../../../actions/explorerActions';
+import { fetchSampleSearches } from '../../../actions/explorerActions';
 
 const localMessages = {
   mainTitle: { id: 'explorer.featured.mainTitle', defaultMessage: 'Featured Queries' },
@@ -65,7 +65,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: () => {
-    dispatch(setQueryList(sampleQueryList));
+    dispatch(fetchSampleSearches(sampleQueryList));
   },
 });
 

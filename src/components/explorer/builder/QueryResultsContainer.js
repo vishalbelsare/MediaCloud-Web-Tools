@@ -30,15 +30,16 @@ const QueryResultsContainer = (props) => {
 QueryResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   selected: React.PropTypes.object,
+  queries: React.PropTypes.array,
   // from context
   params: React.PropTypes.object,       // params from router
   // from state
-  queries: React.PropTypes.array,
+  lastSearchTime: React.PropTypes.array,
   user: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  queries: state.explorer.queries.list,
+  // lastSearchTime: state.explorer.queries.list,
   user: state.user,
 });
 
