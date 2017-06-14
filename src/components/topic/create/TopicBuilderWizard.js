@@ -39,7 +39,7 @@ class TopicBuilderWizard extends React.Component {
     const stepLabelStyle = { height: 45 };
     return (
       <div className="topic-builder-wizard">
-        <BackLinkingControlBar message={localMessages.backToTopicManager} linkTo={'/topics/#/home'} >
+        <BackLinkingControlBar message={localMessages.backToTopicManager} linkTo={'/home'} >
           <Stepper activeStep={currentStep}>
             <Step>
               <StepLabel style={stepLabelStyle}><FormattedMessage {...localMessages.step0Name} /></StepLabel>
