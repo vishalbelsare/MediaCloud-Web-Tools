@@ -14,11 +14,14 @@ logger = logging.getLogger(__name__)
 
 ### MAY NOT BE A FORM TODO
 
-@app.route('/api/explorer/example_queries', methods=['GET'])
+@app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
-def api_explorer_example_queries():
-    example_queries = [{id: 1, image:'an_image.jpg', query:'bike and safety'}, {id: 2, image:'another_image.jpg', query: 'dessert'}]
-    return jsonify(example_queries)
+def api_explorer_sample_searches():
+    example_queries = []
+    example_queries.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green' })
+    example_queries.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-026', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
+    example_queries.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-026', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+    return jsonify(results=example_queries)
 
 @app.route('/api/explorer/story/count', methods=['POST'])
 @flask_login.login_required
