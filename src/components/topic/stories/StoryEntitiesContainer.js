@@ -27,6 +27,11 @@ class StoryEntitiesContainer extends React.Component {
       fetchData(nextProps.filters);
     }
   }
+  downloadCsv = () => {
+    const { storiesId, topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/entities.csv?timespanId=${filters.timespanId}`;
+    window.location = url;
+  }
   render() {
     const { entities, helpButton } = this.props;
     const { formatMessage } = this.props.intl;

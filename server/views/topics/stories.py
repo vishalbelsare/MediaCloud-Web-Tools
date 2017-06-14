@@ -8,6 +8,7 @@ from server import app, cliff, mc, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache
 import server.util.csv as csv
+import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
@@ -15,9 +16,7 @@ from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
-GEONAMES_TAG_SET_ID = 1011
-CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691
-
+PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
 @api_error_handler
@@ -57,12 +56,12 @@ def story(topics_id, stories_id):
         if k not in story_topic_info.keys():
             story_topic_info[k] = story_info[k]
     for tag in story_info['story_tags']:
-        if tag['tag_sets_id'] == GEONAMES_TAG_SET_ID:
+        if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
             geonames_id = int(tag['tag'][9:])
             try:
                 tag['geoname'] = _cached_geoname(geonames_id)
             except Exception as e:
-                # query to CLIFF failed :-( handle it gracefull
+                # query to CLIFF failed :-( handle it gracefully
                 logger.exception(e)
                 tag['geoname'] = {}
     return jsonify(story_topic_info)
@@ -243,12 +242,23 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
 @api_error_handler
 def story_entities(topics_id, stories_id):
     # we don't care about money, number, duration, date, misc, ordinal
-    useful_entity_types = ['PERSON', 'LOCATION', 'ORGANIZATION']
     entities = cached_entities(user_mediacloud_key(), stories_id)
     if entities is not None:
-        entities = [e for e in entities if e['type'] in useful_entity_types]
+        entities = [e for e in entities if e['type'] in PRIMARY_ENTITY_TYPES ]
     return jsonify({'list': entities})
 
+
+@app.route('/api/topics/<topics_id>/stories/<stories_id>/entities.csv', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def story_entities_csv(topics_id, stories_id):
+    # in the download include all entity types
+    entities = cached_entities(user_mediacloud_key(), stories_id)
+    if entities is None:
+        # none means not processed by corenlp, but for download just make it empty
+        entities = []
+    props = ['type', 'name', 'words']
+    return csv.stream_response(entities, props, 'story-'+str(stories_id)+'-entities')
 
 def cached_entities(user_mediacloud_key, stories_id):
     user_mc = user_mediacloud_client()
