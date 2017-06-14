@@ -40,27 +40,27 @@ def access_public_topic(topics_id):
 
 # helper for topic preview queries
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
-    query = '({})'.format(solr_seed_query)
+    query = u'({})'.format(solr_seed_query)
 
     if len(media_ids) > 0 or len(tags_ids) > 0:
-        query += " AND ("
+        query += u" AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            query_media_ids = " ".join(map(str, media_ids))
-            query_media_ids = " media_id:({})".format(query_media_ids)
-            query += '(' + query_media_ids + ')'
+            query_media_ids = u" ".join(map(str, media_ids))
+            query_media_ids = u" media_id:({})".format(query_media_ids)
+            query += u'(' + query_media_ids + u')'
 
         if len(media_ids) > 0 and len(tags_ids) > 0:
-            query += " OR "
+            query += u" OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            query_tags_ids = " ".join(map(str, tags_ids))
-            query_tags_ids = " tags_id_media:({})".format(query_tags_ids)
-            query += '(' + query_tags_ids + ')'
-        query += ')'
+            query_tags_ids = u" ".join(map(str, tags_ids))
+            query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
+            query += u'(' + query_tags_ids + u')'
+        query += u')'
 
     if start_date:
-        query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
+        query += u" AND (+" + concatenate_query_and_dates(start_date, end_date) + u")"
 
     return query
 
