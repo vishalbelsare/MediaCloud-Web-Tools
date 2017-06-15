@@ -17,11 +17,19 @@ logger = logging.getLogger(__name__)
 @app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
 def api_explorer_sample_searches():
-    example_queries = []
-    example_queries.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green' })
-    example_queries.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-026', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
-    example_queries.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-026', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
-    return jsonify(results=example_queries)
+    example_search = []
+    example_search.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green' })
+    example_search.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
+    example_search.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+    
+    example_search2 = []
+    example_search2.append({ 'id': 3, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green' })
+    example_search2.append({ 'id': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
+    example_search2.append({ 'id': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+
+    example_searches = [{'label':'example1', 'id':0, 'data': example_search} , {'label':'example2', 'id':1, 'data': example_search2 }]
+
+    return jsonify({'list': example_searches})
 
 @app.route('/api/explorer/story/count', methods=['POST'])
 @flask_login.login_required

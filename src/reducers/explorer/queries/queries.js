@@ -1,41 +1,33 @@
-import { combineReducers } from 'redux';
 // import { createReducer } from '../../../lib/reduxHelpers';
-import { FETCH_SAMPLE_SEARCHES, FETCH_SAVED_SEARCHES, UPDATE_QUERY, ADD_CUSTOM_QUERY } from '../../../actions/explorerActions';
-
-import sentenceCount from './sentenceCount';
+import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = null;
 
-
 // TODO review with RB
-function list(state = INITIAL_STATE, action) {
+function queries(state = INITIAL_STATE, action) {
   let updatedState = null;
   switch (action.type) {
-    case FETCH_SAMPLE_SEARCHES:
-      return action.payload ? action.payload.args[0] : null;
-    case FETCH_SAVED_SEARCHES:
-      return action.payload ? action.payload.args[0] : null;
     case ADD_CUSTOM_QUERY:
-      updatedState = state;
+      updatedState = [...state];
       updatedState.push(action.payload);
       return updatedState;
     case UPDATE_QUERY:
-      if (action.payload) {
-        updatedState = state;
-        let modifiedQuery = state.filter(q => q.id === action.payload.id)[0];
-        modifiedQuery = Object.assign({}, modifiedQuery, action.payload);
-        updatedState[action.payload.id] = modifiedQuery;
+      if (action.payload) { // just for safety
+        updatedState = [...state];
+        const queryIndex = state.findIndex(q => q.id === action.payload.id);
+        updatedState[queryIndex] = action.payload;
         return updatedState;
       }
       return null;
+    case SELECT_SEARCH:
+      if (action.payload) { // just for safety
+        updatedState = [...action.payload.data];
+        return updatedState;
+      }
+      return state;
     default:
       return state;
   }
 }
-
-const queries = combineReducers({
-  sentenceCount,
-  list,
-});
 
 export default queries;

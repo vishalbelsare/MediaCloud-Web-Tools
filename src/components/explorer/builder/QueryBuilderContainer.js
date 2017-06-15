@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
-import { selectQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
+import { selectQuery, updateTimestampForQueries, selectBySearchId } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -17,14 +17,18 @@ import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib
 class QueryBuilderContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { selected, setSelectedQuery } = this.props;
+    const { selected, queries, setSelectedQuery, saveSearchQueriesToStore, urlQueryString } = this.props;
     // TODO better comparison
     // if a query is clicked or if the url is edited...
     // THis is definitely not working right..
-    if (selected === null || nextProps.selected === null ||
-      selected.q !== nextProps.selected.q ||
-      selected.start_date !== nextProps.selected.start_date ||
-      selected.end_date !== nextProps.selected.end_date) {
+    if ((nextProps.urlQueryString.searchId && queries == null) ||
+      urlQueryString.searchId !== nextProps.urlQueryString.searchId) {
+      saveSearchQueriesToStore(nextProps.urlQueryString);
+    } else if ((selected === null || nextProps.selected === null) ||
+      (selected && nextProps.selected &&
+        (selected.q !== nextProps.selected.q ||
+        selected.start_date !== nextProps.selected.start_date ||
+        selected.end_date !== nextProps.selected.end_date))) {
       // if logged in, get any URL and parse it
       // if not, assume if anything is in the url, parseInt it and select it
 
@@ -74,43 +78,54 @@ QueryBuilderContainer.propTypes = {
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
+  saveSearchQueriesToStore: React.PropTypes.func.isRequired,
+  urlQueryString: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries.list,
+  queries: state.explorer.queries ? state.explorer.queries : null,
   urlQueryString: ownProps.location.query,
+  lastSearchTime: state.explorer.lastSearchTime,
+  samples: state.explorer.samples.list,
   user: state.user,
 });
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
-  setSelectedQuery: (queryType) => {
-    // const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
-
-    // if (isLoggedInUser) {
-    //  dispatch(selectQuery(queryType)); // query string - we will select the custom tab for them unless there is an id in url
-      // dispatch(fetchSavedSearches());
-    // } else {
-    dispatch(selectQuery(queryType)); // query obj
-      // dispatch(fetchExampleQueryList());
-    // }
+  setSelectedQuery: (queryObj) => {
+    dispatch(selectQuery(queryObj)); // query string - we will select the custom tab for them unless there is an id in url
+  },
+  updateQueryList: (queryObj) => {
+    dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: () => {
     dispatch(updateTimestampForQueries());
   },
 });
 
-QueryBuilderContainer.propTypes = {
-  // from context
-  intl: React.PropTypes.object.isRequired,
-};
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    saveSearchQueriesToStore: (queryObj) => {
+      const isLoggedInUser = hasPermissions(getUserRoles(stateProps.user), PERMISSION_LOGGED_IN);
+
+      if (isLoggedInUser) {
+        dispatchProps.setSelectedQuery(queryObj);
+      } else {
+        const queryList = stateProps.samples[parseInt(queryObj.searchId, 10)];
+        dispatchProps.updateQueryList(queryList);
+        // select first entry
+        dispatchProps.setSelectedQuery(queryList.data[0]);
+      }
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       QueryBuilderContainer
     )
   );

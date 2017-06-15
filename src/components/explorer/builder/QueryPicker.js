@@ -107,7 +107,7 @@ QueryPicker.propTypes = {
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
-  queries: state.explorer.queries.list,
+  queries: state.explorer.queries,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

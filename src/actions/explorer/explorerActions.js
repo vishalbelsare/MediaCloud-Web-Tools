@@ -8,6 +8,9 @@ export const updateTimestampForQueries = createAction(UPDATE_TIMESTAMP_FOR_QUERI
 export const FETCH_SAMPLE_SEARCHES = 'FETCH_SAMPLE_SEARCHES';
 export const fetchSampleSearches = createAsyncAction(FETCH_SAMPLE_SEARCHES, api.fetchSampleSearches);
 
+export const SELECT_SEARCH = 'SELECT_SEARCH';
+export const selectBySearchId = createAction(SELECT_SEARCH, searchId => searchId);
+
 
 export const FETCH_SAVED_SEARCHES = 'FETCH_SAVED_SEARCHES';
 export const fetchSavedSearches = createAsyncAction(FETCH_SAVED_SEARCHES, api.fetchSavedSearches);

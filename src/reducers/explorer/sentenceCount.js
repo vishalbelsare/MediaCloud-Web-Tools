@@ -1,6 +1,6 @@
-import { createAsyncReducer } from '../../../lib/reduxHelpers';
-import { FETCH_QUERY_SENTENCE_COUNTS } from '../../../actions/sourceActions';
-import { calcSentences, cleanDateCounts } from '../../../lib/dateUtil';
+import { createAsyncReducer } from '../../lib/reduxHelpers';
+import { FETCH_QUERY_SENTENCE_COUNTS } from '../../actions/explorerActions';
+import { calcSentences, cleanDateCounts } from '../../lib/dateUtil';
 
 const sentenceCount = createAsyncReducer({
   initialState: {

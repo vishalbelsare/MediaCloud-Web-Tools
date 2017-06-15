@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
-import SampleQueryContainer from './SampleQueryContainer';
+import SampleSearchContainer from './SampleSearchContainer';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -38,7 +38,7 @@ const Homepage = (props) => {
       </Row>
       <Row>
         <Col lg={7} xs={12}>
-          <SampleQueryContainer />
+          <SampleSearchContainer />
         </Col>
       </Row>
       {sideBarContent}
