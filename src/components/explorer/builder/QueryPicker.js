@@ -34,10 +34,11 @@ class QueryPicker extends React.Component {
 
 
   updateQuery(event) {
-    const { updateCurrentQuery } = this.props;
+    const { updateCurrentQuery, selected } = this.props;
     // const editedFieldName = event.target.name;
     const updateObject = {};
     updateObject[event.target.name] = event.target.value;
+    updateObject.id = selected.id;
     updateCurrentQuery(updateObject);
   }
 
@@ -119,6 +120,7 @@ const mapDispatchToProps = (dispatch, state) => ({
     // const infoToQuery = queries;
     if (query) {
       dispatch(updateQuery(query));
+      dispatch(selectQuery(query));
     } else {
       dispatch(updateQuery(state.selected));
     }

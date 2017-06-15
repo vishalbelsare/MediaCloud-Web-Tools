@@ -15,7 +15,14 @@ function list(state = INITIAL_STATE, action) {
     case FETCH_SAVED_SEARCHES:
       return action.payload ? action.payload.args[0] : null;
     case UPDATE_QUERY:
-      return action.payload ? { ...state, ...action.payload } : null;
+      if (action.payload) {
+        const updatedState = state;
+        let modifiedQuery = state.filter(q => q.id === action.payload.id)[0];
+        modifiedQuery = Object.assign({}, modifiedQuery, action.payload);
+        updatedState[action.payload.id] = modifiedQuery;
+        return updatedState;
+      }
+      return null;
     default:
       return state;
   }
