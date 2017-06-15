@@ -13,13 +13,14 @@ const QueryPickerItem = (props) => {
         <TextField
           id="q"
           name="q"
+          value={query.q}
           hintText={query.q}
           onChange={updateQuery}
         />
       </div>
     );
   } else {
-    nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.label}</div>;
+    nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.q}</div>;
   }
   return (
     <Card className="query-picker-item" onClick={() => selectThisQuery()}>

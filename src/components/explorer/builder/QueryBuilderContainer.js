@@ -48,7 +48,7 @@ class QueryBuilderContainer extends React.Component {
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
-          <QueryPicker selected={selected} queries={queries} isEditable={isNotLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
+          <QueryPicker isEditable={isNotLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
           <QueryResultsContainer queries={queries} />
         </div>
       );

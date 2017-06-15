@@ -5,7 +5,7 @@ import { reduxForm } from 'redux-form';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
-import { selectQuery, updateQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
 import { AddButton } from '../../common/IconButton';
 
 const localMessages = {
@@ -20,15 +20,15 @@ const localMessages = {
 class QueryPicker extends React.Component {
 
   addACustomQuery(newQueryObj) {
-    const { setSelectedQuery } = this.props;
-    setSelectedQuery(newQueryObj);
+    const { addAQuery } = this.props;
+    addAQuery(newQueryObj);
   }
 
   updateQueryFromEditablePicker(event) {
-    const { updateCurrentQuery } = this.props;
+    const { updateCurrentQuery, selected } = this.props;
     const updateObject = {};
     updateObject[event.target.name] = event.target.value;
-    // name or color has changed,
+    updateObject.id = selected.id;
     updateCurrentQuery(updateObject);
   }
 
@@ -60,7 +60,7 @@ class QueryPicker extends React.Component {
           />
         </div>
       ));
-      const customEmptyQuery = { id: queries.length, label: 'enter query', q: '{}', description: 'empty query', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
+      const customEmptyQuery = { id: queries.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
 
       const addEmptyQuerySlide = (
         <AddButton
@@ -102,10 +102,12 @@ QueryPicker.propTypes = {
   handleSearch: React.PropTypes.func.isRequired,
   formData: React.PropTypes.object,
   updateCurrentQuery: React.PropTypes.func.isRequired,
+  addAQuery: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
+  queries: state.explorer.queries.list,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 
@@ -120,9 +122,16 @@ const mapDispatchToProps = (dispatch, state) => ({
     // const infoToQuery = queries;
     if (query) {
       dispatch(updateQuery(query));
-      dispatch(selectQuery(query));
+      // now we need to update selected b/c why? to reflect the change in name from picker to form or back...
+      // dispatch(selectQuery(state.selected));
     } else {
       dispatch(updateQuery(state.selected));
+    }
+  },
+  addAQuery: (query) => {
+    if (query) {
+      dispatch(addCustomQuery(query));
+      dispatch(selectQuery(query));
     }
   },
 });
