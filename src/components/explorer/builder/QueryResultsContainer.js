@@ -10,7 +10,7 @@ const localMessages = {
 };
 
 const QueryResultsContainer = (props) => {
-  const { queries } = props;
+  const { queries, user, params, samples } = props;
   // const filename = `AttentionComparisonContainer-query-results`;
 
   return (
@@ -20,7 +20,7 @@ const QueryResultsContainer = (props) => {
       </h2>
       <Row>
         <Col lg={6} xs={12}>
-          <AttentionComparisonContainer queries={queries} />
+          <AttentionComparisonContainer queries={queries} user={user} params={params} sampleSearches={samples} />
         </Col>
       </Row>
     </div>
@@ -34,7 +34,8 @@ QueryResultsContainer.propTypes = {
   // from context
   params: React.PropTypes.object,       // params from router
   // from state
-  lastSearchTime: React.PropTypes.array,
+  lastSearchTime: React.PropTypes.object,
+  samples: React.PropTypes.array,
   user: React.PropTypes.object,
 };
 

@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { fetchQuerySentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts } from '../../../actions/explorerActions';
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -11,6 +11,8 @@ import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
+import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { cleanDateCounts } from '../../../lib/dateUtil';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
@@ -35,16 +37,18 @@ function dataAsSeries(data) {
 
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { selected, fetchData } = this.props;
-    if (nextProps.selected !== selected) {
-      fetchData(nextProps.selected);
+    const { urlQueryString, lastSearchTime, fetchData } = this.props;
+    if (nextProps.lastSearchTime !== lastSearchTime ||
+      nextProps.urlQueryString.searchId !== urlQueryString.searchId) {
+    // TODO also check for name and color changes
+      fetchData(nextProps.urlQueryString.searchId);
     }
   }
   render() {
-    const { results, overallTotal, overallCounts } = this.props;
+    const { results } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     // stich together bubble chart data
-    // TODO check something like overallCount >= results.length so we wait until we get fetch all the data
+
     let bubbleData = [];
     if (results !== undefined && results.length > 0) {
       bubbleData = [
@@ -54,21 +58,14 @@ class AttentionComparisonContainer extends React.Component {
           rolloverText: `${focus.name}: ${formatNumber(focus.total)}`,
           fill: COLORS[idx + 1],
         })),
-        {
-          value: overallTotal,
-          centerText: formatMessage(localMessages.overallSeries),
-          rolloverText: `${formatMessage(localMessages.overallSeries)}: ${formatNumber(overallTotal)}`,
-          fill: COLORS[0],
-        },
       ];
     }
     // stich together line chart data
-    const overallData = dataAsSeries(overallCounts);      // now add a series for the whole thing
     let series = [];
     if (results !== undefined) {
       series = [
         ...results.map((query, idx) => {    // add series for all the results
-          const data = dataAsSeries(results.counts);
+          const data = dataAsSeries(cleanDateCounts(query.split));
           return {
             id: idx,
             name: query.name,
@@ -78,14 +75,6 @@ class AttentionComparisonContainer extends React.Component {
             color: COLORS[idx + 1],
           };
         }),
-        {
-          id: 9999,
-          name: formatMessage(localMessages.overallSeries),
-          data: overallData.values,
-          pointStart: overallData.start,
-          pointInterval: overallData.intervalMs,
-          color: COLORS[0],
-        },
       ];
     }
     return (
@@ -123,35 +112,40 @@ class AttentionComparisonContainer extends React.Component {
 
 AttentionComparisonContainer.propTypes = {
   // from parent
-  selected: React.PropTypes.object.isRequired,
+  lastSearchTime: React.PropTypes.object.isRequired,
   queries: React.PropTypes.array.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
+  urlQueryString: React.PropTypes.object.isRequired,
+  sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  overallTotal: React.PropTypes.number.isRequired,
+  overallTotal: React.PropTypes.array.isRequired,
   overallCounts: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = () => ({
-  /* fetchStatus: state.explorer.queries.sentenceCount.fetchStatus,
-  overallTotal: state.explorer.queries.list[0].sentenceCount.total,
-  overallCounts: state.explorer.queries.list[0].sentenceCount.counts,*/
+const mapStateToProps = (state, ownProps) => ({
+  lastSearchTime: state.explorer.lastSearchTime.time,
+  user: state.user,
+  urlQueryString: ownProps.params,
+  fetchStatus: state.explorer.sentenceCount.fetchStatus,
+  results: state.explorer.sentenceCount.results,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (query, index) => {
+  fetchData: (query, idx) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // at this point, we assume any changes to queries from QueryForm has been integrated
 
+    const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
 
-    /* const infoToQuery = {
+    if (isLoggedInUser) {
+      /* const infoToQuery = {
       start_date: query.start_date,
       end_date: query.end_date,
       solr_seed_query: query.q,
@@ -165,10 +159,21 @@ const mapDispatchToProps = (dispatch, state) => ({
       infoToQuery['collections[]'] = '';
     }
     */
-    if (index) { // specific change/update here
-      dispatch(fetchQuerySentenceCounts(query, index));
-    } else { // get all results
-      state.queries.map((q, idx) => dispatch(fetchQuerySentenceCounts(q, idx)));
+      if (idx) { // specific change/update here
+        dispatch(fetchQuerySentenceCounts(query, idx));
+      } else { // get all results
+        state.queries.map((q, index) => dispatch(fetchQuerySentenceCounts(q, index)));
+      }
+    } else if (state.params && state.params.searchId) { // else assume DEMO mode
+      const runTheseQueries = state.sampleSearches[state.params.searchId].data;
+      runTheseQueries.map((q, index) => {
+        const demoInfo = {
+          index,
+          search_id: state.params.searchId, // may or may not have these
+          query_id: q.id,
+        };
+        return dispatch(fetchDemoQuerySentenceCounts(demoInfo)); // id
+      });
     }
   },
 });

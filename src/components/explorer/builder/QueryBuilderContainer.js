@@ -43,7 +43,7 @@ class QueryBuilderContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, handleSearch, user } = this.props;
+    const { selected, queries, setSelectedQuery, handleSearch, user, urlQueryString, samples } = this.props;
     // const { formatMessage } = this.props.intl;
     const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
     let content = <div>Error</div>;
@@ -53,7 +53,7 @@ class QueryBuilderContainer extends React.Component {
       content = (
         <div>
           <QueryPicker isEditable={isNotLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
-          <QueryResultsContainer queries={queries} />
+          <QueryResultsContainer queries={queries} params={urlQueryString} samples={samples} />
         </div>
       );
     }
@@ -75,6 +75,7 @@ QueryBuilderContainer.propTypes = {
   user: React.PropTypes.object.isRequired,
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
+  samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
