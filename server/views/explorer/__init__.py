@@ -13,6 +13,19 @@ logger = logging.getLogger(__name__)
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
+SAMPLE_SEARCH_1 = []
+SAMPLE_SEARCH_1.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green' })
+SAMPLE_SEARCH_1.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
+SAMPLE_SEARCH_1.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+
+SAMPLE_SEARCH_2 = []
+SAMPLE_SEARCH_2.append({ 'id': 3, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green' })
+SAMPLE_SEARCH_2.append({ 'id': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
+SAMPLE_SEARCH_2.append({ 'id': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+
+SAMPLE_SEARCHES = [{'label':'example1', 'id':0, 'data': SAMPLE_SEARCH_1} , {'label':'example2', 'id':1, 'data': SAMPLE_SEARCH_2 }]
+
+
 # TODO maybe move all of this up
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
@@ -45,28 +58,28 @@ def solr_query_from_request(request):
 
 # helper for topic preview queries -- TODO move up
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
-    query = '({})'.format(solr_seed_query)
+    query = u'({})'.format(solr_seed_query)
 
     if len(media_ids) > 0 or len(tags_ids) > 0:
         query += " AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            query_media_ids = " ".join(map(str, media_ids))
-            query_media_ids = " media_id:({})".format(query_media_ids)
+            query_media_ids = u" ".join(map(str, media_ids))
+            query_media_ids = u" media_id:({})".format(query_media_ids)
             query += '('+query_media_ids+')'
 
         if len(media_ids) > 0 and len(tags_ids) > 0:
             query += " OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            query_tags_ids = " ".join(map(str, tags_ids))
-            query_tags_ids = " tags_id_media:({})".format(query_tags_ids)
-            query += '('+query_tags_ids+')'
+            query_tags_ids = u" ".join(map(str, tags_ids))
+            query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
+            query += u'('+query_tags_ids+')'
         query += ')'
 
     if start_date:
-        start_date = '{}'.format(start_date)
-        end_date = '{}'.format(end_date)
+        start_date = u'{}'.format(start_date)
+        end_date = u'{}'.format(end_date)
         query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
     
     return query

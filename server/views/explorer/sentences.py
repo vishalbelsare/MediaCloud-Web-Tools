@@ -5,7 +5,7 @@ import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request 
+from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES 
 
 # load the shared settings file
 
@@ -25,14 +25,14 @@ def api_explorer_sentences_count():
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count', methods=['GET'])
-@flask_login.login_required
-@arguments_required('id')
+@arguments_required('search_id', 'query_id')
 @api_error_handler
 def api_explorer_demo_sentences_count():
-    user_mc = user_mediacloud_client()
     # TODO get query from id
     solr_query = ''
-    sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.form['start_date'], split_end_date=request.form['end_date'], split=True)
+    current_search = SAMPLE_SEARCHES[int(request.args['search_id'])]['data']
+    current_query = current_search[int(request.args['query_id'])]
+    sentence_count_result = mc.sentenceCount(solr_query=current_query['q'], split_start_date=current_query['start_date'], split_end_date=current_query['end_date'], split=True)
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count/csv', methods=['GET'])
