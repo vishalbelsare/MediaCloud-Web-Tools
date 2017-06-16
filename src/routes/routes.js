@@ -1,17 +1,23 @@
-import { hasCookies } from '../lib/auth';
+import store from '../store';
+
+function isLoggedIn() {
+  return !store.getState().user.isLoggedIn;
+}
 
 // We need to restrict some routes to only users that are logged in
 export function requireAuth(nextState, replace) {
-  if (!hasCookies()) {
+  if (!isLoggedIn()) {
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname },
     });
+    return false;
   }
+  return true;
 }
 
 export function redirectHomeIfLoggedIn(nextState, replace) {
-  if (hasCookies()) {
+  if (isLoggedIn()) {
     replace({ pathname: '/home' });
     return true;
   }

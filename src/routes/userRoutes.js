@@ -18,7 +18,7 @@ import ResendActivationForm from '../components/user/ResendActivationForm';
 const userRoutes = (
   <Route path="/user" >
 
-    <Route path="/login" component={LoginFormContainer} onEnter={redirectHomeIfLoggedIn} />
+    <Route path="/login" component={LoginFormContainer} />
 
     <Route path="profile" component={UserProfileContainer} onEnter={requireAuth} />
 

@@ -189,7 +189,8 @@ export function errorReportingMiddleware({ dispatch }) {
       if ('status' in action.payload) {
         if (action.payload.status === 401) {
           // unauthorized - ie. needs to login so delete cookies by going to logout
-          if (action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') { // unless they are trying to login (cause that would be dumb)
+          if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)
+            console.log(`action failed ${action.type}`);
             logout();
           }
           message = action.payload.message;
