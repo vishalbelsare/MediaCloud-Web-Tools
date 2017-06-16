@@ -13,4 +13,9 @@ export function fetchQuerySentenceCounts(params) {
   return createApiPromise('/api/explorer/sentences/count', acceptedParams);
 }
 
+export function fetchDemoQuerySentenceCounts(params) {
+  const acceptedParams = acceptParams(params, ['search_id', 'query_id']);
+  return createApiPromise('/api/explorer/demo/sentences/count', acceptedParams);
+}
+
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

@@ -30,3 +30,6 @@ export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQuer
 
 export const FETCH_QUERY_SENTENCE_COUNTS = 'FETCH_QUERY_SENTENCE_COUNTS';
 export const fetchQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchQuerySentenceCounts, params => params);
+
+export const FETCH_DEMO_QUERY_SENTENCE_COUNTS = 'FETCH_DEMO_QUERY_SENTENCE_COUNTS';
+export const fetchDemoQuerySentenceCounts = createAsyncAction(FETCH_DEMO_QUERY_SENTENCE_COUNTS, api.fetchDemoQuerySentenceCounts, params => params);
