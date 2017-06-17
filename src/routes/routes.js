@@ -1,7 +1,8 @@
 import store from '../store';
 
 function isLoggedIn() {
-  return !store.getState().user.isLoggedIn;
+  const state = store.getState();
+  return state.user.isLoggedIn === true;
 }
 
 // We need to restrict some routes to only users that are logged in
