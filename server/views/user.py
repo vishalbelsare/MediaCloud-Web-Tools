@@ -49,7 +49,7 @@ def permissions_for_user():
 
 
 @app.route('/api/user/signup', methods=['POST'])
-@form_fields_required('email', 'password', 'fullName', 'notes', 'subscribeToNewsletter')
+@form_fields_required('email', 'password', 'fullName', 'notes')
 @api_error_handler 
 def signup():
     logger.debug("reg request from %s", request.form['email'])
