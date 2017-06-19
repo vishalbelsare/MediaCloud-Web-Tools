@@ -190,14 +190,15 @@ export function errorReportingMiddleware({ dispatch }) {
         if (action.payload.status === 401) {
           // unauthorized - ie. needs to login so delete cookies by going to logout
           if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)
-            console.log(`action failed ${action.type}`);
+            message = action.payload.message;
             logout();
           }
-          message = action.payload.message;
         } else if (action.payload.status !== 200) {
-          message = 'Sorry, we had an error';
-          if ('message' in action.payload) {
-            message = action.payload.message;
+          if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)
+            message = 'Sorry, we had an error';
+            if ('message' in action.payload) {
+              message = action.payload.message;
+            }
           }
         }
       }

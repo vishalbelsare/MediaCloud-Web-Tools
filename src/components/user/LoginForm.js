@@ -11,6 +11,8 @@ import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { emptyString, invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
+import { addNotice } from '../../actions/appActions';
+import { LEVEL_ERROR } from '../common/Notice';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
@@ -18,6 +20,7 @@ const localMessages = {
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now!' },
   forgotPassword: { id: 'user.forgotPassword', defaultMessage: 'Forgot Your Password?' },
+  needsToActivate: { id: 'user.needsToActivate', defaultMessage: 'You still need to activate your account. Check out email and click the link we sent you, or <a href="/#/user/resend-activation">send the link again</a> if you didn\'t get it.' },
 };
 
 const LoginFormComponent = (props) => {
@@ -99,7 +102,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
     dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
-      // error reporting is handled by error reporting middleware, so you only need to handle success here
       if (response.status === 200) {
         // redirect to destination if there is one
         const loc = ownProps.location;
@@ -112,6 +114,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (redirect) {
           dispatch(push(redirect));
         }
+      } else if (response.message.includes('is not active')) {
+        // user has signed up, but not activated their account
+        dispatch(addNotice({ htmlMessage: ownProps.intl.formatMessage(localMessages.needsToActivate), level: LEVEL_ERROR }));
+      } else {
+        dispatch(addNotice({ message: localMessages.loginFailed, level: LEVEL_ERROR }));
       }
     });
   },
