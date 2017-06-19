@@ -53,7 +53,9 @@ def permissions_for_user():
 @api_error_handler 
 def signup():
     logger.debug("reg request from %s", request.form['email'])
-    subscribe_to_newsletter = 1 if request.form['subscribeToNewsletter'] == 'true' else 0
+    subscribe_to_newsletter = 0
+    if ('subscribeToNewsletter' in request.form) and (request.form['subscribeToNewsletter'] == 'true'):
+        subscribe_to_newsletter = 1
     results = mc.authRegister(request.form['email'],
                               request.form['password'],
                               request.form['fullName'],
