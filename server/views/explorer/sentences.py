@@ -5,8 +5,8 @@ import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES 
-
+from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES, parse_query_with_args_and_sample_search 
+import datetime
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -25,14 +25,24 @@ def api_explorer_sentences_count():
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count', methods=['GET'])
-@arguments_required('search_id', 'query_id')
+# TODO check this - we may not have either of these if a user custom query @arguments_required('search_id', 'query_id')
 @api_error_handler
 def api_explorer_demo_sentences_count():
-    # TODO get query from id
-    solr_query = ''
+
     current_search = SAMPLE_SEARCHES[int(request.args['search_id'])]['data']
-    current_query = current_search[int(request.args['query_id'])]
-    sentence_count_result = mc.sentenceCount(solr_query=current_query['q'], split_start_date=current_query['start_date'], split_end_date=current_query['end_date'], split=True)
+    index = int(request.args['index']) if 'index' in request.args else None
+
+    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+
+    if index < len(current_search): 
+        start_date = current_search[index]['start_date']
+        end_date = current_search[index]['end_date']
+
+    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date, split_end_date=end_date, split=True)
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count/csv', methods=['GET'])

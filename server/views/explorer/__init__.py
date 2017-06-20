@@ -14,14 +14,20 @@ SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
 SAMPLE_SEARCH_1 = []
-SAMPLE_SEARCH_1.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green' })
-SAMPLE_SEARCH_1.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
-SAMPLE_SEARCH_1.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+SAMPLE_SEARCH_1.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections[]": [5],
+        "sources[]": [1, 342] })
+SAMPLE_SEARCH_1.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [5],
+        "sources[]": [1, 342] })
+SAMPLE_SEARCH_1.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [5],
+        "sources[]": [1, 342] })
 
 SAMPLE_SEARCH_2 = []
-SAMPLE_SEARCH_2.append({ 'id': 3, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green' })
-SAMPLE_SEARCH_2.append({ 'id': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue' })
-SAMPLE_SEARCH_2.append({ 'id': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red' })
+SAMPLE_SEARCH_2.append({ 'id': 3, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections[]": [5],
+        "sources[]": [1, 342] })
+SAMPLE_SEARCH_2.append({ 'id': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [5],
+        "sources[]": [1, 342] })
+SAMPLE_SEARCH_2.append({ 'id': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [5],
+        "sources[]": [1, 342] })
 
 SAMPLE_SEARCHES = [{'label':'example1', 'id':0, 'data': SAMPLE_SEARCH_1} , {'label':'example2', 'id':1, 'data': SAMPLE_SEARCH_2 }]
 
@@ -95,3 +101,41 @@ def concatenate_query_and_dates(start_date, end_date):
                                               True, True)
 
     return publish_date
+
+def parse_query_with_args_and_sample_search(args, current_search) :
+
+    solr_query = ''
+
+    # default dates
+    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    current_query = ''
+    try:
+        index = int(args['index'])
+        query_id = int(args['query_id']) # not using this now, but we could use this as an extra check
+        current_query = current_search[index]['q']
+        start_date = current_search[index]['start_date']
+        end_date = current_search[index]['end_date']
+        media_ids = current_search[index]['sources[]']
+        tags_ids = current_search[index]['collections[]']
+
+        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
+            start_date= start_date,
+            end_date=end_date,
+            media_ids=media_ids,
+            tags_ids=tags_ids)
+
+
+    # we dont have a query_id. Do we have a q param?
+    except Exception as e:
+        logger.warn("Demo user is querying for a keyword with stories: " + str(e))
+        current_query = args['q']
+        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
+            start_date= start_date,
+            end_date=end_date,
+            media_ids=[1, 342],
+            tags_ids=[5])
+
+    return solr_query

@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import AttentionComparisonContainer from './AttentionComparisonContainer';
+import StorySamplePreview from './StorySamplePreview';
 // import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
@@ -19,8 +20,11 @@ const QueryResultsContainer = (props) => {
         <FormattedMessage {...localMessages.queryResultsTitle} />
       </h2>
       <Row>
-        <Col lg={6} xs={12}>
+        <Col lg={12} xs={12}>
           <AttentionComparisonContainer queries={queries} user={user} params={params} sampleSearches={samples} />
+        </Col>
+        <Col lg={12} xs={12}>
+          <StorySamplePreview queries={queries} user={user} params={params} sampleSearches={samples} />
         </Col>
       </Row>
     </div>

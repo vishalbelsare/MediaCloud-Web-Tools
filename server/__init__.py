@@ -179,3 +179,4 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
 if (server_app == SERVER_APP_EXPLORER) or isDevMode():
     import server.views.explorer.explorer_query
     import server.views.explorer.sentences
+    import server.views.explorer.stories
