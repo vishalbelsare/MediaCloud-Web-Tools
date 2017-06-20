@@ -45,14 +45,14 @@ class QueryBuilderContainer extends React.Component {
   render() {
     const { selected, queries, setSelectedQuery, handleSearch, user, urlQueryString, samples } = this.props;
     // const { formatMessage } = this.props.intl;
-    const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
+    const isLoggedInUser = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     let content = <div>Error</div>;
 
     // TODO problem with initialValues not updating wr to selected value...
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
-          <QueryPicker isEditable={isNotLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
+          <QueryPicker isEditable={isLoggedInUser} onClick={setSelectedQuery} handleSearch={handleSearch} />
           <QueryResultsContainer queries={queries} params={urlQueryString} samples={samples} />
         </div>
       );
@@ -97,7 +97,7 @@ const mapStateToProps = (state, ownProps) => ({
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (queryObj) => {
-    dispatch(selectQuery(queryObj)); // query string - we will select the custom tab for them unless there is an id in url
+    dispatch(selectQuery(queryObj));
   },
   updateQueryList: (queryObj) => {
     dispatch(selectBySearchId(queryObj)); // query obj or search id?

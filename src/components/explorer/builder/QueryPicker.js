@@ -29,6 +29,7 @@ class QueryPicker extends React.Component {
     const updateObject = {};
     updateObject[event.target.name] = event.target.value;
     updateObject.id = selected.id;
+    updateObject.index = selected.index;
     updateCurrentQuery(updateObject);
   }
 
@@ -39,6 +40,7 @@ class QueryPicker extends React.Component {
     const updateObject = {};
     updateObject[event.target.name] = event.target.value;
     updateObject.id = selected.id;
+    updateObject.index = selected.index;
     updateCurrentQuery(updateObject);
   }
 
@@ -50,17 +52,18 @@ class QueryPicker extends React.Component {
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected) {
       fixedQuerySlides = queries.map((query, index) => (
-        <div key={index} className={selected.id === query.id ? 'query-picker-item-selected' : ''}>
+        <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
             query={query}
             selected={selected}
-            isEditable={isEditable}
+            isEditable={query.custom ? true : isEditable}
             selectThisQuery={() => setSelectedQuery(query, index)}
             updateQuery={q => this.updateQueryFromEditablePicker(q)}
           />
         </div>
       ));
-      const customEmptyQuery = { id: queries.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
+      // note: no id here
+      const customEmptyQuery = { index: queries.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
 
       const addEmptyQuerySlide = (
         <AddButton
@@ -113,10 +116,11 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = (dispatch, state) => ({
-  setSelectedQuery: (query) => {
+  setSelectedQuery: (query, index) => {
     // if anything changed? but I think this is taken cre of
     // dispatch(updateQuery(state.selected));
-    dispatch(selectQuery(query));
+    const queryWithIndex = Object.assign({}, query, { index });
+    dispatch(selectQuery(queryWithIndex));
   },
   updateCurrentQuery: (query) => {
     // const infoToQuery = queries;
