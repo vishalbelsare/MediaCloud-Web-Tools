@@ -148,7 +148,7 @@ export function topicEnglishStoryCounts(topicId, params) {
 }
 
 export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'q']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);
 }
 

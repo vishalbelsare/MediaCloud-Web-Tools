@@ -31,6 +31,7 @@ const FocusSetSelectorContainer = (props) => {
         <SelectField
           value={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : focalSets[0].focal_sets_id}
           onChange={onFocalSetSelected}
+          fullWidth
         >
           {focalSets.map(fs =>
             <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
