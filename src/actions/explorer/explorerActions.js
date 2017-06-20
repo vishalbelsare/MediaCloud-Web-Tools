@@ -34,8 +34,8 @@ export const fetchQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_C
 export const FETCH_DEMO_QUERY_SENTENCE_COUNTS = 'FETCH_DEMO_QUERY_SENTENCE_COUNTS';
 export const fetchDemoQuerySentenceCounts = createAsyncAction(FETCH_DEMO_QUERY_SENTENCE_COUNTS, api.fetchDemoQuerySentenceCounts, params => params);
 
-export const FETCH_DEMO_QUERY_TOP_STORIES = 'FETCH_DEMO_QUERY_TOP_STORIES';
-export const fetchDemoQueryTopStories = createAsyncAction(FETCH_DEMO_QUERY_TOP_STORIES, api.fetchDemoQueryTopStories, params => params);
+export const FETCH_DEMO_QUERY_SAMPLE_STORIES = 'FETCH_DEMO_QUERY_SAMPLE_STORIES';
+export const fetchDemoQuerySampleStories = createAsyncAction(FETCH_DEMO_QUERY_SAMPLE_STORIES, api.fetchDemoQuerySampleStories, params => params);
 
 export const FETCH_DEMO_QUERY_STORY_COUNT = 'FETCH_DEMO_QUERY_STORY_COUNT';
 export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_DEMO_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);

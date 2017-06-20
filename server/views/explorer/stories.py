@@ -22,12 +22,13 @@ def api_explorer_demo_story_sample():
     return jsonify(story_count_result)  
 
 
+@app.route('/api/explorer/demo/story/count', methods=['GET'])
 @api_error_handler
 def api_explorer_demo_story_count():
     current_search = SAMPLE_SEARCHES[int(request.args['search_id'])]['data']
 
     solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
     
-    story_count_result = user_mc.storyCount(solr_query=solr_query)
+    story_count_result = mc.storyCount(solr_query=solr_query)
     # maybe check admin role before we run this?
     return jsonify(story_count_result)  # give them back new data, so they can update the client

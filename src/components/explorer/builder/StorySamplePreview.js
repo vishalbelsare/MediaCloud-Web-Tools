@@ -5,7 +5,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryTable from '../../common/StoryTable';
-import { fetchQueryTopStories, fetchDemoQueryTopStories } from '../../../actions/explorerActions';
+import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -88,9 +88,9 @@ const mapDispatchToProps = (dispatch, state) => ({
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     if (isLoggedInUser) {
       if (idx) { // specific change/update here
-        dispatch(fetchQueryTopStories(query, idx));
+        dispatch(fetchQuerySampleStories(query, idx));
       } else { // get all results
-        state.queries.map((q, index) => dispatch(fetchQueryTopStories(q, index)));
+        state.queries.map((q, index) => dispatch(fetchQuerySampleStories(q, index)));
       }
     } else if (state.params && state.params.searchId) { // else assume DEMO mode
       let runTheseQueries = state.sampleSearches[state.params.searchId].data;
@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch, state) => ({
           query_id: q.id, // TODO if undefined, what to do?
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchDemoQueryTopStories(demoInfo)); // id
+        return dispatch(fetchDemoQuerySampleStories(demoInfo)); // id
       });
     }
   },

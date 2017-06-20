@@ -9,13 +9,23 @@ export function fetchSavedSearches() {
 }
 
 export function fetchQuerySentenceCounts(params) {
-  const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date']);
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date']);
   return createApiPromise('/api/explorer/sentences/count', acceptedParams);
 }
 
 export function fetchDemoQuerySentenceCounts(params) {
-  const acceptedParams = acceptParams(params, ['search_id', 'query_id']);
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/sentences/count', acceptedParams);
+}
+
+export function fetchDemoQuerySampleStories(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
+}
+
+export function fetchDemoQueryStoryCount(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/story/count', acceptedParams);
 }
 
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error
