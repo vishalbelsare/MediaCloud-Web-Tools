@@ -1,14 +1,21 @@
 import React from 'react';
+import Link from 'react-router/lib/Link';
 import FavoriteToggler from '../FavoriteToggler';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 
 const AppSubHeader = (props) => {
-  const { title, isFavorite, onSetFavorited, subTitle } = props;
+  const { link, title, isFavorite, onSetFavorited, subTitle } = props;
+  let titleContent;
+  if (link) {
+    titleContent = (<Link to={link}>{title}</Link>);
+  } else {
+    titleContent = title;
+  }
   return (
     <div className="app-sub-header" >
       <h1>
-        {title}
+        {titleContent}
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <FavoriteToggler
             isFavorited={isFavorite}
@@ -27,6 +34,10 @@ AppSubHeader.propTypes = {
   isFavorite: React.PropTypes.bool,
   onSetFavorited: React.PropTypes.func,
   subTitle: React.PropTypes.string,
+  link: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.object,
+  ]),
 };
 
 export default AppSubHeader;
