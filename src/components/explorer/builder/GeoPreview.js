@@ -1,11 +1,10 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
+import { GridList, GridTile } from 'material-ui/GridList';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import GeoChart from '../../vis/GeoChart';
-import DataCard from '../../common/DataCard';
 import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
 
 import messages from '../../../resources/messages';
@@ -50,18 +49,22 @@ class GeoPreview extends React.Component {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
     return (
-      <Grid>
+      <GridList
+        style={{ width: 1000, height: 1000, overflowY: 'auto' }}
+        className="geo-mini-cards"
+        cellHeight={400}
+      >
         {results.map((geoSet, idx) =>
-          (<DataCard>
+          (<GridTile>
             <div className="actions">
               <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
             </div>
             <h3>{queries[idx].label}</h3>
             <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
-          </DataCard>
+          </GridTile>
           )
         )}
-      </Grid>
+      </GridList>
     );
   }
 
