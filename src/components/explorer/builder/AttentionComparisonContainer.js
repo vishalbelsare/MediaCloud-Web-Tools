@@ -7,7 +7,6 @@ import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts } from '../../..
 import { asyncContainerize } from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
-import PackedBubbleChart from '../../vis/PackedBubbleChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
@@ -22,8 +21,6 @@ const localMessages = {
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 const COLORS = d3.schemeCategory10;
-const BUBBLE_CHART_DOM_ID = 'total-attention-bubble-chart';
-const TOP_N_LABELS_TO_SHOW = 3; // only the top N bubbles will get a label visible on them (so the text is readable)
 
 function dataAsSeries(data) {
   // clean up the data
@@ -45,30 +42,22 @@ class AttentionComparisonContainer extends React.Component {
     }
   }
   render() {
-    const { results } = this.props;
-    const { formatMessage, formatNumber } = this.props.intl;
+    const { results, queries } = this.props;
+    const { formatMessage } = this.props.intl;
     // stich together bubble chart data
 
-    let bubbleData = [];
-    if (results !== undefined && results.length > 0) {
-      bubbleData = [
-        ...results.sort((a, b) => b.total - a.total).map((focus, idx) => ({
-          value: focus.total,
-          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? focus.name : null,
-          rolloverText: `${focus.name}: ${formatNumber(focus.total)}`,
-          fill: COLORS[idx + 1],
-        })),
-      ];
-    }
+    // because these results are indexed, we can merge these two arrays
+    const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
+
     // stich together line chart data
     let series = [];
-    if (results !== undefined) {
+    if (mergedResultsWithQueryInfo !== undefined) {
       series = [
-        ...results.map((query, idx) => {    // add series for all the results
+        ...mergedResultsWithQueryInfo.map((query, idx) => {    // add series for all the results
           const data = dataAsSeries(cleanDateCounts(query.split));
           return {
             id: idx,
-            name: query.name,
+            name: query.q,
             data: data.values,
             pointStart: data.start,
             pointInterval: data.intervalMs,
@@ -82,26 +71,14 @@ class AttentionComparisonContainer extends React.Component {
         <Row>
           <Col lg={12}>
             <DataCard>
-              <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
-              <AttentionOverTimeChart series={series} height={300} />
-            </DataCard>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6} xs={12}>
-            <DataCard>
               <div className="actions">
                 <DownloadButton
                   tooltip={formatMessage(messages.download)}
-                  onClick={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
+                  onClick={() => downloadSvg()}
                 />
               </div>
-              <h2><FormattedMessage {...localMessages.bubbleChartTitle} /></h2>
-              <PackedBubbleChart
-                data={bubbleData}
-                height={400}
-                domId={BUBBLE_CHART_DOM_ID}
-              />
+              <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
+              <AttentionOverTimeChart series={series} height={300} />
             </DataCard>
           </Col>
         </Row>
@@ -112,7 +89,7 @@ class AttentionComparisonContainer extends React.Component {
 
 AttentionComparisonContainer.propTypes = {
   // from parent
-  lastSearchTime: React.PropTypes.object.isRequired,
+  lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
@@ -125,8 +102,6 @@ AttentionComparisonContainer.propTypes = {
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
-  overallTotal: React.PropTypes.array.isRequired,
-  overallCounts: React.PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -165,12 +140,18 @@ const mapDispatchToProps = (dispatch, state) => ({
         state.queries.map((q, index) => dispatch(fetchQuerySentenceCounts(q, index)));
       }
     } else if (state.params && state.params.searchId) { // else assume DEMO mode
-      const runTheseQueries = state.sampleSearches[state.params.searchId].data;
+      let runTheseQueries = state.sampleSearches[state.params.searchId].data;
+      // merge sample search queries with custom
+
+      // find queries on stack without id but with index and with q, and add?
+      const newQueries = state.queries.filter(q => q.id === undefined && q.index);
+      runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
-          index,
+          index, // should be same as q.index btw
           search_id: state.params.searchId, // may or may not have these
-          query_id: q.id,
+          query_id: q.id, // TODO if undefined, what to do?
+          q: q.q, // only if no query id, means demo user added a keyword
         };
         return dispatch(fetchDemoQuerySentenceCounts(demoInfo)); // id
       });
