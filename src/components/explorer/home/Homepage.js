@@ -37,7 +37,7 @@ const Homepage = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={7} xs={12}>
+        <Col lg={12} xs={12}>
           <SampleSearchContainer />
         </Col>
       </Row>
