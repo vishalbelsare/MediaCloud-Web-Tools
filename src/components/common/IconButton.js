@@ -15,6 +15,7 @@ import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
 import EditIcon from './icons/EditIcon';
+import HomeIcon from './icons/HomeIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
@@ -59,7 +60,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       } else if (useBackgroundColor === true) {
         otherProps.backgroundColor = this.state.backgroundColor;
       }
-      const button = (
+      const icon = (
         <IconButton
           tooltip={displayTooltip}
           iconStyle={iconStyle || {}}
@@ -69,18 +70,35 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           <Icon color={color} {...otherProps} />
         </IconButton>
       );
-      const content = (
-        <Link
-          to={linkTarget}
-          onTouchTap={clickHandler}
-          className="icon-button-link"
-          name={displayTooltip}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
-        >
-          {button}
-        </Link>
-      );
+      let content;
+      if (linkTarget) { // allow using an iconbutton without the link (in case it is inside an href already)
+        content = (
+          <Link
+            to={linkTarget}
+            onTouchTap={clickHandler}
+            className="icon-button-link"
+            name={displayTooltip}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
+          >
+            {icon}
+          </Link>
+        );
+      } else if (clickHandler) {
+        content = (
+          <Link
+            onTouchTap={clickHandler}
+            className="icon-button-link"
+            name={displayTooltip}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
+          >
+            {icon}
+          </Link>
+        );
+      } else {
+        content = icon;
+      }
       return (
         <div className="icon-button">
           {content}
@@ -142,3 +160,5 @@ export const ResetButton = composeIconButton(ResetIcon, messages.reset);
 export const FilterButton = composeIconButton(FilterIcon, messages.filter, false, 45, 45);
 
 export const SaveButton = composeIconButton(SaveIcon, messages.save);
+
+export const HomeButton = composeIconButton(HomeIcon, messages.home);
