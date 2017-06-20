@@ -28,4 +28,9 @@ export function fetchDemoQueryStoryCount(params) {
   return createApiPromise('/api/explorer/demo/story/count', acceptedParams);
 }
 
+export function fetchDemoQueryGeo(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('api/explorer/demo/geo-tags/counts', acceptedParams);
+}
+
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

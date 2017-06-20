@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import AttentionComparisonContainer from './AttentionComparisonContainer';
 import StorySamplePreview from './StorySamplePreview';
 import StoryCountPreview from './StoryCountPreview';
+import GeoPreview from './GeoPreview';
 // import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
@@ -29,6 +30,9 @@ const QueryResultsContainer = (props) => {
         </Col>
         <Col lg={12} xs={12}>
           <StoryCountPreview queries={queries} user={user} params={params} sampleSearches={samples} />
+        </Col>
+        <Col lg={12} xs={12}>
+          <GeoPreview queries={queries} user={user} params={params} sampleSearches={samples} />
         </Col>
       </Row>
     </div>

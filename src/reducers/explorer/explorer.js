@@ -6,6 +6,7 @@ import sentenceCount from './sentenceCount';
 import samples from './samples';
 import stories from './stories';
 import storyCount from './storyCount';
+import geo from './geo';
 
 const rootReducer = combineReducers({
   selected,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   samples,
   stories,
   storyCount,
+  geo,
 });
 
 export default rootReducer;

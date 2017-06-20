@@ -1,29 +1,26 @@
 import React from 'react';
-import * as d3 from 'd3';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchDemoQueryStoryCount, fetchQueryStoryCount } from '../../../actions/explorerActions';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
+import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
-import BubbleRowChart from '../../vis/BubbleRowChart';
+import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
+
 import messages from '../../../resources/messages';
+import { DownloadButton } from '../../common/IconButton';
+import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
-const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
-const TOP_N_LABELS_TO_SHOW = 3;
-const COLORS = d3.schemeCategory10;
-
 const localMessages = {
-  title: { id: 'explorer.storyCount.title', defaultMessage: 'Story Counts' },
-  descriptionIntro: { id: 'explorer.storyCount.help.into',
-    defaultMessage: 'A topic can include up to 100,000 stories.',
-  },
-  totalRolloverLabel: { id: 'explorer.storyCount.total', defaultMessage: 'All Stories' },
-  totalLabel: { id: 'explorer.storyCount.total', defaultMessage: 'Total Stories' },
+  title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
+  intro: { id: 'explorer.geo.info',
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
+  descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 
-class StoryCountPreview extends React.Component {
+class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
@@ -32,42 +29,45 @@ class StoryCountPreview extends React.Component {
       fetchData(nextProps.urlQueryString.searchId);
     }
   }
+
+  downloadCsv = () => {
+    // const { collectionId } = this.props;
+    // const url = `/api/collections/${collectionId}/geography/geography.csv`;
+    // window.location = url;
+  }
+
+  /* handleCountryClick = (event, geo) => {
+    const { results } = this.props;
+
+    // TODO are we supporting this?
+    const countryName = geo.name;
+    const countryTagId = geo.tags_id;
+    // const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
+    // window.open(url, '_blank');
+  } */
+
   render() {
-    const { results, queries } = this.props;
-    const { formatNumber } = this.props.intl;
-    let content = null;
-
-    const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-
-    let bubbleData = [];
-    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo.length > 0) {
-      bubbleData = [
-        ...mergedResultsWithQueryInfo.sort((a, b) => b.count - a.count).map((query, idx) => ({
-          value: query.count,
-          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? query.q : null,
-          rolloverText: `${query.q}: ${formatNumber(query.count)}`,
-          fill: COLORS[idx + 1],
-        })),
-      ];
-      content = (<BubbleRowChart
-        data={bubbleData}
-        padding={220}
-        domId={BUBBLE_CHART_DOM_ID}
-        width={440}
-      />);
-    }
+    const { results, intl, queries } = this.props;
+    const { formatMessage } = intl;
     return (
-      <DataCard>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        {content}
-      </DataCard>
+      <Grid>
+        {results.map((geoSet, idx) =>
+          (<DataCard>
+            <div className="actions">
+              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+            </div>
+            <h3>{queries[idx].label}</h3>
+            <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
+          </DataCard>
+          )
+        )}
+      </Grid>
     );
   }
+
 }
 
-StoryCountPreview.propTypes = {
+GeoPreview.propTypes = {
   lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
   user: React.PropTypes.object.isRequired,
@@ -88,8 +88,8 @@ const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
   urlQueryString: ownProps.params,
-  fetchStatus: state.explorer.storyCount.fetchStatus,
-  results: state.explorer.storyCount.results,
+  fetchStatus: state.explorer.geo.fetchStatus,
+  results: state.explorer.geo.results,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
@@ -101,9 +101,9 @@ const mapDispatchToProps = (dispatch, state) => ({
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     if (isLoggedInUser) {
       if (idx) { // specific change/update here
-        dispatch(fetchQueryStoryCount(query, idx));
+        dispatch(fetchQueryGeo(query, idx));
       } else { // get all results
-        state.queries.map((q, index) => dispatch(fetchQueryStoryCount(q, index)));
+        state.queries.map((q, index) => dispatch(fetchQueryGeo(q, index)));
       }
     } else if (state.params && state.params.searchId) { // else assume DEMO mode
       let runTheseQueries = state.sampleSearches[state.params.searchId].data;
@@ -119,7 +119,7 @@ const mapDispatchToProps = (dispatch, state) => ({
           query_id: q.id, // TODO if undefined, what to do?
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchDemoQueryStoryCount(demoInfo)); // id
+        return dispatch(fetchDemoQueryGeo(demoInfo)); // id
       });
     }
   },
@@ -137,7 +137,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
        composeDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
         composeAsyncContainer(
-          StoryCountPreview
+          GeoPreview
         )
       )
     )

@@ -39,3 +39,6 @@ export const fetchDemoQuerySampleStories = createAsyncAction(FETCH_DEMO_QUERY_SA
 
 export const FETCH_DEMO_QUERY_STORY_COUNT = 'FETCH_DEMO_QUERY_STORY_COUNT';
 export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_DEMO_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);
+
+export const FETCH_DEMO_QUERY_GEO = 'FETCH_DEMO_QUERY_GEO';
+export const fetchDemoQueryGeo = createAsyncAction(FETCH_DEMO_QUERY_GEO, api.fetchDemoQueryGeo, params => params);
