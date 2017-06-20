@@ -56,7 +56,7 @@ class QueryPicker extends React.Component {
           <QueryPickerItem
             query={query}
             selected={selected}
-            isEditable={query.custom ? true : isEditable}
+            isEditable={query.id === undefined ? true : isEditable} // if custom, true for either mode, else if logged in no
             selectThisQuery={() => setSelectedQuery(query, index)}
             updateQuery={q => this.updateQueryFromEditablePicker(q)}
           />
