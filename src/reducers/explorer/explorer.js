@@ -4,6 +4,8 @@ import queries from './queries/queries';
 import lastSearchTime from './lastSearchTime';
 import sentenceCount from './sentenceCount';
 import samples from './samples';
+import stories from './stories';
+import storyCount from './storyCount';
 
 const rootReducer = combineReducers({
   selected,
@@ -11,6 +13,8 @@ const rootReducer = combineReducers({
   lastSearchTime,
   sentenceCount,
   samples,
+  stories,
+  storyCount,
 });
 
 export default rootReducer;
