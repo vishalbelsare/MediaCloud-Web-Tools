@@ -36,7 +36,6 @@ const SearchForm = (props) => {
 SearchForm.propTypes = {
   // from parent
   onSearch: React.PropTypes.func.isRequired,
-  buttonLabel: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
   // from context
   intl: React.PropTypes.object.isRequired,

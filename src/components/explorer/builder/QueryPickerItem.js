@@ -1,7 +1,12 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
+
+const localMessages = {
+  sandCStatus: { id: 'explorer.querypicker.sourcesCollections',
+    defaultMessage: '{totalCount, plural,\n =0 {no media sources} \n =1 {Sources:} srcCount \n other {Sources:} srcCount \n}.' },
+};
 
 const QueryPickerItem = (props) => {
   const { query, isEditable, selectThisQuery, updateQuery } = props;
@@ -22,11 +27,17 @@ const QueryPickerItem = (props) => {
   } else {
     nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.q}</div>;
   }
+  const collCount = query['collections[]'].length;
+  const srcCount = query['sources[]'].length;
+  const totalCount = collCount + srcCount;
+  const subT = <FormattedMessage {...localMessages.sandCStatus} values={{ totalCount, srcCount, collCount }} />;
+
+
   return (
     <Card className="query-picker-item" onClick={() => selectThisQuery()}>
       <CardHeader
         title={nameInfo}
-        subtitle={query.description}
+        subtitle={subT}
       />
       <CardText>
         {query.start_date}

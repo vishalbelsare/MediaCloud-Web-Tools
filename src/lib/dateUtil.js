@@ -18,6 +18,7 @@ const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 const SNAPSHOT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
 
 export const PAST_WEEK = 'week';
+export const PAST_TWO_WEEKS = 'two_weeks';
 export const PAST_MONTH = 'month';
 export const PAST_YEAR = 'year';
 export const PAST_ALL = 'all-time';
@@ -117,7 +118,7 @@ export function prepDateForSolrQuery(startDate, endDate) {
 }
 
 export function getDateRange(timePeriod) {
-  if (![PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
+  if (![PAST_WEEK, PAST_TWO_WEEKS, PAST_MONTH, PAST_YEAR, PAST_ALL].includes(timePeriod)) {
     const error = { message: `unknown time period passed to calculateTimePeriods: ${timePeriod}` };
     throw error;
   }
@@ -125,9 +126,13 @@ export function getDateRange(timePeriod) {
   const targetYear = moment().subtract(1, 'year');
   const targetMonth = moment().subtract(1, 'month');
   const targetWeek = moment().subtract(1, 'week');
+  const targetPastTwoWeeks = moment().subtract(2, 'week');
   switch (timePeriod) {
     case PAST_WEEK: // past week
       targetPeriodStart = targetWeek;
+      break;
+    case PAST_TWO_WEEKS: // past week
+      targetPeriodStart = targetPastTwoWeeks;
       break;
     case PAST_MONTH: // past month
       targetPeriodStart = targetMonth;
@@ -141,6 +146,10 @@ export function getDateRange(timePeriod) {
       break;
   }
   return { start: targetPeriodStart, end: moment() };
+}
+
+export function getPastTwoWeeksDateRange() {
+  return getDateRange(PAST_TWO_WEEKS);
 }
 
 export function calculateTimePeriods(timePeriod) {

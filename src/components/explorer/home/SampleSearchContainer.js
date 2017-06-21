@@ -18,7 +18,7 @@ class SampleSearchContainer extends React.Component {
   }
 
   render() {
-    const { searches, user, onSearch } = this.props;
+    const { samples, user, onSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let searchContent = null;
     let content = null;
@@ -26,8 +26,8 @@ class SampleSearchContainer extends React.Component {
     const initialValues = { keyword: 'Search for' };
 
     searchContent = <SearchForm initialValues={initialValues} onSearch={onSearch} />;
-    if (searches && searches.length > 0) {
-      fixedSearchSlides = searches.map((search, index) => (<div key={index}><SampleSearchItem search={search} user={user} /></div>));
+    if (samples && samples.length > 0) {
+      fixedSearchSlides = samples.map((search, index) => (<div key={index}><SampleSearchItem search={search} user={user} /></div>));
 
       content = (
         <ItemSlider
@@ -54,7 +54,7 @@ class SampleSearchContainer extends React.Component {
 }
 
 SampleSearchContainer.propTypes = {
-  searches: React.PropTypes.array,
+  samples: React.PropTypes.array,
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   user: React.PropTypes.object.isRequired,
@@ -62,7 +62,7 @@ SampleSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  searches: state.explorer.samples.list,
+  samples: state.explorer.samples.list,
   user: state.user,
 });
 
