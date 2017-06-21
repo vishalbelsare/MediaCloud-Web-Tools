@@ -7,15 +7,15 @@ import messages from '../../resources/messages';
 
 const ExplorerApp = (props) => {
   const { formatMessage } = props.intl;
-  const titleHandler = parentTitle => `${formatMessage(messages.dashboardToolName)} | ${parentTitle}`;
+  const titleHandler = parentTitle => `${formatMessage(messages.explorerToolName)} | ${parentTitle}`;
   // const drawer = <SourcesDrawer />;
   return (
     <div>
       <Title render={titleHandler} />
       <AppContainer
         name="explorer"
-        title={formatMessage(messages.dashboardToolName)}
-        description={formatMessage(messages.dashboardToolDescription)}
+        title={formatMessage(messages.explorerToolName)}
+        description={formatMessage(messages.explorerToolDescription)}
         // drawer={drawer}
       >
         {props.children}

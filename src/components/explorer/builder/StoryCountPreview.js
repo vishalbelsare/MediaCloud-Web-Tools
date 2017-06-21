@@ -1,5 +1,5 @@
 import React from 'react';
-import * as d3 from 'd3';
+import { schemeCategory10 } from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -11,8 +11,7 @@ import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
-const TOP_N_LABELS_TO_SHOW = 3;
-const COLORS = d3.schemeCategory10;
+const COLORS = schemeCategory10;
 
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Story Counts' },
@@ -44,14 +43,15 @@ class StoryCountPreview extends React.Component {
       bubbleData = [
         ...mergedResultsWithQueryInfo.sort((a, b) => b.count - a.count).map((query, idx) => ({
           value: query.count,
-          centerText: (idx < TOP_N_LABELS_TO_SHOW) ? query.q : null,
+          aboveText: (idx % 2 === 0) ? query.label : null,
+          belowText: (idx % 2 !== 0) ? query.label : null,
           rolloverText: `${query.q}: ${formatNumber(query.count)}`,
           fill: COLORS[idx + 1],
         })),
       ];
       content = (<BubbleRowChart
         data={bubbleData}
-        padding={220}
+        padding={0}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
       />);

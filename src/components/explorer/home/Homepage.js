@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
@@ -8,7 +8,6 @@ import SampleSearchContainer from './SampleSearchContainer';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
-  about: { id: 'explorer.intro.about', defaultMessage: 'Explorer Text' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
@@ -26,16 +25,6 @@ const Homepage = (props) => {
   }
   return (
     <Grid>
-      <Row>
-        <Col lg={12}>
-          <h1>
-            <FormattedMessage {...localMessages.title} />
-          </h1>
-          <p>
-            <FormattedHTMLMessage {...localMessages.about} />
-          </p>
-        </Col>
-      </Row>
       <Row>
         <Col lg={12} xs={12}>
           <SampleSearchContainer />

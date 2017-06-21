@@ -73,9 +73,12 @@ class QueryPicker extends React.Component {
       );
 
       fixedQuerySlides.push(addEmptyQuerySlide);
-
       content = (
-        <ItemSlider title={formatMessage(localMessages.intro)} slides={fixedQuerySlides} settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false }} />
+        <ItemSlider
+          title={formatMessage(localMessages.intro)}
+          slides={fixedQuerySlides}
+          settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
+        />
       );
     }
 

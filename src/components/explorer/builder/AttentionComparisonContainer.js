@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts } from '../../../actions/explorerActions';
 import { asyncContainerize } from '../../common/AsyncContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
@@ -15,8 +16,8 @@ import { cleanDateCounts } from '../../../lib/dateUtil';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
-  bubbleChartTitle: { id: 'explorer.attention.bubbleChart.title', defaultMessage: 'Total Attention' },
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
+  descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: 'Attention Over Time' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -171,7 +172,9 @@ export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
     asyncContainerize(
       injectIntl(
-        AttentionComparisonContainer
+        composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+          AttentionComparisonContainer
+        )
       )
     )
   );

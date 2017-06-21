@@ -1,9 +1,10 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { GridList, GridTile } from 'material-ui/GridList';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
+import DataCard from '../../common/DataCard';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
 
@@ -49,22 +50,25 @@ class GeoPreview extends React.Component {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
     return (
-      <GridList
-        style={{ width: 1000, height: 1000, overflowY: 'auto' }}
-        className="geo-mini-cards"
-        cellHeight={400}
-      >
-        {results.map((geoSet, idx) =>
-          (<GridTile>
-            <div className="actions">
-              <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-            </div>
-            <h3>{queries[idx].label}</h3>
-            <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
-          </GridTile>
-          )
-        )}
-      </GridList>
+      <DataCard>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <GridList
+          style={{ width: 1000, height: 1000, overflowY: 'auto' }}
+          className="geo-mini-cards"
+          cellHeight={400}
+        >
+          {results.map((geoSet, idx) =>
+            (<GridTile>
+              <div className="actions">
+                <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+              </div>
+              <h3>{queries[idx].label}</h3>
+              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
+            </GridTile>
+            )
+          )}
+        </GridList>
+      </DataCard>
     );
   }
 

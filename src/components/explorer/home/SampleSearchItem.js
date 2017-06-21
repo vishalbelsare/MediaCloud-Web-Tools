@@ -16,7 +16,7 @@ const SampleSearchItem = (props) => {
   }
 
   return (
-    <div className="sample-search">
+    <div className="sample-query-item">
       <h2>{search.label}</h2>
       <Link to={`/queryBuilder/?${urlParamString}`}>{search.label}</Link>
     </div>

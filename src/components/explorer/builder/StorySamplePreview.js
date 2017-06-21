@@ -1,8 +1,9 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
+import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
@@ -37,20 +38,23 @@ class StorySamplePreview extends React.Component {
     const { results, queries, handleStorySelection } = this.props;
 
     return (
-      <Tabs>
-        {results.map((storySet, idx) =>
-          (<Tab label={queries[idx].q}>
-            <h3>{queries[idx].label}</h3>
-            <StoryTable
-              stories={storySet}
-              index={idx}
-              onChangeFocusSelection={handleStorySelection}
-              maxTitleLength={50}
-            />
-          </Tab>
-          )
-        )}
-      </Tabs>
+      <DataCard>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
+        <Tabs>
+          {results.map((storySet, idx) =>
+            (<Tab label={queries[idx].q}>
+
+              <StoryTable
+                stories={storySet}
+                index={idx}
+                onChangeFocusSelection={handleStorySelection}
+                maxTitleLength={50}
+              />
+            </Tab>
+            )
+          )}
+        </Tabs>
+      </DataCard>
     );
   }
 }

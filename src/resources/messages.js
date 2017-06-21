@@ -13,6 +13,8 @@ const messages = {
   topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Find out more about our tools and how to use them' },
+  explorerToolName: { id: 'app.explorer.name', defaultMessage: 'Explorer' },
+  explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
 
   c4cmName: { id: 'c4cm.name', defaultMessage: 'MIT Center for Civic Media' },
   berkmanName: { id: 'berkman.name', defaultMessage: 'Berkman Klein Center for Internet and Society at Harvard University' },

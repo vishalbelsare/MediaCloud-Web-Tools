@@ -29,3 +29,12 @@
 .query-picker-item-selected > div {
     background-color: $material-grey200 !important;
 }
+
+.sample-searches {
+    background-color: $material-red500 !important;
+}
+
+.sample-query-item {
+    border: 10px solid $material-red500;
+    background-color: $white !important;
+}
