@@ -46,3 +46,16 @@ export function isCollectionTagSet(tagSetsId) {
 export function anyCollectionTagSets(tagSetIdList) {
   return tagSetIdList.reduce((any, tagSetId) => isCollectionTagSet(tagSetId) || any, false);
 }
+
+// Use this if you want to sort a set of tags by name (it falls back to tag if there is no label)
+export function compareTagNames(a, b) {
+  const nameA = (a.label || a.tag).toUpperCase(); // ignore upper and lowercase
+  const nameB = (b.label || b.tag).toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+}

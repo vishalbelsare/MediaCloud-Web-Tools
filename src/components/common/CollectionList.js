@@ -6,7 +6,7 @@ import DataCard from './DataCard';
 import SourceOrCollectionChip from './SourceOrCollectionChip';
 import FilledStarIcon from './icons/FilledStarIcon';
 import LockIcon from './icons/LockIcon';
-import { isCollectionTagSet } from '../../lib/tagUtil';
+import { isCollectionTagSet, compareTagNames } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../lib/auth';
@@ -14,8 +14,10 @@ import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../lib/a
 const CollectionList = (props) => {
   const { title, intro, collections, handleClick, onDownload, helpButton, user } = props;
   const { formatMessage } = props.intl;
+  // show private collections only if user has right permission
   const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
   const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
+  validCollections.sort(compareTagNames);
   let actions = null;
   if (onDownload) {
     actions = (

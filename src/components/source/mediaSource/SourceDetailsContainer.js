@@ -8,11 +8,11 @@ import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
+import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
-import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
 import StatBar from '../../common/statbar/StatBar';
@@ -67,10 +67,8 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source, user } = this.props;
+    const { source } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
-    const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
-    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
@@ -168,9 +166,9 @@ class SourceDetailsContainer extends React.Component {
               title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
               intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
                 name: source.name,
-                count: collections.length,
+                count: source.media_source_tags.length,
               })}
-              collections={collections}
+              collections={source.media_source_tags}
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
@@ -206,13 +204,11 @@ SourceDetailsContainer.propTypes = {
   sourceId: React.PropTypes.number.isRequired,
   // from state
   source: React.PropTypes.object,
-  user: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   source: state.sources.sources.selected.sourceDetails,
-  user: state.user,
 });
 
 export default

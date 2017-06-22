@@ -59,7 +59,6 @@ class MediaContainer extends React.Component {
     const { media, topicId, mediaId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
-    const collections = media.media_source_tags.filter(c => c.show_on_media === 1);
     const dialogActions = [
       <FlatButton
         label={formatMessage(messages.ok)}
@@ -135,7 +134,7 @@ class MediaContainer extends React.Component {
               <CollectionList
                 title={formatMessage(localMessages.collectionTitle)}
                 intro={formatMessage(localMessages.collectionIntro)}
-                collections={collections}
+                collections={media.media_source_tags}
                 linkToFullUrl
               />
             </Col>
