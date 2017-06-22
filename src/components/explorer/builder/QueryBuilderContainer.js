@@ -17,17 +17,18 @@ import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib
 class QueryBuilderContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { selected, samples, setSelectedQuery, loadSampleSearches } = this.props;
+    const { selected, samples, selectSearchQueries, setSelectedQuery, loadSampleSearches } = this.props;
     // TODO better comparison
     // if a query is clicked or if the url is edited...
     // we might should break this into two different contaienrs: one for demo, one for logged in users...
     const url = nextProps.location.pathname;
-    const currentIndex = url.slice(url.lastIndexOf('/') + 1, url.length);
+    const currentIndex = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
 
     if (this.props.location.pathname !== nextProps.location.pathname && nextProps.location.pathname.includes('/queries/demo')) {
       if (!samples || samples.length === 0) {
         loadSampleSearches(currentIndex); // currentIndex
       } else {
+        selectSearchQueries(samples[currentIndex]);
         setSelectedQuery(samples[currentIndex].data[0]); // if we already have the searches
       }
     } else if (nextProps.location.pathname.includes('/queries/search')) {
@@ -92,7 +93,7 @@ QueryBuilderContainer.propTypes = {
   handleSearch: React.PropTypes.func.isRequired,
   setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
-  saveSearchQueriesToStore: React.PropTypes.func.isRequired,
+  selectSearchQueries: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
   fetchSamples: React.PropTypes.func.isRequired,
   urlQueryString: React.PropTypes.object,
@@ -107,6 +108,8 @@ const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
   user: state.user,
+  fetchStatus: state.explorer.queries.sources.fetchStatus,
+  sources: state.explorer.queries.sources.results,
 });
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
@@ -124,12 +127,12 @@ const mapDispatchToProps = dispatch => ({
     const isLoggedInUser = hasPermissions(getUserRoles(stateProps.user), PERMISSION_LOGGED_IN);
 
     if (isLoggedInUser) {
-      // do we also need to select the query too?
-      dispatch(selectQuery(searchObj));
-    } else {
-      dispatch(selectBySearchId(searchObj)); // this doesn't really do anything
-      // select first entry
+      dispatch(selectBySearchId(searchObj));
       dispatch(selectQuery(searchObj.data[0]));
+    } else {
+      dispatch(selectBySearchId(searchObj)); // load sample data into queries
+      // select first entry
+      dispatch(selectQuery(searchObj.data[0])); // default select first query
     }
   },
   fetchSamples: (dispatchProps, stateProps, currentIndex) => {
@@ -146,8 +149,8 @@ const mapDispatchToProps = dispatch => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    saveSearchQueriesToStore: (queryObj) => {
-      dispatchProps.setSampleSearch(queryObj, stateProps);
+    selectSearchQueries: (searchObj) => {
+      dispatchProps.setSampleSearch(searchObj, stateProps);
     },
     loadSampleSearches: (currentIndex) => {
       dispatchProps.fetchSamples(dispatchProps, stateProps, currentIndex);

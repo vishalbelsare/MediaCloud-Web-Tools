@@ -39,7 +39,7 @@ class AttentionComparisonContainer extends React.Component {
     if (nextProps.lastSearchTime !== lastSearchTime ||
       nextProps.urlQueryString.searchId !== urlQueryString.searchId) {
     // TODO also check for name and color changes
-      fetchData(nextProps.urlQueryString.searchId);
+      fetchData(this.props, nextProps.urlQueryString.searchId);
     }
   }
   render() {
@@ -107,6 +107,7 @@ AttentionComparisonContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
+  queries: state.explorer.queries,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
@@ -114,7 +115,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (query, idx) => {
+  fetchData: (ownProps, query, idx) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
 
@@ -140,17 +141,20 @@ const mapDispatchToProps = (dispatch, state) => ({
       } else { // get all results
         state.queries.map((q, index) => dispatch(fetchQuerySentenceCounts(q, index)));
       }
-    } else if (state.params && state.params.searchId) { // else assume DEMO mode
-      let runTheseQueries = state.sampleSearches[state.params.searchId].data;
-      // merge sample search queries with custom
+    } else if (state.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const url = ownProps.params.pathname;
+      const currentIndex = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
 
+      let runTheseQueries = state.queries;
       // find queries on stack without id but with index and with q, and add?
+
       const newQueries = state.queries.filter(q => q.id === undefined && q.index);
+
       runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw
-          search_id: state.params.searchId, // may or may not have these
+          search_id: currentIndex, // may or may not have these
           query_id: q.id, // TODO if undefined, what to do?
           q: q.q, // only if no query id, means demo user added a keyword
         };
@@ -163,7 +167,7 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData();
+      dispatchProps.fetchData(ownProps);
     },
   });
 }

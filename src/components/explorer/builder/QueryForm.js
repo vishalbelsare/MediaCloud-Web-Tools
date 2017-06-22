@@ -20,7 +20,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
+  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
@@ -51,9 +51,8 @@ const QueryForm = (props) => {
             <Row>
               <Field
                 name="sources"
-                type="text"
-                component={renderSelectField}
-                label="Color"
+                component={renderTextField}
+                label="Sources"
                 floatingLabelText={formatMessage(localMessages.selectSandC)}
               />
             </Row>

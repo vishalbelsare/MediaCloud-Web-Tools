@@ -54,6 +54,7 @@ QueryResultsContainer.propTypes = {
 const mapStateToProps = state => ({
   // lastSearchTime: state.explorer.queries.list,
   user: state.user,
+  queries: state.explorer.queries,
 });
 
 export default
