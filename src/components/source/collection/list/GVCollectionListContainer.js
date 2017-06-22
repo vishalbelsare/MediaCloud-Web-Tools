@@ -3,14 +3,14 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import CollectionList from './CollectionList';
+import CollectionTable from './CollectionTable';
 import { TAGS_SET_GV_ID } from '../../../../lib/tagUtil';
 
 const GVCollectionListContainer = (props) => {
   const { name, description, collections } = props;
   return (
-    <div className="mc-collections-list">
-      <CollectionList
+    <div className="mc-collections-table">
+      <CollectionTable
         collections={collections}
         title={name}
         description={description}
