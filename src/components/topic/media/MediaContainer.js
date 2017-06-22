@@ -142,7 +142,7 @@ class MediaContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <SourceMetadataStatBar source={media} columnWidth={3} />
+              <SourceMetadataStatBar source={media} />
             </Col>
           </Row>
         </Grid>

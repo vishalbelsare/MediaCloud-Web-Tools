@@ -12,12 +12,16 @@ const localMessages = {
   geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.  We automatically detect the countries and states talked about in our content.</p>' },
 };
 
+/**
+ * This requies `tagUtil.mediaSourceMetadataProps(source)` to have been called in the reducer to fill
+ * in the named metadata properties on the source object.
+ **/
 const SourceMetadataStatBar = (props) => {
   const { columnWidth, source } = props;
   return (
     <div className="source-metadata-stat-bar">
       <StatBar
-        columnWidth={columnWidth || 6}
+        columnWidth={columnWidth || 3}
         stats={[
           { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
           { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
@@ -40,7 +44,7 @@ const SourceMetadataStatBar = (props) => {
 SourceMetadataStatBar.propTypes = {
   // from parent
   source: React.PropTypes.object.isRequired,
-  columnWidth: React.PropTypes.number,
+  columnWidth: React.PropTypes.number,  // optional override - defaults to 3 so it looks good in a 12 wide container
   // from context
   intl: React.PropTypes.object.isRequired,
 };

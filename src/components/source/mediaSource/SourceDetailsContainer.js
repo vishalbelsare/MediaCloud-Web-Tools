@@ -165,7 +165,7 @@ class SourceDetailsContainer extends React.Component {
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
-            <SourceMetadataStatBar source={source} />
+            <SourceMetadataStatBar source={source} columnWidth={6} />
           </Col>
         </Row>
       </Grid>
