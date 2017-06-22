@@ -59,3 +59,16 @@ export function compareTagNames(a, b) {
   }
   return 0;
 }
+
+function tagForMetadata(metadataTagSetsId, allTags) {
+  return allTags.find(tag => tag.tag_sets_id === metadataTagSetsId);
+}
+
+export function mediaSourceMetadataProps(mediaSource) {
+  return {
+    pubCountryTag: tagForMetadata(TAG_SET_PUBLICATION_COUNTRY, mediaSource.media_source_tags),
+    pubStateTag: tagForMetadata(TAG_SET_PUBLICATION_STATE, mediaSource.media_source_tags),
+    primaryLangaugeTag: tagForMetadata(TAG_SET_PRIMARY_LANGUAGE, mediaSource.media_source_tags),
+    countryOfFocusTag: tagForMetadata(TAG_SET_COUNTRY_OF_FOCUS, mediaSource.media_source_tags),
+  };
+}

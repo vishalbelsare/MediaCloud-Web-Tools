@@ -20,6 +20,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import CollectionList from '../../common/CollectionList';
+import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
@@ -137,6 +138,11 @@ class MediaContainer extends React.Component {
                 collections={media.media_source_tags}
                 linkToFullUrl
               />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <SourceMetadataStatBar source={media} columnWidth={3} />
             </Col>
           </Row>
         </Grid>

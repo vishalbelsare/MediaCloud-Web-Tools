@@ -15,8 +15,7 @@ import { jobStatusDateToMoment } from '../../../lib/dateUtil';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
-import StatBar from '../../common/statbar/StatBar';
-import messages from '../../../resources/messages';
+import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -44,12 +43,6 @@ const localMessages = {
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
   unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
-  pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
-  pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
-  primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
-  countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
-  languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
-  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.  We automatically detect the countries and states talked about in our content.</p>' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -172,23 +165,7 @@ class SourceDetailsContainer extends React.Component {
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
-            <StatBar
-              columnWidth={6}
-              stats={[
-                { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
-                { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
-                { message: localMessages.primaryLanguage,
-                  data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?',
-                  helpTitleMsg: localMessages.primaryLanguage,
-                  helpContentMsg: localMessages.languageHelpContent,
-                },
-                { message: localMessages.countryOfFocus,
-                  data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?',
-                  helpTitleMsg: messages.geoHelpTitle,
-                  helpContentMsg: [localMessages.geoHelpDetailedContent, messages.geoHelpContent],
-                },
-              ]}
-            />
+            <SourceMetadataStatBar source={source} />
           </Col>
         </Row>
       </Grid>
