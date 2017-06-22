@@ -2,6 +2,7 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
 import Homepage from '../components/explorer/home/Homepage';
+import DemoQueryBuilderContainer from '../components/explorer/builder/DemoQueryBuilderContainer';
 import QueryBuilderContainer from '../components/explorer/builder/QueryBuilderContainer';
 import userRoutes from './userRoutes';
 import ExplorerApp from '../components/explorer/ExplorerApp';
@@ -16,10 +17,10 @@ const explorerRoutes = (
     {userRoutes}
 
     <Route path="/home" component={Homepage} />
-    <Route path="/queries" component={QueryBuilderContainer}>
-      <Route path="demo" component={QueryBuilderContainer} >
-        <Route path="search" component={QueryBuilderContainer} />
-        <Route path=":id" component={QueryBuilderContainer} />
+    <Route path="/queries">
+      <Route path="demo" component={DemoQueryBuilderContainer} >
+        <Route path="search" component={DemoQueryBuilderContainer} />
+        <Route path=":id" component={DemoQueryBuilderContainer} />
       </Route>
       <Route path=":queryParams" component={QueryBuilderContainer} onEnter={requireAuth} />
     </Route>

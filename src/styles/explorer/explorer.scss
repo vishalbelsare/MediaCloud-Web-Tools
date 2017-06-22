@@ -25,7 +25,9 @@
         float: right;
     }
 }
-
+.query-picker-item, .query-picker-item-card-header {
+    text-align: left;
+}
 .query-picker-item-selected > div {
     background-color: $material-grey200 !important;
 }
