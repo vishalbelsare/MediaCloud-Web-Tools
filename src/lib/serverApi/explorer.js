@@ -33,4 +33,9 @@ export function fetchDemoQueryGeo(params) {
   return createApiPromise('api/explorer/demo/geo-tags/counts', acceptedParams);
 }
 
+export function demoQuerySourcesByIds(params) {
+  const acceptedParams = acceptParams(params, ['sources[]']);
+  return createApiPromise('api/explorer/demo/sources/list', acceptedParams);
+}
+
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

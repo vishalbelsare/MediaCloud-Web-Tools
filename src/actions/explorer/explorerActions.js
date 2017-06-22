@@ -42,3 +42,6 @@ export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_DEMO_QUERY_STORY
 
 export const FETCH_DEMO_QUERY_GEO = 'FETCH_DEMO_QUERY_GEO';
 export const fetchDemoQueryGeo = createAsyncAction(FETCH_DEMO_QUERY_GEO, api.fetchDemoQueryGeo, params => params);
+
+export const FETCH_DEMO_QUERY_SOURCES = 'FETCH_DEMO_QUERY_SOURCES';
+export const demoQuerySourcesByIds = createAsyncAction(FETCH_DEMO_QUERY_SOURCES, api.demoQuerySourcesByIds, props => props);

@@ -1,11 +1,14 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardHeader } from 'material-ui/Card';
 
 const localMessages = {
-  sandCStatus: { id: 'explorer.querypicker.sourcesCollections',
-    defaultMessage: '{totalCount, plural,\n =0 {no media sources} \n =1 {Sources:} srcCount \n other {Sources:} srcCount \n}.' },
+  emptyMedia: { id: 'explorer.querypicker.emptyMedia',
+    defaultMessage: 'no media sources or collections' },
+  sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {label} \n other {# media sources }\n}' },
+  collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
+  collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount} collections' },
 };
 
 const QueryPickerItem = (props) => {
@@ -29,9 +32,25 @@ const QueryPickerItem = (props) => {
   }
   const collCount = query['collections[]'].length;
   const srcCount = query['sources[]'].length;
+  // const srcDesc = query.media;
   const totalCount = collCount + srcCount;
-  const subT = <FormattedMessage {...localMessages.sandCStatus} values={{ totalCount, srcCount, collCount }} />;
+  const queryLabel = query.label;
 
+  const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: queryLabel }} />;
+  let subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
+
+  if (srcCount === 0 && collCount === 1) {
+    // only show collStatus
+    subT = oneCollStatus;
+  } else if (totalCount > 0) {
+    subT = (
+      <div className="query-picker-item-card-header">
+        <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
+        <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
+        {query.start_date}--{query.end_date}
+      </div>
+    );
+  }
 
   return (
     <Card className="query-picker-item" onClick={() => selectThisQuery()}>
@@ -39,9 +58,6 @@ const QueryPickerItem = (props) => {
         title={nameInfo}
         subtitle={subT}
       />
-      <CardText>
-        {query.start_date}
-      </CardText>
     </Card>
   );
 };

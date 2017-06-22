@@ -45,13 +45,19 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
+
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected) {
-      fixedQuerySlides = queries.map((query, index) => (
+      let mergedQueryWithSourceInfo = queries;
+      if (sourcesResults && sourcesResults.length > 0) {
+        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
+      }
+
+      fixedQuerySlides = mergedQueryWithSourceInfo.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
             query={query}
@@ -62,17 +68,19 @@ class QueryPicker extends React.Component {
           />
         </div>
       ));
-      // note: no id here
-      const customEmptyQuery = { index: queries.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
 
-      const addEmptyQuerySlide = (
-        <AddButton
-          tooltip={formatMessage(localMessages.add)}
-          onClick={() => this.addACustomQuery(customEmptyQuery)}
-        />
-      );
+      if (isEditable) {
+        const customEmptyQuery = { index: mergedQueryWithSourceInfo.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
 
-      fixedQuerySlides.push(addEmptyQuerySlide);
+        const addEmptyQuerySlide = (
+          <AddButton
+            tooltip={formatMessage(localMessages.add)}
+            onClick={() => this.addACustomQuery(customEmptyQuery)}
+          />
+        );
+
+        fixedQuerySlides.push(addEmptyQuerySlide);
+      }
       content = (
         <ItemSlider
           title={formatMessage(localMessages.intro)}
@@ -101,6 +109,7 @@ class QueryPicker extends React.Component {
 
 QueryPicker.propTypes = {
   queries: React.PropTypes.array,
+  sourcesResults: React.PropTypes.array,
   selected: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
@@ -114,6 +123,7 @@ QueryPicker.propTypes = {
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
   queries: state.explorer.queries,
+  sourcesResults: state.explorer.sources.results ? state.explorer.sources.results : null,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

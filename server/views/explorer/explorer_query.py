@@ -4,10 +4,9 @@ from flask import jsonify, request
 import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
-from server.util.request import form_fields_required, api_error_handler
+from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES 
-
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -41,7 +40,20 @@ def api_explorer_story_sample():
 
     solr_query = solr_query_from_request(request.form)     
     story_count_result = user_mc.storyList(solr_query=solr_query)
-    return jsonify(story_count_result)  
+    return jsonify(story_count_result)
+
+
+@app.route('/api/explorer/demo/sources/list', methods=['GET'])
+@arguments_required('sources[]')
+@api_error_handler
+def api_explorer_sources_by_ids():
+    source_list = []
+    source_id_array = request.args['sources[]'].split(',')
+    for mediaId in source_id_array:
+        info = mc.media(mediaId)
+        info['id'] = mediaId
+        source_list.append(info)
+    return jsonify(source_list)
 
 
 @app.route('/api/explorer/words/count', methods=['POST'])
