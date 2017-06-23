@@ -103,6 +103,7 @@ const QueryForm = (props) => {
 
 QueryForm.propTypes = {
   // from parent
+  selected: React.PropTypes.object.isRequired,
   onSave: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func,
   buttonLabel: React.PropTypes.string.isRequired,

@@ -149,7 +149,10 @@ export function getDateRange(timePeriod) {
 }
 
 export function getPastTwoWeeksDateRange() {
-  return getDateRange(PAST_TWO_WEEKS);
+  const dateObj = getDateRange(PAST_TWO_WEEKS);
+  dateObj.start = dateObj.start.format('YYYY-MM-DD');
+  dateObj.end = dateObj.end.format('YYYY-MM-DD');
+  return dateObj;
 }
 
 export function calculateTimePeriods(timePeriod) {

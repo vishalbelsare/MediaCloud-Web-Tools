@@ -7,6 +7,7 @@ import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
 import { AddButton } from '../../common/IconButton';
+import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -66,7 +67,8 @@ class QueryPicker extends React.Component {
       ));
 
       if (isEditable) {
-        const customEmptyQuery = { index: mergedQueryWithSourceInfo.length, label: 'enter query', q: 'enter here', description: 'new', imagePath: '.', start_date: '2016-02-02', end_date: '2017-02-02', custom: true };
+        const dateObj = getPastTwoWeeksDateRange();
+        const customEmptyQuery = { index: mergedQueryWithSourceInfo.length - 1, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], custom: true };
 
         const addEmptyQuerySlide = (
           <AddButton
@@ -93,6 +95,7 @@ class QueryPicker extends React.Component {
         {content}
         <QueryForm
           initialValues={selected}
+          selected={selected}
           buttonLabel={formatMessage(localMessages.querySearch)}
           onSave={handleSearch}
           onChange={event => this.updateQuery(event)}

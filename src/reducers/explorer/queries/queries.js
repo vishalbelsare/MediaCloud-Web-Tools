@@ -14,7 +14,7 @@ function queries(state = INITIAL_STATE, action) {
     case UPDATE_QUERY:
       if (action.payload) { // just for safety
         updatedState = [...state];
-        let queryIndex = state.findIndex(q => q.id === action.payload.id);
+        let queryIndex = state.findIndex(q => q.id !== null && q.id === action.payload.id);
         // we may not have an id if this is a custom query, use index. -- update we may not even use ID... TBD
         queryIndex = queryIndex > -1 ? queryIndex : action.payload.index;
         updatedState[queryIndex] = action.payload;

@@ -26,20 +26,11 @@ class DemoQueryBuilderContainer extends React.Component {
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       // we will not have a sample search selected BTW
       // back end effectively ignores everything but the keyword
-      const dateObj = getPastTwoWeeksDateRange();
-      const queryObj = [
-        { q: currentIndexOrKeyword,
-          startDate: dateObj.start,
-          endDate: dateObj.end,
-          collections: [8875027],
-          index: 0,
-          search_id: null,
-          id: null,
-          sources: [],
-        },
-      ];
-      selectQueriesByURLParams(queryObj);
-      setSelectedQuery(queryObj[0]);
+      // const dateObj = getPastTwoWeeksDateRange();
+
+      const parsedObjectArray = this.parseJSONParams(currentIndexOrKeyword);
+      selectQueriesByURLParams(parsedObjectArray);
+      setSelectedQuery(parsedObjectArray[0]);
     } else if (this.props.location.pathname !== nextProps.location.pathname &&
       nextProps.location.pathname.includes('/queries/demo')) {
       // sample query id expected
@@ -53,6 +44,39 @@ class DemoQueryBuilderContainer extends React.Component {
     }
   }
 
+  parseJSONParams = (queriesFromURL) => {
+    let parsedObjectArray = JSON.parse(queriesFromURL);
+    parsedObjectArray = parsedObjectArray.map((q, idx) => {
+      const defaultObjVals = {};
+      if (q.label === undefined) {
+        defaultObjVals.label = `gen${q.q}`; // TODO auto generate!
+      }
+      if (q.color === undefined) {
+        defaultObjVals.color = 'red'; // generateFromColorWheel();
+      }
+      if (q.index === undefined) {
+        defaultObjVals.index = idx; // the backend won't use these values, but this is for the QueryPicker display
+      }
+      if (q.sources === undefined) {
+        defaultObjVals.sources = [];
+      }
+      if (q.collections === undefined) {
+        defaultObjVals.collections = [8875027];
+      }
+      const dateObj = getPastTwoWeeksDateRange();
+      if (q.startDate === undefined) {
+        defaultObjVals.startDate = dateObj.start;
+      }
+      if (q.endDate === undefined) {
+        defaultObjVals.endDate = dateObj.end;
+      }
+      return Object.assign({}, q, defaultObjVals);
+    });
+
+    return parsedObjectArray;
+    // generate color and index?
+  }
+
   render() {
     const { selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
@@ -62,7 +86,7 @@ class DemoQueryBuilderContainer extends React.Component {
     // const url = location.pathname;
     // const currentIndexOrKeyword = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
 
-    const isEditable = location.pathname.includes('queries/search');
+    const isEditable = location.pathname.includes('queries/demo/search');
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>

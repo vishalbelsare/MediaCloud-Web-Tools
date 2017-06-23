@@ -58,7 +58,7 @@ class GeoPreview extends React.Component {
           cellHeight={400}
         >
           {results.map((geoSet, idx) =>
-            (<GridTile>
+            (<GridTile key={idx}>
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
