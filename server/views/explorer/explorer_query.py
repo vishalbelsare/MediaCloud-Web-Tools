@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, Response
 import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
-from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES 
+from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES, read_sample_searches
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -16,8 +16,9 @@ logger = logging.getLogger(__name__)
 @app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
 def api_explorer_sample_searches():
-    
-    return jsonify({'list': SAMPLE_SEARCHES})
+
+    jsonFile = read_sample_searches()
+    return Response(jsonFile, mimetype="attachment/json", headers={"Content-Disposition": "attachment;filename=samples"})
 
 @app.route('/api/explorer/story/count', methods=['POST'])
 @flask_login.login_required

@@ -2,9 +2,10 @@ import json
 import logging
 import flask_login
 import os
+import json
 from server import app, base_dir, mc
 from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param
-from flask import jsonify
+from flask import jsonify, send_from_directory
 from server.auth import is_user_logged_in, user_admin_mediacloud_client
 import datetime
 
@@ -174,14 +175,13 @@ def parse_query_with_args_and_sample_search(args, current_search) :
     return solr_query
 
 def read_sample_searches():
-    filepath = os.path.join(app.config['JSON_FOLDER'], secure_filename(uploaded_file.filename))
-    # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
-    uploaded_file.save(filepath)
-    with open(filepath, 'rU') as f:
-        reader = pycsv.DictReader(f)
-        reader.fieldnames = props
-        new_sources = []
-        updated_only = []
-        all_results = []
-        all_errors = []
-        reader.next()  # this means we have to have a header
+    json_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'static/data'))
+
+    # load the sample searches file
+    return send_from_directory(
+            json_dir,
+            'sample_searches.json',
+            mimetype="application/json",
+            as_attachment=True)
+
+
