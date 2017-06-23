@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
@@ -7,6 +7,7 @@ import LinkWithFilters from './LinkWithFilters';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 import { ReadItNowButton } from '../common/IconButton';
+import SafelyFormattedNumber from '../common/SafelyFormattedNumber';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -142,10 +143,10 @@ class TopicStoryTable extends React.Component {
                     </LinkWithFilters>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.media_inlink_count !== undefined ? story.media_inlink_count : '?'} /></td>
-                  <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
-                  <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
-                  <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
+                  <td><SafelyFormattedNumber value={story.media_inlink_count} /></td>
+                  <td><SafelyFormattedNumber value={story.outlink_count} /></td>
+                  <td><SafelyFormattedNumber value={story.bitly_click_count} /></td>
+                  <td><SafelyFormattedNumber value={story.facebook_share_count} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>
