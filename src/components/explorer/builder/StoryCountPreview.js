@@ -106,11 +106,11 @@ const mapDispatchToProps = (dispatch, state) => ({
         state.queries.map((q, index) => dispatch(fetchQueryStoryCount(q, index)));
       }
     } else if (state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      let runTheseQueries = state.queries;
+      const runTheseQueries = state.queries;
       // find queries on stack without id but with index and with q, and add?
 
-      const newQueries = state.queries.filter(q => q.id === undefined && q.index);
-      runTheseQueries = runTheseQueries.concat(newQueries);
+      // const newQueries = state.queries.filter(q => q.id === null && q.index);
+      // runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw

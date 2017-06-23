@@ -59,7 +59,7 @@ const QueryForm = (props) => {
             <Row>
               <Col lg={3}>
                 <Field
-                  name="start_date"
+                  name="startDate"
                   type="inline"
                   component={renderTextField}
                   label={formatMessage(messages.startDate)}
@@ -68,7 +68,7 @@ const QueryForm = (props) => {
               </Col>
               <Col lg={3}>
                 <Field
-                  name="end_date"
+                  name="endDate"
                   type="inline"
                   component={renderTextField}
                   label={formatMessage(messages.endDate)}

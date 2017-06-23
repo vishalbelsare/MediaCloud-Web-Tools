@@ -14,20 +14,20 @@ SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
 SAMPLE_SEARCH_1 = []
-SAMPLE_SEARCH_1.append({ 'index': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
-        "sources[]": [] })
-SAMPLE_SEARCH_1.append({ 'index': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
-SAMPLE_SEARCH_1.append({ 'index': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
-        "sources[]": [1] })
+SAMPLE_SEARCH_1.append({ 'index': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections": [8875027],
+        "sources": [] })
+SAMPLE_SEARCH_1.append({ 'index': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections": [8875027],
+        "sources": [1, 205701] })
+SAMPLE_SEARCH_1.append({ 'index': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections": [8875027],
+        "sources": [1] })
 
 SAMPLE_SEARCH_2 = []
-SAMPLE_SEARCH_2.append({ 'index': 0, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'index': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'index': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
+SAMPLE_SEARCH_2.append({ 'index': 0, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections": [8875027],
+        "sources": [1, 205701] })
+SAMPLE_SEARCH_2.append({ 'index': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections": [8875027],
+        "sources": [1, 205701] })
+SAMPLE_SEARCH_2.append({ 'index': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections": [8875027],
+        "sources": [1, 205701] })
 
 SAMPLE_SEARCHES = [{'label':'example1', 'id':0, 'data': SAMPLE_SEARCH_1} , {'label':'example2', 'id':1, 'data': SAMPLE_SEARCH_2 }]
 
@@ -113,14 +113,14 @@ def parse_query_with_keywords(args) :
 
     current_query = ''
     # TODO should we allow this from the client?
-    try:
-        index = int(args['index'])
-        query_id = int(args['query_id']) # not using this now, but we could use this as an extra check
+    # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
+
+    try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
         current_query = args['q']
-        start_date = args['start_date']
-        end_date = args['end_date']
-        media_ids = args['sources[]']
-        tags_ids = args['collections[]']
+        start_date = args['start_date'] if 'start_date' in args else start_date
+        end_date = args['end_date'] if 'end_date' in args else end_date
+        media_ids = args['sources[]'] if 'sources[]' in args else []
+        tags_ids = args['collections[]'] if 'collections[]' in args else [8875027]
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
@@ -129,15 +129,9 @@ def parse_query_with_keywords(args) :
             tags_ids=tags_ids)
 
 
-    # or just default
+    # otherwise, default
     except Exception as e:
-        logger.warn("user is querying, only use keyword and default the rest " + str(e))
-        current_query = args['q']
-        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-            start_date= start_date,
-            end_date=end_date,
-            media_ids=[1, 342],
-            tags_ids=[5])
+        logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
 

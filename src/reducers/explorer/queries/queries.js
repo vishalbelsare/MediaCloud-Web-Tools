@@ -30,7 +30,7 @@ function queries(state = INITIAL_STATE, action) {
       return state;
     case SELECT_SEARCH_BY_PARAMS:
       if (action.payload) {
-        const queryData = action.payload.data.map(q => Object.assign({}, q, { id: null, searchId: null }));
+        const queryData = action.payload.map(q => Object.assign({}, q, { id: null, searchId: null }));
         updatedState = queryData;
         return updatedState;
       }

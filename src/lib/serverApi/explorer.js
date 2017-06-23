@@ -34,8 +34,15 @@ export function fetchDemoQueryGeo(params) {
 }
 
 export function demoQuerySourcesByIds(params) {
-  const acceptedParams = acceptParams(params, ['sources[]']);
+  const acceptedParams = acceptParams(params, ['sources']);
+  acceptedParams['sources[]'] = params;
   return createApiPromise('api/explorer/demo/sources/list', acceptedParams);
+}
+
+export function demoQueryCollectionsByIds(params) {
+  const acceptedParams = acceptParams(params, ['collections']);
+  acceptedParams['collections[]'] = params;
+  return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
 }
 
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

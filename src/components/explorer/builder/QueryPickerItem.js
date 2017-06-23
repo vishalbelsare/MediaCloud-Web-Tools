@@ -6,9 +6,9 @@ import { Card, CardHeader } from 'material-ui/Card';
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
     defaultMessage: 'no media sources or collections' },
-  sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {label} \n other {# media sources }\n}' },
+  sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
   collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
-  collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount} collections' },
+  collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
 };
 
 const QueryPickerItem = (props) => {
@@ -34,8 +34,8 @@ const QueryPickerItem = (props) => {
       nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.q}</div>;
     }
 
-    const collCount = query['collections[]'].length;
-    const srcCount = query['sources[]'].length;
+    const collCount = query.collections.length;
+    const srcCount = query.sources.length;
     // const srcDesc = query.media;
     const totalCount = collCount + srcCount;
     const queryLabel = query.label;

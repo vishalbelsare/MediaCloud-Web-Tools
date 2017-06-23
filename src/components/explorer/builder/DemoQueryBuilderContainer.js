@@ -18,20 +18,14 @@ class DemoQueryBuilderContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { samples, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = nextProps.location.pathname;
-    const currentIndexOrKeyword = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
+    let currentIndexOrKeyword = url.slice(url.lastIndexOf('/') + 1, url.length);
 
-    if (this.props.location.pathname !== nextProps.location.pathname && nextProps.location.pathname.includes('/queries/demo')) {
-      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
-        loadSampleSearches(currentIndexOrKeyword); // currentIndex
-      } else { // likely from home page or new query param
-        selectSearchQueriesById(samples[currentIndexOrKeyword]);
-        setSelectedQuery(samples[currentIndexOrKeyword].data[0]); // if we already have the searches
-      }
-    } else if (nextProps.location.pathname.includes('/queries/search')) {
+    if (this.props.location.pathname !== nextProps.location.pathname &&
+      nextProps.location.pathname.includes('/queries/demo/search')) {
       // parse query params
-      // but for demo mode, we don't allow the user to enter in anything but the keywords...
-      // TODO will need to parse
+      // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       // we will not have a sample search selected BTW
+      // back end effectively ignores everything but the keyword
       const dateObj = getPastTwoWeeksDateRange();
       const queryObj = [
         { q: currentIndexOrKeyword,
@@ -46,6 +40,16 @@ class DemoQueryBuilderContainer extends React.Component {
       ];
       selectQueriesByURLParams(queryObj);
       setSelectedQuery(queryObj[0]);
+    } else if (this.props.location.pathname !== nextProps.location.pathname &&
+      nextProps.location.pathname.includes('/queries/demo')) {
+      // sample query id expected
+      currentIndexOrKeyword = parseInt(currentIndexOrKeyword, 10);
+      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+        loadSampleSearches(currentIndexOrKeyword); // currentIndex
+      } else { // likely from home page or new query param
+        selectSearchQueriesById(samples[currentIndexOrKeyword]);
+        setSelectedQuery(samples[currentIndexOrKeyword].data[0]); // if we already have the searches
+      }
     }
   }
 
