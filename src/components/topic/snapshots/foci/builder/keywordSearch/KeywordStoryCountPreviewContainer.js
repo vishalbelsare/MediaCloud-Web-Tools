@@ -50,7 +50,7 @@ class KeywordStoryCountPreviewContainer extends React.Component {
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
-        padding={15}
+        padding={30}
       />);
     }
     return (

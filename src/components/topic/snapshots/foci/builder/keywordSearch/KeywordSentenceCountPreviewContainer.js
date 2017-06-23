@@ -15,6 +15,9 @@ const localMessages = {
   helpText: { id: 'topic.snapshot.keywords.attention.help.text',
     defaultMessage: '<p>This chart shows you the coverage within this Topic that matches your keyword.</p>',
   },
+  chartExplanation: { id: 'topic.snapshot.keywords.attention.explanation',
+    defaultMessage: 'This chart shows you {total} sentences that match your subtopic query.',
+  },
 };
 
 class KeywordSentenceCountPreviewContainer extends React.Component {
@@ -32,8 +35,8 @@ class KeywordSentenceCountPreviewContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
+        <p><FormattedMessage {...localMessages.chartExplanation} values={{ total }} /></p>
         <AttentionOverTimeChart
-          total={total}
           data={counts}
           height={200}
           lineColor={getBrandDarkColor()}
