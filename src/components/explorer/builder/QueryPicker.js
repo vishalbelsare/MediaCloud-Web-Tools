@@ -26,10 +26,8 @@ class QueryPicker extends React.Component {
 
   updateQueryFromEditablePicker(event) {
     const { updateCurrentQuery, selected } = this.props;
-    const updateObject = {};
+    const updateObject = selected;
     updateObject[event.target.name] = event.target.value;
-    updateObject.id = selected.id;
-    updateObject.index = selected.index;
     updateCurrentQuery(updateObject);
   }
 
@@ -37,10 +35,8 @@ class QueryPicker extends React.Component {
   updateQuery(event) {
     const { updateCurrentQuery, selected } = this.props;
     // const editedFieldName = event.target.name;
-    const updateObject = {};
+    const updateObject = selected;
     updateObject[event.target.name] = event.target.value;
-    updateObject.id = selected.id;
-    updateObject.index = selected.index;
     updateCurrentQuery(updateObject);
   }
 

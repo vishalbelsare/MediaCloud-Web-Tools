@@ -14,19 +14,19 @@ SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
 SAMPLE_SEARCH_1 = []
-SAMPLE_SEARCH_1.append({ 'id': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
+SAMPLE_SEARCH_1.append({ 'index': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
+        "sources[]": [] })
+SAMPLE_SEARCH_1.append({ 'index': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
         "sources[]": [1, 205701] })
-SAMPLE_SEARCH_1.append({ 'id': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
-SAMPLE_SEARCH_1.append({ 'id': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
-        "sources[]": [1, 205701] })
+SAMPLE_SEARCH_1.append({ 'index': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
+        "sources[]": [1] })
 
 SAMPLE_SEARCH_2 = []
-SAMPLE_SEARCH_2.append({ 'id': 3, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
+SAMPLE_SEARCH_2.append({ 'index': 0, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections[]": [8875027],
         "sources[]": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'id': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
+SAMPLE_SEARCH_2.append({ 'index': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections[]": [8875027],
         "sources[]": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'id': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
+SAMPLE_SEARCH_2.append({ 'index': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections[]": [8875027],
         "sources[]": [1, 205701] })
 
 SAMPLE_SEARCHES = [{'label':'example1', 'id':0, 'data': SAMPLE_SEARCH_1} , {'label':'example2', 'id':1, 'data': SAMPLE_SEARCH_2 }]
@@ -178,3 +178,16 @@ def parse_query_with_args_and_sample_search(args, current_search) :
             tags_ids=[5])
 
     return solr_query
+
+def read_sample_searches():
+    filepath = os.path.join(app.config['JSON_FOLDER'], secure_filename(uploaded_file.filename))
+    # have to save b/c otherwise we can't locate the file path (security restriction)... can delete afterwards
+    uploaded_file.save(filepath)
+    with open(filepath, 'rU') as f:
+        reader = pycsv.DictReader(f)
+        reader.fieldnames = props
+        new_sources = []
+        updated_only = []
+        all_results = []
+        all_errors = []
+        reader.next()  # this means we have to have a header

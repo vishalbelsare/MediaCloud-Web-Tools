@@ -1,0 +1,82 @@
+[
+  { "name": "US 2016 MSM Election",
+    "imagePath": "/2016-election-us.png",
+    "queries": [
+      {
+        "index": 0,
+        "q": "clinton",
+        "startDate": "2016-06-01",
+        "endDate": "2016-12-01",
+        "collections": [8875027],
+        "sources": [],
+        "label": "Clinton",
+        "color": "#1f77b4",
+      },
+      {
+        "index": 1,
+        "q": "trump",
+        "startDate": "2016-06-01",
+        "endDate": "2016-12-01",
+        "collections": [8875027],
+        "sources": [],
+        "label": "Trump",
+        "color": "#ff7f0e",
+      }
+    ],
+  },
+  { "name": "Comparing US gun coverage",
+    "imagePath": "/guns-us.png",
+    "queries": [
+      {
+        "index": 0,
+        "q": "gun*",
+        "startDate": "2016-8-1",
+        "endDate": "2016-8-15",
+        "collections": [8875027],
+        "sources": [],
+        "label": "Guns in US Mainstream Media",
+        "color": "#1f77b4",
+      },
+      {
+        "index": 1,
+        "q": "gun*",
+        "startDate": "2016-8-1",
+        "endDate": "2016-8-15",
+        "collections": [2453107],
+        "sources": [],
+        "label": "Guns in US Regional Media",
+        "color": "#ff7f0e",
+      }
+    ],
+  },
+  { "name": "Child Marriage in India",
+    "imagePath": "/child-marriage-india.png",
+    "queries": [
+      {
+        "index": 0,
+        "q": "\"child marriage\" or \"child marriages\" or \"child bride\" or \"child brides\" or \"early marriage\" or \"early marriages\"",
+        "startDate": "2016-07-01",
+        "endDate": "2017-07-01",
+        "collections": [9201395],
+        "sources": [],
+        "label": "India",
+        "color": "#1f77b4",
+      },
+    ],
+  },
+  { "name": "Female Genital Mutilation (FGM) in US news sources",
+    "imagePath": "/fgm-us.png",
+    "queries": [
+      {
+        "index": 0,
+        "q": "fgm OR \"female genital mutilation\" OR \"female genital cutting\" OR \"fgc\" OR \"female circumcision\"",
+        "startDate": "2016-07-01",
+        "endDate": "2017-07-01",
+        "collections": [8875027, 2453107, 9139487, 9139458, 8875108, 8878293, 8878292, 8878294],
+        "sources": [],
+        "label": "FGM",
+        "color": "#1f77b4",
+      },
+    ],
+  }
+]
