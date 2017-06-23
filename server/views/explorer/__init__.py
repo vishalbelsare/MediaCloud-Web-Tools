@@ -102,6 +102,45 @@ def concatenate_query_and_dates(start_date, end_date):
 
     return publish_date
 
+def parse_query_with_keywords(args) :
+
+    solr_query = ''
+
+    # default dates
+    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    current_query = ''
+    # TODO should we allow this from the client?
+    try:
+        index = int(args['index'])
+        query_id = int(args['query_id']) # not using this now, but we could use this as an extra check
+        current_query = args['q']
+        start_date = args['start_date']
+        end_date = args['end_date']
+        media_ids = args['sources[]']
+        tags_ids = args['collections[]']
+
+        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
+            start_date= start_date,
+            end_date=end_date,
+            media_ids=media_ids,
+            tags_ids=tags_ids)
+
+
+    # or just default
+    except Exception as e:
+        logger.warn("user is querying, only use keyword and default the rest " + str(e))
+        current_query = args['q']
+        solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
+            start_date= start_date,
+            end_date=end_date,
+            media_ids=[1, 342],
+            tags_ids=[5])
+
+    return solr_query
+
 def parse_query_with_args_and_sample_search(args, current_search) :
 
     solr_query = ''

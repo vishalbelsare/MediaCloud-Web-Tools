@@ -5,7 +5,7 @@ import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES, parse_query_with_args_and_sample_search 
+from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES, parse_query_with_args_and_sample_search, parse_query_with_keywords 
 import datetime
 # load the shared settings file
 
@@ -25,22 +25,28 @@ def api_explorer_sentences_count():
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/demo/sentences/count', methods=['GET'])
-# TODO check this - we may not have either of these if a user custom query @arguments_required('search_id', 'query_id')
+# handles search id query or keyword query
 @api_error_handler
 def api_explorer_demo_sentences_count():
-
-    current_search = SAMPLE_SEARCHES[int(request.args['search_id'])]['data']
+    search_id = int(request.args['search_id']) if 'search_id' in request.args else None
+    
     index = int(request.args['index']) if 'index' in request.args else None
 
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
     start_date = two_weeks_before_now.strftime("%Y-%m-%d")
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-    solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+    if search_id not in [None, -1]:
+        current_search = SAMPLE_SEARCHES[search_id]['data']
+        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        if index < len(current_search): 
+            start_date = current_search[index]['start_date']
+            end_date = current_search[index]['end_date']
+    else:
+        solr_query = parse_query_with_keywords(request.args)
+        # TODO what about other params: date etc for demo..
 
-    if index < len(current_search): 
-        start_date = current_search[index]['start_date']
-        end_date = current_search[index]['end_date']
+    
 
     sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date, split_end_date=end_date, split=True)
     return jsonify(sentence_count_result)

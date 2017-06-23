@@ -2,10 +2,11 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
-import { selectQuery, updateTimestampForQueries, selectBySearchId, fetchSampleSearches, demoQuerySourcesByIds } from '../../../actions/explorerActions';
+import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
+import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 // import { notEmptyString } from '../../../lib/formValidators';
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -15,33 +16,36 @@ import QueryResultsContainer from './QueryResultsContainer';
 class DemoQueryBuilderContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { selected, samples, selectSearchQueries, setSelectedQuery, loadSampleSearches } = this.props;
-    // TODO better comparison
-    // if a query is clicked or if the url is edited...
-    // we might should break this into two different contaienrs: one for demo, one for logged in users...
+    const { samples, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = nextProps.location.pathname;
-    const currentIndex = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
+    const currentIndexOrKeyword = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
 
     if (this.props.location.pathname !== nextProps.location.pathname && nextProps.location.pathname.includes('/queries/demo')) {
-      if (!samples || samples.length === 0) {
-        loadSampleSearches(currentIndex); // currentIndex
-      } else {
-        selectSearchQueries(samples[currentIndex]);
-        setSelectedQuery(samples[currentIndex].data[0]); // if we already have the searches
+      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+        loadSampleSearches(currentIndexOrKeyword); // currentIndex
+      } else { // likely from home page or new query param
+        selectSearchQueriesById(samples[currentIndexOrKeyword]);
+        setSelectedQuery(samples[currentIndexOrKeyword].data[0]); // if we already have the searches
       }
-    }
-
-    if ((selected === null || nextProps.selected === null) ||
-      (selected && nextProps.selected &&
-        (selected.q !== nextProps.selected.q ||
-        selected.start_date !== nextProps.selected.start_date ||
-        selected.end_date !== nextProps.selected.end_date))) {
-      // assume if anything is in the url, parseInt it and select it
-
-      // if something else is clicked, then if logged in, we will push this into URL?
-      // queryParams = selected
-      const qObject = nextProps.selected ? nextProps.selected : nextProps.urlQueryString;
-      setSelectedQuery(qObject);
+    } else if (nextProps.location.pathname.includes('/queries/search')) {
+      // parse query params
+      // but for demo mode, we don't allow the user to enter in anything but the keywords...
+      // TODO will need to parse
+      // we will not have a sample search selected BTW
+      const dateObj = getPastTwoWeeksDateRange();
+      const queryObj = [
+        { q: currentIndexOrKeyword,
+          startDate: dateObj.start,
+          endDate: dateObj.end,
+          collections: [8875027],
+          index: 0,
+          search_id: null,
+          id: null,
+          sources: [],
+        },
+      ];
+      selectQueriesByURLParams(queryObj);
+      setSelectedQuery(queryObj[0]);
     }
   }
 
@@ -51,6 +55,9 @@ class DemoQueryBuilderContainer extends React.Component {
     let content = <div>Error</div>;
     // location could contain a keyword query or a sample search id
     // isEditable if not sample query
+    // const url = location.pathname;
+    // const currentIndexOrKeyword = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
+
     const isEditable = location.pathname.includes('queries/search');
     if (queries && queries.length > 0 && selected) {
       content = (
@@ -84,7 +91,8 @@ DemoQueryBuilderContainer.propTypes = {
   handleSearch: React.PropTypes.func.isRequired,
   setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
-  selectSearchQueries: React.PropTypes.func.isRequired,
+  selectSearchQueriesById: React.PropTypes.func.isRequired,
+  selectQueriesByURLParams: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
   fetchSamples: React.PropTypes.func.isRequired,
   urlQueryString: React.PropTypes.object,
@@ -113,6 +121,11 @@ const mapDispatchToProps = dispatch => ({
   handleSearch: () => {
     dispatch(updateTimestampForQueries());
   },
+  setQueryFromURL: (queryArrayFromURL) => {
+    dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
+    // select first entry
+    dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
+  },
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // load sample data into queries
     // select first entry
@@ -129,7 +142,7 @@ const mapDispatchToProps = dispatch => ({
           dispatch(selectQuery(defaultSelectedQuery));
           searchObjWithSearchId.data.map((query, idx) => {
             const demoInfo = {
-              ...query,
+              ...query, // add it here but also in reducer...
               index: idx,
             };
             return dispatch(demoQuerySourcesByIds(demoInfo));
@@ -142,8 +155,11 @@ const mapDispatchToProps = dispatch => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    selectSearchQueries: (searchObj) => {
+    selectSearchQueriesById: (searchObj) => {
       dispatchProps.setSampleSearch(searchObj);
+    },
+    selectQueriesByURLParams: (queryArray) => {
+      dispatchProps.setQueryFromURL(queryArray);
     },
     loadSampleSearches: (currentIndex) => {
       dispatchProps.fetchSamples(currentIndex);

@@ -8,6 +8,7 @@ import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+// import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -33,6 +34,8 @@ class QueryBuilderContainer extends React.Component {
       }
     } else if (nextProps.location.pathname.includes('/queries/search')) {
       // parse query params
+      // but for demo mode, we don't allow the user to enter in anything but the keywords...
+
     }
 
 

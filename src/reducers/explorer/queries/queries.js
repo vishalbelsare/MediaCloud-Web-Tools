@@ -1,5 +1,5 @@
 // import { createReducer } from '../../../lib/reduxHelpers';
-import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = null;
 
@@ -21,9 +21,17 @@ function queries(state = INITIAL_STATE, action) {
         return updatedState;
       }
       return null;
-    case SELECT_SEARCH:
-      if (action.payload) { // just for safety
-        updatedState = [...action.payload.data];
+    case SELECT_SEARCH_BY_ID:
+      if (action.payload) {
+        const queryData = action.payload.data.map(q => Object.assign({}, q, { id: action.payload.id, index: action.payload.id, searchId: action.payload.searchId }));
+        updatedState = queryData;
+        return updatedState;
+      }
+      return state;
+    case SELECT_SEARCH_BY_PARAMS:
+      if (action.payload) {
+        const queryData = action.payload.data.map(q => Object.assign({}, q, { id: null, search_id: null }));
+        updatedState = queryData;
         return updatedState;
       }
       return state;

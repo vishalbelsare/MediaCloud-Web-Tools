@@ -24,9 +24,9 @@ class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString.searchId !== urlQueryString.searchId) {
+      nextProps.urlQueryString !== urlQueryString) {
     // TODO also check for name and color changes
-      fetchData(nextProps.urlQueryString.searchId);
+      fetchData(urlQueryString);
     }
   }
 
@@ -104,6 +104,7 @@ const mapDispatchToProps = (dispatch, state) => ({
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query
     */
+  // TODO not using ownProps, will we need this or will all the needed info already be in the selected query?
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     if (isLoggedInUser) {
@@ -112,18 +113,17 @@ const mapDispatchToProps = (dispatch, state) => ({
       } else { // get all results
         state.queries.map((q, index) => dispatch(fetchQueryGeo(q, index)));
       }
-    } else if (state.params && state.params.searchId) { // else assume DEMO mode
-      let runTheseQueries = state.sampleSearches[state.params.searchId].data;
-      // merge sample search queries with custom
-
+    } else if (state.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      let runTheseQueries = state.queries;
       // find queries on stack without id but with index and with q, and add?
+
       const newQueries = state.queries.filter(q => q.id === undefined && q.index);
       runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw
-          search_id: state.params.searchId, // may or may not have these
-          query_id: q.id, // TODO if undefined, what to do?
+          search_id: q.searchId, // may or may not have these
+          query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
         return dispatch(fetchDemoQueryGeo(demoInfo)); // id
@@ -135,7 +135,7 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData();
+      dispatchProps.fetchData(ownProps);
     },
   });
 }
