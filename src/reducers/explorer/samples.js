@@ -7,7 +7,7 @@ const samples = createAsyncReducer({
   },
   action: FETCH_SAMPLE_SEARCHES,
   handleSuccess: payload => ({
-    list: payload.list,
+    list: payload.map(s => s),
   }),
 });
 export default samples;

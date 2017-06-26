@@ -11,7 +11,7 @@ const localMessages = {
 };
 
 const SearchForm = (props) => {
-  const { initialValues, handleSubmit, onSearch, renderTextField } = props;
+  const { handleSubmit, onSearch, renderTextField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
 
   return (
@@ -20,7 +20,6 @@ const SearchForm = (props) => {
         <Col md={10}>
           <Field
             name="keyword"
-            initialValues={initialValues}
             component={renderTextField}
             fullWidth
           />

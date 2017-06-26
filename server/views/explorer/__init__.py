@@ -180,8 +180,5 @@ def read_sample_searches():
     # load the sample searches file
     return send_from_directory(
             json_dir,
-            'sample_searches.json',
-            mimetype="application/json",
-            as_attachment=True)
-
+            'sample_searches.json', as_attachment=True)
 

@@ -23,7 +23,7 @@ function queries(state = INITIAL_STATE, action) {
       return null;
     case SELECT_SEARCH_BY_ID:
       if (action.payload) { // we may not have query id for these stored queries. use index which will not change for the sample queries
-        const queryData = action.payload.data.map((q, idx) => Object.assign({}, q, { id: idx, index: idx, searchId: action.payload.searchId }));
+        const queryData = action.payload.queries.map((q, idx) => Object.assign({}, q, { id: idx, index: idx, searchId: action.payload.searchId }));
         updatedState = queryData;
         return updatedState;
       }

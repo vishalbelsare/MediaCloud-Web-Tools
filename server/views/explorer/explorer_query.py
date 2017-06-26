@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import jsonify, request, Response
+from flask import jsonify, request, Response, json
 import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
 def api_explorer_sample_searches():
-
-    jsonFile = read_sample_searches()
-    return Response(jsonFile, mimetype="attachment/json", headers={"Content-Disposition": "attachment;filename=samples"})
+    return read_sample_searches()
 
 @app.route('/api/explorer/story/count', methods=['POST'])
 @flask_login.login_required

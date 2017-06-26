@@ -39,7 +39,7 @@ class DemoQueryBuilderContainer extends React.Component {
         loadSampleSearches(currentIndexOrKeyword); // currentIndex
       } else { // likely from home page or new query param
         selectSearchQueriesById(samples[currentIndexOrKeyword]);
-        setSelectedQuery(samples[currentIndexOrKeyword].data[0]); // if we already have the searches
+        setSelectedQuery(samples[currentIndexOrKeyword].queries[0]); // if we already have the searches
       }
     }
   }
@@ -157,7 +157,7 @@ const mapDispatchToProps = dispatch => ({
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // load sample data into queries
     // select first entry
-    dispatch(selectQuery(searchObj.data[0])); // default select first query
+    dispatch(selectQuery(searchObj.queries[0])); // default select first query
   },
   fetchSamples: (currentIndex) => {
     dispatch(fetchSampleSearches())
@@ -166,9 +166,9 @@ const mapDispatchToProps = dispatch => ({
           const searchObjWithSearchId = { ...values.list[currentIndex], searchId: currentIndex };
           // these can happen concurrently
           dispatch(selectBySearchId(searchObjWithSearchId)); // load sample data into queries
-          const defaultSelectedQuery = searchObjWithSearchId.data[0];
+          const defaultSelectedQuery = searchObjWithSearchId.queries[0];
           dispatch(selectQuery(defaultSelectedQuery));
-          searchObjWithSearchId.data.map((query, idx) => {
+          searchObjWithSearchId.queries.map((query, idx) => {
             const demoInfo = {
               ...query, // add it here but also in reducer...
               index: idx,
