@@ -5,7 +5,7 @@ import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, SAMPLE_SEARCHES, parse_query_with_args_and_sample_search, parse_query_with_keywords 
+from server.views.explorer import solr_query_from_request, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
 # load the shared settings file
 
@@ -37,11 +37,12 @@ def api_explorer_demo_sentences_count():
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     if search_id not in [None, -1]:
-        current_search = SAMPLE_SEARCHES[search_id]['data']
+        SAMPLE_SEARCHES = load_sample_searches()
+        current_search = SAMPLE_SEARCHES[search_id]['queries']
         solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
         if index < len(current_search): 
-            start_date = current_search[index]['start_date']
-            end_date = current_search[index]['end_date']
+            start_date = current_search[index]['startDate']
+            end_date = current_search[index]['endDate']
     else:
         solr_query = parse_query_with_keywords(request.args)
         # TODO what about other params: date etc for demo..

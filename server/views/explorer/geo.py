@@ -7,7 +7,7 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 import server.util.tags as tag_utl
-from server.views.explorer import SAMPLE_SEARCHES, concatenate_query_for_solr, parse_query_with_args_and_sample_search
+from server.views.explorer import concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
 # load the shared settings file
 
@@ -17,16 +17,22 @@ logger = logging.getLogger(__name__)
 @app.route('/api/explorer/demo/geo-tags/counts', methods=['GET'])
 def api_explorer_demo_geotag_count():
 
-    current_search = SAMPLE_SEARCHES[int(request.args['search_id'])]['data']
-    index = int(request.args['index']) if 'index' in request.args else None
+    search_id = int(request.args['search_id']) if 'search_id' in request.args else None
+    
+    if search_id not in [None, -1]:
+        SAMPLE_SEARCHES = load_sample_searches()
+        current_search = SAMPLE_SEARCHES[search_id]['queries']
+        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+    else:
+        solr_query = parse_query_with_keywords(request.args)
+        # TODO what about other params: date etc for demo..
 
-    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    # TODO coverage here
+    # total_stories = mc.storyCount(solr_query)
+    # geotagged_stories = mc.storyCount("({}) AND (tags_id_stories:{})".format(solr_query, CLIFF_CLAVIN_2_3_0_TAG_ID))
+    # coverage_pct = float(geotagged_stories) / float(total_stories)
 
-    solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
-
-    res = mc.sentenceFieldCount('*', solr_query, tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
+    res = mc.sentenceFieldCount('*', solr_query, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:
         geonamesId = int(r['tag'].split('_')[1])
@@ -39,5 +45,7 @@ def api_explorer_demo_geotag_count():
             if hq['properties']['iso-a3'] == r['alpha3']:
                 r['iso-a2'] = hq['properties']['iso-a2']
                 r['value'] = r['count']
+
+    # results = {'coverage': coverage_pct, 'list': res }
     return jsonify(res)
 

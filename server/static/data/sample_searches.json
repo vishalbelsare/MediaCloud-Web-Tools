@@ -31,8 +31,8 @@
     "queries": [{
         "index": 0,
         "q": "gun*",
-        "startDate": "2016-8-1",
-        "endDate": "2016-8-15",
+        "startDate": "2016-08-01",
+        "endDate": "2016-08-15",
         "collections": [8875027],
         "sources": [],
         "label": "Guns in US Mainstream Media",
@@ -41,8 +41,8 @@
       {
         "index": 1,
         "q": "gun*",
-        "startDate": "2016-8-1",
-        "endDate": "2016-8-15",
+        "startDate": "2016-08-01",
+        "endDate": "2016-08-15",
         "collections": [2453107],
         "sources": [],
         "label": "Guns in US Regional Media",

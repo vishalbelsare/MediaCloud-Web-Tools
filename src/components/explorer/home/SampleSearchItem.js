@@ -18,7 +18,7 @@ const SampleSearchItem = (props) => {
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
     const collection = '[8875027]';
-    const sources = '[1234,56789]';
+    const sources = '[]';
     urlParamString = search.queries.map(query => `search/[{"index":${query.index},"q":${query.q},"startDate":${dateObj.start},"endDate":${dateObj.end},"sources":${sources},"collections":${collection}`);
     display = search.queries.map(q => q.label).join(',');
   }

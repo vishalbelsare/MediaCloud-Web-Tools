@@ -14,25 +14,6 @@ logger = logging.getLogger(__name__)
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
-SAMPLE_SEARCH_1 = []
-SAMPLE_SEARCH_1.append({ 'index': 0, 'label': 'public health query', 'description': 'lorem epsum', 'q': 'public and health', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'green', "collections": [8875027],
-        "sources": [] })
-SAMPLE_SEARCH_1.append({ 'index': 1, 'label': 'chocolate query', 'description': 'lorem epsum', 'q': 'chocolate and dessert', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections": [8875027],
-        "sources": [1, 205701] })
-SAMPLE_SEARCH_1.append({ 'index': 2, 'label': 'bike safety query', 'description': 'lorem epsum', 'q': 'bike or safety', 'start_date': '2016-02-02', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections": [8875027],
-        "sources": [1] })
-
-SAMPLE_SEARCH_2 = []
-SAMPLE_SEARCH_2.append({ 'index': 0, 'label': 'search2 news query', 'description': 'lorem epsum', 'q': 'news and truth', 'start_date': '2016-05-05', 'end_date': '2017-05-05', 'imagePath': '.', 'color': 'green', "collections": [8875027],
-        "sources": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'index': 1, 'label': 'search2 candy query', 'description': 'lorem epsum', 'q': 'candy and dessert', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'blue', "collections": [8875027],
-        "sources": [1, 205701] })
-SAMPLE_SEARCH_2.append({ 'index': 2, 'label': 'search2 motorcycle safety query', 'description': 'lorem epsum', 'q': 'motorcycle or safety', 'start_date': '2016-05-05', 'end_date': '2017-02-02', 'imagePath': '.', 'color': 'red', "collections": [8875027],
-        "sources": [1, 205701] })
-
-SAMPLE_SEARCHES = [{'label':'example1', 'id':0, 'data': SAMPLE_SEARCH_1} , {'label':'example2', 'id':1, 'data': SAMPLE_SEARCH_2 }]
-
-
 # TODO maybe move all of this up
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
@@ -150,10 +131,10 @@ def parse_query_with_args_and_sample_search(args, current_search) :
         index = int(args['index'])
         query_id = int(args['query_id']) # not using this now, but we could use this as an extra check
         current_query = current_search[index]['q']
-        start_date = current_search[index]['start_date']
-        end_date = current_search[index]['end_date']
-        media_ids = current_search[index]['sources[]']
-        tags_ids = current_search[index]['collections[]']
+        start_date = current_search[index]['startDate']
+        end_date = current_search[index]['endDate']
+        media_ids = current_search[index]['sources']
+        tags_ids = current_search[index]['collections']
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
@@ -169,10 +150,17 @@ def parse_query_with_args_and_sample_search(args, current_search) :
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
             end_date=end_date,
-            media_ids=[1, 342],
-            tags_ids=[5])
+            media_ids=[],
+            tags_ids=[8875027])
 
     return solr_query
+
+def load_sample_searches():
+    json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
+    # load the sample searches file
+    with open(json_file) as json_data:
+        d = json.load(json_data)
+        return d
 
 def read_sample_searches():
     json_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'static/data'))
