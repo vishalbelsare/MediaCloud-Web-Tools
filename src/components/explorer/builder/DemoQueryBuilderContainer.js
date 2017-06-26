@@ -16,7 +16,7 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 class DemoQueryBuilderContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { samples, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = nextProps.location.pathname;
     let currentIndexOrKeyword = url.slice(url.lastIndexOf('/') + 1, url.length);
 
@@ -27,20 +27,25 @@ class DemoQueryBuilderContainer extends React.Component {
       // we will not have a sample search selected BTW
       // back end effectively ignores everything but the keyword
       // const dateObj = getPastTwoWeeksDateRange();
-
       const parsedObjectArray = this.parseJSONParams(currentIndexOrKeyword);
       selectQueriesByURLParams(parsedObjectArray);
       setSelectedQuery(parsedObjectArray[0]);
-    } else if (this.props.location.pathname !== nextProps.location.pathname &&
-      nextProps.location.pathname.includes('/queries/demo')) {
-      // sample query id expected
+    } else if (nextProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrKeyword = parseInt(currentIndexOrKeyword, 10);
-      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+
+      if (!samples || samples.length === 0 || selected === null) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrKeyword); // currentIndex
-      } else { // likely from home page or new query param
+      } else if (selected && selected.searchId !== currentIndexOrKeyword) {
+        // ISSUE: setting the queries array here, even if it's the same, causes an infinite loop here
+
+        setSelectedQuery(samples[currentIndexOrKeyword].queries[0]);
         selectSearchQueriesById(samples[currentIndexOrKeyword]);
-        setSelectedQuery(samples[currentIndexOrKeyword].queries[0]); // if we already have the searches
-      }
+        // setSelectedQuery(samples[currentIndexOrKeyword].queries[0]); // if we already have the searches
+      } else if (this.props.location.pathname !== nextProps.location.pathname) {
+        selectSearchQueriesById(samples[currentIndexOrKeyword]);
+      // if the currentIndex and queries are different from our currently index and queries
+      } // else if (selected && selected.searchId !== currentIndexOrKeyword) {
+      // }
     }
   }
 
@@ -123,7 +128,7 @@ DemoQueryBuilderContainer.propTypes = {
   selectQueriesByURLParams: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
   fetchSamples: React.PropTypes.func.isRequired,
-  urlQueryString: React.PropTypes.object,
+  urlQueryString: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -132,7 +137,7 @@ const mapStateToProps = (state, ownProps) => ({
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
   queries: state.explorer.queries ? state.explorer.queries : null,
   sourcesResults: state.explorer.sources ? state.explorer.sources.results : null,
-  urlQueryString: ownProps.location.query,
+  urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
   user: state.user,
@@ -155,14 +160,18 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
   },
   setSampleSearch: (searchObj) => {
-    dispatch(selectBySearchId(searchObj)); // load sample data into queries
-    // select first entry
-    dispatch(selectQuery(searchObj.queries[0])); // default select first query
+    dispatch(selectBySearchId(searchObj)) // select/map search's queries
+      .then((selectedQuery) => { // NEVER GETS HERE!?
+        if (selectedQuery) {
+          // select first query
+          dispatch(selectQuery(selectedQuery)); // default select first query
+        }
+      });
   },
   fetchSamples: (currentIndex) => {
-    dispatch(fetchSampleSearches())
+    dispatch(fetchSampleSearches()) // fetch all searches
       .then((values) => {
-        if (values.list && values.list.length > 0) {
+        if (values.list && values.list.length > 0) { // load desired search
           const searchObjWithSearchId = { ...values.list[currentIndex], searchId: currentIndex };
           // these can happen concurrently
           dispatch(selectBySearchId(searchObjWithSearchId)); // load sample data into queries
@@ -191,7 +200,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
     loadSampleSearches: (currentIndex) => {
       dispatchProps.fetchSamples(currentIndex);
-      // why can't I do a then here?
     },
   });
 }

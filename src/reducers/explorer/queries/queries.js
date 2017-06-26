@@ -22,14 +22,14 @@ function queries(state = INITIAL_STATE, action) {
       }
       return null;
     case SELECT_SEARCH_BY_ID:
-      if (action.payload) { // we may not have query id for these stored queries. use index which will not change for the sample queries
-        const queryData = action.payload.queries.map((q, idx) => Object.assign({}, q, { id: idx, index: idx, searchId: action.payload.searchId }));
+      if (action.payload) { // make sure searchId is set if present in return results. use index to differentiate queries.
+        const queryData = action.payload.queries.map((q, idx) => Object.assign({}, q, { searchId: action.payload.id, id: idx, index: idx }));
         updatedState = queryData;
         return updatedState;
       }
       return state;
     case SELECT_SEARCH_BY_PARAMS:
-      if (action.payload) {
+      if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
         const queryData = action.payload.map(q => Object.assign({}, q, { id: null, searchId: null }));
         updatedState = queryData;
         return updatedState;
