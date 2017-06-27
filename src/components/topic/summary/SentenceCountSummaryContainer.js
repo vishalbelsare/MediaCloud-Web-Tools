@@ -15,8 +15,8 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
+  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Total Sentences in Stories' },
+  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of sentences in stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
 class SentenceCountSummaryContainer extends React.Component {

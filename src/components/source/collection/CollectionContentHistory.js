@@ -12,7 +12,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.contentHistory.title', defaultMessage: 'Content History' },
+  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Sentences over Time' },
   counts: { id: 'collection.contentHistory.counts', defaultMessage: '{stories} Stories, {sentences} Sentences' },
 };
 
