@@ -12,7 +12,7 @@ const localMessages = {
     defaultMessage: 'We emailed you a summary of all the media sources we created or updated. {count} sources were added and/or updated successfully! Do you want to add them to this collection?',
   },
   error: { id: 'collection.media.upload.tooMany',
-    defaultMessage: 'Limit exceeded: too many {count} sources to upload. You can add up to 100 sources at a time.',
+    defaultMessage: 'Limit exceeded: too many {count} sources to upload. You can add up to 500 sources at a time.',
   },
 };
 
@@ -20,7 +20,7 @@ const CollectionUploadConfirmer = (props) => {
   const { sources, onConfirm, onCancel, onClickButton } = props;
   const { formatMessage } = props.intl;
   let message = null;
-  if (sources.length > 99) {
+  if (sources.length > 500) {
     message = localMessages.error;
   } else {
     message = localMessages.confirm;
