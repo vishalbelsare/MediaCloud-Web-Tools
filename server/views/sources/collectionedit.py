@@ -6,7 +6,7 @@ from flask import request, jsonify, render_template
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from server.util.mail import send_html_email
 from werkzeug.utils import secure_filename
-import unicodecsv as pycsv
+import csv as pycsv
 from multiprocessing import Pool
 
 from server import app, settings
@@ -79,8 +79,8 @@ def upload_file():
     sources_to_update, sources_to_create = _parse_sources_from_csv_upload(filepath)
     all_results = []
     all_errors = []
-    if len(sources_to_create) > 500:
-        return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 500.'})
+    if len(sources_to_create) > 300:
+        return jsonify({'status': 'Error', 'message': 'Too many sources to upload. The limit is 300.'})
     else:
         audit = []
         if len(sources_to_create) > 0:
@@ -118,14 +118,22 @@ def _parse_sources_from_csv_upload(filepath):
         for line in reader:
             try:
                 # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up val
-                update_the_source = line['media_id'] not in ['', None]    # if there is a media_id it is an update request
-                if update_the_source:
-                    sources_to_update.append(line)
+                updatedSrc = line['media_id'] not in ['', None]
+                # decode all keys as long as there is a key  re Unicode vs ascii
+                newline = {k.decode('utf-8', errors='replace').encode('ascii', errors='ignore').lower(): v for
+                           k, v in line.items() if k not in ['', None]}
+                newline_decoded = {k: v.decode('utf-8', errors='replace').encode('ascii', errors='ignore') for
+                                   k, v in newline.items() if v not in ['', None]}
+                empties = {k: v for k, v in newline.items() if v in ['', None]}
+
+                if updatedSrc:
+                    newline_decoded.update(empties)
+                    sources_to_update.append(newline_decoded)
                 else:
-                    sources_to_create.append(line)
+                    sources_to_create.append(newline_decoded)
             except Exception as e:
-                logger.error("Couldn't process a CSV row: " + str(e))
-                raise Exception("couldn't process a CSV row: " + str(e))
+                    logger.error("Couldn't process a CSV row: " + str(e))
+                    raise Exception("couldn't process a CSV row: " + str(e))
 
         return sources_to_update, sources_to_create
 
@@ -176,7 +184,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             errors.append(src)
         results.append(src)
     if len(sources_to_update) > 0:
-        pool = Pool(processes=20)    # process updates in parallel with worker function
+        pool = Pool(processes=15)    # process updates in parallel with worker function
         update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
         for idx, response in enumerate(update_responses):
             src = sources_to_update[idx]
