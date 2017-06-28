@@ -102,9 +102,9 @@ def upload_file():
                 media['media_id'] = int(
                     media['media_id'])  # make sure they are ints so no-dupes logic works on front end
         time_end = time.time()
-        logger.info("upload_file: {}".format(time_end - time_start))
-        logger.info("  save file: {}".format(time_file_saved - time_start))
-        logger.info("  processing: {}".format(time_end - time_file_saved))
+        logger.debug("upload_file: {}".format(time_end - time_start))
+        logger.debug("  save file: {}".format(time_file_saved - time_start))
+        logger.debug("  processing: {}".format(time_end - time_file_saved))
         return jsonify({'results': all_results})
 
 
@@ -162,7 +162,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
     for src in sources_to_create_no_metadata:
         sources_to_create_no_metadata.append(
             {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
-    creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata) # remove metadata so it doesn't try to save it wrongly
+    creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata) # remove metadata to not save badly
     for idx, response in enumerate(creation_responses):
         src = sources_to_create[idx]
         src['status'] = 'found and updated this source' if response['status'] == 'existing' else response['status']
@@ -193,7 +193,8 @@ def _create_or_update_sources(source_list_from_csv, create_new):
     time_info = time.time()
     # logger.debug("successful :  %s", successful)
     # logger.debug("errors :  %s", errors)
-    # for new sources we have status, media_id, url, error in result, merge with source_list so we have metadata and the fields we need for the return
+    # for new sources we have status, media_id, url, error in result, merge with source_list so we have
+    # metadata and the fields we need for the return
     if create_new:
         info_by_url = {source['url']: source for source in successful}
         for source in source_list_from_csv:
@@ -205,9 +206,9 @@ def _create_or_update_sources(source_list_from_csv, create_new):
     # if a successful update, just return what we have, success
     update_metadata_for_sources(successful)
     time_end = time.time()
-    logger.info("    time_create_update: {}".format(time_end - time_start))
-    logger.info("      info: {}".format(time_info - time_start))
-    logger.info("      metdata: {}".format(time_end - time_info))
+    logger.debug("    time_create_update: {}".format(time_end - time_start))
+    logger.debug("      info: {}".format(time_info - time_start))
+    logger.debug("      metdata: {}".format(time_end - time_info))
     return results, successful, errors
 
 
@@ -241,7 +242,6 @@ def _tag_media_worker(tags):
 
 # this only adds/replaces metadata with values (does not remove)
 def update_metadata_for_sources(source_list):
-    user_mc = user_admin_mediacloud_client()
     tags = []
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
@@ -264,7 +264,7 @@ def update_metadata_for_sources(source_list):
                         tags.append(MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD))
     # now do all the tags in batches so they happen in parallel
     if len(tags) > 0:
-        chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)] # do 50 tags in each request
+        chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
         pool = Pool(processes=10)  # process updates in parallel with worker function
         pool.map(_tag_media_worker, chunks)  # blocks until they are all done
         pool.terminate()  # extra safe garbage collection
