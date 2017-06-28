@@ -114,7 +114,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (redirect) {
           dispatch(push(redirect));
         }
-      } else if (response.message.includes('is not active')) {
+      } else if ((response.message) && (response.message.includes('is not active'))) {
         // user has signed up, but not activated their account
         dispatch(addNotice({ htmlMessage: ownProps.intl.formatMessage(localMessages.needsToActivate), level: LEVEL_ERROR }));
       } else {
