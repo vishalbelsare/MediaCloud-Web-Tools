@@ -82,24 +82,24 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
     const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage', 'countryOfFocus'];
     const infoToSave = {
-      id: ownProps.params.collectionId,
+      id: ownProps.params.sourceId,
+      url: values.url,
       name: values.name,
-      description: values.description,
       editor_notes: nullOrUndefined(values.editor_notes) ? '' : values.editor_notes,
       public_notes: nullOrUndefined(values.public_notes) ? '' : values.public_notes,
-      monitored: values.monitored,
+      monitored: values.monitored || false,
     };
     metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
       if (key in values) {
         infoToSave[key] = nullOrUndefined(values[key]) ? '' : values[key];
       }
     });
-    if ('sources' in values) {
-      infoToSave['collections[]'] = values.sources.map(s => (s.id ? s.id : s.tags_id));
+    if ('collections' in values) {
+      infoToSave['collections[]'] = values.collections.map(s => s.tags_id);
     } else {
       infoToSave['collections[]'] = [];
     }
-    dispatch(updateSource(values))
+    dispatch(updateSource(infoToSave))
       .then((result) => {
         if (result.success === 1) {
           // need to fetch it again because something may have changed
