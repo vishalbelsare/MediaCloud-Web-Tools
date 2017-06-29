@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Field, reduxForm, propTypes, validate } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
@@ -7,8 +7,11 @@ import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../common/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
+  basics: { id: 'topic.form.section.basics', defaultMessage: 'Basics' },
   name: { id: 'topic.form.detail.name', defaultMessage: 'Name' },
   nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a name.' },
   advancedSettings: { id: 'topic.form.detail.advancedSettings', defaultMessage: 'Advanced Settings' },
@@ -20,9 +23,12 @@ const localMessages = {
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
-  monitored: { id: 'topic.form.detail.monitored', defaultMessage: 'Crimson Hexagon Id' },
-  max_iterations: { id: 'topic.form.detail.max_iterations', defaultMessage: 'Max Iterations' },
-  twitter_topics_id: { id: 'topic.form.detail.twitter_topic', defaultMessage: 'Twitter Id' },
+  crimsonHexagon: { id: 'topic.form.detail.crimsonHexagon', defaultMessage: 'Crimson Hexagon Id' },
+  crimsonHexagonHelp: { id: 'topic.form.detail.crimsonHexagon.help', defaultMessage: 'If you have set up a Crimson Hexagon monitor on our associated account, enter it\'s numeric ID here and we will automatically pull in all the stories linked to by tweets in your monitor.' },
+  maxIterations: { id: 'topic.form.detail.maxIterations', defaultMessage: 'Max Spider Iterations' },
+  maxIterationsHelp: { id: 'topic.form.detail.maxIterations.help', defaultMessage: 'You can change how many rounds of spidering you want to do.  If you expect this topic to explode with lots and lots of linked-to stories about the same topic, then keep this small.  Otherwise leave it with the default of 15.' },
+  twitterIdHelp: { id: 'topic.form.detail.twitterTopicsId', defaultMessage: 'If you have created a separate Twitter-sources topic then enter it\'s topics_id here to tie the two together in our system.' },
+  twitterTopicsId: { id: 'topic.form.detail.twitterTopicsId.help', defaultMessage: 'Twitter Id' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
 };
@@ -41,6 +47,11 @@ const TopicDetailForm = (props) => {
   }
   return (
     <div>
+      <Row>
+        <Col lg={10}>
+          <h2><FormattedMessage {...localMessages.basics} /></h2>
+        </Col>
+      </Row>
       <Row>
         <Col lg={10}>
           <Field
@@ -118,36 +129,41 @@ const TopicDetailForm = (props) => {
               showExpandableButton
             />
             <CardText expandable>
-              <Row>
-                <Col lg={12}>
-                  <Field
-                    name="ch_monitor_id"
-                    component={renderTextField}
-                    fullWidth
-                    floatingLabelText={formatMessage(localMessages.monitored)}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12}>
-                  <Field
-                    name="twitter_topics_id"
-                    component={renderTextField}
-                    fullWidth
-                    floatingLabelText={formatMessage(localMessages.twitter_topics_id)}
-                  />
-                </Col>
-              </Row>
+              <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+                <Row>
+                  <Col lg={12}>
+                    <Field
+                      name="ch_monitor_id"
+                      component={renderTextField}
+                      fullWidth
+                      floatingLabelText={formatMessage(localMessages.crimsonHexagon)}
+                    />
+                    <small><FormattedMessage {...localMessages.crimsonHexagonHelp} /></small>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col lg={12}>
+                    <Field
+                      name="twitter_topics_id"
+                      component={renderTextField}
+                      fullWidth
+                      floatingLabelText={formatMessage(localMessages.twitterTopicsId)}
+                    />
+                    <small><FormattedMessage {...localMessages.twitterIdHelp} /></small>
+                  </Col>
+                </Row>
+              </Permissioned>
               <Row>
                 <Col lg={12}>
                   <Field
                     name="max_iterations"
                     component={renderSelectField}
                     fullWidth
-                    floatingLabelText={localMessages.max_iterations}
+                    floatingLabelText={localMessages.maxIterations}
                   >
                     {iterations.map(t => <MenuItem key={t} value={t} primaryText={t} />)}
                   </Field>
+                  <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
                 </Col>
               </Row>
             </CardText>

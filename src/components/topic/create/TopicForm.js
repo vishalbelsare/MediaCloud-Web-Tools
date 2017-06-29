@@ -12,13 +12,12 @@ export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
 
 const localMessages = {
-  name: { id: 'topic.name', defaultMessage: 'Name' },
   nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a name.' },
   descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a description.' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
-  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 18 months." },
+  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
@@ -26,12 +25,14 @@ const TopicForm = (props) => {
   const { onSaveTopic, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
+      <Row><Col lg={12}><hr /></Col></Row>
       <TopicDetailForm
         form="topicForm"
         destroyOnUnmount={false}
         initialValues={initialValues}
         mode={mode}
       />
+      <Row><Col lg={12}><hr /></Col></Row>
       <SourceCollectionsForm
         title={title}
         intro={intro}
@@ -42,6 +43,7 @@ const TopicForm = (props) => {
         maxSources={10}
         maxCollections={10}
       />
+      <Row><Col lg={12}><hr /></Col></Row>
       <Row>
         <Col lg={12}>
           <AppButton
