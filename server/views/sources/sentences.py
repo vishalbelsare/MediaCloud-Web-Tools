@@ -7,6 +7,7 @@ from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
 
+
 def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
     response = {}
     response['sentencecounts'] = cached_recent_sentence_counts(user_mc_key, [which + ":" +str(item_id)])
@@ -15,6 +16,8 @@ def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, filename)
 
+
+@cache
 def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date_str=None):
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query
