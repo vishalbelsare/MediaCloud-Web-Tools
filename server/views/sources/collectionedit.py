@@ -19,6 +19,8 @@ from server.views.sources.metadata import cached_tags_in_tag_set
 
 logger = logging.getLogger(__name__)
 
+MEDIA_UPDATE_POOL_SIZE = 15  # number of parallel processes to use while batch updating media sources
+MEDIA_METADATA_UPDATE_POOL_SIZE = 10  # number of parallel processes to use while batch updating media metadata
 
 @app.route('/api/collections/<collection_id>/update', methods=['POST'])
 @form_fields_required('name', 'description')
@@ -115,6 +117,7 @@ def _parse_sources_from_csv_upload(filepath):
         reader.fieldnames = acceptable_column_names
         sources_to_create = []
         sources_to_update = []
+        reader.next()   # skip column headers
         for line in reader:
             try:
                 # python 2.7 csv module doesn't support unicode so have to do the decode/encode here for cleaned up val
@@ -142,6 +145,7 @@ def _parse_sources_from_csv_upload(filepath):
 def _update_source_worker(source_info):
     user_mc = user_admin_mediacloud_client()
     media_id = source_info['media_id']
+    # logger.debug("Updating media {}".format(media_id))
     source_no_metadata_no_id = {k: v for k, v in source_info.items() if k != 'media_id'
                          and k not in COLLECTIONS_TEMPLATE_METADATA_PROPS}
     response = user_mc.mediaUpdate(media_id, source_no_metadata_no_id)
@@ -165,26 +169,29 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             sources_to_create.append(src)
         else:
             sources_to_update.append(src)
-    # now process all of them
-    sources_to_create_no_metadata = []
-    for src in sources_to_create_no_metadata:
-        sources_to_create_no_metadata.append(
-            {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
-    creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata) # remove metadata to not save badly
-    for idx, response in enumerate(creation_responses):
-        src = sources_to_create[idx]
-        src['status'] = 'found and updated this source' if response['status'] == 'existing' else response['status']
-        if 'error' in response:
-            src['status_message'] = response['error']
-        else:
-            src['status_message'] = src['status']
-        if response['status'] != 'error':
-            successful.append(src)
-        else:
-            errors.append(src)
-        results.append(src)
+    # process all the entries we think are creations in one batch call
+    if len(sources_to_create) > 0:
+        # remove metadata so they don't save badly (will do metadata later)
+        sources_to_create_no_metadata = []
+        for src in sources_to_create:
+            sources_to_create_no_metadata.append(
+                {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
+        creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata)
+        for idx, response in enumerate(creation_responses):
+            src = sources_to_create[idx]
+            src['status'] = 'found and updated this source' if response['status'] == 'existing' else response['status']
+            if 'error' in response:
+                src['status_message'] = response['error']
+            else:
+                src['status_message'] = src['status']
+            if response['status'] != 'error':
+                successful.append(src)
+            else:
+                errors.append(src)
+            results.append(src)
+    # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        pool = Pool(processes=15)    # process updates in parallel with worker function
+        pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
         update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
         for idx, response in enumerate(update_responses):
             src = sources_to_update[idx]
@@ -196,7 +203,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             else:
                 errors.append(src)
             results.append(src)
-        pool.terminate() # extra safe garbage collection
+        pool.terminate()  # extra safe garbage collection
 
     time_info = time.time()
     # logger.debug("successful :  %s", successful)
@@ -216,7 +223,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
     time_end = time.time()
     logger.debug("    time_create_update: {}".format(time_end - time_start))
     logger.debug("      info: {}".format(time_info - time_start))
-    logger.debug("      metdata: {}".format(time_end - time_info))
+    logger.debug("      metadata: {}".format(time_end - time_info))
     return results, successful, errors
 
 
@@ -270,9 +277,9 @@ def update_metadata_for_sources(source_list):
                         metadata_tag_id = matching[0]['tags_id']
                         logger.debug('found metadata to add %s', metadata_tag_id)
                         tags.append(MediaTag(source['media_id'], tags_id=metadata_tag_id, action=TAG_ACTION_ADD))
-    # now do all the tags in batches so they happen in parallel
+    # now do all the tags in parallel batches so it happens quickly
     if len(tags) > 0:
         chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
-        pool = Pool(processes=10)  # process updates in parallel with worker function
+        pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
         pool.map(_tag_media_worker, chunks)  # blocks until they are all done
         pool.terminate()  # extra safe garbage collection

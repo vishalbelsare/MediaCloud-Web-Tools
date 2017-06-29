@@ -4,6 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import AppButton from '../../../common/AppButton';
 import messages from '../../../../resources/messages';
 
+const MAX_ROWS_ALLOWED = 300; // the max number of rows they are allowed to upload - enforced here and on the server
+
 const localMessages = {
   downloadTemplate: { id: 'collection.media.upload.downloadTemplate',
     defaultMessage: 'Download Template',
@@ -19,12 +21,7 @@ const localMessages = {
 const CollectionUploadConfirmer = (props) => {
   const { sources, onConfirm, onCancel, onClickButton } = props;
   const { formatMessage } = props.intl;
-  let message = null;
-  if (sources.length > 300) {
-    message = localMessages.error;
-  } else {
-    message = localMessages.confirm;
-  }
+  const message = (sources.length > MAX_ROWS_ALLOWED) ? localMessages.error : localMessages.confirm;
   return (
     <div className="collection-copy-confirm">
       <p>
