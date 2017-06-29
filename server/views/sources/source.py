@@ -219,7 +219,7 @@ def source_create():
     public_notes = request.form['public_notes'] if 'public_notes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
-    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
+    tag_ids_to_add = tag_ids_from_collections_param()
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
         {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE},
@@ -280,7 +280,7 @@ def source_update(media_id):
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
         if (t['tag_sets_id'] in [COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID]) and (t['show_on_media'] is 1)]
-    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
+    tag_ids_to_add = tag_ids_from_collections_param()
     tag_ids_to_remove = list(set(existing_tag_ids) - set(tag_ids_to_add))
     tags_to_add = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_ADD)
                    for cid in tag_ids_to_add if cid not in existing_tag_ids]
@@ -319,8 +319,9 @@ def source_update(media_id):
     return jsonify(result)
 
 
-def tag_ids_from_collections_param(input):
+def tag_ids_from_collections_param():
     tag_ids_to_add = []
-    if len(input) > 0:
-        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",") if len(cid) > 0]
+    collection_ids = request.form['collections[]'].split(",")
+    if len(collection_ids ) > 0:
+        tag_ids_to_add = [int(cid) for cid in collection_ids if len(cid) > 0]
     return list(set(tag_ids_to_add))
