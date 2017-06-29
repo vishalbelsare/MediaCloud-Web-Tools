@@ -11,7 +11,7 @@ from server.cache import cache
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
-    TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SET_GEOCODER_VERSION, TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE
+    TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SET_GEOCODER_VERSION, TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
 from server.views.sources import _cached_source_story_count
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -297,13 +297,9 @@ def source_update(media_id):
     ]
     for metadata_item in valid_metadata:
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
-        existing_tag_ids = [t for t in source['media_source_tags']
-            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY \
-                or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE \
-                or t['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE \
-                or t['tag_sets_id'] == TAG_SETS_ID_COUNTRY_OF_FOCUS)]
-        # form field check 
-        if metadata_tag_id in [None,'','null','undefined']:
+        existing_tag_ids = [t for t in source['media_source_tags'] if is_metadata_tag_set(t['tag_sets_id'])]
+        # form field check
+        if metadata_tag_id in [None, '', 'null', 'undefined']:
             # we want to remove it if there was one there
             if len(existing_tag_ids) > 0:
                 for remove_if_empty in existing_tag_ids:
@@ -322,6 +318,6 @@ def source_update(media_id):
 def tag_ids_from_collections_param():
     tag_ids_to_add = []
     collection_ids = request.form['collections[]'].split(",")
-    if len(collection_ids ) > 0:
+    if len(collection_ids) > 0:
         tag_ids_to_add = [int(cid) for cid in collection_ids if len(cid) > 0]
     return list(set(tag_ids_to_add))
