@@ -7,6 +7,7 @@ const localMessages = {
   notLoggedIn: { id: 'errors.notLoggedIn', defaultMessage: 'You need to login' },
   badLoginAttempt: { id: 'errors.badLoginAttempt', defaultMessage: 'Your email or password was wrong' },
   details: { id: 'errors.internal.details', defaultMessage: 'details' },
+  quotaExceeded: { id: 'errors.quotaExceeded', defaultMessage: 'You have exceeded your weekly search or story quota. This means you won\'t be able to use any Media Cloud tools until next week. Please email us at support@mediacloud.org if you want a higher quota.' },
 };
 
 class AppNotice extends React.Component {
@@ -40,6 +41,8 @@ class AppNotice extends React.Component {
           } else if (stringMessage.includes('was not found or password is incorrect.')) {
             messageContent = <FormattedMessage {...localMessages.badLoginAttempt} />;
             detailsContent = null;  // don't show them the gnarly details if they just got their password wrong
+          } else if (stringMessage.includes('You have exceeded your quota of requests or stories')) {
+            messageContent = <FormattedMessage {...localMessages.quotaExceeded} />;
           } else {
             messageContent = <FormattedMessage {...localMessages.internalError} />;
           }
