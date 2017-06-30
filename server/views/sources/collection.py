@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 from operator import itemgetter
-
+from multiprocessing import Pool
 import flask_login
 from flask import jsonify, request
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD
@@ -23,12 +23,12 @@ from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
 
+HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
+
 
 def allowed_file(filename):
     filename, file_extension = os.path.splitext(filename)
     return file_extension.lower() in ['.csv']
-
-
 
 
 @app.route('/api/collections/<collection_id>/metadatacoverage.csv')
@@ -259,30 +259,38 @@ def collection_source_sentence_historical_counts_csv(collection_id):
     return csv.stream_response(results, props, filename)
 
 
+# worker function to help in parallel
+def _source_sentence_counts_worker(info):
+    source = info['media']
+    media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
+    total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
+    split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
+                                                               info['start_date_str'], info['end_date_str'])
+    del split_sentence_count['split']['end']
+    del split_sentence_count['split']['start']
+    del split_sentence_count['split']['gap']
+    source_data = {
+        'media_id': source['media_id'],
+        'media_name': source['name'],
+        'media_url': source['url'],
+        'total_stories': total_story_count,
+        'total_sentences': split_sentence_count['count'],
+        'sentences_over_time': split_sentence_count['split'],
+    }
+    return source_data
+
+
 def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
     user_mc = user_admin_mediacloud_client()
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
     media_list = collection_media_list(user_mediacloud_key(), collection_id)
-    results = []
-    for m in media_list:
-        media_query = "(media_id:{}) {}".format(m['media_id'], q)
-        total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
-        split_sentence_count = _cached_source_split_sentence_count(user_mediacloud_key, media_query,
-                                                                   start_date_str, end_date_str)
-        del split_sentence_count['split']['end']
-        del split_sentence_count['split']['start']
-        del split_sentence_count['split']['gap']
-        source_data = {
-            'media_id': m['media_id'],
-            'media_name': m['name'],
-            'media_url': m['url'],
-            'total_stories': total_story_count,
-            'total_sentences': split_sentence_count['count'],
-            'sentences_over_time': split_sentence_count['split'],
-        }
-        results.append(source_data)
+    jobs = [{'media': m, 'q': q, 'start_date_str': start_date_str, 'end_date_str': end_date_str} for m in media_list]
+    # fetch in parallel to make things faster
+    pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
+    results = pool.map(_source_sentence_counts_worker, jobs)  # blocks until they are all done
+    pool.terminate()  # extra safe garbage collection
     return results
 
 
