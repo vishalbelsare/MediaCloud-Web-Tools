@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
-import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds } from '../../../actions/explorerActions';
+import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -33,9 +33,9 @@ class DemoQueryBuilderContainer extends React.Component {
     } else if (nextProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrKeyword = parseInt(currentIndexOrKeyword, 10);
 
-      if (!samples || samples.length === 0 || selected === null) { // if not loaded as in bookmarked page
+      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrKeyword); // currentIndex
-      } else if (selected && selected.searchId !== currentIndexOrKeyword) {
+      } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrKeyword)) {
         // ISSUE: setting the queries array here, even if it's the same, causes an infinite loop here
 
         setSelectedQuery(samples[currentIndexOrKeyword].queries[0]);
@@ -160,33 +160,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
   },
   setSampleSearch: (searchObj) => {
-    dispatch(selectBySearchId(searchObj)) // select/map search's queries
-      .then((selectedQuery) => { // NEVER GETS HERE!?
-        if (selectedQuery) {
-          // select first query
-          dispatch(selectQuery(selectedQuery)); // default select first query
-        }
-      });
+    dispatch(selectBySearchId(searchObj)); // select/map search's queries
   },
-  fetchSamples: (currentIndex) => {
-    dispatch(fetchSampleSearches()) // fetch all searches
-      .then((values) => {
-        if (values.list && values.list.length > 0) { // load desired search
-          const searchObjWithSearchId = { ...values.list[currentIndex], searchId: currentIndex };
-          // these can happen concurrently
-          dispatch(selectBySearchId(searchObjWithSearchId)); // load sample data into queries
-          const defaultSelectedQuery = searchObjWithSearchId.queries[0];
-          dispatch(selectQuery(defaultSelectedQuery));
-          searchObjWithSearchId.queries.map((query, idx) => {
-            const demoInfo = {
-              ...query, // add it here but also in reducer...
-              index: idx,
-            };
-            return dispatch(demoQuerySourcesByIds(demoInfo));
-          });
-        }
-        // then select the first query index
-      });
+  fetchSamples: () => {
+    dispatch(fetchSampleSearches()); // fetch all searches
   },
 });
 
