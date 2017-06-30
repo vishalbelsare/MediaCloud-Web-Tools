@@ -28,7 +28,7 @@ const SourceManagerFaq = () => {
   const items = [];
   for (let i = 1; i <= NUM_ITEMS; i += 1) {
     items.push((
-      <FaqItem key={i} question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} />
+      <FaqItem key={i} question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} expanded />
     ));
   }
   return (

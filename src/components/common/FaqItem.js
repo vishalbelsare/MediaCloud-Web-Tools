@@ -11,6 +11,19 @@ class FaqItem extends React.Component {
     showAnswer: false,
   };
 
+  componentWillMount = () => {
+    const { expanded } = this.props;
+    if (expanded) {
+      this.setState({ showAnswer: expanded });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.expanded) {
+      this.setState({ showAnswer: nextProps.expanded });
+    }
+  }
+
   toggleVisible = (evt) => {
     evt.preventDefault();
     const visible = !this.state.showAnswer;
@@ -41,6 +54,7 @@ FaqItem.propTypes = {
   // from parent
   question: React.PropTypes.object.isRequired,
   answer: React.PropTypes.object.isRequired,
+  expanded: React.PropTypes.bool,
 };
 
 export default
