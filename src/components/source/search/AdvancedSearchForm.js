@@ -31,7 +31,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
@@ -40,7 +40,7 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_STATE}
             name={'publicationState'}
@@ -49,7 +49,7 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
@@ -58,7 +58,7 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
@@ -67,7 +67,9 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={2}>
+      </Row>
+      <Row>
+        <Col lg={12}>
           <AppButton
             style={{ marginTop: 30 }}
             type="submit"
