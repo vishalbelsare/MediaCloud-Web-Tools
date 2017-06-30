@@ -16,7 +16,7 @@ from server.util.request import arguments_required, form_fields_required, api_er
 from server.util.tags import COLLECTIONS_TAG_SET_ID, is_metadata_tag_set, format_name_from_label, format_metadata_fields
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
-from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
+from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
@@ -77,7 +77,7 @@ def api_collection_set(tag_sets_id):
     else:
         info = _tag_set_with_public_collections(tag_sets_id)
 
-    _add_user_favorite_flag_to_collections(info['collections'])
+    add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
 
@@ -125,7 +125,7 @@ def api_collections_by_ids():
         all_media = collection_media_list(user_mediacloud_key(), tagsId)
         info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes': m['public_notes']} for m
                 in all_media]
-        _add_user_favorite_flag_to_sources(info)
+        add_user_favorite_flag_to_sources(info)
         sources_list += info;
     return jsonify({'results': sources_list})
 
@@ -188,11 +188,11 @@ def collection_set_favorited(collection_id):
 def api_collection_details(collection_id):
     user_mc = user_admin_mediacloud_client()
     info = user_mc.tag(collection_id)
-    _add_user_favorite_flag_to_collections([info])
+    add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
     all_media = collection_media_list(user_mediacloud_key(), collection_id)
-    _add_user_favorite_flag_to_sources(all_media)
+    add_user_favorite_flag_to_sources(all_media)
     info['media'] = all_media
 
     return jsonify({'results': info})

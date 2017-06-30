@@ -16,7 +16,7 @@ from server.views.sources import _cached_source_story_count
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
+from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ def api_media_sources_by_ids():
     for mediaId in source_id_array:
         info = _media_source_details(mediaId)
         source_list.append(info)
-    _add_user_favorite_flag_to_sources(source_list)
+    add_user_favorite_flag_to_sources(source_list)
     return jsonify({'results': source_list})
 
 
@@ -132,8 +132,8 @@ def api_media_source_details(media_id):
         info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
     else:
         info['scrape_status'] = None
-    _add_user_favorite_flag_to_sources([info])
-    _add_user_favorite_flag_to_collections(info['media_source_tags'])
+    add_user_favorite_flag_to_sources([info])
+    add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify(info)
 
 @app.route('/api/sources/<media_id>/scrape', methods=['POST'])
