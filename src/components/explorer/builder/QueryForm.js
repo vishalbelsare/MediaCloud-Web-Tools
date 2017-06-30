@@ -5,6 +5,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
+import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
 // import SourceDetailsForm from './SourceDetailsForm';
 import { emptyString } from '../../../lib/formValidators';
@@ -27,8 +28,6 @@ const QueryForm = (props) => {
   if (cleanedInitialValues.disabled === undefined) {
     cleanedInitialValues.disabled = false;
   }
-
-  // const queryParam = `${initialValues.q}`;
 
 // we may have a query or a query object for initialValues
   return (
@@ -79,6 +78,7 @@ const QueryForm = (props) => {
           </Col>
         </Row>
         <Row>
+          <ColorPicker onChange={onChange} />
           <Field
             name="color"
             type="text"

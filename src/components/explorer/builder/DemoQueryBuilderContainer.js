@@ -2,11 +2,13 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
+import * as d3 from 'd3';
 import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+
 // import { notEmptyString } from '../../../lib/formValidators';
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -20,16 +22,17 @@ class DemoQueryBuilderContainer extends React.Component {
     const url = nextProps.location.pathname;
     let currentIndexOrKeyword = url.slice(url.lastIndexOf('/') + 1, url.length);
 
-    if (this.props.location.pathname !== nextProps.location.pathname &&
-      nextProps.location.pathname.includes('/queries/demo/search')) {
+    if (nextProps.location.pathname.includes('/queries/demo/search')) {
       // parse query params
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       // we will not have a sample search selected BTW
       // back end effectively ignores everything but the keyword
       // const dateObj = getPastTwoWeeksDateRange();
-      const parsedObjectArray = this.parseJSONParams(currentIndexOrKeyword);
-      selectQueriesByURLParams(parsedObjectArray);
-      setSelectedQuery(parsedObjectArray[0]);
+      if (this.props.location.pathname !== nextProps.location.pathname) {
+        const parsedObjectArray = this.parseJSONParams(currentIndexOrKeyword);
+        selectQueriesByURLParams(parsedObjectArray);
+        setSelectedQuery(parsedObjectArray[0]);
+      }
     } else if (nextProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrKeyword = parseInt(currentIndexOrKeyword, 10);
 
@@ -49,15 +52,19 @@ class DemoQueryBuilderContainer extends React.Component {
     }
   }
 
+  colorPallette = () => d3.scaleOrdinal(d3.schemeCategory20);
+
   parseJSONParams = (queriesFromURL) => {
     let parsedObjectArray = JSON.parse(queriesFromURL);
-    parsedObjectArray = parsedObjectArray.map((q, idx) => {
+
+    const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, defaultColor: this.colorPallette(idx)() }));
+    parsedObjectArray = parsedObjectArrayWithDefColor.map((q, idx) => {
       const defaultObjVals = {};
       if (q.label === undefined) {
         defaultObjVals.label = `gen${q.q}`; // TODO auto generate!
       }
       if (q.color === undefined) {
-        defaultObjVals.color = 'red'; // generateFromColorWheel();
+        defaultObjVals.color = q.defaultColor; // generateFromColorWheel();
       }
       if (q.index === undefined) {
         defaultObjVals.index = idx; // the backend won't use these values, but this is for the QueryPicker display
