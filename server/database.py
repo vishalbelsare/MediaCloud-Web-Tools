@@ -30,7 +30,11 @@ class AppDatabase():
         return self._conn.users.find_one({'username': username})
 
     def get_users_lists(self, username, list_name):
-        return self.find_by_username(username)[list_name]
+        user_data = self.find_by_username(username)
+        if list_name in user_data:
+            return user_data[list_name]
+        # be a little safe about checking for lists
+        return []
 
     def add_item_to_users_list(self, username, list_name, item):
         return self._conn.users.update_one({'username': username}, {'$push': {list_name: item}})

@@ -83,12 +83,6 @@ const StoryDetails = (props) => {
             values={{ wordCount: story.word_count || formatMessage(localMessages.unknown) }}
           />
         </li>
-        <li>
-          <FormattedHTMLMessage
-            {...localMessages.fbDate}
-            values={{ fbDate: story.facebook_collection_date || formatMessage(localMessages.unknown) }}
-          />
-        </li>
       </ul>
     </DataCard>
   );

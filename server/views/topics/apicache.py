@@ -3,6 +3,7 @@ from flask import request
 
 from server import mc, TOOL_API_KEY
 from server.cache import cache
+from server.util.tags import STORY_UNDATEABLE_TAG
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
@@ -146,6 +147,12 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
         'q': q
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
+    # and make sure to ignore undateable stories
+    undateable_query_part = "NOT tags_id_stories:{}".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
+    if merged_args['q'] is not None:
+        merged_args['q'] += " AND {}".format(undateable_query_part)
+    else:
+        merged_args['q'] = "* AND {}".format(undateable_query_part)
     return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)
 
 
@@ -257,3 +264,18 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
     sentences = local_mc.sentenceList(kwargs['q'], "timespans_id:{}".format(kwargs['timespans_id']),
                                      rows=sample_size, sort=local_mc.SORT_RANDOM)
     return sentences
+
+
+def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
+    '''
+    No timespan/single end point, so we need a helper to do it
+    :param snapshots_id: 
+    :param timespans_id: 
+    :param foci_id: 
+    :return: info about one timespan as specified
+    '''
+    timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
+    for timespan in timespans:
+        if int(timespan['timespans_id']) == int(timespans_id):
+            return timespan
+    return None

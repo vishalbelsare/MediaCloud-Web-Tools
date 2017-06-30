@@ -11,10 +11,10 @@ import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'media.sentenceCount.title', defaultMessage: 'Attention' },
+  title: { id: 'media.sentenceCount.title', defaultMessage: 'Total Sentences in this Media Source' },
   helpTitle: { id: 'media.sentenceCount.help.title', defaultMessage: 'About Media Attention' },
   helpText: { id: 'media.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Media Source.</p>',
+    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Media Source. This is the total number of sentences from this Media Source within this topic, which includes sentences that don\'t specifically match your query (but are in stories where at least one sentences does).</p>',
   },
 };
 

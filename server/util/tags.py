@@ -1,5 +1,7 @@
 import re
 
+STORY_UNDATEABLE_TAG = 8877812  # if a story has this tag, that means it was undateable
+
 # constants related to NYT labels (ie. tags on stories indicating what they are about)
 NYT_LABELER_1_0_0_TAG_ID = 9360669  # the tag that indicates a story was tagged by the NYT labeller version 1
 NYT_LABELS_TAG_SET_ID = 1963  # the tag set all the descriptor tags are in

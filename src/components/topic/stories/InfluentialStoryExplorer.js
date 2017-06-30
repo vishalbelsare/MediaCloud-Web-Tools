@@ -216,7 +216,7 @@ class InfluentialStoryExplorer extends React.Component {
           d => ((d.publishDate === null) ? 'undateable' : moment(d.publishDate).format('MMM D, YYYY')),
           d => `<img className="google-icon" src=${googleFavIconUrl(d.domain)} alt=${d.domain} />`,
           d => d.media_name,
-          d => d.title,
+          d => `<a href=${d.url} target="_blank">${d.title}</a>`,
           d => d.media_inlink_count,
           d => d.outlink_count,
           d => d.bitly_click_count,

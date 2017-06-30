@@ -5,6 +5,7 @@ import AppSubHeader from '../common/header/AppSubHeader';
 import { setTopicFavorite } from '../../actions/topicActions';
 import { updateFeedback } from '../../actions/appActions';
 import messages from '../../resources/messages';
+import { filteredLinkTo } from '../util/location';
 
 const localMessages = {
   topicFavorited: { id: 'source.favorited', defaultMessage: 'Starred this topic' },
@@ -12,7 +13,7 @@ const localMessages = {
 };
 
 const TopicMgrSubHeaderContainer = (props) => {
-  const { topicId, topicInfo, handleSetFavorited } = props;
+  const { topicId, filters, topicInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let title = '';
   if (topicInfo.is_public === 1) {
@@ -25,6 +26,7 @@ const TopicMgrSubHeaderContainer = (props) => {
       <div className="topic-sub-header">
         <AppSubHeader
           title={title}
+          link={filteredLinkTo(`/topics/${topicInfo.topics_id}/summary`, filters)}
           subTitle={topicInfo.description}
           isFavorite={topicInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
@@ -48,6 +50,7 @@ TopicMgrSubHeaderContainer.propTypes = {
   // state
   topicId: React.PropTypes.number,
   topicInfo: React.PropTypes.object,
+  filters: React.PropTypes.object,
   // from dispatch
   handleSetFavorited: React.PropTypes.func.isRequired,
 };
@@ -55,6 +58,7 @@ TopicMgrSubHeaderContainer.propTypes = {
 const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
+  filters: state.topics.selected.filters,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

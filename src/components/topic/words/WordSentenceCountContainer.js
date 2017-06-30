@@ -11,10 +11,10 @@ import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'word.sentenceCount.title', defaultMessage: 'Attention' },
+  title: { id: 'word.sentenceCount.title', defaultMessage: 'Sentences that Use this Word' },
   helpTitle: { id: 'word.sentenceCount.help.title', defaultMessage: 'About Word Attention' },
   helpText: { id: 'word.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Word.</p>',
+    defaultMessage: '<p>This chart shows you the sentences within this Topic that include this word.</p>',
   },
 };
 
@@ -97,7 +97,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           WordSentenceCountContainer
         )

@@ -8,15 +8,14 @@ import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
+import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
-import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
-import StatBar from '../../common/statbar/StatBar';
-import messages from '../../../resources/messages';
+import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -44,12 +43,6 @@ const localMessages = {
   scraping: { id: 'source.scrape.scraping', defaultMessage: 'We are current trying to scrape this source to discover RSS feeds we can pull content from.' },
   scrapeFailed: { id: 'source.scrape.failed', defaultMessage: 'Our last attempt to scrape this source for RSS feeds failed.' },
   unhealthySource: { id: 'source.warning.unhealthy', defaultMessage: 'It looks like we aren\'t actively tracking this source. Don\'t use it in general queries.' },
-  pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
-  pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
-  primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
-  countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
-  languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
-  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.  We automatically detect the countries and states talked about in our content.</p>' },
 };
 
 class SourceDetailsContainer extends React.Component {
@@ -67,10 +60,8 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source, user } = this.props;
+    const { source } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
-    const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
-    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
@@ -168,29 +159,13 @@ class SourceDetailsContainer extends React.Component {
               title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
               intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
                 name: source.name,
-                count: collections.length,
+                count: source.media_source_tags.length,
               })}
-              collections={collections}
+              collections={source.media_source_tags}
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
-            <StatBar
-              columnWidth={6}
-              stats={[
-                { message: localMessages.pubCountry, data: source.pubCountryTag ? source.pubCountryTag.label : '?' },
-                { message: localMessages.pubState, data: source.pubStateTag ? source.pubStateTag.label : '?' },
-                { message: localMessages.primaryLanguage,
-                  data: source.primaryLangaugeTag ? source.primaryLangaugeTag.label : '?',
-                  helpTitleMsg: localMessages.primaryLanguage,
-                  helpContentMsg: localMessages.languageHelpContent,
-                },
-                { message: localMessages.countryOfFocus,
-                  data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?',
-                  helpTitleMsg: messages.geoHelpTitle,
-                  helpContentMsg: [localMessages.geoHelpDetailedContent, messages.geoHelpContent],
-                },
-              ]}
-            />
+            <SourceMetadataStatBar source={source} columnWidth={6} />
           </Col>
         </Row>
       </Grid>
@@ -206,13 +181,11 @@ SourceDetailsContainer.propTypes = {
   sourceId: React.PropTypes.number.isRequired,
   // from state
   source: React.PropTypes.object,
-  user: React.PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   source: state.sources.sources.selected.sourceDetails,
-  user: state.user,
 });
 
 export default

@@ -155,6 +155,7 @@ import server.views.notebook.management
 server_app = settings.get('server', 'app')
 if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.collection
+    import server.views.sources.collectionedit
     import server.views.sources.source
     import server.views.sources.feeds
     import server.views.sources.suggestions

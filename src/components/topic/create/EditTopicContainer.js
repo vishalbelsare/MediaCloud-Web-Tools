@@ -4,7 +4,7 @@ import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
+import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -111,6 +111,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (results.topics_id) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          // if the dates changed tell them it needs a new snapshot
+          if ((infoToSave.start_date !== ownProps.topicInfo.start_date) || (infoToSave.end_date !== ownProps.topicInfo.end_date)) {
+            dispatch(setTopicNeedsNewSnapshot());
+          }
           // update topic info and redirect back to topic summary (no filters because we lost them on edit)
           dispatch(fetchTopicSummary(results.topics_id))
             .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));

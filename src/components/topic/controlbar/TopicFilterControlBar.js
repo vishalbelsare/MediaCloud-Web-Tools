@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
+import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo, filteredLocation } from '../../util/location';
-import { FilterButton } from '../../common/IconButton';
+import { FilterButton, HomeButton } from '../../common/IconButton';
 import { toggleFilterControls, filterByFocus, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
@@ -22,6 +23,7 @@ const localMessages = {
   filterTopic: { id: 'topic.filter', defaultMessage: 'Filter this Topic' },
   startedSpider: { id: 'topic.startedSpider', defaultMessage: 'Started a new spidering job for this topic' },
   summaryMessage: { id: 'snapshot.required', defaultMessage: 'You have made some changes that you can only see if you generate a new Snapshot. <a href="{url}">Generate one now</a>.' },
+  topicHomepage: { id: 'topic.homepage', defaultMessage: 'Topic Homepage' },
 };
 
 class TopicFilterControlBar extends React.Component {
@@ -46,6 +48,10 @@ class TopicFilterControlBar extends React.Component {
           <Grid>
             <Row>
               <Col lg={4} className="left">
+                <LinkWithFilters to={`/topics/${topicId}/summary`}>
+                  <HomeButton />
+                  <b><FormattedMessage {...localMessages.topicHomepage} /></b>
+                </LinkWithFilters>
                 <ModifyTopicDialog
                   topicId={topicId}
                   onUrlChange={goToUrl}

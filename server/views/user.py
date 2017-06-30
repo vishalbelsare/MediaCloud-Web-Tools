@@ -49,11 +49,13 @@ def permissions_for_user():
 
 
 @app.route('/api/user/signup', methods=['POST'])
-@form_fields_required('email', 'password', 'fullName', 'notes', 'subscribeToNewsletter')
+@form_fields_required('email', 'password', 'fullName', 'notes')
 @api_error_handler 
 def signup():
     logger.debug("reg request from %s", request.form['email'])
-    subscribe_to_newsletter = 1 if request.form['subscribeToNewsletter'] == 'true' else 0
+    subscribe_to_newsletter = 0
+    if ('subscribeToNewsletter' in request.form) and (request.form['subscribeToNewsletter'] == 'true'):
+        subscribe_to_newsletter = 1
     results = mc.authRegister(request.form['email'],
                               request.form['password'],
                               request.form['fullName'],
@@ -76,7 +78,7 @@ def activation_confirm():
         else:
             redirect_to_return = redirect(domain + '/#/user/activated?success=0&msg=' + results['error'])
     except MCException as mce:
-        # this is long strack trace so we have to trim it for url length support
+        # this is long stack trace so we have to trim it for url length support
         redirect_to_return = redirect(domain + '/#/user/activated?success=0&msg=' + str(mce[:300]))
     return redirect_to_return
 

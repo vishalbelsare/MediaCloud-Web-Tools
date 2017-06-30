@@ -6,10 +6,10 @@ import CollectionIcon from '../../../common/icons/CollectionIcon';
 import FilledStarIcon from '../../../common/icons/FilledStarIcon';
 import messages from '../../../../resources/messages';
 
-const CollectionList = (props) => {
+const CollectionTable = (props) => {
   const { title, description, collections } = props;
   return (
-    <div className="collection-list">
+    <div className="collection-table">
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
@@ -48,7 +48,7 @@ const CollectionList = (props) => {
   );
 };
 
-CollectionList.propTypes = {
+CollectionTable.propTypes = {
   // from parent
   collections: React.PropTypes.array.isRequired,
   title: React.PropTypes.string.isRequired,
@@ -59,5 +59,5 @@ CollectionList.propTypes = {
 
 export default
   injectIntl(
-    CollectionList
+    CollectionTable
   );

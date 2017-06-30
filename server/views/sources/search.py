@@ -3,11 +3,10 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import  api_error_handler
-from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.util.request import api_error_handler
+from server.auth import user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
-from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
+from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ def media_search(search_str):
         source_list = media_search(cleaned_search_str)[:MAX_SOURCES]
     else:
         source_list = media_search(cleaned_search_str, tags_id=tags[0])[:MAX_SOURCES]
-    _add_user_favorite_flag_to_sources(source_list)
+    add_user_favorite_flag_to_sources(source_list)
     return jsonify({'list':source_list})
 
 
@@ -44,7 +43,7 @@ def collection_search(search_str):
     results = collection_search(search_str, public_only)
     trimmed = [ r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
-    _add_user_favorite_flag_to_collections(flat_list)
+    add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})
 
 

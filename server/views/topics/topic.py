@@ -28,14 +28,21 @@ def topic_list():
         _add_user_favorite_flag_to_topics(topics['topics'])
         return jsonify({'topics': {'personal': topics}})
 
+
 @app.route('/api/topics/queued-and-running', methods=['GET'])
 @api_error_handler
 def does_user_have_a_running_topic():
-    user_mc = user_admin_mediacloud_client()
-    link_id = request.args.get('linkId')
-    topics = user_mc.topicList(link_id=link_id)['topics']
-    queued_and_running_topics = [t for t in topics if t['state'] in ['running', 'queued']]
-
+    user_mc = user_mediacloud_client()
+    queued_and_running_topics = []
+    more_topics = True
+    link_id = None
+    while more_topics:
+        results = user_mc.topicList(link_id=link_id)
+        topics = results['topics']
+        queued_and_running_topics += [t for t in topics if t['state'] in ['running', 'queued']]
+        more_topics = 'next' in results['link_ids']
+        if more_topics:
+            link_id = results['link_ids']['next']
     return jsonify(queued_and_running_topics)
 
 

@@ -13,6 +13,8 @@ const DEFAULT_MAX_COLLECTIONS_TO_SHOW = 3;
 
 const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a search
 
+const ADVANCED_SEARCH_ITEM_VALUE = 'advanced';
+
 const localMessages = {
   advancedSearch: { id: 'sources.search.advanced', defaultMessage: 'Advanced Search...' },
   searchHint: { id: 'sources.search.hint', defaultMessage: 'Search for sources or collections' },
@@ -41,16 +43,13 @@ class SourceSearchContainer extends React.Component {
 
   handleClick = (item) => {
     const { onMediaSourceSelected, onCollectionSelected, onAdvancedSearchSelected } = this.props;
-    const { formatMessage } = this.props.intl;
-    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
-
     if (item) {
       if (item.type === 'mediaSource') {
         if (onMediaSourceSelected) onMediaSourceSelected(item);
       } else if (item.type === 'collection') {
         if (onCollectionSelected) onCollectionSelected(item);
-      } else if (item === advancedSearchTitle) {
-        if (onAdvancedSearchSelected) onAdvancedSearchSelected(this.state.lastSearchString);
+      } else if (item === ADVANCED_SEARCH_ITEM_VALUE) {
+        if (onAdvancedSearchSelected) onAdvancedSearchSelected('');
       }
     }
     // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
@@ -82,7 +81,6 @@ class SourceSearchContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     let results = [];
 
-    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults.slice(0, this.getMaxCollectionsToShow()));
     }
@@ -119,9 +117,9 @@ class SourceSearchContainer extends React.Component {
         text: formatMessage(localMessages.advancedSearch),
         key: formatMessage(localMessages.advancedSearch),
         value: <MenuItem
-          value={advancedSearchTitle}
-          onClick={() => this.handleClick(advancedSearchTitle)}
-          onKeyDown={this.handleMenuItemKeyDown.bind(this, advancedSearchTitle)}
+          value={ADVANCED_SEARCH_ITEM_VALUE}
+          onClick={() => this.handleClick(ADVANCED_SEARCH_ITEM_VALUE)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, ADVANCED_SEARCH_ITEM_VALUE)}
           primaryText={formatMessage(localMessages.advancedSearch)}
         />,
       });

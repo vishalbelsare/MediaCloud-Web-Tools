@@ -6,16 +6,14 @@ import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
 import { fetchAttentionByQuery } from '../../../../actions/topicActions';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
-import messages from '../../../../resources/messages';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Attention' },
-  helpTitle: { id: 'topic.create.preview.attention.help.title', defaultMessage: 'About Attention' },
-  helpText: { id: 'topic.create.preview.attention.help.text',
-    defaultMessage: '<p>This chart shows you estimated coverage of your seed query</p>',
-  },
+  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Matching Sentences' },
   descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
+  helpText: { id: 'media.sentenceCount.help.text',
+    defaultMessage: '<p>This chart shows you the number of sentences over time that match your topic query. This a good preview of the attention paid to your topic that we already have in our system.</p>',
+  },
 };
 
 class TopicAttentionPreview extends React.Component {
@@ -92,7 +90,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+      composeDescribedDataCard(localMessages.descriptionIntro, localMessages.helpText)(
         composeAsyncContainer(
           TopicAttentionPreview
         )

@@ -65,7 +65,6 @@ MediaStoriesContainer.propTypes = {
   // from parent
   mediaId: React.PropTypes.number.isRequired,
   topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from fetchData

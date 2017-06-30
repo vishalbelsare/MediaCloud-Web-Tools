@@ -46,3 +46,29 @@ export function isCollectionTagSet(tagSetsId) {
 export function anyCollectionTagSets(tagSetIdList) {
   return tagSetIdList.reduce((any, tagSetId) => isCollectionTagSet(tagSetId) || any, false);
 }
+
+// Use this if you want to sort a set of tags by name (it falls back to tag if there is no label)
+export function compareTagNames(a, b) {
+  const nameA = (a.label || a.tag).toUpperCase(); // ignore upper and lowercase
+  const nameB = (b.label || b.tag).toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+}
+
+function tagForMetadata(metadataTagSetsId, allTags) {
+  return allTags.find(tag => tag.tag_sets_id === metadataTagSetsId);
+}
+
+export function mediaSourceMetadataProps(mediaSource) {
+  return {
+    pubCountryTag: tagForMetadata(TAG_SET_PUBLICATION_COUNTRY, mediaSource.media_source_tags),
+    pubStateTag: tagForMetadata(TAG_SET_PUBLICATION_STATE, mediaSource.media_source_tags),
+    primaryLangaugeTag: tagForMetadata(TAG_SET_PRIMARY_LANGUAGE, mediaSource.media_source_tags),
+    countryOfFocusTag: tagForMetadata(TAG_SET_COUNTRY_OF_FOCUS, mediaSource.media_source_tags),
+  };
+}

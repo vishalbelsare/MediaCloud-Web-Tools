@@ -20,7 +20,7 @@ const localMessages = {
   title: { id: 'topic.summary.stories.title', defaultMessage: 'Top Stories' },
   descriptionIntro: { id: 'topic.summary.stories.help.title', defaultMessage: 'The top stories within this topic can suggest the main ways it is talked about.  Sort by different measures to get a better picture of a story\'s influence.' },
   downloadNoFBData: { id: 'topic.summary.stories.download.noFB', defaultMessage: 'Download Csv' },
-  downloadWithFBData: { id: 'topic.summary.stories.download.withFB', defaultMessage: 'Download Csv with Facebook Data (takes longer)' },
+  downloadWithFBData: { id: 'topic.summary.stories.download.withFB', defaultMessage: 'Download CSV w/Facebook collection date (takes longer)' },
 };
 
 const NUM_TO_SHOW = 10;

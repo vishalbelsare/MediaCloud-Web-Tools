@@ -32,7 +32,8 @@ export function logout() {
 }
 
 export function hasCookies() {
-  return (cookie.load(COOKIE_USERNAME) !== undefined);
+  const hasUsernameCookie = (cookie.load(COOKIE_USERNAME) !== undefined);
+  return hasUsernameCookie;
 }
 
 /**

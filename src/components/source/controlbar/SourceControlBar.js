@@ -47,12 +47,8 @@ const mapDispatchToProps = dispatch => ({
   handleCollectionSelected: (item) => {
     dispatch(push(`/collections/${item.id}`));
   },
-  handleAdvancedSearchSelected: (values) => {
-    if (values.toLowerCase() !== 'advanced search') {
-      dispatch(push(`/search?search=${values}`));
-    } else {
-      dispatch(push('/search?search='));
-    }
+  handleAdvancedSearchSelected: (searchStr) => {
+    dispatch(push(`/search?search=${searchStr}`));
   },
 });
 
