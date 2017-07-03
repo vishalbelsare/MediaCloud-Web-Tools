@@ -34,14 +34,14 @@ export function fetchDemoQueryGeo(params) {
 }
 
 export function demoQuerySourcesByIds(params) {
-  const acceptedParams = acceptParams(params, ['sources']);
-  acceptedParams['sources[]'] = params;
+  const acceptedParams = acceptParams(params, ['index', 'sources']);
+  acceptedParams['sources[]'] = params.sources;
   return createApiPromise('api/explorer/demo/sources/list', acceptedParams);
 }
 
 export function demoQueryCollectionsByIds(params) {
-  const acceptedParams = acceptParams(params, ['collections']);
-  acceptedParams['collections[]'] = params;
+  const acceptedParams = acceptParams(params, ['index', 'collections']);
+  acceptedParams['collections[]'] = params.collections;
   return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
 }
 

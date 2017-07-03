@@ -57,6 +57,14 @@ const QueryForm = (props) => {
               />
             </Row>
             <Row>
+              <Field
+                name="collections"
+                component={renderTextField}
+                label="Collections"
+                floatingLabelText={formatMessage(localMessages.selectSandC)}
+              />
+            </Row>
+            <Row>
               <Col lg={3}>
                 <Field
                   name="startDate"

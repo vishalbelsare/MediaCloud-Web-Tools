@@ -51,13 +51,14 @@ class QueryPickerItem extends React.Component {
         );
       }
 
-      const collCount = query.collections.length;
-      const srcCount = query.sources.length;
+      const collCount = query.collections ? query.collections.length : 0;
+      const srcCount = query.sources ? query.sources.length : 0;
       // const srcDesc = query.media;
       const totalCount = collCount + srcCount;
       const queryLabel = query.label;
+      const oneCollLabel = collCount === 1 ? query.collections[0].label : '';
 
-      const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: queryLabel }} />;
+      const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: oneCollLabel }} />;
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
 
       if (srcCount === 0 && collCount === 1) {

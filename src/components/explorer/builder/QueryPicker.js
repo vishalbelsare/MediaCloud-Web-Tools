@@ -54,7 +54,7 @@ class QueryPicker extends React.Component {
       }
       // TODO, make sure the indexes are ok here b/c query may not have had an id on either sources or coll
       if (collectionsResults && collectionsResults.length > 0) {
-        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { sources: collectionsResults[idx] }));
+        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] }));
       }
 
       fixedQuerySlides = mergedQueryWithSourceInfo.map((query, index) => (
@@ -113,6 +113,7 @@ QueryPicker.propTypes = {
   queries: React.PropTypes.array,
   sourcesResults: React.PropTypes.array,
   collectionsResults: React.PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
   selected: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
@@ -128,6 +129,7 @@ const mapStateToProps = state => ({
   queries: state.explorer.queries,
   sourcesResults: state.explorer.sources.results ? state.explorer.sources.results : null,
   collectionsResults: state.explorer.collections.results ? state.explorer.collections.results : null,
+  fetchStatus: state.explorer.collections.fetchStatus,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

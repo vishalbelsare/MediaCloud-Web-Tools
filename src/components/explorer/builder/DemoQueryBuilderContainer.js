@@ -158,20 +158,20 @@ const mapDispatchToProps = dispatch => ({
   },
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries
-    const queriesWithSources = searchObj.queries.map((q) => {
-      const src = q.sources;
-      return src > 0 ? src : null;
-    }).filter(s => s);
-    if (queriesWithSources.length > 0) {
-      dispatch(demoQuerySourcesByIds(queriesWithSources)); // get sources names
-    }
-    const queriesWithCollections = searchObj.queries.map((q) => {
-      const coll = q.collections;
-      return coll.length > 0 ? coll : null;
-    }).filter(c => [...c]);
-    if (queriesWithCollections.length > 0) {
-      dispatch(demoQueryCollectionsByIds(queriesWithCollections)); // get collection names
-    }
+    searchObj.queries.map((q, idx) => {
+      const demoInfo = {
+        index: idx,
+      };
+      if (q.sources && q.sources.length > 0) {
+        demoInfo.sources = q.sources;
+        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+      }
+      if (q.collections && q.collections.length > 0) {
+        demoInfo.collections = q.collections;
+        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+      }
+      return 0;
+    });
   },
   fetchSamples: () => {
     dispatch(fetchSampleSearches()); // fetch all searches
