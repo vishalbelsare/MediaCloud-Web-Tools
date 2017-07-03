@@ -53,7 +53,6 @@ class GeoPreview extends React.Component {
       <DataCard>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <GridList
-          style={{ width: 1000, height: 1000, overflowY: 'auto' }}
           className="geo-mini-cards"
           cellHeight={400}
         >

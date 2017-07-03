@@ -32,6 +32,12 @@
     background-color: $material-grey200 !important;
 }
 
+.color-picker button {
+    border: none !important;
+    padding: 0px;
+    cursor: pointer !important;
+}
+
 .sample-searches {
     background-color: $material-red500 !important;
 }
