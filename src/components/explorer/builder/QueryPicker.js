@@ -41,7 +41,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, sourcesResults, collectionsResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
@@ -51,6 +51,10 @@ class QueryPicker extends React.Component {
       let mergedQueryWithSourceInfo = queries;
       if (sourcesResults && sourcesResults.length > 0) {
         mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
+      }
+      // TODO, make sure the indexes are ok here b/c query may not have had an id on either sources or coll
+      if (collectionsResults && collectionsResults.length > 0) {
+        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { sources: collectionsResults[idx] }));
       }
 
       fixedQuerySlides = mergedQueryWithSourceInfo.map((query, index) => (
@@ -108,6 +112,7 @@ class QueryPicker extends React.Component {
 QueryPicker.propTypes = {
   queries: React.PropTypes.array,
   sourcesResults: React.PropTypes.array,
+  collectionsResults: React.PropTypes.array,
   selected: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
@@ -122,14 +127,13 @@ const mapStateToProps = state => ({
   selected: state.explorer.selected,
   queries: state.explorer.queries,
   sourcesResults: state.explorer.sources.results ? state.explorer.sources.results : null,
+  collectionsResults: state.explorer.collections.results ? state.explorer.collections.results : null,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 
 
 const mapDispatchToProps = (dispatch, state) => ({
   setSelectedQuery: (query, index) => {
-    // if anything changed? but I think this is taken cre of
-    // dispatch(updateQuery(state.selected));
     const queryWithIndex = Object.assign({}, query, { index });
     dispatch(selectQuery(queryWithIndex));
   },
@@ -137,8 +141,6 @@ const mapDispatchToProps = (dispatch, state) => ({
     // const infoToQuery = queries;
     if (query) {
       dispatch(updateQuery(query));
-      // now we need to update selected b/c why? to reflect the change in name from picker to form or back...
-      // dispatch(selectQuery(state.selected));
     } else {
       dispatch(updateQuery(state.selected));
     }

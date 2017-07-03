@@ -48,3 +48,7 @@ export const fetchDemoQueryGeo = createAsyncAction(FETCH_DEMO_QUERY_GEO, api.fet
 
 export const FETCH_DEMO_QUERY_SOURCES = 'FETCH_DEMO_QUERY_SOURCES';
 export const demoQuerySourcesByIds = createAsyncAction(FETCH_DEMO_QUERY_SOURCES, api.demoQuerySourcesByIds, props => props);
+
+export const FETCH_DEMO_QUERY_COLLECTIONS = 'FETCH_DEMO_QUERY_COLLECTIONS';
+export const demoQueryCollectionsByIds = createAsyncAction(FETCH_DEMO_QUERY_COLLECTIONS, api.demoQueryCollectionsByIds, props => props);
+

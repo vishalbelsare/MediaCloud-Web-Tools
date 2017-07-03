@@ -1,27 +1,32 @@
-import logging
-from flask import jsonify, request, render_template
-import flask_login
+import csv as pycsv
 import datetime
+import logging
+import os
 from operator import itemgetter
+
+import flask_login
+from flask import jsonify, request, render_template
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 from werkzeug import secure_filename
-import csv as pycsv
-import server.util.csv as csv
-import os
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, METADATA_PRIMARY_LANGUAGE_NAME, is_metadata_tag_set, format_name_from_label
 
+import server.util.csv as csv
 from server import app, mc, db, settings
-from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
+    ROLE_MEDIA_EDIT
 from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.util.common import collection_media_list
 from server.util.mail import send_html_email
-from server.views.sources.words import cached_wordcount, stream_wordcount_csv
-from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.metadata import cached_tags_in_tag_set
+from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
+from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
+    TAG_SETS_ID_PRIMARY_LANGUAGE, \
+    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, is_metadata_tag_set, format_name_from_label
+from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
+    COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
 from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
+from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
+from server.views.sources.metadata import cached_tags_in_tag_set
+from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
+from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
 
@@ -503,29 +508,6 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
 def _tag_set_info(user_mc_key, tag_sets_id):
     user_mc = user_admin_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
-
-
-def collection_media_list(user_mc_key, tags_id):
-    more_media = True
-    all_media = []
-    max_media_id = 0
-    while more_media:
-        logger.debug("last_media_id %s", str(max_media_id))
-        media = collection_media_list_page(user_mc_key, tags_id, max_media_id)
-        all_media = all_media + media
-        if len(media) > 0:
-            max_media_id = media[len(media) - 1]['media_id']
-        more_media = len(media) != 0
-    return sorted(all_media, key=lambda t: t['name'].lower())
-
-
-def collection_media_list_page(user_mc_key, tags_id, max_media_id):
-    '''
-    We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
-    and some of the collections have TONS of sources
-    '''
-    user_mc = user_admin_mediacloud_client()
-    return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
 
 
 @app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])

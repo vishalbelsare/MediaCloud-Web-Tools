@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
-import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches } from '../../../actions/explorerActions';
+import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -39,16 +39,11 @@ class DemoQueryBuilderContainer extends React.Component {
       if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrKeyword); // currentIndex
       } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrKeyword)) {
-        // ISSUE: setting the queries array here, even if it's the same, causes an infinite loop here
-
         setSelectedQuery(samples[currentIndexOrKeyword].queries[0]);
         selectSearchQueriesById(samples[currentIndexOrKeyword]);
-        // setSelectedQuery(samples[currentIndexOrKeyword].queries[0]); // if we already have the searches
-      } else if (this.props.location.pathname !== nextProps.location.pathname) {
+      } else if (this.props.location.pathname !== nextProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
         selectSearchQueriesById(samples[currentIndexOrKeyword]);
-      // if the currentIndex and queries are different from our currently index and queries
-      } // else if (selected && selected.searchId !== currentIndexOrKeyword) {
-      // }
+      }
     }
   }
 
@@ -93,11 +88,6 @@ class DemoQueryBuilderContainer extends React.Component {
     const { selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <div>Error</div>;
-    // location could contain a keyword query or a sample search id
-    // isEditable if not sample query
-    // const url = location.pathname;
-    // const currentIndexOrKeyword = parseInt(url.slice(url.lastIndexOf('/') + 1, url.length), 10);
-
     const isEditable = location.pathname.includes('queries/demo/search');
     if (queries && queries.length > 0 && selected) {
       content = (
@@ -168,6 +158,20 @@ const mapDispatchToProps = dispatch => ({
   },
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries
+    const queriesWithSources = searchObj.queries.map((q) => {
+      const src = q.sources;
+      return src > 0 ? src : null;
+    }).filter(s => s);
+    if (queriesWithSources.length > 0) {
+      dispatch(demoQuerySourcesByIds(queriesWithSources)); // get sources names
+    }
+    const queriesWithCollections = searchObj.queries.map((q) => {
+      const coll = q.collections;
+      return coll.length > 0 ? coll : null;
+    }).filter(c => [...c]);
+    if (queriesWithCollections.length > 0) {
+      dispatch(demoQueryCollectionsByIds(queriesWithCollections)); // get collection names
+    }
   },
   fetchSamples: () => {
     dispatch(fetchSampleSearches()); // fetch all searches

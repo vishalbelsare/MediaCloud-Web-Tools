@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import selected from './selected';
 import queries from './queries/queries';
 import sources from './queries/sources';
+import collections from './queries/collections';
 import lastSearchTime from './lastSearchTime';
 import sentenceCount from './sentenceCount';
 import samples from './samples';
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   selected,
   queries,
   sources,
+  collections,
   lastSearchTime,
   sentenceCount,
   samples,
