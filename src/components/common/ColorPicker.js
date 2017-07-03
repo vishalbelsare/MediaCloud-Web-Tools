@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { GithubPicker } from 'react-color';
-// import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
 
 class ColorPicker extends React.Component {
 
@@ -10,16 +9,16 @@ class ColorPicker extends React.Component {
     displayColorPicker: false,
   };
 
-  handleClick = (props) => {
-    const { color, onClick } = props;
+  handleClick = () => {
+    // const { color, onClick } = props;
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
-    onClick({ color });
+    // onClick({ color });
   };
 
-  handleClose = (e) => {
+  handleClose = (color) => {
     const { onChange } = this.props;
     this.setState({ displayColorPicker: false });
-    onChange({ color: e.target.value });
+    onChange({ name: 'color', value: color.hex });
   };
 
   render() {
@@ -28,7 +27,7 @@ class ColorPicker extends React.Component {
     if (this.state.displayColorPicker) {
       colorPicker = <GithubPicker color={color} onChange={this.handleClose} />;
     } else {
-      colorPicker = <a href="" onClick={this.handleClick}>pickcolor</a>;
+      colorPicker = <button onClick={this.handleClick}><span style={{ width: 10, height: 10, backgroundColor: `${color}`, display: 'inline-block' }} /></button>;
     }
     return (
       <div className="color-picker">

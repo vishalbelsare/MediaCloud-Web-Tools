@@ -1,5 +1,4 @@
 import React from 'react';
-import { schemeCategory10 } from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -11,7 +10,6 @@ import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
-const COLORS = schemeCategory10;
 
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Story Counts' },
@@ -46,7 +44,7 @@ class StoryCountPreview extends React.Component {
           aboveText: (idx % 2 === 0) ? query.label : null,
           belowText: (idx % 2 !== 0) ? query.label : null,
           rolloverText: `${query.q}: ${formatNumber(query.count)}`,
-          fill: COLORS[idx + 1],
+          fill: query.color,
         })),
       ];
       content = (<BubbleRowChart

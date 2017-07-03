@@ -1,5 +1,5 @@
 import React from 'react';
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -21,7 +21,6 @@ const localMessages = {
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
-const COLORS = d3.schemeCategory10;
 
 function dataAsSeries(data) {
   // clean up the data
@@ -35,10 +34,15 @@ function dataAsSeries(data) {
 
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { urlQueryString, lastSearchTime, fetchData } = this.props;
+    const { urlQueryString, selected, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
       nextProps.urlQueryString !== urlQueryString) {
-    // TODO also check for name and color changes
+      fetchData(nextProps.urlQueryString);
+    }
+    if (nextProps.selected.color !== selected.color) {
+      fetchData(nextProps.urlQueryString);
+    }
+    if (nextProps.selected.label !== selected.label) {
       fetchData(nextProps.urlQueryString);
     }
   }
@@ -62,7 +66,7 @@ class AttentionComparisonContainer extends React.Component {
             data: data.values,
             pointStart: data.start,
             pointInterval: data.intervalMs,
-            color: COLORS[idx + 1],
+            color: query.color,
           };
         }),
       ];
@@ -92,6 +96,7 @@ AttentionComparisonContainer.propTypes = {
   // from parent
   lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
+  selected: React.PropTypes.object.isRequired,
   // from composition
   params: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
@@ -109,6 +114,7 @@ AttentionComparisonContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   queries: state.explorer.queries,
+  selected: state.explorer.selected,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,

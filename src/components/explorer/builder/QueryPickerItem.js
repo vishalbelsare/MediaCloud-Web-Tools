@@ -1,8 +1,8 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
-import { SketchPicker } from 'react-color';
-import { Card, CardHeader } from 'material-ui/Card';
+import { Card } from 'material-ui/Card';
+import ColorPicker from '../../common/ColorPicker';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
@@ -22,18 +22,14 @@ class QueryPickerItem extends React.Component {
     let nameInfo = null;
     let subT = null;
 
-    const colorPicker = (
-      <SketchPicker
-        color={query.color}
-        onChangeComplete={this.handleChangeComplete}
-      />
-    );
     if (query) {
       if (isEditable) {
         nameInfo = (
           <div>
-            {colorPicker}
-            <span style={{ width: 10, height: 10, backgroundColor: `${query.label}`, display: 'inline-block' }} />
+            <ColorPicker
+              color={query.color}
+              onChange={updateQuery}
+            />
             <TextField
               id="q"
               name="q"
@@ -44,7 +40,15 @@ class QueryPickerItem extends React.Component {
           </div>
         );
       } else {
-        nameInfo = <div><span style={{ width: 10, height: 10, backgroundColor: `${query.color}`, display: 'inline-block' }} />{query.q}</div>;
+        nameInfo = (
+          <div>
+            <ColorPicker
+              color={query.color}
+              onChange={updateQuery}
+            />
+            {query.q}
+          </div>
+        );
       }
 
       const collCount = query.collections.length;
@@ -72,10 +76,8 @@ class QueryPickerItem extends React.Component {
 
     return (
       <Card className="query-picker-item" onClick={() => selectThisQuery()}>
-        <CardHeader
-          title={nameInfo}
-          subtitle={subT}
-        />
+        {nameInfo}
+        {subT}
       </Card>
     );
   }

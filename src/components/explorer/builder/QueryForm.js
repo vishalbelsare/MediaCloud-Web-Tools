@@ -21,13 +21,14 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, selected, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
     cleanedInitialValues.disabled = false;
   }
+  const currentColor = selected.color; // for ColorPicker
 
 // we may have a query or a query object for initialValues
   return (
@@ -78,7 +79,11 @@ const QueryForm = (props) => {
           </Col>
         </Row>
         <Row>
-          <ColorPicker onChange={onChange} />
+          <ColorPicker
+            name="color"
+            color={currentColor}
+            onChange={onChange}
+          />
           <Field
             name="color"
             type="text"

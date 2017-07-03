@@ -25,19 +25,18 @@ class QueryPicker extends React.Component {
     addAQuery(newQueryObj);
   }
 
-  updateQueryFromEditablePicker(event) {
-    const { updateCurrentQuery, selected } = this.props;
-    const updateObject = selected;
-    updateObject[event.target.name] = event.target.value;
-    updateCurrentQuery(updateObject);
-  }
+  /* updateQueryFromEditablePicker(event) {
+    updateQuery(event);
+  } */
 
 
-  updateQuery(event) {
+  updateQuery(obj) {
     const { updateCurrentQuery, selected } = this.props;
     // const editedFieldName = event.target.name;
     const updateObject = selected;
-    updateObject[event.target.name] = event.target.value;
+    const fieldName = obj.target ? obj.target.name : obj.name;
+    const fieldValue = obj.target ? obj.target.value : obj.value;
+    updateObject[fieldName] = fieldValue;
     updateCurrentQuery(updateObject);
   }
 
@@ -61,7 +60,7 @@ class QueryPicker extends React.Component {
             selected={selected}
             isEditable={query.id === undefined ? true : isEditable} // if custom, true for either mode, else if logged in no
             selectThisQuery={() => setSelectedQuery(query, index)}
-            updateQuery={q => this.updateQueryFromEditablePicker(q)}
+            updateQuery={q => this.updateQuery(q)}
           />
         </div>
       ));
