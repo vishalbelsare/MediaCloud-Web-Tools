@@ -7,7 +7,7 @@ import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
-// import SourceDetailsForm from './SourceDetailsForm';
+import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString } from '../../../lib/formValidators';
 
 const localMessages = {
@@ -48,22 +48,12 @@ const QueryForm = (props) => {
             />
           </Col>
           <Col lg={6}>
-            <Row>
-              <Field
-                name="sources"
-                component={renderTextField}
-                label="Sources"
-                floatingLabelText={formatMessage(localMessages.selectSandC)}
-              />
-            </Row>
-            <Row>
-              <Field
-                name="collections"
-                component={renderTextField}
-                label="Collections"
-                floatingLabelText={formatMessage(localMessages.selectSandC)}
-              />
-            </Row>
+            <SourceCollectionsForm
+              form="queryForm"
+              destroyOnUnmount={false}
+              initialValues={cleanedInitialValues}
+              allowRemoval
+            />
             <Row>
               <Col lg={3}>
                 <Field
@@ -141,6 +131,9 @@ function validate(values) {
   }
   if (emptyString(values.color)) {
     errors.url = localMessages.colorError;
+  }
+  if (!values.collections || !values.collections.length) {
+    errors.collections = { _error: 'At least one collection must be chosen' };
   }
   return errors;
 }
