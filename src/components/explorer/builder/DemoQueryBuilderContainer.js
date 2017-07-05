@@ -155,6 +155,20 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
     // select first entry
     dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
+    queryArrayFromURL.map((q, idx) => {
+      const demoInfo = {
+        index: idx,
+      };
+      if (q.sources && q.sources.length > 0) {
+        demoInfo.sources = q.sources;
+        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+      }
+      if (q.collections && q.collections.length > 0) {
+        demoInfo.collections = q.collections;
+        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+      }
+      return 0;
+    });
   },
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries

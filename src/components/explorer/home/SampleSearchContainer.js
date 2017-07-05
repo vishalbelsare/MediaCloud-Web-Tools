@@ -60,7 +60,7 @@ SampleSearchContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   fetchData: React.PropTypes.func.isRequired,
   user: React.PropTypes.object.isRequired,
-  onSearch: React.PropTypes.func.isRequired,
+  onKeywordSearch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

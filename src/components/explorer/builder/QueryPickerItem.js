@@ -28,14 +28,14 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={updateQuery}
+              onChange={(e, val) => updateQuery(e, val)}
             />
             <TextField
               id="q"
               name="q"
               value={query.q}
               hintText={query.q}
-              onChange={updateQuery}
+              onChange={(e, val) => updateQuery(e, val)}
             />
           </div>
         );
@@ -89,7 +89,7 @@ QueryPickerItem.propTypes = {
   query: React.PropTypes.object,
   isEditable: React.PropTypes.bool.isRequired,
   selectThisQuery: React.PropTypes.func,
-  updateQuery: React.PropTypes.func,
+  updateQuery: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

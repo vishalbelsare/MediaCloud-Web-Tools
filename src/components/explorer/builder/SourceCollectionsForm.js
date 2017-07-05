@@ -16,8 +16,14 @@ const renderCollectionSelector = ({ allowRemoval, fields }) => (
             component={(info) => {
               const handleDelete = (allowRemoval || info.meta.dirty) ? () => { fields.remove(index); } : undefined;
               const val = info.input.value;
+              let tempObj = {};
+              if (val && typeof val === 'number') {
+                tempObj.id = val;
+              } else {
+                tempObj = info.input.value;
+              }
               return (
-                <SourceOrCollectionChip object={val} onDelete={handleDelete} />
+                <SourceOrCollectionChip object={tempObj} onDelete={handleDelete} />
               );
             }}
           />
@@ -53,6 +59,7 @@ SourceCollectionsForm.propTypes = {
   // from parent
   intl: React.PropTypes.object.isRequired,
   initialValues: React.PropTypes.object,
+  selected: React.PropTypes.object,
   allowRemoval: React.PropTypes.bool,
 };
 

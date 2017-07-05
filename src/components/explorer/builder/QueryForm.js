@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, propTypes } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import composeIntlForm from '../../common/IntlForm';
@@ -8,7 +8,7 @@ import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
 import SourceCollectionsForm from './SourceCollectionsForm';
-import { emptyString } from '../../../lib/formValidators';
+// import { emptyString } from '../../../lib/formValidators';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -21,7 +21,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, selected, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, selected, isEditable, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
@@ -29,7 +29,7 @@ const QueryForm = (props) => {
     cleanedInitialValues.disabled = false;
   }
   const currentColor = selected.color; // for ColorPicker
-
+  const currentQ = selected.q;
 // we may have a query or a query object for initialValues
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
@@ -39,6 +39,7 @@ const QueryForm = (props) => {
             <Field
               name="q"
               type="text"
+              value={currentQ}
               multiLine
               rows={3}
               rowsMax={4}
@@ -51,8 +52,10 @@ const QueryForm = (props) => {
             <SourceCollectionsForm
               form="queryForm"
               destroyOnUnmount={false}
+              enableReinitialize
               initialValues={cleanedInitialValues}
-              allowRemoval
+              selected={selected}
+              allowRemoval={isEditable}
             />
             <Row>
               <Col lg={3}>
@@ -83,7 +86,7 @@ const QueryForm = (props) => {
             onChange={onChange}
           />
           <Field
-            name="color"
+            name="colorText"
             type="text"
             component={renderTextField}
             label="Color"
@@ -122,9 +125,10 @@ QueryForm.propTypes = {
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
+  isEditable: React.PropTypes.bool.isRequired,
 };
 
-function validate(values) {
+/* function validate(values) {
   const errors = {};
   if (emptyString(values.query)) {
     errors.name = localMessages.queryError;
@@ -136,20 +140,12 @@ function validate(values) {
     errors.collections = { _error: 'At least one collection must be chosen' };
   }
   return errors;
-}
-
-const reduxFormConfig = {
-  form: 'queryForm',
-  validate,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  // may need to add the initialValues here...
-};
+} */
 
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm(reduxFormConfig)(
+      reduxForm({ propTypes })(
         QueryForm
       ),
     ),

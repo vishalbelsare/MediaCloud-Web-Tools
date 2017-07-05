@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -48,18 +47,19 @@ class QueryPicker extends React.Component {
 
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected) {
-      let mergedQueryWithSourceInfo = queries;
+      let mergedQueryWithSandCInfo = queries;
       if (sourcesResults && sourcesResults.length > 0) {
-        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
+        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
       }
       // TODO, make sure the indexes are ok here b/c query may not have had an id on either sources or coll
       if (collectionsResults && collectionsResults.length > 0) {
-        mergedQueryWithSourceInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] }));
+        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] }));
       }
 
-      fixedQuerySlides = mergedQueryWithSourceInfo.map((query, index) => (
+      fixedQuerySlides = mergedQueryWithSandCInfo.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
+            key={index}
             query={query}
             selected={selected}
             isEditable={query.id === undefined ? true : isEditable} // if custom, true for either mode, else if logged in no
@@ -71,10 +71,11 @@ class QueryPicker extends React.Component {
 
       if (isEditable) {
         const dateObj = getPastTwoWeeksDateRange();
-        const customEmptyQuery = { index: mergedQueryWithSourceInfo.length - 1, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], custom: true };
+        const customEmptyQuery = { index: mergedQueryWithSandCInfo.length - 1, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], custom: true };
 
         const addEmptyQuerySlide = (
           <AddButton
+            key={mergedQueryWithSandCInfo.length}
             tooltip={formatMessage(localMessages.add)}
             onClick={() => this.addACustomQuery(customEmptyQuery)}
           />
@@ -89,23 +90,28 @@ class QueryPicker extends React.Component {
           settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
         />
       );
+
+      // indicate which queryPickerItem is selected -
+      const selectedWithSandCLabels = mergedQueryWithSandCInfo.find(q => q.index === selected.index);
+      const initialValues = selectedWithSandCLabels ? { ...selectedWithSandCLabels } : {};
+      return (
+        <div className="query-picker">
+          {content}
+          <QueryForm
+            initialValues={initialValues}
+            selected={selectedWithSandCLabels}
+            form="queryForm"
+            enableReinitialize
+            destroyOnUnmount={false}
+            buttonLabel={formatMessage(localMessages.querySearch)}
+            onSave={handleSearch}
+            onChange={event => this.updateQuery(event)}
+            isEditable
+          />
+        </div>
+      );
     }
-
-    // indicate which queryPickerItem is selected -
-
-    return (
-      <div className="query-picker">
-        {content}
-        <QueryForm
-          initialValues={selected}
-          selected={selected}
-          buttonLabel={formatMessage(localMessages.querySearch)}
-          onSave={handleSearch}
-          onChange={event => this.updateQuery(event)}
-          isEditable
-        />
-      </div>
-    );
+    return ('error - no queries ');
   }
 }
 
@@ -119,7 +125,7 @@ QueryPicker.propTypes = {
   setSelectedQuery: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
-  formData: React.PropTypes.object,
+  // formData: React.PropTypes.object,
   updateCurrentQuery: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
 };
@@ -155,17 +161,10 @@ const mapDispatchToProps = (dispatch, state) => ({
   },
 });
 
-const reduxFormConfig = {
-  form: 'queryForm',
-  destroyOnUnmount: true,  // so the wizard works
-};
-
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      reduxForm(reduxFormConfig)(
-        QueryPicker
-      )
+      QueryPicker
     )
   );
 
