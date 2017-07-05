@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import * as d3 from 'd3';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -70,8 +71,12 @@ class QueryPicker extends React.Component {
       ));
 
       if (isEditable) {
+        const colorPallette = () => d3.scaleOrdinal(d3.schemeCategory20);
+
         const dateObj = getPastTwoWeeksDateRange();
-        const customEmptyQuery = { index: mergedQueryWithSandCInfo.length - 1, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], custom: true };
+        const newEntryIndex = mergedQueryWithSandCInfo.length - 1;
+        const genDefColor = colorPallette(newEntryIndex);
+        const customEmptyQuery = { index: { newEntryIndex }, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], color: { genDefColor }, custom: true };
 
         const addEmptyQuerySlide = (
           <AddButton
