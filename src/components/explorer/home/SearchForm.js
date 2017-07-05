@@ -11,8 +11,14 @@ const localMessages = {
 };
 
 const SearchForm = (props) => {
-  const { handleSubmit, onSearch, renderTextField } = props;
+  const { handleSubmit, onSearch, renderTextField, user } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
+  const checkEnterKey = (e, values) => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      return handleSubmit(values, user); // <--- all the form values are in a prop
+    }
+    return null;
+  };
 
   return (
     <form className="app-form search-form" name="searchForm" onSubmit={handleSubmit(onSearch.bind(this))}>
@@ -22,6 +28,7 @@ const SearchForm = (props) => {
             name="keyword"
             component={renderTextField}
             fullWidth
+            onChange={(e, values) => checkEnterKey(e, values)}
           />
         </Col>
         <Col lg={1}>
@@ -43,6 +50,7 @@ SearchForm.propTypes = {
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
+  user: React.PropTypes.object.isRequired,
 };
 
 function validate(values) {

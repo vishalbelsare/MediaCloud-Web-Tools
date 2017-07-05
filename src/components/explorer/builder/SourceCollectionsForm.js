@@ -36,7 +36,7 @@ renderCollectionSelector.propTypes = {
 const SourceCollectionsForm = (props) => {
   const { initialValues, allowRemoval } = props;
   return (
-    <div className="form-section explorer-source-collection-form">
+    <div className="explorer-source-collection-form">
       <FieldArray
         form={propTypes.form}
         name="collections"
