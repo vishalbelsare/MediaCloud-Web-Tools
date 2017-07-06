@@ -13,6 +13,7 @@ import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
+import Word2VecContainer from '../words/Word2VecContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -54,6 +55,9 @@ class TopicSummaryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
+            </Col>
+            <Col lg={12}>
+              <Word2VecContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />

@@ -11,6 +11,9 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
 
+from gensim.models.keyedvectors import KeyedVectors
+from sklearn.decomposition import PCA
+
 
 logger = logging.getLogger(__name__)
 
@@ -254,3 +257,37 @@ def topic_search():
     matching_topics = user_mc.topicList(name=search_str)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
+
+
+#TODO: install all the additional python libraries for this method...add to requirements.txt?
+@app.route('/api/topics/<topic_id>/word2vec', methods=['GET']) #double-check...pretty sure this should be a 'GET'...
+@flask_login.login_required
+#@arguments_required('topicId')
+@api_error_handler
+def topic_word2vec(topic_id):
+    #topic_id = request.args['topicId']
+    user_mc = user_mediacloud_client()  #admin...?
+    # TODO: double-check args here
+    words = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
+    # word_vectors = KeyedVectors.load('GoogleNews-vectors-negative300', mmap='r')
+    return jsonify({'embeddings': words})
+    # TODO: potentially find better way to do this
+    # Remove words that are not in model vocab
+    """
+    to_be_removed = []
+    for w in topic_word_count:
+      try:
+        word_vectors[w['term']]
+      except KeyError:
+        print "Not in vocabulary: " + w['term']
+        to_be_removed.append(w)
+
+    for w in to_be_removed:
+      topic_word_count.remove(w)
+
+    pca = PCA(n_components=2)  
+    two_d_embeddings = pca.fit_transform(embeddings)
+    """
+    #TODO: need to double-check what format two_d_embeddings is in...
+    # but want to return something like that as a result...
+    
