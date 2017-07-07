@@ -259,35 +259,35 @@ def topic_search():
     return jsonify({'topics': results})
 
 
-#TODO: install all the additional python libraries for this method...add to requirements.txt?
+#TODO: add to requirements.txt gensim and sklearn...?
 @app.route('/api/topics/<topic_id>/word2vec', methods=['GET']) #double-check...pretty sure this should be a 'GET'...
 @flask_login.login_required
-#@arguments_required('topicId')
 @api_error_handler
 def topic_word2vec(topic_id):
-    #topic_id = request.args['topicId']
     user_mc = user_mediacloud_client()  #admin...?
-    # TODO: double-check args here
-    words = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
-    # word_vectors = KeyedVectors.load('GoogleNews-vectors-negative300', mmap='r')
-    return jsonify({'embeddings': words})
+    topic_word_count = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
+    word_vectors = KeyedVectors.load('./server/static/data/GoogleNews-vectors-negative300', mmap='r')
+    
     # TODO: potentially find better way to do this
     # Remove words that are not in model vocab
-    """
     to_be_removed = []
     for w in topic_word_count:
       try:
         word_vectors[w['term']]
       except KeyError:
-        print "Not in vocabulary: " + w['term']
+        #print "Not in vocabulary: " + w['term']
         to_be_removed.append(w)
-
     for w in to_be_removed:
       topic_word_count.remove(w)
 
-    pca = PCA(n_components=2)  
-    two_d_embeddings = pca.fit_transform(embeddings)
-    """
-    #TODO: need to double-check what format two_d_embeddings is in...
-    # but want to return something like that as a result...
-    
+    words = map(lambda x: x['term'], topic_word_count)
+    counts = map(lambda x: x['count'], topic_word_count)
+    embeddings = [word_vectors[w] for w in words]
+    pca = PCA(n_components=2)
+    two_d_embeddings = pca.fit_transform(embeddings).tolist()
+
+    data = []
+    for i in range(len(words)):
+        data.append({'word': words[i], 'count': counts[i], 'x': two_d_embeddings[i][0], 'y': two_d_embeddings[i][1]})
+
+    return jsonify({'embeddings': data})
