@@ -44,7 +44,7 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={updateQuery}
+              onChange={(e, val) => updateQuery(e, val)}
             />
             {query.q}
           </div>
