@@ -13,26 +13,20 @@ const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
   intro: { id: 'explorer.querypicker.intro', defaultMessage: 'Here are all available queries' },
   add: { id: 'explorer.querypicker.add', defaultMessage: 'Add query' },
-  querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
-  searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
+  querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search' },
+  searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
 };
 
 //
 class QueryPicker extends React.Component {
 
-  addACustomQuery(newQueryObj) {
+  addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
   }
 
-  /* updateQueryFromEditablePicker(event) {
-    updateQuery(event);
-  } */
-
-
   updateQuery(obj) {
     const { updateCurrentQuery, selected } = this.props;
-    // const editedFieldName = event.target.name;
     const updateObject = selected;
     const fieldName = obj.target ? obj.target.name : obj.name;
     const fieldValue = obj.target ? obj.target.value : obj.value;
@@ -70,23 +64,25 @@ class QueryPicker extends React.Component {
         </div>
       ));
 
+      // provide the add Query button, load with default values when Added is clicked
       if (isEditable) {
         const colorPallette = () => d3.scaleOrdinal(d3.schemeCategory20);
-
         const dateObj = getPastTwoWeeksDateRange();
-        const newEntryIndex = mergedQueryWithSandCInfo.length - 1;
-        const genDefColor = colorPallette(newEntryIndex);
-        const customEmptyQuery = { index: { newEntryIndex }, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [8875027], sources: [], color: { genDefColor }, custom: true };
+        const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
+        const genDefColor = colorPallette(newIndex)();
+        const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: { id: 8875027, label: 'U.S. Mainstream Media' }, sources: [], color: { genDefColor }, custom: true };
 
-        const addEmptyQuerySlide = (
-          <AddButton
-            key={mergedQueryWithSandCInfo.length}
-            tooltip={formatMessage(localMessages.add)}
-            onClick={() => this.addACustomQuery(customEmptyQuery)}
-          />
+        const emptyQuerySlide = (
+          <div className="add-custom-query" key={fixedQuerySlides.length}>
+            <AddButton
+              key={fixedQuerySlides.length} // this isn't working
+              tooltip={formatMessage(localMessages.add)}
+              onClick={() => this.addAQuery(defaultQuery)}
+            />
+          </div>
         );
 
-        fixedQuerySlides.push(addEmptyQuerySlide);
+        fixedQuerySlides.push(emptyQuerySlide);
       }
       content = (
         <ItemSlider
