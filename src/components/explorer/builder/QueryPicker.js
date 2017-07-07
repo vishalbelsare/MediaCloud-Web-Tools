@@ -48,8 +48,9 @@ class QueryPicker extends React.Component {
         mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
       }
       // TODO, make sure the indexes are ok here b/c query may not have had an id on either sources or coll
+      // for new queries, we don't have this information for the default yet...
       if (collectionsResults && collectionsResults.length > 0) {
-        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] }));
+        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] ? collectionsResults[idx] : r.collections }));
       }
 
       fixedQuerySlides = mergedQueryWithSandCInfo.map((query, index) => (
@@ -71,7 +72,7 @@ class QueryPicker extends React.Component {
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
         const genDefColor = colorPallette(newIndex)();
-        const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div className="add-custom-query" key={fixedQuerySlides.length}>
@@ -155,10 +156,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(updateQuery(ownProps.selected)); // this won't e right
     }
     // push all queries into url
-    // const urlParamString = queries.map(query => `{"index":${query.index},"q":${query.q},"startDate":${q.start},"endDate":${q.end},"sources":${q.sources},"collections":${q.collection}}`);
-    const urlParamString = queries.map(q => JSON.stringify(q));
+    const urlParamString = queries.map(q => `{"index":${q.index},"q":${q.q},"startDate":${q.startDate},"endDate":${q.endDate},"sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
+    // const urlParamString = queries.map(q => JSON.stringify(q));
     const display = urlParamString.join(',');
-    const newLocation = `search/[${display}]`;
+    const newLocation = `queries/demo/search/[${display}]`;
     dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
   },
   addAQuery: (query) => {
