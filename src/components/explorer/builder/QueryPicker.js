@@ -156,7 +156,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(updateQuery(ownProps.selected)); // this won't e right
     }
     // push all queries into url
-    const urlParamString = queries.map(q => `{"index":${q.index},"q":${q.q},"startDate":${q.startDate},"endDate":${q.endDate},"sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
+    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
     // const urlParamString = queries.map(q => JSON.stringify(q));
     const display = urlParamString.join(',');
     const newLocation = `queries/demo/search/[${display}]`;
