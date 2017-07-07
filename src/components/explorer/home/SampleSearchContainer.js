@@ -25,9 +25,9 @@ class SampleSearchContainer extends React.Component {
     let searchContent = null;
     let content = null;
     let fixedSearchSlides = null;
-    const initialValues = { keyword: 'Search for' };
+    // const initialValues = { keyword: 'Search for' };
 
-    searchContent = <SearchForm initialValues={initialValues} onSearch={onKeywordSearch} user={user} />;
+    searchContent = <SearchForm onSearch={onKeywordSearch} user={user} />;
     if (samples && samples.length > 0) {
       fixedSearchSlides = samples.map((search, index) => (<div key={index}><SampleSearchItem search={search} user={user} /></div>));
 

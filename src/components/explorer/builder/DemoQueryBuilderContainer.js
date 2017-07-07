@@ -20,29 +20,38 @@ class DemoQueryBuilderContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = nextProps.location.pathname;
-    let currentIndexOrKeyword = url.slice(url.lastIndexOf('/') + 1, url.length);
-
+    const urlExtended = nextProps.location.hash;
+    let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
     if (nextProps.location.pathname.includes('/queries/demo/search')) {
       // parse query params
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       // we will not have a sample search selected BTW
       // back end effectively ignores everything but the keyword
       // const dateObj = getPastTwoWeeksDateRange();
+
+      //  which one to select? the first one
+      let parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+      if (urlExtended !== '' && urlExtended !== undefined) {
+        // url params may contain several queries
+        parsedObjectArray = this.parseJSONParams(urlExtended); // TODO
+      }
       if (this.props.location.pathname !== nextProps.location.pathname) {
-        const parsedObjectArray = this.parseJSONParams(currentIndexOrKeyword);
+        selectQueriesByURLParams(parsedObjectArray);
+        setSelectedQuery(parsedObjectArray[0]);
+      } else if (!selected && !nextProps.selected) {
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
       }
     } else if (nextProps.location.pathname.includes('/queries/demo')) {
-      currentIndexOrKeyword = parseInt(currentIndexOrKeyword, 10);
+      currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
 
       if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
-        loadSampleSearches(currentIndexOrKeyword); // currentIndex
-      } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrKeyword)) {
-        setSelectedQuery(samples[currentIndexOrKeyword].queries[0]);
-        selectSearchQueriesById(samples[currentIndexOrKeyword]);
+        loadSampleSearches(currentIndexOrQuery); // currentIndex
+      } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrQuery)) {
+        setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
+        selectSearchQueriesById(samples[currentIndexOrQuery]);
       } else if (this.props.location.pathname !== nextProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
-        selectSearchQueriesById(samples[currentIndexOrKeyword]);
+        selectSearchQueriesById(samples[currentIndexOrQuery]);
       }
     }
   }
