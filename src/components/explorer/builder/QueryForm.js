@@ -49,6 +49,7 @@ const QueryForm = (props) => {
                 name="q"
                 type="text"
                 value={currentQ}
+                underlineShow={false}
                 multiLine
                 rows={3}
                 rowsMax={4}
@@ -94,6 +95,7 @@ const QueryForm = (props) => {
                   name="startDate"
                   type="inline"
                   component={renderTextField}
+                  underlineShow={false}
                 />
               </Col>
               <FormattedMessage {...localMessages.dateTo} />
@@ -104,6 +106,7 @@ const QueryForm = (props) => {
                   name="endDate"
                   type="inline"
                   component={renderTextField}
+                  underlineShow={false}
                 />
               </Col>
             </Row>
