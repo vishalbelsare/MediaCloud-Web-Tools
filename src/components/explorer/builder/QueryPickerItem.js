@@ -62,11 +62,18 @@ class QueryPickerItem extends React.Component {
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
 
       if (srcCount === 0 && collCount === 1) {
-        // only show collStatus
-        subT = oneCollStatus;
+        // TODO start_date vs startDate
+        subT = (
+          <div className="query-picker-item-card-header">
+            {query.label}<br />
+            {oneCollStatus}<br />
+            {query.startDate}--{query.endDate}
+          </div>
+        );
       } else if (totalCount > 0) {
         subT = (
           <div className="query-picker-item-card-header">
+            {query.label}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
             {query.start_date}--{query.end_date}

@@ -2,8 +2,9 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
+import { replace } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, updateTimestampForQueries, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryPicker from './QueryPicker';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -14,6 +15,7 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
 }; */
+const MAX_COLORS = 20;
 
 class DemoQueryBuilderContainer extends React.Component {
 
@@ -30,14 +32,18 @@ class DemoQueryBuilderContainer extends React.Component {
       // const dateObj = getPastTwoWeeksDateRange();
 
       //  which one to select? the first one
-      let parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+      let parsedObjectArray = null;
       if (urlExtended !== '' && urlExtended !== undefined) {
         // url params may contain several queries
-        parsedObjectArray = this.parseJSONParams(urlExtended); // TODO
+        parsedObjectArray = this.parseJSONParams(`${currentIndexOrQuery}${urlExtended}`); // TODO not sure about the hash
+      } else {
+        parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
       }
       if (this.props.location.pathname !== nextProps.location.pathname) {
+        // could we check to see if we have added any new queries... otherwise just an update...
+        // and we keep current selection
         selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]);
+        setSelectedQuery(parsedObjectArray[0]); // how to not do this if we want to keep currentselection
       } else if (!selected && !nextProps.selected) {
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
@@ -56,12 +62,12 @@ class DemoQueryBuilderContainer extends React.Component {
     }
   }
 
-  colorPallette = () => d3.scaleOrdinal(d3.schemeCategory20);
 
   parseJSONParams = (queriesFromURL) => {
     let parsedObjectArray = JSON.parse(queriesFromURL);
+    const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
 
-    const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, defaultColor: this.colorPallette(idx)() }));
+    const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, defaultColor: colorPallette(idx) }));
     parsedObjectArray = parsedObjectArrayWithDefColor.map((q, idx) => {
       const defaultObjVals = {};
       if (q.label === undefined) {
@@ -101,7 +107,7 @@ class DemoQueryBuilderContainer extends React.Component {
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
-          <QueryPicker isEditable={isEditable} onClick={setSelectedQuery} handleSearch={handleSearch} />
+          <QueryPicker isEditable={isEditable} onClick={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
           <QueryResultsContainer queries={queries} params={location} samples={samples} />
         </div>
       );
@@ -157,8 +163,16 @@ const mapDispatchToProps = dispatch => ({
   updateQueryList: (queryObj) => {
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
-  handleSearch: () => {
-    dispatch(updateTimestampForQueries());
+  handleSearch: (queries) => {
+    // compare urlparams and determine if we dispatch(updateTimestampForQueries());
+    // or if we just change the url and trigger the refresh that way?
+    // push all updated queries into url
+    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
+    // const urlParamString = queries.map(q => JSON.stringify(q));
+    const display = urlParamString.join(',');
+    const newLocation = `queries/demo/search/[${display}]`;
+    dispatch(replace(newLocation));
+    // this should keep the current selection...
   },
   setQueryFromURL: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries

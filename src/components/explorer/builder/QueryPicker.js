@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { replace } from 'react-router-redux';
 import * as d3 from 'd3';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
@@ -18,6 +17,8 @@ const localMessages = {
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
 };
 
+const MAX_COLORS = 20;
+
 //
 class QueryPicker extends React.Component {
 
@@ -27,12 +28,12 @@ class QueryPicker extends React.Component {
   }
 
   updateQuery(obj) {
-    const { updateCurrentQuery, selected, queries } = this.props;
+    const { updateCurrentQuery, selected } = this.props;
     const updateObject = selected;
     const fieldName = obj.target ? obj.target.name : obj.name;
     const fieldValue = obj.target ? obj.target.value : obj.value;
     updateObject[fieldName] = fieldValue;
-    updateCurrentQuery(updateObject, queries);
+    updateCurrentQuery(updateObject);
   }
 
   render() {
@@ -68,10 +69,10 @@ class QueryPicker extends React.Component {
 
       // provide the add Query button, load with default values when Added is clicked
       if (isEditable) {
-        const colorPallette = () => d3.scaleOrdinal(d3.schemeCategory20);
+        const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
-        const genDefColor = colorPallette(newIndex)();
+        const genDefColor = colorPallette(newIndex);
         const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
@@ -148,19 +149,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const queryWithIndex = Object.assign({}, query, { index });
     dispatch(selectQuery(queryWithIndex));
   },
-  updateCurrentQuery: (query, queries) => {
-    // const infoToQuery = queries;
+  updateCurrentQuery: (query) => {
     if (query) {
       dispatch(updateQuery(query));
     } else {
       dispatch(updateQuery(ownProps.selected)); // this won't e right
     }
-    // push all queries into url
-    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
-    // const urlParamString = queries.map(q => JSON.stringify(q));
-    const display = urlParamString.join(',');
-    const newLocation = `queries/demo/search/[${display}]`;
-    dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
   },
   addAQuery: (query) => {
     if (query) {
