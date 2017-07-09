@@ -14,6 +14,7 @@ import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
+import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
@@ -114,6 +115,8 @@ export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
+
+export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add);
 
 export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
 

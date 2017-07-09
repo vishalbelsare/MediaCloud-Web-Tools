@@ -1,18 +1,19 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
+import { Card } from 'material-ui/Card';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
-import { AddButton } from '../../common/IconButton';
+import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
   intro: { id: 'explorer.querypicker.intro', defaultMessage: 'Here are all available queries' },
-  add: { id: 'explorer.querypicker.add', defaultMessage: 'Add query' },
+  addQuery: { id: 'explorer.querypicker.addQuery', defaultMessage: 'Add query' },
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
 };
@@ -76,12 +77,15 @@ class QueryPicker extends React.Component {
         const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
-          <div className="add-custom-query" key={fixedQuerySlides.length}>
-            <AddButton
-              key={fixedQuerySlides.length} // this isn't working
-              tooltip={formatMessage(localMessages.add)}
-              onClick={() => this.addAQuery(defaultQuery)}
-            />
+          <div className="add-query-item" key={fixedQuerySlides.length}>
+            <Card className="query-picker-item">
+              <AddQueryButton
+                key={fixedQuerySlides.length} // this isn't working
+                tooltip={formatMessage(localMessages.addQuery)}
+                onClick={() => this.addAQuery(defaultQuery)}
+              />
+              <FormattedMessage {...localMessages.addQuery} />
+            </Card>
           </div>
         );
 
