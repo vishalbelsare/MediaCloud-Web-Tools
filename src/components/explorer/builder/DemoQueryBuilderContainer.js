@@ -167,7 +167,7 @@ const mapDispatchToProps = dispatch => ({
     // compare urlparams and determine if we dispatch(updateTimestampForQueries());
     // or if we just change the url and trigger the refresh that way?
     // push all updated queries into url
-    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => c.tags_id || c.id)}]}`);
+    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
     // const urlParamString = queries.map(q => JSON.stringify(q));
     const display = urlParamString.join(',');
     const newLocation = `queries/demo/search/[${display}]`;
