@@ -194,12 +194,30 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     props = ['stories_id', 'publish_date', 'date_is_reliable', 
             'title', 'url', 'media_id', 'media_name',
             'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
-             'facebook_share_count', 'language']
-
+             'facebook_share_count', 'language', 'subtopics', 'themes']
+    user_mc = user_mediacloud_client()
     try:
         while more_stories:
             page = topic_story_list(user_mc_key, topics_id, **params)
-
+            # need to make another call to fetch the tags :-(
+            story_ids = [str(s['stories_id']) for s in page['stories']]
+            stories_with_tags = user_mc.storyList('stories_id:('+" ".join(story_ids)+")", rows=kwargs['limit'])
+            story_ids_to_tags = {int(s['stories_id']): s['story_tags'] for s in stories_with_tags}
+            for s in page['stories']:
+                s['themes'] = '?'  # means we haven't processed it for themes yet
+                s['subtopics'] = '?'  # fill it in for safety
+                stories_id = s['stories_id']
+                if stories_id in story_ids_to_tags:
+                    story_tags = story_ids_to_tags[stories_id]
+                    story_tag_ids = [t['tags_id'] for t in story_tags]
+                    # add in the names of any themes
+                    if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
+                        s['themes'] = ",".join([t['tag'] for t in story_tags
+                                                if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID])
+                    # not doing geonames places here because it would take too long to fetch the name with `_cached_geonames`
+                # add in the names of any subtopics
+                foci_names = [f['name'] for f in s['foci']]
+                s['subtopics'] = ",".join(foci_names)
             all_stories = all_stories + page['stories']
             if 'next' in page['link_ids']:
                 params['link_id'] = page['link_ids']['next']
