@@ -65,11 +65,15 @@ def api_explorer_demo_sentences_count():
 @cache
 def cached_by_query_sentence_counts(query, start_date_str=None, end_date_str=None):
     sentence_count_result = mc.sentenceCount(solr_query=query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
-    return sentence_count_result
+    return sentence_count_result['response']
 
 
 def stream_sentence_count_csv(fn, search_id_or_query, index):
     response = {}
+    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+
     SAMPLE_SEARCHES = load_sample_searches()
     if int(search_id_or_query) < len(SAMPLE_SEARCHES):
         search_id = int(search_id_or_query)
@@ -85,8 +89,10 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
         start_date = search_id_or_query['startDate']
         end_date = search_id_or_query['endDate']
 
-    response['sentencecounts'] = cached_by_query_sentence_counts(solr_query, start_date, end_date) # get dates out of query?
-    clean_results = [{'date': date, 'numFound': count} for date, count in response['sentencecounts'].iteritems() if date not in ['gap', 'start', 'end']]
+    results = cached_by_query_sentence_counts(solr_query, start_date, end_date) # get dates out of query?
+    clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
+    sorted_results = sorted(clean_results, key=itemgetter('date'))
+
     clean_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, fn)

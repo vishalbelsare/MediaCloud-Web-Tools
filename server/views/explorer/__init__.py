@@ -128,8 +128,12 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     current_query = ''
     try:
-        index = int(args_or_query['index']) or int(args_or_query)
-        query_id = int(args_or_query['query_id']) # not using this now, but we could use this as an extra check
+        if isinstance(args_or_query, int):
+            index = int(args_or_query)
+        else:
+            index = int(args_or_query['index']) if 'index' in args_or_query else None
+            query_id = int(args_or_query['query_id']) if 'query_id' in args_or_query else None
+         # not using this now, but we could use this as an extra check
         current_query = current_search[index]['q']
         start_date = current_search[index]['startDate']
         end_date = current_search[index]['endDate']
@@ -150,7 +154,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
             current_query = int(args_or_query)
         except Exception as e:
             current_query = args_or_query['q'] if 'q' in args_or_query else None
-            
+
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
             end_date=end_date,
