@@ -117,7 +117,7 @@ def parse_query_with_keywords(args) :
 
     return solr_query
 
-def parse_query_with_args_and_sample_search(args, current_search) :
+def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     solr_query = ''
 
@@ -128,8 +128,8 @@ def parse_query_with_args_and_sample_search(args, current_search) :
 
     current_query = ''
     try:
-        index = int(args['index'])
-        query_id = int(args['query_id']) # not using this now, but we could use this as an extra check
+        index = int(args_or_query['index']) or int(args_or_query)
+        query_id = int(args_or_query['query_id']) # not using this now, but we could use this as an extra check
         current_query = current_search[index]['q']
         start_date = current_search[index]['startDate']
         end_date = current_search[index]['endDate']
@@ -145,8 +145,12 @@ def parse_query_with_args_and_sample_search(args, current_search) :
 
     # we dont have a query_id. Do we have a q param?
     except Exception as e:
-        logger.warn("Demo user is querying for a keyword with stories: " + str(e))
-        current_query = args['q']
+        logger.warn("Demo user is querying for a keyword: " + str(e))
+        try:
+            current_query = int(args_or_query)
+        except Exception as e:
+            current_query = args_or_query['q'] if 'q' in args_or_query else None
+            
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
             end_date=end_date,

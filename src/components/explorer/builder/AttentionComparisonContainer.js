@@ -10,7 +10,7 @@ import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-import { downloadSvg } from '../../util/svg';
+// import { downloadSvg } from '../../util/svg';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 
@@ -46,6 +46,15 @@ class AttentionComparisonContainer extends React.Component {
       fetchData(nextProps.urlQueryString);
     }
   }
+  downloadCsv = () => {
+    const { urlQueryString } = this.props;
+    // TODO pathname check
+    let currentIndexOrQuery = urlQueryString.pathname;
+    currentIndexOrQuery = currentIndexOrQuery.slice(currentIndexOrQuery.lastIndexOf('/') + 1, currentIndexOrQuery.length);
+    currentIndexOrQuery = decodeURIComponent(currentIndexOrQuery);
+    const url = `/api/explorer/sentences/count.csv/${currentIndexOrQuery}&index=0`;
+    window.location = url;
+  }
   render() {
     const { results, queries } = this.props;
     const { formatMessage } = this.props.intl;
@@ -79,7 +88,7 @@ class AttentionComparisonContainer extends React.Component {
               <div className="actions">
                 <DownloadButton
                   tooltip={formatMessage(messages.download)}
-                  onClick={() => downloadSvg()}
+                  onClick={() => this.downloadCsv()}
                 />
               </div>
               <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>

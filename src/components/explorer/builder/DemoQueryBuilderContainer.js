@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid/lib';
-import { replace } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
@@ -35,6 +35,7 @@ class DemoQueryBuilderContainer extends React.Component {
       let parsedObjectArray = null;
       if (urlExtended !== '' && urlExtended !== undefined) {
         // url params may contain several queries
+        // TODO handle invalid case : AppNotice
         parsedObjectArray = this.parseJSONParams(`${currentIndexOrQuery}${urlExtended}`); // TODO not sure about the hash
       } else {
         parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
@@ -54,8 +55,8 @@ class DemoQueryBuilderContainer extends React.Component {
       if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrQuery); // currentIndex
       } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrQuery)) {
-        setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
         selectSearchQueriesById(samples[currentIndexOrQuery]);
+        setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
       } else if (this.props.location.pathname !== nextProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
         selectSearchQueriesById(samples[currentIndexOrQuery]);
       }
@@ -168,10 +169,12 @@ const mapDispatchToProps = dispatch => ({
     // or if we just change the url and trigger the refresh that way?
     // push all updated queries into url
     const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
+    // TODO urlEncode -avoid hash weirdness
+
     // const urlParamString = queries.map(q => JSON.stringify(q));
     const display = urlParamString.join(',');
     const newLocation = `queries/demo/search/[${display}]`;
-    dispatch(replace(newLocation));
+    dispatch(push(newLocation));
     // this should keep the current selection...
   },
   setQueryFromURL: (queryArrayFromURL) => {
