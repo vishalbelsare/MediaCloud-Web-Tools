@@ -81,25 +81,36 @@ def story_counts(topics_id):
     elif is_user_logged_in():
         local_key = user_mediacloud_key()
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     total = topic_story_count(local_key, topics_id, timespans_id=None, q=None)
     filtered = topic_story_count(local_key, topics_id)  # force a count with just the query
-    return jsonify({'counts':{'count': filtered['count'], 'total': total['count']}})
+    return jsonify({'counts': {'count': filtered['count'], 'total': total['count']}})
+
+
+@app.route('/api/topics/<topics_id>/stories/undateable-counts', methods=['GET'])
+@api_error_handler
+def story_undateable_count(topics_id):
+    q = "tags_id_stories:{}".format(tag_util.STORY_UNDATEABLE_TAG)
+    return _public_safe_topic_story_count(topics_id, q)
 
 
 @app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
 @api_error_handler
 def story_english_counts(topics_id):
     q = "language:en"
+    return _public_safe_topic_story_count(topics_id, q)
+
+
+def _public_safe_topic_story_count(topics_id, q):
     if access_public_topic(topics_id):
         total = topic_story_count(TOOL_API_KEY, topics_id, q=None)
-        in_english = topic_story_count(TOOL_API_KEY, topics_id, q=q)  # force a count with just the query
+        matching = topic_story_count(TOOL_API_KEY, topics_id, q=q)  # force a count with just the query
     elif is_user_logged_in():
         total = topic_story_count(user_mediacloud_key(), topics_id, q=None)
-        in_english = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
+        matching = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-    return jsonify({'counts': {'count': in_english['count'], 'total': total['count']}})
+    return jsonify({'counts': {'count': matching['count'], 'total': total['count']}})
 
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words', methods=['GET'])

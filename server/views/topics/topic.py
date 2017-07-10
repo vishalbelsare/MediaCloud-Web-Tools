@@ -66,7 +66,8 @@ def topic_filter_cascade_list():
         link_id = request.args.get('linkId')
         results = user_mc.topicList(link_id=link_id)
         user_topics = results['topics']
-        favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
+        favorite_topic_ids = db.get_users_lists(user_name(), 'favorite'
+                                                             'Topics')
         # mark all the public topics as favorite or not
         for t in public_topics:
             t['isFavorite'] = t['topics_id'] in favorite_topic_ids
