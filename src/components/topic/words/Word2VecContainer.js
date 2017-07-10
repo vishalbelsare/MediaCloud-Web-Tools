@@ -12,12 +12,7 @@ import Word2VecChart from '../../vis/Word2VecChart';
 const localMessages = {
   title: { id: 'topic.words.word2vec.title', defaultMessage: 'Word2Vec' },
   descriptionIntro: { id: 'topic.words.word2vec.help.title', defaultMessage: 'W2V help text here...' },
-  toolTipText: { id: 'topic.words.word2vec.toolTip.text', defaultMessage: 'TEST' },
 };
-
-const domId = 'word2vec-topic';
-
-// helper functions here
 
 class Word2VecContainer extends React.Component {
 
@@ -37,7 +32,7 @@ class Word2VecContainer extends React.Component {
         <Col lg={12}>
           <DataCard>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <Word2VecChart data={embeddings} domId={domId} />
+            <Word2VecChart data={embeddings} domId={'word2vec-topic'} />
           </DataCard>
         </Col>
       </Row>

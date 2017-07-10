@@ -57,9 +57,6 @@ class TopicSummaryContainer extends React.Component {
               <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
             </Col>
             <Col lg={12}>
-              <Word2VecContainer topicId={topicId} filters={filters} />
-            </Col>
-            <Col lg={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
             <Col lg={12}>
@@ -75,6 +72,9 @@ class TopicSummaryContainer extends React.Component {
             </Permissioned>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
+            </Col>
+            <Col lg={12}>
+              <Word2VecContainer topicId={topicId} filters={filters} />
             </Col>
             <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
               <Col lg={12}>

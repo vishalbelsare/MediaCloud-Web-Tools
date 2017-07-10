@@ -264,7 +264,7 @@ def topic_search():
 @flask_login.login_required
 @api_error_handler
 def topic_word2vec(topic_id):
-    user_mc = user_mediacloud_client()  #admin...?
+    user_mc = user_mediacloud_client()
     topic_word_count = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
     word_vectors = KeyedVectors.load('./server/static/data/GoogleNews-vectors-negative300', mmap='r')
     
@@ -275,7 +275,6 @@ def topic_word2vec(topic_id):
       try:
         word_vectors[w['term']]
       except KeyError:
-        #print "Not in vocabulary: " + w['term']
         to_be_removed.append(w)
     for w in to_be_removed:
       topic_word_count.remove(w)
