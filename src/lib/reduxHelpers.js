@@ -301,7 +301,7 @@ export function createIndexedAsyncReducer(handlers) {
       case resolve(handlers.action):
         return reducers.handleSuccess(action.payload, state, action.meta.args);  // TODO check...
       case reject(handlers.action):
-        return reducers.handleFailure(action.payload, state, action.payload.args);
+        return reducers.handleFailure(action.payload, state, action.meta.args);
       default:
         if (action.type in extraActionLookup) {
           return Object.assign({}, state, {

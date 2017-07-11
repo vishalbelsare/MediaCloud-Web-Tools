@@ -50,17 +50,7 @@ def api_explorer_demo_sentences_count():
         start_date = start_date_str
         end_date = end_date_str
 
-    # TODO not sure if we need this
-    if start_date_str is None:
-        last_n_days = 365
-        start_date = datetime.date.today()-datetime.timedelta(last_n_days)
-        start_date = start_date.strftime("%Y-%m-%d")
-    if end_date_str is None:
-        end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday 
-        end_date = end_date.strftime("%Y-%m-%d")
-
     return cached_by_query_sentence_counts(solr_query, start_date, end_date)
-
 
 @cache
 def cached_by_query_sentence_counts(query, start_date_str=None, end_date_str=None):
