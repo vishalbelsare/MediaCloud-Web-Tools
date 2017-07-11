@@ -18,7 +18,7 @@ class QueryPickerItem extends React.Component {
   }
 
   render() {
-    const { query, isEditable, selectThisQuery, updateQuery } = this.props;
+    const { query, isEditable, displayLabel, selectThisQuery, updateQuery } = this.props;
     let nameInfo = null;
     let subT = null;
 
@@ -65,7 +65,7 @@ class QueryPickerItem extends React.Component {
         // TODO start_date vs startDate
         subT = (
           <div className="query-picker-item-card-header">
-            {query.label}<br />
+            {displayLabel ? query.label : ''}
             {oneCollStatus}<br />
             {query.startDate}--{query.endDate}
           </div>
@@ -73,7 +73,7 @@ class QueryPickerItem extends React.Component {
       } else if (totalCount > 0) {
         subT = (
           <div className="query-picker-item-card-header">
-            {query.label}
+            {displayLabel ? query.label : ''}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
             {query.start_date}--{query.end_date}
@@ -95,6 +95,7 @@ QueryPickerItem.propTypes = {
   // from parent
   query: React.PropTypes.object,
   isEditable: React.PropTypes.bool.isRequired,
+  displayLabel: React.PropTypes.bool.isRequired,
   selectThisQuery: React.PropTypes.func,
   updateQuery: React.PropTypes.func.isRequired,
   // from composition
