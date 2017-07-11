@@ -8,6 +8,7 @@ import SearchForm from './SearchForm';
 import SampleSearchItem from './SampleSearchItem';
 import { fetchSampleSearches } from '../../../actions/explorerActions';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
   intro: { id: 'explorer.featured.intro', defaultMessage: 'Try one of our sample searches' },
@@ -80,11 +81,12 @@ const mapDispatchToProps = dispatch => ({
     const collection = '[8875027]';
     // why bother sending this? const sources = '[]';
     const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","collections":${collection}}]`;
+    const demoParams = `[{"q":"${values.keyword}"}]`;
 
-    if (user) {
+    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       urlParamString = `demo/search/${defParams}`;
     } else {
-      urlParamString = `search/${defParams}`;
+      urlParamString = `demo/search/${demoParams}`;
     }
     dispatch(push(`/queries/${urlParamString}`));
   },

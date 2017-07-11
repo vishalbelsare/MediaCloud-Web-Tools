@@ -18,64 +18,60 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 const MAX_COLORS = 20;
 
 class DemoQueryBuilderContainer extends React.Component {
-
+  componentWillMount() {
+    const { selected } = this.props;
+    if (!selected) {
+      this.checkPropsAndDispatch(this.props);
+    }
+  }
   componentWillReceiveProps(nextProps) {
+    this.checkPropsAndDispatch(nextProps);
+  }
+  checkPropsAndDispatch(whichProps) {
     const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
-    const url = nextProps.location.pathname;
-    const urlExtended = nextProps.location.hash;
+    const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
-    if (nextProps.location.pathname.includes('/queries/demo/search')) {
+    if (whichProps.location.pathname.includes('/queries/demo/search')) {
       // parse query params
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       // we will not have a sample search selected BTW
       // back end effectively ignores everything but the keyword
-      // const dateObj = getPastTwoWeeksDateRange();
 
-      //  which one to select? the first one
-      let parsedObjectArray = null;
-      if (urlExtended !== '' && urlExtended !== undefined) {
-        // url params may contain several queries
-        // TODO handle invalid case : AppNotice
-        parsedObjectArray = this.parseJSONParams(`${currentIndexOrQuery}${urlExtended}`); // TODO not sure about the hash
-      } else {
-        parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
-      }
-      if (this.props.location.pathname !== nextProps.location.pathname) {
+      const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+      if (this.props.location.pathname !== whichProps.location.pathname) {
         // could we check to see if we have added any new queries... otherwise just an update...
         // and we keep current selection
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]); // how to not do this if we want to keep currentselection
-      } else if (!selected && !nextProps.selected) {
+      } else if (!selected && !whichProps.selected) {
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
       }
-    } else if (nextProps.location.pathname.includes('/queries/demo')) {
+    } else if (whichProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
 
       if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrQuery); // currentIndex
-      } else if ((!selected && !nextProps.selected) || (nextProps.selected && nextProps.selected.searchId !== currentIndexOrQuery)) {
+      } else if ((!selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
         selectSearchQueriesById(samples[currentIndexOrQuery]);
         setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
-      } else if (this.props.location.pathname !== nextProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
+      } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
         selectSearchQueriesById(samples[currentIndexOrQuery]);
       }
     }
   }
 
-
   parseJSONParams = (queriesFromURL) => {
     let parsedObjectArray = JSON.parse(queriesFromURL);
     const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
-
-    const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, defaultColor: colorPallette(idx) }));
+    const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, color: unescape(q.color), defaultColor: colorPallette(idx) }));
     parsedObjectArray = parsedObjectArrayWithDefColor.map((q, idx) => {
       const defaultObjVals = {};
       if (q.label === undefined) {
-        defaultObjVals.label = `gen${q.q}`; // TODO auto generate!
+        defaultObjVals.label = q.label || q.q; // TODO auto generate for logged in users!
       }
       if (q.color === undefined) {
-        defaultObjVals.color = q.defaultColor; // generateFromColorWheel();
+        defaultObjVals.color = q.defaultColor; // generated from ColorWheel();
       }
       if (q.index === undefined) {
         defaultObjVals.index = idx; // the backend won't use these values, but this is for the QueryPicker display
@@ -165,15 +161,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    // compare urlparams and determine if we dispatch(updateTimestampForQueries());
-    // or if we just change the url and trigger the refresh that way?
-    // push all updated queries into url
-    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","startDate":"${q.startDate}","endDate":"${q.endDate}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
-    // TODO urlEncode -avoid hash weirdness
-
-    // const urlParamString = queries.map(q => JSON.stringify(q));
-    const display = urlParamString.join(',');
-    const newLocation = `queries/demo/search/[${display}]`;
+    // let urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
+    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
+    const newLocation = `queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
     // this should keep the current selection...
   },

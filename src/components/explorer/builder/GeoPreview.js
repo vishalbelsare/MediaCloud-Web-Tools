@@ -61,7 +61,7 @@ class GeoPreview extends React.Component {
               <div className="actions">
                 <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
               </div>
-              <h3>{queries[idx].label}</h3>
+              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
               <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
             </GridTile>
             )

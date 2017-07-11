@@ -42,7 +42,7 @@ class StorySamplePreview extends React.Component {
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <Tabs>
           {results.map((storySet, idx) =>
-            (<Tab label={queries ? queries[idx].q : 'empty'} key={idx}>
+            (<Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
 
               <StoryTable
                 stories={storySet}
