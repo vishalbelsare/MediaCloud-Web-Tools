@@ -23,7 +23,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, selected, isEditable, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, selected, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -78,7 +78,7 @@ const QueryForm = (props) => {
                 enableReinitialize
                 initialValues={cleanedInitialValues}
                 selected={selected}
-                allowRemoval={isEditable}
+                allowRemoval={false}
               />
             </Row>
             <Row>
