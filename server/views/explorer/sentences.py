@@ -10,6 +10,7 @@ from server.util.request import form_fields_required, api_error_handler, argumen
 import server.util.csv as csv
 from server.views.explorer import solr_query_from_request, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
+import json
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -38,34 +39,37 @@ def api_explorer_demo_sentences_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
     index = int(request.args['index']) if 'index' in request.args else None
 
-    if search_id not in [None, -1]:
+    if isinstance(search_id, int) and search_id not in [None, -1]:
         SAMPLE_SEARCHES = load_sample_searches()
         current_search = SAMPLE_SEARCHES[search_id]['queries']
         solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+
         if index < len(current_search): 
             start_date = current_search[index]['startDate']
             end_date = current_search[index]['endDate']
     else:
         solr_query = parse_query_with_keywords(request.args)
-        start_date = start_date_str
-        end_date = end_date_str
+    # why is this call fundamentally different than the cache call???
+    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date, split_end_date=end_date, split=True)
+    results = cached_by_query_sentence_counts(solr_query, start_date, end_date)
+    
+    return jsonify(results)
 
-    return cached_by_query_sentence_counts(solr_query, start_date, end_date)
 
 @cache
-def cached_by_query_sentence_counts(query, start_date_str=None, end_date_str=None):
-    sentence_count_result = mc.sentenceCount(solr_query=query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
-    return sentence_count_result['response']
+def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_str=None):
+    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
+    return sentence_count_result
 
 
 def stream_sentence_count_csv(fn, search_id_or_query, index):
-    response = {}
+
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
     start_date = two_weeks_before_now.strftime("%Y-%m-%d")
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     SAMPLE_SEARCHES = load_sample_searches()
-    if int(search_id_or_query) < len(SAMPLE_SEARCHES):
+    if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
         search_id = int(search_id_or_query)
         SAMPLE_SEARCHES = load_sample_searches()
         current_search = SAMPLE_SEARCHES[search_id]['queries']
@@ -75,9 +79,12 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
             start_date = current_search[int(index)]['startDate']
             end_date = current_search[int(index)]['endDate']
     else:
-        solr_query = parse_query_with_keywords(search_id_or_query)
-        start_date = search_id_or_query['startDate']
-        end_date = search_id_or_query['endDate']
+        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
+        query = json.loads(search_id_or_query)
+        current_query = query[0]
+        solr_query = parse_query_with_keywords(current_query) # TODO don't mod the start and end date unless permissions
+        # start_date = current_query['startDate'] if 'startDate' in current_query else start_date
+        # end_date = current_query['endDate'] if 'endDate' in current_query else end_date
 
     results = cached_by_query_sentence_counts(solr_query, start_date, end_date) # get dates out of query?
     clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
@@ -87,8 +94,7 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, fn)
 
-# TODO, how different logged-in v demo user
-@app.route('/api/explorer/sentences/count.csv/<search_id_or_query>/<index>')
+@app.route('/api/explorer/sentences/count.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
 def api_explorer_sentence_count_csv(search_id_or_query, index):
     return stream_sentence_count_csv('sentenceCounts-Explorer', search_id_or_query, index)

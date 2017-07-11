@@ -52,12 +52,12 @@ class AttentionComparisonContainer extends React.Component {
     } */
   }
   downloadCsv = (query) => {
-    const { urlQueryString } = this.props;
+    // onst { urlQueryString } = this.props;
     // TODO pathname check
-    let currentIndexOrQuery = urlQueryString.pathname;
-    currentIndexOrQuery = currentIndexOrQuery.slice(currentIndexOrQuery.lastIndexOf('/') + 1, currentIndexOrQuery.length);
-    currentIndexOrQuery = decodeURIComponent(currentIndexOrQuery);
-    const url = `/api/explorer/sentences/count.csv/${currentIndexOrQuery}/${query.index}`;
+    // let currentIndexOrQuery = urlQueryString.pathname;
+    // currentIndexOrQuery = currentIndexOrQuery.slice(currentIndexOrQuery.lastIndexOf('/') + 1, currentIndexOrQuery.length);
+    // currentIndexOrQuery = escape(currentIndexOrQuery);
+    const url = `/api/explorer/sentences/count.csv/[{"q":"${query.q}"}]/${query.index}`;
     window.location = url;
   }
   render() {
@@ -92,8 +92,9 @@ class AttentionComparisonContainer extends React.Component {
             <DataCard>
               <div className="actions">
                 <ActionMenu>
-                  {mergedResultsWithQueryInfo.map(q =>
+                  {mergedResultsWithQueryInfo.map((q, idx) =>
                     <MenuItem
+                      key={idx}
                       className="action-icon-menu-item"
                       primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
                       rightIcon={<DownloadButton />}
