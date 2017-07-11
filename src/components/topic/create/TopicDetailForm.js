@@ -12,13 +12,14 @@ import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 
 const localMessages = {
   basics: { id: 'topic.form.section.basics', defaultMessage: 'Basics' },
-  name: { id: 'topic.form.detail.name', defaultMessage: 'Name' },
-  nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a name.' },
+  name: { id: 'topic.form.detail.name', defaultMessage: 'Topic Name (what is this about?)' },
+  nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a short dsecriptive name.' },
   advancedSettings: { id: 'topic.form.detail.advancedSettings', defaultMessage: 'Advanced Settings' },
-  description: { id: 'topic.form.detail.description', defaultMessage: 'Description' },
+  description: { id: 'topic.form.detail.description', defaultMessage: 'Description (why are you making this?)' },
   descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a description.' },
   seedQuery: { id: 'topic.form.detail.seedQuery', defaultMessage: 'Seed Query' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
+  seedQueryDescription: { id: 'topic.form.detail.seedQuery.about', defaultMessage: 'Enter a boolean query to select stories that will seed the Topic.  Links in stories already in our database that match this query will be followed to find more stories that might not be in our database already.' },
   queryEditWarning: { id: 'topic.form.detal.query.edit.warning', defaultMessage: '<b>Be careful!</b> If you plan to edit the query and make a new snapshot make sure you only increase the scope of the query.  If you reduce the scope there will be stories from previous snapshots included that don\'t match your new reduced query.' },
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
@@ -53,11 +54,12 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={5}>
           <Field
             name="name"
             component={renderTextField}
             floatingLabelText={localMessages.name}
+            fullWidth
           />
         </Col>
       </Row>
@@ -116,6 +118,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={localMessages.seedQuery}
           />
+          <small><FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}
         </Col>
       </Row>
