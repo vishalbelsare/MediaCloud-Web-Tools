@@ -31,7 +31,7 @@ class StorySamplePreview extends React.Component {
     if (nextProps.lastSearchTime !== lastSearchTime ||
       nextProps.urlQueryString !== urlQueryString) {
     // TODO also check for name and color changes
-      fetchData(nextProps.urlQueryString);
+      fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
   render() {
@@ -85,19 +85,19 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (ownProps, query, idx) => {
+  fetchData: (ownProps, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     if (isLoggedInUser) {
-      if (idx) { // specific change/update here
-        dispatch(fetchQuerySampleStories(query, idx));
-      } else { // get all results
-        state.queries.map((q, index) => dispatch(fetchQuerySampleStories(q, index)));
-      }
-    } else if (state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = state.queries;
+      // if (idx) { // specific change/update here
+      //  dispatch(fetchQuerySampleStories(query, idx));
+      // } else { // get all results
+      state.queries.map((q, index) => dispatch(fetchQuerySampleStories(q, index)));
+      // }
+    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw

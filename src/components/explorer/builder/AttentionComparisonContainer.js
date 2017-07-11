@@ -3,14 +3,15 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
+import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts } from '../../../actions/explorerActions';
-import { asyncContainerize } from '../../common/AsyncContainer';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-// import { downloadSvg } from '../../util/svg';
+import ActionMenu from '../../common/ActionMenu';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 
@@ -18,6 +19,7 @@ const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
   descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: 'Attention Over Time' },
+  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -34,25 +36,28 @@ function dataAsSeries(data) {
 
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { urlQueryString, selected, lastSearchTime, fetchData } = this.props;
+    const { urlQueryString, lastSearchTime, queries, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
       nextProps.urlQueryString !== urlQueryString) {
-      fetchData(nextProps.urlQueryString);
+      fetchData(nextProps.urlQueryString, nextProps.queries);
     }
-    if (nextProps.selected.color !== selected.color) {
+    if (nextProps.queries[0].label !== queries[0].label) {
+      fetchData(nextProps.urlQueryString, nextProps.queries);
+    }
+    /* if (nextProps.selected.color !== selected.color) {
       fetchData(nextProps.urlQueryString);
     }
     if (nextProps.selected.label !== selected.label) {
       fetchData(nextProps.urlQueryString);
-    }
+    } */
   }
-  downloadCsv = () => {
+  downloadCsv = (query) => {
     const { urlQueryString } = this.props;
     // TODO pathname check
     let currentIndexOrQuery = urlQueryString.pathname;
     currentIndexOrQuery = currentIndexOrQuery.slice(currentIndexOrQuery.lastIndexOf('/') + 1, currentIndexOrQuery.length);
     currentIndexOrQuery = decodeURIComponent(currentIndexOrQuery);
-    const url = `/api/explorer/sentences/count.csv/${currentIndexOrQuery}&index=0`;
+    const url = `/api/explorer/sentences/count.csv/${currentIndexOrQuery}/${query.index}`;
     window.location = url;
   }
   render() {
@@ -71,7 +76,7 @@ class AttentionComparisonContainer extends React.Component {
           const data = dataAsSeries(cleanDateCounts(query.split));
           return {
             id: idx,
-            name: query.q,
+            name: query.label,
             data: data.values,
             pointStart: data.start,
             pointInterval: data.intervalMs,
@@ -86,10 +91,16 @@ class AttentionComparisonContainer extends React.Component {
           <Col lg={12}>
             <DataCard>
               <div className="actions">
-                <DownloadButton
-                  tooltip={formatMessage(messages.download)}
-                  onClick={() => this.downloadCsv()}
-                />
+                <ActionMenu>
+                  {mergedResultsWithQueryInfo.map(q =>
+                    <MenuItem
+                      className="action-icon-menu-item"
+                      primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                      rightIcon={<DownloadButton />}
+                      onTouchTap={() => this.downloadCsv(q)}
+                    />
+                  )}
+                </ActionMenu>
               </div>
               <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
               <AttentionOverTimeChart series={series} height={300} />
@@ -122,8 +133,6 @@ AttentionComparisonContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  queries: state.explorer.queries,
-  selected: state.explorer.selected,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
@@ -131,7 +140,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (params, query, idx) => {
+  fetchData: (params, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
 
@@ -152,13 +161,13 @@ const mapDispatchToProps = (dispatch, state) => ({
       infoToQuery['collections[]'] = '';
     }
     */
-      if (idx) { // specific change/update here
-        dispatch(fetchQuerySentenceCounts(query, idx));
+      if (params) { // specific change/update here
+        dispatch(fetchQuerySentenceCounts());
       } else { // get all results
         state.queries.map((q, index) => dispatch(fetchQuerySentenceCounts(q, index)));
       }
-    } else if (state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = state.queries;
+    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || state.queries;
       // find queries on stack without id but with index and with q, and add?
       // hmm problem here b/c we already have it in here
       // const newQueries = state.queries.filter(q => q.id === null && q.index);
@@ -185,10 +194,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 }
 
 export default
-  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    asyncContainerize(
-      injectIntl(
-        composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+  injectIntl(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+        composeAsyncContainer(
           AttentionComparisonContainer
         )
       )
