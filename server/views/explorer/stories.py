@@ -5,9 +5,11 @@ import flask_login
 from server import app, db, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.cache import cache
+import server.util.csv as csv
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.views.explorer import concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
+import json
 # load the shared settings file
 
 logger = logging.getLogger(__name__)
@@ -31,19 +33,31 @@ def api_explorer_demo_story_sample():
 def cached_story_samples(query):
     return mc.storyList(solr_query=query)
 
-@app.route('/api/explorer/stories.csv', methods=['GET'])
-@flask_login.login_required
-def explorer_stories_csv(query):
-    search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    if search_id not in [None, -1]:
+
+@app.route('/api/explorer/stories/samples.csv/<search_id_or_query>/<index>', methods=['GET'])
+def explorer_stories_csv(search_id_or_query, index):
+    filename = ''
+    SAMPLE_SEARCHES = load_sample_searches()
+    if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
+        search_id = int(search_id_or_query)
         SAMPLE_SEARCHES = load_sample_searches()
         current_search = SAMPLE_SEARCHES[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+
+        if int(index) < len(current_search): 
+            start_date = current_search[int(index)]['startDate']
+            end_date = current_search[int(index)]['endDate']
+            filename = 'explorer-stories-' + current_search[int(index)]['q']
     else:
-        solr_query = parse_query_with_keywords(request.args)
+        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
+        query = json.loads(search_id_or_query)
+        current_query = query[0]
+        solr_query = parse_query_with_keywords(current_query)
+        filename = 'explorer-stories-' + current_query['q']
 
     story_count_result = cached_story_samples(solr_query)
-    return stream_story_samples_csv('explorer-stories', story_count_result)
+    
+    return stream_story_samples_csv(filename, story_count_result)
 
 def stream_story_samples_csv(filename, stories):
     '''
@@ -51,8 +65,7 @@ def stream_story_samples_csv(filename, stories):
     simply be passed on to a call to topicStoryList.
     '''
     props = ['stories_id', 'publish_date',
-            'title', 'url', 'media_id', 'media_name',
-            'bitly_click_count', 'facebook_share_count']
+            'title', 'media_name']
     return csv.stream_response(stories, props, filename)
 
 
@@ -77,3 +90,34 @@ def api_explorer_demo_story_count():
 def cached_story_count(query):
     return mc.storyCount(solr_query=query)
 
+def stream_story_count_csv(filename, story_count_result):
+    '''
+    Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
+    simply be passed on to a call to topicStoryList.
+    '''
+    props = ['count']
+    return csv.stream_response(story_count_result, props, filename)
+
+@app.route('/api/explorer/stories/count.csv/<search_id_or_query>/<index>', methods=['GET'])
+def explorer_story_count_csv(search_id_or_query, index):
+    filename = ''
+    SAMPLE_SEARCHES = load_sample_searches()
+    if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
+        search_id = int(search_id_or_query)
+        SAMPLE_SEARCHES = load_sample_searches()
+        current_search = SAMPLE_SEARCHES[search_id]['queries']
+        solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+
+        if int(index) < len(current_search): 
+            start_date = current_search[int(index)]['startDate']
+            end_date = current_search[int(index)]['endDate']
+            filename = 'explorer-stories-' + current_search[int(index)]['q']
+    else:
+        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
+        query = json.loads(search_id_or_query)
+        current_query = query[0]
+        solr_query = parse_query_with_keywords(current_query)
+        filename = 'explorer-stories-' + current_query['q']
+
+    story_count_result = cached_story_count(solr_query)
+    return stream_story_count_csv(filename, story_count_result)

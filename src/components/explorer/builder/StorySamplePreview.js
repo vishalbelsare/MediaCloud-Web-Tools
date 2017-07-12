@@ -2,9 +2,12 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import MenuItem from 'material-ui/MenuItem';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import { DownloadButton } from '../../common/IconButton';
+import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
@@ -22,7 +25,7 @@ const localMessages = {
   },
   descriptionIntro: { id: 'explorer.stories.help.title', defaultMessage: 'This is a random sample of stories.' },
   tabStory: { id: 'explorer.stories.tab', defaultMessage: 'Tab for Query' },
-
+  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 class StorySamplePreview extends React.Component {
@@ -34,16 +37,33 @@ class StorySamplePreview extends React.Component {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
+  downloadCsv = (query) => {
+    const url = `/api/explorer/stories/samples.csv/[{"q":"${query.q}"}]/${query.index}`;
+    window.location = url;
+  }
   render() {
     const { results, queries, handleStorySelection } = this.props;
-
+    const { formatMessage } = this.props.intl;
     return (
       <DataCard>
         <h2><FormattedMessage {...localMessages.title} /></h2>
+        <div className="actions">
+          <ActionMenu>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
+        <br />
         <Tabs>
           {results.map((storySet, idx) =>
             (<Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
-
               <StoryTable
                 stories={storySet}
                 index={idx}
