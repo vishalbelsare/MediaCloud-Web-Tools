@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AttentionComparisonContainer from './AttentionComparisonContainer';
 import StorySamplePreview from './StorySamplePreview';
 import StoryCountPreview from './StoryCountPreview';
@@ -17,7 +17,7 @@ const QueryResultsContainer = (props) => {
   // const filename = `AttentionComparisonContainer-query-results`;
 
   return (
-    <div>
+    <Grid>
       <h2>
         <FormattedMessage {...localMessages.queryResultsTitle} />
       </h2>
@@ -35,7 +35,7 @@ const QueryResultsContainer = (props) => {
           <GeoPreview queries={queries} user={user} params={params} sampleSearches={samples} />
         </Col>
       </Row>
-    </div>
+    </Grid>
   );
 };
 

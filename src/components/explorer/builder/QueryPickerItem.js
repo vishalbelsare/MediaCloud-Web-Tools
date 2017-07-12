@@ -25,11 +25,11 @@ class QueryPickerItem extends React.Component {
     if (query) {
       if (isEditable) {
         nameInfo = (
-          <div>
+          <div className="query-picker-item-card-header">
             <ColorPicker
               color={query.color}
               onChange={(e, val) => updateQuery(e, val)}
-            />
+            />&nbsp;
             <TextField
               id="q"
               name="q"
@@ -41,11 +41,11 @@ class QueryPickerItem extends React.Component {
         );
       } else {
         nameInfo = (
-          <div>
+          <div className="query-picker-item-card-header">
             <ColorPicker
               color={query.color}
               onChange={(e, val) => updateQuery(e, val)}
-            />
+            />&nbsp;
             {query.q}
           </div>
         );
