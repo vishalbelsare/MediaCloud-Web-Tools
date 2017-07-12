@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
@@ -111,9 +110,9 @@ class DemoQueryBuilderContainer extends React.Component {
     }
     // TODO, decide whether to show QueryForm if in Demo mode
     return (
-      <Grid>
+      <div>
         { content }
-      </Grid>
+      </div>
     );
   }
 }
