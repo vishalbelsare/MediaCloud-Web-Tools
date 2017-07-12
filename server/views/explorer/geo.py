@@ -57,9 +57,28 @@ def geotag_count():
     return jsonify(res)
 
 
+
 def stream_geo_csv(mc_key, filename):
-    info = {}
-    info = geotag_count()
+    filename = ''
+    SAMPLE_SEARCHES = load_sample_searches()
+    if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
+        search_id = int(search_id_or_query)
+        SAMPLE_SEARCHES = load_sample_searches()
+        current_search = SAMPLE_SEARCHES[search_id]['queries']
+        solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+
+        if int(index) < len(current_search): 
+            start_date = current_search[int(index)]['startDate']
+            end_date = current_search[int(index)]['endDate']
+            filename = 'explorer-geography-' + current_search[int(index)]['q']
+    else:
+        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
+        query = json.loads(search_id_or_query)
+        current_query = query[0]
+        solr_query = parse_query_with_keywords(current_query)
+        filename = 'explorer-geography-' + current_query['q']
+
+    info = cached_geotags(solr_query)
     props = ['label', 'count']
     return csv.stream_response(info, props, filename)
 
@@ -68,6 +87,6 @@ def stream_geo_csv(mc_key, filename):
 @flask_login.login_required
 @api_error_handler
 def explorer_geo_csv():
-    return stream_geo_csv(user_mediacloud_key(), 'geography-Explorer')
+    return stream_geo_csv(user_mediacloud_key(), 'explorer-geography')
 
 
