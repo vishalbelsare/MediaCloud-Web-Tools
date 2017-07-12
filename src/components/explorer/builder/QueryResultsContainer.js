@@ -1,26 +1,16 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AttentionComparisonContainer from './AttentionComparisonContainer';
 import StorySamplePreview from './StorySamplePreview';
 import StoryCountPreview from './StoryCountPreview';
 import GeoPreview from './GeoPreview';
-// import { hasPermissions, getUserRoles, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-
-const localMessages = {
-  queryResultsTitle: { id: 'explorer.details.title', defaultMessage: 'Query Results' },
-};
 
 const QueryResultsContainer = (props) => {
   const { queries, user, params, samples } = props;
-  // const filename = `AttentionComparisonContainer-query-results`;
-
   return (
     <Grid>
-      <h2>
-        <FormattedMessage {...localMessages.queryResultsTitle} />
-      </h2>
       <Row>
         <Col lg={12} xs={12}>
           <AttentionComparisonContainer queries={queries} user={user} params={params} sampleSearches={samples} />
