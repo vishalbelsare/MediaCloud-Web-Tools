@@ -35,6 +35,12 @@ function dataAsSeries(data) {
 }
 
 class AttentionComparisonContainer extends React.Component {
+  componentWillMount() {
+    const { urlQueryString, queries, fetchData } = this.props;
+    if (!queries) {
+      fetchData(urlQueryString, queries);
+    }
+  }
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, queries, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
@@ -134,6 +140,8 @@ AttentionComparisonContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
+  selected: state.explorer.selected,
+  queries: state.explorer.queries,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
