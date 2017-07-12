@@ -70,7 +70,7 @@ class DemoQueryBuilderContainer extends React.Component {
       if (q.label === undefined) {
         defaultObjVals.label = q.label || q.q; // TODO auto generate for logged in users!
       }
-      if (q.color === undefined) {
+      if (q.color === undefined || q.color === 'undefined') {
         defaultObjVals.color = q.defaultColor; // generated from ColorWheel();
       }
       if (q.index === undefined) {
