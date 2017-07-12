@@ -25,7 +25,8 @@ const SampleSearchItem = (props) => {
 
   return (
     <div className="sample-search-item">
-      <h2>{search.name}</h2>
+      <h2> <Link to={`/queries/${urlParamString}`}>{search.name}</Link></h2>
+      <img src={`/static/img/sample-searches/${search.imageName}`} alt={search.name} />
       <Link to={`/queries/${urlParamString}`}>{display}</Link>
     </div>
   );
