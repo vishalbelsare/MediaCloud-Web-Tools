@@ -2,14 +2,15 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { GridList, GridTile } from 'material-ui/GridList';
+import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
-
-import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
+import ActionMenu from '../../common/ActionMenu';
+import messages from '../../../resources/messages';
 import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -18,6 +19,7 @@ const localMessages = {
   intro: { id: 'explorer.geo.info',
     defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
+  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 class GeoPreview extends React.Component {
@@ -29,11 +31,9 @@ class GeoPreview extends React.Component {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
-
-  downloadCsv = () => {
-    // const { collectionId } = this.props;
-    // const url = `/api/collections/${collectionId}/geography/geography.csv`;
-    // window.location = url;
+  downloadCsv = (query) => {
+    const url = `/api/explorer/geography/geography.csv/[{"q":"${query.q}"}]/${query.index}`;
+    window.location = url;
   }
 
   /* handleCountryClick = (event, geo) => {
@@ -52,6 +52,19 @@ class GeoPreview extends React.Component {
     return (
       <DataCard>
         <h2><FormattedMessage {...localMessages.title} /></h2>
+        <div className="actions">
+          <ActionMenu>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
         <GridList
           className="geo-mini-cards"
           cellHeight={400}
