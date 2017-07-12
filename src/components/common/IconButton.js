@@ -8,6 +8,7 @@ import OpenInNewIcon from 'material-ui/svg-icons/action/open-in-new';
 import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
 import SaveIcon from 'material-ui/svg-icons/content/save';
+import SearchIcon from 'material-ui/svg-icons/action/search';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -145,3 +146,5 @@ export const ResetButton = composeIconButton(ResetIcon, messages.reset);
 export const FilterButton = composeIconButton(FilterIcon, messages.filter, false, 45, 45);
 
 export const SaveButton = composeIconButton(SaveIcon, messages.save);
+
+export const SearchButton = composeIconButton(SearchIcon, messages.search);

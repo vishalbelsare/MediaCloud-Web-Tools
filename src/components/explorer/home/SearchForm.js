@@ -4,10 +4,12 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import { emptyString } from '../../../lib/formValidators';
+import { SearchButton } from '../../common/IconButton';
 
 const localMessages = {
   mainTitle: { id: 'explorer.search.title', defaultMessage: 'Enter Keyword' },
   addButton: { id: 'explorer.search', defaultMessage: 'Search' },
+  searchHint: { id: 'explorer.intro.searchHint', defaultMessage: 'Search for...' },
 };
 
 const SearchForm = (props) => {
@@ -20,12 +22,14 @@ const SearchForm = (props) => {
         <Col md={10}>
           <Field
             name="keyword"
+            className="explorer-home-search-field"
             component={renderTextField}
+            hintText={localMessages.searchHint}
             fullWidth
           />
         </Col>
-        <Col lg={1}>
-        ?
+        <Col md={2}>
+          <SearchButton onClick={handleSubmit(onSearch.bind(this))} />
         </Col>
       </Row>
     </form>
