@@ -1,10 +1,13 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchDemoQueryStoryCount, fetchQueryStoryCount } from '../../../actions/explorerActions';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
+import { DownloadButton } from '../../common/IconButton';
+import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
@@ -18,6 +21,7 @@ const localMessages = {
   },
   totalRolloverLabel: { id: 'explorer.storyCount.total', defaultMessage: 'All Stories' },
   totalLabel: { id: 'explorer.storyCount.total', defaultMessage: 'Total Stories' },
+  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 class StoryCountPreview extends React.Component {
@@ -29,9 +33,13 @@ class StoryCountPreview extends React.Component {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
+  downloadCsv = (query) => {
+    const url = `/api/explorer/stories/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+    window.location = url;
+  }
   render() {
     const { results, queries } = this.props;
-    const { formatNumber } = this.props.intl;
+    const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
 
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
@@ -59,6 +67,19 @@ class StoryCountPreview extends React.Component {
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
+        <div className="actions">
+          <ActionMenu>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
         {content}
       </DataCard>
     );
