@@ -1,7 +1,7 @@
 [{
     "id": 0,
     "name": "US 2016 MSM Election",
-    "imageName": "cat-helmet.png",
+    "imageName": "fake-data-1.png",
     "queries": [{
         "index": 0,
         "q": "clinton",
@@ -27,7 +27,7 @@
   {
     "id": 1,
     "name": "Comparing US gun coverage",
-    "imageName": "cat-helmet.png",
+    "imageName": "fake-data-2.png",
     "queries": [{
         "index": 0,
         "q": "gun*",
@@ -53,7 +53,7 @@
   {
     "id": 2,
     "name": "Child Marriage in India",
-    "imageName": "cat-helmet.png",
+    "imageName": "fake-data-1.png",
     "queries": [{
       "index": 0,
       "q": "\"child marriage\" or \"child marriages\" or \"child bride\" or \"child brides\" or \"early marriage\" or \"early marriages\"",
@@ -68,7 +68,7 @@
   {
     "id": 3,
     "name": "Female Genital Mutilation (FGM) in US news sources",
-    "imageName": "cat-helmet.png",
+    "imageName": "fake-data-2.png",
     "queries": [{
       "index": 0,
       "q": "fgm OR \"female genital mutilation\" OR \"female genital cutting\" OR \"fgc\" OR \"female circumcision\"",

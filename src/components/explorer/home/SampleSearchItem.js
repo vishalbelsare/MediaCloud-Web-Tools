@@ -10,24 +10,20 @@ const SampleSearchItem = (props) => {
   // else just put in the id...
   const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
   let urlParamString = null;
-  let display = null;
   if (isNotLoggedInUser) {
     urlParamString = `demo/${search.id}`;
-    display = search.queries.map(q => q.label).join(',');
   } else { // TODO is this right to put into url, and what format?
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
     const collection = '[8875027]';
     const sources = '[]';
     urlParamString = search.queries.map(query => `search/[{"index":${query.index},"q":${query.q},"startDate":${dateObj.start},"endDate":${dateObj.end},"sources":${sources},"collections":${collection}`);
-    display = search.queries.map(q => q.label).join(',');
   }
-
+  const link = `/queries/${urlParamString}`;
   return (
     <div className="sample-search-item">
-      <h2> <Link to={`/queries/${urlParamString}`}>{search.name}</Link></h2>
-      <img src={`/static/img/sample-searches/${search.imageName}`} alt={search.name} />
-      <Link to={`/queries/${urlParamString}`}>{display}</Link>
+      <h2><Link to={link}>{search.name}</Link></h2>
+      <Link to={link}><img src={`/static/img/sample-searches/${search.imageName}`} alt={search.name} /></Link>
     </div>
   );
 };

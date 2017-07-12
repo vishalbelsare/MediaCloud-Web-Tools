@@ -1,0 +1,22 @@
+@import '../constants';
+
+.query-picker-item {
+  border: 1px solid $material-grey200;
+  margin: 0 !important;
+  padding: 5px !important;
+    height: 110px;
+    text-align: center;
+
+    query-picker-item-color {
+        width: 10px !important;
+        height: 10px;
+        display: block !important;
+        float: right;
+    }
+}
+.query-picker-item, .query-picker-item-card-header {
+    text-align: left;
+}
+.query-picker-item-selected > div {
+    background-color: $material-grey200 !important;
+}

@@ -1,0 +1,35 @@
+.app-explorer {
+
+  a {
+    color: $explorer-primary;
+  }
+
+  .app-button {
+    &.hovering :hover {
+      background-color: $explorer-darker !important;
+    }
+  }
+
+  .app-icon-button {
+    &.hovering :hover {
+      background-color: $explorer-darker !important;
+    }   
+  }
+
+  .app-icon-filled-star > svg {
+    fill: $explorer-primary;
+  }
+
+  .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+  }
+
+}
+

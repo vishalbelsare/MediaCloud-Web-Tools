@@ -1,47 +1,9 @@
 @import '../constants';
+@import '_base';
 @import '_homepage';
 @import '_sample_searches';
-
-.glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-}
-
-.query-picker-item {
-	border: 1px solid $material-grey200;
-	margin: 0 !important;
-	padding: 5px !important;
-    height: 110px;
-    text-align: center;
-
-    query-picker-item-color {
-        width: 10px !important;
-        height: 10px;
-        display: block !important;
-        float: right;
-    }
-}
-.query-picker-item, .query-picker-item-card-header {
-    text-align: left;
-}
-.query-picker-item-selected > div {
-    background-color: $material-grey200 !important;
-}
-.color-picker {
-    display: inline-block !important;
-}
-.color-picker button {
-    border: none !important;
-    padding: 0px;
-    cursor: pointer !important;
-    display: inline-block !important;
-}
+@import '_color_picker';
+@import '_query_picker';
 
 .query-field {
     border: 1px solid $material-grey200 !important;

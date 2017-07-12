@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import ItemSlider from '../../common/ItemSlider';
@@ -8,6 +8,7 @@ import { fetchSampleSearches } from '../../../actions/explorerActions';
 
 const localMessages = {
   intro: { id: 'explorer.featured.intro', defaultMessage: 'Try one of our sample searches' },
+  trySample: { id: 'explorer.featured.trySample', defaultMessage: 'Try one of our sample searches!' },
 };
 
 class SampleSearchContainer extends React.Component {
@@ -42,6 +43,7 @@ class SampleSearchContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12}>
+              <span className="invitation"><FormattedMessage {...localMessages.trySample} /></span>
               {content}
             </Col>
           </Row>
