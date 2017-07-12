@@ -2,8 +2,8 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
 import Homepage from '../components/explorer/home/Homepage';
-import DemoQueryBuilderContainer from '../components/explorer/builder/DemoQueryBuilderContainer';
-import QueryBuilderContainer from '../components/explorer/builder/QueryBuilderContainer';
+import DemoQueryContainer from '../components/explorer/builder/DemoQueryContainer';
+import LoggedInQueryContainer from '../components/explorer/builder/LoggedInQueryContainer';
 import userRoutes from './userRoutes';
 import ExplorerApp from '../components/explorer/ExplorerApp';
 import { requireAuth } from './routes';
@@ -18,13 +18,13 @@ const explorerRoutes = (
 
     <Route path="/home" component={Homepage} />
     <Route path="/queries">
-      <Route path="demo" component={DemoQueryBuilderContainer} >
-        <Route path="search" component={DemoQueryBuilderContainer} >
-          <Route path=":keyword" component={DemoQueryBuilderContainer} />
+      <Route path="demo" component={DemoQueryContainer} >
+        <Route path="search" component={DemoQueryContainer} >
+          <Route path=":keyword" component={DemoQueryContainer} />
         </Route>
-        <Route path=":id" component={DemoQueryBuilderContainer} />
+        <Route path=":id" component={DemoQueryContainer} />
       </Route>
-      <Route path=":queryParams" component={QueryBuilderContainer} onEnter={requireAuth} />
+      <Route path=":queryParams" component={LoggedInQueryContainer} onEnter={requireAuth} />
     </Route>
   </Route>
 );

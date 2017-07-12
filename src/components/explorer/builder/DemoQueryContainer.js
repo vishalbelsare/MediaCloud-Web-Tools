@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
-import QueryPicker from './QueryPicker';
+import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
@@ -103,7 +103,7 @@ class DemoQueryBuilderContainer extends React.Component {
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
-          <QueryPicker isEditable={isEditable} onClick={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+          <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
           <QueryResultsContainer queries={queries} params={location} samples={samples} />
         </div>
       );
