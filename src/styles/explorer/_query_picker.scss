@@ -1,33 +1,43 @@
 @import '../constants';
 
-.query-picker-item {
-    border: 1px solid $material-grey200;
+.query-picker {
+  border-bottom: 1px solid $material-grey200;
+
+  .slick-slider {
+    margin-bottom: 0px;
+  }
+
+  .query-picker-item {
+    
+    border-left: 1px solid $material-grey200;
+    border-right: 1px solid $material-grey200;
     margin: 0 !important;
     padding: 5px 20px !important;
     height: 110px;
     text-align: left;
 
-    query-picker-item-color {
-        width: 10px !important;
-        height: 10px;
-        display: block !important;
-        float: right;
+    &:first-child {
+      border-left: 0px;
     }
-}
 
-.query-picker-item-name {
+    .query-picker-item-color {
+      width: 10px !important;
+      height: 10px;
+      display: block !important;
+      float: right;
+    }
+  }
+
+  .query-picker-item-name {
     padding: 5px 20px;
-}
+  }
 
-.query-picker-item, .query-picker-item-card-header {
+  .query-picker-item, .query-picker-item-card-header {
     text-align: left;
     padding: 5px 20px;
-}
-.query-picker-item-selected > div {
+  }
+  .query-picker-item-selected > div {
     background-color: $material-grey200 !important;
+  }
+  
 }
-
-.query-field {
-    border: 1px solid $material-grey200 !important;
-}
-

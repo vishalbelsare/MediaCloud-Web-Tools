@@ -6,7 +6,7 @@ import QueryPicker from './QueryPicker';
 const QueryBuilderContainer = (props) => {
   const { queries, isEditable, setSelectedQuery, handleSearch } = props;
   return (
-    <div className="query-picker">
+    <div className="query-builder">
       <QueryPicker isEditable={isEditable} onClick={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
     </div>
   );

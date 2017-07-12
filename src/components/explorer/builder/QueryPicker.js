@@ -3,7 +3,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { Card } from 'material-ui/Card';
-import { Grid } from 'react-flexbox-grid/lib';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -94,32 +93,32 @@ class QueryPicker extends React.Component {
         fixedQuerySlides.push(emptyQuerySlide);
       }
       content = (
-        <ItemSlider
-          title={formatMessage(localMessages.intro)}
-          slides={fixedQuerySlides}
-          settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
-        />
+        <div className="query-picker">
+          <ItemSlider
+            title={formatMessage(localMessages.intro)}
+            slides={fixedQuerySlides}
+            settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
+          />
+        </div>
       );
 
       // indicate which queryPickerItem is selected -
       const selectedWithSandCLabels = mergedQueryWithSandCInfo.find(q => q.index === selected.index);
       const initialValues = selectedWithSandCLabels ? { ...selectedWithSandCLabels } : {};
       return (
-        <div className="query-picker">
+        <div>
           {content}
-          <Grid>
-            <QueryForm
-              initialValues={initialValues}
-              selected={selectedWithSandCLabels}
-              form="queryForm"
-              enableReinitialize
-              destroyOnUnmount={false}
-              buttonLabel={formatMessage(localMessages.querySearch)}
-              onSave={handleSearch}
-              onChange={event => this.updateQuery(event)}
-              isEditable
-            />
-          </Grid>
+          <QueryForm
+            initialValues={initialValues}
+            selected={selectedWithSandCLabels}
+            form="queryForm"
+            enableReinitialize
+            destroyOnUnmount={false}
+            buttonLabel={formatMessage(localMessages.querySearch)}
+            onSave={handleSearch}
+            onChange={event => this.updateQuery(event)}
+            isEditable
+          />
         </div>
       );
     }

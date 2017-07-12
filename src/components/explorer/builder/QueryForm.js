@@ -1,9 +1,8 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
-import DataCard from '../../common/DataCard';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
@@ -37,102 +36,87 @@ const QueryForm = (props) => {
 // we may have a query or a query object for initialValues
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
-      <DataCard>
-        <Row>
-          <Col lg={6}>
-            <Row>
-              <FormattedMessage {...localMessages.query} />
-            </Row>
-            <Row>
-              <Field
-                className="query-field"
-                name="q"
-                type="text"
-                value={currentQ}
-                underlineShow={false}
-                multiLine
-                rows={3}
-                rowsMax={4}
-                component={renderTextField}
-              />
-            </Row>
-            <Row>
-              <Col lg={6}>&nbsp;</Col>
-            </Row>
-            <Row>
-              <Link to={'/howToBuildQueries'}><FormattedMessage {...localMessages.learnHowTo} /></Link>
-            </Row>
-          </Col>
-          <Col lg={6}>
-            <Row>
-              <FormattedMessage {...localMessages.selectSandC} />
-            </Row>
-            <Row>
-              <Col lg={6}>&nbsp;</Col>
-            </Row>
-            <Row>
-              <SourceCollectionsForm
-                className="query-field"
-                form="queryForm"
-                destroyOnUnmount={false}
-                enableReinitialize
-                initialValues={cleanedInitialValues}
-                selected={selected}
-                allowRemoval={false}
-              />
-            </Row>
-            <Row>
-              <Col lg={6}>&nbsp;</Col>
-            </Row>
-            <Row>
-              <FormattedMessage {...localMessages.dates} />
-            </Row>
-            <Row>
-              <Col lg={2} sm={1}>
+      <div className="query-form-wrapper">
+        <Grid>
+          <Row>
+            <Col lg={5}>
+              <div className="q-field-wrapper">
+                <label htmlFor="q"><FormattedMessage {...localMessages.query} /></label>
                 <Field
                   className="query-field"
+                  name="q"
+                  type="text"
+                  value={currentQ}
+                  underlineShow={false}
+                  multiLine
+                  rows={3}
+                  rowsMax={4}
+                  fullWidth
+                  component={renderTextField}
+                />
+                <Link to={'/howToBuildQueries'}><FormattedMessage {...localMessages.learnHowTo} /></Link>
+              </div>
+              <div className="color-field-wrapper">
+                <label htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
+                <ColorPicker
+                  name="color"
+                  color={currentColor}
+                  onChange={onChange}
+                />
+              </div>
+            </Col>
+            <Col lg={1} />
+            <Col lg={6}>
+              <div className="media-field-wrapper">
+                <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
+                <SourceCollectionsForm
+                  className="query-field"
+                  form="queryForm"
+                  destroyOnUnmount={false}
+                  enableReinitialize
+                  initialValues={cleanedInitialValues}
+                  selected={selected}
+                  allowRemoval={false}
+                />
+              </div>
+              <div className="dates-field-wrapper">
+                <label htmlFor="startDate"><FormattedMessage {...localMessages.dates} /></label>
+                <Field
+                  className="query-field start-date-wrapper"
                   maxLength="12"
                   name="startDate"
                   type="inline"
                   component={renderTextField}
                   underlineShow={false}
                 />
-              </Col>
-              <FormattedMessage {...localMessages.dateTo} />
-              <Col lg={1}>
+                <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
                 <Field
-                  className="query-field"
+                  className="query-field end-date-wrapper"
                   maxLength="12"
                   name="endDate"
                   type="inline"
                   component={renderTextField}
                   underlineShow={false}
                 />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+      <Grid>
         <Row>
-          <Col lg={3}>
-            <FormattedMessage {...localMessages.color} />
-            <ColorPicker
-              name="color"
-              color={currentColor}
-              onChange={onChange}
+          <Col lg={11} />
+          <Col lg={1}>
+            <AppButton
+              style={{ marginTop: 30 }}
+              type="submit"
+              label={buttonLabel}
+              disabled={submitting}
+              primary
             />
           </Col>
         </Row>
-      </DataCard>
-      <Col lg={11} />
-      <Col lg={1}>
-        <AppButton
-          style={{ marginTop: 30 }}
-          type="submit"
-          label={buttonLabel}
-          disabled={submitting}
-          primary
-        />
-      </Col>
+      </Grid>
     </form>
   );
 };
