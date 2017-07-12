@@ -105,20 +105,22 @@ class QueryPicker extends React.Component {
       const selectedWithSandCLabels = mergedQueryWithSandCInfo.find(q => q.index === selected.index);
       const initialValues = selectedWithSandCLabels ? { ...selectedWithSandCLabels } : {};
       return (
-        <Grid className="query-picker">
+        <div className="query-picker">
           {content}
-          <QueryForm
-            initialValues={initialValues}
-            selected={selectedWithSandCLabels}
-            form="queryForm"
-            enableReinitialize
-            destroyOnUnmount={false}
-            buttonLabel={formatMessage(localMessages.querySearch)}
-            onSave={handleSearch}
-            onChange={event => this.updateQuery(event)}
-            isEditable
-          />
-        </Grid>
+          <Grid>
+            <QueryForm
+              initialValues={initialValues}
+              selected={selectedWithSandCLabels}
+              form="queryForm"
+              enableReinitialize
+              destroyOnUnmount={false}
+              buttonLabel={formatMessage(localMessages.querySearch)}
+              onSave={handleSearch}
+              onChange={event => this.updateQuery(event)}
+              isEditable
+            />
+          </Grid>
+        </div>
       );
     }
     return ('error - no queries ');

@@ -29,8 +29,9 @@ class QueryPickerItem extends React.Component {
             <ColorPicker
               color={query.color}
               onChange={(e, val) => updateQuery(e, val)}
-            />&nbsp;
+            />
             <TextField
+              className="query-picker-editable-name"
               id="q"
               name="q"
               value={query.q}

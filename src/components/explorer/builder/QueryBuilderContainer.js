@@ -1,15 +1,14 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
 import QueryPicker from './QueryPicker';
 
 const QueryBuilderContainer = (props) => {
   const { queries, isEditable, setSelectedQuery, handleSearch } = props;
   return (
-    <Grid className="query-picker">
+    <div className="query-picker">
       <QueryPicker isEditable={isEditable} onClick={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
-    </Grid>
+    </div>
   );
 };
 
