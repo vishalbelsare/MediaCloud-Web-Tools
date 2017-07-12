@@ -1,7 +1,6 @@
 @import '../constants';
 @import '_homepage';
 @import '_sample_searches';
-@import '_query_picker';
 
 .glyphicon {
     position: relative;
@@ -14,30 +13,6 @@
     -webkit-font-smoothing: antialiased;
 }
 
-.query-picker-item {
-	border: 1px solid $material-grey200;
-	margin: 0 !important;
-	padding: 5px 20px !important;
-    height: 110px;
-    text-align: left;
-
-    query-picker-item-color {
-        width: 10px !important;
-        height: 10px;
-        display: block !important;
-        float: right;
-    }
-}
-.query-picker-item-name {
-    padding: 5px 20px;
-}
-.query-picker-item, .query-picker-item-card-header {
-    text-align: left;
-    padding: 5px 20px;
-}
-.query-picker-item-selected > div {
-    background-color: $material-grey200 !important;
-}
 .color-picker {
     display: inline-block !important;
 }
