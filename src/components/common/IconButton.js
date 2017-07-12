@@ -147,4 +147,4 @@ export const FilterButton = composeIconButton(FilterIcon, messages.filter, false
 
 export const SaveButton = composeIconButton(SaveIcon, messages.save);
 
-export const SearchButton = composeIconButton(SearchIcon, messages.search);
+export const SearchButton = composeIconButton(SearchIcon, messages.search, false);
