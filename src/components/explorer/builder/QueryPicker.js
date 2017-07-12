@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { Card } from 'material-ui/Card';
+import { Grid } from 'react-flexbox-grid/lib';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -104,7 +105,7 @@ class QueryPicker extends React.Component {
       const selectedWithSandCLabels = mergedQueryWithSandCInfo.find(q => q.index === selected.index);
       const initialValues = selectedWithSandCLabels ? { ...selectedWithSandCLabels } : {};
       return (
-        <div className="query-picker">
+        <Grid className="query-picker">
           {content}
           <QueryForm
             initialValues={initialValues}
@@ -117,7 +118,7 @@ class QueryPicker extends React.Component {
             onChange={event => this.updateQuery(event)}
             isEditable
           />
-        </div>
+        </Grid>
       );
     }
     return ('error - no queries ');
