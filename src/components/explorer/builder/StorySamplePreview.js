@@ -38,7 +38,12 @@ class StorySamplePreview extends React.Component {
     }
   }
   downloadCsv = (query) => {
-    const url = `/api/explorer/stories/samples.csv/[{"q":"${query.q}"}]/${query.index}`;
+    let url = null;
+    if (parseInt(query.searchId, 10) >= 0) {
+      url = `/api/explorer/stories/samples.csv/${query.searchId}/${query.index}`;
+    } else {
+      url = `/api/explorer/stories/samples.csv/[{"q":"${query.q}"}]/${query.index}`;
+    }
     window.location = url;
   }
   render() {
