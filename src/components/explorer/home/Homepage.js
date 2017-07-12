@@ -28,19 +28,23 @@ const Homepage = (props) => {
     );
   }
   return (
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <SearchForm onSearch={onKeywordSearch} user={user} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <SampleSearchContainer />
-        </Col>
-      </Row>
-      {sideBarContent}
-    </Grid>
+    <div>
+      <Grid>
+        <Row>
+          <Col lg={12}>
+            <SearchForm onSearch={onKeywordSearch} user={user} />
+          </Col>
+        </Row>
+      </Grid>
+      <SampleSearchContainer />
+      <Grid>
+        <Row>
+          <Col lg={12}>
+            {sideBarContent}
+          </Col>
+        </Row>
+      </Grid>
+    </div>
   );
 };
 

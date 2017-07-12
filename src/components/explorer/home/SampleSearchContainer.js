@@ -1,8 +1,8 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import ItemSlider from '../../common/ItemSlider';
-import DataCard from '../../common/DataCard';
 import SampleSearchItem from './SampleSearchItem';
 import { fetchSampleSearches } from '../../../actions/explorerActions';
 
@@ -38,9 +38,15 @@ class SampleSearchContainer extends React.Component {
     }
 
     return (
-      <DataCard className="sample-searches">
-        {content}
-      </DataCard>
+      <div className="sample-searches">
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              {content}
+            </Col>
+          </Row>
+        </Grid>
+      </div>
     );
   }
 }

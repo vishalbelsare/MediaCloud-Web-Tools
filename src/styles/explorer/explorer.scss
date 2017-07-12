@@ -1,5 +1,6 @@
 @import '../constants';
 @import '_homepage';
+@import '_sample_searches';
 
 .glyphicon {
     position: relative;
@@ -40,15 +41,6 @@
     padding: 0px;
     cursor: pointer !important;
     display: inline-block !important;
-}
-
-.sample-searches {
-    background-color: $material-red500 !important;
-}
-
-.sample-query-item {
-    border: 10px solid $material-red500;
-    background-color: $white !important;
 }
 
 .query-field {
