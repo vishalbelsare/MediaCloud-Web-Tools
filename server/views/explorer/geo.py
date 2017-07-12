@@ -58,7 +58,7 @@ def geotag_count():
 
 
 
-def stream_geo_csv(mc_key, filename):
+def stream_geo_csv(fn, search_id_or_query, index):
     filename = ''
     SAMPLE_SEARCHES = load_sample_searches()
     if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
@@ -84,9 +84,8 @@ def stream_geo_csv(mc_key, filename):
 
 
 @app.route('/api/explorer/geography/geography.csv')
-@flask_login.login_required
 @api_error_handler
-def explorer_geo_csv():
-    return stream_geo_csv(user_mediacloud_key(), 'explorer-geography')
+def explorer_geo_csv(search_id_or_query, index):
+    return stream_geo_csv('explorer-geography', search_id_or_query, index)
 
 
