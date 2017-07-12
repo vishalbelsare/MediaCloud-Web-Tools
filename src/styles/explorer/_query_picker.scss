@@ -20,11 +20,23 @@
       border-left: 0px;
     }
 
-    .query-picker-item-color {
-      width: 10px !important;
-      height: 10px;
-      display: block !important;
-      float: right;
+    .query-info {
+      margin-left: 20px;
+      display: block;
+      color: $material-grey600;
+    }
+
+    .add-query-item {
+      margin-top: 40px;
+      font-size: 20px;
+      color: $material-grey600;
+    }
+
+  }
+
+  .query-picker-item {
+    .query-picker-editable-name {
+      width: 210px !important;
     }
   }
 
@@ -32,10 +44,6 @@
     padding: 5px 20px;
   }
 
-  .query-picker-item, .query-picker-item-card-header {
-    text-align: left;
-    padding: 5px 20px;
-  }
   .query-picker-item-selected > div {
     background-color: $material-grey200 !important;
   }

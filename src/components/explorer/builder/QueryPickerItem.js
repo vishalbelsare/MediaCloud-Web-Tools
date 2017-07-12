@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
-import { Card } from 'material-ui/Card';
 import ColorPicker from '../../common/ColorPicker';
 
 const localMessages = {
@@ -10,6 +9,7 @@ const localMessages = {
   sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
   collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
   collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
+  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
 };
 
 class QueryPickerItem extends React.Component {
@@ -19,13 +19,14 @@ class QueryPickerItem extends React.Component {
 
   render() {
     const { query, isEditable, displayLabel, selectThisQuery, updateQuery } = this.props;
+    const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
 
     if (query) {
       if (isEditable) {
         nameInfo = (
-          <div className="query-picker-item-card-header">
+          <div>
             <ColorPicker
               color={query.color}
               onChange={(e, val) => updateQuery(e, val)}
@@ -35,14 +36,14 @@ class QueryPickerItem extends React.Component {
               id="q"
               name="q"
               value={query.q}
-              hintText={query.q}
+              hintText={query.q || formatMessage(localMessages.searchHint)}
               onChange={(e, val) => updateQuery(e, val)}
             />
           </div>
         );
       } else {
         nameInfo = (
-          <div className="query-picker-item-card-header">
+          <div>
             <ColorPicker
               color={query.color}
               onChange={(e, val) => updateQuery(e, val)}
@@ -65,7 +66,7 @@ class QueryPickerItem extends React.Component {
       if (srcCount === 0 && collCount === 1) {
         // TODO start_date vs startDate
         subT = (
-          <div className="query-picker-item-card-header">
+          <div className="query-info">
             {displayLabel ? query.label : ''}
             {oneCollStatus}<br />
             {query.startDate}--{query.endDate}
@@ -73,7 +74,7 @@ class QueryPickerItem extends React.Component {
         );
       } else if (totalCount > 0) {
         subT = (
-          <div className="query-picker-item-card-header">
+          <div className="query-info">
             {displayLabel ? query.label : ''}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
@@ -84,10 +85,10 @@ class QueryPickerItem extends React.Component {
     }
 
     return (
-      <Card className="query-picker-item" onClick={() => selectThisQuery()}>
+      <div className="query-picker-item" onTouchTap={selectThisQuery}>
         {nameInfo}
         {subT}
-      </Card>
+      </div>
     );
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
+import { Grid } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
-import { Card } from 'material-ui/Card';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
@@ -75,18 +75,20 @@ class QueryPicker extends React.Component {
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
         const genDefColor = colorPallette(newIndex);
-        const defaultQuery = { index: newIndex, label: 'enter query', q: 'enter here', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
-          <div className="add-query-item" key={fixedQuerySlides.length}>
-            <Card className="query-picker-item">
-              <AddQueryButton
-                key={fixedQuerySlides.length} // this isn't working
-                tooltip={formatMessage(localMessages.addQuery)}
-                onClick={() => this.addAQuery(defaultQuery)}
-              />
-              <FormattedMessage {...localMessages.addQuery} />
-            </Card>
+          <div key={fixedQuerySlides.length}>
+            <div className="query-picker-item">
+              <div className="add-query-item">
+                <AddQueryButton
+                  key={fixedQuerySlides.length} // this isn't working
+                  tooltip={formatMessage(localMessages.addQuery)}
+                  onClick={() => this.addAQuery(defaultQuery)}
+                />
+                <FormattedMessage {...localMessages.addQuery} />
+              </div>
+            </div>
           </div>
         );
 
@@ -94,11 +96,13 @@ class QueryPicker extends React.Component {
       }
       content = (
         <div className="query-picker">
-          <ItemSlider
-            title={formatMessage(localMessages.intro)}
-            slides={fixedQuerySlides}
-            settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
-          />
+          <Grid>
+            <ItemSlider
+              title={formatMessage(localMessages.intro)}
+              slides={fixedQuerySlides}
+              settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
+            />
+          </Grid>
         </div>
       );
 

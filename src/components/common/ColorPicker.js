@@ -25,7 +25,7 @@ class ColorPicker extends React.Component {
     const { color } = this.props;
     let colorPicker = null;
     if (this.state.displayColorPicker) {
-      colorPicker = <GithubPicker color={color} onChange={this.handleClose} />;
+      colorPicker = <GithubPicker triangle="hide" color={color} onChange={this.handleClose} />;
     } else {
       colorPicker = <button onClick={this.handleClick} style={{ width: 10, height: 10, borderRadius: 10, backgroundColor: `${color}`, display: 'inline-block' }} />;
     }
