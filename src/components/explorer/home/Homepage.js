@@ -12,19 +12,32 @@ import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
+  subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Welcome to the Media Cloud Explorer' },
+  summary: { id: 'explorer.intro.summary', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
+  description: { id: 'explorer.intro.description', defaultMessage: 'Dashboard is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over acustom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
 const Homepage = (props) => {
   const { user, onKeywordSearch } = props;
   let sideBarContent;
-
   if (!user.isLoggedIn) {
     sideBarContent = (
-      <DataCard>
-        <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
-        <LoginForm />
-      </DataCard>
+      <Grid>
+        <Row>
+          <Col md={8}>
+            <h1><FormattedMessage {...localMessages.subtitle} /></h1>
+            <h2><FormattedMessage {...localMessages.summary} /></h2>
+            <p><FormattedMessage {...localMessages.description} /></p>
+          </Col>
+          <Col md={4}>
+            <DataCard>
+              <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
+              <LoginForm />
+            </DataCard>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
   return (
@@ -37,13 +50,7 @@ const Homepage = (props) => {
         </Row>
       </Grid>
       <SampleSearchContainer />
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            {sideBarContent}
-          </Col>
-        </Row>
-      </Grid>
+      {sideBarContent}
     </div>
   );
 };
