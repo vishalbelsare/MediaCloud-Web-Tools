@@ -57,7 +57,7 @@ const QueryForm = (props) => {
                 <Link to={'/howToBuildQueries'}><FormattedMessage {...localMessages.learnHowTo} /></Link>
               </div>
               <div className="color-field-wrapper">
-                <label htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
+                <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
                 <ColorPicker
                   name="color"
                   color={currentColor}
