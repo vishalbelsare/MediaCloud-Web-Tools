@@ -2,10 +2,10 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import Link from 'react-router/lib/Link';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
 // import { emptyString } from '../../../lib/formValidators';
 
@@ -19,10 +19,12 @@ const localMessages = {
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
   learnHowTo: { id: 'explorer.queryBuilder.learnHowTo', defaultMessage: 'Learn how to build query strings' },
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
+  queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
+  queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
 };
 
 const QueryForm = (props) => {
-  const { initialValues, selected, buttonLabel, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, selected, buttonLabel, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -54,7 +56,7 @@ const QueryForm = (props) => {
                   fullWidth
                   component={renderTextField}
                 />
-                <Link to={'/howToBuildQueries'}><FormattedMessage {...localMessages.learnHowTo} /></Link>
+                <a href="#query-help" onClick={handleOpenHelp}><FormattedMessage {...localMessages.learnHowTo} /></a>
               </div>
               <div className="color-field-wrapper">
                 <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
@@ -134,6 +136,7 @@ QueryForm.propTypes = {
   renderSelectField: React.PropTypes.func.isRequired,
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
+  handleOpenHelp: React.PropTypes.func.isRequired,
   // from form healper
   updateQuery: React.PropTypes.func,
   handleSubmit: React.PropTypes.func,
@@ -159,8 +162,10 @@ QueryForm.propTypes = {
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm({ propTypes })(
-        QueryForm
+      composeHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
+        reduxForm({ propTypes })(
+          QueryForm
+        ),
       ),
     ),
   );

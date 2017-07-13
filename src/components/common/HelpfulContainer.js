@@ -55,7 +55,14 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHe
             </Row>
           );
         } else {
-          displayContent = <ChildComponent {...this.props} helpButton={helpButton} helpContent={content} />;
+          displayContent = (
+            <ChildComponent
+              {...this.props}
+              handleOpenHelp={this.handleOpen}
+              helpButton={helpButton}
+              helpContent={content}
+            />
+          );
         }
         return (
           <span className="helpful">
