@@ -35,17 +35,16 @@ class DemoQueryBuilderContainer extends React.Component {
       // parse query params
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
       const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
-      const currentQuery = parsedObjectArray.map(q => q.q);
-      let isNewQuerySet = null;
+      /* const currentQuery = parsedObjectArray.map(q => q.q);
+       let isNewQuerySet = null;
       if (whichProps && whichProps.selected) {
-        isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0);
-      }
+        isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0); // this is true even if a new query is beign entered
+      } */
       if (this.props.location.pathname !== whichProps.location.pathname) {
         // TODO how to keep current selection if this is just an *updated* set of queries
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
-      } else if ((!selected && !whichProps.selected) ||
-        isNewQuerySet) {
+      } else if (!selected && !whichProps.selected) {
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
       }
