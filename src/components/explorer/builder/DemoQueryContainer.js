@@ -30,19 +30,22 @@ class DemoQueryBuilderContainer extends React.Component {
     const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
+
     if (whichProps.location.pathname.includes('/queries/demo/search')) {
       // parse query params
       // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
-      // we will not have a sample search selected BTW
-      // back end effectively ignores everything but the keyword
-
       const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+      const currentQuery = parsedObjectArray.map(q => q.q);
+      let isNewQuerySet = null;
+      if (whichProps && whichProps.selected) {
+        isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0);
+      }
       if (this.props.location.pathname !== whichProps.location.pathname) {
-        // could we check to see if we have added any new queries... otherwise just an update...
-        // and we keep current selection
+        // TODO how to keep current selection if this is just an *updated* set of queries
         selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]); // how to not do this if we want to keep currentselection
-      } else if (!selected && !whichProps.selected) {
+        setSelectedQuery(parsedObjectArray[0]);
+      } else if ((!selected && !whichProps.selected) ||
+        isNewQuerySet) {
         selectQueriesByURLParams(parsedObjectArray);
         setSelectedQuery(parsedObjectArray[0]);
       }
