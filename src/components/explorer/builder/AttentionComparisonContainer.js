@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetQueries, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -35,27 +35,9 @@ function dataAsSeries(data) {
 }
 
 class AttentionComparisonContainer extends React.Component {
-  componentWillMount() {
-    const { urlQueryString, queries, fetchData } = this.props;
-    if (!queries) {
-      fetchData(urlQueryString, queries);
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    const { urlQueryString, lastSearchTime, queries, fetchData } = this.props;
-    if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
-      fetchData(nextProps.urlQueryString, nextProps.queries);
-    }
-    if (nextProps.queries[0].label !== queries[0].label) {
-      fetchData(nextProps.urlQueryString, nextProps.queries);
-    }
-    /* if (nextProps.selected.color !== selected.color) {
-      fetchData(nextProps.urlQueryString);
-    }
-    if (nextProps.selected.label !== selected.label) {
-      fetchData(nextProps.urlQueryString);
-    } */
+  componentWillUnmount() {
+    const { resetDisplay } = this.props;
+    resetDisplay();
   }
   downloadCsv = (query) => {
     let url = null;
@@ -129,6 +111,8 @@ AttentionComparisonContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
+  recordLastSearchTime: React.PropTypes.func.isRequired,
+  resetDisplay: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
   sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
@@ -141,7 +125,6 @@ AttentionComparisonContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   selected: state.explorer.selected,
-  queries: state.explorer.queries,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
@@ -149,6 +132,13 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
+  recordLastSearchTime: () => {
+    dispatch(updateTimestampForQueries());
+  },
+  resetDisplay: () => {
+    dispatch(resetQueries());
+    dispatch(resetSentenceCounts());
+  },
   fetchData: (params, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
@@ -197,7 +187,8 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.params);
+      dispatchProps.recordLastSearchTime();
+      dispatchProps.fetchData(ownProps, ownProps.queries);
     },
   });
 }

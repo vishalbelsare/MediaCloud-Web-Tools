@@ -52,3 +52,9 @@ export const demoQuerySourcesByIds = createAsyncAction(FETCH_DEMO_QUERY_SOURCES,
 export const FETCH_DEMO_QUERY_COLLECTIONS = 'FETCH_DEMO_QUERY_COLLECTIONS';
 export const demoQueryCollectionsByIds = createAsyncAction(FETCH_DEMO_QUERY_COLLECTIONS, api.demoQueryCollectionsByIds, props => props);
 
+export const RESET_QUERIES = 'RESET_QUERIES';
+export const resetQueries = createAction(RESET_QUERIES);
+
+export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
+export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
+

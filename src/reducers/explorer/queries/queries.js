@@ -1,5 +1,5 @@
 // import { createReducer } from '../../../lib/reduxHelpers';
-import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, RESET_QUERIES } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = null;
 
@@ -31,10 +31,11 @@ function queries(state = INITIAL_STATE, action) {
     case SELECT_SEARCH_BY_PARAMS:
       if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
         const queryData = action.payload.map(q => Object.assign({}, q, { id: null, searchId: null }));
-        updatedState = queryData;
-        return updatedState;
+        return queryData;
       }
       return state;
+    case RESET_QUERIES:
+      return [];
     default:
       return state;
   }
