@@ -34,7 +34,12 @@ class StoryCountPreview extends React.Component {
     }
   }
   downloadCsv = (query) => {
-    const url = `/api/explorer/stories/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+    let url = null;
+    if (parseInt(query.searchId, 10) >= 0) {
+      url = `/api/explorer/stories/count.csv/${query.searchId}/${query.index}`;
+    } else {
+      url = `/api/explorer/stories/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+    }
     window.location = url;
   }
   render() {

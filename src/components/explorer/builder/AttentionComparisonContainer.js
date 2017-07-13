@@ -58,12 +58,12 @@ class AttentionComparisonContainer extends React.Component {
     } */
   }
   downloadCsv = (query) => {
-    // onst { urlQueryString } = this.props;
-    // TODO pathname check
-    // let currentIndexOrQuery = urlQueryString.pathname;
-    // currentIndexOrQuery = currentIndexOrQuery.slice(currentIndexOrQuery.lastIndexOf('/') + 1, currentIndexOrQuery.length);
-    // currentIndexOrQuery = escape(currentIndexOrQuery);
-    const url = `/api/explorer/sentences/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+    let url = null;
+    if (parseInt(query.searchId, 10) >= 0) {
+      url = `/api/explorer/sentences/count.csv/${query.searchId}/${query.index}`;
+    } else {
+      url = `/api/explorer/sentences/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+    }
     window.location = url;
   }
   render() {

@@ -32,7 +32,12 @@ class GeoPreview extends React.Component {
     }
   }
   downloadCsv = (query) => {
-    const url = `/api/explorer/geography/geography.csv/[{"q":"${query.q}"}]/${query.index}`;
+    let url = null;
+    if (parseInt(query.searchId, 10) >= 0) {
+      url = `/api/explorer/geography/geography.csv/${query.searchId}/${query.index}`;
+    } else {
+      url = `/api/explorer/geography/geography.csv/[{"q":"${query.q}"}]/${query.index}`;
+    }
     window.location = url;
   }
 

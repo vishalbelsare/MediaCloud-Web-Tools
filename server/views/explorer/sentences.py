@@ -69,22 +69,24 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     SAMPLE_SEARCHES = load_sample_searches()
-    if isinstance(search_id_or_query, int) and int(search_id_or_query) < len(SAMPLE_SEARCHES):
+    try:
         search_id = int(search_id_or_query)
-        SAMPLE_SEARCHES = load_sample_searches()
-        current_search = SAMPLE_SEARCHES[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+        if search_id >= 0:
+            SAMPLE_SEARCHES = load_sample_searches()
+            current_search = SAMPLE_SEARCHES[search_id]['queries']
+            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
 
-        if int(index) < len(current_search): 
-            start_date = current_search[int(index)]['startDate']
-            end_date = current_search[int(index)]['endDate']
-    else:
+            if int(index) < len(current_search): 
+                start_date = current_search[int(index)]['startDate']
+                end_date = current_search[int(index)]['endDate']
+                filename = fn + current_search[int(index)]['q']
+
+    except Exception as e:
         # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
         query = json.loads(search_id_or_query)
         current_query = query[0]
         solr_query = parse_query_with_keywords(current_query) # TODO don't mod the start and end date unless permissions
-        # start_date = current_query['startDate'] if 'startDate' in current_query else start_date
-        # end_date = current_query['endDate'] if 'endDate' in current_query else end_date
+        filename = fn + current_query['q']
 
     results = cached_by_query_sentence_counts(solr_query, start_date, end_date) # get dates out of query?
     clean_results = [{'date': date, 'numFound': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
@@ -92,10 +94,10 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
 
     clean_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'numFound']
-    return csv.stream_response(clean_results, props, fn)
+    return csv.stream_response(clean_results, props, filename)
 
 @app.route('/api/explorer/sentences/count.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
 def api_explorer_sentence_count_csv(search_id_or_query, index):
-    return stream_sentence_count_csv('sentenceCounts-Explorer', search_id_or_query, index)
+    return stream_sentence_count_csv('sentenceCounts-Explorer-', search_id_or_query, index)
 
