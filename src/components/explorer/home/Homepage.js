@@ -25,12 +25,12 @@ const Homepage = (props) => {
     sideBarContent = (
       <Grid>
         <Row>
-          <Col md={8}>
+          <Col md={7}>
             <h1><FormattedMessage {...localMessages.subtitle} /></h1>
             <h2><FormattedMessage {...localMessages.summary} /></h2>
             <p><FormattedMessage {...localMessages.description} /></p>
           </Col>
-          <Col md={4}>
+          <Col md={5}>
             <DataCard>
               <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
               <LoginForm />

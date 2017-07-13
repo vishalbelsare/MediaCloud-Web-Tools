@@ -1,6 +1,8 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Slider from 'react-slick';
+import PreviousIcon from 'material-ui/svg-icons/image/navigate-before';
+import NextIcon from 'material-ui/svg-icons/image/navigate-next';
 
 const ItemSlider = (props) => {
   const { slides, settings } = props;
@@ -14,8 +16,20 @@ const ItemSlider = (props) => {
   };
 
   // use this if you have a prepped set of JSX tags to send over
+  const nextButton = <NextIcon />;
+  const previousButton = <PreviousIcon />;
   return (
-    <Slider {...settingsExt} style={{ width: 80, height: 100, margin: 10, padding: 10 }}>
+    <Slider
+      {...settingsExt}
+      nextArrow={nextButton}
+      prevArrow={previousButton}
+      style={{
+        width: 80,
+        height: 100,
+        margin: 10,
+        padding: 10,
+      }}
+    >
       { slides }
     </Slider>
   );

@@ -33,7 +33,14 @@ class SampleSearchContainer extends React.Component {
         <ItemSlider
           title={formatMessage(localMessages.intro)}
           slides={fixedSearchSlides}
-          settings={{ height: 60, dots: false, slidesToShow: 3, slidesToScroll: 1, infinite: false, arrows: fixedSearchSlides.length > 3 }}
+          settings={{
+            height: 60,
+            dots: false,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            infinite: false,
+            arrows: fixedSearchSlides.length > 3,
+          }}
         />
       );
     }
