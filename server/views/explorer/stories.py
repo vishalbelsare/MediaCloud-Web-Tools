@@ -80,7 +80,6 @@ def api_explorer_demo_story_count():
         solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
         solr_query = parse_query_with_keywords(request.args)
-        # TODO what about other params: date etc for demo..
 
     story_count_result = cached_story_count(solr_query)
     # maybe check admin role before we run this?

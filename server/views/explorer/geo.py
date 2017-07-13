@@ -38,7 +38,6 @@ def geotag_count():
         solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
     else:
         solr_query = parse_query_with_keywords(request.args)
-        # TODO what about other params: date etc for demo..
 
     # TODO coverage here
     # total_stories = mc.storyCount(solr_query)
@@ -66,6 +65,8 @@ def geotag_count():
 
 def stream_geo_csv(fn, search_id_or_query, index):
     filename = ''
+
+    # TODO: there is duplicate code here...
     SAMPLE_SEARCHES = load_sample_searches()
     try:
         search_id = int(search_id_or_query)
@@ -91,7 +92,7 @@ def stream_geo_csv(fn, search_id_or_query, index):
         geonamesId = int(r['tag'].split('_')[1])
         if geonamesId not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():   # only include countries
             continue
-        r['geonamesId'] = geonamesId    # TODO: move this to JS?
+        r['geonamesId'] = geonamesId
         r['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[geonamesId]
         r['count'] = (float(r['count'])/float(tag_utl.GEO_SAMPLE_SIZE))    # WTF: why is the API returning this as a string and not a number?
         for hq in HIGHCHARTS_KEYS:

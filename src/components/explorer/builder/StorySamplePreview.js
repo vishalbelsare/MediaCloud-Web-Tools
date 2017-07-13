@@ -51,7 +51,6 @@ class StorySamplePreview extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
         <div className="actions">
           <ActionMenu>
             {queries.map((q, idx) =>
@@ -65,6 +64,7 @@ class StorySamplePreview extends React.Component {
             )}
           </ActionMenu>
         </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
         <br />
         <Tabs>
           {results.map((storySet, idx) =>

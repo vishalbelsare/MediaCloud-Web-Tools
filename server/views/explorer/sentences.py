@@ -15,8 +15,6 @@ import json
 
 logger = logging.getLogger(__name__)
 
-### MAY NOT BE A FORM TODO
-
 @app.route('/api/explorer/sentences/count', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -68,7 +66,7 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
     start_date = two_weeks_before_now.strftime("%Y-%m-%d")
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-    SAMPLE_SEARCHES = load_sample_searches()
+    SAMPLE_SEARCHES = load_sample_searches() # TODO: some duplicate code here
     try:
         search_id = int(search_id_or_query)
         if search_id >= 0:

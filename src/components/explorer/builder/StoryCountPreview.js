@@ -69,9 +69,6 @@ class StoryCountPreview extends React.Component {
     }
     return (
       <DataCard>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
         <div className="actions">
           <ActionMenu>
             {queries.map((q, idx) =>
@@ -85,6 +82,9 @@ class StoryCountPreview extends React.Component {
             )}
           </ActionMenu>
         </div>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+        </h2>
         {content}
       </DataCard>
     );

@@ -56,7 +56,6 @@ class GeoPreview extends React.Component {
     const { formatMessage } = intl;
     return (
       <DataCard>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
         <div className="actions">
           <ActionMenu>
             {queries.map((q, idx) =>
@@ -70,15 +69,13 @@ class GeoPreview extends React.Component {
             )}
           </ActionMenu>
         </div>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
         <GridList
           className="geo-mini-cards"
           cellHeight={400}
         >
           {results.map((geoSet, idx) =>
             (<GridTile key={idx}>
-              <div className="actions">
-                <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
-              </div>
               <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
               <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
             </GridTile>
