@@ -1,11 +1,12 @@
 import logging
-from flask import jsonify
-import flask_login
 
-from server import app, mc
-from server.util.request import  api_error_handler
-from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client
+import flask_login
+from flask import jsonify
+
+from server import app
+from server.auth import user_admin_mediacloud_client
+from server.util.request import api_error_handler
+from server.util.tags import cached_tags_in_tag_set
 
 logger = logging.getLogger(__name__)
 
@@ -24,19 +25,3 @@ def api_metadata_values(tag_sets_id):
     return jsonify(tag_set)
 
 
-@cache
-def cached_tags_in_tag_set(tag_sets_id):
-    '''
-    This is cached at the app level, so it doesn't need a user key.  This is because
-    the list of tags here shouldn't change (ie. metadata values don't change within a category)
-    '''
-    all_tags = []
-    last_id = 0
-    more = True
-    while more:
-        current_list = mc.tagList(tag_sets_id=tag_sets_id, rows=100, last_tags_id=last_id)
-        last_id = current_list[-1]['tags_id']
-        more = (len(current_list) == 100) and (len(current_list) != 0)
-        all_tags = all_tags + current_list
-    all_tags = sorted(all_tags, key=lambda tag: tag['label'])
-    return all_tags
