@@ -3,8 +3,9 @@ import { formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContainer';
+import EditRetweetPartisanshipContainer from './retweetPartisanship/EditRetweetPartisanshipContainer';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
 
 const localMessages = {
   unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
@@ -18,6 +19,14 @@ const FocusForm2ConfigureContainer = (props) => {
   switch (currentFocalTechnique) {
     case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
       content = (<EditKeywordSearchContainer
+        topicId={topicId}
+        initialValues={initialValues}
+        onPreviousStep={handlePreviousStep}
+        onNextStep={handleNextStep}
+      />);
+      break;
+    case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
+      content = (<EditRetweetPartisanshipContainer
         topicId={topicId}
         initialValues={initialValues}
         onPreviousStep={handlePreviousStep}

@@ -55,7 +55,7 @@ PieChart.propTypes = {
   title: React.PropTypes.string.isRequired,
   data: React.PropTypes.array.isRequired,
   onPieSliceClick: React.PropTypes.func,
-  tooltipText: React.PropTypes.string.isRequired,
+  tooltipText: React.PropTypes.string,
   showDataLabels: React.PropTypes.bool.isRequired,
   height: React.PropTypes.number,
   // from composition chain

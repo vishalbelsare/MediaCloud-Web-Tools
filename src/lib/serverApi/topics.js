@@ -262,3 +262,11 @@ export function userQueuedAndRunningTopics() {
 export function topicStoryEntities(topicId, storyId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
 }
+
+export function topicPreviewRetweetPartisanshipStoryCounts(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/preview/retweet-partisanship/story-counts`);
+}
+
+export function topicPreviewRetweetPartisanshipCoverage(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/preview/retweet-partisanship/coverage`);
+}
