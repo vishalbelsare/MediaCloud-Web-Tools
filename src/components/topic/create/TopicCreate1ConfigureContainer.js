@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector, SubmissionError, propTypes } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
-import { goToCreateTopicStep } from '../../../actions/topicActions';
+import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { addNotice } from '../../../actions/appActions';
+import { LEVEL_ERROR } from '../../common/Notice';
 import messages from '../../../resources/messages';
 import { getCurrentDate, getMomentDateSubtraction } from '../../../lib/dateUtil';
 
@@ -18,12 +20,13 @@ const localMessages = {
   addCollectionsTitle: { id: 'topic.create.addCollectionsTitle', defaultMessage: 'Select Sources And Collections' },
   addCollectionsIntro: { id: 'topic.create.addCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic:' },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
+  topicNameAlreadyExists: { id: 'topic.form.detail.nameExists', defaultMessage: 'Sorry this topic name is already taken.' },
 };
 
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { finishStep } = props;
+  const { nextStep } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
@@ -38,8 +41,9 @@ const TopicCreate1ConfigureContainer = (props) => {
         </Col>
       </Row>
       <TopicForm
+        form="topicForm"
         initialValues={initialValues}
-        onSaveTopic={finishStep}
+        onSubmit={nextStep}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -60,30 +64,60 @@ TopicCreate1ConfigureContainer.propTypes = {
   // from state
   currentStep: React.PropTypes.number,
   formData: React.PropTypes.object,
+  topicNameSearch: React.PropTypes.object,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
+  nextStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  topicNameSearch: state.topics.create.topicNameSearch,
 });
 
 const mapDispatchToProps = dispatch => ({
-  goToStep: (step) => {
-    dispatch(goToCreateTopicStep(step));
+  addNotice: (msg) => {
+    dispatch(addNotice(msg));
+  },
+  goToStep: (step, values) => {
+    const success = dispatch(fetchTopicSearchResults(values.name))
+      .then((results) => {
+        if (results && results.topics && results.topics.length === 0) {
+          return true;
+        }
+        throw new SubmissionError({ name: 'name', _error: 'errors' });
+      });
+    return success;
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      dispatchProps.goToStep(1, values);
+    nextStep: (values) => {
+      let newErrObj = {};
+      dispatchProps.goToStep(1, values)
+      .then(() => 1,
+        (errors) => {
+          dispatchProps.addNotice({ level: LEVEL_ERROR, message: 'test error' });
+          newErrObj = errors;
+          newErrObj.name = 'errrorrr';
+          return newErrObj;
+        },
+      );
     },
   });
 }
+const validate = (values, props) => {
+  const errors = {};
+  if (values && values.name && props && props.error) {
+    errors.name = 'problem';
+  }
+  return errors;
+};
 
 const reduxFormConfig = {
   form: 'topicForm',
+  validate,
+  propTypes,
   destroyOnUnmount: false,  // so the wizard works
 };
 
