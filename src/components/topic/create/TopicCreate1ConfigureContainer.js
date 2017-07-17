@@ -8,7 +8,7 @@ import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
 import { addNotice } from '../../../actions/appActions';
-import { LEVEL_ERROR } from '../../common/Notice';
+// import { LEVEL_ERROR } from '../../common/Notice';
 import messages from '../../../resources/messages';
 import { getCurrentDate, getMomentDateSubtraction } from '../../../lib/dateUtil';
 
@@ -70,39 +70,35 @@ TopicCreate1ConfigureContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  formData: formSelector(state, 'name', 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
   topicNameSearch: state.topics.create.topicNameSearch,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   addNotice: (msg) => {
     dispatch(addNotice(msg));
   },
-  goToStep: (step, values) => {
-    const success = dispatch(fetchTopicSearchResults(values.name))
-      .then((results) => {
-        if (results && results.topics && results.topics.length === 0) {
-          return true;
-        }
-        throw new SubmissionError({ name: 'name', _error: 'errors' });
-      });
-    return success;
+  goToStep: (values) => {
+    const results = dispatch(fetchTopicSearchResults(values.name));
+    if (results && results.topics && results.topics.length <= 0) {
+      return results;
+    }
+    const msg = ownProps.intl.formatMessage(localMessages.topicNameAlreadyExists);
+    throw new SubmissionError({ name: msg, _error: 'error' });
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     nextStep: (values) => {
-      let newErrObj = {};
+      // const newErrObj = {};
       dispatchProps.goToStep(1, values)
-      .then(() => 1,
-        (errors) => {
-          dispatchProps.addNotice({ level: LEVEL_ERROR, message: 'test error' });
-          newErrObj = errors;
-          newErrObj.name = 'errrorrr';
-          return newErrObj;
-        },
-      );
+      .then(() => 1)
+      .catch((err) => {
+        if (err instanceof SubmissionError) {
+          throw err;
+        }
+      });
     },
   });
 }

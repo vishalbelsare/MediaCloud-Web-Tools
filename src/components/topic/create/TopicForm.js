@@ -68,7 +68,7 @@ TopicForm.propTypes = {
   handleSubmit: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
   pristine: React.PropTypes.bool.isRequired,
-  error: React.PropTypes.object,
+  error: React.PropTypes.string,
   submitting: React.PropTypes.bool.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
@@ -117,6 +117,7 @@ const reduxFormConfig = {
   validate,
   destroyOnUnmount: false,
   warn,
+  // forceUnregisterOnUnmount: true,
 };
 
 export default
