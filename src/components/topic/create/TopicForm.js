@@ -22,9 +22,9 @@ const localMessages = {
 };
 
 const TopicForm = (props) => {
-  const { onSaveTopic, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
-    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
+    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
       <Row><Col lg={12}><hr /></Col></Row>
       <TopicDetailForm
         form="topicForm"
@@ -66,12 +66,14 @@ TopicForm.propTypes = {
   initialValues: React.PropTypes.object,
   // from parent
   handleSubmit: React.PropTypes.func.isRequired,
-  onSaveTopic: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
   pristine: React.PropTypes.bool.isRequired,
+  error: React.PropTypes.object,
   submitting: React.PropTypes.bool.isRequired,
   title: React.PropTypes.string.isRequired,
   intro: React.PropTypes.string.isRequired,
   validate: React.PropTypes.func.isRequired,
+  topicNameSearch: React.PropTypes.object,
   mode: React.PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
 };
 
