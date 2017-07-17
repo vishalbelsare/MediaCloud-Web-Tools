@@ -8,6 +8,7 @@ export const GO_TO_CREATE_FOCUS_STEP = 'GO_TO_CREATE_FOCUS_STEP';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORIES = 'FETCH_CREATE_FOCUS_KEYWORD_STORIES';
 export const FETCH_CREATE_FOCUS_KEYWORD_ATTENTION = 'FETCH_CREATE_FOCUS_KEYWORD_ATTENTION';
 export const FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS = 'FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS';
+export const CREATE_RETWEET_FOCUS_SET = 'CREATE_RETWEET_FOCUS_SET';
 
 // pass in topicId and params (object with name, description, focal_set_definitions_id, query)
 export const createFocusDefinition = createAsyncAction(CREATE_FOCUS_DEFINITION, api.createFocusDefinition);
@@ -26,3 +27,5 @@ export const fetchCreateFocusKeywordAttention = createAsyncAction(FETCH_CREATE_F
 
 // pass in topicId, q
 export const fetchCreateFocusKeywordStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS, api.topicStoryCounts);
+
+export const createRetweetFocalSet = createAsyncAction(CREATE_RETWEET_FOCUS_SET, api.createRetweetFocalSet);

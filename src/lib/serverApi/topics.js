@@ -264,9 +264,14 @@ export function topicStoryEntities(topicId, storyId) {
 }
 
 export function topicPreviewRetweetPartisanshipStoryCounts(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/preview/retweet-partisanship/story-counts`);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/preview/story-counts`);
 }
 
 export function topicPreviewRetweetPartisanshipCoverage(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/preview/retweet-partisanship/coverage`);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/preview/coverage`);
+}
+
+export function createRetweetFocalSet(topicId, params) {
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/create`, acceptedParams, 'put');
 }
