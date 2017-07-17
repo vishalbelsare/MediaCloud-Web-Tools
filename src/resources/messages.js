@@ -151,6 +151,7 @@ const messages = {
   upload: { id: 'upload', defaultMessage: 'Upload' },
   other: { id: 'other', defaultMessage: 'Other' },
   required: { id: 'required', defaultMessage: 'Required' },
+  unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },

@@ -8,7 +8,6 @@ import composeIntlForm from '../../../../../common/IntlForm';
 import messages from '../../../../../../resources/messages';
 import RetweetCoveragePreviewContainer from './RetweetCoveragePreviewContainer';
 import RetweetStoryCountsPreviewContainer from './RetweetStoryCountsPreviewContainer';
-import { notEmptyString } from '../../../../../../lib/formValidators';
 
 const formSelector = formValueSelector('snapshotFocus');
 
@@ -19,34 +18,36 @@ const localMessages = {
 };
 
 const EditRetweetPartisanshipContainer = (props) => {
-  const { topicId, onPreviousStep } = props;
+  const { topicId, onPreviousStep, handleSubmit, finishStep } = props;
   const { formatMessage } = props.intl;
   return (
     <Grid>
-      <Row>
-        <Col lg={8} md={12}>
-          <h1><FormattedMessage {...localMessages.title} /></h1>
-          <p><FormattedMessage {...localMessages.about} /></p>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={8} md={12}>
-          <RetweetCoveragePreviewContainer topicId={topicId} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={8} md={12}>
-          <RetweetStoryCountsPreviewContainer topicId={topicId} />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={8} xs={12}>
-          <br />
-          <AppButton flat onClick={onPreviousStep} label={formatMessage(messages.previous)} />
-          &nbsp; &nbsp;
-          <AppButton type="submit" label={formatMessage(messages.next)} primary />
-        </Col>
-      </Row>
+      <form className="focus-create-edit-retweet" name="focusCreateEditRetweetForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <Row>
+          <Col lg={8} md={12}>
+            <h1><FormattedMessage {...localMessages.title} /></h1>
+            <p><FormattedMessage {...localMessages.about} /></p>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={8} md={12}>
+            <RetweetCoveragePreviewContainer topicId={topicId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={8} md={12}>
+            <RetweetStoryCountsPreviewContainer topicId={topicId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={8} xs={12}>
+            <br />
+            <AppButton flat onClick={onPreviousStep} label={formatMessage(messages.previous)} />
+            &nbsp; &nbsp;
+            <AppButton type="submit" label={formatMessage(messages.next)} primary />
+          </Col>
+        </Row>
+      </form>
     </Grid>
   );
 };
@@ -76,26 +77,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  finishStep: (values) => {
-    const customProps = {
-      keywords: values.keywords,
-    };
-    ownProps.onNextStep(customProps);
+  finishStep: () => {
+    ownProps.onNextStep({});
   },
 });
-
-function validate(values) {
-  const errors = {};
-  if (!notEmptyString(values.keywords)) {
-    errors.focusName = localMessages.errorNoKeywords;
-  }
-  return errors;
-}
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
-  validate,
 };
 
 export default

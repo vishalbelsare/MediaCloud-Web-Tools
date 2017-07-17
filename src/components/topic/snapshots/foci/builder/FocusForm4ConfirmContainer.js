@@ -6,7 +6,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import composeIntlForm from '../../../../common/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import RetweetPartisanshipSummary from './retweetPartisanship/RetweetPartisanshipSummary';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
 import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, goToCreateFocusStep }
@@ -15,14 +16,9 @@ import { updateFeedback } from '../../../../../actions/appActions';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
 
 const localMessages = {
-  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your New "{name}" Subtopic' },
-  name: { id: 'focus.create.confirm.name', defaultMessage: '<b>Name</b>: {name}' },
-  description: { id: 'focus.create.confirm.description', defaultMessage: '<b>Description</b>: {description}' },
+  title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your Subtopic Changes' },
   focalTechnique: { id: 'focus.create.confirm.focalTechnique', defaultMessage: '<b>Technique</b>: {name}' },
-  focalSetExisting: { id: 'focus.create.confirm.focalSetExisting', defaultMessage: '<b>Technique</b>: Add to existing' },
-  focalSetNew: { id: 'focus.create.confirm.focalSetNew', defaultMessage: '<b>Technique</b>: Create a new one named {name} ({description}' },
-  unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
-  addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Subtopic' },
+  addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add More' },
   focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Set.' },
   focalSetNotSaved: { id: 'focus.notSaved', defaultMessage: 'Sorry, we couldn\'t save your new Set' },
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
@@ -35,18 +31,17 @@ const FocusForm4ConfirmContainer = (props) => {
   let content = null;
   switch (formValues.focalTechnique) {
     case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
-      content = <KeywordSearchSummary topicId={topicId} properties={formValues} initialValues={initialValues} />;
+      content = (
+        <KeywordSearchSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
+      );
+      break;
+    case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
+      content = (
+        <RetweetPartisanshipSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
+      );
       break;
     default:
-      content = <FormattedMessage {...localMessages.unimplemented} />;
-  }
-  let focalSetContent = null;
-  switch (formValues.focalSetDefinitionId) {
-    case NEW_FOCAL_SET_PLACEHOLDER_ID:
-      focalSetContent = <FormattedHTMLMessage {...localMessages.focalSetNew} values={{ name: formValues.focalSetName, description: formValues.focalSetDescription }} />;
-      break;
-    default:
-      focalSetContent = <FormattedHTMLMessage {...localMessages.focalSetExisting} />;
+      content = <FormattedMessage {...messages.unimplemented} />;
   }
   return (
     <form className="focus-confirm" name="snapshotFocusFormConfirm" onSubmit={handleSubmit(finishStep.bind(this))}>
@@ -58,16 +53,11 @@ const FocusForm4ConfirmContainer = (props) => {
         </Row>
         <Row>
           <Col lg={12}>
-            <ul>
-              <li><FormattedHTMLMessage {...localMessages.name} values={{ name: formValues.focusName }} /></li>
-              <li><FormattedHTMLMessage {...localMessages.description} values={{ description: formValues.focusDescription }} /></li>
-              <li>{focalSetContent}</li>
-            </ul>
+            <h3><FormattedHTMLMessage {...localMessages.focalTechnique} values={{ name: formValues.focalTechnique }} /></h3>
           </Col>
         </Row>
         <Row>
           <Col lg={12}>
-            <h3><FormattedHTMLMessage {...localMessages.focalTechnique} values={{ name: formValues.focalTechnique }} /></h3>
             {content}
           </Col>
         </Row>

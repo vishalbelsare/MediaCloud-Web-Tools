@@ -13,20 +13,25 @@ const localMessages = {
 };
 
 const FocalSetForm = (props) => {
-  const { renderTextField } = props;
+  const { renderTextField, introContent, fullWidth } = props;
+  const defaultIntroContent = (<p className="light"><i><FormattedMessage {...localMessages.focalSetWhy} /></i></p>);
+  const fullWidthFields = fullWidth || false;
+  const intro = introContent || defaultIntroContent;
   return (
     <div className="new-focal-set">
-      <p className="light"><i><FormattedMessage {...localMessages.focalSetWhy} /></i></p>
+      {intro}
       <Field
         name="focalSetName"
         component={renderTextField}
         floatingLabelText={localMessages.focalSetName}
+        fullWidth={fullWidthFields}
       />
       <br />
       <Field
         name="focalSetDescription"
         component={renderTextField}
         floatingLabelText={localMessages.focalSetDescription}
+        fullWidth={fullWidthFields}
       />
     </div>
   );
@@ -38,6 +43,8 @@ FocalSetForm.propTypes = {
   renderTextField: React.PropTypes.func.isRequired,
   // from parent
   initialValues: React.PropTypes.object,
+  introContent: React.PropTypes.object,
+  fullWidth: React.PropTypes.bool,
 };
 
 function validate(values) {

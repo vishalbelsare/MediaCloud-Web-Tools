@@ -44,7 +44,7 @@ class EditKeywordSearchContainer extends React.Component {
     }
     return (
       <Grid>
-        <form className="focus-create-edit" name="focusCreateEditForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+        <form className="focus-create-edit-keyword" name="focusCreateEditKeywordForm" onSubmit={handleSubmit(finishStep.bind(this))}>
           <Row>
             <Col lg={10}>
               <h2><FormattedMessage {...localMessages.title} values={{ technique: currentFocalTechnique }} /></h2>
@@ -122,7 +122,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function validate(values) {
   const errors = {};
   if (!notEmptyString(values.keywords)) {
-    errors.focusName = localMessages.errorNoKeywords;
+    errors.keywords = localMessages.errorNoKeywords;
   }
   return errors;
 }

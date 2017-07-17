@@ -38,7 +38,6 @@ class FocalTechniqueSelector extends React.Component {
 
   render() {
     const { currentFocalTechnique } = this.props;
-    console.log(currentFocalTechnique);
     return (
       <div className="focal-technique-selector">
         <Row>

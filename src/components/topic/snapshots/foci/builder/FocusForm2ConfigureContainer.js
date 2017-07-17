@@ -6,10 +6,7 @@ import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContain
 import EditRetweetPartisanshipContainer from './retweetPartisanship/EditRetweetPartisanshipContainer';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
-
-const localMessages = {
-  unimplemented: { id: 'focus.create.edit.unimplemented', defaultMessage: 'Unimplemented' },
-};
+import messages from '../../../../../resources/messages';
 
 const formSelector = formValueSelector('snapshotFocus');
 
@@ -34,7 +31,7 @@ const FocusForm2ConfigureContainer = (props) => {
       />);
       break;
     default:
-      content = <FormattedMessage {...localMessages.unimplemented} />;
+      content = <FormattedMessage {...messages.unimplemented} />;
   }
   return (
     <div>
