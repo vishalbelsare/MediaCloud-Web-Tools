@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../lib/focalTechniques';
 
 const CreateFocusContainer = (props) => {
   const { topicId, location } = props;
@@ -9,6 +10,8 @@ const CreateFocusContainer = (props) => {
   const initialValues = {};
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
+  } else {
+    initialValues.focalTechnique = FOCAL_TECHNIQUE_BOOLEAN_QUERY;
   }
   // if there aren't any focal set defs, the user should have to create a new one
   if (focalSetDefId !== undefined) {

@@ -19,7 +19,7 @@ const localMessages = {
 const FocusForm3DescribeContainer = (props) => {
   const { topicId, handleSubmit, finishStep, goToStep, initialValues, focalSetDefinitions } = props;
   const { formatMessage } = props.intl;
-  // figure out a which focal set ot default to
+  // figure out a which focal set to default to
   if (focalSetDefinitions.length === 0) {
     initialValues.focalSetId = NEW_FOCAL_SET_PLACEHOLDER_ID;
   } else {

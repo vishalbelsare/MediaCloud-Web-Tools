@@ -90,6 +90,7 @@ const messages = {
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
   addFocus: { id: 'focus.add', defaultMessage: 'Add a New Subtopic' },
+  manageFoci: { id: 'focus.manage', defaultMessage: 'Manage Subtopics' },
 
   story: { id: 'story', defaultMessage: 'Story' },
   storyPlural: { id: 'stories', defaultMessage: 'Stories' },

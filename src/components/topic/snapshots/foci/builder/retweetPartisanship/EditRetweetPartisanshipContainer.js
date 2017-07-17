@@ -1,7 +1,7 @@
 import React from 'react';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
@@ -13,27 +13,29 @@ import { notEmptyString } from '../../../../../../lib/formValidators';
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Configure Your {technique} Subtopic' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Retweet Partisanship' },
   about: { id: 'focus.create.edit.about',
-    defaultMessage: '<p>This will create a set of subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season..  Each media soure is scored based on the ratio of retweets of their stories in those two groups.  For instance, if their stories are almost completely retweeted by Trump followers on Twitter, then that media source will be assigned to the "right" subtopic.  This covers the 1000 most tweeted media sources, so it is likely it will not cover all the media sources in your Topic.</p>' },
+    defaultMessage: 'This will create a set of subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.  For instance, if their stories are almost completely retweeted by Trump followers on Twitter, then that media source will be assigned to the "right" subtopic.  This covers the 1000 most tweeted media sources, so it is likely it will not cover all the media sources in your Topic.' },
 };
 
 const EditRetweetPartisanshipContainer = (props) => {
   const { topicId, onPreviousStep } = props;
   const { formatMessage } = props.intl;
-  // preview:
-  // * pie chart showing the pct of sentences covered by the quintiles
-  // * horizontal bubble chart showing the amount of stories in each quintile
-  // * line chart showing sentences over time - one line for each quintile
   return (
     <Grid>
       <Row>
-        <Col lg={8}>
+        <Col lg={8} md={12}>
+          <h1><FormattedMessage {...localMessages.title} /></h1>
+          <p><FormattedMessage {...localMessages.about} /></p>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={8} md={12}>
           <RetweetCoveragePreviewContainer topicId={topicId} />
         </Col>
       </Row>
       <Row>
-        <Col lg={8}>
+        <Col lg={8} md={12}>
           <RetweetStoryCountsPreviewContainer topicId={topicId} />
         </Col>
       </Row>

@@ -38,6 +38,7 @@ class FocalTechniqueSelector extends React.Component {
 
   render() {
     const { currentFocalTechnique } = this.props;
+    console.log(currentFocalTechnique);
     return (
       <div className="focal-technique-selector">
         <Row>
@@ -56,7 +57,7 @@ class FocalTechniqueSelector extends React.Component {
               onClick={() => this.handleSelection(FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP)}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP}
               id="Retweet Partisanship"
-              image="/static/img/focal-technique-reference-2x.png"
+              icon={KeywordSearchIcon}
               nameMsg={localMessages.retweetName}
               descriptionMsg={localMessages.retweetDescription}
             />

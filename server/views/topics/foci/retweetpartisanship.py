@@ -30,7 +30,14 @@ def retweet_partisanship_story_counts(topics_id):
             'count': tagged_story_count,
             'pct': float(tagged_story_count)/float(total_stories)
         })
-    return jsonify({'story_counts': tag_story_counts})
+    # order them in the way a person would expect ( left to center to right)
+    ordered_tag_story_counts = list()
+    ordered_tag_story_counts.append([t for t in tag_story_counts if t['tags_id'] == 9360520][0])
+    ordered_tag_story_counts.append([t for t in tag_story_counts if t['tags_id'] == 9360521][0])
+    ordered_tag_story_counts.append([t for t in tag_story_counts if t['tags_id'] == 9360522][0])
+    ordered_tag_story_counts.append([t for t in tag_story_counts if t['tags_id'] == 9360523][0])
+    ordered_tag_story_counts.append([t for t in tag_story_counts if t['tags_id'] == 9360524][0])
+    return jsonify({'story_counts': ordered_tag_story_counts})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/preview/retweet-partisanship/coverage', methods=['GET'])

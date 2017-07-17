@@ -15,7 +15,6 @@ import FocusIcon from '../../../common/icons/FocusIcon';
 import messages from '../../../../resources/messages';
 
 const localMessages = {
-  focalSetsManageTitle: { id: 'focalSets.manage.title', defaultMessage: 'Manage Subtopics' },
   focalSetsManageAbout: { id: 'focalSets.manage.about',
     defaultMessage: 'Every Subtopic is part of a Set. All the Subtopics within a Set share the same Technique. Our tools lets you compare Subtopics with a Set, but they don\'t let you easily compare Subtopics in different Sets.' },
   removeFocalSetTitle: { id: 'focalSets.manage.remove.title', defaultMessage: 'Really Remove this Set?' },
@@ -74,7 +73,7 @@ class ManageFocalSetsContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12}>
-              <h1><FocusIcon /><FormattedMessage {...localMessages.focalSetsManageTitle} /></h1>
+              <h1><FocusIcon /><FormattedMessage {...messages.manageFoci} /></h1>
             </Col>
           </Row>
           <Row>
