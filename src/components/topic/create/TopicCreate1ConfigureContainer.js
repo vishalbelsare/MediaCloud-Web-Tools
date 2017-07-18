@@ -74,6 +74,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+// TODO: can we remove this?  It doesn't use any of the nProps args...
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     finishStep: (values) => {
