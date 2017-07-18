@@ -104,10 +104,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateTopicStep(step));
   },
   evalStep: (values) => {
-    Promise
-    .all([dispatch(fetchTopicSearchResults(values.name))])
+    new Promise((resolve) => {
+      const results = dispatch(fetchTopicSearchResults(values.name));
+      resolve(results);
+    })
     .then((results) => { evalResultsPromise(results); })
-    .then(
+    .catch(
       (error) => { // this should return a failed Promise
         throw new SubmissionError({ name: 'name', _error: 'error', error });
       });
