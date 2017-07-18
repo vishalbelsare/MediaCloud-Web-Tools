@@ -39,7 +39,7 @@ const TopicCreate1ConfigureContainer = (props) => {
       </Row>
       <TopicForm
         initialValues={initialValues}
-        onSubmit={finishStep}
+        onSubmit={() => goToStep(1)}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -73,15 +73,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateTopicStep(step));
   },
 });
-
-// TODO: can we remove this?  It doesn't use any of the nProps args...
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      dispatchProps.goToStep(1, values);
-    },
-  });
-}
 
 const reduxFormConfig = {
   form: 'topicForm',
