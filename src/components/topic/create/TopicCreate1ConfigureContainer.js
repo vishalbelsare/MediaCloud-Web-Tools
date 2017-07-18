@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, formValueSelector, SubmissionError, propTypes } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
-import { goToCreateTopicStep, fetchTopicSearchResults } from '../../../actions/topicActions';
-import { addNotice } from '../../../actions/appActions';
-// import { LEVEL_ERROR } from '../../common/Notice';
+import { goToCreateTopicStep } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { getCurrentDate, getMomentDateSubtraction } from '../../../lib/dateUtil';
 
@@ -20,13 +18,12 @@ const localMessages = {
   addCollectionsTitle: { id: 'topic.create.addCollectionsTitle', defaultMessage: 'Select Sources And Collections' },
   addCollectionsIntro: { id: 'topic.create.addCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic:' },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
-  topicNameAlreadyExists: { id: 'topic.form.detail.nameExists', defaultMessage: 'Sorry this topic name is already taken.' },
 };
 
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { evalNextStep } = props;
+  const { finishStep } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
@@ -41,9 +38,8 @@ const TopicCreate1ConfigureContainer = (props) => {
         </Col>
       </Row>
       <TopicForm
-        form="topicForm"
         initialValues={initialValues}
-        onSubmit={evalNextStep}
+        onSubmit={finishStep}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -64,73 +60,30 @@ TopicCreate1ConfigureContainer.propTypes = {
   // from state
   currentStep: React.PropTypes.number,
   formData: React.PropTypes.object,
-  topicNameSearch: React.PropTypes.object,
   // from dispatch
-  evalStep: React.PropTypes.func.isRequired,
-  evalNextStep: React.PropTypes.func.isRequired,
-  goToNextStep: React.PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  formData: formSelector(state, 'name', 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
-  topicNameSearch: state.topics.create.topicNameSearch,
+  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
 });
 
-function evalResults(results, cb) {
-  if (results.length <= 0) {
-    cb(null, 'continue');
-  } else {
-    cb('name exists');
-  }
-}
-
-function evalResultsPromise(results) {
-  return new Promise((resolve, reject) => {
-    evalResults(results, (error, data) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-}
-
 const mapDispatchToProps = dispatch => ({
-  addNotice: (msg) => {
-    dispatch(addNotice(msg));
-  },
-  goToNextStep: (step) => {
+  goToStep: (step) => {
     dispatch(goToCreateTopicStep(step));
-  },
-  evalStep: (values) => {
-    Promise
-    .all([dispatch(fetchTopicSearchResults(values.name))])
-    .then((results) => { evalResultsPromise(results); })
-    .then(
-      (error) => { // this should return a failed Promise
-        throw new SubmissionError({ name: 'name', _error: 'error', error });
-      });
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    evalNextStep: (values => dispatchProps.evalStep(values)),
+    finishStep: (values) => {
+      dispatchProps.goToStep(1, values);
+    },
   });
 }
-const validate = (values, props) => {
-  const errors = {};
-  if (values && values.name && props && props.error) {
-    errors.name = 'problem';
-  }
-  return errors;
-};
 
 const reduxFormConfig = {
   form: 'topicForm',
-  validate,
-  propTypes,
   destroyOnUnmount: false,  // so the wizard works
 };
 
