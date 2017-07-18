@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import composeIntlForm from '../../common/IntlForm';
 import TopicForm, { TOPIC_FORM_MODE_CREATE } from './TopicForm';
-import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { goToCreateTopicStep, fetchTopicSearchResults } from '../../../actions/topicActions';
 import { addNotice } from '../../../actions/appActions';
 // import { LEVEL_ERROR } from '../../common/Notice';
 import messages from '../../../resources/messages';
@@ -26,7 +26,7 @@ const localMessages = {
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { nextStep } = props;
+  const { evalNextStep } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
@@ -43,7 +43,7 @@ const TopicCreate1ConfigureContainer = (props) => {
       <TopicForm
         form="topicForm"
         initialValues={initialValues}
-        onSubmit={nextStep}
+        onSubmit={evalNextStep}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -66,7 +66,9 @@ TopicCreate1ConfigureContainer.propTypes = {
   formData: React.PropTypes.object,
   topicNameSearch: React.PropTypes.object,
   // from dispatch
-  nextStep: React.PropTypes.func.isRequired,
+  evalStep: React.PropTypes.func.isRequired,
+  evalNextStep: React.PropTypes.func.isRequired,
+  goToNextStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -74,32 +76,47 @@ const mapStateToProps = state => ({
   topicNameSearch: state.topics.create.topicNameSearch,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+function evalResults(results, cb) {
+  if (results.length <= 0) {
+    cb(null, 'continue');
+  } else {
+    cb('name exists');
+  }
+}
+
+function evalResultsPromise(results) {
+  return new Promise((resolve, reject) => {
+    evalResults(results, (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+const mapDispatchToProps = dispatch => ({
   addNotice: (msg) => {
     dispatch(addNotice(msg));
   },
-  goToStep: (values) => {
-    const results = dispatch(fetchTopicSearchResults(values.name));
-    if (results && results.topics && results.topics.length <= 0) {
-      return results;
-    }
-    const msg = ownProps.intl.formatMessage(localMessages.topicNameAlreadyExists);
-    throw new SubmissionError({ name: msg, _error: 'error' });
+  goToNextStep: (step) => {
+    dispatch(goToCreateTopicStep(step));
+  },
+  evalStep: (values) => {
+    Promise
+    .all([dispatch(fetchTopicSearchResults(values.name))])
+    .then((results) => { evalResultsPromise(results); })
+    .then(
+      (error) => { // this should return a failed Promise
+        throw new SubmissionError({ name: 'name', _error: 'error', error });
+      });
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    nextStep: (values) => {
-      // const newErrObj = {};
-      dispatchProps.goToStep(1, values)
-      .then(() => 1)
-      .catch((err) => {
-        if (err instanceof SubmissionError) {
-          throw err;
-        }
-      });
-    },
+    evalNextStep: (values => dispatchProps.evalStep(values)),
   });
 }
 const validate = (values, props) => {
