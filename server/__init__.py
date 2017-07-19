@@ -7,7 +7,6 @@ from flask import Flask, render_template
 from flask_webpack import Webpack
 from flask_mail import Mail
 import flask_login
-from flask_cdn import CDN
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
@@ -92,26 +91,28 @@ def is_prod_mode():
 
 webpack = Webpack()
 mail = Mail()
-cdn = CDN()
 
 
 def create_app():
     # Factory method to create the app
-    prod_app = settings.get('server', 'app')
+    prod_app_name = settings.get('server', 'app')
     my_app = Flask(__name__)
     # set up uploading
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
     # set up webpack
+    if is_dev_mode():
+        manifest_path = '../build/manifest.json'
+    else:
+        manifest_path = '../server/static/gen/{}/manifest.json'.format(prod_app_name)
     webpack_config = {
         'DEBUG': is_dev_mode(),
-        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if is_dev_mode() else '../server/static/gen/' + prod_app + '/manifest.json'
+        'WEBPACK_MANIFEST_PATH': manifest_path
     }
+    if is_prod_mode():
+        webpack_config['WEBPACK_ASSETS_URL'] = 'https://d2h2bu87t9cnlp.cloudfront.net/static/gen/{}/'.format(prod_app_name)
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
-    # setup CDN for delivery speedup
-    my_app.config['CDN_DOMAIN'] = 'd2h2bu87t9cnlp.cloudfront.net'
-    cdn.init_app(my_app)
     # set up mail sending
     if settings.has_option('smtp', 'enabled'):
         mail_enabled = settings.get('smtp', 'enabled')

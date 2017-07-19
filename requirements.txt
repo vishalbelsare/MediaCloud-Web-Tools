@@ -24,4 +24,3 @@ Flask-Mail==0.9.1
 mediameter-cliff==1.2.0
 python-dateutil==2.6.0
 unicodecsv==0.14.1
-flask-cdn==1.5.3
