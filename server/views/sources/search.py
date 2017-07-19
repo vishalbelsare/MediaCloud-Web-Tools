@@ -1,10 +1,11 @@
 import logging
 from flask import jsonify, request
 import flask_login
+from multiprocessing import Pool
 
 from server import app
 from server.util.request import api_error_handler
-from server.auth import user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 MAX_SOURCES = 20
 MAX_COLLECTIONS = 20
+MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 
 
 @app.route('/api/sources/search/<search_str>', methods=['GET'])
@@ -31,7 +33,7 @@ def media_search(search_str):
 
 
 def media_search(search_str, tags_id=None):
-    mc = user_admin_mediacloud_client()
+    mc = user_mediacloud_client()
     return mc.mediaList(name_like=search_str, tags_id=tags_id)
 
 
@@ -47,13 +49,14 @@ def collection_search(search_str):
     return jsonify({'list': flat_list})
 
 
+def _media_search_worker(job):
+    user_mc = user_mediacloud_client()
+    return user_mc.tagList(tag_sets_id=job['tag_sets_id'], public_only=job['public_only'], name_like=job['search_str'])
+
+
 def _matching_tags_by_set(search_str, public_only):
-    mc = user_admin_mediacloud_client()
-    # TODO: translate to a pool for parallel requests
-    matching_tags_in_collections = []
-    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS:
-        matching_tags = mc.tagList(tag_sets_id=tag_sets_id, public_only=public_only, name_like=search_str)
-        matching_tags_in_collections.append(matching_tags)
+    search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str, 'public_only': public_only}
+                   for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
+    pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
+    matching_tags_in_collections = pool.map(_media_search_worker, search_jobs)
     return matching_tags_in_collections
-
-
