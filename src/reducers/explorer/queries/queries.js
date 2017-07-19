@@ -35,7 +35,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return state;
     case RESET_QUERIES:
-      return [];
+      return INITIAL_STATE;
     default:
       return state;
   }

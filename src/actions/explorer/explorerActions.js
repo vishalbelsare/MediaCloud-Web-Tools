@@ -61,3 +61,12 @@ export const resetSelected = createAction(RESET_SELECTED);
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
+export const RESET_SAMPLES = 'RESET_SAMPLES';
+export const resetSamples = createAction(RESET_SAMPLES);
+
+export const RESET_STORY_COUNTS = 'RESET_STORY_COUNTS';
+export const resetStoryCounts = createAction(RESET_STORY_COUNTS);
+
+export const RESET_GEO = 'RESET_GEO';
+export const resetGeo = createAction(RESET_GEO);
+

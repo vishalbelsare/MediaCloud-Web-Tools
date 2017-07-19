@@ -35,6 +35,14 @@ function dataAsSeries(data) {
 }
 
 class AttentionComparisonContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { urlQueryString, lastSearchTime, fetchData } = this.props;
+    if (nextProps.lastSearchTime !== lastSearchTime ||
+      nextProps.urlQueryString !== urlQueryString) {
+    // TODO also check for name and color changes
+      fetchData(nextProps.urlQueryString, nextProps.queries);
+    }
+  }
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {

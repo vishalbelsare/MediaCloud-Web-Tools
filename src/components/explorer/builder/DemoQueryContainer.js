@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -164,10 +164,13 @@ const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (queryObj) => {
     dispatch(selectQuery(queryObj));
   },
-  resetExplorerData: () => {
+  resetExplorerData: () => { // TODO we will reduce this down to one call
     dispatch(resetSelected());
     dispatch(resetQueries());
     dispatch(resetSentenceCounts());
+    dispatch(resetSamples());
+    dispatch(resetStoryCounts());
+    dispatch(resetGeo());
   },
   updateQueryList: (queryObj) => {
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
