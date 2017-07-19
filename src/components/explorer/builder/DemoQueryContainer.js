@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -26,6 +26,10 @@ class DemoQueryBuilderContainer extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     this.checkPropsAndDispatch(nextProps);
+  }
+  componentWillUnmount() {
+    const { resetSelectedQuery } = this.props;
+    resetSelectedQuery();
   }
   checkPropsAndDispatch(whichProps) {
     const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
@@ -135,6 +139,7 @@ DemoQueryBuilderContainer.propTypes = {
   handleSearch: React.PropTypes.func.isRequired,
   setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
+  resetSelectedQuery: React.PropTypes.func.isRequired,
   selectSearchQueriesById: React.PropTypes.func.isRequired,
   selectQueriesByURLParams: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
@@ -158,6 +163,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (queryObj) => {
     dispatch(selectQuery(queryObj));
+  },
+  resetSelectedQuery: () => {
+    dispatch(resetSelected());
+    dispatch(resetQueries());
   },
   updateQueryList: (queryObj) => {
     dispatch(selectBySearchId(queryObj)); // query obj or search id?

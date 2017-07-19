@@ -55,6 +55,9 @@ export const demoQueryCollectionsByIds = createAsyncAction(FETCH_DEMO_QUERY_COLL
 export const RESET_QUERIES = 'RESET_QUERIES';
 export const resetQueries = createAction(RESET_QUERIES);
 
+export const RESET_SELECTED = 'RESET_SELECTED';
+export const resetSelected = createAction(RESET_SELECTED);
+
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
