@@ -28,8 +28,8 @@ class DemoQueryBuilderContainer extends React.Component {
     this.checkPropsAndDispatch(nextProps);
   }
   componentWillUnmount() {
-    const { resetSelectedQuery } = this.props;
-    resetSelectedQuery();
+    const { resetExplorerData } = this.props;
+    resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
     const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
@@ -139,7 +139,7 @@ DemoQueryBuilderContainer.propTypes = {
   handleSearch: React.PropTypes.func.isRequired,
   setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
-  resetSelectedQuery: React.PropTypes.func.isRequired,
+  resetExplorerData: React.PropTypes.func.isRequired,
   selectSearchQueriesById: React.PropTypes.func.isRequired,
   selectQueriesByURLParams: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
@@ -164,7 +164,7 @@ const mapDispatchToProps = dispatch => ({
   setSelectedQuery: (queryObj) => {
     dispatch(selectQuery(queryObj));
   },
-  resetSelectedQuery: () => {
+  resetExplorerData: () => {
     dispatch(resetSelected());
     dispatch(resetQueries());
   },

@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetQueries, resetSentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -35,10 +35,6 @@ function dataAsSeries(data) {
 }
 
 class AttentionComparisonContainer extends React.Component {
-  componentWillUnmount() {
-    const { resetDisplay } = this.props;
-    resetDisplay();
-  }
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
@@ -136,7 +132,7 @@ const mapDispatchToProps = (dispatch, state) => ({
     dispatch(updateTimestampForQueries());
   },
   resetDisplay: () => {
-    dispatch(resetQueries());
+    // dispatch(resetQueries());
     dispatch(resetSentenceCounts());
   },
   fetchData: (params, queries) => {
