@@ -213,7 +213,7 @@ class InfluentialStoryExplorer extends React.Component {
         })
         .showGroups(false)
         .columns([
-          d => ((d.publishDate === null) ? 'undateable' : moment(d.publishDate).format('MMM D, YYYY')),
+          d => ((d.publishDate === null) ? STORY_PUB_DATE_UNDATEABLE : moment(d.publishDate).format('MMM D, YYYY')),
           d => `<img className="google-icon" src=${googleFavIconUrl(d.domain)} alt=${d.domain} />`,
           d => d.media_name,
           d => `<a href=${d.url} target="_blank">${d.title}</a>`,
