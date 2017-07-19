@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
-import { storyPubDateToTimestamp, dateUtil.STORY_PUB_DATE_UNDATEABLE } from '../../lib/dateUtil';
+import { storyPubDateToTimestamp, STORY_PUB_DATE_UNDATEABLE } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 
 const localMessages = {
