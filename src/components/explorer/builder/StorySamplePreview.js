@@ -99,7 +99,6 @@ StorySamplePreview.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   handleStorySelection: React.PropTypes.func.isRequired,
-  resetDisplay: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -111,10 +110,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  resetDisplay: () => {
-    // dispatch(resetQueries());
-    // dispatch(resetStorySamples());
-  },
   fetchData: (ownProps, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query

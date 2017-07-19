@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetSentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -108,7 +108,6 @@ AttentionComparisonContainer.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   recordLastSearchTime: React.PropTypes.func.isRequired,
-  resetDisplay: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
   sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
@@ -130,10 +129,6 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, state) => ({
   recordLastSearchTime: () => {
     dispatch(updateTimestampForQueries());
-  },
-  resetDisplay: () => {
-    // dispatch(resetQueries());
-    dispatch(resetSentenceCounts());
   },
   fetchData: (params, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
