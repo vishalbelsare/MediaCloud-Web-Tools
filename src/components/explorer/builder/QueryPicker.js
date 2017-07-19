@@ -75,7 +75,7 @@ class QueryPicker extends React.Component {
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
         const genDefColor = colorPallette(newIndex);
-        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 8875027, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: 9139487, label: 'U.S. Mainstream Media' }], sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>

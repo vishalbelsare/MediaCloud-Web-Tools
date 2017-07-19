@@ -102,7 +102,7 @@ def parse_query_with_keywords(args) :
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
         media_ids = args['sources[]'] if 'sources[]' in args else []
-        tags_ids = args['collections[]'] if 'collections[]' in args else [8875027]
+        tags_ids = args['collections[]'] if 'collections[]' in args else [9139487]
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
             start_date= start_date,
@@ -159,7 +159,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
             start_date= start_date,
             end_date=end_date,
             media_ids=[],
-            tags_ids=[8875027])
+            tags_ids=[9139487])
 
     return solr_query
 

@@ -7,7 +7,7 @@
         "q": "clinton",
         "startDate": "2016-06-01",
         "endDate": "2016-12-01",
-        "collections": [8875027],
+        "collections": [9139487],
         "sources": [],
         "label": "Clinton",
         "color": "#1f77b4"
@@ -17,7 +17,7 @@
         "q": "trump",
         "startDate": "2016-06-01",
         "endDate": "2016-12-01",
-        "collections": [8875027],
+        "collections": [9139487],
         "sources": [],
         "label": "Trump",
         "color": "#ff7f0e"
@@ -33,7 +33,7 @@
         "q": "gun*",
         "startDate": "2016-08-01",
         "endDate": "2016-08-15",
-        "collections": [8875027],
+        "collections": [9139487],
         "sources": [],
         "label": "Guns in US Mainstream Media",
         "color": "#1f77b4"
