@@ -1,0 +1,2 @@
+
+FOCAL_TECHNIQUE_BOOLEAN_QUERY = 'Boolean Query'

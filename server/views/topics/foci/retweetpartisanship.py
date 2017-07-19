@@ -1,18 +1,19 @@
 import logging
-from flask import jsonify
+from flask import jsonify, request
 import flask_login
 
 from server import app
 from server.cache import cache
-from server.util.request import api_error_handler
+from server.util.request import api_error_handler, json_error_response, form_fields_required
 from server.views.topics.apicache import topic_story_count
-from server.auth import user_mediacloud_key
+from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.util.tags import cached_tags_in_tag_set, media_with_tag, TAG_SETS_ID_RETWEET_PARTISANSHIP_2016
+from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 
 logger = logging.getLogger(__name__)
 
 
-@app.route('/api/topics/<topics_id>/focal-sets/preview/retweet-partisanship/story-counts', methods=['GET'])
+@app.route('/api/topics/<topics_id>/focal-sets/retweet-partisanship/preview/story-counts', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def retweet_partisanship_story_counts(topics_id):
@@ -40,7 +41,7 @@ def retweet_partisanship_story_counts(topics_id):
     return jsonify({'story_counts': ordered_tag_story_counts})
 
 
-@app.route('/api/topics/<topics_id>/focal-sets/preview/retweet-partisanship/coverage', methods=['GET'])
+@app.route('/api/topics/<topics_id>/focal-sets/retweet-partisanship/preview/coverage', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def retweet_partisanship_coverage(topics_id):
@@ -66,3 +67,31 @@ def cached_media_tags(tag_sets_id):
         tag['media_ids'] = media_ids
         tag['media_query'] = "media_id:({})".format(" ".join(media_ids))
     return partisanship_tags
+
+
+@app.route('/api/topics/<topics_id>/focal-sets/retweet-partisanship/create', methods=['POST'])
+@form_fields_required('focalSetName', 'focalSetDescription')
+@flask_login.login_required
+def create_retweet_partisanship_focal_set(topics_id):
+    user_mc = user_mediacloud_client()
+    # grab the focalSetName and focalSetDescription and then make one
+    focal_set_name = request.form['focalSetName']
+    focal_set_description = request.form['focalSetDescription']
+    focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY
+    new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description, focal_technique)
+    if 'focal_set_definitions_id' not in new_focal_set:
+        return json_error_response('Unable to create the subtopic set')
+    # now make the foci in it - one for each partisanship quintile
+    partisanship_tags = cached_media_tags(TAG_SETS_ID_RETWEET_PARTISANSHIP_2016)
+    for tag in partisanship_tags:
+        name = tag['label']
+        description = "Media sources that were retweeted more often during the 2016 US election season by people on the {}".format(tag['label'])
+        query = tag['media_query']
+        focal_set_definitions_id = new_focal_set['focal_set_definitions_id']
+        # create a new boolean query subtopic based on tag['media_query']
+        new_focus = user_mc.topicFocusDefinitionCreate(topics_id,
+                                                       name=name, description=description, query=query,
+                                                       focal_set_definitions_id=focal_set_definitions_id)
+        if (len(new_focus) == 0) or ('focus_definitions_id' not in new_focus[0]):
+            return json_error_response('Unable to create the {} subtopic'.format(name))
+    return {'success': True}

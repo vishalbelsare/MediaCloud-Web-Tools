@@ -273,5 +273,5 @@ export function topicPreviewRetweetPartisanshipCoverage(topicId) {
 
 export function createRetweetFocalSet(topicId, params) {
   const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
-  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/create`, acceptedParams, 'put');
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/create`, acceptedParams);
 }

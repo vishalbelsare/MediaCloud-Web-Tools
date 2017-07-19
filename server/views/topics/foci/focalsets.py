@@ -9,6 +9,7 @@ from server.views.topics.apicache import topic_focal_sets
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/topics/<topics_id>/focal-sets/list', methods=['GET'])
 @arguments_required('snapshotId')
 @flask_login.login_required
@@ -18,6 +19,7 @@ def topic_focal_set_list(topics_id):
     focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
     return jsonify(focal_sets)
 
+
 @app.route('/api/topics/<topics_id>/focal-set-definitions/list', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -25,6 +27,7 @@ def topic_focal_set_definitions_list(topics_id):
     user_mc = user_admin_mediacloud_client()
     definitions = user_mc.topicFocalSetDefinitionList(topics_id)
     return jsonify(definitions)
+
 
 @app.route('/api/topics/<topics_id>/focal-set-definitions/create', methods=['POST'])
 @form_fields_required('focalSetName', 'focalSetDescription', 'focalTechnique')
@@ -37,6 +40,7 @@ def topic_focal_set_definitions_create(topics_id):
     focal_technique = request.form['focalTechnique']
     new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, name, description, focal_technique)
     return jsonify(new_focal_set)
+
 
 @app.route('/api/topics/<topics_id>/focal-set-definitions/<focal_set_definitions_id>/delete', methods=['DELETE'])
 @flask_login.login_required

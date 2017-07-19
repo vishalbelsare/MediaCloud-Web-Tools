@@ -165,7 +165,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(createRetweetFocalSet(topicId, values));
         break;
       default:
-        dispatch(updateFeedback({ open: true, message: messages.unimplemented }));
+        dispatch(updateFeedback({ open: true, message: messages.unimplemented }))
+          .then((results) => {
+            if (results.success === true) {
+              dispatch(updateFeedback({ open: true, message: localMessages.focalSetSaved }));  // user feedback that it worked
+              dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+              dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+            } else {
+              dispatch(updateFeedback({ open: true, message: localMessages.focalSetNotSaved }));  // user feedback that it failed
+            }
+          });
     }
   },
 });
