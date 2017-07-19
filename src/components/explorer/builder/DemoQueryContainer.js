@@ -15,6 +15,7 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
 }; */
 const MAX_COLORS = 20;
+const DEFAULT_COLLECTION = 9139487;
 
 class DemoQueryBuilderContainer extends React.Component {
   componentWillMount() {
@@ -81,7 +82,7 @@ class DemoQueryBuilderContainer extends React.Component {
         defaultObjVals.sources = [];
       }
       if (q.collections === undefined) {
-        defaultObjVals.collections = [8875027];
+        defaultObjVals.collections = [DEFAULT_COLLECTION];
       }
       const dateObj = getPastTwoWeeksDateRange();
       if (q.startDate === undefined) {

@@ -18,6 +18,8 @@ const localMessages = {
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
+const DEFAULT_COLLECTION = 9139487;
+
 const Homepage = (props) => {
   const { user, onKeywordSearch } = props;
   let sideBarContent;
@@ -74,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
     let urlParamString = null;
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = '[9139487]';
+    const collection = [DEFAULT_COLLECTION];
     // why bother sending this? const sources = '[]';
     const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","collections":${collection}}]`;
     const demoParams = `[{"q":"${values.keyword}"}]`;

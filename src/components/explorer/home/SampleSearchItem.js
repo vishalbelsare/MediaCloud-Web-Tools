@@ -4,6 +4,8 @@ import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
+const DEFAULT_COLLECTION = 9139487;
+
 const SampleSearchItem = (props) => {
   const { search, user } = props;
   // dissect the search and put it into the url if logged in...
@@ -15,7 +17,7 @@ const SampleSearchItem = (props) => {
   } else { // TODO is this right to put into url, and what format?
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = '[8875027]';
+    const collection = [DEFAULT_COLLECTION];
     const sources = '[]';
     urlParamString = search.queries.map(query => `search/[{"index":${query.index},"q":${query.q},"startDate":${dateObj.start},"endDate":${dateObj.end},"sources":${sources},"collections":${collection}`);
   }
