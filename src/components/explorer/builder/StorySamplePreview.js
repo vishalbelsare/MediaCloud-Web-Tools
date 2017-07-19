@@ -9,7 +9,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
-import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
+import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetQueries } from '../../../actions/explorerActions';
 import messages from '../../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
@@ -36,6 +36,10 @@ class StorySamplePreview extends React.Component {
     // TODO also check for name and color changes
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  componentWillUnmount() {
+    const { resetDisplay } = this.props;
+    resetDisplay();
   }
   downloadCsv = (query) => {
     let url = null;
@@ -99,6 +103,7 @@ StorySamplePreview.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   handleStorySelection: React.PropTypes.func.isRequired,
+  resetDisplay: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -110,6 +115,10 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
+  resetDisplay: () => {
+    dispatch(resetQueries());
+    // dispatch(resetStorySamples());
+  },
   fetchData: (ownProps, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
