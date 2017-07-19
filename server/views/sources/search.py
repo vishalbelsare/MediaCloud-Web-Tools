@@ -5,7 +5,7 @@ import flask_login
 from server import app
 from server.util.request import api_error_handler
 from server.auth import user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
+from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
@@ -40,18 +40,20 @@ def media_search(search_str, tags_id=None):
 @api_error_handler
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    results = collection_search(search_str, public_only)
-    trimmed = [ r[:MAX_COLLECTIONS] for r in results]
+    results = _matching_tags_by_set(search_str, public_only)
+    trimmed = [r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
     add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})
 
 
-def collection_search(search_str, public_only):
+def _matching_tags_by_set(search_str, public_only):
     mc = user_admin_mediacloud_client()
-    mc_results = mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    gv_results = mc.tagList(tag_sets_id=GV_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    emm_results = mc.tagList(tag_sets_id=EMM_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    return [mc_results, emm_results, gv_results]
+    # TODO: translate to a pool for parallel requests
+    matching_tags_in_collections = []
+    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS:
+        matching_tags = mc.tagList(tag_sets_id=tag_sets_id, public_only=public_only, name_like=search_str)
+        matching_tags_in_collections.append(matching_tags)
+    return matching_tags_in_collections
 
 

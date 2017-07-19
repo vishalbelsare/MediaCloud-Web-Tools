@@ -16,10 +16,11 @@ export const TAG_SET_NYT_THEMES_VERSION = 1964;
 export const TAG_SET_NYT_THEMES = 1963;
 
 // tag sets that hold collections we want to show to the user
-export const TAGS_SET_MC_ID = 5;
-export const TAGS_SET_EMM_ID = 556;
-export const TAGS_SET_GV_ID = 597;
-const VALID_COLLECTION_IDS = [TAGS_SET_EMM_ID, TAGS_SET_GV_ID, TAGS_SET_MC_ID];
+export const TAG_SET_MC_ID = 5;
+export const TAG_SET_EMM_ID = 556;
+export const TAG_SET_GV_ID = 597;
+export const TAG_SET_PARTISAN_RETWEETS_ID = 1959;
+const VALID_COLLECTION_IDS = [TAG_SET_EMM_ID, TAG_SET_GV_ID, TAG_SET_MC_ID, TAG_SET_PARTISAN_RETWEETS_ID];
 
 // tags for each country, allowed us to indicate which country a media source was published in
 export const TAG_SET_PUBLICATION_COUNTRY = 1935;

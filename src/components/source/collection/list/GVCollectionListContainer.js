@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
 import CollectionTable from './CollectionTable';
-import { TAGS_SET_GV_ID } from '../../../../lib/tagUtil';
+import { TAG_SET_GV_ID } from '../../../../lib/tagUtil';
 
 const GVCollectionListContainer = (props) => {
   const { name, description, collections } = props;
@@ -40,7 +40,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionList(TAGS_SET_GV_ID));
+    dispatch(fetchCollectionList(TAG_SET_GV_ID));
   },
 });
 
