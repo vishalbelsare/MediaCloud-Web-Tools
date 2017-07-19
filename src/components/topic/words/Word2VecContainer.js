@@ -32,7 +32,7 @@ class Word2VecContainer extends React.Component {
         <Col lg={12}>
           <DataCard>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <Word2VecChart data={embeddings} domId={'word2vec-topic'} />
+            <Word2VecChart words={embeddings} domId={'word2vec-topic'} />
           </DataCard>
         </Col>
       </Row>
@@ -79,8 +79,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 export default
   connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-    // TODO: change messages.attentionchart to message.w2vcharthelp, add help text...
-    composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
+    composeDescribedDataCard(localMessages.descriptionIntro, [messages.word2vecChartHelpText])(
       asyncContainerize(
         injectIntl(
           Word2VecContainer

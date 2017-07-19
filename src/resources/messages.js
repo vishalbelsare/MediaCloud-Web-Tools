@@ -190,6 +190,8 @@ const messages = {
   crawledFeedsStat: { id: 'crawledFeeds', defaultMessage: 'Active Crawled Feeds' },
   dailyStoriesStat: { id: 'dailyStories', defaultMessage: 'Daily Stories' },
   dailyDownloadsStat: { id: 'dailyDownloads', defaultMessage: 'Daily Downloads' },
+
+  word2vecChartHelpText: { id: 'word2vecChart.help.text', defaultMessage: '<p>TODO<p>' },
 };
 
 export default messages;
