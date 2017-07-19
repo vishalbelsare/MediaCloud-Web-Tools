@@ -39,7 +39,7 @@ const TopicCreate1ConfigureContainer = (props) => {
       </Row>
       <TopicForm
         initialValues={initialValues}
-        onSubmit={() => goToStep(1)}
+        onSubmit={() => finishStep(1)}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -69,7 +69,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  goToStep: (step) => {
+  finishStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
 });
@@ -83,7 +83,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        connect(mapStateToProps, mapDispatchToProps)(
           TopicCreate1ConfigureContainer
         )
       )
