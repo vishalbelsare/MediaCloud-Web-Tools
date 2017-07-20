@@ -10,6 +10,7 @@ import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollecti
 import DescriptiveButton from '../../common/DescriptiveButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
+import { assetUrl } from '../../../lib/assetUtil';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -63,7 +64,7 @@ const Homepage = (props) => {
       <Row>
         <Col lg={4} xs={12}>
           <DescriptiveButton
-            imageUrl="static/img/mediacloud-logo-black-2x.png"
+            imageUrl={assetUrl('static/img/mediacloud-logo-black-2x.png')}
             label={formatMessage(localMessages.browseMC)}
             description={formatMessage(localMessages.browseMCabout)}
             onClick={() => { goToUrl('/collections/media-cloud'); }}
@@ -71,7 +72,7 @@ const Homepage = (props) => {
         </Col>
         <Col lg={4} xs={12}>
           <DescriptiveButton
-            imageUrl="/static/img/logo-global-voices.png"
+            imageUrl={assetUrl('/static/img/logo-global-voices.png')}
             label={formatMessage(localMessages.browseGV)}
             description={formatMessage(localMessages.browseGVabout)}
             onClick={() => { goToUrl('/collections/global-voices'); }}
@@ -79,7 +80,7 @@ const Homepage = (props) => {
         </Col>
         <Col lg={4} xs={12}>
           <DescriptiveButton
-            imageUrl="/static/img/logo-emm.png"
+            imageUrl={assetUrl('/static/img/logo-emm.png')}
             label={formatMessage(localMessages.browseEMM)}
             description={formatMessage(localMessages.browseEMMabout)}
             onClick={() => { goToUrl('/collections/european-media-monitor'); }}

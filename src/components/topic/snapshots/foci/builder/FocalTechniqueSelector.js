@@ -7,6 +7,7 @@ import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
   from '../../../../../lib/focalTechniques';
+import { assetUrl } from '../../../../../lib/assetUtil';
 
 const localMessages = {
   about: { id: 'focus.techniquePicker.about',
@@ -59,7 +60,7 @@ class FocalTechniqueSelector extends React.Component {
               onClick={this.selectReferenceSetUpload}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_REFERENCE_SET}
               id="Reference Set Upload"
-              image="/static/img/focal-technique-reference-2x.png"
+              image={assetUrl('/static/img/focal-technique-reference-2x.png')}
               nameMsg={localMessages.referenceName}
               descriptionMsg={localMessages.referenceDescription}
               disabled
@@ -71,7 +72,7 @@ class FocalTechniqueSelector extends React.Component {
               onClick={this.selectCommunityDetection}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
               id="Community Selection"
-              image="/static/img/focal-technique-manual-2x.png"
+              image={assetUrl('/static/img/focal-technique-manual-2x.png')}
               nameMsg={localMessages.manualName}
               descriptionMsg={localMessages.manualDescription}
               disabled
@@ -83,7 +84,7 @@ class FocalTechniqueSelector extends React.Component {
               onClick={this.selectAutoMatic}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_AUTO_MAGIC}
               id="AutoMagic Community Detection"
-              image="/static/img/focal-technique-automagic-2x.png"
+              image={assetUrl('/static/img/focal-technique-automagic-2x.png')}
               nameMsg={localMessages.automagicName}
               descriptionMsg={localMessages.automagicDescription}
               disabled

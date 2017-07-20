@@ -13,6 +13,7 @@ import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
+import { assetUrl } from '../lib/assetUtil';
 
 const localMessages = {
   supportOptions: { id: 'app.supportOptions', defaultMessage: 'Need help? Join our <a href="https://groups.io/g/mediacloud">discussion group</a><br />or email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
@@ -33,7 +34,7 @@ const AppContainer = (props) => {
             <br /><br />
             <FormattedMessage {...localMessages.maintenance} />
             <br /><br />
-            <img alt="under-constrction" src="/static/img/under-construction.gif" />
+            <img alt="under-constrction" src={assetUrl('/static/img/under-construction.gif')} />
             <br /><br />
           </ErrorNotice>
         </Row>

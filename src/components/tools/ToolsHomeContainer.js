@@ -10,6 +10,7 @@ import Faq from './faq/ToolsFaq';
 import SystemStatsContainer from './SystemStatsContainer';
 import LoginForm from '../user/LoginForm';
 import DataCard from '../common/DataCard';
+import { assetUrl } from '../../lib/assetUtil';
 
 const localMessages = {
   title: { id: 'tools.home.title', defaultMessage: 'Welcome to Media Cloud' },
@@ -67,7 +68,7 @@ const ToolsHomeContainer = (props) => {
               name={messages.topicsToolName}
               className="tool-topics"
               description={messages.topicsToolDescription}
-              screenshotUrl="/static/img/preview-topics.png"
+              screenshotUrl={assetUrl('/static/img/preview-topics.png')}
               url={TOPICS_URL}
             />
           </Col>
@@ -76,7 +77,7 @@ const ToolsHomeContainer = (props) => {
               name={messages.sourcesToolName}
               className="tool-sources"
               description={messages.sourcesToolDescription}
-              screenshotUrl="/static/img/preview-sources.png"
+              screenshotUrl={assetUrl('/static/img/preview-sources.png')}
               url={SOURCES_URL}
             />
           </Col>
