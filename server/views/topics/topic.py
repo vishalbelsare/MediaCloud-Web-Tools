@@ -2,6 +2,9 @@
 import logging
 from flask import jsonify, request
 import flask_login
+import string
+from gensim.models.keyedvectors import KeyedVectors
+from sklearn.decomposition import PCA
 
 from server import app, db, mc
 from server.cache import cache
@@ -10,10 +13,6 @@ from server.util.request import form_fields_required, arguments_required, api_er
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
-
-from gensim.models.keyedvectors import KeyedVectors
-from sklearn.decomposition import PCA
-
 
 logger = logging.getLogger(__name__)
 
@@ -259,34 +258,39 @@ def topic_search():
     return jsonify({'topics': results})
 
 
-#TODO: add to requirements.txt gensim and sklearn...?
-@app.route('/api/topics/<topic_id>/word2vec', methods=['GET']) #double-check...pretty sure this should be a 'GET'...
+@app.route('/api/topics/<topic_id>/word2vec', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def topic_word2vec(topic_id):
     user_mc = user_mediacloud_client()
     topic_word_count = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
-    word_vectors = KeyedVectors.load('./server/static/data/GoogleNews-vectors-negative300', mmap='r')
     
-    # TODO: potentially find better way to do this
+    try:
+        word_vectors = KeyedVectors.load('./server/static/data/GoogleNews-vectors-negative300', mmap='r')
+    except IOError:
+        return jsonify({'embeddings': []})
+
     # Remove words that are not in model vocab
     to_be_removed = []
     for w in topic_word_count:
       try:
+        # remove punctuation
+        w['term'] = "".join(l for l in w['term'] if l not in string.punctuation)
         word_vectors[w['term']]
       except KeyError:
         to_be_removed.append(w)
     for w in to_be_removed:
       topic_word_count.remove(w)
 
-    words = map(lambda x: x['term'], topic_word_count)
+    terms = map(lambda x: x['term'], topic_word_count)
     counts = map(lambda x: x['count'], topic_word_count)
-    embeddings = [word_vectors[w] for w in words]
+
+    embeddings = [word_vectors[t] for t in terms]
     pca = PCA(n_components=2)
     two_d_embeddings = pca.fit_transform(embeddings).tolist()
 
     data = []
-    for i in range(len(words)):
-        data.append({'word': words[i], 'count': counts[i], 'x': two_d_embeddings[i][0], 'y': two_d_embeddings[i][1]})
+    for i in range(len(terms)):
+        data.append({'term': terms[i], 'count': counts[i], 'x': two_d_embeddings[i][0], 'y': two_d_embeddings[i][1]})
 
     return jsonify({'embeddings': data})

@@ -13,7 +13,7 @@ import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
-import Word2VecContainer from '../words/Word2VecContainer';
+import Word2VecContainer from './Word2VecContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 

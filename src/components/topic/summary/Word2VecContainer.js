@@ -12,11 +12,13 @@ import Word2VecChart from '../../vis/Word2VecChart';
 const localMessages = {
   title: { id: 'topic.words.word2vec.title', defaultMessage: 'Word2Vec' },
   descriptionIntro: { id: 'topic.words.word2vec.help.title', defaultMessage: 'W2V help text here...' },
+  missingGoogleVectors: { id: 'topic.words.word2vec.missingGoogleVectors', defaultMessage: 'Sorry, but our Word2Vec data could not be generated at this time.' },
 };
+
+const WORD2VEC_DOM_ID = 'topic-summary-word2vec';
 
 class Word2VecContainer extends React.Component {
 
-  // TODO: look into what componentWillReceiveProps method is supposed to do...left-over code from other component
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId) {
@@ -26,13 +28,22 @@ class Word2VecContainer extends React.Component {
 
   render() {
     const { embeddings } = this.props;
-
+    let content;
+    if (embeddings.length > 0) {
+      content = (<Word2VecChart words={embeddings} domId={WORD2VEC_DOM_ID} />);
+    } else {
+      content = (
+        <p>
+          <FormattedMessage {...localMessages.missingGoogleVectors} />
+        </p>
+      );
+    }
     return (
       <Row>
         <Col lg={12}>
           <DataCard>
             <h2><FormattedMessage {...localMessages.title} /></h2>
-            <Word2VecChart words={embeddings} domId={'word2vec-topic'} />
+            {content}
           </DataCard>
         </Col>
       </Row>
@@ -56,8 +67,8 @@ Word2VecContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.word2vec.fetchStatus,
-  embeddings: state.topics.selected.word2vec.embeddings,
+  fetchStatus: state.topics.selected.summary.word2vec.fetchStatus,
+  embeddings: state.topics.selected.summary.word2vec.embeddings,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -68,7 +79,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-// Not exactly sure what this does...
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {

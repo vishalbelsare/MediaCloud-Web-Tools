@@ -10,8 +10,8 @@ const localMessages = {
 
 const DEFAULT_WIDTH = 730;
 const DEFAULT_HEIGHT = 400;
-const DEFAULT_MIN_FONT_SIZE = 10;
-const DEFAULT_MAX_FONT_SIZE = 40;
+const DEFAULT_MIN_FONT_SIZE = 15;
+const DEFAULT_MAX_FONT_SIZE = 45;
 const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
@@ -73,7 +73,7 @@ function Word2VecChart(props) {
     .style('opacity', 0);
 
   // determine appropriate margins
-  const maxLengthWord = words.sort((a, b) => b.word.length - a.word.length)[0].word;
+  const maxLengthWord = words.sort((a, b) => b.term.length - a.term.length)[0].term;
   const maxWordWidth = d3.select('body').append('span')
     .attr('class', 'word-width-span')
     .text(maxLengthWord)
@@ -113,7 +113,7 @@ function Word2VecChart(props) {
     .enter()
     .append('text')
     .attr('text-anchor', 'middle')
-    .text(d => d.word)
+    .text(d => d.term)
     .attr('x', d => xScale(d.x))
     .attr('y', d => yScale(d.y))
     .attr('fill', d => colorScale(d.count))
@@ -125,7 +125,7 @@ function Word2VecChart(props) {
   // tool-tip
   text.on('mouseover', (d) => {
     rollover.transition().duration(200).style('opacity', 0.9);
-    rollover.text(formatMessage(localMessages.word2vecTerm, { term: d.word }))
+    rollover.text(formatMessage(localMessages.word2vecTerm, { term: d.term }))
       .style('left', `${d3.event.pageX}px`)
       .style('top', `${d3.event.pageY}px`);
   })
