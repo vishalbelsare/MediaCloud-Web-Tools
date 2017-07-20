@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { assetPath } from '../../lib/assetUtil';
 
 const localMessages = {
   title: { id: 'topic.underConsutrction.title', defaultMessage: 'Success!' },
@@ -19,7 +20,7 @@ const TopicUnderConstruction = props => (
         <p><FormattedMessage {...localMessages.text} /></p>
         <img
           alt={props.intl.formatMessage(localMessages.title)}
-          src={'/static/img/kittens-searching.gif'}
+          src={assetPath('/static/img/kittens-searching.gif')}
         />
       </Col>
     </Row>
