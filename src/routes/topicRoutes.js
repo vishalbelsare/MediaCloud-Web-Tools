@@ -29,6 +29,7 @@ import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotGenerate from '../components/topic/snapshots/SnapshotGenerate';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
+import PageNotFound from '../components/PageNotFound';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
@@ -76,6 +77,8 @@ const topicRoutes = (
     </Route>
 
     {userRoutes}
+
+    <Route path="*" component={PageNotFound} />
 
   </Route>
 

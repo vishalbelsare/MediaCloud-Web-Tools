@@ -4,7 +4,7 @@ import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
-import { storyPubDateToTimestamp } from '../../lib/dateUtil';
+import { storyPubDateToTimestamp, STORY_PUB_DATE_UNDATEABLE } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 import { ReadItNowButton } from '../common/IconButton';
 import SafelyFormattedNumber from '../common/SafelyFormattedNumber';
@@ -99,7 +99,7 @@ class TopicStoryTable extends React.Component {
               let dateToShow = null;  // need to handle undateable stories
               let dateStyle = '';
               const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
-              if (story.publish_date === 'undateable') {
+              if (story.publish_date === STORY_PUB_DATE_UNDATEABLE) {
                 dateToShow = formatMessage(localMessages.undateable);
                 dateStyle = 'story-date-undateable';
               } else {

@@ -10,10 +10,10 @@ const SourceControlBar = props => (
     <div className="main">
       <Grid>
         <Row>
-          <Col lg={8} xs={12} className="left">
+          <Col lg={6} xs={12} className="left">
             {props.children}
           </Col>
-          <Col lg={4} xs={12} className="right">
+          <Col lg={6} xs={12} className="right">
             <SourceSearchContainer
               onAdvancedSearchSelected={props.handleAdvancedSearchSelected}
               onMediaSourceSelected={props.handleMediaSourceSelected}

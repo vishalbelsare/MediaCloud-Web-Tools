@@ -7,7 +7,7 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
-const MAX_SUGGESTION_CHARS = 40;
+const MAX_SUGGESTION_CHARS = 70;
 const DEFAULT_MAX_SOURCES_TO_SHOW = 5;
 const DEFAULT_MAX_COLLECTIONS_TO_SHOW = 3;
 
