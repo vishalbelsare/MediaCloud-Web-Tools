@@ -65,7 +65,7 @@ const Homepage = (props) => {
       <Row>
         <Col lg={4} xs={12}>
           <DescriptiveButton
-            imageUrl={assetUrl('static/img/mediacloud-logo-black-2x.png')}
+            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
             label={formatMessage(localMessages.browseMC)}
             description={formatMessage(localMessages.browseMCabout)}
             onClick={() => { goToUrl('/collections/media-cloud'); }}
