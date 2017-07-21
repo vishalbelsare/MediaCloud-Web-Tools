@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -90,8 +91,8 @@ const ToolsHomeContainer = (props) => {
 };
 
 ToolsHomeContainer.propTypes = {
-  isLoggedIn: React.PropTypes.bool.isRequired,
-  intl: React.PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

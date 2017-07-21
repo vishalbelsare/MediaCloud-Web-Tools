@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { push } from 'react-router-redux';
@@ -97,14 +98,14 @@ const Homepage = (props) => {
 };
 
 Homepage.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
   // from state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   // from dispatch
-  goToUrl: React.PropTypes.func.isRequired,
+  goToUrl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

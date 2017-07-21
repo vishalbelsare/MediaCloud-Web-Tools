@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -58,14 +59,14 @@ const AttentionContainer = (props) => {
 
 AttentionContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number,
-  selectedFocalSetId: React.PropTypes.number,
-  focalSets: React.PropTypes.array,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  selectedFocalSetId: PropTypes.number,
+  focalSets: PropTypes.array,
   // from dispatch
-  handleFocalSetSelected: React.PropTypes.func.isRequired,
+  handleFocalSetSelected: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
@@ -50,11 +51,11 @@ const CollectionTable = (props) => {
 
 CollectionTable.propTypes = {
   // from parent
-  collections: React.PropTypes.array.isRequired,
-  title: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string,
+  collections: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

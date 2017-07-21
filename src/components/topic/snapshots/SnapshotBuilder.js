@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
@@ -14,9 +15,9 @@ const SnapshotBuilder = props => (
 );
 
 SnapshotBuilder.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
+  children: PropTypes.node,
 };
 
 export default

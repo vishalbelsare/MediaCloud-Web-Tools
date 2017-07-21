@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const CloseIcon = props => (
@@ -9,7 +10,7 @@ const CloseIcon = props => (
 );
 
 CloseIcon.propTypes = {
-  backgroundColor: React.PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default CloseIcon;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const ExploreIcon = props => (
@@ -25,7 +26,7 @@ const ExploreIcon = props => (
 );
 
 ExploreIcon.propTypes = {
-  backgroundColor: React.PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default ExploreIcon;

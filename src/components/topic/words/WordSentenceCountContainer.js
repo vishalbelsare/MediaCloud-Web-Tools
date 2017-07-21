@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -51,20 +52,20 @@ class WordSentenceCountContainer extends React.Component {
 
 WordSentenceCountContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // passed in
-  topicId: React.PropTypes.number.isRequired,
-  term: React.PropTypes.string.isRequired,
-  stem: React.PropTypes.string.isRequired,  // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  topicId: PropTypes.number.isRequired,
+  term: PropTypes.string.isRequired,
+  stem: PropTypes.string.isRequired,  // from state
+  fetchStatus: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  params: React.PropTypes.object,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  params: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

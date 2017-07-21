@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -90,10 +91,10 @@ const StoryDetails = (props) => {
 
 StoryDetails.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  story: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  story: PropTypes.object.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(

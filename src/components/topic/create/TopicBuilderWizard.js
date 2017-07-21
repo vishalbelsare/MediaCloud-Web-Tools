@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
@@ -61,15 +62,15 @@ class TopicBuilderWizard extends React.Component {
 
 TopicBuilderWizard.propTypes = {
   // from parent
-  formData: React.PropTypes.object,
-  initialValues: React.PropTypes.object,
-  startStep: React.PropTypes.number,
-  location: React.PropTypes.object,
+  formData: PropTypes.object,
+  initialValues: PropTypes.object,
+  startStep: PropTypes.number,
+  location: PropTypes.object,
   // from state
-  currentStep: React.PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired,
   // from dispatch
-  goToStep: React.PropTypes.func.isRequired,
-  handleUnmount: React.PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
+  handleUnmount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -21,17 +22,17 @@ const ContentPreview = (props) => {
 
 ContentPreview.propTypes = {
   // from parent
-  intro: React.PropTypes.string,
-  icon: React.PropTypes.object,
-  linkDisplay: React.PropTypes.func,
-  linkInfo: React.PropTypes.func,
-  items: React.PropTypes.array.isRequired,
-  classStyle: React.PropTypes.string,
-  helpButton: React.PropTypes.node,
-  disabled: React.PropTypes.func,
+  intro: PropTypes.string,
+  icon: PropTypes.object,
+  linkDisplay: PropTypes.func,
+  linkInfo: PropTypes.func,
+  items: PropTypes.array.isRequired,
+  classStyle: PropTypes.string,
+  helpButton: PropTypes.node,
+  disabled: PropTypes.func,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  contentType: React.PropTypes.string,
+  intl: PropTypes.object.isRequired,
+  contentType: PropTypes.string,
 };
 
 

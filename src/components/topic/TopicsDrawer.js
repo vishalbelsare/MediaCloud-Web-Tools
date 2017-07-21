@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -85,11 +86,11 @@ class TopicsDrawer extends React.Component {
 
 TopicsDrawer.propTypes = {
   // state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   // from dispatch
-  handleMenuItemClick: React.PropTypes.func.isRequired,
+  handleMenuItemClick: PropTypes.func.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

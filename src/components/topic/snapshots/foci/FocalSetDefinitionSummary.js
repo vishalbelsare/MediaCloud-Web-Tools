@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -91,12 +92,12 @@ class FocalSetDefinitionSummary extends React.Component {
 
 FocalSetDefinitionSummary.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  focalSetDefinition: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  onFocusDefinitionDelete: React.PropTypes.func.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  focalSetDefinition: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onFocusDefinitionDelete: PropTypes.func.isRequired,
+  topicId: PropTypes.number.isRequired,
 };
 
 export default

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
@@ -24,12 +25,12 @@ const DescriptiveButton = (props) => {
 
 DescriptiveButton.propTypes = {
   // from parent
-  imageUrl: React.PropTypes.string,
-  svgIcon: React.PropTypes.node,
-  label: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string.isRequired,
-  onClick: React.PropTypes.func.isRequired,
-  className: React.PropTypes.string,
+  imageUrl: PropTypes.string,
+  svgIcon: PropTypes.node,
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 export default DescriptiveButton;

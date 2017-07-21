@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -33,16 +34,16 @@ const FocalTechniqueDescription = (props) => {
 
 FocalTechniqueDescription.propTypes = {
   // from parent
-  id: React.PropTypes.string.isRequired,
-  image: React.PropTypes.string,
-  icon: React.PropTypes.func,
-  nameMsg: React.PropTypes.object.isRequired,
-  descriptionMsg: React.PropTypes.object.isRequired,
-  selected: React.PropTypes.bool,
-  disabled: React.PropTypes.bool,
-  comingSoon: React.PropTypes.bool,
-  onClick: React.PropTypes.func,
-  intl: React.PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  icon: PropTypes.func,
+  nameMsg: PropTypes.object.isRequired,
+  descriptionMsg: PropTypes.object.isRequired,
+  selected: PropTypes.bool,
+  disabled: PropTypes.bool,
+  comingSoon: PropTypes.bool,
+  onClick: PropTypes.func,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

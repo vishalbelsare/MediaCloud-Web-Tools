@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -66,15 +67,15 @@ class LinkMapContainer extends React.Component {
 
 LinkMapContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   // from state
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from parent
-  handleFetchMapData: React.PropTypes.func.isRequired,
+  handleFetchMapData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
@@ -65,15 +66,15 @@ const EditTopicContainer = (props) => {
 
 EditTopicContainer.propTypes = {
   // from context
-  location: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object,
+  location: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object,
   // from state
-  timespan: React.PropTypes.object,
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number,
-  topicInfo: React.PropTypes.object,
-  handleSave: React.PropTypes.func.isRequired,
+  timespan: PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  topicInfo: PropTypes.object,
+  handleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

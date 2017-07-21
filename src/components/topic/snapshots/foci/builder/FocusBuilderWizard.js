@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
@@ -66,15 +67,15 @@ class FocusBuilderWizard extends React.Component {
 
 FocusBuilderWizard.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
-  startStep: React.PropTypes.number,
-  location: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
+  startStep: PropTypes.number,
+  location: PropTypes.object,
   // from state
-  currentStep: React.PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired,
   // from dispatch
-  goToStep: React.PropTypes.func.isRequired,
-  handleUnmount: React.PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
+  handleUnmount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

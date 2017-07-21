@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -83,15 +84,15 @@ const FocusDescriptionForm = (props) => {
 
 FocusDescriptionForm.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object.isRequired,
-  focalSetDefinitions: React.PropTypes.array.isRequired,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object.isRequired,
+  focalSetDefinitions: PropTypes.array.isRequired,
   // form composition
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
   // from state
-  currentFocalSetDefinitionId: React.PropTypes.number,
+  currentFocalSetDefinitionId: PropTypes.number,
 };
 
 const mapStateToProps = state => ({

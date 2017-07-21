@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
@@ -116,13 +117,13 @@ class ModifyTopicDialog extends React.Component {
 
 ModifyTopicDialog.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number,
-  needsNewSnapshot: React.PropTypes.bool.isRequired,
-  onSpiderRequest: React.PropTypes.func.isRequired,
+  topicId: PropTypes.number,
+  needsNewSnapshot: PropTypes.bool.isRequired,
+  onSpiderRequest: PropTypes.func.isRequired,
   // from dispatch
-  onUrlChange: React.PropTypes.func.isRequired,
+  onUrlChange: PropTypes.func.isRequired,
 };
 
 export default

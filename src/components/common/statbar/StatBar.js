@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -15,11 +16,11 @@ const StatBar = props => (
 
 StatBar.propTypes = {
   // from parent
-  stats: React.PropTypes.array.isRequired,
-  className: React.PropTypes.string,
-  columnWidth: React.PropTypes.number,
+  stats: PropTypes.array.isRequired,
+  className: PropTypes.string,
+  columnWidth: PropTypes.number,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

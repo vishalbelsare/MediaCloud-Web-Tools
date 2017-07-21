@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -49,20 +50,20 @@ const FocusForm1TechniqueContainer = (props) => {
 
 FocusForm1TechniqueContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
-  initialValues: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
   // form composition
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool,
-  submitting: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool,
+  submitting: PropTypes.bool,
   // from state
-  currentFocalTechnique: React.PropTypes.string,
+  currentFocalTechnique: PropTypes.string,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

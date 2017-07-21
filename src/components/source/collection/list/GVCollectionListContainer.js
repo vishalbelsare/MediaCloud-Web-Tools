@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -21,14 +22,14 @@ const GVCollectionListContainer = (props) => {
 
 GVCollectionListContainer.propTypes = {
   // from state
-  collections: React.PropTypes.array.isRequired,
-  name: React.PropTypes.string,
-  description: React.PropTypes.string,
-  fetchStatus: React.PropTypes.string.isRequired,
+  collections: PropTypes.array.isRequired,
+  name: PropTypes.string,
+  description: PropTypes.string,
+  fetchStatus: PropTypes.string.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

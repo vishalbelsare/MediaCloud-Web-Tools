@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -84,16 +85,16 @@ class CollectionUploadSourceContainer extends React.Component {
 
 CollectionUploadSourceContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
   // from parent
-  onConfirm: React.PropTypes.func.isRequired,
-  mysources: React.PropTypes.array,
-  myCollectionId: React.PropTypes.string,
+  onConfirm: PropTypes.func.isRequired,
+  mysources: PropTypes.array,
+  myCollectionId: PropTypes.string,
   // from parent
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  uploadCSVFile: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  uploadCSVFile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

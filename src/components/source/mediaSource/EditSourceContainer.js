@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -61,14 +62,14 @@ const EditSourceContainer = (props) => {
 
 EditSourceContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleSave: React.PropTypes.func.isRequired,
+  handleSave: PropTypes.func.isRequired,
   // form state
-  sourceId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  source: React.PropTypes.object,
-  user: React.PropTypes.object,
+  sourceId: PropTypes.number.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  source: PropTypes.object,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

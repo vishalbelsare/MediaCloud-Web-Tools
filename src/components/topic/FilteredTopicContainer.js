@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -57,17 +58,17 @@ class FilteredTopicContainer extends React.Component {
 
 FilteredTopicContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
-  fetchStatusInfo: React.PropTypes.string,
-  fetchStatusSnapshot: React.PropTypes.string,
+  intl: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
+  fetchStatusInfo: PropTypes.string,
+  fetchStatusSnapshot: PropTypes.string,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  topicInfo: React.PropTypes.object.isRequired,
-  snapshots: React.PropTypes.array.isRequired,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  topicInfo: PropTypes.object.isRequired,
+  snapshots: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
@@ -20,11 +21,11 @@ const DataCard = (props) => {
 
 DataCard.propTypes = {
   // from parent
-  children: React.PropTypes.node.isRequired,
-  border: React.PropTypes.bool,
-  disabled: React.PropTypes.bool,
-  inline: React.PropTypes.bool,
-  className: React.PropTypes.string,
+  children: PropTypes.node.isRequired,
+  border: PropTypes.bool,
+  disabled: PropTypes.bool,
+  inline: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default DataCard;

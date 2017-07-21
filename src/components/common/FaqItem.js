@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
@@ -50,11 +51,11 @@ class FaqItem extends React.Component {
 
 FaqItem.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  question: React.PropTypes.object.isRequired,
-  answer: React.PropTypes.object.isRequired,
-  expanded: React.PropTypes.bool,
+  question: PropTypes.object.isRequired,
+  answer: PropTypes.object.isRequired,
+  expanded: PropTypes.bool,
 };
 
 export default

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
@@ -94,7 +95,7 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
     }
 
     HelpfulContainer.propTypes = {
-      intl: React.PropTypes.object.isRequired,
+      intl: PropTypes.object.isRequired,
     };
 
     return injectIntl(HelpfulContainer);

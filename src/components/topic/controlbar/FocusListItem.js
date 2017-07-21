@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
@@ -32,10 +33,10 @@ class FocusListItem extends React.Component {
 }
 
 FocusListItem.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  focus: React.PropTypes.object.isRequired,
-  onSelected: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  focus: PropTypes.object.isRequired,
+  onSelected: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
 };
 
 export default injectIntl(FocusListItem);

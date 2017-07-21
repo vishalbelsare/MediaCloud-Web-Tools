@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -62,7 +63,7 @@ function composeDescribedDataCard(introMessage, descriptionMessage) {
     }
 
     DescribedDataCard.propTypes = {
-      intl: React.PropTypes.object.isRequired,
+      intl: PropTypes.object.isRequired,
     };
 
     return injectIntl(DescribedDataCard);

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -61,17 +62,17 @@ class SentenceCountSummaryContainer extends React.Component {
 
 SentenceCountSummaryContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // passed in
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,  // array of {date: epochMS, count: int]
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,  // array of {date: epochMS, count: int]
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

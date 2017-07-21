@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Grid } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
@@ -22,7 +23,7 @@ const ChangePasswordContainer = (props) => {
 
 ChangePasswordContainer.propTypes = {
   // from dispatch
-  handlePasswordChange: React.PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

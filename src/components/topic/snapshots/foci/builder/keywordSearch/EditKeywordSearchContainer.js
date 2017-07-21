@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
@@ -88,20 +89,20 @@ class EditKeywordSearchContainer extends React.Component {
 
 EditKeywordSearchContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
-  onPreviousStep: React.PropTypes.func.isRequired,
-  onNextStep: React.PropTypes.func.isRequired,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
+  onPreviousStep: PropTypes.func.isRequired,
+  onNextStep: PropTypes.func.isRequired,
   // from state
-  formData: React.PropTypes.object,
-  currentKeywords: React.PropTypes.string,
-  currentFocalTechnique: React.PropTypes.string,
+  formData: PropTypes.object,
+  currentKeywords: PropTypes.string,
+  currentFocalTechnique: PropTypes.string,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
   // from compositional helper
-  intl: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

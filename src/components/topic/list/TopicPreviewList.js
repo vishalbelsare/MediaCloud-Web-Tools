@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
@@ -87,11 +88,11 @@ const TopicPreviewList = (props) => {
 
 TopicPreviewList.propTypes = {
   // from parent
-  linkGenerator: React.PropTypes.func,
-  topics: React.PropTypes.array.isRequired,
-  onSetFavorited: React.PropTypes.func,
+  linkGenerator: PropTypes.func,
+  topics: PropTypes.array.isRequired,
+  onSetFavorited: PropTypes.func,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

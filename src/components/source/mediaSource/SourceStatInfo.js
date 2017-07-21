@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -52,12 +53,12 @@ const SourceStatInfo = (props) => {
 
 SourceStatInfo.propTypes = {
   // from parent
-  sourceId: React.PropTypes.number.isRequired,
-  sourceInfo: React.PropTypes.object.isRequired,
+  sourceId: PropTypes.number.isRequired,
+  sourceInfo: PropTypes.object.isRequired,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 
 };
 

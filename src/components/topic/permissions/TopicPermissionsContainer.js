@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -72,16 +73,16 @@ class TopicPermissionsContainer extends React.Component {
 
 TopicPermissionsContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleUpdate: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
-  handleDelete: React.PropTypes.func.isRequired,
+  handleUpdate: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   // from state
-  topicId: React.PropTypes.number,
-  fetchStatus: React.PropTypes.string.isRequired,
-  permissions: React.PropTypes.array,
+  topicId: PropTypes.number,
+  fetchStatus: PropTypes.string.isRequired,
+  permissions: PropTypes.array,
 };
 
 const mapStateToProps = state => ({

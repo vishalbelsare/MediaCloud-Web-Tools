@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -105,10 +106,10 @@ class FocalTechniqueSelector extends React.Component {
 FocalTechniqueSelector.propTypes = {
   // from parent
   // from componsition chain
-  intl: React.PropTypes.object.isRequired,
-  change: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  change: PropTypes.func.isRequired,
   // from state
-  currentFocalTechnique: React.PropTypes.string,
+  currentFocalTechnique: PropTypes.string,
 };
 
 const mapStateToProps = state => ({

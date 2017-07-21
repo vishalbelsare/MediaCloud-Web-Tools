@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Title from 'react-title-component';
@@ -27,8 +28,8 @@ const TopicsApp = (props) => {
 };
 
 TopicsApp.propTypes = {
-  children: React.PropTypes.node,
-  intl: React.PropTypes.object.isRequired,
+  children: PropTypes.node,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

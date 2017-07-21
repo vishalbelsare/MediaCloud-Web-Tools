@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -52,21 +53,21 @@ const FocusForm3DescribeContainer = (props) => {
 
 FocusForm3DescribeContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
   // form composition
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  focalSetDefinitions: React.PropTypes.array.isRequired,
-  formData: React.PropTypes.object,
+  fetchStatus: PropTypes.string.isRequired,
+  focalSetDefinitions: PropTypes.array.isRequired,
+  formData: PropTypes.object,
   // from dispatch
-  goToStep: React.PropTypes.func.isRequired,
-  finishStep: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

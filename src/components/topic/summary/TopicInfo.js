@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
@@ -58,8 +59,8 @@ const TopicInfo = (props) => {
 };
 
 TopicInfo.propTypes = {
-  topic: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired,
+  topic: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(TopicInfo);
