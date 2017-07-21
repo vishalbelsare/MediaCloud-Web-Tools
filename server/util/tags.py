@@ -8,8 +8,8 @@ NYT_LABELS_TAG_SET_ID = 1963  # the tag set all the descriptor tags are in
 NYT_LABELS_SAMPLE_SIZE = 10000  # the sample size to use for looking at NYT descriptor tags
 
 # constants for versioning of geo-tagged stories
-TAG_SET_GEOCODER_VERSION = 1937;
-TAG_SET_NYT_LABELS_VERSION = 1964;
+TAG_SET_GEOCODER_VERSION = 1937
+TAG_SET_NYT_LABELS_VERSION = 1964
 
 # constants related to the CLIFF-based geotagging (ie. tags on stories indicating places they are about)
 CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691  # the tag that indicates a story was tagged by the CLIFF version 2.3.0
@@ -17,9 +17,11 @@ GEO_TAG_SET = 1011  # the tag set all the geo tags are in
 GEO_SAMPLE_SIZE = 10000  # the sample size to use for looking at geo tags
 
 # Source collection tags sets
-COLLECTIONS_TAG_SET_ID = 5  # holds all the Media Cloud collections
-GV_TAG_SET_ID = 556  # holds country collections made from scraping GlobalVoices outlinks
-EMM_TAG_SET_ID = 597  # holds country collections made from scraping European Media Monitor source list
+TAG_SETS_ID_COLLECTIONS = 5  # holds all the Media Cloud collections
+TAG_SET_ID_GV = 556  # holds country collections made from scraping GlobalVoices outlinks
+TAG_SET_ID_EMM = 597  # holds country collections made from scraping European Media Monitor source list
+TAG_SET_ID_PARTISAN_RETWEETS = 1959  # holds the partisan retweet quintiles
+VALID_COLLECTION_TAG_SETS_IDS = [TAG_SET_ID_EMM, TAG_SET_ID_GV, TAG_SETS_ID_COLLECTIONS, TAG_SET_ID_PARTISAN_RETWEETS];
 
 # Source metadata tag sets
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935  # holds the country of publication of a source

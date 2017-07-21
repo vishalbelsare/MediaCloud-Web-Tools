@@ -13,7 +13,7 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_
     ROLE_MEDIA_EDIT
 from server.cache import cache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import COLLECTIONS_TAG_SET_ID, is_metadata_tag_set, format_name_from_label, format_metadata_fields
+from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
@@ -458,7 +458,7 @@ def collection_create():
 
     formatted_name = format_name_from_label(label)
     # first create the collection
-    new_collection = user_mc.createTag(COLLECTIONS_TAG_SET_ID, formatted_name, label, description,
+    new_collection = user_mc.createTag(TAG_SETS_ID_COLLECTIONS, formatted_name, label, description,
                                        is_static=(static == 'true'),
                                        show_on_stories=(show_on_stories == 'true'),
                                        show_on_media=(show_on_media == 'true'))

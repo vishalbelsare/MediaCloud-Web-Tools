@@ -147,6 +147,11 @@ export function topicEnglishStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/english-counts`, acceptedParams);
 }
 
+export function topicUndateableStoryCounts(topicId, params) {
+  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/stories/undateable-counts`, acceptedParams);
+}
+
 export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);

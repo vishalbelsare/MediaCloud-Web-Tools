@@ -16,6 +16,7 @@ import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Word2VecContainer from './Word2VecContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import TopicStoryStatsContainer from './TopicStoryStatsContainer';
 
 const localMessages = {
   title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
@@ -39,9 +40,11 @@ class TopicSummaryContainer extends React.Component {
     let filteredStoryCountContent = null;
     if ((timespan && (timespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
       filteredStoryCountContent = (
-        <Col lg={12}>
-          <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
-        </Col>
+        <Row>
+          <Col lg={12}>
+            <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+          </Col>
+        </Row>
       );
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
@@ -56,41 +59,59 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={12}>
               <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
               <Col lg={12}>
                 <NytLabelSummaryContainer topicId={topicId} filters={filters} />
               </Col>
-            </Permissioned>
+            </Row>
+          </Permissioned>
+          <Row>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
-            <Col lg={12}>
-              <Word2VecContainer topicId={topicId} filters={filters} />
-            </Col>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
+              <Col lg={12}>
+                <Word2VecContainer topicId={topicId} filters={filters} />
+            </Row>
+            <Row>
               <Col lg={12}>
                 <GeoTagSummaryContainer topicId={topicId} filters={filters} />
               </Col>
-            </Permissioned>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-              {filteredStoryCountContent}
+            </Row>
+            {filteredStoryCountContent}
+            <Row>
               <Col lg={12}>
                 <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>
-              <Col lg={12}>
+            </Row>
+            <Row>
+              <Col lg={6}>
                 <TopicInfo topic={topicInfo} />
               </Col>
-            </Permissioned>
-          </Row>
+              <Col lg={6}>
+                <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
+              </Col>
+            </Row>
+          </Permissioned>
         </Grid>
       );
     } else {

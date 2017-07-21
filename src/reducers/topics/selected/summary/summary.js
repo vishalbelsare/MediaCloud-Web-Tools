@@ -6,6 +6,8 @@ import sentenceCount from './sentenceCount';
 import storyTotals from './storyTotals';
 import geocodedStoryTotals from './geocodedStoryTotals';
 import englishStoryTotals from './englishStoryTotals';
+import undateableStoryTotals from './undateableStoryTotals';
+import themedStoryTotals from './themedStoryTotals';
 import mapFiles from './mapFiles';
 import word2vec from './word2vec';
 
@@ -17,6 +19,8 @@ const summaryReducer = combineReducers({
   storyTotals,
   geocodedStoryTotals,
   englishStoryTotals,
+  undateableStoryTotals,
+  themedStoryTotals,
   mapFiles,
   word2vec,
 });
