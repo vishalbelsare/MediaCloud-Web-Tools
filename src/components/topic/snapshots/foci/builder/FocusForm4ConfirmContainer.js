@@ -181,7 +181,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // <------ preserve form data
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 };
 
 export default

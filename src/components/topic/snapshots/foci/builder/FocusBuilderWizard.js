@@ -25,6 +25,11 @@ class FocusBuilderWizard extends React.Component {
     goToStep(startStep || 0);
   }
 
+  shouldComponentUpdate = (nextProps) => {
+    const { currentStep } = this.props;
+    return currentStep !== nextProps.currentStep;
+  }
+
   componentWillUnmount = () => {
     const { handleUnmount } = this.props;
     handleUnmount();
@@ -87,7 +92,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateFocusStep(step));
   },
   handleUnmount: () => {
-    dispatch(goToCreateFocusStep(0));
+    dispatch(goToCreateFocusStep(0)); // reset for next time
   },
 });
 

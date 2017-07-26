@@ -7,9 +7,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
 import FocusDescriptionForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
-import { goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import messages from '../../../../../resources/messages';
-import composeAsyncContainer from '../../../../common/AsyncContainer';
 
 const formSelector = formValueSelector('snapshotFocus');
 
@@ -76,12 +75,9 @@ const mapStateToProps = state => ({
   formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId'),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
-  },
-  asyncFetch: () => {
-    dispatch(fetchFocalSetDefinitions(ownProps.topicId));
   },
 });
 
@@ -102,7 +98,8 @@ function validate() {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // <------ preserve form data
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate,
 };
 
@@ -111,9 +108,7 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          composeAsyncContainer(
-            FocusForm3DescribeContainer
-          )
+          FocusForm3DescribeContainer
         )
       )
     )
