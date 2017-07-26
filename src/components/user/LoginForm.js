@@ -101,9 +101,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
-    dispatch(loginWithPassword(values.email, values.password, values.destination))
+    dispatch(loginWithPassword(values.email, values.password))
     .then((response) => {
-      if (response.status === 200) {
+      if (response.key) {
         // redirect to destination if there is one
         const loc = ownProps.location;
         let redirect;
