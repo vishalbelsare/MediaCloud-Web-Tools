@@ -59,7 +59,7 @@ class ModifyTopicDialog extends React.Component {
             onClick={this.handleModifyClick}
             tooltip={formatMessage(localMessages.modifyTopic)}
           />
-          <Link to={`#${formatMessage(localMessages.modifyTopic)}`} onClick={this.handleModifyClick}>
+          <Link to={`${formatMessage(localMessages.modifyTopic)}`} onClick={this.handleModifyClick}>
             <b><FormattedMessage {...localMessages.modifyTopic} /></b>
           </Link>
         </Permissioned>
@@ -81,6 +81,7 @@ class ModifyTopicDialog extends React.Component {
             description={(needsNewSnapshot) ? formatMessage(localMessages.generateSnapshotDetails) : ''}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/generate`)}
             className={(needsNewSnapshot) ? 'warning' : ''}
+            id="modify-topic-snapshot"
           />
           <Permissioned onlyTopic={PERMISSION_TOPIC_ADMIN}>
             <DescriptiveButton
@@ -90,6 +91,7 @@ class ModifyTopicDialog extends React.Component {
                 onSpiderRequest();
                 this.handleRemoveDialogClose();
               }}
+              id="modify-topic-spider"
             />
           </Permissioned>
           <DescriptiveButton
@@ -97,16 +99,19 @@ class ModifyTopicDialog extends React.Component {
             label={formatMessage(messages.addFocus)}
             description={formatMessage(localMessages.addFocusDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/foci`)}
+            id="modify-topic-subtopics"
           />
           <DescriptiveButton
             label={formatMessage(localMessages.changePermissions)}
             description={formatMessage(localMessages.changePermissionsDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/permissions`)}
+            id="modify-topic-permissions"
           />
           <DescriptiveButton
             label={formatMessage(localMessages.changeSettings)}
             description={formatMessage(localMessages.changeSettingsDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/edit`)}
+            id="modify-topic-settings"
           />
         </Dialog>
       </div>
