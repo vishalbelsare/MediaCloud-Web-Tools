@@ -22,4 +22,4 @@ env
 *.gexf
 .idea
 sketches/*
-config/test.config
+config/test.config.js
