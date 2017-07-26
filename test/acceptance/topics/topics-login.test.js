@@ -1,5 +1,6 @@
 import visit from '../../helpers/visit';
 import login from '../../helpers/login';
+import { TOPIC_ID_COMMON_CORE, pathToTopicSummaryPage } from '../../helpers/topics';
 
 describe('From the topics home page...', () => {
   beforeAll((done) => {
@@ -14,6 +15,15 @@ describe('From the topics home page...', () => {
               .evaluate(() => document.querySelector('#content h2').innerText)
               .end();
     expect(result).toBe('Personal Topics');
+  });
+
+  test('the user is redirected to topic summary page after log in', async () => {
+    const result = await visit(pathToTopicSummaryPage(TOPIC_ID_COMMON_CORE))
+              .use(login)
+              .wait('.controlbar-topic')
+              .exists('.topic-summary')
+              .end();
+    expect(result).toBe(true);
   });
 
   test('the user can log out', async () => {
