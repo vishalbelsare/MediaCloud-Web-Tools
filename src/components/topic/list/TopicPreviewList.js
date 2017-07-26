@@ -51,7 +51,7 @@ const TopicPreviewList = (props) => {
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
             <DataCard className="topic-preview-list-item">
-              <div className="content">
+              <div className="content" id={`topic-preview-${topic.topics_id}`}>
                 <div>
                   <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
                     <FavoriteToggler

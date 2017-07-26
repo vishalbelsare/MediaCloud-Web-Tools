@@ -8,6 +8,8 @@ import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo, filteredLocation } from '../../util/location';
 import { FilterButton, HomeButton } from '../../common/IconButton';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import { toggleFilterControls, filterByFocus, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
@@ -53,12 +55,14 @@ class TopicFilterControlBar extends React.Component {
                   <HomeButton />
                   <b><FormattedMessage {...localMessages.topicHomepage} /></b>
                 </LinkWithFilters>
-                <ModifyTopicDialog
-                  topicId={topicId}
-                  onUrlChange={goToUrl}
-                  needsNewSnapshot={needsNewSnapshot}
-                  onSpiderRequest={handleSpiderRequest}
-                />
+                <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                  <ModifyTopicDialog
+                    topicId={topicId}
+                    onUrlChange={goToUrl}
+                    needsNewSnapshot={needsNewSnapshot}
+                    onSpiderRequest={handleSpiderRequest}
+                  />
+                </Permissioned>
               </Col>
               <Col lg={8} className="right">
                 <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />

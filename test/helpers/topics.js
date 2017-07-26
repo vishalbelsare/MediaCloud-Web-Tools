@@ -1,0 +1,3 @@
+
+export const TOPIC_ID_CLIMATE_CHANGE = 1537;
+export const TOPIC_ID_COMMON_CORE = 1019;
