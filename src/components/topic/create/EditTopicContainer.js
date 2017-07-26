@@ -52,8 +52,8 @@ const EditTopicContainer = (props) => {
         </Row>
         <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
           <TopicForm
-            onSaveTopic={handleSave}
             initialValues={initialValues}
+            onSubmit={handleSave}
             title={formatMessage(localMessages.editTopicCollectionsTitle)}
             intro={formatMessage(localMessages.editTopicCollectionsIntro)}
             mode={TOPIC_FORM_MODE_EDIT}
