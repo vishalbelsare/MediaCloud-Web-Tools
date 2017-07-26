@@ -54,7 +54,7 @@ const FocusForm4ConfirmContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.name }} /></h2>
+            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.focusName }} /></h2>
           </Col>
         </Row>
         <Row>
