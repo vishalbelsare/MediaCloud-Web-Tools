@@ -7,7 +7,7 @@ describe('From the topics public home page...', () => {
     done();
   });
 
-  test('the user can see a title listing public topics', async () => {
+  test('the user can see a listing of public topics', async () => {
     const result = await visit('/#/home')
               .wait('#content h1')
               .exists('.topic-preview-list')

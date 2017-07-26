@@ -8,7 +8,7 @@ describe('From the topics logged-in home page...', () => {
     done();
   });
 
-  test('the user can see modify a topic they have write permission for', async () => {
+  test('the user can see "modify topic" for one they have write permission for', async () => {
     const result = await visit('/#/home')
               .use(login)
               .wait('.topic-list-container')
@@ -19,7 +19,7 @@ describe('From the topics logged-in home page...', () => {
     expect(result).toBe(false);
   });
 
-  test('the user can\'t see modify a topic they have read permission for', async () => {
+  test('the user can\'t see "modify topic" they have read permission for', async () => {
     const result = await visit('/#/home')
               .use(login)
               .wait('.topic-list-container')
