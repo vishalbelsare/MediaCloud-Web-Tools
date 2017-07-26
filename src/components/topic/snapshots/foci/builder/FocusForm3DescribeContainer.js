@@ -66,7 +66,6 @@ FocusForm3DescribeContainer.propTypes = {
   // from dispatch
   goToStep: PropTypes.func.isRequired,
   finishStep: PropTypes.func.isRequired,
-  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
