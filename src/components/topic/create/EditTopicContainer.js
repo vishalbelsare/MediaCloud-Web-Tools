@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { filteredLinkTo } from '../../util/location';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -52,6 +53,7 @@ const EditTopicContainer = (props) => {
         </Row>
         <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
           <TopicForm
+            topicId={topicId}
             initialValues={initialValues}
             onSubmit={handleSave}
             title={formatMessage(localMessages.editTopicCollectionsTitle)}
@@ -74,6 +76,7 @@ EditTopicContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
+  // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
 };
 
@@ -87,7 +90,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleSave: (values) => {
+  reallyHandleSave: (values, topicInfo, filters) => {
     const infoToSave = {
       name: values.name,
       description: values.description,
@@ -113,12 +116,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // if the dates changed tell them it needs a new snapshot
-          if ((infoToSave.start_date !== ownProps.topicInfo.start_date) || (infoToSave.end_date !== ownProps.topicInfo.end_date)) {
+          if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
             dispatch(setTopicNeedsNewSnapshot());
           }
-          // update topic info and redirect back to topic summary (no filters because we lost them on edit)
+          // update topic info and redirect back to topic summary
           dispatch(fetchTopicSummary(results.topics_id))
-            .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));
+            .then(() => dispatch(push(filteredLinkTo(`/topics/${results.topics_id}/summary`, filters))));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
@@ -127,9 +130,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleSave: (values) => {
+      dispatchProps.reallyHandleSave(values, stateProps.topicInfo, stateProps.filters); // need topicInfo to do comparison to fire notices
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       EditTopicContainer
     )
   );

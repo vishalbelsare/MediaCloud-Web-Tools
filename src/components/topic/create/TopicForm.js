@@ -25,9 +25,10 @@ const localMessages = {
 };
 
 const TopicForm = (props) => {
-  const { onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
+      <input type="hidden" name="topicId" value={topicId} />
       <Row><Col lg={12}><hr /></Col></Row>
       <TopicDetailForm
         form="topicForm"
@@ -68,6 +69,7 @@ TopicForm.propTypes = {
   intl: PropTypes.object.isRequired,
   initialValues: PropTypes.object,
   // from parent
+  topicId: PropTypes.number,
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
@@ -110,7 +112,8 @@ function validate(values, props) {
 const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
-      if (results.topics && results.topics.length !== 0) {
+      if (results.topics && (results.topics.length !== 0) &&
+        (values.topicId && (results.topics[0].topics_id !== values.topicId))) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }
