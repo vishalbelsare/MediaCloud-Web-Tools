@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -54,11 +55,11 @@ const StoryPlaces = (props) => {
 
 StoryPlaces.propTypes = {
   // from parent
-  tags: React.PropTypes.array.isRequired,
-  geocoderVersion: React.PropTypes.string,
+  tags: PropTypes.array.isRequired,
+  geocoderVersion: PropTypes.string,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 export default

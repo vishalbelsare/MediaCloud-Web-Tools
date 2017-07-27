@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -38,12 +39,12 @@ class EditFocusContainer extends React.Component {
 
 EditFocusContainer.propTypes = {
   // from context:
-  topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired,
   // from state
-  focusDefinition: React.PropTypes.object.isRequired,
+  focusDefinition: PropTypes.object.isRequired,
   // from dispatch
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const findFocalSetDefById = (state, focusDefId) => {

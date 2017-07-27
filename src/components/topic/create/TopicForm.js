@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -24,9 +25,10 @@ const localMessages = {
 };
 
 const TopicForm = (props) => {
-  const { onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
+      <input type="hidden" name="topicId" value={topicId} />
       <Row><Col lg={12}><hr /></Col></Row>
       <TopicDetailForm
         form="topicForm"
@@ -64,19 +66,20 @@ const TopicForm = (props) => {
 
 TopicForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  initialValues: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
   // from parent
-  handleSubmit: React.PropTypes.func.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  error: React.PropTypes.string,
-  submitting: React.PropTypes.bool.isRequired,
-  title: React.PropTypes.string.isRequired,
-  intro: React.PropTypes.string.isRequired,
-  validate: React.PropTypes.func.isRequired,
-  topicNameSearch: React.PropTypes.object,
-  mode: React.PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  topicId: PropTypes.number,
+  handleSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  submitting: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  intro: PropTypes.string.isRequired,
+  validate: PropTypes.func.isRequired,
+  topicNameSearch: PropTypes.object,
+  mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
 };
 
 function validate(values, props) {
@@ -109,7 +112,8 @@ function validate(values, props) {
 const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
-      if (results.topics && results.topics.length !== 0) {
+      if (results.topics && (results.topics.length !== 0) &&
+        (values.topicId && (results.topics[0].topics_id !== values.topicId))) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Slider from 'react-slick';
@@ -22,14 +23,14 @@ const ItemSlider = (props) => {
 
 ItemSlider.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
-  intro: React.PropTypes.string,
-  slides: React.PropTypes.array.isRequired,
-  helpButton: React.PropTypes.node,
+  title: PropTypes.string.isRequired,
+  intro: PropTypes.string,
+  slides: PropTypes.array.isRequired,
+  helpButton: PropTypes.node,
   // from dispatch
-  handleClick: React.PropTypes.func,
+  handleClick: PropTypes.func,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

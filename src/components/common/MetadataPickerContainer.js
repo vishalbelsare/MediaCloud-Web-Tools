@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
@@ -67,22 +68,22 @@ const MetadataPickerContainer = (props) => {
 
 MetadataPickerContainer.propTypes = {
   // from parent
-  id: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
-  disabled: React.PropTypes.bool,
-  autocomplete: React.PropTypes.bool,
-  floatingLabelText: React.PropTypes.string,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  disabled: PropTypes.bool,
+  autocomplete: PropTypes.bool,
+  floatingLabelText: PropTypes.string,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  renderAutoComplete: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderAutoComplete: PropTypes.func.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string,
-  tags: React.PropTypes.array,
-  label: React.PropTypes.string,
+  fetchStatus: PropTypes.string,
+  tags: PropTypes.array,
+  label: PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({

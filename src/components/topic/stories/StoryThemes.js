@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -46,11 +47,11 @@ const StoryThemes = (props) => {
 
 StoryThemes.propTypes = {
   // from parent
-  tags: React.PropTypes.array.isRequired,
-  nytThemesVersion: React.PropTypes.string,
+  tags: PropTypes.array.isRequired,
+  nytThemesVersion: PropTypes.string,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 export default

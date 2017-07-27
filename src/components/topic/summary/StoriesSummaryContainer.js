@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -92,19 +93,19 @@ class StoriesSummaryContainer extends React.Component {
 
 StoriesSummaryContainer.propTypes = {
   // from the composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  handleFocusSelected: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  handleFocusSelected: PropTypes.func.isRequired,
+  sortData: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  sort: React.PropTypes.string.isRequired,
-  stories: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  sort: PropTypes.string.isRequired,
+  stories: PropTypes.array,
 };
 
 const mapStateToProps = state => ({

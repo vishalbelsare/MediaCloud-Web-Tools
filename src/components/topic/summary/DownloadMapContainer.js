@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -76,18 +77,18 @@ class DownloadMapContainer extends React.Component {
 
 DownloadMapContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  linkMapStatus: React.PropTypes.string,
-  wordMapStatus: React.PropTypes.string,
+  fetchStatus: PropTypes.string.isRequired,
+  linkMapStatus: PropTypes.string,
+  wordMapStatus: PropTypes.string,
 };
 
 const mapStateToProps = state => ({

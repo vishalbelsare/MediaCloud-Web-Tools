@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
@@ -47,9 +48,9 @@ const UserMenuContainer = (props) => {
 
 UserMenuContainer.propTypes = {
   // from state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   // from dispatch
-  routeToUrl: React.PropTypes.func.isRequired,
+  routeToUrl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

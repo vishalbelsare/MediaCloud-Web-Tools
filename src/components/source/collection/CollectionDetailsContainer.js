@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -97,13 +98,13 @@ class CollectionDetailsContainer extends React.Component {
 }
 
 CollectionDetailsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  collectionId: React.PropTypes.number.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  collectionId: PropTypes.number.isRequired,
   // from state
-  collection: React.PropTypes.object,
-  user: React.PropTypes.object,
+  collection: PropTypes.object,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

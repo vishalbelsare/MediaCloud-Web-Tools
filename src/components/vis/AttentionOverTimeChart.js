@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
@@ -151,17 +152,17 @@ class AttentionOverTimeChart extends React.Component {
 
 AttentionOverTimeChart.propTypes = {
   // from parent
-  data: React.PropTypes.array,
-  series: React.PropTypes.array,
-  height: React.PropTypes.number.isRequired,
-  lineColor: React.PropTypes.string,
-  health: React.PropTypes.array,
-  onDataPointClick: React.PropTypes.func, // (date0, date1, evt, chartObj)
-  total: React.PropTypes.number,  // optional total to display just above the chart
-  filename: React.PropTypes.string,
-  showLegend: React.PropTypes.bool,
+  data: PropTypes.array,
+  series: PropTypes.array,
+  height: PropTypes.number.isRequired,
+  lineColor: PropTypes.string,
+  health: PropTypes.array,
+  onDataPointClick: PropTypes.func, // (date0, date1, evt, chartObj)
+  total: PropTypes.number,  // optional total to display just above the chart
+  filename: PropTypes.string,
+  showLegend: PropTypes.bool,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(AttentionOverTimeChart);

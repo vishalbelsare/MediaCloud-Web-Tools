@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 
@@ -27,9 +28,9 @@ const NamedEntitiesTable = props => (
 
 NamedEntitiesTable.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  entities: React.PropTypes.array.isRequired,
+  entities: PropTypes.array.isRequired,
 };
 
 export default

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 
@@ -18,10 +19,10 @@ const KeywordSearchSummary = (props) => {
 
 KeywordSearchSummary.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  properties: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  properties: PropTypes.object.isRequired,
   // form context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

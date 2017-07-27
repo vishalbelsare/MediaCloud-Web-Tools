@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, WarningNotice } from '../Notice';
@@ -84,8 +85,8 @@ class AppNotice extends React.Component {
 }
 
 AppNotice.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  info: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  info: PropTypes.object.isRequired,
 };
 
 export default

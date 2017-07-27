@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -336,11 +337,11 @@ class InfluentialStoryExplorer extends React.Component {
 
 InfluentialStoryExplorer.propTypes = {
   // from the composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  selectedTimespan: React.PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  selectedTimespan: PropTypes.object,
 };
 
 export default

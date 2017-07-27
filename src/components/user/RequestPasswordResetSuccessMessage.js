@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -23,7 +24,7 @@ const RequestPasswordResetSuccessMessage = () => (
 
 
 RequestPasswordResetSuccessMessage.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(RequestPasswordResetSuccessMessage);

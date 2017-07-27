@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -105,13 +106,13 @@ class TopicSearchContainer extends React.Component {
 
 TopicSearchContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  topicResults: React.PropTypes.array.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  topicResults: PropTypes.array.isRequired,
   // from dispatch
-  onTopicSelected: React.PropTypes.func.isRequired,
-  search: React.PropTypes.func.isRequired,
+  onTopicSelected: PropTypes.func.isRequired,
+  search: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

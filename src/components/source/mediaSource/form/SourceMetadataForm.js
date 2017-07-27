@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -56,8 +57,8 @@ const SourceMetadataForm = props => (
 
 SourceMetadataForm.propTypes = {
   // from compositional chain
-  initialValues: React.PropTypes.object,
-  intl: React.PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

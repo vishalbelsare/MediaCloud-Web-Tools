@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -46,9 +47,9 @@ const CreateSourceContainer = (props) => {
 
 CreateSourceContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleSave: React.PropTypes.func.isRequired,
+  handleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({

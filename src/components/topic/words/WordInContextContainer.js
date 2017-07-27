@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -63,17 +64,17 @@ class WordInContextContainer extends React.Component {
 
 WordInContextContainer.propTypes = {
   // from parent
-  stem: React.PropTypes.string.isRequired,
-  term: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  stem: PropTypes.string.isRequired,
+  term: PropTypes.string.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from store
-  fragments: React.PropTypes.array.isRequired,
+  fragments: PropTypes.array.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 

@@ -1,7 +1,12 @@
-import config from '../../config/test.config'
+import config from '../../config/test.config';
+import { SUBMIT_BUTTON, inputNamed } from './dom';
 
-export default function (nightmare) {
-  nightmare.type('.login-form input[type=text]', config.username)
-           .type('.login-form input[type=password]', config.password)
-           .click('.login-form .app-button button');
-}
+// helper that will login for you
+const login = (nightmare) => {
+  nightmare.viewport(1280, 700)
+           .insert(inputNamed('email'), config.username)
+           .insert(inputNamed('password'), config.password)
+           .click(SUBMIT_BUTTON);
+};
+
+export default login;

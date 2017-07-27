@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -52,9 +53,9 @@ function composeNotice(level) {
     }
   }
   Notice.propTypes = {
-    intl: React.PropTypes.object.isRequired,
-    children: React.PropTypes.node.isRequired,
-    details: React.PropTypes.string,
+    intl: PropTypes.object.isRequired,
+    children: PropTypes.node.isRequired,
+    details: PropTypes.string,
   };
   return injectIntl(Notice);
 }

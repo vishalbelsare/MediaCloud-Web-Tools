@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -76,10 +77,10 @@ const BrandToolbar = (props) => {
 
 BrandToolbar.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  backgroundColor: React.PropTypes.string.isRequired,
-  drawer: React.PropTypes.node,
+  backgroundColor: PropTypes.string.isRequired,
+  drawer: PropTypes.node,
 };
 
 export default

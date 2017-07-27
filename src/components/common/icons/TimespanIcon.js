@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 57.145;
@@ -22,7 +23,7 @@ const TimespanIcon = (props) => {
 };
 
 TimespanIcon.propTypes = {
-  height: React.PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default TimespanIcon;

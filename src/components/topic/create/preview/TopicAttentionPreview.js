@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -43,16 +44,16 @@ class TopicAttentionPreview extends React.Component {
 
 TopicAttentionPreview.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // passed in
-  query: React.PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

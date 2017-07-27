@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -44,17 +45,17 @@ const TopicStoryStatsContainer = (props) => {
 
 TopicStoryStatsContainer.propTypes = {
   // from parent
-  timespan: React.PropTypes.object,
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  timespan: PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  geocodedCounts: React.PropTypes.object,
-  englishCounts: React.PropTypes.object,
-  themeCounts: React.PropTypes.object,
-  undateableCount: React.PropTypes.object,
+  fetchStatus: PropTypes.string.isRequired,
+  geocodedCounts: PropTypes.object,
+  englishCounts: PropTypes.object,
+  themeCounts: PropTypes.object,
+  undateableCount: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

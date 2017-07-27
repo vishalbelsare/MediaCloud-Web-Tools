@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
@@ -33,10 +34,10 @@ const SourceOrCollectionChip = (props) => {
 };
 
 SourceOrCollectionChip.propTypes = {
-  object: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.func,
-  onClick: React.PropTypes.func,
-  children: React.PropTypes.node,
+  object: PropTypes.object.isRequired,
+  onDelete: PropTypes.func,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
 };
 
 export default SourceOrCollectionChip;

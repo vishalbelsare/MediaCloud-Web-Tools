@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -50,8 +51,8 @@ const renderCollectionSelector = ({ fields, meta: { error } }) => (
   </div>
 );
 renderCollectionSelector.propTypes = {
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
+  fields: PropTypes.object,
+  meta: PropTypes.object,
 };
 
 const PickCollectionsForm = () => (
@@ -68,7 +69,7 @@ const PickCollectionsForm = () => (
 
 PickCollectionsForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

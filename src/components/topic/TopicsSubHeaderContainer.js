@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -46,13 +47,13 @@ const TopicMgrSubHeaderContainer = (props) => {
 TopicMgrSubHeaderContainer.propTypes = {
   // from parent
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // state
-  topicId: React.PropTypes.number,
-  topicInfo: React.PropTypes.object,
-  filters: React.PropTypes.object,
+  topicId: PropTypes.number,
+  topicInfo: PropTypes.object,
+  filters: PropTypes.object,
   // from dispatch
-  handleSetFavorited: React.PropTypes.func.isRequired,
+  handleSetFavorited: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

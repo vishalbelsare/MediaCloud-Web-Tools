@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -47,18 +48,18 @@ class KeywordSentenceCountPreviewContainer extends React.Component {
 
 KeywordSentenceCountPreviewContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // passed in
-  topicId: React.PropTypes.number.isRequired,
-  keywords: React.PropTypes.string.isRequired,
+  topicId: PropTypes.number.isRequired,
+  keywords: PropTypes.string.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 41.928;
@@ -26,7 +27,7 @@ const StoryIcon = (props) => {
 };
 
 StoryIcon.propTypes = {
-  height: React.PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default StoryIcon;

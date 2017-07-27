@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -42,15 +43,15 @@ const FavoritedContainer = (props) => {
 
 FavoritedContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string,
-  total: React.PropTypes.number,
+  fetchStatus: PropTypes.string,
+  total: PropTypes.number,
   // from parent
-  favoritedSources: React.PropTypes.array.isRequired,
-  favoritedCollections: React.PropTypes.array.isRequired,
+  favoritedSources: PropTypes.array.isRequired,
+  favoritedCollections: PropTypes.array.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -69,11 +70,11 @@ const UserProfileContainer = (props) => {
 
 UserProfileContainer.propTypes = {
   // from state
-  profile: React.PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
   // from dispatch
-  handleResetApiKey: React.PropTypes.func.isRequired,
+  handleResetApiKey: PropTypes.func.isRequired,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

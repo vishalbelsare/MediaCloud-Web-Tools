@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -60,18 +61,18 @@ class SourceSentenceCountContainer extends React.Component {
 
 SourceSentenceCountContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  health: React.PropTypes.array,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  health: PropTypes.array,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from parent
-  sourceId: React.PropTypes.number.isRequired,
-  filename: React.PropTypes.string,
+  sourceId: PropTypes.number.isRequired,
+  filename: PropTypes.string,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

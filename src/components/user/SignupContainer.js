@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -137,18 +138,18 @@ class SignupContainer extends React.Component {
 
 SignupContainer.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderCheckbox: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
   // from dispatch
-  handleSignupSubmission: React.PropTypes.func.isRequired,
+  handleSignupSubmission: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

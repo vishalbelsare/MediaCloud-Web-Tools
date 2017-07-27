@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
@@ -43,10 +44,10 @@ const SourceMetadataStatBar = (props) => {
 
 SourceMetadataStatBar.propTypes = {
   // from parent
-  source: React.PropTypes.object.isRequired,
-  columnWidth: React.PropTypes.number,  // optional override - defaults to 3 so it looks good in a 12 wide container
+  source: PropTypes.object.isRequired,
+  columnWidth: PropTypes.number,  // optional override - defaults to 3 so it looks good in a 12 wide container
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

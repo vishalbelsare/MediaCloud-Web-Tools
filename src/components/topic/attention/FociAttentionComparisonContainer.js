@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -122,20 +123,20 @@ class FociAttentionComparisonContainer extends React.Component {
 
 FociAttentionComparisonContainer.propTypes = {
   // from parent
-  filters: React.PropTypes.object.isRequired,
-  selectedFocalSetId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  selectedFocalSetId: PropTypes.number.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  foci: React.PropTypes.array.isRequired,
-  overallTotal: React.PropTypes.number.isRequired,
-  overallCounts: React.PropTypes.array.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  foci: PropTypes.array.isRequired,
+  overallTotal: PropTypes.number.isRequired,
+  overallCounts: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

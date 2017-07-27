@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Field, reduxForm, propTypes, validate } from 'redux-form';
@@ -179,16 +180,16 @@ const TopicDetailForm = (props) => {
 
 TopicDetailForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderCheckbox: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  renderDatePickerInline: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderDatePickerInline: PropTypes.func.isRequired,
   // from form helper
-  handleSubmit: React.PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   // from parent
-  mode: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
+  mode: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
 };
 
 export default

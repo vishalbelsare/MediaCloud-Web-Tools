@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -147,17 +148,17 @@ class StoryContainer extends React.Component {
 
 StoryContainer.propTypes = {
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  intl: React.PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  story: React.PropTypes.object.isRequired,
-  storiesId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
+  story: PropTypes.object.isRequired,
+  storiesId: PropTypes.number.isRequired,
+  topicId: PropTypes.number.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

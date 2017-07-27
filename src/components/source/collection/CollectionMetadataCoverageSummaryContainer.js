@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -115,16 +116,16 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
 
 CollectionMetadataCoverageSummaryContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
   // from parent
-  collectionId: React.PropTypes.number.isRequired,
-  collection: React.PropTypes.object.isRequired,
-  sources: React.PropTypes.array.isRequired,
+  collectionId: PropTypes.number.isRequired,
+  collection: PropTypes.object.isRequired,
+  sources: PropTypes.array.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = (state, ownprops) => ({

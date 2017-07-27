@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -105,11 +106,11 @@ class MediaTable extends React.Component {
 }
 
 MediaTable.propTypes = {
-  media: React.PropTypes.array.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  onChangeSort: React.PropTypes.func,
-  sortedBy: React.PropTypes.string,
+  media: PropTypes.array.isRequired,
+  intl: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  onChangeSort: PropTypes.func,
+  sortedBy: PropTypes.string,
 };
 
 export default injectIntl(MediaTable);

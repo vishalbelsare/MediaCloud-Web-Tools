@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -100,12 +101,12 @@ class StoryTable extends React.Component {
 }
 
 StoryTable.propTypes = {
-  stories: React.PropTypes.array.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  onChangeSort: React.PropTypes.func,
-  onChangeFocusSelection: React.PropTypes.func,
-  sortedBy: React.PropTypes.string,
-  maxTitleLength: React.PropTypes.number,
+  stories: PropTypes.array.isRequired,
+  intl: PropTypes.object.isRequired,
+  onChangeSort: PropTypes.func,
+  onChangeFocusSelection: PropTypes.func,
+  sortedBy: PropTypes.string,
+  maxTitleLength: PropTypes.number,
 };
 
 export default injectIntl(StoryTable);

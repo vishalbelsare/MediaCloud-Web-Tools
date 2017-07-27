@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -62,10 +63,10 @@ const FavoriteSourcesAndCollectionsContainer = (props) => {
 };
 
 FavoriteSourcesAndCollectionsContainer.propTypes = {
-  fetchStatus: React.PropTypes.string.isRequired,
-  favoritedSources: React.PropTypes.array.isRequired,
-  favoritedCollections: React.PropTypes.array.isRequired,
-  intl: React.PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  favoritedSources: PropTypes.array.isRequired,
+  favoritedCollections: PropTypes.array.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -28,13 +29,13 @@ const SourceControlBar = props => (
 
 SourceControlBar.propTypes = {
   // from parent
-  children: React.PropTypes.node,
+  children: PropTypes.node,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleMediaSourceSelected: React.PropTypes.func.isRequired,
-  handleCollectionSelected: React.PropTypes.func.isRequired,
-  handleAdvancedSearchSelected: React.PropTypes.func.isRequired,
+  handleMediaSourceSelected: PropTypes.func.isRequired,
+  handleCollectionSelected: PropTypes.func.isRequired,
+  handleAdvancedSearchSelected: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -7,7 +8,7 @@ import AppToolbar from './AppToolbar';
 import messages from '../../../resources/messages';
 import { getBrandColors } from '../../../styles/colors';
 import AppNoticesContainer from './AppNoticesContainer';
-import { assetPath } from '../../../lib/assetUtil';
+import { assetUrl } from '../../../lib/assetUtil';
 
 const localMessages = {
   goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
@@ -35,7 +36,7 @@ const AppHeader = (props) => {
               <img
                 className="app-logo"
                 alt={formatMessage(messages.suiteName)}
-                src={assetPath('/static/img/mediacloud-logo-white-2x.png')}
+                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
                 width={65}
                 height={65}
               />
@@ -57,7 +58,7 @@ const AppHeader = (props) => {
               <img
                 className="app-logo"
                 alt={formatMessage(messages.suiteName)}
-                src={assetPath('/static/img/mediacloud-logo-white-2x.png')}
+                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
                 width={65}
                 height={65}
               />
@@ -91,22 +92,22 @@ const AppHeader = (props) => {
 
 AppHeader.propTypes = {
   // from parent
-  name: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string.isRequired,
-  backgroundColor: React.PropTypes.string.isRequired,
-  lightColor: React.PropTypes.string.isRequired,
-  drawer: React.PropTypes.node,
-  subHeader: React.PropTypes.node,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  backgroundColor: PropTypes.string.isRequired,
+  lightColor: PropTypes.string.isRequired,
+  drawer: PropTypes.node,
+  subHeader: PropTypes.node,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // state
-  showSubHeader: React.PropTypes.bool,
+  showSubHeader: PropTypes.bool,
   // from dispatch
-  navigateToHome: React.PropTypes.func.isRequired,
+  navigateToHome: PropTypes.func.isRequired,
 };
 
 AppHeader.contextTypes = {
-  router: React.PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = store => ({

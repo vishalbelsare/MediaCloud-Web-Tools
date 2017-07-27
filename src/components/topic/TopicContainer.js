@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { replace } from 'react-router-redux';
@@ -81,20 +82,20 @@ class TopicContainer extends React.Component {
 
 TopicContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
-  location: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  intl: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  location: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  addAppNotice: React.PropTypes.func.isRequired,
-  removeTopicId: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  addAppNotice: PropTypes.func.isRequired,
+  removeTopicId: PropTypes.func.isRequired,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  topicInfo: React.PropTypes.object,
-  needsNewSnapshot: React.PropTypes.bool.isRequired,
-  snapshotCount: React.PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  topicInfo: PropTypes.object,
+  needsNewSnapshot: PropTypes.bool.isRequired,
+  snapshotCount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

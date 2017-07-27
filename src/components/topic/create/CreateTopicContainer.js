@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -28,11 +29,11 @@ const CreateTopicContainer = (props) => {
 };
 
 CreateTopicContainer.propTypes = {
-  location: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  canCreateTopic: React.PropTypes.bool,
-  runningTopics: React.PropTypes.array,
-  user: React.PropTypes.object,
+  location: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  canCreateTopic: PropTypes.bool,
+  runningTopics: PropTypes.array,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -59,16 +60,16 @@ const RequestPasswordReset = (props) => {
 
 RequestPasswordReset.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
   // from state
-  errorMessage: React.PropTypes.string,
-  pristine: React.PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string,
+  pristine: PropTypes.bool.isRequired,
   // from dispatch
-  onSubmitRecovery: React.PropTypes.func.isRequired,
+  onSubmitRecovery: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
