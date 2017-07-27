@@ -1,6 +1,6 @@
 import visit from '../../helpers/visit';
 import login from '../../helpers/login';
-import { TOPIC_ID_CLIMATE_CHANGE, TOPIC_ID_COMMON_CORE } from '../../helpers/topics';
+import { READABLE_TOPIC_ID, WRITEABLE_TOPIC_ID } from '../../helpers/topics';
 
 describe('From the topics logged-in home page...', () => {
   beforeAll((done) => {
@@ -12,7 +12,7 @@ describe('From the topics logged-in home page...', () => {
     const result = await visit('/#/home')
               .use(login)
               .wait('.topic-list-container')
-              .click(`#topic-preview-${TOPIC_ID_CLIMATE_CHANGE} h2 a`)
+              .click(`#topic-preview-${READABLE_TOPIC_ID} h2 a`)
               .wait('.controlbar-topic')
               .exists('.modify-topic')
               .end();
@@ -23,7 +23,7 @@ describe('From the topics logged-in home page...', () => {
     const result = await visit('/#/home')
               .use(login)
               .wait('.topic-list-container')
-              .click(`#topic-preview-${TOPIC_ID_COMMON_CORE} h2 a`)
+              .click(`#topic-preview-${WRITEABLE_TOPIC_ID} h2 a`)
               .wait('.controlbar-topic')
               .exists('.modify-topic')
               .end();
