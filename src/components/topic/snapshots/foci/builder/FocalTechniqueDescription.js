@@ -7,7 +7,7 @@ const localMessages = {
 };
 
 const FocalTechniqueDescription = (props) => {
-  const { selected, disabled, nameMsg, descriptionMsg, image, icon, onClick, comingSoon } = props;
+  const { selected, disabled, nameMsg, descriptionMsg, id, image, icon, onClick, comingSoon } = props;
   const { formatMessage } = props.intl;
   const disabledClass = (disabled === true) ? 'disabled' : '';
   const selectedClass = (selected === true) ? 'selected' : '';
@@ -21,7 +21,7 @@ const FocalTechniqueDescription = (props) => {
     visualContent = <div className="focal-technique-icon" tabIndex={0} role="button" onKeyPress={clickHandler} onClick={clickHandler}>{icon()}</div>;
   }
   return (
-    <div className={rootClasses}>
+    <div id={id} className={rootClasses}>
       {visualContent}
       <p><b><FormattedMessage {...nameMsg} /></b></p>
       <p>

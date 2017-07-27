@@ -34,7 +34,7 @@ const FocusDescriptionForm = (props) => {
     focalSetContent = <FocalSetForm initialValues={initialValues} />;
   }
   return (
-    <div className="focus-create-details">
+    <div className="focus-create-details-form">
       <Row>
         <Col lg={3} xs={12}>
           <Field

@@ -50,7 +50,7 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectBooleanQuery}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
-              id="Boolean Query"
+              id="technique-boolean-query"
               icon={KeywordSearchIcon}
               nameMsg={localMessages.keywordName}
               descriptionMsg={localMessages.keywordDescription}
@@ -60,7 +60,7 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectReferenceSetUpload}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_REFERENCE_SET}
-              id="Reference Set Upload"
+              id="technique-reference-set-upload"
               image={assetUrl('/static/img/focal-technique-reference-2x.png')}
               nameMsg={localMessages.referenceName}
               descriptionMsg={localMessages.referenceDescription}
@@ -72,7 +72,7 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectCommunityDetection}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
-              id="Community Selection"
+              id="technique-community-selection"
               image={assetUrl('/static/img/focal-technique-manual-2x.png')}
               nameMsg={localMessages.manualName}
               descriptionMsg={localMessages.manualDescription}
@@ -84,7 +84,7 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectAutoMatic}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_AUTO_MAGIC}
-              id="AutoMagic Community Detection"
+              id="technique-autoMagic-community-detection"
               image={assetUrl('/static/img/focal-technique-automagic-2x.png')}
               nameMsg={localMessages.automagicName}
               descriptionMsg={localMessages.automagicDescription}

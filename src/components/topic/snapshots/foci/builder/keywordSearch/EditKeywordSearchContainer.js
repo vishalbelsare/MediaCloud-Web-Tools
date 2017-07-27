@@ -65,6 +65,7 @@ class EditKeywordSearchContainer extends React.Component {
             </Col>
             <Col lg={2} xs={12}>
               <AppButton
+                id="keyword-search-preview-button"
                 label={formatMessage(messages.search)}
                 style={{ marginTop: 33 }}
                 onClick={() => this.setState({ keywords: currentKeywords })}
