@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -46,19 +47,19 @@ class StoryInlinksContainer extends React.Component {
 
 StoryInlinksContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  storiesId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  storiesId: PropTypes.number.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from fetchData
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  inlinkedStories: React.PropTypes.array.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  inlinkedStories: PropTypes.array.isRequired,
+  filters: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

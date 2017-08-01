@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import Link from 'react-router/lib/Link';
@@ -10,8 +11,8 @@ const DeleteButton = props => (
 );
 
 DeleteButton.propTypes = {
-  tooltip: React.PropTypes.string.isRequired,
-  onClick: React.PropTypes.func.isRequired,
+  tooltip: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default DeleteButton;

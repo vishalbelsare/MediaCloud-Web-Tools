@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -56,7 +57,7 @@ class CollectionDetailsContainer extends React.Component {
             <p><b>{collection.description}</b></p>
             <p>
               <li><FormattedMessage {...localMessages.collectionIsOrIsnt} values={{ shows: collection.is_static }} /></li>
-              <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media, onStories: collection.show_on_stories }} /></li>
+              <li><FormattedMessage {...localMessages.collectionShowOn} values={{ onMedia: collection.show_on_media || 0, onStories: collection.show_on_stories || 0 }} /></li>
             </p>
           </Col>
           <Col lg={4}>
@@ -97,13 +98,13 @@ class CollectionDetailsContainer extends React.Component {
 }
 
 CollectionDetailsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  collectionId: React.PropTypes.number.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  collectionId: PropTypes.number.isRequired,
   // from state
-  collection: React.PropTypes.object,
-  user: React.PropTypes.object,
+  collection: PropTypes.object,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

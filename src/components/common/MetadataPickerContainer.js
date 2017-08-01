@@ -1,11 +1,12 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../lib/tagUtil';
 
 const MODE_SELECT = 'MODE_SELECT';
 const MODE_AUTOCOMPLETE = 'MODE_AUTOCOMPLETE';
@@ -67,22 +68,22 @@ const MetadataPickerContainer = (props) => {
 
 MetadataPickerContainer.propTypes = {
   // from parent
-  id: React.PropTypes.number.isRequired,
-  name: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
-  disabled: React.PropTypes.bool,
-  autocomplete: React.PropTypes.bool,
-  floatingLabelText: React.PropTypes.string,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  disabled: PropTypes.bool,
+  autocomplete: PropTypes.bool,
+  floatingLabelText: PropTypes.string,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  renderAutoComplete: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderAutoComplete: PropTypes.func.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string,
-  tags: React.PropTypes.array,
-  label: React.PropTypes.string,
+  fetchStatus: PropTypes.string,
+  tags: PropTypes.array,
+  label: PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -102,6 +103,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         break;
       case TAG_SET_PRIMARY_LANGUAGE:
         dispatch(fetchMetadataValuesForPrimaryLanguage(ownProps.id));
+        break;
+      case TAG_SET_COUNTRY_OF_FOCUS:
+        dispatch(fetchMetadataValuesForCountryOfFocus(ownProps.id));
         break;
       default:
         break;

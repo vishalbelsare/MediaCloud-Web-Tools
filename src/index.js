@@ -11,8 +11,8 @@ import hashHistory from 'react-router/lib/hashHistory';
 import { syncHistoryWithStore } from 'react-router-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { hasCookies, getCookies } from './lib/auth';
-import { loginWithKey } from './actions/userActions';
+import { hasCookies, deleteCookies } from './lib/auth';
+import { loginWithCookie } from './actions/userActions';
 import store from './store';
 import { getBrandColors } from './styles/colors';
 
@@ -61,13 +61,13 @@ export default function initializeApp(routes) {
     );
   };
 
-  // load any cookies correctly
+  // log them in if they have a valid cookie
   if (hasCookies()) {
-    const cookies = getCookies();
-    store.dispatch(loginWithKey(cookies.email, cookies.key))
+    store.dispatch(loginWithCookie())
       .then((results) => {
         if ({}.hasOwnProperty.call(results, 'status') && (results.status !== 200)) {
-          if (window.location.href.indexOf('login') === -1) {
+          if (!window.location.href.includes('login') && !window.location.href.includes('home')) {
+            deleteCookies();  // cookies didn't work, so delete them
             window.location = '/#/login';
           }
         }

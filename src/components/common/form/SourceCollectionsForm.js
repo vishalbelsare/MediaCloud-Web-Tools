@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -53,13 +54,13 @@ const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollecti
   </div>
 );
 renderCollectionSelector.propTypes = {
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
-  intro: React.PropTypes.string.isRequired,
-  allowRemoval: React.PropTypes.bool,
-  maxSources: React.PropTypes.number,
-  maxCollections: React.PropTypes.number,
-  validate: React.PropTypes.func,
+  fields: PropTypes.object,
+  meta: PropTypes.object,
+  intro: PropTypes.string.isRequired,
+  allowRemoval: PropTypes.bool,
+  maxSources: PropTypes.number,
+  maxCollections: PropTypes.number,
+  validate: PropTypes.func,
 };
 
 const SourceCollectionsForm = (props) => {
@@ -88,13 +89,13 @@ const SourceCollectionsForm = (props) => {
 
 SourceCollectionsForm.propTypes = {
   // from parent
-  intl: React.PropTypes.object.isRequired,
-  title: React.PropTypes.string.isRequired,
-  intro: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
-  allowRemoval: React.PropTypes.bool,
-  maxSources: React.PropTypes.number,
-  maxCollections: React.PropTypes.number,
+  intl: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+  intro: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  allowRemoval: PropTypes.bool,
+  maxSources: PropTypes.number,
+  maxCollections: PropTypes.number,
 };
 
 export default

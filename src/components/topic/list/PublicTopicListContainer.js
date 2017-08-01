@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -22,11 +23,11 @@ const PublicTopicListContainer = (props) => {
 
 PublicTopicListContainer.propTypes = {
   // from state
-  topics: React.PropTypes.array,
+  topics: PropTypes.array,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

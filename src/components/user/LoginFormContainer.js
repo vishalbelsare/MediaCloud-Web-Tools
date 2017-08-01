@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -34,13 +35,13 @@ class LoginContainer extends React.Component {
 }
 
 LoginContainer.propTypes = {
-  isLoggedIn: React.PropTypes.bool.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
+  isLoggedIn: PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
 };
 
 LoginContainer.contextTypes = {
-  router: React.PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

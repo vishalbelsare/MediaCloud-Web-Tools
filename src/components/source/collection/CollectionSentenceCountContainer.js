@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -12,7 +13,7 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'sentenceCount.title', defaultMessage: 'Sentences Over Time' },
+  title: { id: 'sentenceCount.title', defaultMessage: 'Sentences in this Collection' },
   helpTitle: { id: 'collection.summary.sentenceCount.help.title', defaultMessage: 'About Sentences Over Time' },
   helpText: { id: 'collection.summary.sentenceCount.help.text',
     defaultMessage: '<p>This chart shows you the number of sentences we have collected from the sources in this collection over time. Click on the line to see a summary of the content in this collection for that date.</p>',
@@ -60,18 +61,18 @@ class CollectionSentenceCountContainer extends React.Component {
 
 CollectionSentenceCountContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  health: React.PropTypes.array,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  health: PropTypes.array,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from parent
-  collectionId: React.PropTypes.number.isRequired,
-  filename: React.PropTypes.string,
+  collectionId: PropTypes.number.isRequired,
+  filename: PropTypes.string,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

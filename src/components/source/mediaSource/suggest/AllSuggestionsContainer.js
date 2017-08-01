@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -36,11 +37,11 @@ const allSuggestionsContainer = (props) => {
 
 allSuggestionsContainer.propTypes = {
   // from the composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  suggestions: React.PropTypes.array.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  suggestions: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

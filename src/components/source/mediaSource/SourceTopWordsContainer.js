@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -49,17 +50,17 @@ class SourceTopWordsContainer extends React.Component {
 
 SourceTopWordsContainer.propTypes = {
   // from parent
-  source: React.PropTypes.object.isRequired,
+  source: PropTypes.object.isRequired,
   // from state
-  fetchData: React.PropTypes.func.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  words: React.PropTypes.array,
-  timePeriod: React.PropTypes.string.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  words: PropTypes.array,
+  timePeriod: PropTypes.string.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -7,11 +8,13 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
-const MAX_SUGGESTION_CHARS = 40;
+const MAX_SUGGESTION_CHARS = 70;
 const DEFAULT_MAX_SOURCES_TO_SHOW = 5;
 const DEFAULT_MAX_COLLECTIONS_TO_SHOW = 3;
 
 const DELAY_BEFORE_SEARCH_MS = 500; // wait this long after a keypress to fire a search
+
+const ADVANCED_SEARCH_ITEM_VALUE = 'advanced';
 
 const localMessages = {
   advancedSearch: { id: 'sources.search.advanced', defaultMessage: 'Advanced Search...' },
@@ -41,18 +44,20 @@ class SourceSearchContainer extends React.Component {
 
   handleClick = (item) => {
     const { onMediaSourceSelected, onCollectionSelected, onAdvancedSearchSelected } = this.props;
-    const { formatMessage } = this.props.intl;
-    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
-
     if (item) {
       if (item.type === 'mediaSource') {
         if (onMediaSourceSelected) onMediaSourceSelected(item);
       } else if (item.type === 'collection') {
         if (onCollectionSelected) onCollectionSelected(item);
-      } else if (item === advancedSearchTitle) {
-        if (onAdvancedSearchSelected) onAdvancedSearchSelected(this.state.lastSearchString);
+      } else if (item === ADVANCED_SEARCH_ITEM_VALUE) {
+        if (onAdvancedSearchSelected) onAdvancedSearchSelected('');
       }
     }
+    // annoyingly need to timeout to reset the field after selection is made (so it fires after menuCloseDelay)
+    // @see https://stackoverflow.com/questions/34387787/how-to-clear-the-text-in-a-material-ui-auto-complete-field
+    setTimeout(() => {
+      this.setState({ lastSearchString: '' });
+    }, 300);
   }
 
   fireSearchIfNeeded = () => {
@@ -63,12 +68,20 @@ class SourceSearchContainer extends React.Component {
     }
   }
 
+  handleMenuItemKeyDown = (item, event) => {
+    switch (event.key) {
+      case 'Enter':
+        this.handleClick(item);
+        break;
+      default: break;
+    }
+  }
+
   resetIfRequested = () => {
     const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected, disableStaticCollections } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
 
-    const advancedSearchTitle = formatMessage(localMessages.advancedSearch);
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults.slice(0, this.getMaxCollectionsToShow()));
     }
@@ -79,6 +92,7 @@ class SourceSearchContainer extends React.Component {
       let menuItemValue = (
         <MenuItem
           onClick={() => this.handleClick(item)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, item)}
           id={`searchResult${item.media_id || item.tags_id}`}
           primaryText={(item.name.length > MAX_SUGGESTION_CHARS) ? `${item.name.substr(0, MAX_SUGGESTION_CHARS)}...` : item.name}
         />
@@ -104,8 +118,9 @@ class SourceSearchContainer extends React.Component {
         text: formatMessage(localMessages.advancedSearch),
         key: formatMessage(localMessages.advancedSearch),
         value: <MenuItem
-          value={advancedSearchTitle}
-          onClick={() => this.handleClick(advancedSearchTitle)}
+          value={ADVANCED_SEARCH_ITEM_VALUE}
+          onClick={() => this.handleClick(ADVANCED_SEARCH_ITEM_VALUE)}
+          onKeyDown={this.handleMenuItemKeyDown.bind(this, ADVANCED_SEARCH_ITEM_VALUE)}
           primaryText={formatMessage(localMessages.advancedSearch)}
         />,
       });
@@ -142,6 +157,7 @@ class SourceSearchContainer extends React.Component {
           hintText={formatMessage(localMessages.searchHint)}
           fullWidth
           openOnFocus
+          searchText={this.state.lastSearchString}
           onClick={this.resetIfRequested}
           dataSource={resultsAsComponents}
           onUpdateInput={this.handleUpdateInput}
@@ -156,24 +172,24 @@ class SourceSearchContainer extends React.Component {
 }
 
 SourceSearchContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  searchSources: React.PropTypes.bool,      // include source results?
-  searchCollections: React.PropTypes.bool,  // include collection results?
-  searchStaticCollections: React.PropTypes.bool,  // inclue static collecton results?
-  onMediaSourceSelected: React.PropTypes.func,
-  onCollectionSelected: React.PropTypes.func,
-  onAdvancedSearchSelected: React.PropTypes.func,
-  maxSources: React.PropTypes.number,
-  maxCollections: React.PropTypes.number,
+  searchSources: PropTypes.bool,      // include source results?
+  searchCollections: PropTypes.bool,  // include collection results?
+  searchStaticCollections: PropTypes.bool,  // inclue static collecton results?
+  onMediaSourceSelected: PropTypes.func,
+  onCollectionSelected: PropTypes.func,
+  onAdvancedSearchSelected: PropTypes.func,
+  maxSources: PropTypes.number,
+  maxCollections: PropTypes.number,
   // from state
-  sourceFetchStatus: React.PropTypes.array.isRequired,
-  collectionFetchStatus: React.PropTypes.array.isRequired,
-  sourceResults: React.PropTypes.array.isRequired,
-  collectionResults: React.PropTypes.array.isRequired,
+  sourceFetchStatus: PropTypes.array.isRequired,
+  collectionFetchStatus: PropTypes.array.isRequired,
+  sourceResults: PropTypes.array.isRequired,
+  collectionResults: PropTypes.array.isRequired,
   // from dispatch
-  search: React.PropTypes.func.isRequired,
-  disableStaticCollections: React.PropTypes.bool,
+  search: PropTypes.func.isRequired,
+  disableStaticCollections: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -204,7 +220,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 SourceSearchContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

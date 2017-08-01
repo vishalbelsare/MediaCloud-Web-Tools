@@ -1,12 +1,14 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import LinkWithFilters from './LinkWithFilters';
-import { storyPubDateToTimestamp } from '../../lib/dateUtil';
+import { storyPubDateToTimestamp, STORY_PUB_DATE_UNDATEABLE } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 import { ReadItNowButton } from '../common/IconButton';
+import SafelyFormattedNumber from '../common/SafelyFormattedNumber';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -98,7 +100,7 @@ class TopicStoryTable extends React.Component {
               let dateToShow = null;  // need to handle undateable stories
               let dateStyle = '';
               const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
-              if (story.publish_date === 'undateable') {
+              if (story.publish_date === STORY_PUB_DATE_UNDATEABLE) {
                 dateToShow = formatMessage(localMessages.undateable);
                 dateStyle = 'story-date-undateable';
               } else {
@@ -142,10 +144,10 @@ class TopicStoryTable extends React.Component {
                     </LinkWithFilters>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.media_inlink_count !== undefined ? story.media_inlink_count : '?'} /></td>
-                  <td><FormattedNumber value={story.outlink_count !== undefined ? story.outlink_count : '?'} /></td>
-                  <td><FormattedNumber value={story.bitly_click_count !== undefined ? story.bitly_click_count : '?'} /></td>
-                  <td><FormattedNumber value={story.facebook_share_count !== undefined ? story.facebook_share_count : '?'} /></td>
+                  <td><SafelyFormattedNumber value={story.media_inlink_count} /></td>
+                  <td><SafelyFormattedNumber value={story.outlink_count} /></td>
+                  <td><SafelyFormattedNumber value={story.bitly_click_count} /></td>
+                  <td><SafelyFormattedNumber value={story.facebook_share_count} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>
@@ -161,13 +163,13 @@ class TopicStoryTable extends React.Component {
 }
 
 TopicStoryTable.propTypes = {
-  stories: React.PropTypes.array.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number, // not required as this table is now also used by query routine
-  onChangeSort: React.PropTypes.func,
-  onChangeFocusSelection: React.PropTypes.func,
-  sortedBy: React.PropTypes.string,
-  maxTitleLength: React.PropTypes.number,
+  stories: PropTypes.array.isRequired,
+  intl: PropTypes.object.isRequired,
+  topicId: PropTypes.number, // not required as this table is now also used by query routine
+  onChangeSort: PropTypes.func,
+  onChangeFocusSelection: PropTypes.func,
+  sortedBy: PropTypes.string,
+  maxTitleLength: PropTypes.number,
 };
 
 export default injectIntl(TopicStoryTable);

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
@@ -155,7 +156,7 @@ class BubbleRowChart extends React.Component {
 }
 
 BubbleRowChart.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   /*
   [{
     'value': number,
@@ -169,14 +170,14 @@ BubbleRowChart.propTypes = {
     'rolloverText': string(optional),
   }]
   */
-  data: React.PropTypes.array.isRequired,
-  domId: React.PropTypes.string.isRequired,  // to make download work
-  width: React.PropTypes.number,
-  height: React.PropTypes.number,
-  placement: React.PropTypes.string,
-  maxBubbleRadius: React.PropTypes.number,
-  minBubbleRadius: React.PropTypes.number,
-  padding: React.PropTypes.number,
+  data: PropTypes.array.isRequired,
+  domId: PropTypes.string.isRequired,  // to make download work
+  width: PropTypes.number,
+  height: PropTypes.number,
+  placement: PropTypes.string,
+  maxBubbleRadius: PropTypes.number,
+  minBubbleRadius: PropTypes.number,
+  padding: PropTypes.number,
 };
 
 export default injectIntl(BubbleRowChart);

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -144,14 +145,14 @@ const AdvancedSearchResults = (props) => {
 };
 
 AdvancedSearchResults.propTypes = {
-  queriedSources: React.PropTypes.array,
-  queriedCollections: React.PropTypes.array,
-  intl: React.PropTypes.object.isRequired,
-  addOrRemoveToSelectedSources: React.PropTypes.func,
-  addOrRemoveToSelectedCollections: React.PropTypes.func,
-  addRemoveAll: React.PropTypes.func.isRequired,
-  allOrNoneCheck: React.PropTypes.bool,
-  onAddToCollection: React.PropTypes.func.isRequired,
+  queriedSources: PropTypes.array,
+  queriedCollections: PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  addOrRemoveToSelectedSources: PropTypes.func,
+  addOrRemoveToSelectedCollections: PropTypes.func,
+  addRemoveAll: PropTypes.func.isRequired,
+  allOrNoneCheck: PropTypes.bool,
+  onAddToCollection: PropTypes.func.isRequired,
 };
 
 export default injectIntl(AdvancedSearchResults);

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -20,6 +21,7 @@ import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import StatBar from '../../common/statbar/StatBar';
 import CollectionList from '../../common/CollectionList';
+import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
@@ -59,7 +61,6 @@ class MediaContainer extends React.Component {
     const { media, topicId, mediaId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
-    const collections = media.media_source_tags.filter(c => c.show_on_media === 1);
     const dialogActions = [
       <FlatButton
         label={formatMessage(messages.ok)}
@@ -135,9 +136,14 @@ class MediaContainer extends React.Component {
               <CollectionList
                 title={formatMessage(localMessages.collectionTitle)}
                 intro={formatMessage(localMessages.collectionIntro)}
-                collections={collections}
+                collections={media.media_source_tags}
                 linkToFullUrl
               />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <SourceMetadataStatBar source={media} />
             </Col>
           </Row>
         </Grid>
@@ -149,18 +155,18 @@ class MediaContainer extends React.Component {
 
 MediaContainer.propTypes = {
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  intl: React.PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  media: React.PropTypes.object.isRequired,
-  mediaId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  media: PropTypes.object.isRequired,
+  mediaId: PropTypes.number.isRequired,
+  topicId: PropTypes.number.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

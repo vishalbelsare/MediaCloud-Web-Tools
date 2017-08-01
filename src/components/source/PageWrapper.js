@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
@@ -37,7 +38,7 @@ const PageWrapper = (props) => {
 
 PageWrapper.propTypes = {
   // from parent
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 };
 
 export default

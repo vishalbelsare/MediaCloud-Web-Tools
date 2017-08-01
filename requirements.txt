@@ -1,6 +1,4 @@
-## The following requirements were added by pip --freeze:
 Flask==0.11.1
-Flask-Cors==2.1.2
 Flask-Login==0.3.2
 Flask-Webpack==0.1.0
 Jinja2==2.8
@@ -9,7 +7,7 @@ Werkzeug==0.11.10
 click==6.6
 gunicorn==19.4.5
 itsdangerous==0.24
-mediacloud==2.40.0
+mediacloud==2.40.1
 ndg-httpsclient==0.4.1
 pyOpenSSL==16.0.0
 pyasn1==0.1.9

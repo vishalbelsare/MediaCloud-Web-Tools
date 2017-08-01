@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -5,15 +6,17 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
 import AttentionOverTimeChart from '../../../../../vis/AttentionOverTimeChart';
 import { fetchCreateFocusKeywordAttention } from '../../../../../../actions/topicActions';
-import messages from '../../../../../../resources/messages';
 import DataCard from '../../../../../common/DataCard';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.keywords.attention.title', defaultMessage: 'Attention' },
+  title: { id: 'topic.snapshot.keywords.attention.title', defaultMessage: 'Matching Sentences' },
   helpTitle: { id: 'topic.snapshot.keywords.attention.help.title', defaultMessage: 'About Attention' },
   helpText: { id: 'topic.snapshot.keywords.attention.help.text',
-    defaultMessage: '<p>This chart shows you the coverage within this Topic that matches your keyword.</p>',
+    defaultMessage: '<p>This chart shows you the number of sentences over time that match your subtopic query.</p>',
+  },
+  chartExplanation: { id: 'topic.snapshot.keywords.attention.explanation',
+    defaultMessage: 'This chart shows you {total} sentences that match your subtopic query.',
   },
 };
 
@@ -32,8 +35,8 @@ class KeywordSentenceCountPreviewContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
+        <p><FormattedMessage {...localMessages.chartExplanation} values={{ total }} /></p>
         <AttentionOverTimeChart
-          total={total}
           data={counts}
           height={200}
           lineColor={getBrandDarkColor()}
@@ -45,18 +48,18 @@ class KeywordSentenceCountPreviewContainer extends React.Component {
 
 KeywordSentenceCountPreviewContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // passed in
-  topicId: React.PropTypes.number.isRequired,
-  keywords: React.PropTypes.string.isRequired,
+  topicId: PropTypes.number.isRequired,
+  keywords: PropTypes.string.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -82,7 +85,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
+      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           KeywordSentenceCountPreviewContainer
         )

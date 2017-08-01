@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import ErrorTryAgain from '../common/ErrorTryAgain';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -80,8 +81,8 @@ export const asyncContainerize = (ChildComponent, loadingSpinnerSize) => {
     }
   }
   ComposedAsyncContainer.propTypes = {
-    fetchStatus: React.PropTypes.string.isRequired,
-    asyncFetch: React.PropTypes.func.isRequired,
+    fetchStatus: PropTypes.string.isRequired,
+    asyncFetch: PropTypes.func.isRequired,
   };
   return ComposedAsyncContainer;
 };

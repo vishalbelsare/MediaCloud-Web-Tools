@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -13,10 +14,12 @@ const localMessages = {
   publishDate: { id: 'story.details.publishDate', defaultMessage: '<b>Published on</b>: {date}' },
   extractorVersion: { id: 'story.details.extractorVersion', defaultMessage: '<b>Extractor Version</b>: {version}' },
   geocoderVersion: { id: 'story.details.geocoderVersion', defaultMessage: '<b>Geocoder Version</b>: {version}' },
+  nytThemesVersion: { id: 'story.details.nytThemesVersion', defaultMessage: '<b>NYT Themes Version</b>: {version}' },
   dateGuessMethod: { id: 'story.details.dateGuess', defaultMessage: '<b>Date Guessed From</b>: {method}' },
   dateIsReliable: { id: 'story.details.dateReliable', defaultMessage: '<b>Date is Reliable?</b>: {isReliable}' },
   apSyndicated: { id: 'story.details.apSyndicated', defaultMessage: '<b>AP Story?</b> {apSyndicated}' },
   wordCount: { id: 'story.details.wordCount', defaultMessage: '<b>Word Count</b>: {wordCount}' },
+  fbDate: { id: 'story.details.fbDate', defaultMessage: '<b>Facebook Collection Date</b>: {fbDate}' },
   unknown: { id: 'story.details.unknown', defaultMessage: 'Unknown' },
 };
 
@@ -65,6 +68,12 @@ const StoryDetails = (props) => {
         </li>
         <li>
           <FormattedHTMLMessage
+            {...localMessages.nytThemesVersion}
+            values={{ version: story.nytThemesVersion || formatMessage(localMessages.unknown) }}
+          />
+        </li>
+        <li>
+          <FormattedHTMLMessage
             {...localMessages.apSyndicated}
             values={{ apSyndicated: story.ap_syndicated || formatMessage(localMessages.unknown) }}
           />
@@ -82,10 +91,10 @@ const StoryDetails = (props) => {
 
 StoryDetails.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  story: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  story: PropTypes.object.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(

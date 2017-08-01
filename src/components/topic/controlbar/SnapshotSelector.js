@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
@@ -56,10 +57,10 @@ class SnapshotSelector extends React.Component {
 }
 
 SnapshotSelector.propTypes = {
-  snapshots: React.PropTypes.array.isRequired,
-  selectedId: React.PropTypes.number,
-  intl: React.PropTypes.object.isRequired,
-  onSnapshotSelected: React.PropTypes.func,
+  snapshots: PropTypes.array.isRequired,
+  selectedId: PropTypes.number,
+  intl: PropTypes.object.isRequired,
+  onSnapshotSelected: PropTypes.func,
 };
 
 export default

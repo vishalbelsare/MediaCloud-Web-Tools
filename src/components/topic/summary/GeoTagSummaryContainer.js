@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -62,16 +63,16 @@ class GeoTagSummaryContainer extends React.Component {
 
 GeoTagSummaryContainer.propTypes = {
   // from state
-  data: React.PropTypes.array.isRequired,
-  coverage: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string,
+  data: PropTypes.array.isRequired,
+  coverage: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

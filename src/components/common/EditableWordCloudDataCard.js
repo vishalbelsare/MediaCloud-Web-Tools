@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -185,24 +186,24 @@ class EditableWordCloudDataCard extends React.Component {
 
 EditableWordCloudDataCard.propTypes = {
   // from parent
-  width: React.PropTypes.number,
-  height: React.PropTypes.number,
-  maxFontSize: React.PropTypes.number,
-  minFontSize: React.PropTypes.number,
-  title: React.PropTypes.string.isRequired,
-  words: React.PropTypes.array.isRequired,
-  itemId: React.PropTypes.string,
-  downloadUrl: React.PropTypes.string,
-  explore: React.PropTypes.object,
-  download: React.PropTypes.func,
-  helpButton: React.PropTypes.node,
-  targetURL: React.PropTypes.string,
-  subtitleContent: React.PropTypes.object,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  maxFontSize: PropTypes.number,
+  minFontSize: PropTypes.number,
+  title: PropTypes.string.isRequired,
+  words: PropTypes.array.isRequired,
+  itemId: PropTypes.string,
+  downloadUrl: PropTypes.string,
+  explore: PropTypes.object,
+  download: PropTypes.func,
+  helpButton: PropTypes.node,
+  targetURL: PropTypes.string,
+  subtitleContent: PropTypes.object,
     // from dispatch
-  onViewModeClick: React.PropTypes.func.isRequired,
-  domId: React.PropTypes.string.isRequired,
+  onViewModeClick: PropTypes.func.isRequired,
+  domId: PropTypes.string.isRequired,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

@@ -7,7 +7,7 @@ from server import app, db, mc
 from server.cache import cache
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, is_user_logged_in
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
 
@@ -28,14 +28,22 @@ def topic_list():
         _add_user_favorite_flag_to_topics(topics['topics'])
         return jsonify({'topics': {'personal': topics}})
 
+
 @app.route('/api/topics/queued-and-running', methods=['GET'])
 @api_error_handler
 def does_user_have_a_running_topic():
-    user_mc = user_admin_mediacloud_client()
-    link_id = request.args.get('linkId')
-    topics = user_mc.topicList(link_id=link_id)['topics']
-    queued_and_running_topics = [t for t in topics if t['state'] in ['running', 'queued']]
-
+    user_mc = user_mediacloud_client()
+    queued_and_running_topics = []
+    more_topics = True
+    link_id = None
+    while more_topics:
+        results = user_mc.topicList(link_id=link_id)
+        topics = results['topics']
+        queued_and_running_topics += [t for t in topics if t['state'] in ['running', 'queued']
+                                      and t['user_permission'] in ['admin']]
+        more_topics = 'next' in results['link_ids']
+        if more_topics:
+            link_id = results['link_ids']['next']
     return jsonify(queued_and_running_topics)
 
 
@@ -50,12 +58,16 @@ def topic_filter_cascade_list():
     # check if user had favorites or personal
     user_topics = []
     favorited_topics = []
+    results = {
+        'link_ids': []
+    }
     if is_user_logged_in():
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
         results = user_mc.topicList(link_id=link_id)
         user_topics = results['topics']
-        favorite_topic_ids = db.get_users_lists(user_name(), 'favoriteTopics')
+        favorite_topic_ids = db.get_users_lists(user_name(), 'favorite'
+                                                             'Topics')
         # mark all the public topics as favorite or not
         for t in public_topics:
             t['isFavorite'] = t['topics_id'] in favorite_topic_ids
@@ -72,7 +84,7 @@ def topic_filter_cascade_list():
 def sorted_public_topic_list():
     # needs to support logged in or not
     if is_user_logged_in():
-        local_mc = user_admin_mediacloud_client()
+        local_mc = user_mediacloud_client()
     else:
         local_mc = mc
     public_topics_list = local_mc.topicList(public=True)['topics']

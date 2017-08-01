@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -44,21 +45,21 @@ class WordsSummaryContainer extends React.Component {
 
 WordsSummaryContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  width: React.PropTypes.number,
-  height: React.PropTypes.number,
-  maxFontSize: React.PropTypes.number,
-  minFontSize: React.PropTypes.number,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  maxFontSize: PropTypes.number,
+  minFontSize: PropTypes.number,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  words: React.PropTypes.array,
-  fetchStatus: React.PropTypes.string.isRequired,
-  handleWordCloudClick: React.PropTypes.func,
+  words: PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  handleWordCloudClick: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

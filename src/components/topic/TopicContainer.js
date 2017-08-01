@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { replace } from 'react-router-redux';
@@ -81,20 +82,20 @@ class TopicContainer extends React.Component {
 
 TopicContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
-  location: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  intl: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  location: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  addAppNotice: React.PropTypes.func.isRequired,
-  removeTopicId: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  addAppNotice: PropTypes.func.isRequired,
+  removeTopicId: PropTypes.func.isRequired,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  topicInfo: React.PropTypes.object,
-  needsNewSnapshot: React.PropTypes.bool.isRequired,
-  snapshotCount: React.PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  topicInfo: PropTypes.object,
+  needsNewSnapshot: PropTypes.bool.isRequired,
+  snapshotCount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -179,6 +180,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             });
             dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
             dispatch(filterBySnapshot(newSnapshotId));
+          } else if (snapshots.length > 0) {
+            // first snapshot doesn't show up as a job, so we gotta check for status here and alert if it is importing :-(
+            const firstSnapshot = snapshots[0];
+            if (!snapshotIsUsable(firstSnapshot)) {
+              dispatch(addNotice({
+                level: LEVEL_INFO,
+                message: ownProps.intl.formatMessage(localMessages.snapshotImporting),
+              }));
+            }
           }
         } else if (firstReadySnapshot.snapshots_id !== parseInt(snapshotId, 10)) {
           // if snaphot is specific in URL, but it is not the latest then show a warning

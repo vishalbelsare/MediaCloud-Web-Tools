@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 48.767;
@@ -22,7 +23,7 @@ const FocusIcon = (props) => {
 };
 
 FocusIcon.propTypes = {
-  height: React.PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default FocusIcon;

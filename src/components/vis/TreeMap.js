@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
@@ -62,12 +63,12 @@ const TreeMap = (props) => {
 
 TreeMap.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
-  data: React.PropTypes.array.isRequired,
-  onLeafClick: React.PropTypes.func,
-  color: React.PropTypes.string,
+  title: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  onLeafClick: PropTypes.func,
+  color: PropTypes.string,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

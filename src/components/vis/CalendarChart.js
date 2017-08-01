@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Chart } from 'react-google-charts';
 import { getBrandDarkColor } from '../../styles/colors';
@@ -29,9 +30,9 @@ const CalendarChart = (props) => {
 };
 
 CalendarChart.propTypes = {
-  domId: React.PropTypes.string.isRequired,
-  data: React.PropTypes.array.isRequired,  // an array of [jsDateObj, countInteger]
-  cellSize: React.PropTypes.number.isRequired,
+  domId: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,  // an array of [jsDateObj, countInteger]
+  cellSize: PropTypes.number.isRequired,
 };
 
 export default CalendarChart;

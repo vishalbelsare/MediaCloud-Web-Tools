@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -52,21 +53,21 @@ class MediaOutlinksContainer extends React.Component {
 
 MediaOutlinksContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  mediaId: React.PropTypes.number.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  mediaId: PropTypes.number.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  sortData: PropTypes.func.isRequired,
   // from state
-  sort: React.PropTypes.string.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  outlinkedStories: React.PropTypes.array.isRequired,
+  sort: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  outlinkedStories: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

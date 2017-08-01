@@ -7,7 +7,7 @@ from server import app, TOOL_API_KEY
 import server.util.csv as csv
 from server.util.request import filters_from_args, api_error_handler, json_error_response
 from server.auth import user_mediacloud_key, is_user_logged_in
-from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list
+from server.views.topics.apicache import topic_sentence_counts, topic_focal_sets, cached_topic_timespan_list, topic_timespan
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -48,14 +48,20 @@ def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
     all_focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id)
     # need the timespan info, to find the appropriate timespan with each focus
     base_snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
-    # logger.info(base_snapshot_timespans)
-    base_timespan = None
-    for t in base_snapshot_timespans:
-        if int(t['timespans_id']) == int(timespans_id):
-            base_timespan = t
-            logger.info('base timespan = %s', timespans_id)
+    # if they have a focus selected, we need to find the appropriate overall timespan
+    if foci_id is not None:
+        timespan = topic_timespan(topics_id, snapshots_id, foci_id, timespans_id)
+        for t in base_snapshot_timespans:
+            if timespans_match(timespan, t):
+                base_timespan = t
+    else:
+        base_timespan = None
+        for t in base_snapshot_timespans:
+            if t['timespans_id'] == int(timespans_id):
+                base_timespan = t
+                logger.info('base timespan = %s', timespans_id)
     if base_timespan is None:
-        return json_error_response('Couldn\'t find the timespan you specified')
+        return json_error_response("Couldn't find the timespan you specified")
     # iterate through to find the one of interest
     focal_set = None
     for fs in all_focal_sets:
@@ -69,7 +75,7 @@ def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
         snapshot_timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=focus['foci_id'])
         timespan = None
         for t in snapshot_timespans:
-            if t['start_date'] == base_timespan['start_date'] and t['end_date'] == base_timespan['end_date'] and t['period'] == base_timespan['period']:
+            if timespans_match(t, base_timespan):
                 timespan = t
                 logger.info('matching in focus %s, timespan = %s', focus['foci_id'], t['timespans_id'])
         if timespan is None:
@@ -77,3 +83,14 @@ def topic_focal_set_sentences_compare(topics_id, focal_sets_id):
         data = topic_sentence_counts(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, timespans_id=timespan['timespans_id'], foci_id=focus['foci_id'])
         focus['sentence_counts'] = data
     return jsonify(focal_set)
+
+
+def timespans_match(timespan1, timespan2):
+    '''
+    Useful to compare two timespans from different subtopics
+    :return: true if they match, false if they don't
+    '''
+    match = (timespan1['start_date'] == timespan2['start_date']) \
+            and (timespan1['end_date'] == timespan2['end_date']) \
+            and (timespan1['period'] == timespan2['period'])
+    return match

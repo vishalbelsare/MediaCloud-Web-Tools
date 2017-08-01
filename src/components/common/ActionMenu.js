@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import IconMenu from 'material-ui/IconMenu';
@@ -74,15 +75,15 @@ class ActionMenu extends React.Component {
   }
 }
 ActionMenu.propTypes = {
-  onClick: React.PropTypes.func,
-  topLevelButton: React.PropTypes.func,
-  children: React.PropTypes.array,
-  openButton: React.PropTypes.object,
-  closeButton: React.PropTypes.object,
-  tooltip: React.PropTypes.string,
-  intl: React.PropTypes.object.isRequired,
-  color: React.PropTypes.string,
-  iconStyle: React.PropTypes.object,
+  onClick: PropTypes.func,
+  topLevelButton: PropTypes.func,
+  children: PropTypes.array,
+  openButton: PropTypes.object,
+  closeButton: PropTypes.object,
+  tooltip: PropTypes.string,
+  intl: PropTypes.object.isRequired,
+  color: PropTypes.string,
+  iconStyle: PropTypes.object,
 };
 
 export default injectIntl(ActionMenu);

@@ -1,10 +1,12 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchTopicSummary, updateTopic } from '../../../actions/topicActions';
+import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { filteredLinkTo } from '../../util/location';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -51,8 +53,9 @@ const EditTopicContainer = (props) => {
         </Row>
         <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
           <TopicForm
-            onSaveTopic={handleSave}
+            topicId={topicId}
             initialValues={initialValues}
+            onSubmit={handleSave}
             title={formatMessage(localMessages.editTopicCollectionsTitle)}
             intro={formatMessage(localMessages.editTopicCollectionsIntro)}
             mode={TOPIC_FORM_MODE_EDIT}
@@ -65,15 +68,16 @@ const EditTopicContainer = (props) => {
 
 EditTopicContainer.propTypes = {
   // from context
-  location: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object,
+  location: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object,
   // from state
-  timespan: React.PropTypes.object,
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number,
-  topicInfo: React.PropTypes.object,
-  handleSave: React.PropTypes.func.isRequired,
+  timespan: PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  topicInfo: PropTypes.object,
+  // from dispatch/merge
+  handleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -86,7 +90,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleSave: (values) => {
+  reallyHandleSave: (values, topicInfo, filters) => {
     const infoToSave = {
       name: values.name,
       description: values.description,
@@ -111,9 +115,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (results.topics_id) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          // update topic info and redirect back to topic summary (no filters because we lost them on edit)
+          // if the dates changed tell them it needs a new snapshot
+          if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
+            dispatch(setTopicNeedsNewSnapshot());
+          }
+          // update topic info and redirect back to topic summary
           dispatch(fetchTopicSummary(results.topics_id))
-            .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));
+            .then(() => dispatch(push(filteredLinkTo(`/topics/${results.topics_id}/summary`, filters))));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
@@ -122,9 +130,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleSave: (values) => {
+      dispatchProps.reallyHandleSave(values, stateProps.topicInfo, stateProps.filters); // need topicInfo to do comparison to fire notices
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       EditTopicContainer
     )
   );

@@ -1,21 +1,22 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import DataCard from '../../common/DataCard';
 import CollectionList from '../../common/CollectionList';
 import SourceStatInfo from './SourceStatInfo';
 import SourceSentenceCountContainer from './SourceSentenceCountContainer';
 import SourceTopWordsContainer from './SourceTopWordsContainer';
 import SourceGeographyContainer from './SourceGeographyContainer';
-import { isMetaDataTagSet, isCollectionTagSet, anyCollectionTagSets } from '../../../lib/tagUtil';
+import { anyCollectionTagSets } from '../../../lib/tagUtil';
 import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING, SOURCE_SCRAPE_STATE_COMPLETED, SOURCE_SCRAPE_STATE_ERROR } from '../../../reducers/sources/sources/selected/sourceDetails';
 import { InfoNotice, ErrorNotice, WarningNotice } from '../../common/Notice';
 import { jobStatusDateToMoment } from '../../../lib/dateUtil';
-import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import AppButton from '../../common/AppButton';
+import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search on the Dashboard' },
@@ -60,11 +61,8 @@ class SourceDetailsContainer extends React.Component {
   }
 
   render() {
-    const { source, user } = this.props;
+    const { source } = this.props;
     const { formatMessage, formatNumber, formatDate } = this.props.intl;
-    const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
-    const collections = source.media_source_tags.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
-    const metadata = source.media_source_tags.filter(c => (isMetaDataTagSet(c.tag_sets_id)));
     const filename = `SentencesOverTime-Source-${source.media_id}`;
     // check if source is not suitable for general queries
     let unhealthySourceWarning;
@@ -93,18 +91,6 @@ class SourceDetailsContainer extends React.Component {
           {...localMessages.feedLastScrapeDate}
           values={{ date: formatDate(jobStatusDateToMoment(source.scrape_status.job_states[0].last_updated)) }}
         />
-      );
-    }
-    // gather up metadata nicely
-    let metadataContent = <FormattedMessage {...localMessages.metadataEmpty} />;
-    if (metadata.length > 0) {
-      metadataContent = (
-        <ul>{ metadata.map(item =>
-          <li key={`metadata-${item.label}`}>
-            <FormattedMessage {...localMessages.metadataDescription} values={{ label: item.description ? item.description : item.label }} />
-          </li>
-          )}
-        </ul>
       );
     }
     const publicNotes = (source.public_notes) ? <FormattedHTMLMessage {...localMessages.publicNotes} values={{ notes: source.public_notes }} /> : null;
@@ -174,18 +160,13 @@ class SourceDetailsContainer extends React.Component {
               title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
               intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
                 name: source.name,
-                count: collections.length,
+                count: source.media_source_tags.length,
               })}
-              collections={collections}
+              collections={source.media_source_tags}
             />
           </Col>
           <Col lg={6} md={6} sm={12} >
-            <DataCard>
-              <h2>
-                <FormattedMessage {...localMessages.metadataLabel} />
-              </h2>
-              {metadataContent}
-            </DataCard>
+            <SourceMetadataStatBar source={source} columnWidth={6} />
           </Col>
         </Row>
       </Grid>
@@ -195,19 +176,17 @@ class SourceDetailsContainer extends React.Component {
 }
 
 SourceDetailsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  sourceId: React.PropTypes.number.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  sourceId: PropTypes.number.isRequired,
   // from state
-  source: React.PropTypes.object,
-  user: React.PropTypes.object,
+  source: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   sourceId: parseInt(ownProps.params.sourceId, 10),
   source: state.sources.sources.selected.sourceDetails,
-  user: state.user,
 });
 
 export default
