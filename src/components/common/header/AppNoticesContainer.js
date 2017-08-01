@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -43,15 +42,15 @@ const AppNoticesContainer = (props) => {
 AppNoticesContainer.propTypes = {
   // from parent
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // state
-  notices: PropTypes.array,
+  notices: React.PropTypes.array,
   // from dispatch
-  handleDismiss: PropTypes.func.isRequired,
+  handleDismiss: React.PropTypes.func.isRequired,
 };
 
 AppNoticesContainer.contextTypes = {
-  router: PropTypes.object.isRequired,
+  router: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

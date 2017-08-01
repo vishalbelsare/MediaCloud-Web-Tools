@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
@@ -65,10 +64,10 @@ class FocusSelector extends React.Component {
 }
 
 FocusSelector.propTypes = {
-  foci: PropTypes.array.isRequired,
-  selectedId: PropTypes.number,
-  intl: PropTypes.object.isRequired,
-  onFocusSelected: PropTypes.func,
+  foci: React.PropTypes.array.isRequired,
+  selectedId: React.PropTypes.number,
+  intl: React.PropTypes.object.isRequired,
+  onFocusSelected: React.PropTypes.func,
 };
 
 export default

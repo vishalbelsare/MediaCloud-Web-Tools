@@ -1,6 +1,8 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import composeAsyncContainer from '../../common/AsyncContainer';
+import { fetchTopicGeocodedStoryCoverage, fetchTopicEnglishStoryCounts } from '../../../actions/topicActions';
 import StatBar from '../../common/statbar/StatBar';
 
 const localMessages = {
@@ -13,19 +15,23 @@ const localMessages = {
 };
 
 const TopicTimespanInfo = (props) => {
-  const { timespan } = props;
+  const { timespan, geocodedCounts, englishCounts } = props;
   const { formatNumber } = props.intl;
   if ((timespan === null) || (timespan === undefined)) {
     return null;
   }
   return (
     <StatBar
-      columnWidth={3}
+      columnWidth={2}
       stats={[
         { message: localMessages.storyCount, data: formatNumber(timespan.story_count) },
         { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count) },
         { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count) },
         { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },
+        { message: localMessages.englishCount,
+          data: formatNumber(englishCounts.count / geocodedCounts.total, { style: 'percent' }) },
+        { message: localMessages.geocodedCount,
+          data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }) },
       ]}
     />
   );
@@ -33,13 +39,36 @@ const TopicTimespanInfo = (props) => {
 
 TopicTimespanInfo.propTypes = {
   // from parent
-  timespan: PropTypes.object,
-  topicId: PropTypes.number.isRequired,
+  timespan: React.PropTypes.object,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  geocodedCounts: React.PropTypes.object,
+  englishCounts: React.PropTypes.object,
 };
+
+const mapStateToProps = state => ({
+  fetchStatus: state.topics.selected.summary.geocodedStoryTotals.fetchStatus,  // TODO: respect both statuses
+  geocodedCounts: state.topics.selected.summary.geocodedStoryTotals.counts,
+  englishCounts: state.topics.selected.summary.englishStoryTotals.counts,
+  filters: state.topics.selected.filters,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  asyncFetch: () => {
+    dispatch(fetchTopicGeocodedStoryCoverage(ownProps.topicId, ownProps.filters));
+    dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, ownProps.filters));
+  },
+});
 
 export default
   injectIntl(
-    TopicTimespanInfo
+    connect(mapStateToProps, mapDispatchToProps)(
+      composeAsyncContainer(
+        TopicTimespanInfo
+      )
+    )
   );

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -31,9 +30,9 @@ class TopicsDrawer extends React.Component {
     const { user, handleMenuItemClick } = this.props;
     const { formatMessage } = this.props.intl;
     // gotta show extra login invivation based on the user state
-    let loginMenuItem = null;
+    let logoutMenuItem = null;
     if (!user.isLoggedIn) {
-      loginMenuItem = (
+      logoutMenuItem = (
         <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/login'); }}>
           <FormattedMessage {...messages.userLogin} />
         </MenuItem>
@@ -77,7 +76,7 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/about'); }}>
             <FormattedMessage {...messages.menuAbout} />
           </MenuItem>
-          {loginMenuItem}
+          {logoutMenuItem}
         </Drawer>
       </div>
     );
@@ -86,11 +85,11 @@ class TopicsDrawer extends React.Component {
 
 TopicsDrawer.propTypes = {
   // state
-  user: PropTypes.object.isRequired,
+  user: React.PropTypes.object.isRequired,
   // from dispatch
-  handleMenuItemClick: PropTypes.func.isRequired,
+  handleMenuItemClick: React.PropTypes.func.isRequired,
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

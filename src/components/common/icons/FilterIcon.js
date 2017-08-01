@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const FilterIcon = props => (
@@ -10,7 +9,7 @@ const FilterIcon = props => (
 );
 
 FilterIcon.propTypes = {
-  backgroundColor: PropTypes.string,
+  backgroundColor: React.PropTypes.string,
 };
 
 export default FilterIcon;

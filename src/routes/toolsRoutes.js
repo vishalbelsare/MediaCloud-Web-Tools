@@ -4,7 +4,6 @@ import IndexRedirect from 'react-router/lib/IndexRedirect';
 import ToolsApp from '../components/tools/ToolsApp';
 import ToolsHomeContainer from '../components/tools/ToolsHomeContainer';
 import userRoutes from './userRoutes';
-import PageNotFound from '../components/PageNotFound';
 
 const toolsRoutes = (
   <Route path="/" component={ToolsApp}>
@@ -14,8 +13,6 @@ const toolsRoutes = (
     <Route path="home" component={ToolsHomeContainer} />
 
     {userRoutes}
-
-    <Route path="*" component={PageNotFound} />
 
   </Route>
 );

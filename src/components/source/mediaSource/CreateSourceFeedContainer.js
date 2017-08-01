@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -57,17 +56,17 @@ const CreateSourceFeedContainer = (props) => {
 };
 
 CreateSourceFeedContainer.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  handleSave: PropTypes.func.isRequired,
+  handleSave: React.PropTypes.func.isRequired,
   // from context
-  params: PropTypes.object.isRequired,       // params from router
+  params: React.PropTypes.object.isRequired,       // params from router
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  sourceId: PropTypes.number.isRequired,
-  sourceName: PropTypes.string.isRequired,
-  feed: PropTypes.object,
-  feedId: PropTypes.number,
+  fetchStatus: React.PropTypes.string.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
+  sourceName: React.PropTypes.string.isRequired,
+  feed: React.PropTypes.object,
+  feedId: React.PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => ({

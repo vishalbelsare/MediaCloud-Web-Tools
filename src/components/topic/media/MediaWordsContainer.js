@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -49,19 +48,19 @@ class MediaWordsContainer extends React.Component {
 
 MediaWordsContainer.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
-  mediaId: PropTypes.number.isRequired,
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
+  mediaId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  words: PropTypes.array,
-  fetchStatus: PropTypes.string.isRequired,
-  handleWordCloudClick: PropTypes.func,
+  words: React.PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
+  handleWordCloudClick: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

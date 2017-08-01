@@ -7,6 +7,7 @@ from flask import Flask, render_template
 from flask_webpack import Webpack
 from flask_mail import Mail
 import flask_login
+from flask_cors import CORS
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
@@ -37,7 +38,7 @@ try:
     handler = SentryHandler(settings.get('sentry', 'dsn'))
     setup_logging(handler)
 except Exception:
-    logging.info("no sentry logging")
+    print "no sentry logging"
 
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
@@ -82,36 +83,29 @@ except Exception as err:
 
 logger.info("Connected to DB: %s@%s", db_name, db_host)
 
-
-def is_dev_mode():
+def isDevMode():
     return server_mode == SERVER_MODE_DEV
 
-
-def is_prod_mode():
+def isProdMode():
     return server_mode == SERVER_MODE_PROD
 
 webpack = Webpack()
 mail = Mail()
 
-
 def create_app():
-    # Factory method to create the app
-    prod_app_name = settings.get('server', 'app')
+    '''
+    Factory method to create the app
+    '''
+    prod_app = settings.get('server', 'app')
     my_app = Flask(__name__)
     # set up uploading
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
     # set up webpack
-    if is_dev_mode():
-        manifest_path = '../build/manifest.json'
-    else:
-        manifest_path = '../server/static/gen/{}/manifest.json'.format(prod_app_name)
     webpack_config = {
-        'DEBUG': is_dev_mode(),
-        'WEBPACK_MANIFEST_PATH': manifest_path
+        'DEBUG': isDevMode(),
+        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/'+prod_app+'/manifest.json'
     }
-    if is_prod_mode():
-        webpack_config['WEBPACK_ASSETS_URL'] = 'https://d2h2bu87t9cnlp.cloudfront.net/static/gen/{}/'.format(prod_app_name)
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
     # set up mail sending
@@ -137,26 +131,31 @@ def create_app():
 app = create_app()
 app.secret_key = settings.get('server', 'secret_key')
 
+CORS(app,
+    resources=r'/*',
+    supports_credentials=True,
+    allow_headers='Content-Type'
+)
+
 # Create user login manager
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-
 # set up all the views
+
 @app.route('/')
 def index():
     logger.debug("homepage request")
     return render_template('index.html')
 
-# now load in the appropriate view endpoints, after the app has been initialized
+# now load in the appropriate view endpoints (only on Prod)
 import server.views.user
 import server.views.stat
 import server.views.sources.search
 import server.views.notebook.management
 server_app = settings.get('server', 'app')
-if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
+if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.collection
-    import server.views.sources.collectionedit
     import server.views.sources.source
     import server.views.sources.feeds
     import server.views.sources.suggestions
@@ -164,7 +163,7 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.words
     import server.views.sources.geocount
     import server.views.sources.metadata
-if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
+if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.media
     import server.views.topics.sentences
     import server.views.topics.stories

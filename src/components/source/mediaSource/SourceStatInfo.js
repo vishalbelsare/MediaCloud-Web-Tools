@@ -1,15 +1,13 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceStats } from '../../../actions/sourceActions';
 import StatBar from '../../common/statbar/StatBar';
-import messages from '../../../resources/messages';
 
 const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
-  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'Geocoded' },
+  geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'With Geography' },
   collections: { id: 'source.summary.statbar.collections', defaultMessage: 'Collections' },
   isHealthy: { id: 'source.summary.statbar.isHealthy', defaultMessage: '{value, plural,\n =1{healthy}\n =0{not healthy}\n}' },
   health: { id: 'source.summary.statbar.health', defaultMessage: 'Health' },
@@ -36,16 +34,8 @@ const SourceStatInfo = (props) => {
         { message: localMessages.coveredSince, data: formatDate(sourceInfo.start_date) },
         { message: localMessages.health, data: isHealthy },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
-        { message: localMessages.geoPct,
-          data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }),
-          helpTitleMsg: messages.geoHelpTitle,
-          helpContentMsg: messages.geoHelpContent,
-        },
-        { message: localMessages.nytPct,
-          data: formatNumber(sourceInfo.nytPct, { style: 'percent', maximumFractionDigits: 2 }),
-          helpTitleMsg: messages.themeHelpTitle,
-          helpContentMsg: messages.themeHelpContent,
-        },
+        { message: localMessages.geoPct, data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }) },
+        { message: localMessages.nytPct, data: formatNumber(sourceInfo.nytPct, { style: 'percent', maximumFractionDigits: 2 }) },
       ]}
     />
   );
@@ -53,12 +43,12 @@ const SourceStatInfo = (props) => {
 
 SourceStatInfo.propTypes = {
   // from parent
-  sourceId: PropTypes.number.isRequired,
-  sourceInfo: PropTypes.object.isRequired,
+  sourceId: React.PropTypes.number.isRequired,
+  sourceInfo: React.PropTypes.object.isRequired,
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
 
 };
 

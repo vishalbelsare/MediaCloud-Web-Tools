@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { reduxForm, reset } from 'redux-form';
@@ -58,15 +57,15 @@ const SuggestSourceContainer = (props) => {
 
 SuggestSourceContainer.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
   // from dispatch
-  handleSave: PropTypes.func.isRequired,
+  handleSave: React.PropTypes.func.isRequired,
   // from form healper
-  initialValues: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  pristine: PropTypes.bool,
-  submitting: PropTypes.bool,
+  initialValues: React.PropTypes.object,
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
 };
 
 function validate(values) {

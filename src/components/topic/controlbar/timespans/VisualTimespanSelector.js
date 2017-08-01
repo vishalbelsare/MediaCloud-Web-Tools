@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import * as d3 from 'd3';
@@ -88,15 +87,15 @@ class VisualTimespanSelector extends React.Component {
 
 VisualTimespanSelector.propTypes = {
   // from parent
-  startDate: PropTypes.object.isRequired,
-  endDate: PropTypes.object.isRequired,
-  timespans: PropTypes.array.isRequired,
-  onTimespanSelected: PropTypes.func,
-  selectedTimespan: PropTypes.object,
+  startDate: React.PropTypes.object.isRequired,
+  endDate: React.PropTypes.object.isRequired,
+  timespans: React.PropTypes.array.isRequired,
+  onTimespanSelected: React.PropTypes.func,
+  selectedTimespan: React.PropTypes.object,
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from Dimensions helper
-  containerWidth: PropTypes.number,
+  containerWidth: React.PropTypes.number,
 };
 
 export default

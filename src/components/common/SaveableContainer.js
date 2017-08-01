@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -98,10 +97,10 @@ const composeSaveableContainer = (ChildComponent) => {
     }
   }
   SaveableContainer.propTypes = {
-    intl: PropTypes.object.isRequired,
-    handleSaveToNotebook: PropTypes.func.isRequired,
-    fetchStatus: PropTypes.string.isRequired,
-    notebookEntryId: PropTypes.string,
+    intl: React.PropTypes.object.isRequired,
+    handleSaveToNotebook: React.PropTypes.func.isRequired,
+    fetchStatus: React.PropTypes.string.isRequired,
+    notebookEntryId: React.PropTypes.string,
   };
   const mapStateToProps = state => ({
     fetchStatus: state.notebook.current.fetchStatus,

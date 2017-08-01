@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -91,15 +90,15 @@ const SourceFeedForm = (props) => {
 
 SourceFeedForm.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
-  initialValues: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired,
-  onSave: PropTypes.func.isRequired,
-  buttonLabel: PropTypes.string.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
+  onSave: React.PropTypes.func.isRequired,
+  buttonLabel: React.PropTypes.string.isRequired,
 };
 
 function validate(values) {

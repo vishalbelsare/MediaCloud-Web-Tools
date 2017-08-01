@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
@@ -11,19 +10,6 @@ class FaqItem extends React.Component {
   state = {
     showAnswer: false,
   };
-
-  componentWillMount = () => {
-    const { expanded } = this.props;
-    if (expanded) {
-      this.setState({ showAnswer: expanded });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.expanded) {
-      this.setState({ showAnswer: nextProps.expanded });
-    }
-  }
 
   toggleVisible = (evt) => {
     evt.preventDefault();
@@ -51,11 +37,10 @@ class FaqItem extends React.Component {
 
 FaqItem.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  question: PropTypes.object.isRequired,
-  answer: PropTypes.object.isRequired,
-  expanded: PropTypes.bool,
+  question: React.PropTypes.object.isRequired,
+  answer: React.PropTypes.object.isRequired,
 };
 
 export default

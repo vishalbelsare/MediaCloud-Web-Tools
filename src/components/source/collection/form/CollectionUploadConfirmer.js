@@ -1,11 +1,8 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AppButton from '../../../common/AppButton';
 import messages from '../../../../resources/messages';
-
-const MAX_ROWS_ALLOWED = 300; // the max number of rows they are allowed to upload - enforced here and on the server
 
 const localMessages = {
   downloadTemplate: { id: 'collection.media.upload.downloadTemplate',
@@ -15,14 +12,19 @@ const localMessages = {
     defaultMessage: 'We emailed you a summary of all the media sources we created or updated. {count} sources were added and/or updated successfully! Do you want to add them to this collection?',
   },
   error: { id: 'collection.media.upload.tooMany',
-    defaultMessage: 'Limit exceeded: too many {count} sources to upload. You can add up to 300 sources at a time.',
+    defaultMessage: 'Limit exceeded: too many {count} sources to upload. You can add up to 100 sources at a time.',
   },
 };
 
 const CollectionUploadConfirmer = (props) => {
   const { sources, onConfirm, onCancel, onClickButton } = props;
   const { formatMessage } = props.intl;
-  const message = (sources.length > MAX_ROWS_ALLOWED) ? localMessages.error : localMessages.confirm;
+  let message = null;
+  if (sources.length > 99) {
+    message = localMessages.error;
+  } else {
+    message = localMessages.confirm;
+  }
   return (
     <div className="collection-copy-confirm">
       <p>
@@ -47,15 +49,15 @@ const CollectionUploadConfirmer = (props) => {
 
 CollectionUploadConfirmer.propTypes = {
   // from parent
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
-  onClickButton: PropTypes.func.isRequired,
+  onConfirm: React.PropTypes.func,
+  onCancel: React.PropTypes.func,
+  onClickButton: React.PropTypes.func.isRequired,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
   // from state
-  fetchStatus: PropTypes.string,
-  sources: PropTypes.array,
+  fetchStatus: React.PropTypes.string,
+  sources: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({

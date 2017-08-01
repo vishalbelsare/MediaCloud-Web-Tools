@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { PERMISSION_TOPIC_READ, PERMISSION_TOPIC_WRITE, PERMISSION_TOPIC_ADMIN, hasPermissions, getUserRoles,
@@ -55,12 +54,12 @@ const Permissioned = (props) => {
 
 Permissioned.propTypes = {
   // from parent
-  children: PropTypes.node, // not required, because the content passed in could be null (if some property isn't filled in on an object)
-  onlyTopic: PropTypes.string,
-  onlyRole: PropTypes.string,
+  children: React.PropTypes.node, // not required, because the content passed in could be null (if some property isn't filled in on an object)
+  onlyTopic: React.PropTypes.string,
+  onlyRole: React.PropTypes.string,
   // from state
-  userTopicPermission: PropTypes.string,
-  user: PropTypes.object.isRequired,
+  userTopicPermission: React.PropTypes.string,
+  user: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

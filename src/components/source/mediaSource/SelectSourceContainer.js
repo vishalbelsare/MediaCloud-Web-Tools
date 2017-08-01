@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -68,23 +67,23 @@ class SelectSourceContainer extends React.Component {
 }
 
 SelectSourceContainer.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
-  asyncFetch: PropTypes.func.isRequired,
-  removeSourceId: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  removeSourceId: React.PropTypes.func.isRequired,
   // from context
-  location: PropTypes.object.isRequired,
-  params: PropTypes.object.isRequired,       // params from router
-  sourceId: PropTypes.number.isRequired,
-  children: PropTypes.node.isRequired,
+  location: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  sourceId: React.PropTypes.number.isRequired,
+  children: React.PropTypes.node.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  source: PropTypes.object,
+  fetchStatus: React.PropTypes.string.isRequired,
+  source: React.PropTypes.object,
 };
 
 SelectSourceContainer.contextTypes = {
-  store: PropTypes.object.isRequired,
+  store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

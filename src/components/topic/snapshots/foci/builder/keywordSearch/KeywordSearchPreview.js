@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -37,10 +36,10 @@ const KeywordSearchPreview = (props) => {
 
 KeywordSearchPreview.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  keywords: PropTypes.string.isRequired,
-  topicId: PropTypes.number.isRequired,
+  keywords: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
 };
 
 export default

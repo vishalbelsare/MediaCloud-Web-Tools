@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import FaqItem from '../../common/FaqItem';
 
 const localMessages = {
   title: { id: 'faq.title', defaultMessage: 'FAQ' },
-  q1: { id: 'faq.q1', defaultMessage: 'What is Source Manager?' },
-  a1: { id: 'faq.a1', defaultMessage: 'Source manager is a tool that allows users to browse the media sources and collections in our database, and suggest more to add.' },
+  q1: { id: 'faq.q1', defaultMessage: 'What is MediaCloud?' },
+  a1: { id: 'faq.a1', defaultMessage: 'Media Cloud is an open source and open data platform for storing, retrieving, visualizing, and analyzing online news.' },
   q2: { id: 'faq.q2', defaultMessage: 'How are stories collected?' },
   a2: { id: 'faq.a2', defaultMessage: 'For the most part, MC collects stories through the RSS feeds of the sources we follow. That means that, overall, we only have content from the moment we start following a specific media source.' },
   q3: { id: 'faq.q3', defaultMessage: 'How far back in time does MC content go?' },
@@ -29,7 +28,7 @@ const SourceManagerFaq = () => {
   const items = [];
   for (let i = 1; i <= NUM_ITEMS; i += 1) {
     items.push((
-      <FaqItem key={i} question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} expanded />
+      <FaqItem key={i} question={localMessages[`q${i}`]} answer={localMessages[`a${i}`]} />
     ));
   }
   return (
@@ -42,7 +41,7 @@ const SourceManagerFaq = () => {
 
 SourceManagerFaq.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default

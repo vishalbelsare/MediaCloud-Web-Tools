@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 63.849;
@@ -24,7 +23,7 @@ const TopicIcon = (props) => {
 };
 
 TopicIcon.propTypes = {
-  height: PropTypes.number,
+  height: React.PropTypes.number,
 };
 
 export default TopicIcon;

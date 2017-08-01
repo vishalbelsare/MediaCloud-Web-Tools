@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -49,14 +48,14 @@ class ConfirmationDialog extends React.Component {
 
 ConfirmationDialog.propTypes = {
   // from composition
-  intl: PropTypes.object.isRequired,
-  children: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  children: React.PropTypes.node.isRequired,
   // from parent
-  open: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  okText: PropTypes.string.isRequired,
-  onOk: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
+  open: React.PropTypes.bool.isRequired,
+  title: React.PropTypes.string.isRequired,
+  okText: React.PropTypes.string.isRequired,
+  onOk: React.PropTypes.func.isRequired,
+  onCancel: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(ConfirmationDialog);

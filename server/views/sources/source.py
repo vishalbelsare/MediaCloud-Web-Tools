@@ -10,14 +10,13 @@ from server import app, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, VALID_COLLECTION_TAG_SETS_IDS, \
-    TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SET_GEOCODER_VERSION, \
-    TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
+from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, \
+    TAG_SETS_ID_PUBLICATION_STATE, TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SET_GEOCODER_VERSION, TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE
 from server.views.sources import _cached_source_story_count
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
+from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +32,7 @@ def api_media_sources_by_ids():
     for mediaId in source_id_array:
         info = _media_source_details(mediaId)
         source_list.append(info)
-    add_user_favorite_flag_to_sources(source_list)
+    _add_user_favorite_flag_to_sources(source_list)
     return jsonify({'results': source_list})
 
 
@@ -133,8 +132,8 @@ def api_media_source_details(media_id):
         info['scrape_status'] = user_mc.feedsScrapeStatus(media_id)  # need to know if scrape is running
     else:
         info['scrape_status'] = None
-    add_user_favorite_flag_to_sources([info])
-    add_user_favorite_flag_to_collections(info['media_source_tags'])
+    _add_user_favorite_flag_to_sources([info])
+    _add_user_favorite_flag_to_collections(info['media_source_tags'])
     return jsonify(info)
 
 @app.route('/api/sources/<media_id>/scrape', methods=['POST'])
@@ -220,12 +219,11 @@ def source_create():
     public_notes = request.form['public_notes'] if 'public_notes' in request.form else None
     monitored = request.form['monitored'] if 'monitored' in request.form else None
     # parse out any tag to add (ie. collections and metadata)
-    tag_ids_to_add = tag_ids_from_collections_param()
+    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
         {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE},
-        {'form_key': 'primaryLanguageg', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE},
-        {'form_key': 'countryOfFocus', 'tag_sets_id': TAG_SETS_ID_COUNTRY_OF_FOCUS}
+        {'form_key': 'primaryLanguageg', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE}
     ]
     source_to_create = {
         'name': name,
@@ -280,8 +278,8 @@ def source_update(media_id):
     # now we need to update the collections separately, because they are tags on the media source
     source = user_mc.media(media_id)
     existing_tag_ids = [t['tags_id'] for t in source['media_source_tags']
-                        if (t['tag_sets_id'] in [VALID_COLLECTION_TAG_SETS_IDS])]
-    tag_ids_to_add = tag_ids_from_collections_param()
+        if (t['tag_sets_id'] in [COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID]) and (t['show_on_media'] is 1)]
+    tag_ids_to_add = tag_ids_from_collections_param(request.form['collections[]'])
     tag_ids_to_remove = list(set(existing_tag_ids) - set(tag_ids_to_add))
     tags_to_add = [MediaTag(media_id, tags_id=cid, action=TAG_ACTION_ADD)
                    for cid in tag_ids_to_add if cid not in existing_tag_ids]
@@ -293,14 +291,16 @@ def source_update(media_id):
     valid_metadata = [
         {'form_key': 'publicationCountry', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_COUNTRY},
         {'form_key': 'publicationState', 'tag_sets_id': TAG_SETS_ID_PUBLICATION_STATE},
-        {'form_key': 'primaryLanguage', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE},
-        {'form_key': 'countryOfFocus', 'tag_sets_id': TAG_SETS_ID_COUNTRY_OF_FOCUS}
+        {'form_key': 'primaryLanguage', 'tag_sets_id': TAG_SETS_ID_PRIMARY_LANGUAGE}
     ]
     for metadata_item in valid_metadata:
         metadata_tag_id = request.form[metadata_item['form_key']] if metadata_item['form_key'] in request.form else None # this is optional
-        existing_tag_ids = [t for t in source['media_source_tags'] if is_metadata_tag_set(t['tag_sets_id'])]
-        # form field check
-        if metadata_tag_id in [None, '', 'null', 'undefined']:
+        existing_tag_ids = [t for t in source['media_source_tags']
+            if (t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_COUNTRY \
+                or t['tag_sets_id'] == TAG_SETS_ID_PUBLICATION_STATE \
+                or t['tag_sets_id'] == TAG_SETS_ID_PRIMARY_LANGUAGE)]
+        # form field check 
+        if metadata_tag_id in [None,'','null','undefined']:
             # we want to remove it if there was one there
             if len(existing_tag_ids) > 0:
                 for remove_if_empty in existing_tag_ids:
@@ -316,9 +316,8 @@ def source_update(media_id):
     return jsonify(result)
 
 
-def tag_ids_from_collections_param():
+def tag_ids_from_collections_param(input):
     tag_ids_to_add = []
-    collection_ids = request.form['collections[]'].split(",")
-    if len(collection_ids) > 0:
-        tag_ids_to_add = [int(cid) for cid in collection_ids if len(cid) > 0]
+    if len(input) > 0:
+        tag_ids_to_add = [int(cid) for cid in request.form['collections[]'].split(",") if len(cid) > 0]
     return list(set(tag_ids_to_add))

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -10,19 +9,16 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
-import StoryEntitiesContainer from './StoryEntitiesContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
-import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import StoryDetails from './StoryDetails';
 import StoryPlaces from './StoryPlaces';
-import StoryThemes from './StoryThemes';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -30,7 +26,6 @@ const localMessages = {
   mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
-  unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
 };
 
 class StoryContainer extends React.Component {
@@ -111,7 +106,7 @@ class StoryContainer extends React.Component {
                   { message: messages.outlinks, data: formatNumber(story.outlink_count) },
                   { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
                   { message: messages.bitlyClicks, data: formatNumber(story.bitly_click_count) },
-                  { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
+                  { message: messages.language, data: story.language },
                 ]}
               />
             </Col>
@@ -125,18 +120,10 @@ class StoryContainer extends React.Component {
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
             <Col lg={6}>
-              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)} geocoderVersion={story.geocoderVersion} />
-            </Col>
-            <Col lg={6}>
-              <StoryThemes tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)} nytThemesVersion={story.nytThemesVersion} />
-            </Col>
-            <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
             </Col>
-          </Row>
-          <Row>
-            <Col lg={12} >
-              <StoryEntitiesContainer topicId={topicId} storiesId={storiesId} />
+            <Col lg={6}>
+              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === 1011)} />
             </Col>
           </Row>
         </Grid>
@@ -148,17 +135,17 @@ class StoryContainer extends React.Component {
 
 StoryContainer.propTypes = {
   // from context
-  params: PropTypes.object.isRequired,       // params from router
-  intl: PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  intl: React.PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  story: PropTypes.object.isRequired,
-  storiesId: PropTypes.number.isRequired,
-  topicId: PropTypes.number.isRequired,
-  fetchStatus: PropTypes.string.isRequired,
+  story: React.PropTypes.object.isRequired,
+  storiesId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

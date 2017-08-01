@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -8,7 +7,6 @@ import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
   from '../../../../../lib/focalTechniques';
-import { assetUrl } from '../../../../../lib/assetUtil';
 
 const localMessages = {
   about: { id: 'focus.techniquePicker.about',
@@ -50,7 +48,7 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectBooleanQuery}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
-              id="technique-boolean-query"
+              id="Boolean Query"
               icon={KeywordSearchIcon}
               nameMsg={localMessages.keywordName}
               descriptionMsg={localMessages.keywordDescription}
@@ -60,8 +58,8 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectReferenceSetUpload}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_REFERENCE_SET}
-              id="technique-reference-set-upload"
-              image={assetUrl('/static/img/focal-technique-reference-2x.png')}
+              id="Reference Set Upload"
+              image="/static/img/focal-technique-reference-2x.png"
               nameMsg={localMessages.referenceName}
               descriptionMsg={localMessages.referenceDescription}
               disabled
@@ -72,8 +70,8 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectCommunityDetection}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
-              id="technique-community-selection"
-              image={assetUrl('/static/img/focal-technique-manual-2x.png')}
+              id="Community Selection"
+              image="/static/img/focal-technique-manual-2x.png"
               nameMsg={localMessages.manualName}
               descriptionMsg={localMessages.manualDescription}
               disabled
@@ -84,8 +82,8 @@ class FocalTechniqueSelector extends React.Component {
             <FocalTechniqueDescription
               onClick={this.selectAutoMatic}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_AUTO_MAGIC}
-              id="technique-autoMagic-community-detection"
-              image={assetUrl('/static/img/focal-technique-automagic-2x.png')}
+              id="AutoMagic Community Detection"
+              image="/static/img/focal-technique-automagic-2x.png"
               nameMsg={localMessages.automagicName}
               descriptionMsg={localMessages.automagicDescription}
               disabled
@@ -106,10 +104,10 @@ class FocalTechniqueSelector extends React.Component {
 FocalTechniqueSelector.propTypes = {
   // from parent
   // from componsition chain
-  intl: PropTypes.object.isRequired,
-  change: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  change: React.PropTypes.func.isRequired,
   // from state
-  currentFocalTechnique: PropTypes.string,
+  currentFocalTechnique: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({

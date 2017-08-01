@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
@@ -46,18 +45,18 @@ const TopicCreate2PreviewContainer = (props) => {
 
 TopicCreate2PreviewContainer.propTypes = {
   // from parent
-  location: PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // form composition
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  currentStep: PropTypes.number,
-  handlePreviousStep: PropTypes.func.isRequired,
-  handleNextStep: PropTypes.func.isRequired,
+  currentStep: React.PropTypes.number,
+  handlePreviousStep: React.PropTypes.func.isRequired,
+  handleNextStep: React.PropTypes.func.isRequired,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
-  goToStep: PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
+  goToStep: React.PropTypes.func.isRequired,
   // from form
-  formData: PropTypes.object,
+  formData: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({

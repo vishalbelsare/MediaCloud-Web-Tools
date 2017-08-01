@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -7,7 +6,7 @@ const localMessages = {
 };
 
 const FocalTechniqueDescription = (props) => {
-  const { selected, disabled, nameMsg, descriptionMsg, id, image, icon, onClick, comingSoon } = props;
+  const { selected, disabled, nameMsg, descriptionMsg, image, icon, onClick, comingSoon } = props;
   const { formatMessage } = props.intl;
   const disabledClass = (disabled === true) ? 'disabled' : '';
   const selectedClass = (selected === true) ? 'selected' : '';
@@ -21,7 +20,7 @@ const FocalTechniqueDescription = (props) => {
     visualContent = <div className="focal-technique-icon" tabIndex={0} role="button" onKeyPress={clickHandler} onClick={clickHandler}>{icon()}</div>;
   }
   return (
-    <div id={id} className={rootClasses}>
+    <div className={rootClasses}>
       {visualContent}
       <p><b><FormattedMessage {...nameMsg} /></b></p>
       <p>
@@ -34,16 +33,16 @@ const FocalTechniqueDescription = (props) => {
 
 FocalTechniqueDescription.propTypes = {
   // from parent
-  id: PropTypes.string.isRequired,
-  image: PropTypes.string,
-  icon: PropTypes.func,
-  nameMsg: PropTypes.object.isRequired,
-  descriptionMsg: PropTypes.object.isRequired,
-  selected: PropTypes.bool,
-  disabled: PropTypes.bool,
-  comingSoon: PropTypes.bool,
-  onClick: PropTypes.func,
-  intl: PropTypes.object.isRequired,
+  id: React.PropTypes.string.isRequired,
+  image: React.PropTypes.string,
+  icon: React.PropTypes.func,
+  nameMsg: React.PropTypes.object.isRequired,
+  descriptionMsg: React.PropTypes.object.isRequired,
+  selected: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
+  comingSoon: React.PropTypes.bool,
+  onClick: React.PropTypes.func,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default

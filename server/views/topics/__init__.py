@@ -12,11 +12,6 @@ logger = logging.getLogger(__name__)
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
-TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
-                         'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
-                         'outlink_count', 'bitly_click_count', 'facebook_share_count',
-                         'pub_country', 'pub_state', 'primary_language']
-
 
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
@@ -28,7 +23,7 @@ def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
 def topic_is_public(topics_id):
     topic = mc.topic(topics_id)
     is_public = topic['is_public']
-    return int(is_public) == 1
+    return int(is_public)== 1
 
 
 def access_public_topic(topics_id):
@@ -40,28 +35,28 @@ def access_public_topic(topics_id):
 
 # helper for topic preview queries
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
-    query = u'({})'.format(solr_seed_query)
+    query = '({})'.format(solr_seed_query)
 
     if len(media_ids) > 0 or len(tags_ids) > 0:
-        query += u" AND ("
+        query += " AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            query_media_ids = u" ".join(map(str, media_ids))
-            query_media_ids = u" media_id:({})".format(query_media_ids)
-            query += u'(' + query_media_ids + u')'
+            query_media_ids = " ".join(map(str, media_ids))
+            query_media_ids = " media_id:({})".format(query_media_ids)
+            query += '('+query_media_ids+')'
 
         if len(media_ids) > 0 and len(tags_ids) > 0:
-            query += u" OR "
+            query += " OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            query_tags_ids = u" ".join(map(str, tags_ids))
-            query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
-            query += u'(' + query_tags_ids + u')'
-        query += u')'
+            query_tags_ids = " ".join(map(str, tags_ids))
+            query_tags_ids = " tags_id_media:({})".format(query_tags_ids)
+            query += '('+query_tags_ids+')'
+        query += ')'
 
     if start_date:
-        query += u" AND (+" + concatenate_query_and_dates(start_date, end_date) + u")"
-
+        query += " AND (+" + concatenate_query_and_dates(start_date, end_date) + ")"
+    
     return query
 
 

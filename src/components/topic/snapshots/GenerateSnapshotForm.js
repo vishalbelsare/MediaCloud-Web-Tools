@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
@@ -47,14 +46,14 @@ const GenerateSnapshotForm = (props) => {
 
 GenerateSnapshotForm.propTypes = {
   // from parent
-  initialValues: PropTypes.object,
-  onGenerate: PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
+  onGenerate: React.PropTypes.func.isRequired,
   // form composition
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func,
-  pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
 };
 
 function validate() {

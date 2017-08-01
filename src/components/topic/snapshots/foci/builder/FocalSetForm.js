@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -35,10 +34,10 @@ const FocalSetForm = (props) => {
 
 FocalSetForm.propTypes = {
   // form compositinal chain
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
   // from parent
-  initialValues: PropTypes.object,
+  initialValues: React.PropTypes.object,
 };
 
 function validate(values) {

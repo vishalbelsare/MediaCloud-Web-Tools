@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -53,19 +52,19 @@ const FilterSelectorContainer = (props) => {
 
 FilterSelectorContainer.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from parent
-  onFocusSelected: PropTypes.func.isRequired,
+  onFocusSelected: React.PropTypes.func.isRequired,
   // from dispatch
-  handleSnapshotSelected: PropTypes.func.isRequired,
+  handleSnapshotSelected: React.PropTypes.func.isRequired,
   // from state
-  filters: PropTypes.object.isRequired,
-  topicId: PropTypes.number.isRequired,
-  fetchStatus: PropTypes.string.isRequired,
-  snapshots: PropTypes.array.isRequired,
-  snapshotId: PropTypes.number,
-  filtersVisible: PropTypes.bool.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  snapshots: React.PropTypes.array.isRequired,
+  snapshotId: React.PropTypes.number,
+  filtersVisible: React.PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

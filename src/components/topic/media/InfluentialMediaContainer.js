@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -66,19 +65,19 @@ class InfluentialMediaContainer extends React.Component {
 InfluentialMediaContainer.ROWS_PER_PAGE = 50;
 
 InfluentialMediaContainer.propTypes = {
-  fetchStatus: PropTypes.string.isRequired,
-  sort: PropTypes.string.isRequired,
-  media: PropTypes.array.isRequired,
-  topicId: PropTypes.number.isRequired,
-  topicInfo: PropTypes.object.isRequired,
-  fetchData: PropTypes.func.isRequired,
-  sortData: PropTypes.func.isRequired,
-  intl: PropTypes.object.isRequired,
-  filters: PropTypes.object.isRequired,
-  links: PropTypes.object,
+  fetchStatus: React.PropTypes.string.isRequired,
+  sort: React.PropTypes.string.isRequired,
+  media: React.PropTypes.array.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  topicInfo: React.PropTypes.object.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  sortData: React.PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  links: React.PropTypes.object,
   // from PagedContainer wrapper
-  nextButton: PropTypes.node,
-  previousButton: PropTypes.node,
+  nextButton: React.PropTypes.node,
+  previousButton: React.PropTypes.node,
 };
 
 const mapStateToProps = state => ({

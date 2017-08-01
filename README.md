@@ -23,9 +23,8 @@ Python 2.7:
  * in MediaMeter directory>`pip install -r requirements.txt` 
 
 Node and npm:  
- * make sure your node installation is up-to-date (we work with v8.2.1 right now)
+ * make sure your node installation is up-to-date (we work with v5.9.0 right now)
  * `npm install` to install all the package dependencies (as specified in the `package.json`)
- * install watchman for the testing (`brew install --HEAD watchman`)
 
 MongoDB:
 [Install MongoDb](https://docs.mongodb.com/manual/installation/).  We develop on OS X and install via the [HomeBrew package manager](http://brew.sh): `brew install mongodb`

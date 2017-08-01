@@ -1,6 +1,5 @@
 import { FETCH_SOURCE_DETAILS, SET_FAVORITE_SOURCE } from '../../../../actions/sourceActions';
 import { createAsyncReducer } from '../../../../lib/reduxHelpers';
-import { mediaSourceMetadataProps } from '../../../../lib/tagUtil';
 
 export const SOURCE_SCRAPE_STATE_QUEUED = 'queued';
 export const SOURCE_SCRAPE_STATE_RUNNING = 'running';
@@ -20,7 +19,6 @@ const sourceDetails = createAsyncReducer({
     return {
       ...payload,
       media_id: parseInt(payload.media_id, 10), // make sure it is an int
-      ...mediaSourceMetadataProps(payload),
       latestScrapeState,
     };
   },

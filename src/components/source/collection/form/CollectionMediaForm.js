@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FieldArray, Field, reduxForm, formValueSelector } from 'redux-form';
@@ -147,7 +146,7 @@ class SourceSelectionRendererRaw extends React.Component {
                     fullWidth
                     multiLine
                     rows={4}
-                    hintText={formatMessage(localMessages.sourceUrlHint)}
+                    hintText={localMessages.sourceUrlHint}
                   />
                   <AppButton
                     primary
@@ -188,7 +187,7 @@ class SourceSelectionRendererRaw extends React.Component {
                   </tr>
                   {fields.map((source, idx) =>
                     <Field
-                      key={idx}
+                      key={source.media_id}
                       name={source}
                       component={info => (
                         <tr key={info.input.value.media_id ? info.input.value.media_id : info.input.value.id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
@@ -225,17 +224,17 @@ class SourceSelectionRendererRaw extends React.Component {
 
 SourceSelectionRendererRaw.propTypes = {
   // from form heper
-  fields: PropTypes.object,
-  meta: PropTypes.object,
-  initialValues: PropTypes.object,
-  renderTextField: PropTypes.func.isRequired,
+  fields: React.PropTypes.object,
+  meta: React.PropTypes.object,
+  initialValues: React.PropTypes.object,
+  renderTextField: React.PropTypes.func.isRequired,
   // from parent
-  submitButton: PropTypes.node,
-  currentSources: PropTypes.array,
-  sourceUrlsToAdd: PropTypes.string,
-  editCollectionId: PropTypes.string,
-  onSourcesAdded: PropTypes.func.isRequired,
-  intl: PropTypes.object.isRequired,
+  submitButton: React.PropTypes.node,
+  currentSources: React.PropTypes.array,
+  sourceUrlsToAdd: React.PropTypes.string,
+  editCollectionId: React.PropTypes.string,
+  onSourcesAdded: React.PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 const SourceSelectionRenderer =
@@ -261,17 +260,17 @@ const CollectionMediaForm = props => (
 
 CollectionMediaForm.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  initialValues: PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
   // from form helper
   // from parent
-  submitButton: PropTypes.node,
+  submitButton: React.PropTypes.node,
   // from state
-  currentSources: PropTypes.array,
-  sourceUrlsToAdd: PropTypes.string,
+  currentSources: React.PropTypes.array,
+  sourceUrlsToAdd: React.PropTypes.string,
   // from dispatch
-  handleSourceAdded: PropTypes.func.isRequired,
+  handleSourceAdded: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

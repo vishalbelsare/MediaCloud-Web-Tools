@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -6,7 +5,7 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import composeHelpfulContainer from '../../../../../common/HelpfulContainer';
 import { fetchCreateFocusKeywordStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
-import BubbleRowChart from '../../../../../vis/BubbleRowChart';
+import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-keyword-preview-story-total';
@@ -47,11 +46,10 @@ class KeywordStoryCountPreviewContainer extends React.Component {
           rolloverText: `${formatMessage(localMessages.totalLabel)}: ${formatNumber(counts.total)} stories`,
         },
       ];
-      content = (<BubbleRowChart
+      content = (<PackedBubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
         width={440}
-        padding={30}
       />);
     }
     return (
@@ -68,17 +66,17 @@ class KeywordStoryCountPreviewContainer extends React.Component {
 
 KeywordStoryCountPreviewContainer.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
-  topicId: PropTypes.number.isRequired,
-  keywords: PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  keywords: React.PropTypes.string.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  counts: PropTypes.object,
-  fetchStatus: PropTypes.string.isRequired,
+  counts: React.PropTypes.object,
+  fetchStatus: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

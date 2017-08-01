@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -26,7 +25,7 @@ const SignupSuccessMessage = () => (
 
 
 SignupSuccessMessage.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(SignupSuccessMessage);

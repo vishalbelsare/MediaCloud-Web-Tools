@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -34,7 +33,7 @@ const FocusDescriptionForm = (props) => {
     focalSetContent = <FocalSetForm initialValues={initialValues} />;
   }
   return (
-    <div className="focus-create-details-form">
+    <div className="focus-create-details">
       <Row>
         <Col lg={3} xs={12}>
           <Field
@@ -84,15 +83,15 @@ const FocusDescriptionForm = (props) => {
 
 FocusDescriptionForm.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  initialValues: PropTypes.object.isRequired,
-  focalSetDefinitions: PropTypes.array.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object.isRequired,
+  focalSetDefinitions: React.PropTypes.array.isRequired,
   // form composition
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
   // from state
-  currentFocalSetDefinitionId: PropTypes.number,
+  currentFocalSetDefinitionId: React.PropTypes.number,
 };
 
 const mapStateToProps = state => ({

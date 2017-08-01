@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -15,7 +14,7 @@ const localMessages = {
   title: { id: 'topic.create.setup.title', defaultMessage: 'Step 1: Create A Topic' },
   about: { id: 'topic.create.setup.about',
     defaultMessage: 'Create A Topic then click Preview' },
-  createTopicText: { id: 'topic.create.text', defaultMessage: 'You can create a new Topic to add to the MediaCloud system. Copy and paste the keyword query from a Dashboard search into here, and then select dates and media sources and/or collections.  The stories in our database that match will be "seed stories".  Our system will follow links from those stories to find others that match your keyword query, even if they are in sources we don\'t otherwise cover. The combination of stories in our system, and stories that we find via this "spidering" process, will create your Topic.' },
+  createTopicText: { id: 'topic.create.text', defaultMessage: 'You can create a new Topic to add to the MediaCloud system.' },
   addCollectionsTitle: { id: 'topic.create.addCollectionsTitle', defaultMessage: 'Select Sources And Collections' },
   addCollectionsIntro: { id: 'topic.create.addCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic:' },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
@@ -40,7 +39,7 @@ const TopicCreate1ConfigureContainer = (props) => {
       </Row>
       <TopicForm
         initialValues={initialValues}
-        onSubmit={() => finishStep(1)}
+        onSaveTopic={finishStep}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -51,18 +50,18 @@ const TopicCreate1ConfigureContainer = (props) => {
 
 TopicCreate1ConfigureContainer.propTypes = {
   // from parent
-  location: PropTypes.object.isRequired,
-  initialValues: PropTypes.object,
+  location: React.PropTypes.object.isRequired,
+  initialValues: React.PropTypes.object,
   // form composition
-  intl: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  pristine: PropTypes.bool,
-  submitting: PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
   // from state
-  currentStep: PropTypes.number,
-  formData: PropTypes.object,
+  currentStep: React.PropTypes.number,
+  formData: React.PropTypes.object,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -70,10 +69,18 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  finishStep: (step) => {
+  goToStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    finishStep: (values) => {
+      dispatchProps.goToStep(1, values);
+    },
+  });
+}
 
 const reduxFormConfig = {
   form: 'topicForm',
@@ -84,7 +91,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps)(
+        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
           TopicCreate1ConfigureContainer
         )
       )

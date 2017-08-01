@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -18,15 +17,15 @@ const FocusSelectorContainer = (props) => {
 
 FocusSelectorContainer.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  location: PropTypes.object.isRequired,
-  snapshotId: PropTypes.number,
-  onFocusSelected: PropTypes.func.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
+  snapshotId: React.PropTypes.number,
+  onFocusSelected: React.PropTypes.func.isRequired,
   // from composition
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  foci: PropTypes.array.isRequired,
-  selectedFocus: PropTypes.object,
+  foci: React.PropTypes.array.isRequired,
+  selectedFocus: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({

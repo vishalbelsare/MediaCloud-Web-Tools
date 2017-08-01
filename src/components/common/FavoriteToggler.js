@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { FavoriteButton, FavoriteBorderButton } from './IconButton';
@@ -28,10 +27,10 @@ const FavoriteToggler = (props) => {
 };
 
 FavoriteToggler.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // form parent
-  isFavorited: PropTypes.bool.isRequired,
-  onSetFavorited: PropTypes.func.isRequired,
+  isFavorited: React.PropTypes.bool.isRequired,
+  onSetFavorited: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(FavoriteToggler);

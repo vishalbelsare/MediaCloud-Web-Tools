@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -15,13 +14,13 @@ const ToolDescription = (props) => {
 
 ToolDescription.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  name: PropTypes.object.isRequired,
-  description: PropTypes.object.isRequired,
-  screenshotUrl: PropTypes.string.isRequired,
-  className: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
+  name: React.PropTypes.object.isRequired,
+  description: React.PropTypes.object.isRequired,
+  screenshotUrl: React.PropTypes.string.isRequired,
+  className: React.PropTypes.string.isRequired,
+  url: React.PropTypes.string.isRequired,
 };
 
 export default

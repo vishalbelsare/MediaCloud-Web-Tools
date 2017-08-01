@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
@@ -81,20 +80,20 @@ class AddByUrlConfirmer extends Component {
 
 AddByUrlConfirmer.propTypes = {
   // from parent
-  urls: PropTypes.array.isRequired,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
+  urls: React.PropTypes.array.isRequired,
+  onConfirm: React.PropTypes.func,
+  onCancel: React.PropTypes.func,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string,
-  sources: PropTypes.array,
-  newSources: PropTypes.array,
-  existingSources: PropTypes.array,
-  errorSources: PropTypes.array,
+  fetchStatus: React.PropTypes.string,
+  sources: React.PropTypes.array,
+  newSources: React.PropTypes.array,
+  existingSources: React.PropTypes.array,
+  errorSources: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({

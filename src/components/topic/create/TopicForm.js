@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -8,35 +7,31 @@ import TopicDetailForm from './TopicDetailForm';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
-import { fetchTopicSearchResults } from '../../../actions/topicActions';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
 
 const localMessages = {
+  name: { id: 'topic.name', defaultMessage: 'Name' },
   nameError: { id: 'topic.form.detail.name.error', defaultMessage: 'Your topic needs a name.' },
-  nameInUseError: { id: 'topic.form.detail.name.errorInUse', defaultMessage: 'That topic name is already taken. Please use a different one.' },
   descriptionError: { id: 'topic.form.detail.desciption.error', defaultMessage: 'Your topic need a description.' },
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
-  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
+  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 18 months." },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
 const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { onSaveTopic, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
   return (
-    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
-      <input type="hidden" name="topicId" value={topicId} />
-      <Row><Col lg={12}><hr /></Col></Row>
+    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSaveTopic.bind(this))}>
       <TopicDetailForm
         form="topicForm"
         destroyOnUnmount={false}
         initialValues={initialValues}
         mode={mode}
       />
-      <Row><Col lg={12}><hr /></Col></Row>
       <SourceCollectionsForm
         title={title}
         intro={intro}
@@ -47,7 +42,6 @@ const TopicForm = (props) => {
         maxSources={10}
         maxCollections={10}
       />
-      <Row><Col lg={12}><hr /></Col></Row>
       <Row>
         <Col lg={12}>
           <AppButton
@@ -66,20 +60,17 @@ const TopicForm = (props) => {
 
 TopicForm.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  initialValues: PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
+  initialValues: React.PropTypes.object,
   // from parent
-  topicId: PropTypes.number,
-  handleSubmit: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  pristine: PropTypes.bool.isRequired,
-  error: PropTypes.string,
-  submitting: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  intro: PropTypes.string.isRequired,
-  validate: PropTypes.func.isRequired,
-  topicNameSearch: PropTypes.object,
-  mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  handleSubmit: React.PropTypes.func.isRequired,
+  onSaveTopic: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
+  title: React.PropTypes.string.isRequired,
+  intro: React.PropTypes.string.isRequired,
+  validate: React.PropTypes.func.isRequired,
+  mode: React.PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
 };
 
 function validate(values, props) {
@@ -109,17 +100,6 @@ function validate(values, props) {
   return errors;
 }
 
-const asyncValidate = (values, dispatch) => (
-  dispatch(fetchTopicSearchResults(values.name))
-    .then((results) => {
-      if (results.topics && (results.topics.length !== 0) &&
-        (values.topicId && (results.topics[0].topics_id !== values.topicId))) {
-        const error = { name: localMessages.nameInUseError };
-        throw error;
-      }
-    })
-);
-
 const warn = (values) => {
   const warnings = {};
   if (validDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
@@ -131,11 +111,8 @@ const warn = (values) => {
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
-  asyncValidate,
-  asyncBlurFields: ['name'],
   destroyOnUnmount: false,
   warn,
-  // forceUnregisterOnUnmount: true,
 };
 
 export default

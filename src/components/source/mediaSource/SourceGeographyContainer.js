@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -52,17 +51,17 @@ class SourceGeographyContainer extends React.Component {
 
 SourceGeographyContainer.propTypes = {
   // from parent
-  source: PropTypes.object.isRequired,
+  source: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string,
-  geolist: PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string,
+  geolist: React.PropTypes.array.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from parent
-  intro: PropTypes.string,
+  intro: React.PropTypes.string,
   // from composition
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

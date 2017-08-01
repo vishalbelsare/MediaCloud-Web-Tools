@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
@@ -14,8 +13,8 @@ const LoadingSpinner = (props) => {
 };
 
 LoadingSpinner.propTypes = {
-  padding: PropTypes.number,
-  size: PropTypes.number, // in pixels
+  padding: React.PropTypes.number,
+  size: React.PropTypes.number, // in pixels
 };
 
 export default LoadingSpinner;

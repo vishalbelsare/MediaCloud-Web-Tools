@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -95,21 +94,21 @@ class SourceFeedContainer extends React.Component {
 }
 
 SourceFeedContainer.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
-  asyncFetch: PropTypes.func.isRequired,
-  scrapeFeeds: PropTypes.func.isRequired,
-  pushToUrl: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  scrapeFeeds: React.PropTypes.func.isRequired,
+  pushToUrl: React.PropTypes.func.isRequired,
   // from context
-  params: PropTypes.object.isRequired,       // params from router
-  sourceId: PropTypes.number.isRequired,
-  sourceName: PropTypes.string.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  sourceId: React.PropTypes.number.isRequired,
+  sourceName: React.PropTypes.string.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  source: PropTypes.object,
-  feeds: PropTypes.array,
-  feedcount: PropTypes.number,
+  fetchStatus: React.PropTypes.string.isRequired,
+  source: React.PropTypes.object,
+  feeds: React.PropTypes.array,
+  feedcount: React.PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => ({

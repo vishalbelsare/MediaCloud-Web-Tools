@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -62,13 +61,13 @@ const SnapshotHome = props => (
 );
 
 SnapshotHome.propTypes = {
-  intl: PropTypes.object.isRequired,
-  params: PropTypes.object.isRequired,
-  children: PropTypes.node,
+  intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,
+  children: React.PropTypes.node,
   // from state
-  topicId: PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   // from dispatch
-  handleGenerateSnapshotRequest: PropTypes.func.isRequired,
+  handleGenerateSnapshotRequest: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

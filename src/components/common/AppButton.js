@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -48,9 +47,9 @@ class AppButton extends React.Component {
 
 AppButton.propTypes = {
   // from parent
-  disabled: PropTypes.bool,
-  flat: PropTypes.bool,
-  className: PropTypes.string,
+  disabled: React.PropTypes.bool,
+  flat: React.PropTypes.bool,
+  className: React.PropTypes.string,
 };
 
 export default AppButton;

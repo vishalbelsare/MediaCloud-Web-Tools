@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -47,9 +46,9 @@ const CreateSourceContainer = (props) => {
 
 CreateSourceContainer.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  handleSave: PropTypes.func.isRequired,
+  handleSave: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({
@@ -57,7 +56,7 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage', 'countryOfFocus'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage'];
     const infoToSave = {
       url: values.url,
       name: values.name,

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -7,14 +6,16 @@ import AttentionOverTimeChart from '../../../vis/AttentionOverTimeChart';
 import { fetchAttentionByQuery } from '../../../../actions/topicActions';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import DataCard from '../../../common/DataCard';
+import messages from '../../../../resources/messages';
 import { getBrandDarkColor } from '../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Matching Sentences' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
-  helpText: { id: 'media.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the number of sentences over time that match your topic query. This a good preview of the attention paid to your topic that we already have in our system.</p>',
+  title: { id: 'topic.create.preview.attention.title', defaultMessage: 'Attention' },
+  helpTitle: { id: 'topic.create.preview.attention.help.title', defaultMessage: 'About Attention' },
+  helpText: { id: 'topic.create.preview.attention.help.text',
+    defaultMessage: '<p>This chart shows you estimated coverage of your seed query</p>',
   },
+  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'The attention over time to your topic can vary. If you see a predominantly flat line here with no attention, consider going back and changing the start and end dates for your topic. If you have too many total seed stories, try shortening the total number of days your topic covers.' },
 };
 
 class TopicAttentionPreview extends React.Component {
@@ -44,16 +45,16 @@ class TopicAttentionPreview extends React.Component {
 
 TopicAttentionPreview.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // passed in
-  query: PropTypes.object.isRequired,
+  query: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  total: PropTypes.number,
-  counts: PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
+  total: React.PropTypes.number,
+  counts: React.PropTypes.array,
   // from dispath
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -91,7 +92,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, localMessages.helpText)(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.attentionChartHelpText])(
         composeAsyncContainer(
           TopicAttentionPreview
         )

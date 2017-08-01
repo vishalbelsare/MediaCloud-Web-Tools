@@ -1,6 +1,4 @@
 
-const MIN_PASSWORD_LENGTH = 8;
-
 export function notEmptyString(value) {
   return (value !== null) && (value !== undefined) && (value.trim() !== '');
 }
@@ -27,18 +25,6 @@ export function invalidDate(value) {
 
 export function validDate(value) {
   return !invalidDate(value);
-}
-
-export function stringTooShort(value, minLength) {
-  return (value && (value.length < minLength));
-}
-
-export function passwordTooShort(value) {
-  return stringTooShort(value, MIN_PASSWORD_LENGTH);
-}
-
-export function stringsDoNotMatch(value1, value2) {
-  return ((value1 !== undefined) && (value2 !== undefined) && (value1 !== value2));
 }
 
 export function invalidUrl(value) {

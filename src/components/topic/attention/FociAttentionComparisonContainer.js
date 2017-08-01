@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -15,8 +14,8 @@ import { downloadSvg } from '../../util/svg';
 
 const localMessages = {
   overallSeries: { id: 'topic.attention.series.overall', defaultMessage: 'Whole Topic' },
-  bubbleChartTitle: { id: 'topic.attention.bubbleChart.title', defaultMessage: 'Total Stories in Each Subtopic' },
-  lineChartTitle: { id: 'topic.attention.lineChart.title', defaultMessage: 'Total Sentences over Time in Each Subtopic' },
+  bubbleChartTitle: { id: 'topic.attention.bubbleChart.title', defaultMessage: 'Total Attention' },
+  lineChartTitle: { id: 'topic.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -123,20 +122,20 @@ class FociAttentionComparisonContainer extends React.Component {
 
 FociAttentionComparisonContainer.propTypes = {
   // from parent
-  filters: PropTypes.object.isRequired,
-  selectedFocalSetId: PropTypes.number.isRequired,
-  topicId: PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  selectedFocalSetId: React.PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
   // from composition
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from mergeProps
-  asyncFetch: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  foci: PropTypes.array.isRequired,
-  overallTotal: PropTypes.number.isRequired,
-  overallCounts: PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  foci: React.PropTypes.array.isRequired,
+  overallTotal: React.PropTypes.number.isRequired,
+  overallCounts: React.PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

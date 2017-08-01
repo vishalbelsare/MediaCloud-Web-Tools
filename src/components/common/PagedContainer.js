@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import messages from '../../resources/messages';
@@ -24,10 +23,10 @@ function composePagedContainer(ComposedContainer) {
     return <ComposedContainer {...props} nextButton={nextButton} previousButton={previousButton} />;
   };
   PagedContainer.propTypes = {
-    intl: PropTypes.object.isRequired,
-    links: PropTypes.object.isRequired,
-    nextPage: PropTypes.func.isRequired,
-    previousPage: PropTypes.func.isRequired,
+    intl: React.PropTypes.object.isRequired,
+    links: React.PropTypes.object.isRequired,
+    nextPage: React.PropTypes.func.isRequired,
+    previousPage: React.PropTypes.func.isRequired,
   };
   return PagedContainer;
 }

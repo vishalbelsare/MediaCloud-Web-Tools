@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -12,7 +11,7 @@ import { downloadSvg } from '../../util/svg';
 import { DownloadButton } from '../../common/IconButton';
 
 const localMessages = {
-  title: { id: 'word.inContext.title', defaultMessage: 'Word in Context: {word}' },
+  title: { id: 'word.inContext.title', defaultMessage: 'Word in Context' },
   helpTitle: { id: 'word.inContext.help.title', defaultMessage: 'About Word in Context' },
   helpText: { id: 'word.inContext.help.text',
     defaultMessage: '<p>It is helpful to look at how a word is used, in addition to the fact that it is used.  While a word cloud can tell you what words are used, this interactive visualization can help you explore the use of a word in context.</p>',
@@ -48,7 +47,7 @@ class WordInContextContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.downloadSVG)} onClick={() => this.downloadSvg()} />
         </div>
         <h2>
-          <FormattedMessage {...localMessages.title} values={{ word: term }} />
+          <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
         <WordTree
@@ -64,17 +63,17 @@ class WordInContextContainer extends React.Component {
 
 WordInContextContainer.propTypes = {
   // from parent
-  stem: PropTypes.string.isRequired,
-  term: PropTypes.string.isRequired,
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
+  stem: React.PropTypes.string.isRequired,
+  term: React.PropTypes.string.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from store
-  fragments: PropTypes.array.isRequired,
+  fragments: React.PropTypes.array.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from context
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 

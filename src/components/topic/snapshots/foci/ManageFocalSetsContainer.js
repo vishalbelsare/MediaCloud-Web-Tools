@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -102,11 +101,9 @@ class ManageFocalSetsContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <div id="create-foci-button">
-                <Link to={`/topics/${topicId}/snapshot/foci/create`}>
-                  <AppButton primary label={formatMessage(messages.addFocus)} />
-                </Link>
-              </div>
+              <Link to={`/topics/${topicId}/snapshot/foci/create`}>
+                <AppButton primary label={formatMessage(messages.addFocus)} />
+              </Link>
             </Col>
           </Row>
         </Grid>
@@ -119,15 +116,15 @@ class ManageFocalSetsContainer extends React.Component {
 
 ManageFocalSetsContainer.propTypes = {
   // from composition
-  topicId: PropTypes.number.isRequired,
-  intl: PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  focalSetDefinitions: PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  focalSetDefinitions: React.PropTypes.array.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  handleFocalSetDefinitionDelete: PropTypes.func.isRequired,
-  handleFocusDefinitionDelete: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  handleFocalSetDefinitionDelete: React.PropTypes.func.isRequired,
+  handleFocusDefinitionDelete: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
