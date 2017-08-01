@@ -30,8 +30,8 @@ export const updateQuery = createAction(UPDATE_QUERY, query => query);
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const selectMedia = createAction(SELECT_MEDIA, media => media);
 
-export const FETCH_MEDIA = 'FETCH_MEDIA';
-export const fetchMedia = createAsyncAction(FETCH_MEDIA, api.fetchMedia);
+export const FETCH_MEDIA_FOR_QUERY = 'FETCH_MEDIA_FOR_QUERY';
+export const fetchMedia = createAsyncAction(FETCH_MEDIA_FOR_QUERY, api.fetchMedia);
 
 export const PREPARE_QUERIES = 'PREPARE_QUERIES';
 export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQueries);

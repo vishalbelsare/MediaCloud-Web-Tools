@@ -53,8 +53,6 @@ def api_explorer_collection_set(tag_sets_id):
     :return: dict of info and list of collections in
     '''
     info = []
-    user_mc = user_admin_mediacloud_client()
-
     if is_user_logged_in() and user_has_auth_role(ROLE_MEDIA_EDIT) == True:
         info = _tag_set_with_private_collections(tag_sets_id)
     else:

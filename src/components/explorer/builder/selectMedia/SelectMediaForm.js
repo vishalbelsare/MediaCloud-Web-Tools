@@ -3,9 +3,9 @@ import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import Collapsible from 'react-collapsible';
 import composeIntlForm from '../../../common/IntlForm';
-import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
+// import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
 // import AppButton from '../../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
+// import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
 
 
 const localMessages = {
@@ -26,29 +26,7 @@ const SelectMediaForm = (props) => {
         <p>enter name or url</p>
         <p>here</p>
       </Collapsible>
-      <Collapsible trigger={formatMessage(localMessages.searchByMetadata)}>
-        <MetadataPickerContainer
-          id={TAG_SET_PUBLICATION_COUNTRY}
-          name={'publicationCountry'}
-          form="selectMediaForm"
-          floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
-          autocomplete
-        />
-        <MetadataPickerContainer
-          id={TAG_SET_PUBLICATION_STATE}
-          name={'publicationState'}
-          form="selectMediaForm"
-          floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
-          autocomplete
-        />
-        <MetadataPickerContainer
-          id={TAG_SET_PRIMARY_LANGUAGE}
-          name={'primaryLanguage'}
-          form="selectMediaForm"
-          floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
-          autocomplete
-        />
-      </Collapsible>
+      <Collapsible trigger={formatMessage(localMessages.searchByMetadata)} />
     </form>
   );
 };
