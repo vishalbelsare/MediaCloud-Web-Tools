@@ -1,35 +1,8 @@
-<<<<<<< HEAD
-import csv as pycsv
-=======
->>>>>>> master
 import datetime
 import logging
 import os
 from operator import itemgetter
-<<<<<<< HEAD
 
-import flask_login
-from flask import jsonify, request, render_template
-from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
-from werkzeug import secure_filename
-
-import server.util.csv as csv
-from server import app, mc, db, settings
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
-    ROLE_MEDIA_EDIT
-from server.cache import cache
-from server.util.common import collection_media_list
-from server.util.mail import send_html_email
-from server.util.request import arguments_required, form_fields_required, api_error_handler, json_error_response
-from server.util.tags import COLLECTIONS_TAG_SET_ID, TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, \
-    TAG_SETS_ID_PRIMARY_LANGUAGE, \
-    VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, is_metadata_tag_set, format_name_from_label
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
-    COLLECTIONS_TEMPLATE_PROPS_EDIT, download_sources_csv, _cached_source_story_count
-from server.views.sources.favorites import _add_user_favorite_flag_to_collections, _add_user_favorite_flag_to_sources
-from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
-from server.views.sources.metadata import cached_tags_in_tag_set
-=======
 from multiprocessing import Pool
 import flask_login
 from flask import jsonify, request
@@ -40,13 +13,15 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
 from server.cache import cache
+from server.util.common import collection_media_list
+from server.util.mail import send_html_email
+
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
->>>>>>> master
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.words import cached_wordcount, stream_wordcount_csv
 
