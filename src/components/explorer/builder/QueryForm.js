@@ -8,6 +8,7 @@ import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
 // import { emptyString } from '../../../lib/formValidators';
+import SelectMediaDialog from './SelectMediaDialog';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -69,6 +70,7 @@ const QueryForm = (props) => {
             </Col>
             <Col lg={1} />
             <Col lg={6}>
+              <SelectMediaDialog />
               <div className="media-field-wrapper">
                 <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
                 <SourceCollectionsForm

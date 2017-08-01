@@ -123,6 +123,7 @@ const messages = {
   help: { id: 'help', defaultMessage: 'Help' },
   delete: { id: 'delete', defaultMessage: 'Delete' },
   save: { id: 'save', defaultMessage: 'Save' },
+  done: { id: 'done', defaultMessage: 'Done' },
   preview: { id: 'preview', defaultMessage: 'Preview' },
   confirm: { id: 'confirm', defaultMessage: 'Confirm' },
   remove: { id: 'remove', defaultMessage: 'Remove' },

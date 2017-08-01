@@ -44,5 +44,9 @@ export function demoQueryCollectionsByIds(params) {
   acceptedParams['collections[]'] = params.collections;
   return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
 }
+export function fetchMedia() {
+  // TODO fetch sources too, for now just temp using collections
+  return createApiPromise('api/explorer/set/5');
+}
 
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

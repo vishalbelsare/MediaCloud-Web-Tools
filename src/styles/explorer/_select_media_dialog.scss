@@ -1,0 +1,43 @@
+@import '../_constants';
+
+.select-media-dialog {
+
+  .select-media-dialog-content {
+    > div {
+      background-color: $material-grey800 !important;
+    }
+  }
+
+  .select-media-dialog-title {
+    font-weight: bold !important;
+    text-align: center !important;
+    font-family: $font-families !important;
+    color: rgb(255,255,255) !important;
+  }
+
+  .select-media-dialog-body {
+    .select-media-container {
+      max-width: 400px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 25px;
+      .app-icon {
+        width: 50px !important;
+        &.app-icon-snapshots > svg {
+          height: 30px !important;
+        }
+        &.app-icon-timespan > svg {
+          height: 30px !important;
+        }
+        &.app-icon-focus > svg {
+          height: 30px !important;
+        }
+      }
+    }
+  }
+
+  .select-media-dialog-overlay {
+
+  }
+
+}

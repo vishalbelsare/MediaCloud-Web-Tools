@@ -3,10 +3,11 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, mc
-from server.auth import user_admin_mediacloud_client
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
+    is_user_logged_in, ROLE_MEDIA_EDIT
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.views.explorer import solr_query_from_request, read_sample_searches
-# load the shared settings file
+from operator import itemgetter
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,54 @@ def api_explorer_collections_by_ids():
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
         coll_list.append(info);
     return jsonify(coll_list)
+
+@app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])
+@api_error_handler
+def api_explorer_collection_set(tag_sets_id):
+    '''
+    Return a list of all the (public only or public and private, depending on user role) collections in a tag set.  Not cached because this can change, and load time isn't terrible.
+    :param tag_sets_id: the tag set to query for public collections
+    :return: dict of info and list of collections in
+    '''
+    info = []
+    user_mc = user_admin_mediacloud_client()
+
+    if is_user_logged_in() and user_has_auth_role(ROLE_MEDIA_EDIT) == True:
+        info = _tag_set_with_private_collections(tag_sets_id)
+    else:
+        info = _tag_set_with_public_collections(tag_sets_id)
+
+    #_add_user_favorite_flag_to_collections(info['collections'])
+    return jsonify(info)
+
+def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
+
+    # TODO use which mc or user_mc here
+    tag_set = mc.tagSet(tag_sets_id)
+    # page through tags
+    more_tags = True
+    all_tags = []
+    last_tags_id = 0
+    while more_tags:
+        tags = mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100, public_only=show_only_public_collections)
+        all_tags = all_tags + tags
+        if len(tags) > 0:
+            last_tags_id = tags[-1]['tags_id']
+        more_tags = len(tags) != 0
+    collection_list = [t for t in all_tags if t['show_on_media'] is 1]  # double check the show_on_media because that controls public or not
+    collection_list = sorted(collection_list, key=itemgetter('label'))
+    return {
+        'name': tag_set['label'],
+        'description': tag_set['description'],
+        'collections': collection_list
+    }
+
+def _tag_set_with_private_collections(tag_sets_id):
+    return _tag_set_with_collections(tag_sets_id, False)
+
+
+def _tag_set_with_public_collections(tag_sets_id):
+    return _tag_set_with_collections(tag_sets_id, True)
 
 
 @app.route('/api/explorer/words/count', methods=['POST'])
