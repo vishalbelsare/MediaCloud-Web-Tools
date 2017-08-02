@@ -21,7 +21,8 @@ const localMessages = {
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the average number of sentences that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the sentences per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
-
+const DEFAULT_SOURCES = '';
+const DEFAULT_COLLECTION = 9139487;
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 
 function dataAsSeries(data) {
@@ -145,25 +146,17 @@ const mapDispatchToProps = (dispatch, state) => ({
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
 
     if (isLoggedInUser) {
-      /* const infoToQuery = {
-      start_date: query.start_date,
-      end_date: query.end_date,
-      solr_seed_query: query.q,
-      color: query.color,
-    };
-    if ('sourcesAndCollections' in query) {
-      infoToQuery['sources[]'] = query.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
-      infoToQuery['collections[]'] = query.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
-    } else {
-      infoToQuery['sources[]'] = '';
-      infoToQuery['collections[]'] = '';
-    }
-    */
-      if (params) { // specific change/update here
-        dispatch(fetchQuerySentenceCounts());
-      } else { // get all results
-        state.queries.map((q, index) => dispatch(fetchQuerySentenceCounts(q, index)));
-      }
+      state.queries.map((q) => {
+        const infoToQuery = {
+          start_date: q.startDate,
+          end_date: q.endDate,
+          q: q.q,
+          index: q.index,
+          sources: [DEFAULT_SOURCES],
+          collections: [DEFAULT_COLLECTION],
+        };
+        return dispatch(fetchQuerySentenceCounts(infoToQuery));
+      });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
       // find queries on stack without id but with index and with q, and add?

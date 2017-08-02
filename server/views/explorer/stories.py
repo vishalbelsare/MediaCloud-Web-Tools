@@ -14,6 +14,16 @@ import json
 
 logger = logging.getLogger(__name__)
 
+@app.route('/api/explorer/stories/sample', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_explorer_story_sample():
+    solr_query = parse_query_with_keywords(request.args)
+ 
+    story_count_result = cached_story_samples(solr_query)
+    return jsonify(story_count_result)  
+
+
 @app.route('/api/explorer/demo/stories/sample', methods=['GET'])
 @api_error_handler
 def api_explorer_demo_story_sample():
@@ -68,6 +78,15 @@ def stream_story_samples_csv(filename, stories):
     props = ['stories_id', 'publish_date',
             'title', 'media_name']
     return csv.stream_response(stories, props, filename)
+
+@app.route('/api/explorer/story/count', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_explorer_story_count():
+    solr_query = parse_query_with_keywords(request.args)
+ 
+    story_count_result = cached_story_count(solr_query)
+    return jsonify(story_count_result)  
 
 
 @app.route('/api/explorer/demo/story/count', methods=['GET'])

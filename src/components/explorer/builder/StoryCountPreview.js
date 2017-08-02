@@ -13,6 +13,8 @@ import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
+const DEFAULT_SOURCES = '';
+const DEFAULT_COLLECTION = 9139487;
 
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Story Counts' },
@@ -127,8 +129,17 @@ const mapDispatchToProps = (dispatch, state) => ({
       // if (idx) { // specific change/update here
       //  dispatch(fetchQueryStoryCount(query, idx));
       // } else { // get all results
-      state.queries.map((q, index) => dispatch(fetchQueryStoryCount(q, index)));
-      // }
+      state.queries.map((q) => {
+        const infoToQuery = {
+          start_date: q.startDate,
+          end_date: q.endDate,
+          q: q.q,
+          index: q.index,
+          sources: [DEFAULT_SOURCES],
+          collections: [DEFAULT_COLLECTION],
+        };
+        return dispatch(fetchQueryStoryCount(infoToQuery));
+      });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q, index) => {

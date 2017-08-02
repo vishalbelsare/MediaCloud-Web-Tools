@@ -1,14 +1,15 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
-import { selectQuery, updateTimestampForQueries, selectBySearchId, fetchSampleSearches } from '../../../actions/explorerActions';
-// import QueryForm from './QueryForm';
-import QueryPicker from './QueryPicker';
+import { push } from 'react-router-redux';
+import * as d3 from 'd3';
+import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+
+import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-// import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -20,9 +21,11 @@ const DEFAULT_COLLECTION = 9139487;
 
 class LoggedInQueryContainer extends React.Component {
   componentWillMount() {
-    const { selected } = this.props;
-    if (!selected) {
-      this.checkPropsAndDispatch(this.props);
+    const { user, selected } = this.props;
+    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+      if (!selected) {
+        this.checkPropsAndDispatch(this.props);
+      }
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -33,37 +36,39 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { user, samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
 
-    if (whichProps.location.pathname.includes('/queries/demo/search')) {
-      // parse query params
-      // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
-      const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
-      /* const currentQuery = parsedObjectArray.map(q => q.q);
-       let isNewQuerySet = null;
-      if (whichProps && whichProps.selected) {
-        isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0); // this is true even if a new query is beign entered
-      } */
-      if (this.props.location.pathname !== whichProps.location.pathname) {
-        // TODO how to keep current selection if this is just an *updated* set of queries
-        selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]);
-      } else if (!selected && !whichProps.selected) {
-        selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]);
-      }
-    } else if (whichProps.location.pathname.includes('/queries/demo')) {
-      currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
+    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+      if (whichProps.location.pathname.includes('/queries/search')) {
+        // parse query params
+        // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
+        const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+        /* const currentQuery = parsedObjectArray.map(q => q.q);
+         let isNewQuerySet = null;
+        if (whichProps && whichProps.selected) {
+          isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0); // this is true even if a new query is beign entered
+        } */
+        if (this.props.location.pathname !== whichProps.location.pathname) {
+          // TODO how to keep current selection if this is just an *updated* set of queries
+          selectQueriesByURLParams(parsedObjectArray);
+          setSelectedQuery(parsedObjectArray[0]);
+        } else if (!selected && !whichProps.selected) {
+          selectQueriesByURLParams(parsedObjectArray);
+          setSelectedQuery(parsedObjectArray[0]);
+        }
+      } else if (whichProps.location.pathname.includes('/queries')) {
+        currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
 
-      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
-        loadSampleSearches(currentIndexOrQuery); // currentIndex
-      } else if ((!selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
-        selectSearchQueriesById(samples[currentIndexOrQuery]);
-        setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
-      } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
-        selectSearchQueriesById(samples[currentIndexOrQuery]);
+        if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+          loadSampleSearches(currentIndexOrQuery); // currentIndex
+        } else if ((!selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
+          selectSearchQueriesById(samples[currentIndexOrQuery]);
+          setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
+        } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
+          selectSearchQueriesById(samples[currentIndexOrQuery]);
+        }
       }
     }
   }
@@ -104,17 +109,21 @@ class LoggedInQueryContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
+    const { user, selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <div>Error</div>;
     const isEditable = location.pathname.includes('queries/demo/search');
-    if (queries && queries.length > 0 && selected) {
-      content = (
-        <div>
-          <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
-          <QueryResultsContainer queries={queries} params={location} samples={samples} />
-        </div>
-      );
+    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+      if (queries && queries.length > 0 && selected) {
+        content = (
+          <div>
+            <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+            <QueryResultsContainer queries={queries} params={location} samples={samples} />
+          </div>
+        );
+      }
+    } else {
+      content = <div>No Permissions</div>;
     }
     // TODO, decide whether to show QueryForm if in Demo mode
     return (
@@ -179,7 +188,7 @@ const mapDispatchToProps = dispatch => ({
   handleSearch: (queries) => {
     // let urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
     const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
-    const newLocation = `queries/demo/search/[${urlParamString}]`;
+    const newLocation = `queries/search/[${urlParamString}]`;
     dispatch(push(newLocation));
     // this should keep the current selection...
   },
@@ -188,16 +197,16 @@ const mapDispatchToProps = dispatch => ({
     // select first entry
     dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
     queryArrayFromURL.map((q, idx) => {
-      const demoInfo = {
+      const queryInfo = {
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
-        demoInfo.sources = q.sources;
-        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+        queryInfo.sources = q.sources;
+        dispatch(fetchQuerySourcesByIds(queryInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        demoInfo.collections = q.collections;
-        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+        queryInfo.collections = q.collections;
+        dispatch(fetchQueryCollectionsByIds(queryInfo)); // get collection names
       }
       return 0;
     });
@@ -205,16 +214,16 @@ const mapDispatchToProps = dispatch => ({
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries
     searchObj.queries.map((q, idx) => {
-      const demoInfo = {
+      const queryInfo = {
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
-        demoInfo.sources = q.sources;
-        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+        queryInfo.sources = q.sources;
+        dispatch(fetchQuerySourcesByIds(queryInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        demoInfo.collections = q.collections;
-        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+        queryInfo.collections = q.collections;
+        dispatch(fetchQueryCollectionsByIds(queryInfo)); // get collection names
       }
       return 0;
     });

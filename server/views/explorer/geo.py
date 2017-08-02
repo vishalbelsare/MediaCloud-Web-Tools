@@ -15,6 +15,12 @@ import json
 
 logger = logging.getLogger(__name__)
 
+@app.route('/api/explorer/geo-tags/counts', methods=['GET'])
+@flask_login.login_required
+def api_explorer_geotag_count():
+    return geotag_count()
+
+
 @app.route('/api/explorer/demo/geo-tags/counts', methods=['GET'])
 def api_explorer_demo_geotag_count():
     return geotag_count()

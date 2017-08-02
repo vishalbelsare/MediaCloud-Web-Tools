@@ -22,6 +22,9 @@ const localMessages = {
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
+const DEFAULT_SOURCES = '';
+const DEFAULT_COLLECTION = 9139487;
+
 class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
@@ -122,11 +125,17 @@ const mapDispatchToProps = (dispatch, state) => ({
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     if (isLoggedInUser) {
-      // if (idx) { // specific change/update here
-      //  dispatch(fetchQueryGeo(query, idx));
-      // } else { // get all results
-      queries.map((q, index) => dispatch(fetchQueryGeo(q, index)));
-      // }
+      state.queries.map((q) => {
+        const infoToQuery = {
+          start_date: q.startDate,
+          end_date: q.endDate,
+          q: q.q,
+          index: q.index,
+          sources: [DEFAULT_SOURCES],
+          collections: [DEFAULT_COLLECTION],
+        };
+        return dispatch(fetchQueryGeo(infoToQuery));
+      });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q, index) => {

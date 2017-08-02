@@ -14,7 +14,8 @@ import messages from '../../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 // const NUM_TO_SHOW = 20;
-
+const DEFAULT_SOURCES = '';
+const DEFAULT_COLLECTION = 9139487;
 // TODO check all these messages
 
 const localMessages = {
@@ -120,8 +121,17 @@ const mapDispatchToProps = (dispatch, state) => ({
       // if (idx) { // specific change/update here
       //  dispatch(fetchQuerySampleStories(query, idx));
       // } else { // get all results
-      state.queries.map((q, index) => dispatch(fetchQuerySampleStories(q, index)));
-      // }
+      state.queries.map((q) => {
+        const infoToQuery = {
+          start_date: q.startDate,
+          end_date: q.endDate,
+          q: q.q,
+          index: q.index,
+          sources: [DEFAULT_SOURCES],
+          collections: [DEFAULT_COLLECTION],
+        };
+        return dispatch(fetchQuerySampleStories(infoToQuery));
+      });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q, index) => {

@@ -18,11 +18,41 @@ logger = logging.getLogger(__name__)
 def api_explorer_sample_searches():
     return read_sample_searches()
 
+@app.route('/api/explorer/sources/list', methods=['GET'])
+@flask_login.login_required
+@arguments_required('sources[]')
+@api_error_handler
+def api_explorer_sources_by_ids():
+    # TODO do logged in check and use same code path?
+    user_mc = user_admin_mediacloud_client()
+    source_list = []
+    source_id_array = request.args['sources[]'].split(',')
+    for mediaId in source_id_array:
+        info = user_mc.media(mediaId)
+        info['id'] = mediaId
+        source_list.append(info)
+    return jsonify(source_list)
+
+@app.route('/api/explorer/collections/list', methods=['GET'])
+@flask_login.login_required
+@arguments_required('collections[]')
+@api_error_handler
+def api_explorer_demo_collections_by_ids():
+    user_mc = user_admin_mediacloud_client()
+    collIdArray = request.args['collections[]'].split(',')
+    coll_list = []
+    for tagsId in collIdArray:
+        info = user_mc.tag(tagsId)
+        info['id'] = tagsId
+        # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
+        coll_list.append(info);
+    return jsonify(coll_list)
+
 
 @app.route('/api/explorer/demo/sources/list', methods=['GET'])
 @arguments_required('sources[]')
 @api_error_handler
-def api_explorer_sources_by_ids():
+def api_explorer_demo_sources_by_ids():
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
     for mediaId in source_id_array:

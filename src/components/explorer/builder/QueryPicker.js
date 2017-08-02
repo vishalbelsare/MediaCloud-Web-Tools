@@ -20,7 +20,8 @@ const localMessages = {
 
 const MAX_COLORS = 20;
 const DEFAULT_COLLECTION = 9139487;
-//
+const DEFAULT_COLLECTION_OBJECT = [{ tags_id: DEFAULT_COLLECTION, label: 'U.S. Top News' }];
+
 class QueryPicker extends React.Component {
 
   addAQuery(newQueryObj) {
@@ -75,7 +76,7 @@ class QueryPicker extends React.Component {
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
         const genDefColor = colorPallette(newIndex);
-        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: [{ tags_id: DEFAULT_COLLECTION, label: 'U.S. Top News' }], sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: JSON.stringify(DEFAULT_COLLECTION_OBJECT), sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>
