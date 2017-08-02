@@ -7,7 +7,7 @@ import AppToolbar from './AppToolbar';
 import messages from '../../../resources/messages';
 import { getBrandColors } from '../../../styles/colors';
 import AppNoticesContainer from './AppNoticesContainer';
-import { assetPath } from '../../../lib/assetUtil';
+import { assetUrl } from '../../../lib/assetUtil';
 
 const localMessages = {
   goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
@@ -35,7 +35,7 @@ const AppHeader = (props) => {
               <img
                 className="app-logo"
                 alt={formatMessage(messages.suiteName)}
-                src={assetPath('/static/img/mediacloud-logo-white-2x.png')}
+                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
                 width={65}
                 height={65}
               />
@@ -57,7 +57,7 @@ const AppHeader = (props) => {
               <img
                 className="app-logo"
                 alt={formatMessage(messages.suiteName)}
-                src={assetPath('/static/img/mediacloud-logo-white-2x.png')}
+                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
                 width={65}
                 height={65}
               />
