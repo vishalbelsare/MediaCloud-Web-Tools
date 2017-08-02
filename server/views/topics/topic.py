@@ -3,13 +3,12 @@ import logging
 from flask import jsonify, request
 import flask_login
 import string
-from gensim.models.keyedvectors import KeyedVectors
-from sklearn.decomposition import PCA
 
 from server import app, db, mc
 from server.cache import cache
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
+from server.util.wordembeddings import google_news_2d
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
@@ -265,34 +264,13 @@ def topic_search():
 @api_error_handler
 def topic_word2vec(topic_id):
     user_mc = user_mediacloud_client()
-    topic_word_count = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
-    
-    try:
-        word_vectors = KeyedVectors.load('./server/static/data/GoogleNews-vectors-negative300', mmap='r')
-    except IOError:
-        return jsonify({'embeddings': []})
-
-    # Remove words that are not in model vocab
-    to_be_removed = []
-    for w in topic_word_count:
-      try:
-        # remove punctuation
-        w['term'] = "".join(l for l in w['term'] if l not in string.punctuation)
-        word_vectors[w['term']]
-      except KeyError:
-        to_be_removed.append(w)
-    for w in to_be_removed:
-      topic_word_count.remove(w)
-
-    terms = map(lambda x: x['term'], topic_word_count)
-    counts = map(lambda x: x['count'], topic_word_count)
-
-    embeddings = [word_vectors[t] for t in terms]
-    pca = PCA(n_components=2)
-    two_d_embeddings = pca.fit_transform(embeddings).tolist()
-
+    topic_word_counts = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
+    words = [w['term'] for w in topic_word_counts]
+    word2vec_results = google_news_2d(words)
+    terms = map(lambda x: x['term'], topic_word_counts)
+    counts = map(lambda x: x['count'], topic_word_counts)
     data = []
     for i in range(len(terms)):
-        data.append({'term': terms[i], 'count': counts[i], 'x': two_d_embeddings[i][0], 'y': two_d_embeddings[i][1]})
-
+        data.append({'term': terms[i], 'count': counts[i],
+                     'x': word2vec_results[i]['x'], 'y': word2vec_results[i]['y']})
     return jsonify({'embeddings': data})

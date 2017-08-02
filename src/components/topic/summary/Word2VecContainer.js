@@ -10,9 +10,9 @@ import DataCard from '../../common/DataCard';
 import Word2VecChart from '../../vis/Word2VecChart';
 
 const localMessages = {
-  title: { id: 'topic.words.word2vec.title', defaultMessage: 'Word2Vec' },
-  descriptionIntro: { id: 'topic.words.word2vec.help.title', defaultMessage: 'W2V help text here...' },
-  missingGoogleVectors: { id: 'topic.words.word2vec.missingGoogleVectors', defaultMessage: 'Sorry, but our Word2Vec data could not be generated at this time.' },
+  title: { id: 'topic.words.word2vec.title', defaultMessage: 'Word Space' },
+  descriptionIntro: { id: 'topic.words.word2vec.help.title', defaultMessage: 'The Word Space shows you how the most common words are used together.  Each word is bigger and dark if it is used more, and it is positioned next to other words it is used with.' },
+  missingGoogleVectors: { id: 'topic.words.word2vec.missingGoogleVectors', defaultMessage: 'Sorry, but our word space data could not be generated at this time.' },
 };
 
 const WORD2VEC_DOM_ID = 'topic-summary-word2vec';
