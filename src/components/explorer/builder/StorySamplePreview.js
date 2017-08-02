@@ -70,6 +70,7 @@ class StorySamplePreview extends React.Component {
           {results.map((storySet, idx) =>
             (<Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
               <StoryTable
+                className="story-table"
                 stories={storySet}
                 index={idx}
                 onChangeFocusSelection={handleStorySelection}
