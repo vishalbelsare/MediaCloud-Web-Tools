@@ -91,6 +91,7 @@ class TopicSummaryContainer extends React.Component {
             <Row>
               <Col lg={12}>
                 <Word2VecContainer topicId={topicId} filters={filters} />
+              </Col>
             </Row>
             <Row>
               <Col lg={12}>
