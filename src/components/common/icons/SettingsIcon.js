@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const SettingsIcon = props => (
@@ -11,7 +12,7 @@ const SettingsIcon = props => (
 );
 
 SettingsIcon.propTypes = {
-  backgroundColor: React.PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default SettingsIcon;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
@@ -124,7 +125,7 @@ function composeIntlForm(Component) {
   }
 
   IntlFormForm.propTypes = {
-    intl: React.PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   return injectIntl(IntlFormForm);

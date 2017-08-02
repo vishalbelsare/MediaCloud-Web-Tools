@@ -1,18 +1,19 @@
 import logging
 from flask import jsonify, request
 import flask_login
+from multiprocessing import Pool
 
 from server import app
-from server.util.request import  api_error_handler
-from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.tags import COLLECTIONS_TAG_SET_ID, GV_TAG_SET_ID, EMM_TAG_SET_ID
-from server.views.sources.favorites import _add_user_favorite_flag_to_sources, _add_user_favorite_flag_to_collections
+from server.util.request import api_error_handler
+from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
+from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
 
 MAX_SOURCES = 20
 MAX_COLLECTIONS = 20
+MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 
 
 @app.route('/api/sources/search/<search_str>', methods=['GET'])
@@ -27,12 +28,12 @@ def media_search(search_str):
         source_list = media_search(cleaned_search_str)[:MAX_SOURCES]
     else:
         source_list = media_search(cleaned_search_str, tags_id=tags[0])[:MAX_SOURCES]
-    _add_user_favorite_flag_to_sources(source_list)
+    add_user_favorite_flag_to_sources(source_list)
     return jsonify({'list':source_list})
 
 
 def media_search(search_str, tags_id=None):
-    mc = user_admin_mediacloud_client()
+    mc = user_mediacloud_client()
     return mc.mediaList(name_like=search_str, tags_id=tags_id)
 
 
@@ -41,18 +42,21 @@ def media_search(search_str, tags_id=None):
 @api_error_handler
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    results = collection_search(search_str, public_only)
-    trimmed = [ r[:MAX_COLLECTIONS] for r in results]
+    results = _matching_tags_by_set(search_str, public_only)
+    trimmed = [r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
-    _add_user_favorite_flag_to_collections(flat_list)
+    add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})
 
 
-def collection_search(search_str, public_only):
-    mc = user_admin_mediacloud_client()
-    mc_results = mc.tagList(tag_sets_id=COLLECTIONS_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    gv_results = mc.tagList(tag_sets_id=GV_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    emm_results = mc.tagList(tag_sets_id=EMM_TAG_SET_ID, public_only=public_only, name_like=search_str)
-    return [mc_results, emm_results, gv_results]
+def _media_search_worker(job):
+    user_mc = user_mediacloud_client()
+    return user_mc.tagList(tag_sets_id=job['tag_sets_id'], public_only=job['public_only'], name_like=job['search_str'])
 
 
+def _matching_tags_by_set(search_str, public_only):
+    search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str, 'public_only': public_only}
+                   for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
+    pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
+    matching_tags_in_collections = pool.map(_media_search_worker, search_jobs)
+    return matching_tags_in_collections

@@ -1,13 +1,14 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { WarningNotice } from '../common/Notice';
+import { ErrorNotice } from '../common/Notice';
 import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
-  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your query maxed out the 100K limit on stories. Try to better constrain your seed stories next time.' },
+  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your topic has collected more than the 100,000 story limit! You\'ll need to make a new topic with fewer seed stories if you want to investigate this.' },
   noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
 };
 
@@ -44,10 +45,10 @@ class FilteredTopicContainer extends React.Component {
       // how to distinguish between fetch-ongoing and a generating snapshot?
       if (topicInfo && topicInfo.message) {
         if (topicInfo.message.includes('exceeds')) {
-          subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></WarningNotice>;
+          subContent = (
+            <ErrorNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></ErrorNotice>
+          );
         }
-      } else {
-        subContent = <WarningNotice><FormattedHTMLMessage {...localMessages.noUsableSnapshot} /></WarningNotice>;
       }
     }
     return (subContent);
@@ -57,17 +58,17 @@ class FilteredTopicContainer extends React.Component {
 
 FilteredTopicContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
-  fetchStatusInfo: React.PropTypes.string,
-  fetchStatusSnapshot: React.PropTypes.string,
+  intl: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
+  fetchStatusInfo: PropTypes.string,
+  fetchStatusSnapshot: PropTypes.string,
   // from state
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  topicInfo: React.PropTypes.object.isRequired,
-  snapshots: React.PropTypes.array.isRequired,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  topicInfo: PropTypes.object.isRequired,
+  snapshots: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

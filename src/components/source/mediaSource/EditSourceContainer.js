@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -7,7 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
-import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import { nullOrUndefined } from '../../../lib/formValidators';
@@ -25,6 +26,7 @@ const EditSourceContainer = (props) => {
   const pubCountry = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_COUNTRY);
   const pubState = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_STATE);
   const pLanguage = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PRIMARY_LANGUAGE);
+  const pCountryFocus = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_COUNTRY_OF_FOCUS);
   const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
   const intialValues = {
     ...source,
@@ -35,6 +37,7 @@ const EditSourceContainer = (props) => {
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
     publicationState: pubState ? pubState.tags_id : undefined,
     primaryLanguage: pLanguage ? pLanguage.tags_id : undefined,
+    countryOfFocus: pCountryFocus ? pCountryFocus.tags_id : undefined,
   };
   return (
     <div className="edit-source">
@@ -59,14 +62,14 @@ const EditSourceContainer = (props) => {
 
 EditSourceContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleSave: React.PropTypes.func.isRequired,
+  handleSave: PropTypes.func.isRequired,
   // form state
-  sourceId: React.PropTypes.number.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  source: React.PropTypes.object,
-  user: React.PropTypes.object,
+  sourceId: PropTypes.number.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  source: PropTypes.object,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -78,26 +81,26 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage', 'countryOfFocus'];
     const infoToSave = {
-      id: ownProps.params.collectionId,
+      id: ownProps.params.sourceId,
+      url: values.url,
       name: values.name,
-      description: values.description,
       editor_notes: nullOrUndefined(values.editor_notes) ? '' : values.editor_notes,
       public_notes: nullOrUndefined(values.public_notes) ? '' : values.public_notes,
-      monitored: values.monitored,
+      monitored: values.monitored || false,
     };
     metadataTagFormKeys.forEach((key) => { // the metdata tags are encoded in individual properties on the form
       if (key in values) {
         infoToSave[key] = nullOrUndefined(values[key]) ? '' : values[key];
       }
     });
-    if ('sources' in values) {
-      infoToSave['collections[]'] = values.sources.map(s => (s.id ? s.id : s.tags_id));
+    if ('collections' in values) {
+      infoToSave['collections[]'] = values.collections.map(s => s.tags_id);
     } else {
       infoToSave['collections[]'] = [];
     }
-    dispatch(updateSource(values))
+    dispatch(updateSource(infoToSave))
       .then((result) => {
         if (result.success === 1) {
           // need to fetch it again because something may have changed

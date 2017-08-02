@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -122,15 +123,15 @@ class NytLabelSummaryContainer extends React.Component {
 
 NytLabelSummaryContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  coverage: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  data: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  coverage: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  data: PropTypes.array,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

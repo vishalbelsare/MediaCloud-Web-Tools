@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -53,22 +54,22 @@ class WordStoriesContainer extends React.Component {
 
 WordStoriesContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  stem: React.PropTypes.string.isRequired,
-  term: React.PropTypes.string.isRequired,
-  topicId: React.PropTypes.number.isRequired,
+  stem: PropTypes.string.isRequired,
+  term: PropTypes.string.isRequired,
+  topicId: PropTypes.number.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from fetchData
-  fetchData: React.PropTypes.func.isRequired,
-  sortData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  sortData: PropTypes.func.isRequired,
   // from state
-  sort: React.PropTypes.string.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  inlinkedStories: React.PropTypes.array.isRequired,
+  sort: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  inlinkedStories: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({

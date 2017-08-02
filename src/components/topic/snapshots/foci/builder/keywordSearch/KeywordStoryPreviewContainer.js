@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -38,16 +39,16 @@ class KeywordStoryPreviewContainer extends React.Component {
 
 KeywordStoryPreviewContainer.propTypes = {
   // from the composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  keywords: React.PropTypes.string.isRequired,
+  topicId: PropTypes.number.isRequired,
+  keywords: PropTypes.string.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  stories: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  stories: PropTypes.array,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -24,11 +25,11 @@ const BackLinkingControlBar = props => (
 
 BackLinkingControlBar.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  linkTo: React.PropTypes.string.isRequired,
-  message: React.PropTypes.object.isRequired,
-  children: React.PropTypes.node,
+  linkTo: PropTypes.string.isRequired,
+  message: PropTypes.object.isRequired,
+  children: PropTypes.node,
 };
 
 export default injectIntl(BackLinkingControlBar);

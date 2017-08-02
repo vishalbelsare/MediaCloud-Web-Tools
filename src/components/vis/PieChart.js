@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
@@ -52,14 +53,14 @@ const PieChart = (props) => {
 
 PieChart.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
-  data: React.PropTypes.array.isRequired,
-  onPieSliceClick: React.PropTypes.func,
-  tooltipText: React.PropTypes.string.isRequired,
-  showDataLabels: React.PropTypes.bool.isRequired,
-  height: React.PropTypes.number,
+  title: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  onPieSliceClick: PropTypes.func,
+  tooltipText: PropTypes.string.isRequired,
+  showDataLabels: PropTypes.bool.isRequired,
+  height: PropTypes.number,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

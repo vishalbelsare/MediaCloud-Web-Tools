@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -44,18 +45,18 @@ const SourceForm = (props) => {
 
 SourceForm.propTypes = {
   // from parent
-  onSave: React.PropTypes.func.isRequired,
-  buttonLabel: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
+  onSave: PropTypes.func.isRequired,
+  buttonLabel: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  collections: React.PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  collections: PropTypes.array,
   // from form healper
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
 
 function validate(values) {

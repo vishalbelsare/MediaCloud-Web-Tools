@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -53,7 +54,7 @@ const FocusForm4ConfirmContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.name }} /></h2>
+            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.focusName }} /></h2>
           </Col>
         </Row>
         <Row>
@@ -91,17 +92,17 @@ const FocusForm4ConfirmContainer = (props) => {
 
 FocusForm4ConfirmContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
   // form context
-  intl: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
-  submitting: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool,
   // from state
-  formValues: React.PropTypes.object.isRequired,
+  formValues: PropTypes.object.isRequired,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
-  handlePreviousStep: React.PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
+  handlePreviousStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -180,7 +181,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // <------ preserve form data
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 };
 
 export default

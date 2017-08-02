@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
@@ -6,7 +7,7 @@ import DataCard from './DataCard';
 import SourceOrCollectionChip from './SourceOrCollectionChip';
 import FilledStarIcon from './icons/FilledStarIcon';
 import LockIcon from './icons/LockIcon';
-import { isCollectionTagSet } from '../../lib/tagUtil';
+import { isCollectionTagSet, compareTagNames } from '../../lib/tagUtil';
 import { DownloadButton } from '../common/IconButton';
 import messages from '../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../lib/auth';
@@ -14,8 +15,10 @@ import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../lib/a
 const CollectionList = (props) => {
   const { title, intro, collections, handleClick, onDownload, helpButton, user } = props;
   const { formatMessage } = props.intl;
+  // show private collections only if user has right permission
   const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
   const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
+  validCollections.sort(compareTagNames);
   let actions = null;
   if (onDownload) {
     actions = (
@@ -32,7 +35,7 @@ const CollectionList = (props) => {
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
           <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
-            { c.show_on_media === 1 ? <LockIcon /> : '' }
+            { c.show_on_media === 0 ? <LockIcon /> : '' }
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}
@@ -43,17 +46,17 @@ const CollectionList = (props) => {
 
 CollectionList.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
-  intro: React.PropTypes.string,
-  collections: React.PropTypes.array.isRequired,
-  linkToFullUrl: React.PropTypes.bool,
-  onDownload: React.PropTypes.func,
-  helpButton: React.PropTypes.node,
+  title: PropTypes.string.isRequired,
+  intro: PropTypes.string,
+  collections: PropTypes.array.isRequired,
+  linkToFullUrl: PropTypes.bool,
+  onDownload: PropTypes.func,
+  helpButton: PropTypes.node,
   // from dispatch
-  handleClick: React.PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

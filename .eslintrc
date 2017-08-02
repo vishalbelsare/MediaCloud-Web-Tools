@@ -31,5 +31,6 @@
     }],
     "react/require-default-props": 0,
     "react/no-array-index-key": 0,
+    "click-events-have-key-events": 0,
  }
 }

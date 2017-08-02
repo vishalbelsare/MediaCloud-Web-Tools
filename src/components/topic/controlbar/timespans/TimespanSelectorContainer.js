@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { replace, push } from 'react-router-redux';
@@ -46,21 +47,21 @@ class TimespanSelectorContainer extends React.Component {
 
 TimespanSelectorContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  handleTimespanSelected: React.PropTypes.func.isRequired,
-  setExpanded: React.PropTypes.func.isRequired,
-  handlePeriodSelected: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  handleTimespanSelected: PropTypes.func.isRequired,
+  setExpanded: PropTypes.func.isRequired,
+  handlePeriodSelected: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  timespans: React.PropTypes.array.isRequired,
-  isVisible: React.PropTypes.bool.isRequired,
-  selectedPeriod: React.PropTypes.string.isRequired,
-  timespanId: React.PropTypes.number,
-  selectedTimespan: React.PropTypes.object,
+  fetchStatus: PropTypes.string.isRequired,
+  timespans: PropTypes.array.isRequired,
+  isVisible: PropTypes.bool.isRequired,
+  selectedPeriod: PropTypes.string.isRequired,
+  timespanId: PropTypes.number,
+  selectedTimespan: PropTypes.object,
 };
 
 // helper to update the url and fire off event

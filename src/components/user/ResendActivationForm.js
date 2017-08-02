@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -16,7 +17,6 @@ const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter a valid email address.' },
   title: { id: 'user.resendActivation.title', defaultMessage: 'Didn\'t get the activation email?' },
   intro: { id: 'user.resendActivation.intro', defaultMessage: 'Sorry about that! Enter your email address again and we\'ll send you another activation email.' },
-  resendActivation: { id: 'user.resendActivation.action', defaultMessage: 'Resend Activation Email' },
   failed: { id: 'user.resendActivation.failed', defaultMessage: 'Sorry, something went wrong.' },
 };
 
@@ -46,7 +46,7 @@ const ResendActivationForm = (props) => {
           <Col lg={12}>
             <AppButton
               type="submit"
-              label={formatMessage(localMessages.resendActivation)}
+              label={formatMessage(messages.resendActivation)}
               primary
               disabled={pristine || submitting}
             />
@@ -59,16 +59,16 @@ const ResendActivationForm = (props) => {
 
 ResendActivationForm.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   // from state
   // from dispatch
-  handleFormSubmission: React.PropTypes.func.isRequired,
+  handleFormSubmission: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({
@@ -78,12 +78,12 @@ const mapDispatchToProps = dispatch => ({
   handleFormSubmission: (values) => {
     dispatch(resendActivation(values))
     .then((response) => {
-      if (response.status !== 200) {
-        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
-      } else if (response.success === 1) {
+      if (response.success === 1) {
+        dispatch(push('/user/resend-activation-success'));
+      } else if (response.error) {
         dispatch(addNotice({ message: response.error, level: LEVEL_ERROR }));
-      } else {
-        dispatch(push('/#/user/resend-activation-success'));
+      } else if (response.success !== 1) {
+        dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
       }
     });
   },

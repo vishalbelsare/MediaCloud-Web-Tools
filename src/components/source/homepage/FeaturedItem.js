@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import Link from 'react-router/lib/Link';
@@ -27,9 +28,9 @@ const FeaturedItem = (props) => {
 
 FeaturedItem.propTypes = {
   // from parent
-  collection: React.PropTypes.object,
+  collection: PropTypes.object,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

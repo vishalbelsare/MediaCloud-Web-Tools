@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import moment from 'moment';
@@ -39,11 +40,11 @@ class SnapshotListItem extends React.Component {
 }
 
 SnapshotListItem.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  id: React.PropTypes.number.isRequired,
-  snapshot: React.PropTypes.object.isRequired,
-  onSelected: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
+  snapshot: PropTypes.object.isRequired,
+  onSelected: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
 };
 
 export default injectIntl(SnapshotListItem);

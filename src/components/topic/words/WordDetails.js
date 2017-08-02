@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../../common/DataCard';
@@ -21,10 +22,10 @@ const WordDetails = (props) => {
 
 WordDetails.propTypes = {
   // from parent
-  term: React.PropTypes.string.isRequired,
-  stem: React.PropTypes.string.isRequired,
+  term: PropTypes.string.isRequired,
+  stem: PropTypes.string.isRequired,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(WordDetails);

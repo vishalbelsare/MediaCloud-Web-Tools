@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
@@ -5,13 +6,14 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import AppButton from '../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
 
 const localMessages = {
   searchSuggestion: { id: 'search.advanced.searchTip', defaultMessage: 'match these words' },
   pubCountrySuggestion: { id: 'search.advanced.pubCountryTip', defaultMessage: 'published in' },
   pubStateSuggestion: { id: 'search.advanced.pubStateTip', defaultMessage: 'state published in' },
   pLanguageSuggestion: { id: 'search.advanced.pLanguageTip', defaultMessage: 'primary language' },
+  pCountryOfFocusSuggestion: { id: 'search.advanced.pCountryOfFocusTip', defaultMessage: 'country of focus' },
 };
 const AdvancedSearchForm = (props) => {
   const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
@@ -30,7 +32,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_COUNTRY}
             name={'publicationCountry'}
@@ -39,7 +41,7 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_STATE}
             name={'publicationState'}
@@ -48,7 +50,7 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={10}>
+        <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
@@ -57,7 +59,18 @@ const AdvancedSearchForm = (props) => {
             autocomplete
           />
         </Col>
-        <Col lg={2}>
+        <Col lg={6}>
+          <MetadataPickerContainer
+            id={TAG_SET_COUNTRY_OF_FOCUS}
+            name={'countryOfFocus'}
+            form="advancedQueryForm"
+            floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
+            autocomplete
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
           <AppButton
             style={{ marginTop: 30 }}
             type="submit"
@@ -73,17 +86,17 @@ const AdvancedSearchForm = (props) => {
 
 AdvancedSearchForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from form healper
-  initialValues: React.PropTypes.object,
-  buttonLabel: React.PropTypes.string.isRequired,
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
+  buttonLabel: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  renderTextField: PropTypes.func.isRequired,
   // from parent
-  onSearch: React.PropTypes.func.isRequired,
-  searchString: React.PropTypes.string,
+  onSearch: PropTypes.func.isRequired,
+  searchString: PropTypes.string,
 };
 
 const reduxFormConfig = {

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 67.5;
@@ -23,7 +24,7 @@ const MediaSourceIcon = (props) => {
 };
 
 MediaSourceIcon.propTypes = {
-  height: React.PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default MediaSourceIcon;

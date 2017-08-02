@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -26,8 +27,8 @@ const CreateFocusContainer = (props) => {
 
 CreateFocusContainer.propTypes = {
   // from context:
-  topicId: React.PropTypes.number.isRequired,
-  location: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

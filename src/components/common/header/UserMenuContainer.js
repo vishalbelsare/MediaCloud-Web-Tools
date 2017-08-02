@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
@@ -6,7 +7,7 @@ import IconMenu from 'material-ui/IconMenu';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { PERMISSION_LOGGED_IN, logout } from '../../../lib/auth';
 import Permissioned from '../Permissioned';
 import messages from '../../../resources/messages';
 
@@ -28,7 +29,10 @@ const UserMenuContainer = (props) => {
           <MenuItem onTouchTap={() => { routeToUrl('/user/profile'); }}>
             <FormattedMessage {...messages.userProfile} />
           </MenuItem>
-          <MenuItem id="user-logout" onTouchTap={() => { routeToUrl('/logout'); }}>
+          <MenuItem onTouchTap={() => { routeToUrl('/user/change-password'); }}>
+            <FormattedMessage {...messages.userChangePassword} />
+          </MenuItem>
+          <MenuItem id="user-logout" onTouchTap={logout}>
             <FormattedMessage {...messages.userLogout} />
           </MenuItem>
         </IconMenu>
@@ -44,9 +48,9 @@ const UserMenuContainer = (props) => {
 
 UserMenuContainer.propTypes = {
   // from state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   // from dispatch
-  routeToUrl: React.PropTypes.func.isRequired,
+  routeToUrl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

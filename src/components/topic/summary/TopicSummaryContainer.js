@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -15,6 +16,7 @@ import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import TopicStoryStatsContainer from './TopicStoryStatsContainer';
 
 const localMessages = {
   title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
@@ -38,9 +40,11 @@ class TopicSummaryContainer extends React.Component {
     let filteredStoryCountContent = null;
     if ((timespan && (timespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
       filteredStoryCountContent = (
-        <Col lg={12}>
-          <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
-        </Col>
+        <Row>
+          <Col lg={12}>
+            <StoryTotalsSummaryContainer topicId={topicId} filters={filters} />
+          </Col>
+        </Row>
       );
     }
     if (!user.isLoggedIn || this.filtersAreSet()) {
@@ -55,38 +59,57 @@ class TopicSummaryContainer extends React.Component {
             <Col lg={12}>
               <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <SentenceCountSummaryContainer topicId={topicId} filters={filters} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <StoriesSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
               <MediaSummaryContainer topicId={topicId} filters={filters} location={location} />
             </Col>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
               <Col lg={12}>
                 <NytLabelSummaryContainer topicId={topicId} filters={filters} />
               </Col>
-            </Permissioned>
+            </Row>
+          </Permissioned>
+          <Row>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
             </Col>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+          </Row>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            <Row>
               <Col lg={12}>
                 <GeoTagSummaryContainer topicId={topicId} filters={filters} />
               </Col>
-            </Permissioned>
-            <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-              {filteredStoryCountContent}
+            </Row>
+          </Permissioned>
+          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+            {filteredStoryCountContent}
+            <Row>
               <Col lg={12}>
                 <DownloadMapContainer topicId={topicId} filters={filters} />
               </Col>
-              <Col lg={12}>
+            </Row>
+            <Row>
+              <Col lg={6}>
                 <TopicInfo topic={topicInfo} />
               </Col>
-            </Permissioned>
-          </Row>
+              <Col lg={6}>
+                <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
+              </Col>
+            </Row>
+          </Permissioned>
         </Grid>
       );
     } else {
@@ -102,15 +125,15 @@ class TopicSummaryContainer extends React.Component {
 
 TopicSummaryContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object,
   // from state
-  timespan: React.PropTypes.object,
-  location: React.PropTypes.object,
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number,
-  topicInfo: React.PropTypes.object,
-  user: React.PropTypes.object.isRequired,
+  timespan: PropTypes.object,
+  location: PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  topicInfo: PropTypes.object,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

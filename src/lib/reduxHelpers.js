@@ -1,8 +1,8 @@
 import { resolve, reject } from 'redux-simple-promise';
-import { push } from 'react-router-redux';
 import * as fetchConstants from './fetchConstants';
 import { addNotice } from '../actions/appActions';
 import { LEVEL_ERROR } from '../components/common/Notice';
+import { logout } from '../lib/auth';
 
 // TODO: replace this with normalizr? https://github.com/gaearon/normalizr
 export function arrayToDict(arr, keyPropertyName) {
@@ -189,14 +189,16 @@ export function errorReportingMiddleware({ dispatch }) {
       if ('status' in action.payload) {
         if (action.payload.status === 401) {
           // unauthorized - ie. needs to login so delete cookies by going to logout
-          if (action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') { // unless they are trying to login (cause that would be dumb)
-            dispatch(push('/logout'));
-          }
-          message = action.payload.message;
-        } else if (action.payload.status !== 200) {
-          message = 'Sorry, we had an error';
-          if ('message' in action.payload) {
+          if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)
             message = action.payload.message;
+            logout();
+          }
+        } else if (action.payload.status !== 200) {
+          if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)
+            message = 'Sorry, we had an error';
+            if ('message' in action.payload) {
+              message = action.payload.message;
+            }
           }
         }
       }

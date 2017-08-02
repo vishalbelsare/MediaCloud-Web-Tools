@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { DeleteButton, EditButton } from '../../../common/IconButton';
@@ -39,11 +40,11 @@ class FocusDefinition extends React.Component {
 
 FocusDefinition.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  focusDefinition: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.func,
+  topicId: PropTypes.number.isRequired,
+  focusDefinition: PropTypes.object.isRequired,
+  onDelete: PropTypes.func,
 };
 
 export default

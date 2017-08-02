@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const MoreOptionsIcon = props => (
@@ -15,7 +16,7 @@ const MoreOptionsIcon = props => (
 );
 
 MoreOptionsIcon.propTypes = {
-  backgroundColor: React.PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default MoreOptionsIcon;

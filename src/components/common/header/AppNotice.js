@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, WarningNotice } from '../Notice';
@@ -5,7 +6,9 @@ import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR, ErrorNotice, InfoNotice, Warnin
 const localMessages = {
   internalError: { id: 'errors.internal', defaultMessage: 'Internal Error' },
   notLoggedIn: { id: 'errors.notLoggedIn', defaultMessage: 'You need to login' },
+  badLoginAttempt: { id: 'errors.badLoginAttempt', defaultMessage: 'Your email or password was wrong' },
   details: { id: 'errors.internal.details', defaultMessage: 'details' },
+  quotaExceeded: { id: 'errors.quotaExceeded', defaultMessage: 'You have exceeded your weekly search or story quota. This means you won\'t be able to use any Media Cloud tools until next week. Please email us at support@mediacloud.org if you want a higher quota.' },
 };
 
 class AppNotice extends React.Component {
@@ -33,12 +36,17 @@ class AppNotice extends React.Component {
       const isLowLevelError = (stringMessage.includes('.pm')) || (stringMessage.includes('.py'));  // ie. does it include a stack trace
       if ((details === undefined) || (details === null)) {
         if (isLowLevelError) {
+          detailsContent = stringMessage;
           if (stringMessage.includes('Invalid API key or authentication cookie')) {
             messageContent = <FormattedMessage {...localMessages.notLoggedIn} />;
+          } else if (stringMessage.includes('was not found or password is incorrect.')) {
+            messageContent = <FormattedMessage {...localMessages.badLoginAttempt} />;
+            detailsContent = null;  // don't show them the gnarly details if they just got their password wrong
+          } else if (stringMessage.includes('You have exceeded your quota of requests or stories')) {
+            messageContent = <FormattedMessage {...localMessages.quotaExceeded} />;
           } else {
             messageContent = <FormattedMessage {...localMessages.internalError} />;
           }
-          detailsContent = stringMessage;
         }
       }
     // handle html messages
@@ -77,8 +85,8 @@ class AppNotice extends React.Component {
 }
 
 AppNotice.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  info: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  info: PropTypes.object.isRequired,
 };
 
 export default

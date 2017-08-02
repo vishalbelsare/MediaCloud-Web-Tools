@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -40,8 +41,8 @@ class TimespanPeriodSelector extends React.Component {
 
 TimespanPeriodSelector.propTypes = {
   // from parent
-  selectedPeriod: React.PropTypes.string.isRequired,
-  onPeriodSelected: React.PropTypes.func.isRequired,
+  selectedPeriod: PropTypes.string.isRequired,
+  onPeriodSelected: PropTypes.func.isRequired,
 };
 
 export default

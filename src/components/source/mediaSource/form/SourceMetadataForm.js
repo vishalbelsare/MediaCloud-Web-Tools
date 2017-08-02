@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
@@ -16,7 +17,7 @@ const SourceMetadataForm = props => (
       </Col>
     </Row>
     <Row>
-      <Col lg={4} xs={12}>
+      <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PUBLICATION_COUNTRY}
           name={'publicationCountry'}
@@ -24,7 +25,7 @@ const SourceMetadataForm = props => (
           initialValues={props.initialValues}
         />
       </Col>
-      <Col lg={4} xs={12}>
+      <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PUBLICATION_STATE}
           name={'publicationState'}
@@ -32,10 +33,19 @@ const SourceMetadataForm = props => (
           initialValues={props.initialValues}
         />
       </Col>
-      <Col lg={4} xs={12}>
+      <Col lg={3} xs={12}>
         <MetadataPickerContainer
           id={TAG_SET_PRIMARY_LANGUAGE}
           name={'primaryLanguage'}
+          form="sourceForm"
+          disabled
+          initialValues={props.initialValues}
+        />
+      </Col>
+      <Col lg={3} xs={12}>
+        <MetadataPickerContainer
+          id={TAG_SET_COUNTRY_OF_FOCUS}
+          name={'countryOfFocus'}
           form="sourceForm"
           disabled
           initialValues={props.initialValues}
@@ -47,8 +57,8 @@ const SourceMetadataForm = props => (
 
 SourceMetadataForm.propTypes = {
   // from compositional chain
-  initialValues: React.PropTypes.object,
-  intl: React.PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

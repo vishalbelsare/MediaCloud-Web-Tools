@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -9,7 +10,7 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.metadatacoverage.chart.title', defaultMessage: 'Metadata' },
@@ -28,6 +29,9 @@ const localMessages = {
   pLanguageTitle: { id: 'collection.summary.metadatacoverage.pLanguage.title', defaultMessage: 'Primary Language' },
   pLanguageTagged: { id: 'collection.summary.metadatacoverage.pLanguage.tagged', defaultMessage: 'with language' },
   pLanguageNotTagged: { id: 'collection.summary.metadatacoverage.pLanguage.notTagged', defaultMessage: 'unknown language' },
+  pCountryOfFocusTitle: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.title', defaultMessage: 'Country of Focus' },
+  pCountryOfFocusTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.tagged', defaultMessage: 'with country of focus' },
+  pCountryOfFocusNotTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.notTagged', defaultMessage: 'unknown country of focus' },
 
 };
 
@@ -78,6 +82,15 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
             />
           </Col>
+          <Col lg={3}>
+            <MetadataCoverageItem
+              title={formatMessage(localMessages.pCountryOfFocusTitle)}
+              sources={sources}
+              metadataId={TAG_SET_COUNTRY_OF_FOCUS}
+              taggedText={formatMessage(localMessages.pCountryOfFocusTagged)}
+              notTaggedText={formatMessage(localMessages.pCountryOfFocusNotTagged)}
+            />
+          </Col>
         </Row>
       );
     }
@@ -103,16 +116,16 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
 
 CollectionMetadataCoverageSummaryContainer.propTypes = {
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
   // from parent
-  collectionId: React.PropTypes.number.isRequired,
-  collection: React.PropTypes.object.isRequired,
-  sources: React.PropTypes.array.isRequired,
+  collectionId: PropTypes.number.isRequired,
+  collection: PropTypes.object.isRequired,
+  sources: PropTypes.array.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = (state, ownprops) => ({

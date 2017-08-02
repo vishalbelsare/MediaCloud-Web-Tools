@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
@@ -96,10 +97,10 @@ class Sunburst extends React.Component {
 
 Sunburst.propTypes = {
   // from parent
-  tree: React.PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
-  domId: React.PropTypes.string.isRequired,
+  tree: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  domId: PropTypes.string.isRequired,
 };
 
 export default Sunburst;
