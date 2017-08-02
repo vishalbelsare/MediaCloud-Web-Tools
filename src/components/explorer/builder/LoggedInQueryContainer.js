@@ -201,11 +201,11 @@ const mapDispatchToProps = dispatch => ({
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
-        queryInfo.sources = q.sources;
+        queryInfo.sources = q.sources.map(src => src.media_id);
         dispatch(fetchQuerySourcesByIds(queryInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        queryInfo.collections = q.collections;
+        queryInfo.collections = q.collections.map(coll => coll.tags_id);
         dispatch(fetchQueryCollectionsByIds(queryInfo)); // get collection names
       }
       return 0;
