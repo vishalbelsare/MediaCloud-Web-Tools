@@ -262,3 +262,7 @@ export function userQueuedAndRunningTopics() {
 export function topicStoryEntities(topicId, storyId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
 }
+
+export function topicWord2Vec(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/word2vec`);
+}

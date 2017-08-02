@@ -38,7 +38,7 @@ const SourceFeedTable = (props) => {
                 {feed.feed_status}
               </td>
               <td>
-                <Link to={`/sources/${feed.url}`}>{feed.url}</Link>
+                <a href={feed.url}>{feed.url}</a>
               </td>
               <td>
                 <Link to={`/sources/${feed.media_id}/feeds/${feed.feeds_id}/edit`} >
