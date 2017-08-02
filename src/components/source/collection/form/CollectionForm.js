@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -60,18 +59,18 @@ const CollectionForm = (props) => {
 
 CollectionForm.propTypes = {
   // from parent
-  onSave: PropTypes.func.isRequired,
-  buttonLabel: PropTypes.string.isRequired,
-  initialValues: PropTypes.object,
+  onSave: React.PropTypes.func.isRequired,
+  buttonLabel: React.PropTypes.string.isRequired,
+  initialValues: React.PropTypes.object,
   // from context
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
-  collections: PropTypes.array,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
+  collections: React.PropTypes.array,
   // from form healper
-  handleSubmit: PropTypes.func,
-  pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired,
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool.isRequired,
+  submitting: React.PropTypes.bool.isRequired,
 };
 
 function validate(values) {

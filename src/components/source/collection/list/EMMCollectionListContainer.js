@@ -1,17 +1,16 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import CollectionTable from './CollectionTable';
-import { TAG_SET_EMM_ID } from '../../../../lib/tagUtil';
+import CollectionList from './CollectionList';
+import { TAGS_SET_EMM_ID } from '../../../../lib/tagUtil';
 
 const EMMCollectionListContainer = (props) => {
   const { name, description, collections } = props;
   return (
-    <div className="mc-collections-table">
-      <CollectionTable
+    <div className="mc-collections-list">
+      <CollectionList
         collections={collections}
         title={name}
         description={description}
@@ -22,14 +21,14 @@ const EMMCollectionListContainer = (props) => {
 
 EMMCollectionListContainer.propTypes = {
   // from state
-  collections: PropTypes.array.isRequired,
-  name: PropTypes.string,
-  description: PropTypes.string,
-  fetchStatus: PropTypes.string.isRequired,
+  collections: React.PropTypes.array.isRequired,
+  name: React.PropTypes.string,
+  description: React.PropTypes.string,
+  fetchStatus: React.PropTypes.string.isRequired,
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -41,7 +40,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
-    dispatch(fetchCollectionList(TAG_SET_EMM_ID));
+    dispatch(fetchCollectionList(TAGS_SET_EMM_ID));
   },
 });
 

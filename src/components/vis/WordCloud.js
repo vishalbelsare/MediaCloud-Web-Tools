@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import d3LayoutCloud from 'd3-cloud';
@@ -140,18 +139,18 @@ class WordCloud extends React.Component {
 }
 
 WordCloud.propTypes = {
-  words: PropTypes.array.isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  maxFontSize: PropTypes.number,
-  minFontSize: PropTypes.number,
-  textColor: PropTypes.string,
-  onWordClick: PropTypes.func,
-  linkColor: PropTypes.string,
-  showTooltips: PropTypes.bool,
-  domId: PropTypes.string,
+  words: React.PropTypes.array.isRequired,
+  width: React.PropTypes.number,
+  height: React.PropTypes.number,
+  maxFontSize: React.PropTypes.number,
+  minFontSize: React.PropTypes.number,
+  textColor: React.PropTypes.string,
+  onWordClick: React.PropTypes.func,
+  linkColor: React.PropTypes.string,
+  showTooltips: React.PropTypes.bool,
+  domId: React.PropTypes.string,
   // from compositon chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 //  alreadyNormalized: React.PropTypes.bool,
 //  fullExtent: React.PropTypes.array,
 };

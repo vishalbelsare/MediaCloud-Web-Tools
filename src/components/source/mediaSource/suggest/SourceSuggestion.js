@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
@@ -158,12 +157,12 @@ class SourceSuggestion extends React.Component {
 
 SourceSuggestion.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  suggestion: PropTypes.object.isRequired,
-  markable: PropTypes.bool.isRequired,
-  onReject: PropTypes.func,
-  onApprove: PropTypes.func,
+  suggestion: React.PropTypes.object.isRequired,
+  markable: React.PropTypes.bool.isRequired,
+  onReject: React.PropTypes.func,
+  onApprove: React.PropTypes.func,
 };
 
 export default

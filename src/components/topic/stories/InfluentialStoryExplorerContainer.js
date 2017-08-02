@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -64,20 +63,20 @@ class InfluentialStoryExplorerContainer extends React.Component {
 
 InfluentialStoryExplorerContainer.propTypes = {
   // from the composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
   // from state
-  filters: PropTypes.object.isRequired,
-  topicId: PropTypes.number.isRequired,
-  selectedTimespan: PropTypes.object,
-  counts: PropTypes.object,
-  fetchStatus: PropTypes.string.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  selectedTimespan: React.PropTypes.object,
+  counts: React.PropTypes.object,
+  fetchStatus: React.PropTypes.string.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from PagedContainer wrapper
-  nextButton: PropTypes.node,
-  previousButton: PropTypes.node,
+  nextButton: React.PropTypes.node,
+  previousButton: React.PropTypes.node,
 };
 
 const mapStateToProps = state => ({

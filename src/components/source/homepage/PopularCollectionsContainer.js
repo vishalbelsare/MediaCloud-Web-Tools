@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Row } from 'react-flexbox-grid/lib';
@@ -40,8 +39,8 @@ const PopularCollectionsContainer = (props) => {
 };
 
 PopularCollectionsContainer.propTypes = {
-  collections: PropTypes.array,
-  intl: PropTypes.object.isRequired,
+  collections: React.PropTypes.array,
+  intl: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

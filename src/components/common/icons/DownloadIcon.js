@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const DownloadIcon = props => (
@@ -19,7 +18,7 @@ const DownloadIcon = props => (
 );
 
 DownloadIcon.propTypes = {
-  backgroundColor: PropTypes.string,
+  backgroundColor: React.PropTypes.string,
 };
 
 export default DownloadIcon;

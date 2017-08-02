@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -88,19 +87,19 @@ class CreateCollectionContainer extends React.Component {
 
 CreateCollectionContainer.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
-  params: PropTypes.object.isRequired,       // params from router
-  location: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object.isRequired,
   // from dispatch
-  handleSave: PropTypes.func.isRequired,
-  dispatchMetadataSelections: PropTypes.func.isRequired,
-  dispatchAddAllSourcesByString: PropTypes.func.isRequired,
-  dispatchReset: PropTypes.func,
-  saveParamsToStore: PropTypes.func.isRequired,
-  sourcesToPrefill: PropTypes.array,
-  collectionsToPrefill: PropTypes.array,
-  prefillSrcIds: PropTypes.string,
-  prefillCollectionIds: PropTypes.string,
+  handleSave: React.PropTypes.func.isRequired,
+  dispatchMetadataSelections: React.PropTypes.func.isRequired,
+  dispatchAddAllSourcesByString: React.PropTypes.func.isRequired,
+  dispatchReset: React.PropTypes.func,
+  saveParamsToStore: React.PropTypes.func.isRequired,
+  sourcesToPrefill: React.PropTypes.array,
+  collectionsToPrefill: React.PropTypes.array,
+  prefillSrcIds: React.PropTypes.string,
+  prefillCollectionIds: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({

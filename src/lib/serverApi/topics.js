@@ -147,13 +147,8 @@ export function topicEnglishStoryCounts(topicId, params) {
   return createApiPromise(`/api/topics/${topicId}/stories/english-counts`, acceptedParams);
 }
 
-export function topicUndateableStoryCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/stories/undateable-counts`, acceptedParams);
-}
-
 export function topicFocalSetSentenceCounts(topicId, focalSetId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'timespanId', 'q']);
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/sentences/focal-set/${focalSetId}/count`, acceptedParams);
 }
 
@@ -257,8 +252,4 @@ export function topicSpider(topicId) {
 
 export function userQueuedAndRunningTopics() {
   return createApiPromise('/api/topics/queued-and-running');
-}
-
-export function topicStoryEntities(topicId, storyId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
 }

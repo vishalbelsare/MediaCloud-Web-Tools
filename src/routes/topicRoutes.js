@@ -1,8 +1,8 @@
 import React from 'react';
 import Route from 'react-router/lib/Route';
-import Redirect from 'react-router/lib/Redirect';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
-import TopicsHomeContainer from '../components/topic/TopicsHomeContainer';
+import HomeContainer from '../components/topic/HomeContainer';
+import PublicHomeContainer from '../components/topic/PublicHomeContainer';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';
@@ -16,7 +16,7 @@ import LinkMapContainer from '../components/topic/maps/LinkMapContainer';
 import CreateFocusContainer from '../components/topic/snapshots/foci/CreateFocusContainer';
 import EditFocusContainer from '../components/topic/snapshots/foci/EditFocusContainer';
 import ManageFocalSetsContainer from '../components/topic/snapshots/foci/ManageFocalSetsContainer';
-import { requireAuth } from './routes';
+import { requireAuth, redirectHomeIfLoggedIn } from './routes';
 import userRoutes from './userRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
@@ -29,19 +29,19 @@ import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotGenerate from '../components/topic/snapshots/SnapshotGenerate';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
-import PageNotFound from '../components/PageNotFound';
 
 const topicRoutes = (
   <Route path="/" component={TopicsApp}>
 
-    <IndexRedirect to="/home" />
+    <IndexRedirect to="/topics/public/home" />
 
     <Route path="/about" component={About} />
 
-    <Redirect from="/topics/public/home" to="/home" />
-    <Route path="/home" component={TopicsHomeContainer} />
+    <Route path="/home" component={HomeContainer} onEnter={requireAuth} />
 
     <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
+
+    {userRoutes}
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 
@@ -72,13 +72,10 @@ const topicRoutes = (
 
     </Route>
 
+    <Route path="/topics/public/home" component={PublicHomeContainer} onEnter={redirectHomeIfLoggedIn} />
     <Route path="/topics/public/:topicId" component={TopicContainer}>
       <Route path="/topics/public/:topicId/summary" component={PublicTopicSummaryContainer} />
     </Route>
-
-    {userRoutes}
-
-    <Route path="*" component={PageNotFound} />
 
   </Route>
 

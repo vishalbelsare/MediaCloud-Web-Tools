@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -70,17 +69,17 @@ class MediaSummaryContainer extends React.Component {
 
 MediaSummaryContainer.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
-  sortData: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  sortData: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  sort: PropTypes.string.isRequired,
-  media: PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
+  sort: React.PropTypes.string.isRequired,
+  media: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({

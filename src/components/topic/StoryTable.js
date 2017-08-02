@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
-import { storyPubDateToTimestamp, STORY_PUB_DATE_UNDATEABLE } from '../../lib/dateUtil';
+import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 
 const localMessages = {
@@ -63,7 +62,7 @@ class StoryTable extends React.Component {
               let dateToShow = null;  // need to handle undateable stories
               let dateStyle = '';
               const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
-              if (story.publish_date === STORY_PUB_DATE_UNDATEABLE) {
+              if (story.publish_date === 'undateable') {
                 dateToShow = formatMessage(localMessages.undateable);
                 dateStyle = 'story-date-undateable';
               } else {
@@ -101,12 +100,12 @@ class StoryTable extends React.Component {
 }
 
 StoryTable.propTypes = {
-  stories: PropTypes.array.isRequired,
-  intl: PropTypes.object.isRequired,
-  onChangeSort: PropTypes.func,
-  onChangeFocusSelection: PropTypes.func,
-  sortedBy: PropTypes.string,
-  maxTitleLength: PropTypes.number,
+  stories: React.PropTypes.array.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  onChangeSort: React.PropTypes.func,
+  onChangeFocusSelection: React.PropTypes.func,
+  sortedBy: React.PropTypes.string,
+  maxTitleLength: React.PropTypes.number,
 };
 
 export default injectIntl(StoryTable);

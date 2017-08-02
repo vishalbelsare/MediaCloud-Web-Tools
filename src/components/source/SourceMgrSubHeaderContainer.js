@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -66,16 +65,16 @@ const SourceMgrSubHeaderContainer = (props) => {
 SourceMgrSubHeaderContainer.propTypes = {
   // from parent
   // from context
-  params: PropTypes.object,       // params from router
-  location: PropTypes.object,
-  intl: PropTypes.object.isRequired,
+  params: React.PropTypes.object,       // params from router
+  location: React.PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
   // state
-  sourceId: PropTypes.number,
-  sourceInfo: PropTypes.object,
-  collectionId: PropTypes.number,
-  collectionInfo: PropTypes.object,
+  sourceId: React.PropTypes.number,
+  sourceInfo: React.PropTypes.object,
+  collectionId: React.PropTypes.number,
+  collectionInfo: React.PropTypes.object,
   // from dispatch
-  handleSetFavorited: PropTypes.func.isRequired,
+  handleSetFavorited: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

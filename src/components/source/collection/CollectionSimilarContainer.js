@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -31,16 +30,16 @@ const CollectionSimilarContainer = (props) => {
 
 CollectionSimilarContainer.propTypes = {
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  total: PropTypes.number,
+  fetchStatus: React.PropTypes.string.isRequired,
+  total: React.PropTypes.number,
   // from parent
-  collectionId: PropTypes.number.isRequired,
-  similarCollections: PropTypes.array,
+  collectionId: React.PropTypes.number.isRequired,
+  similarCollections: React.PropTypes.array,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from composition
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

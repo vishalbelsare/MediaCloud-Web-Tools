@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
@@ -51,7 +50,7 @@ const TopicPreviewList = (props) => {
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
             <DataCard className="topic-preview-list-item">
-              <div className="content" id={`topic-preview-${topic.topics_id}`}>
+              <div className="content">
                 <div>
                   <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
                     <FavoriteToggler
@@ -88,11 +87,11 @@ const TopicPreviewList = (props) => {
 
 TopicPreviewList.propTypes = {
   // from parent
-  linkGenerator: PropTypes.func,
-  topics: PropTypes.array.isRequired,
-  onSetFavorited: PropTypes.func,
+  linkGenerator: React.PropTypes.func,
+  topics: React.PropTypes.array.isRequired,
+  onSetFavorited: React.PropTypes.func,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 

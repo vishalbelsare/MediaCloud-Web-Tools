@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { calculateTimePeriods, PAST_WEEK, PAST_MONTH, PAST_YEAR, PAST_ALL } from '../../lib/dateUtil';
@@ -74,9 +73,9 @@ const composePeriodicContent = (ChildComponent, hideAllTimeOption = false) => {
     }
   }
   PeriodicContent.propTypes = {
-    intl: PropTypes.object.isRequired,
-    selectedTimePeriod: PropTypes.string.isRequired,
-    handleTimePeriodClick: PropTypes.func.isRequired,
+    intl: React.PropTypes.object.isRequired,
+    selectedTimePeriod: React.PropTypes.string.isRequired,
+    handleTimePeriodClick: React.PropTypes.func.isRequired,
   };
   return injectIntl(
     PeriodicContent

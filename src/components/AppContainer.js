@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -14,7 +13,6 @@ import { getVersion } from '../config';
 import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
-import { assetUrl } from '../lib/assetUtil';
 
 const localMessages = {
   supportOptions: { id: 'app.supportOptions', defaultMessage: 'Need help? Join our <a href="https://groups.io/g/mediacloud">discussion group</a><br />or email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
@@ -35,7 +33,7 @@ const AppContainer = (props) => {
             <br /><br />
             <FormattedMessage {...localMessages.maintenance} />
             <br /><br />
-            <img alt="under-constrction" src={assetUrl('/static/img/under-construction.gif')} />
+            <img alt="under-constrction" src="/static/img/under-construction.gif" />
             <br /><br />
           </ErrorNotice>
         </Row>
@@ -88,25 +86,25 @@ const AppContainer = (props) => {
 };
 
 AppContainer.propTypes = {
-  children: PropTypes.node,
-  handleTouchTapLeftIconButton: PropTypes.func,
-  intl: PropTypes.object.isRequired,
+  children: React.PropTypes.node,
+  handleTouchTapLeftIconButton: React.PropTypes.func,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  feedback: PropTypes.object.isRequired,
+  feedback: React.PropTypes.object.isRequired,
   // from dispatch
-  handleSnackBarRequestClose: PropTypes.func.isRequired,
+  handleSnackBarRequestClose: React.PropTypes.func.isRequired,
   // from parent
-  name: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  drawer: PropTypes.node,
-  showLoginButton: PropTypes.bool,
-  subHeader: PropTypes.node,
+  name: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  description: React.PropTypes.string.isRequired,
+  drawer: React.PropTypes.node,
+  showLoginButton: React.PropTypes.bool,
+  subHeader: React.PropTypes.node,
 };
 
 AppContainer.contextTypes = {
-  router: PropTypes.object.isRequired,
-  store: PropTypes.object.isRequired,
+  router: React.PropTypes.object.isRequired,
+  store: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

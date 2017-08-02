@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -51,17 +50,17 @@ class CollectionCopyConfirmer extends Component {
 
 CollectionCopyConfirmer.propTypes = {
   // from parent
-  collectionId: PropTypes.number.isRequired,
-  onConfirm: PropTypes.func,
-  onCancel: PropTypes.func,
+  collectionId: React.PropTypes.number.isRequired,
+  onConfirm: React.PropTypes.func,
+  onCancel: React.PropTypes.func,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string,
-  collection: PropTypes.object,
+  fetchStatus: React.PropTypes.string,
+  collection: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({

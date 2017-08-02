@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import Link from 'react-router/lib/Link';
@@ -46,14 +45,14 @@ const PendingSuggestionsContainer = (props) => {
 
 PendingSuggestionsContainer.propTypes = {
   // from the composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  suggestions: PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  suggestions: React.PropTypes.array.isRequired,
   // from dispatch
-  handleApprove: PropTypes.func,
-  handleReject: PropTypes.func,
+  handleApprove: React.PropTypes.func,
+  handleReject: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

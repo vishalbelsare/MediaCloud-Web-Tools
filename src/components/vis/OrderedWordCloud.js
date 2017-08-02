@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
@@ -195,19 +194,19 @@ class OrderedWordCloud extends React.Component {
 }
 
 OrderedWordCloud.propTypes = {
-  words: PropTypes.array.isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  maxFontSize: PropTypes.number,
-  minFontSize: PropTypes.number,
-  textColor: PropTypes.string,
-  onWordClick: PropTypes.func,
-  linkColor: PropTypes.string,
-  showTooltips: PropTypes.bool,
-  intl: PropTypes.object.isRequired,
-  alreadyNormalized: PropTypes.bool,
-  fullExtent: PropTypes.array,
-  domId: PropTypes.string,
+  words: React.PropTypes.array.isRequired,
+  width: React.PropTypes.number,
+  height: React.PropTypes.number,
+  maxFontSize: React.PropTypes.number,
+  minFontSize: React.PropTypes.number,
+  textColor: React.PropTypes.string,
+  onWordClick: React.PropTypes.func,
+  linkColor: React.PropTypes.string,
+  showTooltips: React.PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
+  alreadyNormalized: React.PropTypes.bool,
+  fullExtent: React.PropTypes.array,
+  domId: React.PropTypes.string,
 };
 
 export default injectIntl(OrderedWordCloud);

@@ -1,5 +1,5 @@
 import { createAsyncAction } from '../../lib/reduxHelpers';
-import * as api from '../../lib/serverApi/system';
+import * as api from '../../lib/serverApi/topics';
 
 export const FETCH_SYSTEM_STATS = 'FETCH_SYSTEM_STATS';
 

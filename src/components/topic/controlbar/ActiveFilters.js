@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Chip from 'material-ui/Chip';
@@ -29,8 +28,8 @@ const ActiveFilters = (props) => {
 
 ActiveFilters.propTypes = {
   // from parent
-  focus: PropTypes.object,
-  onRemoveFocus: PropTypes.func.isRequired,
+  focus: React.PropTypes.object,
+  onRemoveFocus: React.PropTypes.func.isRequired,
 };
 
 export default injectIntl(ActiveFilters);

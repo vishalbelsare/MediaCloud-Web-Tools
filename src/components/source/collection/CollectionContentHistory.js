@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -13,7 +12,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { getDateRange } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.contentHistory.title', defaultMessage: 'Total Sentences over Time' },
+  title: { id: 'collection.contentHistory.title', defaultMessage: 'Content History' },
   counts: { id: 'collection.contentHistory.counts', defaultMessage: '{stories} Stories, {sentences} Sentences' },
 };
 
@@ -73,20 +72,20 @@ class CollectionContentHistory extends React.Component {
 }
 
 CollectionContentHistory.propTypes = {
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from context
-  location: PropTypes.object.isRequired,
+  location: React.PropTypes.object.isRequired,
   // from state
-  collectionId: PropTypes.number.isRequired,
-  fetchStatus: PropTypes.string.isRequired,
-  collection: PropTypes.object.isRequired,
-  historicalCounts: PropTypes.array.isRequired,
-  timePeriodControls: PropTypes.node.isRequired,
-  selectedTimePeriod: PropTypes.string.isRequired,
+  collectionId: React.PropTypes.number.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  collection: React.PropTypes.object.isRequired,
+  historicalCounts: React.PropTypes.array.isRequired,
+  timePeriodControls: React.PropTypes.node.isRequired,
+  selectedTimePeriod: React.PropTypes.string.isRequired,
   // from dispatch
-  handleTimePeriodClick: PropTypes.func.isRequired,
+  handleTimePeriodClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

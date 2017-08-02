@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import SelectField from 'material-ui/SelectField';
@@ -32,7 +31,6 @@ const FocusSetSelectorContainer = (props) => {
         <SelectField
           value={selectedFocalSetId !== NO_FOCAL_SET_SELECTED ? selectedFocalSetId : focalSets[0].focal_sets_id}
           onChange={onFocalSetSelected}
-          fullWidth
         >
           {focalSets.map(fs =>
             <MenuItem key={fs.focal_sets_id} value={fs.focal_sets_id} primaryText={fs.name} />)
@@ -57,17 +55,17 @@ const FocusSetSelectorContainer = (props) => {
 
 FocusSetSelectorContainer.propTypes = {
   // from parents
-  topicId: PropTypes.number.isRequired,
-  snapshotId: PropTypes.number,
-  onFocalSetSelected: PropTypes.func.isRequired,
-  selectedFocalSetId: PropTypes.number,
+  topicId: React.PropTypes.number.isRequired,
+  snapshotId: React.PropTypes.number,
+  onFocalSetSelected: React.PropTypes.func.isRequired,
+  selectedFocalSetId: React.PropTypes.number,
   // from composition
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
   // from mergeProps
   // from state
-  focalSets: PropTypes.array.isRequired,
-  hideNoneOption: PropTypes.bool,
+  focalSets: React.PropTypes.array.isRequired,
+  hideNoneOption: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

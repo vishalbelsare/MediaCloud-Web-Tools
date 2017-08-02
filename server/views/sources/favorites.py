@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 
-def add_user_favorite_flag_to_sources(sources):
+def _add_user_favorite_flag_to_sources(sources):
     user_favorited = db.get_users_lists(user_name(), 'favoriteSources')
     for s in sources:
         s['isFavorite'] = int(s['media_id']) in user_favorited
     return sources
 
-def add_user_favorite_flag_to_collections(collections):
+def _add_user_favorite_flag_to_collections(collections):
     user_favorited = db.get_users_lists(user_name(), 'favoriteCollections')
     for c in collections:
         c['isFavorite'] = int(c['tags_id']) in user_favorited

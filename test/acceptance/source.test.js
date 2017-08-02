@@ -1,14 +1,15 @@
 import visit from '../helpers/visit';
-import login from '../helpers/login';
+import login from '../helpers/login'
 
 describe('From the sources home page...', () => {
-  beforeAll((done) => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+  beforeAll(function(done) {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL=30000;
     done();
   });
 
-  test('the user can log in', async () => {
-    const result = await visit('/#/home')
+  test('the user can log in', async() => {
+    let result = await visit('/#/home')
               .use(login)
               .wait('.datacard.favorite-sources-collections')
               .evaluate(() => document.querySelector('.datacard.favorite-sources-collections h2').innerText)
@@ -17,8 +18,8 @@ describe('From the sources home page...', () => {
     expect(result).toBe('My Starred Items');
   });
 
-  test('the user can log out', async () => {
-    const result = await visit('/#/home')
+  test('the user can log out', async() => {
+    let result = await visit('/#/home')
               .use(login)
               .wait('.user-menu button')
               .touchTap('.user-menu button')
@@ -33,33 +34,35 @@ describe('From the sources home page...', () => {
 });
 
 describe('When searching for "Boston" in search bar', () => {
-  beforeAll((done) => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
-    done();
-  });
 
-  test('it suggests "Boston Globe"', async () => {
-    const result = await visit('/#/home')
+	beforeAll(function(done) {
+		jasmine.DEFAULT_TIMEOUT_INTERVAL=20000;
+		done();
+	});
+
+  test('it suggests "Boston Globe"', async() => {
+  	let result = await visit('/#/home')
               .use(login)
               .wait('.source-search input')
               .type('.source-search input', 'Boston')
-              .evaluate(() => document.querySelector('.source-search input').focus())
+  					  .evaluate(() => document.querySelector('.source-search input').focus())
               .wait('#searchResult15')
               .evaluate(() => document.querySelector('#searchResult15').innerText)
-              .end();
-    expect(result.trim()).toBe('The Boston Globe');
+  					  .end();
+  	expect(result.trim()).toBe('The Boston Globe');
   });
 });
 
 describe('After opening drawer', () => {
-  beforeAll((done) => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 40000;
+
+  beforeAll(function(done) {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL=40000;
     done();
   });
 
-  test('it links to Media Cloud sources', async () => {
-    const mediaCloudHeader = 'Collections';
-    const result = await visit('/#/home')
+  test('it links to Media Cloud sources', async() => {
+    let mediaCloudHeader = 'Collections';
+    let result = await visit('/#/home')
               .use(login)
               .wait('#sources-drawer-button')
               .touchTap('#sources-drawer-button')
@@ -71,9 +74,9 @@ describe('After opening drawer', () => {
     expect(result).toBe(mediaCloudHeader);
   });
 
-  test('it links to Global Voices', async () => {
-    const globalVoicesHeader = 'Global Voices Countries';
-    const result = await visit('/#/home')
+  test('it links to Global Voices', async() => {
+    let globalVoicesHeader = 'Global Voices Countries';
+    let result = await visit('/#/home')
               .use(login)
               .wait('#sources-drawer-button')
               .touchTap('#sources-drawer-button')
@@ -85,14 +88,14 @@ describe('After opening drawer', () => {
     expect(result).toBe(globalVoicesHeader);
   });
 
-  test('it links to European Monitor', async () => {
-    const europeMediaMonitorHeader = 'Europe Media Monitor Countries';
-    const result = await visit('/#/home')
+  test('it links to European Monitor', async() => {
+    let europeMediaMonitorHeader = 'Europe Media Monitor Countries';
+    let result = await visit('/#/home')
               .use(login)
               .wait('#sources-drawer-button')
               .touchTap('#sources-drawer-button')
               .wait('#european-media-monitor-collections')
-              .touchTap('#european-media-monitor-collections')
+              .touchTap('#european-media-monitor-collections') 
               .wait('.collection-list h2')
               .evaluate(() => document.querySelector('.collection-list h2').innerText)
               .end();

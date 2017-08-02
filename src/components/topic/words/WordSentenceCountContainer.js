@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -12,10 +11,10 @@ import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'word.sentenceCount.title', defaultMessage: 'Sentences that Use this Word' },
+  title: { id: 'word.sentenceCount.title', defaultMessage: 'Attention' },
   helpTitle: { id: 'word.sentenceCount.help.title', defaultMessage: 'About Word Attention' },
   helpText: { id: 'word.sentenceCount.help.text',
-    defaultMessage: '<p>This chart shows you the sentences within this Topic that include this word.</p>',
+    defaultMessage: '<p>This chart shows you the coverage of this Topic over time by this Word.</p>',
   },
 };
 
@@ -52,20 +51,20 @@ class WordSentenceCountContainer extends React.Component {
 
 WordSentenceCountContainer.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // passed in
-  topicId: PropTypes.number.isRequired,
-  term: PropTypes.string.isRequired,
-  stem: PropTypes.string.isRequired,  // from state
-  fetchStatus: PropTypes.string.isRequired,
-  filters: PropTypes.object.isRequired,
-  total: PropTypes.number,
-  counts: PropTypes.array,
+  topicId: React.PropTypes.number.isRequired,
+  term: React.PropTypes.string.isRequired,
+  stem: React.PropTypes.string.isRequired,  // from state
+  fetchStatus: React.PropTypes.string.isRequired,
+  filters: React.PropTypes.object.isRequired,
+  total: React.PropTypes.number,
+  counts: React.PropTypes.array,
   // from dispath
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
-  params: PropTypes.object,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  params: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -98,7 +97,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.attentionChartHelpText])(
         composeAsyncContainer(
           WordSentenceCountContainer
         )

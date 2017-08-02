@@ -1,19 +1,18 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { loginWithPassword } from '../../actions/userActions';
-// import { addNotice } from '../../actions/appActions';
+import { getAppName } from '../../config';
 import AppButton from '../common/AppButton';
 import * as fetchConstants from '../../lib/fetchConstants';
 import messages from '../../resources/messages';
 import { emptyString, invalidEmail } from '../../lib/formValidators';
 import composeIntlForm from '../common/IntlForm';
-import { addNotice } from '../../actions/appActions';
-import { LEVEL_ERROR } from '../common/Notice';
+
+const MEDIACLOUD_REGISTER_URL = 'https://core.mediacloud.org/login/register';
 
 const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter your email address.' },
@@ -21,7 +20,6 @@ const localMessages = {
   loginFailed: { id: 'user.loginFailed', defaultMessage: 'Your email or password was wrong.' },
   signUpNow: { id: 'user.signUpNow', defaultMessage: 'No account? Register now!' },
   forgotPassword: { id: 'user.forgotPassword', defaultMessage: 'Forgot Your Password?' },
-  needsToActivate: { id: 'user.needsToActivate', defaultMessage: 'You still need to activate your account. Check out email and click the link we sent you, or <a href="/#/user/resend-activation">send the link again</a> if you didn\'t get it.' },
 };
 
 const LoginFormComponent = (props) => {
@@ -62,20 +60,12 @@ const LoginFormComponent = (props) => {
       <Row>
         <Col lg={12}>
           <br />
-          <Link to="/user/signup">
+          <a href={`${MEDIACLOUD_REGISTER_URL}?from=${getAppName()}`}>
             <AppButton
               flat
               label={formatMessage(localMessages.signUpNow)}
             />
-          </Link>
-        </Col>
-        <Col lg={12}>
-          <Link to="/user/request-password-reset">
-            <AppButton
-              flat
-              label={formatMessage(localMessages.forgotPassword)}
-            />
-          </Link>
+          </a>
         </Col>
       </Row>
     </form>
@@ -84,15 +74,15 @@ const LoginFormComponent = (props) => {
 
 LoginFormComponent.propTypes = {
   // from composition
-  intl: PropTypes.object.isRequired,
-  location: PropTypes.object,
-  redirect: PropTypes.string,
-  handleSubmit: PropTypes.func.isRequired,
-  renderTextField: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  location: React.PropTypes.object,
+  redirect: React.PropTypes.string,
+  handleSubmit: React.PropTypes.func.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
   // from dispatch
-  onSubmitLoginForm: PropTypes.func.isRequired,
+  onSubmitLoginForm: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -101,9 +91,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
-    dispatch(loginWithPassword(values.email, values.password))
+    dispatch(loginWithPassword(values.email, values.password, values.destination))
     .then((response) => {
-      if (response.key) {
+      // error reporting is handled by error reporting middleware, so you only need to handle success here
+      if (response.status !== 401) {
         // redirect to destination if there is one
         const loc = ownProps.location;
         let redirect;
@@ -115,11 +106,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         if (redirect) {
           dispatch(push(redirect));
         }
-      } else if ((response.message) && (response.message.includes('is not active'))) {
-        // user has signed up, but not activated their account
-        dispatch(addNotice({ htmlMessage: ownProps.intl.formatMessage(localMessages.needsToActivate), level: LEVEL_ERROR }));
-      } else if (response.status) {
-        dispatch(addNotice({ message: localMessages.loginFailed, level: LEVEL_ERROR }));
       }
     });
   },
@@ -143,10 +129,12 @@ const reduxFormConfig = {
 };
 
 export default
-  composeIntlForm(
-    reduxForm(reduxFormConfig)(
-      connect(mapStateToProps, mapDispatchToProps)(
-        LoginFormComponent
+  injectIntl(
+    composeIntlForm(
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps)(
+          LoginFormComponent
+        )
       )
     )
   );

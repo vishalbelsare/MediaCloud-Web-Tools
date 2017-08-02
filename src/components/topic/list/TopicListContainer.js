@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { push } from 'react-router-redux';
 import { withRouter } from 'react-router';
@@ -128,21 +127,21 @@ class TopicListContainer extends React.Component {
 
 TopicListContainer.propTypes = {
   // from state
-  topics: PropTypes.object.isRequired,
-  links: PropTypes.object,
+  topics: React.PropTypes.object.isRequired,
+  links: React.PropTypes.object,
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  handleSetFavorited: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  handleSetFavorited: React.PropTypes.func.isRequired,
   // from PagedContainer wrapper
-  nextButton: PropTypes.node,
-  previousButton: PropTypes.node,
-  params: PropTypes.object.isRequired,       // params from router
-  location: PropTypes.object.isRequired,
-  showFavorites: PropTypes.bool,
-  setFilter: PropTypes.func.isRequired,
-  currentFilter: PropTypes.string,
+  nextButton: React.PropTypes.node,
+  previousButton: React.PropTypes.node,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object.isRequired,
+  showFavorites: React.PropTypes.bool,
+  setFilter: React.PropTypes.func.isRequired,
+  currentFilter: React.PropTypes.string,
 };
 
 const mapStateToProps = state => ({

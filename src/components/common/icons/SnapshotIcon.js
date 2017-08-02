@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const DEFAULT_WIDTH = 69.331;
@@ -22,7 +21,7 @@ const SnapshotIcon = (props) => {
 };
 
 SnapshotIcon.propTypes = {
-  height: PropTypes.number,
+  height: React.PropTypes.number,
 };
 
 export default SnapshotIcon;

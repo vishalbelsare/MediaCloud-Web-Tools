@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -80,28 +79,28 @@ class AdvancedSearchResultsContainer extends React.Component {
 
 AdvancedSearchResultsContainer.propTypes = {
   // from state
-  queriedCollections: PropTypes.array,
-  queriedSources: PropTypes.array,
-  fetchStatus: PropTypes.string.isRequired,
+  queriedCollections: React.PropTypes.array,
+  queriedSources: React.PropTypes.array,
+  fetchStatus: React.PropTypes.string.isRequired,
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // form parent
-  searchString: PropTypes.string,
-  tags: PropTypes.array,
+  searchString: React.PropTypes.string,
+  tags: React.PropTypes.array,
   // from dispatch
-  dispatchToCreate: PropTypes.func.isRequired,
-  dispatchSourceSelection: PropTypes.func.isRequired,
-  dispatchCollectionSelection: PropTypes.func.isRequired,
-  dispatchToCreateWithSearch: PropTypes.func.isRequired,
-  dispatchReset: PropTypes.func,
-  fetchData: PropTypes.func.isRequired,
-  asyncFetch: PropTypes.func.isRequired,
+  dispatchToCreate: React.PropTypes.func.isRequired,
+  dispatchSourceSelection: React.PropTypes.func.isRequired,
+  dispatchCollectionSelection: React.PropTypes.func.isRequired,
+  dispatchToCreateWithSearch: React.PropTypes.func.isRequired,
+  dispatchReset: React.PropTypes.func,
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from form healper
-  buttonLabel: PropTypes.string,
-  initialValues: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  pristine: PropTypes.bool,
-  submitting: PropTypes.bool,
+  buttonLabel: React.PropTypes.string,
+  initialValues: React.PropTypes.object,
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({

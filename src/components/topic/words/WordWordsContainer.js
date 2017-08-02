@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -48,20 +47,20 @@ class WordWordsContainer extends React.Component {
 
 WordWordsContainer.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
   // from parent
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
-  asyncFetch: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  words: PropTypes.array.isRequired,
-  handleWordCloudClick: PropTypes.func,
-  term: PropTypes.string.isRequired,
-  stem: PropTypes.string.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  words: React.PropTypes.array.isRequired,
+  handleWordCloudClick: React.PropTypes.func,
+  term: React.PropTypes.string.isRequired,
+  stem: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

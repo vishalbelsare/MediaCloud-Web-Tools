@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -86,9 +85,9 @@ const SourceSuggestionForm = (props) => {
 
 SourceSuggestionForm.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  initialValues: PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 function validate(values) {

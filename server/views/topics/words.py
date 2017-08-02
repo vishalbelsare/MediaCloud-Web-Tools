@@ -114,10 +114,9 @@ def topic_word_usage_sample(topics_id, word):
         q = u"({}) AND ({})".format(word, q)
     else:
         q = word
-    # need to use tool API key here because non-admin users can't pull sentences
-    results = topic_sentence_sample(TOOL_API_KEY, topics_id, sample_size=1000, q=q)
+    results = topic_sentence_sample(user_mediacloud_key(), topics_id, sample_size=1000, q=q)
     # TODO: only pull the 5 words before and after so we
-    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results['response']['docs'] if s['sentence'] is not None]
+    fragments = [_sentence_fragment_around(word, s['sentence']) for s in results['response']['docs']]
     fragments = [f for f in fragments if f is not None]
     return jsonify({'fragments': fragments})
 
@@ -129,8 +128,8 @@ def _sentence_fragment_around(keyword, sentence):
     Warning: this makes simplistic assumptions about word tokenization
     ::return:: a sentence fragment around keyword, or None if keyword can't be found
     '''
+    words = sentence.split()    # super naive, but works ok
     try:
-        words = sentence.split()  # super naive, but works ok
         keyword_index = None
         for index, word in enumerate(words):
             if keyword_index is not None:

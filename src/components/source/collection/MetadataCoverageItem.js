@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import PieChart from '../../vis/PieChart';
@@ -42,12 +41,12 @@ const MetadataCoverageItem = (props) => {
 };
 
 MetadataCoverageItem.propTypes = {
-  sources: PropTypes.array,
-  metadataId: PropTypes.number,
-  title: PropTypes.string,
-  intl: PropTypes.object.isRequired,
-  taggedText: PropTypes.string,
-  notTaggedText: PropTypes.string,
+  sources: React.PropTypes.array,
+  metadataId: React.PropTypes.number,
+  title: React.PropTypes.string,
+  intl: React.PropTypes.object.isRequired,
+  taggedText: React.PropTypes.string,
+  notTaggedText: React.PropTypes.string,
 };
 
 export default injectIntl(MetadataCoverageItem);

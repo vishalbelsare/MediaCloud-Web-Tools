@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -38,10 +37,10 @@ const PublicTopicSummaryContainer = (props) => {
 
 PublicTopicSummaryContainer.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  user: PropTypes.object.isRequired,
-  handleButtonClick: PropTypes.func.isRequired,
+  user: React.PropTypes.object.isRequired,
+  handleButtonClick: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

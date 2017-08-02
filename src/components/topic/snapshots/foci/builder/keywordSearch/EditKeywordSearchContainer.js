@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
@@ -65,7 +64,6 @@ class EditKeywordSearchContainer extends React.Component {
             </Col>
             <Col lg={2} xs={12}>
               <AppButton
-                id="keyword-search-preview-button"
                 label={formatMessage(messages.search)}
                 style={{ marginTop: 33 }}
                 onClick={() => this.setState({ keywords: currentKeywords })}
@@ -90,20 +88,20 @@ class EditKeywordSearchContainer extends React.Component {
 
 EditKeywordSearchContainer.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  initialValues: PropTypes.object,
-  onPreviousStep: PropTypes.func.isRequired,
-  onNextStep: PropTypes.func.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
+  onPreviousStep: React.PropTypes.func.isRequired,
+  onNextStep: React.PropTypes.func.isRequired,
   // from state
-  formData: PropTypes.object,
-  currentKeywords: PropTypes.string,
-  currentFocalTechnique: PropTypes.string,
+  formData: React.PropTypes.object,
+  currentKeywords: React.PropTypes.string,
+  currentFocalTechnique: React.PropTypes.string,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
   // from compositional helper
-  intl: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  renderTextField: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -131,8 +129,7 @@ function validate(values) {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  destroyOnUnmount: false,  // so the wizard works
   validate,
 };
 

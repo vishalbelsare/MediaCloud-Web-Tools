@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import ReactHighmaps from 'react-highcharts/dist/ReactHighmaps';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -139,12 +138,12 @@ class GeoChart extends React.Component {
 
 
 GeoChart.propTypes = {
-  data: PropTypes.array.isRequired,
-  countryMinColorScale: PropTypes.string,
-  countryMaxColorScale: PropTypes.string,
-  hoverColor: PropTypes.string,
-  onCountryClick: PropTypes.func,
-  intl: PropTypes.object.isRequired,
+  data: React.PropTypes.array.isRequired,
+  countryMinColorScale: React.PropTypes.string,
+  countryMaxColorScale: React.PropTypes.string,
+  hoverColor: React.PropTypes.string,
+  onCountryClick: React.PropTypes.func,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(GeoChart);

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -50,20 +49,20 @@ const FocusForm1TechniqueContainer = (props) => {
 
 FocusForm1TechniqueContainer.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  location: PropTypes.object.isRequired,
-  initialValues: PropTypes.object,
+  topicId: React.PropTypes.number.isRequired,
+  location: React.PropTypes.object.isRequired,
+  initialValues: React.PropTypes.object,
   // form composition
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  pristine: PropTypes.bool,
-  submitting: PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
   // from state
-  currentFocalTechnique: PropTypes.string,
+  currentFocalTechnique: React.PropTypes.string,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -94,8 +93,7 @@ function validate() {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  destroyOnUnmount: false,  // so the wizard works
   validate,
 };
 

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import { FormattedHtml, injectIntl } from 'react-intl';
@@ -70,20 +69,20 @@ const ComparativeOrderedWordCloud = (props) => {
 };
 
 ComparativeOrderedWordCloud.propTypes = {
-  leftWords: PropTypes.array,   // array of { count, stem, term }
-  rightWords: PropTypes.array,  // array of { count, stem, term }
-  leftTitleMsg: PropTypes.object,
-  centerTitleMsg: PropTypes.object,
-  rightTitleMsg: PropTypes.object,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  maxFontSize: PropTypes.number,
-  minFontSize: PropTypes.number,
-  textColor: PropTypes.string,
-  onWordClick: PropTypes.func,
-  linkColor: PropTypes.string,
-  showTooltips: PropTypes.bool,
-  intl: PropTypes.object.isRequired,
+  leftWords: React.PropTypes.array,   // array of { count, stem, term }
+  rightWords: React.PropTypes.array,  // array of { count, stem, term }
+  leftTitleMsg: React.PropTypes.object,
+  centerTitleMsg: React.PropTypes.object,
+  rightTitleMsg: React.PropTypes.object,
+  width: React.PropTypes.number,
+  height: React.PropTypes.number,
+  maxFontSize: React.PropTypes.number,
+  minFontSize: React.PropTypes.number,
+  textColor: React.PropTypes.string,
+  onWordClick: React.PropTypes.func,
+  linkColor: React.PropTypes.string,
+  showTooltips: React.PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default

@@ -1,4 +1,3 @@
-@import '../constants';
 
 .collection-list-item-wrapper {
   display: flex;
@@ -8,23 +7,4 @@
 .chip {
   margin-right: 5px !important;
   margin-bottom: 5px !important;
-}
-
-.collection-list {
-  .app-icon-filled-star {
-    svg {
-      margin-left: 5px;
-      width: 15px !important;
-      height: 15px !important;
-    }
-  }
-
-  .app-icon-lock {
-    svg {
-      fill: $material-grey800;
-      margin-left: 5px;
-      width: 15px !important;
-      height: 15px !important;
-    }
-  }
 }

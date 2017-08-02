@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
@@ -16,7 +15,7 @@ const SourceOrCollectionChip = (props) => {
   }
   const typeClass = isCollection ? 'chip-collection' : 'chip-media-source';
   const objectId = object.id || isCollection ? object.tags_id : object.media_id;
-  const name = isCollection ? (object.name || object.label || object.tag) : (object.name || object.url);
+  const name = isCollection ? (object.name || object.label) : (object.name || object.url);
   return (
     <Chip
       className={`chip ${typeClass}`}
@@ -34,10 +33,10 @@ const SourceOrCollectionChip = (props) => {
 };
 
 SourceOrCollectionChip.propTypes = {
-  object: PropTypes.object.isRequired,
-  onDelete: PropTypes.func,
-  onClick: PropTypes.func,
-  children: PropTypes.node,
+  object: React.PropTypes.object.isRequired,
+  onDelete: React.PropTypes.func,
+  onClick: React.PropTypes.func,
+  children: React.PropTypes.node,
 };
 
 export default SourceOrCollectionChip;

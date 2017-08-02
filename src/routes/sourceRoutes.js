@@ -29,12 +29,13 @@ import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
 import SourcesApp from '../components/source/SourcesApp';
 import About from '../components/source/About';
-import PageNotFound from '../components/PageNotFound';
 
 const sourceRoutes = (
   <Route path="/" component={SourcesApp}>
 
     <IndexRedirect to="/home" />
+
+    {userRoutes}
 
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
@@ -72,10 +73,6 @@ const sourceRoutes = (
         <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
       </Route>
     </Route>
-
-    {userRoutes}
-
-    <Route path="*" component={PageNotFound} />
 
   </Route>
 );

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -84,15 +83,15 @@ const TimespanSelector = (props) => {
 
 TimespanSelector.propTypes = {
   // from parent
-  timespans: PropTypes.array.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  selectedPeriod: PropTypes.string.isRequired,
-  selectedTimespan: PropTypes.object,
-  onTimespanSelected: PropTypes.func.isRequired,
-  onPeriodSelected: PropTypes.func.isRequired,
-  setExpanded: PropTypes.func.isRequired,
+  timespans: React.PropTypes.array.isRequired,
+  isExpanded: React.PropTypes.bool.isRequired,
+  selectedPeriod: React.PropTypes.string.isRequired,
+  selectedTimespan: React.PropTypes.object,
+  onTimespanSelected: React.PropTypes.func.isRequired,
+  onPeriodSelected: React.PropTypes.func.isRequired,
+  setExpanded: React.PropTypes.func.isRequired,
   // from helpful
-  helpButton: PropTypes.node.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 export default

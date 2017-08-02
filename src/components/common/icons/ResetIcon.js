@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const ResetIcon = props => (
@@ -10,7 +9,7 @@ const ResetIcon = props => (
 );
 
 ResetIcon.propTypes = {
-  backgroundColor: PropTypes.string,
+  backgroundColor: React.PropTypes.string,
 };
 
 export default ResetIcon;

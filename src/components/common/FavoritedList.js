@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -33,16 +32,16 @@ const FavoritedList = (props) => {
 
 FavoritedList.propTypes = {
   // from parent
-  title: PropTypes.string.isRequired,
-  intro: PropTypes.string,
-  favoritedItems: PropTypes.array.isRequired,
-  linkToFullUrl: PropTypes.bool,
-  onDownload: PropTypes.func,
-  helpButton: PropTypes.node,
+  title: React.PropTypes.string.isRequired,
+  intro: React.PropTypes.string,
+  favoritedItems: React.PropTypes.array.isRequired,
+  linkToFullUrl: React.PropTypes.bool,
+  onDownload: React.PropTypes.func,
+  helpButton: React.PropTypes.node,
   // from dispatch
-  handleClick: PropTypes.func.isRequired,
+  handleClick: React.PropTypes.func.isRequired,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = () => ({

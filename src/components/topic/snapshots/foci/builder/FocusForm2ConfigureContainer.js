@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { formValueSelector } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -37,15 +36,15 @@ const FocusForm2ConfigureContainer = (props) => {
 
 FocusForm2ConfigureContainer.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  initialValues: PropTypes.object,
+  topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
   // form context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from dipatch
-  handlePreviousStep: PropTypes.func.isRequired,
-  handleNextStep: PropTypes.func.isRequired,
+  handlePreviousStep: React.PropTypes.func.isRequired,
+  handleNextStep: React.PropTypes.func.isRequired,
   // from state:
-  currentFocalTechnique: PropTypes.string.isRequired,
+  currentFocalTechnique: React.PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

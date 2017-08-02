@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -100,10 +99,10 @@ const SourceDetailsForm = (props) => {
 
 SourceDetailsForm.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderCheckbox: PropTypes.func.isRequired,
-  initialValues: PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderCheckbox: React.PropTypes.func.isRequired,
+  initialValues: React.PropTypes.object,
 };
 
 const reduxFormConfig = {

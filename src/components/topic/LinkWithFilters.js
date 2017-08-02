@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
@@ -24,12 +23,12 @@ const LinkWithFilters = (props) => {
 
 LinkWithFilters.propTypes = {
   // from parent
-  children: PropTypes.node.isRequired,
-  to: PropTypes.string.isRequired,
-  style: PropTypes.object,
-  filters: PropTypes.object,  // use this to override
+  children: React.PropTypes.node.isRequired,
+  to: React.PropTypes.string.isRequired,
+  style: React.PropTypes.object,
+  filters: React.PropTypes.object,  // use this to override
   // from state
-  existingFilters: PropTypes.object.isRequired,
+  existingFilters: React.PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

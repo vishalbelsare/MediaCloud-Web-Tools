@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 // import { formValueSelector } from 'redux-form';
@@ -64,9 +63,6 @@ class AdvancedSearchContainer extends React.Component {
               if ('primaryLanguage' in values) {
                 info.tags.push(values.primaryLanguage);
               }
-              if ('countryOfFocus' in values) {
-                info.tags.push(values.countryOfFocus);
-              }
               this.setState(info);
             }}
           />
@@ -82,12 +78,12 @@ class AdvancedSearchContainer extends React.Component {
 
 AdvancedSearchContainer.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
-  params: PropTypes.object.isRequired,       // params from router
-  location: PropTypes.object,
+  intl: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired,       // params from router
+  location: React.PropTypes.object,
   // from dispatch
   // from url
-  urlQueryString: PropTypes.string,
+  urlQueryString: React.PropTypes.string,
 };
 
 const mapStateToProps = (state, ownProps) => ({

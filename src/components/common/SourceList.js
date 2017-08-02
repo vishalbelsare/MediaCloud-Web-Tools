@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from './DataCard';
@@ -69,13 +68,13 @@ class SourceList extends React.Component {
 
 SourceList.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  title: PropTypes.string,
-  intro: PropTypes.string,
-  sources: PropTypes.array.isRequired,
-  collectionId: PropTypes.number,
-  downloadUrl: PropTypes.string,
+  title: React.PropTypes.string,
+  intro: React.PropTypes.string,
+  sources: React.PropTypes.array.isRequired,
+  collectionId: React.PropTypes.number,
+  downloadUrl: React.PropTypes.string,
 };
 
 export default

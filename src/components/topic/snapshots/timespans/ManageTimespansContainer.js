@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -31,9 +30,9 @@ const ManageTimespansContainer = props => (
 
 ManageTimespansContainer.propTypes = {
   // from composition
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from state
-  topicId: PropTypes.number.isRequired,
+  topicId: React.PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

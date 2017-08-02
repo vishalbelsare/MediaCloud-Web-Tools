@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -76,17 +75,17 @@ const TopicCreate3ConfirmContainer = (props) => {
 TopicCreate3ConfirmContainer.propTypes = {
   // from parent
 
-  initialValues: PropTypes.object,
+  initialValues: React.PropTypes.object,
   // form context
-  intl: PropTypes.object.isRequired,
-  handleCreateTopic: PropTypes.func.isRequired,
-  submitting: PropTypes.bool,
+  intl: React.PropTypes.object.isRequired,
+  handleCreateTopic: React.PropTypes.func.isRequired,
+  submitting: React.PropTypes.bool,
   // from state
-  formValues: PropTypes.object.isRequired,
+  formValues: React.PropTypes.object.isRequired,
   // from dispatch
-  finishStep: PropTypes.func.isRequired,
-  handlePreviousStep: PropTypes.func.isRequired,
-  storyCount: PropTypes.number,
+  finishStep: React.PropTypes.func.isRequired,
+  handlePreviousStep: React.PropTypes.func.isRequired,
+  storyCount: React.PropTypes.number,
 };
 
 const mapStateToProps = state => ({

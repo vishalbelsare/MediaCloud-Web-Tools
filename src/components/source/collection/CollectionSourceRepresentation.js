@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as d3 from 'd3';
@@ -121,16 +120,16 @@ class CollectionSourceRepresentation extends React.Component {
 
 CollectionSourceRepresentation.propTypes = {
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  sources: PropTypes.array.isRequired,
+  fetchStatus: React.PropTypes.string.isRequired,
+  sources: React.PropTypes.array.isRequired,
   // from parent
-  collectionId: PropTypes.number.isRequired,
+  collectionId: React.PropTypes.number.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  navToSource: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  navToSource: React.PropTypes.func.isRequired,
   // from composition
-  intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  helpButton: React.PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

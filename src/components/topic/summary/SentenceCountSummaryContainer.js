@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -16,8 +15,8 @@ import { getBrandDarkColor } from '../../../styles/colors';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
-  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Total Sentences in Stories' },
-  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. This chart shows the total number of sentences in stories that matched your topic query. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
+  title: { id: 'topic.summary.sentenceCount.title', defaultMessage: 'Attention' },
+  descriptionIntro: { id: 'topic.summary.sentenceCount.help.title', defaultMessage: 'Analyze attention to this topic over time to understand how it is covered. Spikes in attention can reveal key events.  Plateaus can reveal stable, "normal", attention levels.' },
 };
 
 class SentenceCountSummaryContainer extends React.Component {
@@ -62,17 +61,17 @@ class SentenceCountSummaryContainer extends React.Component {
 
 SentenceCountSummaryContainer.propTypes = {
   // from composition chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // passed in
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
+  topicId: React.PropTypes.number.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  total: PropTypes.number,
-  counts: PropTypes.array,  // array of {date: epochMS, count: int]
+  fetchStatus: React.PropTypes.string.isRequired,
+  total: React.PropTypes.number,
+  counts: React.PropTypes.array,  // array of {date: epochMS, count: int]
   // from dispath
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

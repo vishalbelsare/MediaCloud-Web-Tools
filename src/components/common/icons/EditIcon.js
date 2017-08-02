@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const EditIcon = props => (
@@ -10,7 +9,7 @@ const EditIcon = props => (
 );
 
 EditIcon.propTypes = {
-  backgroundColor: PropTypes.string,
+  backgroundColor: React.PropTypes.string,
 };
 
 export default EditIcon;

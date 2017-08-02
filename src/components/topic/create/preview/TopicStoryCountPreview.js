@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -27,15 +26,15 @@ const localMessages = {
   totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max 100K Total Stories' },
   adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: 'You need to select a minimum of 500 seed stories.' },
-  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100,000 seed stories. Go back and make a more focused query, choose a shorter timespan, or fewer media sources.' },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100K seed stories.' },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'With this many seed stories, it is likely that the spidering will cause you to run into your 100,000 story limit. Try searching over a narrower time period, or for more specific keywords.' },
 };
 
 class TopicStoryCountPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { query, fetchData, user } = this.props;
+    const { query, fetchData } = this.props;
     if (nextProps.query !== query) {
-      fetchData(nextProps.query, user);
+      fetchData(nextProps.query);
     }
   }
   render() {
@@ -68,9 +67,9 @@ class TopicStoryCountPreview extends React.Component {
       }
       content = (<BubbleRowChart
         data={data}
-        padding={30}
+        padding={220}
         domId={BUBBLE_CHART_DOM_ID}
-        width={700}
+        width={440}
       />);
     }
     return (
@@ -87,16 +86,16 @@ class TopicStoryCountPreview extends React.Component {
 
 TopicStoryCountPreview.propTypes = {
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  query: PropTypes.object.isRequired,
+  query: React.PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
-  fetchData: PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
   // from state
-  count: PropTypes.number,
-  fetchStatus: PropTypes.string.isRequired,
-  user: PropTypes.object,
+  count: React.PropTypes.number,
+  fetchStatus: React.PropTypes.string.isRequired,
+  user: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -106,7 +105,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (query, user) => {
+  fetchData: (query) => {
     const infoForQuery = {
       q: query.solr_seed_query,
       start_date: query.start_date,
@@ -121,7 +120,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     dispatch(fetchStoryCountByQuery(infoForQuery))
       .then((result) => {
-        if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+        if (!hasPermissions(getUserRoles(ownProps.user), PERMISSION_TOPIC_ADMIN)) {
           if (result.count > MAX_RECOMMENDED_STORIES) {
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
           } else if (result.count < MAX_RECOMMENDED_STORIES && result.count > WARNING_LIMIT_RECOMMENDED_STORIES) {
@@ -140,7 +139,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.query, stateProps.user);
+      dispatchProps.fetchData(ownProps.query);
     },
   });
 }

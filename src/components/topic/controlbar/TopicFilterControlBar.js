@@ -1,15 +1,11 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
-import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo, filteredLocation } from '../../util/location';
-import { FilterButton, HomeButton } from '../../common/IconButton';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { FilterButton } from '../../common/IconButton';
 import { toggleFilterControls, filterByFocus, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
@@ -26,7 +22,6 @@ const localMessages = {
   filterTopic: { id: 'topic.filter', defaultMessage: 'Filter this Topic' },
   startedSpider: { id: 'topic.startedSpider', defaultMessage: 'Started a new spidering job for this topic' },
   summaryMessage: { id: 'snapshot.required', defaultMessage: 'You have made some changes that you can only see if you generate a new Snapshot. <a href="{url}">Generate one now</a>.' },
-  topicHomepage: { id: 'topic.homepage', defaultMessage: 'Topic Homepage' },
 };
 
 class TopicFilterControlBar extends React.Component {
@@ -51,18 +46,12 @@ class TopicFilterControlBar extends React.Component {
           <Grid>
             <Row>
               <Col lg={4} className="left">
-                <LinkWithFilters to={`/topics/${topicId}/summary`}>
-                  <HomeButton />
-                  <b><FormattedMessage {...localMessages.topicHomepage} /></b>
-                </LinkWithFilters>
-                <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                  <ModifyTopicDialog
-                    topicId={topicId}
-                    onUrlChange={goToUrl}
-                    needsNewSnapshot={needsNewSnapshot}
-                    onSpiderRequest={handleSpiderRequest}
-                  />
-                </Permissioned>
+                <ModifyTopicDialog
+                  topicId={topicId}
+                  onUrlChange={goToUrl}
+                  needsNewSnapshot={needsNewSnapshot}
+                  onSpiderRequest={handleSpiderRequest}
+                />
               </Col>
               <Col lg={8} className="right">
                 <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />
@@ -87,22 +76,22 @@ class TopicFilterControlBar extends React.Component {
 
 TopicFilterControlBar.propTypes = {
   // from context
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
   // from parent
-  topicId: PropTypes.number,
-  location: PropTypes.object.isRequired,
-  filters: PropTypes.object.isRequired,
+  topicId: React.PropTypes.number,
+  location: React.PropTypes.object.isRequired,
+  filters: React.PropTypes.object.isRequired,
   // from state
-  fetchStatus: PropTypes.string,
-  snapshots: PropTypes.array,
-  needsNewSnapshot: PropTypes.bool,
+  fetchStatus: React.PropTypes.string,
+  snapshots: React.PropTypes.array,
+  needsNewSnapshot: React.PropTypes.bool,
   // from dispatch
-  fetchData: PropTypes.func.isRequired,
-  handleFilterToggle: PropTypes.func.isRequired,
-  handleFocusSelected: PropTypes.func.isRequired,
-  handleSpiderRequest: PropTypes.func.isRequired,
+  fetchData: React.PropTypes.func.isRequired,
+  handleFilterToggle: React.PropTypes.func.isRequired,
+  handleFocusSelected: React.PropTypes.func.isRequired,
+  handleSpiderRequest: React.PropTypes.func.isRequired,
   // from merge
-  goToUrl: PropTypes.func.isRequired,
+  goToUrl: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

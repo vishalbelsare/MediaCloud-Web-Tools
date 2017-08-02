@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -7,8 +6,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
 import FocusDescriptionForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
-import { goToCreateFocusStep } from '../../../../../actions/topicActions';
+import { goToCreateFocusStep, fetchFocalSetDefinitions } from '../../../../../actions/topicActions';
 import messages from '../../../../../resources/messages';
+import composeAsyncContainer from '../../../../common/AsyncContainer';
 
 const formSelector = formValueSelector('snapshotFocus');
 
@@ -52,20 +52,21 @@ const FocusForm3DescribeContainer = (props) => {
 
 FocusForm3DescribeContainer.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  initialValues: PropTypes.object,
+  topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
   // form composition
-  intl: PropTypes.object.isRequired,
-  renderTextField: PropTypes.func.isRequired,
-  renderSelectField: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  intl: React.PropTypes.object.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
+  renderSelectField: React.PropTypes.func.isRequired,
+  handleSubmit: React.PropTypes.func.isRequired,
   // from state
-  fetchStatus: PropTypes.string.isRequired,
-  focalSetDefinitions: PropTypes.array.isRequired,
-  formData: PropTypes.object,
+  fetchStatus: React.PropTypes.string.isRequired,
+  focalSetDefinitions: React.PropTypes.array.isRequired,
+  formData: React.PropTypes.object,
   // from dispatch
-  goToStep: PropTypes.func.isRequired,
-  finishStep: PropTypes.func.isRequired,
+  goToStep: React.PropTypes.func.isRequired,
+  finishStep: React.PropTypes.func.isRequired,
+  asyncFetch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -74,9 +75,12 @@ const mapStateToProps = state => ({
   formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId'),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   goToStep: (step) => {
     dispatch(goToCreateFocusStep(step));
+  },
+  asyncFetch: () => {
+    dispatch(fetchFocalSetDefinitions(ownProps.topicId));
   },
 });
 
@@ -97,8 +101,7 @@ function validate() {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false, // <------ preserve form data
-  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  destroyOnUnmount: false,  // so the wizard works
   validate,
 };
 
@@ -107,7 +110,9 @@ export default
     composeIntlForm(
       reduxForm(reduxFormConfig)(
         connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          FocusForm3DescribeContainer
+          composeAsyncContainer(
+            FocusForm3DescribeContainer
+          )
         )
       )
     )

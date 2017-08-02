@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
@@ -15,9 +14,9 @@ const HealthBadge = props => (
 
 HealthBadge.propTypes = {
   // from parent
-  isHealthy: PropTypes.bool.isRequired,
+  isHealthy: React.PropTypes.bool.isRequired,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default injectIntl(HealthBadge);

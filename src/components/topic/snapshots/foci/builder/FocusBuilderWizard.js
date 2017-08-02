@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
@@ -23,11 +22,6 @@ class FocusBuilderWizard extends React.Component {
   componentWillMount = () => {
     const { startStep, goToStep } = this.props;
     goToStep(startStep || 0);
-  }
-
-  shouldComponentUpdate = (nextProps) => {
-    const { currentStep } = this.props;
-    return currentStep !== nextProps.currentStep;
   }
 
   componentWillUnmount = () => {
@@ -72,15 +66,15 @@ class FocusBuilderWizard extends React.Component {
 
 FocusBuilderWizard.propTypes = {
   // from parent
-  topicId: PropTypes.number.isRequired,
-  initialValues: PropTypes.object,
-  startStep: PropTypes.number,
-  location: PropTypes.object,
+  topicId: React.PropTypes.number.isRequired,
+  initialValues: React.PropTypes.object,
+  startStep: React.PropTypes.number,
+  location: React.PropTypes.object,
   // from state
-  currentStep: PropTypes.number.isRequired,
+  currentStep: React.PropTypes.number.isRequired,
   // from dispatch
-  goToStep: PropTypes.func.isRequired,
-  handleUnmount: PropTypes.func.isRequired,
+  goToStep: React.PropTypes.func.isRequired,
+  handleUnmount: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -92,7 +86,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateFocusStep(step));
   },
   handleUnmount: () => {
-    dispatch(goToCreateFocusStep(0)); // reset for next time
+    dispatch(goToCreateFocusStep(0));
   },
 });
 
