@@ -24,3 +24,6 @@ password = my_passowrd
 [cliff]
 host = http://www.localhost
 port = 8080
+
+[services]
+word_embeddings_server_url = http://word-embeddings-server-url
