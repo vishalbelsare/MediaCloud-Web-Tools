@@ -308,7 +308,7 @@ export function createIndexedAsyncReducer(handlers) {
         if (action.type in extraActionLookup) {
           return Object.assign({}, state, {
             ...state,
-            ...extraActionLookup[action.type](action.payload, state, action.payload.args),
+            ...extraActionLookup[action.type](action.payload, state, action.args),
           });
         }
         return state;
