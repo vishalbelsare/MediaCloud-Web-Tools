@@ -4,18 +4,17 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
-
+import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION, DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import { LEVEL_ERROR } from '../../common/Notice';
 
-/* const localMessages = {
-  querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
-  searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
-}; */
+const localMessages = {
+  errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
+};
 
 const MAX_COLORS = 20;
 
@@ -36,20 +35,24 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { user, samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { user, samples, selected, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
 
+    // for Logged In users, we expect the URL to have query, start/end dates and at least one collection. Throw an error if this is missing
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       if (whichProps.location.pathname.includes('/queries/search')) {
         // parse query params
         // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
-        const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
-        /* const currentQuery = parsedObjectArray.map(q => q.q);
-         let isNewQuerySet = null;
-        if (whichProps && whichProps.selected) {
-          isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0); // this is true even if a new query is beign entered
-        } */
+        let parsedObjectArray = null;
+        try {
+          parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+        } catch (e) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
+        }
+
         if (this.props.location.pathname !== whichProps.location.pathname) {
           // TODO how to keep current selection if this is just an *updated* set of queries
           selectQueriesByURLParams(parsedObjectArray);
@@ -88,18 +91,9 @@ class LoggedInQueryContainer extends React.Component {
       if (q.index === undefined) {
         defaultObjVals.index = idx; // the backend won't use these values, but this is for the QueryPicker display
       }
-      if (q.sources === undefined) {
-        defaultObjVals.sources = [];
-      }
-      if (q.collections === undefined) {
-        defaultObjVals.collections = [DEFAULT_COLLECTION];
-      }
-      const dateObj = getPastTwoWeeksDateRange();
-      if (q.startDate === undefined) {
-        defaultObjVals.startDate = dateObj.start;
-      }
-      if (q.endDate === undefined) {
-        defaultObjVals.endDate = dateObj.end;
+      if (q.q === undefined || q.collections === undefined || q.startDate === undefined || q.endDate === undefined) {
+        // this means an error
+        throw new Error();
       }
       return Object.assign({}, q, defaultObjVals);
     });
@@ -141,6 +135,7 @@ LoggedInQueryContainer.propTypes = {
   // from state
   location: React.PropTypes.object,
   user: React.PropTypes.object.isRequired,
+  addAppNotice: React.PropTypes.func.isRequired,
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
   sourcesResults: React.PropTypes.array,
@@ -171,6 +166,9 @@ const mapStateToProps = (state, ownProps) => ({
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
+  addAppNotice: (info) => {
+    dispatch(addNotice(info));
+  },
   setSelectedQuery: (queryObj) => {
     dispatch(selectQuery(queryObj));
   },
