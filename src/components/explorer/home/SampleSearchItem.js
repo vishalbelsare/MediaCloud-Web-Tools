@@ -3,9 +3,8 @@ import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
-const DEFAULT_COLLECTION = 9139487;
-const DEFAULT_COLLECTION_OBJECT = [{ tags_id: DEFAULT_COLLECTION, label: 'U.S. Top News' }];
 const SampleSearchItem = (props) => {
   const { search, user } = props;
   // dissect the search and put it into the url if logged in...
@@ -15,7 +14,7 @@ const SampleSearchItem = (props) => {
   if (isNotLoggedInUser) {
     urlParamString = `demo/${search.id}`;
   } else {
-    // use default dates, collection, sources
+    // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
     const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
     const sources = '[]';

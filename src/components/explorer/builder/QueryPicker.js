@@ -9,6 +9,7 @@ import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -19,8 +20,6 @@ const localMessages = {
 };
 
 const MAX_COLORS = 20;
-const DEFAULT_COLLECTION = 9139487;
-const DEFAULT_COLLECTION_OBJECT = [{ tags_id: DEFAULT_COLLECTION, label: 'U.S. Top News' }];
 
 class QueryPicker extends React.Component {
 

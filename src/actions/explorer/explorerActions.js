@@ -38,39 +38,27 @@ export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQuer
 
 export const FETCH_QUERY_SENTENCE_COUNTS = 'FETCH_QUERY_SENTENCE_COUNTS';
 export const fetchQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchQuerySentenceCounts, params => params);
-
-export const FETCH_DEMO_QUERY_SENTENCE_COUNTS = 'FETCH_DEMO_QUERY_SENTENCE_COUNTS';
-export const fetchDemoQuerySentenceCounts = createAsyncAction(FETCH_DEMO_QUERY_SENTENCE_COUNTS, api.fetchDemoQuerySentenceCounts, params => params);
+export const fetchDemoQuerySentenceCounts = createAsyncAction(FETCH_QUERY_SENTENCE_COUNTS, api.fetchDemoQuerySentenceCounts, params => params);
 
 export const FETCH_QUERY_SAMPLE_STORIES = 'FETCH_QUERY_SAMPLE_STORIES';
 export const fetchQuerySampleStories = createAsyncAction(FETCH_QUERY_SAMPLE_STORIES, api.fetchQuerySampleStories, params => params);
-
-export const FETCH_DEMO_QUERY_SAMPLE_STORIES = 'FETCH_DEMO_QUERY_SAMPLE_STORIES';
-export const fetchDemoQuerySampleStories = createAsyncAction(FETCH_DEMO_QUERY_SAMPLE_STORIES, api.fetchDemoQuerySampleStories, params => params);
+export const fetchDemoQuerySampleStories = createAsyncAction(FETCH_QUERY_SAMPLE_STORIES, api.fetchDemoQuerySampleStories, params => params);
 
 export const FETCH_QUERY_STORY_COUNT = 'FETCH_QUERY_STORY_COUNT';
 export const fetchQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchQueryStoryCount, params => params);
-
-export const FETCH_DEMO_QUERY_STORY_COUNT = 'FETCH_DEMO_QUERY_STORY_COUNT';
-export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_DEMO_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);
+export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);
 
 export const FETCH_QUERY_GEO = 'FETCH_QUERY_GEO';
 export const fetchQueryGeo = createAsyncAction(FETCH_QUERY_GEO, api.fetchQueryGeo, params => params);
-
-export const FETCH_DEMO_QUERY_GEO = 'FETCH_DEMO_QUERY_GEO';
-export const fetchDemoQueryGeo = createAsyncAction(FETCH_DEMO_QUERY_GEO, api.fetchDemoQueryGeo, params => params);
+export const fetchDemoQueryGeo = createAsyncAction(FETCH_QUERY_GEO, api.fetchDemoQueryGeo, params => params);
 
 export const FETCH_QUERY_SOURCES = 'FETCH_QUERY_SOURCES';
 export const fetchQuerySourcesByIds = createAsyncAction(FETCH_QUERY_SOURCES, api.fetchQuerySourcesByIds, props => props);
-
-export const FETCH_DEMO_QUERY_SOURCES = 'FETCH_DEMO_QUERY_SOURCES';
-export const demoQuerySourcesByIds = createAsyncAction(FETCH_DEMO_QUERY_SOURCES, api.demoQuerySourcesByIds, props => props);
+export const demoQuerySourcesByIds = createAsyncAction(FETCH_QUERY_SOURCES, api.demoQuerySourcesByIds, props => props);
 
 export const FETCH_QUERY_COLLECTIONS = 'FETCH_QUERY_COLLECTIONS';
 export const fetchQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIONS, api.fetchQueryCollectionsByIds, props => props);
-
-export const FETCH_DEMO_QUERY_COLLECTIONS = 'FETCH_DEMO_QUERY_COLLECTIONS';
-export const demoQueryCollectionsByIds = createAsyncAction(FETCH_DEMO_QUERY_COLLECTIONS, api.demoQueryCollectionsByIds, props => props);
+export const demoQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIONS, api.demoQueryCollectionsByIds, props => props);
 
 export const RESET_QUERIES = 'RESET_QUERIES';
 export const resetQueries = createAction(RESET_QUERIES);

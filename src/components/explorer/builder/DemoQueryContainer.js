@@ -8,6 +8,7 @@ import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearche
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
 
 // import { notEmptyString } from '../../../lib/formValidators';
 /* const localMessages = {
@@ -15,7 +16,6 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
 }; */
 const MAX_COLORS = 20;
-const DEFAULT_COLLECTION = 9139487;
 
 class DemoQueryBuilderContainer extends React.Component {
   componentWillMount() {

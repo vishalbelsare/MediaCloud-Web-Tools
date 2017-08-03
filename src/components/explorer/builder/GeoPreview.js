@@ -13,6 +13,7 @@ import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
 import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
@@ -21,9 +22,6 @@ const localMessages = {
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
-
-const DEFAULT_SOURCES = '';
-const DEFAULT_COLLECTION = 9139487;
 
 class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {

@@ -10,6 +10,7 @@ import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -17,7 +18,6 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 }; */
 
 const MAX_COLORS = 20;
-const DEFAULT_COLLECTION = 9139487;
 
 class LoggedInQueryContainer extends React.Component {
   componentWillMount() {
@@ -112,8 +112,8 @@ class LoggedInQueryContainer extends React.Component {
     const { user, selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <div>Error</div>;
-    const isEditable = location.pathname.includes('queries/demo/search');
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+      const isEditable = true;
       if (queries && queries.length > 0 && selected) {
         content = (
           <div>
@@ -186,8 +186,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    // let urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
-    const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
+    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
+    const sources = [DEFAULT_SOURCES];
+    let urlParamString = queries.map(query => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":${collection}}`);
+    urlParamString = `search/[${urlParamString}]`;
     const newLocation = `queries/search/[${urlParamString}]`;
     dispatch(push(newLocation));
     // this should keep the current selection...
