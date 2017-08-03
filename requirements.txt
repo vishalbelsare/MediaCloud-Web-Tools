@@ -16,8 +16,8 @@ requests==2.10.0
 six==1.10.0
 wsgiref==0.1.2
 HermesCache==0.6.0
-raven==5.26.0
-blinker==1.4
+raven[flask]
+blinker
 redis==2.10.5
 networkx==1.9
 Flask-Mail==0.9.1
