@@ -1,32 +1,26 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
-import Collapsible from 'react-collapsible';
+import { reduxForm, Field } from 'redux-form';
 import composeIntlForm from '../../../common/IntlForm';
 // import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
 // import AppButton from '../../../common/AppButton';
 // import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
 
-
-const localMessages = {
-  searchByName: { id: 'explorer.media.select.searchby.name', defaultMessage: 'Search by Name/URL' },
-  searchByMetadata: { id: 'explorer.media.select.searchby.metadata', defaultMessage: 'Search by Metadata' },
-  selectedMedia: { id: 'explorer.media.select.media', defaultMessage: 'Selected Media' },
-  pubCountrySuggestion: { id: 'explorer.media.select.pubCountryTip', defaultMessage: 'published in' },
-  pubStateSuggestion: { id: 'explorer.media.select.pubStateTip', defaultMessage: 'state published in' },
-  pLanguageSuggestion: { id: 'explorer.media.select.pLanguageTip', defaultMessage: 'primary language' },
-};
-
 const SelectMediaForm = (props) => {
-  const { handleSubmit, onSearch } = props;
-  const { formatMessage } = props.intl;
+  const { handleSubmit, onSearch, renderTextField } = props;
   return (
     <form className="select-media-container" onSubmit={handleSubmit(onSearch.bind(this))}>
-      <Collapsible trigger={formatMessage(localMessages.searchByName)}>
-        <p>enter name or url</p>
-        <p>here</p>
-      </Collapsible>
-      <Collapsible trigger={formatMessage(localMessages.searchByMetadata)} />
+      <Field
+        className="media-query-field"
+        name="keyword"
+        type="text"
+        underlineShow={false}
+        multiLine
+        rows={3}
+        rowsMax={4}
+        fullWidth
+        component={renderTextField}
+      />
     </form>
   );
 };
@@ -40,6 +34,7 @@ SelectMediaForm.propTypes = {
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
+  renderTextField: React.PropTypes.func.isRequired,
 };
 
 const reduxFormConfig = {
