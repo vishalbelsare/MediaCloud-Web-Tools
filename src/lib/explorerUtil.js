@@ -1,4 +1,4 @@
-export const DEFAULT_SOURCE = '';
+export const DEFAULT_SOURCES = '';
 
 export const DEFAULT_COLLECTION = 9139487;
 

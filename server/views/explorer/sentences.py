@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_explorer_sentences_count():
     user_mc = user_admin_mediacloud_client()
-    # is id an option here?
+    # dates are required as is one collection, how do we handle default for logged in users?
     solr_query = solr_query_from_request(request.args) 
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.args['start_date'], split_end_date=request.args['end_date'], split=True)
     # make sure we return the query and the id passed in..

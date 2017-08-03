@@ -10,7 +10,7 @@ import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION, DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION, DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
 /* const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
@@ -187,10 +187,10 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSearch: (queries) => {
     const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
-    const sources = [DEFAULT_SOURCES];
+    const sources = '[]';
     let urlParamString = queries.map(query => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":${collection}}`);
-    urlParamString = `search/[${urlParamString}]`;
-    const newLocation = `queries/search/[${urlParamString}]`;
+    urlParamString = `[${urlParamString}]`;
+    const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
     // this should keep the current selection...
   },
