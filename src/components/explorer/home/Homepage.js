@@ -9,6 +9,7 @@ import SearchForm from './SearchForm';
 import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -17,8 +18,6 @@ const localMessages = {
   description: { id: 'explorer.intro.description', defaultMessage: 'Dashboard is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over acustom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
-
-const DEFAULT_COLLECTION = 9139487;
 
 const Homepage = (props) => {
   const { user, onKeywordSearch } = props;
@@ -47,7 +46,7 @@ const Homepage = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <SearchForm onSearch={onKeywordSearch} user={user} />
+            <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
           </Col>
         </Row>
       </Grid>
@@ -76,13 +75,13 @@ const mapDispatchToProps = dispatch => ({
     let urlParamString = null;
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = [DEFAULT_COLLECTION];
+    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
     // why bother sending this? const sources = '[]';
     const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","collections":${collection}}]`;
     const demoParams = `[{"q":"${values.keyword}"}]`;
 
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-      urlParamString = `demo/search/${defParams}`;
+      urlParamString = `search/${defParams}`;
     } else {
       urlParamString = `demo/search/${demoParams}`;
     }
