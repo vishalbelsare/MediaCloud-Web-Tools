@@ -43,7 +43,7 @@ export default function (path = '' /*, query = {}*/) {
   const page = nightmare({
     show: true,
     pollInterval: 50,
-  });
+  }).viewport(1260, 700);
 
   return page.goto(location);
 }
