@@ -49,10 +49,10 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} xs={12}>
-              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} />
+              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
-              <WordWordsContainer topicId={topicId} stem={stem} term={term} />
+              <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
           </Row>
           <Row>
@@ -62,7 +62,7 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <WordStoriesContainer topicId={topicId} stem={stem} term={term} />
+              <WordStoriesContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
           </Row>
           <Row>

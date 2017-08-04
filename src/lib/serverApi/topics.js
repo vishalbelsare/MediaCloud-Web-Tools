@@ -171,8 +171,9 @@ export function wordStories(topicId, wordstem, params) {
   return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/stories`, acceptedParams);
 }
 
-export function wordWords(topicId, wordstem) {
-  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/words`);
+export function wordWords(topicId, wordstem, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/words/${wordstem}*/words`, acceptedParams);
 }
 
 export function wordSampleSentences(topicId, wordstem, params) {

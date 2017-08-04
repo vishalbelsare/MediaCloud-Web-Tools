@@ -23,9 +23,8 @@ const localMessages = {
 class WordSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId ||
-      (nextProps.stem !== this.props.stem)) {
-      fetchData(nextProps);
+    if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem)) {
+      fetchData(nextProps.filters, nextProps.stem);
     }
   }
   downloadCsv = () => {
@@ -55,12 +54,13 @@ WordSentenceCountContainer.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
-  // passed in
+  // from parent
   topicId: PropTypes.number.isRequired,
   term: PropTypes.string.isRequired,
   stem: PropTypes.string.isRequired,  // from state
-  fetchStatus: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
+  // from state
+  fetchStatus: PropTypes.string.isRequired,
   total: PropTypes.number,
   counts: PropTypes.array,
   // from dispath
@@ -73,32 +73,21 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.sentenceCount.fetchStatus,
   total: state.topics.selected.word.sentenceCount.total,
   counts: state.topics.selected.word.sentenceCount.counts,
-  filters: state.topics.selected.filters,
-  stem: state.topics.selected.word.info.stem,
-  term: state.topics.selected.word.info.term,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (stateProps) => {
-    const params = {
-      ...stateProps.filters,
-      sort: stateProps.sort,
-    };
-    dispatch(fetchWordSentenceCounts(ownProps.topicId, stateProps.stem, params));
+  fetchData: (filters, stem) => {
+    dispatch(fetchWordSentenceCounts(ownProps.topicId, stem, filters));
+  },
+  asyncFetch: () => {
+    const { topicId, stem, filters } = ownProps;
+    dispatch(fetchWordSentenceCounts(topicId, stem, filters));
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           WordSentenceCountContainer

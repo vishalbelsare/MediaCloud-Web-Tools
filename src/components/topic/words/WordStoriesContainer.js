@@ -22,12 +22,13 @@ const localMessages = {
 class WordStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) ||
-      (nextProps.stem !== this.props.stem)) {
-      fetchData(nextProps);
+    if ((nextProps.filters.timespanId !== filters.timespanId) ||
+        (nextProps.sort !== sort) ||
+        (nextProps.stem !== this.props.stem)) {
+      fetchData(nextProps.filters, nextProps.sort, nextProps.stem);
     }
   }
-  onChangeSort = (newSort) => {
+  handleSortData = (newSort) => {
     const { sortData } = this.props;
     sortData(newSort);
   }
@@ -48,7 +49,7 @@ class WordStoriesContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={inlinkedStories} topicId={topicId} />
+        <TopicStoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.handleSortData} />
       </DataCard>
     );
   }
@@ -62,6 +63,7 @@ WordStoriesContainer.propTypes = {
   stem: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from fetchData
@@ -69,7 +71,6 @@ WordStoriesContainer.propTypes = {
   sortData: PropTypes.func.isRequired,
   // from state
   sort: PropTypes.string.isRequired,
-  filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
 };
@@ -78,18 +79,17 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.stories.fetchStatus,
   inlinkedStories: state.topics.selected.word.stories.stories,
   sort: state.topics.selected.word.stories.sort,
-  filters: state.topics.selected.filters,
   stem: state.topics.selected.word.info.stem,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (stateProps) => {
+  fetchData: (filters, sort, stem) => {
     const params = {
-      ...stateProps.filters,
-      sort: stateProps.sort,
+      ...filters,
+      sort,
       limit: STORIES_TO_SHOW,
     };
-    dispatch(fetchWordStories(ownProps.topicId, stateProps.stem, params));
+    dispatch(fetchWordStories(ownProps.topicId, stem, params));
   },
   sortData: (sort) => {
     dispatch(sortWordStories(sort));
@@ -99,7 +99,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
+      dispatchProps.fetchData(ownProps.filters, stateProps.sort, ownProps.stem);
     },
   });
 }
