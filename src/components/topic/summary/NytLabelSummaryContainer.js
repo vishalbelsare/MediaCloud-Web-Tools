@@ -21,6 +21,7 @@ const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
 const COLORS = schemeCategory10;
 const PERCENTAGE_MIN_VALUE = 0.03; // anything lower than this goes into an "other" bubble
 const COVERAGE_REQUIRED = 0.8;  // need > this many of the stories tagged to show the results
+const BUBBLES_TO_SHOW = 5;
 
 const localMessages = {
   title: { id: 'topic.summary.nytLabels.title', defaultMessage: 'Top Themes' },
@@ -85,7 +86,7 @@ class NytLabelSummaryContainer extends React.Component {
             <FormattedMessage {...localMessages.title} />
           </h2>
           <BubbleRowChart
-            data={bubbleData}
+            data={bubbleData.slice(0, BUBBLES_TO_SHOW - 1)}
             width={800}
             height={220}
             domId={BUBBLE_CHART_DOM_ID}
