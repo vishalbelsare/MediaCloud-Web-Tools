@@ -13,6 +13,9 @@ app = sources
 [sentry]
 dsn = https://<key>:<secret>@app.getsentry.com/<project>
 
+[cdn]
+asset_url = https://DISTRIBUTION_NAME.cloudfront.net/static/gen/topics/
+
 [stmp]
 enabled = 0
 server = mail.your_server.suffix

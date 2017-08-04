@@ -118,8 +118,13 @@ def create_app():
         'DEBUG': is_dev_mode(),
         'WEBPACK_MANIFEST_PATH': manifest_path
     }
-    if is_prod_mode():
-        webpack_config['WEBPACK_ASSETS_URL'] = 'https://d2h2bu87t9cnlp.cloudfront.net/static/gen/{}/'.format(prod_app_name)
+    try:
+        cdn_asset_url = settings.get('cdn', 'asset_url')
+        webpack_config['WEBPACK_ASSETS_URL'] = cdn_asset_url
+    except ConfigParser.NoOptionError:
+        logger.info("Asset pipeline: no cdn")
+    except ConfigParser.NoSectionError:
+        logger.info("Asset pipeline: no cdn")
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
     # set up mail sending
