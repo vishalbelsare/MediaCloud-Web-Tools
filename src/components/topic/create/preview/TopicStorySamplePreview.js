@@ -8,7 +8,6 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import StoryTable from '../../StoryTable';
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
-import messages from '../../../../resources/messages';
 import { filteredLocation } from '../../../util/location';
 
 const NUM_TO_SHOW = 20;
@@ -108,7 +107,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
+      composeDescribedDataCard(localMessages.descriptionIntro)(
         composeAsyncContainer(
           TopicStorySamplePreview
         )
