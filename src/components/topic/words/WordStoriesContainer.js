@@ -9,10 +9,12 @@ import messages from '../../../resources/messages';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
+import { filtersAsUrlParams } from '../../util/location';
 
 const STORIES_TO_SHOW = 10;
 
 const localMessages = {
+  title: { id: 'word.stories.title', defaultMessage: 'Stories that Use this Word' },
   helpTitle: { id: 'word.stories.help.title', defaultMessage: 'About Word Stories' },
   helpIntro: { id: 'word.stories.help.intro', defaultMessage: '<p>This is a table of stories pertaining this word within the Topic.</p>' },
 };
@@ -31,7 +33,7 @@ class WordStoriesContainer extends React.Component {
   }
   downloadCsv = () => {
     const { term, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/words/${term}/word.csv?timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/words/${term}*/stories.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {
@@ -43,7 +45,7 @@ class WordStoriesContainer extends React.Component {
           <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
         </div>
         <h2>
-          <FormattedMessage {...messages.storyPlural} />
+          <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
         <TopicStoryTable stories={inlinkedStories} topicId={topicId} />

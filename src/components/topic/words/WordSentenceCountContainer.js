@@ -10,6 +10,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'word.sentenceCount.title', defaultMessage: 'Sentences that Use this Word' },
@@ -29,7 +30,7 @@ class WordSentenceCountContainer extends React.Component {
   }
   downloadCsv = () => {
     const { topicId, term, filters } = this.props;
-    const url = `/api/topics/${topicId}/word/${term}*/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/words/${term}*/sentences/count.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {
