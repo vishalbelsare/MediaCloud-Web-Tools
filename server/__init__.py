@@ -117,8 +117,6 @@ def create_app():
         'DEBUG': is_dev_mode(),
         'WEBPACK_MANIFEST_PATH': manifest_path
     }
-    my_app.config.update(webpack_config)
-    webpack.init_app(my_app)
     # caching and CDN config
     my_app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 7 * 24 * 60 * 60
     try:
@@ -128,6 +126,8 @@ def create_app():
         logger.info("Asset pipeline: no cdn")
     except ConfigParser.NoSectionError:
         logger.info("Asset pipeline: no cdn")
+    my_app.config.update(webpack_config)
+    webpack.init_app(my_app)
     # set up mail sending
     if settings.has_option('smtp', 'enabled'):
         mail_enabled = settings.get('smtp', 'enabled')
