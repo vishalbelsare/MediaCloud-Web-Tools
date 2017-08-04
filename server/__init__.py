@@ -122,6 +122,7 @@ def create_app():
     try:
         cdn_asset_url = settings.get('cdn', 'asset_url')
         webpack_config['WEBPACK_ASSETS_URL'] = cdn_asset_url
+        logger.info("Asset pipeline: {}".format(cdn_asset_url))
     except ConfigParser.NoOptionError:
         logger.info("Asset pipeline: no cdn")
     except ConfigParser.NoSectionError:
