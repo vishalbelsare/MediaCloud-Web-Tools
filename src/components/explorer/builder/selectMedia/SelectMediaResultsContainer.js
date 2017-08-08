@@ -2,11 +2,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import { fetchMedia, selectMedia, updateMediaSelectionQuery } from '../../../../actions/explorerActions';
+import { fetchMedia, selectMedia, selectMediaQueryArgs, fetchCollections } from '../../../../actions/explorerActions';
 import ContentPreview from '../../../common/ContentPreview';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
 import SelectMediaForm from './SelectMediaForm';
-
+import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../../lib/explorerUtil';
+import * as fetchConstants from '../../../../lib/fetchConstants';
 /*
 const localMessages = {
   searchByName: { id: 'explorer.media.select.searchby.name', defaultMessage: 'Search by Name/URL' },
@@ -18,33 +19,50 @@ const localMessages = {
 }; */
 
 class SelectMediaResultsContainer extends React.Component {
-  updateMediaQuery(obj, values) {
-    const { updateMediaSelection } = this.props;
-    const updateObject = obj;
-    const fieldName = obj.target ? obj.target.name : obj.name;
-    const fieldValue = obj.target ? obj.target.value : obj.value;
-    updateObject[fieldName] = values;
-    updateMediaSelection(updateObject, fieldValue);
+  updateMediaQuery(values) {
+    const { updateMediaSelection, selectedMediaQueryType } = this.props;
+    const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
+    updateMediaSelection(updatedQueryObj);
+  }
+  handleSelectMedia(media) {
+    const { handleSelection } = this.props;
+    handleSelection(media);
   }
   render() {
-    const { media } = this.props; // TODO differentiate betwee coll and src
+    const { selectedMediaQueryType, selectedMediaQueryArgs, collectionResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
-    if (media && media.length > 0) {
+    let whichMedia = null;
+    switch (selectedMediaQueryType) {
+      case PICK_COLLECTION:
+        whichMedia = collectionResults;
+        break;
+      case PICK_SOURCE:
+      case ADVANCED:
+        break;
+      case STARRED:
+        whichMedia = starredResults;
+        break;
+      default:
+        whichMedia = featured;
+        break;
+    }
+    if (whichMedia && whichMedia.length > 0) {
       content = (
         <ContentPreview
-          items={media}
+          items={whichMedia}
           classStyle="browse-items"
           itemType="media"
           icon={<CollectionIcon height={25} />}
-          linkInfo={c => `media/${c.tags_id}`}
+          linkInfo={c => `whichMedia/${c.tags_id}`}
           linkDisplay={c => c.label}
+          onClick={this.handleSelectMedia}
         />
       );
     }
     return (
       <div className="select-media-container">
-        <SelectMediaForm onSearch={() => this.updateMediaQuery} />
-        <div>{content}</div>
+        <SelectMediaForm initialValues={selectedMediaQueryArgs} onSearch={val => this.updateMediaQuery(val)} />
+        {content}
       </div>
     );
   }
@@ -56,26 +74,52 @@ SelectMediaResultsContainer.propTypes = {
   handleSelection: React.PropTypes.func,
   media: React.PropTypes.array,
   updateMediaSelection: React.PropTypes.func.isRequired,
+  selectedMediaQueryArgs: React.PropTypes.string,
+  selectedMediaQueryType: React.PropTypes.number,
+  featured: React.PropTypes.array,
+  collectionResults: React.PropTypes.array,
+  sourcesResults: React.PropTypes.array,
+  starredResults: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.explorer.media.fetchStatus,
-  media: state.explorer.media.collections,
+  fetchStatus: (state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.type : null,
+  selectedMediaQueryArgs: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args : null,
+  sourcesResults: state.explorer.media.media ? state.explorer.media.media : null,
+  media: state.explorer.media.featured ? state.explorer.media.featured.collections : null,
+  collectionResults: state.explorer.media.collectionQueryResults ? state.explorer.media.collectionQueryResults.list : null,
+  starredResults: state.explorer.media.starredQueryResults ? state.explorer.media.starredQueryResults : null,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   updateMediaSelection: (values) => {
     if (values) {
-      dispatch(updateMediaSelectionQuery(values, ownProps));
+      dispatch(selectMediaQueryArgs(values));
+      switch (values.type) {
+        case PICK_COLLECTION:
+          dispatch(fetchCollections(values));
+          break;
+        case PICK_SOURCE:
+        case ADVANCED:
+          break;
+        case STARRED:
+          dispatch(fetchMedia(5)); // TODO make this a real search
+          break;
+        default:
+          break;
+      }
     }
   },
-  handleSelection: (values) => {
-    if (values) {
-      dispatch(selectMedia(values, ownProps));
+  handleSelection: (selectedMedia) => {
+    if (selectedMedia) {
+      dispatch(selectMedia(selectedMedia));
     }
   },
   asyncFetch: () => {
-    dispatch(fetchMedia(5)); // TODO make this a real search
+    // what kind of media is being queried for?
+    // default to PICK_COLLECTION
+    dispatch(fetchMedia(5)); // TODO make this a real search or "all"
   },
 });
 

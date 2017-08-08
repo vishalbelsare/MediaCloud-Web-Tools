@@ -30,8 +30,16 @@ export const updateQuery = createAction(UPDATE_QUERY, query => query);
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const selectMedia = createAction(SELECT_MEDIA, media => media);
 
+export const SELECT_MEDIA_QUERY_ARGS = 'SELECT_MEDIA_QUERY_ARGS';
+export const selectMediaQueryArgs = createAction(SELECT_MEDIA_QUERY_ARGS, args => args);
+
 export const FETCH_MEDIA_FOR_QUERY = 'FETCH_MEDIA_FOR_QUERY';
 export const fetchMedia = createAsyncAction(FETCH_MEDIA_FOR_QUERY, api.fetchMedia);
+
+export const FETCH_EXPLORER_COLLECTION_SEARCH = 'FETCH_EXPLORER_COLLECTION_SEARCH';
+export const fetchCollections = createAsyncAction(FETCH_EXPLORER_COLLECTION_SEARCH, api.fetchCollections, params => params);
+
+export const RESET_EXPLORER_COLLECTION_SEARCH = 'RESET_EXPLORER_COLLECTION_SEARCH';
 
 export const PREPARE_QUERIES = 'PREPARE_QUERIES';
 export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQueries);

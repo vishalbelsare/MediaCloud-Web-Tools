@@ -11,13 +11,8 @@ const SelectMediaForm = (props) => {
   return (
     <form className="select-media-container" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Field
-        className="media-query-field"
         name="keyword"
         type="text"
-        underlineShow={false}
-        multiLine
-        rows={3}
-        rowsMax={4}
         fullWidth
         component={renderTextField}
       />

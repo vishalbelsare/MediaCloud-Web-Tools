@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
-import { Row, Col } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './selectMedia/MediaSelectionContainer';
 import SelectMediaResultsContainer from './selectMedia/SelectMediaResultsContainer';
@@ -61,14 +61,16 @@ class SelectMediaDialog extends React.Component {
           autoDetectWindowHeight
         >
           <div className="select-media-dialog-inner">
-            <Row>
-              <Col lg={2}>
-                <MediaSelectionContainer selectedMedia={selectedMedia} />
-              </Col>
-              <Col lg={4}>
-                <SelectMediaResultsContainer queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
-              </Col>
-            </Row>
+            <Grid>
+              <Row>
+                <Col lg={2}>
+                  <MediaSelectionContainer selectedMedia={selectedMedia} />
+                </Col>
+                <Col lg={6}>
+                  <SelectMediaResultsContainer selectedMediaQueryType={0} queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                </Col>
+              </Row>
+            </Grid>
           </div>
         </Dialog>
       </div>
@@ -90,13 +92,14 @@ SelectMediaDialog.propTypes = {
 const mapStateToProps = state => ({
   selectedCollections: state.explorer.selected.sources, // maybe we want these dunnoyet
   selectedSources: state.explorer.selected.collections,
+  fetchStatus: state.explorer.collections.fetchStatus,
   selectedMedia: state.explorer.selected.collections,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   handleSelection: (values) => {
     if (values) {
-      dispatch(fetchMedia(values, ownProps));
+      dispatch(fetchMedia(5));
     }
   },
 });

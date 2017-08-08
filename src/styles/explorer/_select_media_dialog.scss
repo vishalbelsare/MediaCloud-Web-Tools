@@ -1,10 +1,10 @@
 @import '../_constants';
 
 .select-media-dialog {
-
+  width: 600px !important;
   .select-media-dialog-content {
     > div {
-      background-color: $material-grey800 !important;
+      background-color: $white !important;
     }
   }
 
@@ -17,7 +17,8 @@
 
   .select-media-dialog-body {
     .select-media-container {
-      max-width: 400px;
+      background-color: $white !important;
+      max-width: 1000px;
       margin-right: auto;
       margin-left: auto;
       margin-bottom: 25px;
@@ -33,11 +34,28 @@
           height: 30px !important;
         }
       }
+
+      .browse-list {
+        .browse-items {
+          font-size: 16px !important;
+          display: block;
+          .content {
+            font-size: 12px !important;
+            min-height: 100px !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+          }
+          h2 {
+            font-size: 16px !important;
+          }
+          padding-bottom: 10px;
+          .app-icon.app-icon-large {
+            height:25px;
+          }
+        }
+      }
     }
   }
-
-  .select-media-dialog-overlay {
-
-  }
-
 }
