@@ -3,8 +3,10 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, mc
+from server.cache import cache
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
+from server.views.sources import FEATURED_COLLECTION_LIST
 from server.util.request import form_fields_required, api_error_handler, arguments_required
 from server.views.explorer import solr_query_from_request, read_sample_searches
 from operator import itemgetter
@@ -73,6 +75,24 @@ def api_explorer_collections_by_ids():
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
         coll_list.append(info);
     return jsonify(coll_list)
+
+@app.route('/api/explorer/collections/featured', methods=['GET'])
+@api_error_handler
+def api_explorer_featured_collections():
+    featured_collections = _cached_featured_collections()
+    return jsonify({'results': featured_collections})
+
+
+@cache
+def _cached_featured_collections():
+    featured_collections = []
+    for tagsId in FEATURED_COLLECTION_LIST:
+        info = mc.tag(tagsId)
+        info['id'] = tagsId
+        # info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tagsId))  # use None here to use app-level mc object
+        featured_collections += [info]
+    return featured_collections
+
 
 @app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])
 @api_error_handler
