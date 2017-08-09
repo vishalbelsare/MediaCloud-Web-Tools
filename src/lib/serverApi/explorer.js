@@ -72,17 +72,17 @@ export function fetchQueryCollectionsByIds(params) {
   return createApiPromise('api/explorer/collections/list', acceptedParams);
 }
 
-export function fetchMedia() {
+export function fetchMediaPickerFeaturedCollections() {
   // TODO fetch sources too, for now just temp using collections
-  return createApiPromise('api/explorer/set/5');
+  return createApiPromise('/api/mediapicker/collections/featured');
 }
-export function fetchCollections(params) {
+export function fetchMediaPickerCollections(params) {
   const acceptedParams = acceptParams(params, ['keyword']);
-  return createApiPromise('/api/explorer/collections/search', acceptedParams);
+  return createApiPromise('/api/mediapicker/collections/search', acceptedParams);
 }
 
-export function fetchSources(params) {
+export function fetchMediaPickerSources(params) {
   const acceptedParams = acceptParams(params, ['keyword']);
-  return createApiPromise('/api/explorer/sources/search', acceptedParams);
+  return createApiPromise('/api/mediapicker/sources/search', acceptedParams);
 }
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

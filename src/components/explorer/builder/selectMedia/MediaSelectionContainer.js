@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
 import { Row } from 'react-flexbox-grid/lib';
-import { selectMediaQueryArgs } from '../../../../actions/explorerActions';
+import { selectMediaPickerQueryArgs } from '../../../../actions/explorerActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../../lib/explorerUtil';
 // import SourceOrCollectionChip from '../../../common/SourceOrCollectionChip';
 // import SelectedMediaContainer from './SelectedMediaContainer';
@@ -75,7 +75,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   updateMediaSelection: (type) => {
     if (type >= 0) {
-      dispatch(selectMediaQueryArgs({ type }));
+      dispatch(selectMediaPickerQueryArgs({ type }));
     }
   },
 });

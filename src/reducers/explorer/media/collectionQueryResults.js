@@ -1,11 +1,11 @@
-import { FETCH_EXPLORER_COLLECTION_SEARCH, RESET_EXPLORER_COLLECTION_SEARCH } from '../../../actions/explorerActions';
+import { FETCH_MEDIAPICKER_COLLECTION_SEARCH, RESET_MEDIAPICKER_COLLECTION_SEARCH } from '../../../actions/explorerActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const collectionSearch = createAsyncReducer({
   initialState: {
     list: [],
   },
-  action: FETCH_EXPLORER_COLLECTION_SEARCH,
+  action: FETCH_MEDIAPICKER_COLLECTION_SEARCH,
   handleSuccess: (payload, state, meta) => ({
     args: meta.args[0],
     list: payload.list.map(c => ({
@@ -15,7 +15,7 @@ const collectionSearch = createAsyncReducer({
       type: 'collection',
     })),
   }),
-  [RESET_EXPLORER_COLLECTION_SEARCH]: () => ({ list: [] }),
+  [RESET_MEDIAPICKER_COLLECTION_SEARCH]: () => ({ list: [] }),
 });
 
 export default collectionSearch;

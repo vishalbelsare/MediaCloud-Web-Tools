@@ -2,9 +2,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import { fetchMedia, selectMedia, selectMediaQueryArgs, fetchCollections } from '../../../../actions/explorerActions';
+import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../../actions/explorerActions';
 import ContentPreview from '../../../common/ContentPreview';
-import CollectionIcon from '../../../common/icons/CollectionIcon';
 import SelectMediaForm from './SelectMediaForm';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../../lib/explorerUtil';
 import * as fetchConstants from '../../../../lib/fetchConstants';
@@ -29,7 +28,7 @@ class SelectMediaResultsContainer extends React.Component {
     handleSelection(media);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourcesResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
     let whichStoredKeyword = selectedMediaQueryKeyword;
@@ -44,6 +43,11 @@ class SelectMediaResultsContainer extends React.Component {
         }
         break;
       case PICK_SOURCE:
+        if (sourcesResults && (sourcesResults.list && (sourcesResults.list.length > 0 || (sourcesResults.args && sourcesResults.args.keyword)))) {
+          whichMedia = sourcesResults.list; // since this is the default, check keyword, otherwise it'll be empty
+          whichStoredKeyword = sourcesResults.args.keyword;
+        }
+        break;
       case ADVANCED:
         break;
       case STARRED:
@@ -59,9 +63,8 @@ class SelectMediaResultsContainer extends React.Component {
           items={whichMedia}
           classStyle="browse-items"
           itemType="media"
-          icon={<CollectionIcon height={25} />}
-          linkInfo={c => `whichMedia/${c.tags_id}`}
-          linkDisplay={c => c.label}
+          linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
+          linkDisplay={c => (c.label ? c.label : c.name)}
           onClick={this.handleSelectMedia}
         />
       );
@@ -92,8 +95,8 @@ const mapStateToProps = state => ({
   fetchStatus: (state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
   selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.type : null,
   selectedMediaQueryKeyword: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.keyword : null,
-  sourcesResults: state.explorer.media.media ? state.explorer.media.media : null,
-  featured: state.explorer.media.featured ? state.explorer.media.featured.collections : null,
+  sourcesResults: state.explorer.media.sourceQueryResults ? state.explorer.media.sourceQueryResults : null,
+  featured: state.explorer.media.featured ? state.explorer.media.featured.results : null,
   collectionResults: state.explorer.media.collectionQueryResults ? state.explorer.media.collectionQueryResults : null,
   starredResults: state.explorer.media.starredQueryResults ? state.explorer.media.starredQueryResults : null,
 });
@@ -101,16 +104,18 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   updateMediaSelection: (values) => {
     if (values) {
-      dispatch(selectMediaQueryArgs(values));
+      dispatch(selectMediaPickerQueryArgs(values));
       switch (values.type) {
         case PICK_COLLECTION:
-          dispatch(fetchCollections(values));
+          dispatch(fetchMediaPickerCollections(values));
           break;
         case PICK_SOURCE:
+          dispatch(fetchMediaPickerSources(values));
+          break;
         case ADVANCED:
           break;
         case STARRED:
-          dispatch(fetchMedia(5)); // TODO make this a real search
+          dispatch(fetchMediaPickerFeaturedCollections(5)); // TODO make this a real search
           break;
         default:
           break;
@@ -125,7 +130,7 @@ const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
     // what kind of media is being queried for?
     // default to PICK_COLLECTION
-    dispatch(fetchMedia(5)); // TODO make this a real search or "all"
+    dispatch(fetchMediaPickerFeaturedCollections(5)); // TODO make this a real search or "all"
   },
 });
 

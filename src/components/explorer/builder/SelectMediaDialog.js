@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './selectMedia/MediaSelectionContainer';
 import SelectMediaResultsContainer from './selectMedia/SelectMediaResultsContainer';
-import { fetchMedia } from '../../../actions/explorerActions';
+import { fetchMediaPickerFeaturedCollections } from '../../../actions/explorerActions';
 import AppButton from '../../common/AppButton';
 import { EditButton } from '../../common/IconButton';
 
@@ -99,7 +99,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   handleSelection: (values) => {
     if (values) {
-      dispatch(fetchMedia(5));
+      dispatch(fetchMediaPickerFeaturedCollections(5));
     }
   },
 });

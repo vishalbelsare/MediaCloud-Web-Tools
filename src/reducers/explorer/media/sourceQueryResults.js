@@ -1,8 +1,21 @@
-import { FETCH_MEDIA_FOR_QUERY } from '../../../actions/explorerActions';
+import { FETCH_MEDIAPICKER_SOURCE_SEARCH, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/explorerActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const sourceQueryResults = createAsyncReducer({
-  action: FETCH_MEDIA_FOR_QUERY,
+  initialState: {
+    list: [],
+  },
+  action: FETCH_MEDIAPICKER_SOURCE_SEARCH,
+  handleSuccess: (payload, state, meta) => ({
+    args: meta.args[0],
+    list: payload.list.map(c => ({
+      ...c,
+      name: `${c.name}`,
+      id: c.media_id,
+      type: 'source',
+    })),
+  }),
+  [RESET_MEDIAPICKER_SOURCE_SEARCH]: () => ({ list: [] }),
 });
-export default sourceQueryResults;
 
+export default sourceQueryResults;

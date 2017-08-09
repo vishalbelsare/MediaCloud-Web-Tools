@@ -76,7 +76,7 @@ def api_explorer_collections_by_ids():
         coll_list.append(info);
     return jsonify(coll_list)
 
-@app.route('/api/explorer/collections/featured', methods=['GET'])
+@app.route('/api/mediapicker/collections/featured', methods=['GET'])
 @api_error_handler
 def api_explorer_featured_collections():
     featured_collections = _cached_featured_collections()
@@ -84,6 +84,7 @@ def api_explorer_featured_collections():
 
 
 @cache
+# if details is true, add story count, source count also
 def _cached_featured_collections():
     featured_collections = []
     for tagsId in FEATURED_COLLECTION_LIST:
@@ -94,6 +95,7 @@ def _cached_featured_collections():
     return featured_collections
 
 
+# TODO maybe remove
 @app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])
 @api_error_handler
 def api_explorer_collection_set(tag_sets_id):
