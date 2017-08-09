@@ -31,13 +31,13 @@ class SelectMediaResultsContainer extends React.Component {
     const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourcesResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
-    let whichStoredKeyword = selectedMediaQueryKeyword;
+    let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
     // user the media that matches the selected media query
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
-          whichStoredKeyword = collectionResults.args.keyword;
+          whichStoredKeyword = collectionResults.args;
         } else {
           whichMedia = featured;
         }
@@ -45,7 +45,7 @@ class SelectMediaResultsContainer extends React.Component {
       case PICK_SOURCE:
         if (sourcesResults && (sourcesResults.list && (sourcesResults.list.length > 0 || (sourcesResults.args && sourcesResults.args.keyword)))) {
           whichMedia = sourcesResults.list; // since this is the default, check keyword, otherwise it'll be empty
-          whichStoredKeyword = sourcesResults.args.keyword;
+          whichStoredKeyword = sourcesResults.args;
         }
         break;
       case ADVANCED:
@@ -92,12 +92,12 @@ SelectMediaResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: (state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
-  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.type : null,
+  fetchStatus: (state.explorer.media.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.keyword : null,
-  sourcesResults: state.explorer.media.sourceQueryResults ? state.explorer.media.sourceQueryResults : null,
+  sourcesResults: state.explorer.media.sourceQueryResults,
   featured: state.explorer.media.featured ? state.explorer.media.featured.results : null,
-  collectionResults: state.explorer.media.collectionQueryResults ? state.explorer.media.collectionQueryResults : null,
+  collectionResults: state.explorer.media.collectionQueryResults,
   starredResults: state.explorer.media.starredQueryResults ? state.explorer.media.starredQueryResults : null,
 });
 

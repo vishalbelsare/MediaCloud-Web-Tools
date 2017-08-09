@@ -7,13 +7,17 @@ import composeIntlForm from '../../../common/IntlForm';
 // import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
 
 const SelectMediaForm = (props) => {
-  const { handleSubmit, onSearch, renderTextField } = props;
+  const { initialValues, handleSubmit, onSearch, renderTextField } = props;
+
+  const cleanedInitialValues = initialValues ? { ...initialValues } : {};
+  if (cleanedInitialValues.keyword === undefined) {
+    cleanedInitialValues.keyword = '';
+  }
   return (
     <form className="select-media-container" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Field
         name="keyword"
-        type="text"
-        fullWidth
+        defaultValue={cleanedInitialValues.keyword}
         component={renderTextField}
       />
     </form>
@@ -25,7 +29,7 @@ SelectMediaForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
   onSearch: React.PropTypes.func,
   isEditable: React.PropTypes.bool,
-  initialValues: React.PropTypes.string,
+  initialValues: React.PropTypes.object,
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
@@ -34,6 +38,7 @@ SelectMediaForm.propTypes = {
 
 const reduxFormConfig = {
   form: 'selectMediaForm',
+  enableReinitialize: true,
 };
 
 export default
