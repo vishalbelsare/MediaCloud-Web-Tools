@@ -3,7 +3,6 @@ import selected from './selected';
 import queries from './queries/queries';
 import sources from './queries/sources';
 import collections from './queries/collections';
-import media from './media/media';
 import lastSearchTime from './lastSearchTime';
 import sentenceCount from './sentenceCount';
 import samples from './samples';
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
   queries,
   sources,
   collections,
-  media,
   lastSearchTime,
   sentenceCount,
   samples,

@@ -2,19 +2,19 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../AsyncContainer';
-import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/explorerActions';
+import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
 import ContentPreview from '../ContentPreview';
 import SelectMediaForm from './SelectMediaForm';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 /*
 const localMessages = {
-  searchByName: { id: 'explorer.media.select.searchby.name', defaultMessage: 'Search by Name/URL' },
-  searchByMetadata: { id: 'explorer.media.select.searchby.metadata', defaultMessage: 'Search by Metadata' },
-  selectedMedia: { id: 'explorer.media.select.media', defaultMessage: 'Selected Media' },
-  pubCountrySuggestion: { id: 'explorer.media.select.pubCountryTip', defaultMessage: 'published in' },
-  pubStateSuggestion: { id: 'explorer.media.select.pubStateTip', defaultMessage: 'state published in' },
-  pLanguageSuggestion: { id: 'explorer.media.select.pLanguageTip', defaultMessage: 'primary language' },
+  searchByName: { id: 'system.mediaPicker.select.searchby.name', defaultMessage: 'Search by Name/URL' },
+  searchByMetadata: { id: 'system.mediaPicker.select.searchby.metadata', defaultMessage: 'Search by Metadata' },
+  selectedMedia: { id: 'system.mediaPicker.select.media', defaultMessage: 'Selected Media' },
+  pubCountrySuggestion: { id: 'system.mediaPicker.select.pubCountryTip', defaultMessage: 'published in' },
+  pubStateSuggestion: { id: 'system.mediaPicker.select.pubStateTip', defaultMessage: 'state published in' },
+  pLanguageSuggestion: { id: 'system.mediaPicker.select.pLanguageTip', defaultMessage: 'primary language' },
 }; */
 
 class SelectMediaResultsContainer extends React.Component {
@@ -92,13 +92,13 @@ SelectMediaResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: (state.explorer.media.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
-  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.type : 0,
-  selectedMediaQueryKeyword: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.keyword : null,
-  sourcesResults: state.explorer.media.sourceQueryResults,
-  featured: state.explorer.media.featured ? state.explorer.media.featured.results : null,
-  collectionResults: state.explorer.media.collectionQueryResults,
-  starredResults: state.explorer.media.starredQueryResults ? state.explorer.media.starredQueryResults : null,
+  fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
+  selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
+  sourcesResults: state.system.mediaPicker.sourceQueryResults,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.results : null,
+  collectionResults: state.system.mediaPicker.collectionQueryResults,
+  starredResults: state.system.mediaPicker.starredQueryResults ? state.system.mediaPicker.starredQueryResults : null,
 });
 
 const mapDispatchToProps = dispatch => ({

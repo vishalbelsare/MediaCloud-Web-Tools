@@ -6,14 +6,14 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
-import { fetchMediaPickerFeaturedCollections } from '../../../actions/explorerActions';
+import { fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
 
 const localMessages = {
-  selectMediaTitle: { id: 'explorer.media.select', defaultMessage: 'Modify Sources and Collections' },
-  searchByName: { id: 'explorer.media.select.searchby.name', defaultMessage: 'Search by Name/URL' },
-  selectedMedia: { id: 'explorer.media.select.media', defaultMessage: 'Selected Media' },
+  selectMediaTitle: { id: 'system.mediaPicker.select', defaultMessage: 'Modify Sources and Collections' },
+  searchByName: { id: 'system.mediaPicker.select.searchby.name', defaultMessage: 'Search by Name/URL' },
+  selectedMedia: { id: 'system.mediaPicker.select.media', defaultMessage: 'Selected Media' },
 };
 
 class SelectMediaDialog extends React.Component {

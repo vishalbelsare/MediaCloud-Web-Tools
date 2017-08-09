@@ -4,16 +4,16 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
 import { Row } from 'react-flexbox-grid/lib';
-import { selectMediaPickerQueryArgs } from '../../../actions/explorerActions';
+import { selectMediaPickerQueryArgs } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 // import SourceOrCollectionChip from '../../../common/SourceOrCollectionChip';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
-  pickCollections: { id: 'explorer.media.select.pickCollections', defaultMessage: 'Pick A Collection' },
-  pickSources: { id: 'explorer.media.select.pickSources', defaultMessage: 'Pick A Source' },
-  pickAdvanced: { id: 'explorer.media.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
-  pickStarred: { id: 'explorer.media.select.pickStarred', defaultMessage: 'Pick From Starred' },
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Pick A Collection' },
+  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Pick A Source' },
+  pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
+  pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
 
 class MediaSelectionContainer extends React.Component {
@@ -65,9 +65,9 @@ MediaSelectionContainer.propTypes = {
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
   queries: state.explorer.queries,
-  selectedMediaQuery: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.type : null,
-  sourcesResults: state.explorer.media.media ? state.explorer.media.media.results : null, // resutl of query?
-  collectionsResults: state.explorer.media.collections ? state.explorer.media.collections.results : null,
+  selectedMediaQuery: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.type : null,
+  sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
+  collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
   fetchStatus: state.explorer.collections.fetchStatus,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
