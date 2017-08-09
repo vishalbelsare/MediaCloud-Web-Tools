@@ -1,12 +1,12 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../common/AsyncContainer';
-import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../../actions/explorerActions';
-import ContentPreview from '../../../common/ContentPreview';
+import composeAsyncContainer from '../AsyncContainer';
+import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/explorerActions';
+import ContentPreview from '../ContentPreview';
 import SelectMediaForm from './SelectMediaForm';
-import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../../lib/explorerUtil';
-import * as fetchConstants from '../../../../lib/fetchConstants';
+import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
+import * as fetchConstants from '../../../lib/fetchConstants';
 /*
 const localMessages = {
   searchByName: { id: 'explorer.media.select.searchby.name', defaultMessage: 'Search by Name/URL' },

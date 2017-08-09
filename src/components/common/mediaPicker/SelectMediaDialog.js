@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
-import MediaSelectionContainer from './selectMedia/MediaSelectionContainer';
-import SelectMediaResultsContainer from './selectMedia/SelectMediaResultsContainer';
+import MediaSelectionContainer from './MediaSelectionContainer';
+import SelectMediaResultsContainer from './SelectMediaResultsContainer';
 import { fetchMediaPickerFeaturedCollections } from '../../../actions/explorerActions';
-import AppButton from '../../common/AppButton';
-import { EditButton } from '../../common/IconButton';
+import AppButton from '../AppButton';
+import { EditButton } from '../IconButton';
 
 const localMessages = {
   selectMediaTitle: { id: 'explorer.media.select', defaultMessage: 'Modify Sources and Collections' },

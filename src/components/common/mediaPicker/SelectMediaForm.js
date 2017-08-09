@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm, Field } from 'redux-form';
-import composeIntlForm from '../../../common/IntlForm';
+import composeIntlForm from '../IntlForm';
 // import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
 // import AppButton from '../../../common/AppButton';
 // import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';

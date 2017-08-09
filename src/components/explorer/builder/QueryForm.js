@@ -8,7 +8,7 @@ import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
 // import { emptyString } from '../../../lib/formValidators';
-import SelectMediaDialog from './SelectMediaDialog';
+import SelectMediaDialog from '../../common/mediaPicker/SelectMediaDialog';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
