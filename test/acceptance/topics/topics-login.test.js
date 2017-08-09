@@ -4,11 +4,11 @@ import { WRITEABLE_TOPIC_ID, pathToTopicSummaryPage } from '../../helpers/topics
 
 describe('From the topics home page...', () => {
   beforeAll((done) => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
     done();
   });
 
-  test('the user can log in', async () => {
+  test('the user can log in and Personal Topic list', async () => {
     const result = await visit('/#/login')
               .use(login)
               .wait('.topic-list-container')
@@ -20,7 +20,7 @@ describe('From the topics home page...', () => {
   test('the user is redirected to topic summary page after log in', async () => {
     const result = await visit(pathToTopicSummaryPage(WRITEABLE_TOPIC_ID))
               .use(login)
-              .wait('.controlbar-topic')
+              .wait('.topic-summary')
               .exists('.topic-summary')
               .end();
     expect(result).toBe(true);

@@ -5,6 +5,33 @@ import flask
 logger = logging.getLogger(__name__)
 
 
+def _file_name_timestamp():
+    return datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
+
+def safe_filename(name):
+    return u"{}_{}.csv".format(name, _file_name_timestamp())
+
+
+def dict2row(keys_to_include, dict_row):
+    attributes = []
+    try:
+        for k in keys_to_include:
+            value = dict_row[k]
+            if isinstance(value, (int, long, float)):
+                cleaned_value = str(dict_row[k])
+            elif value in ['', None]:
+                cleaned_value = ''
+            else:
+                cleaned_value = '"' + value.encode('utf-8').replace('"', '""') + '"'
+            attributes.append(cleaned_value)
+    except Exception as e:
+        logger.error("Couldn't process a CSV row: " + str(e))
+        logger.exception(e)
+        logger.debug(dict_row)
+    return attributes
+
+
 def stream_response(data, dict_keys, filename, column_names=None, as_attachment=True):
     """Stream a fully ready dict to the user as a csv.
     Keyword arguments:
@@ -25,27 +52,10 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
     # stream back a csv
     def stream_as_csv(dataset, props, names):
         yield ','.join(names) + '\n'
-        for row in dataset:
-            try:
-                attributes = []
-                for p in props:
-                    value = row[p]
-                    cleaned_value = value
-                    if isinstance(value, (int, long, float)):
-                        cleaned_value = str(row[p])
-                    elif value in ['', None]:
-                        # trying to handle endode/decode problem on the other end
-                        cleaned_value = ''
-                    else:
-                        cleaned_value = '"'+value.encode('utf-8').replace('"', '""')+'"'
-                    attributes.append(cleaned_value)
-                # attributes = [ csv_escape(str(row[p])) for p in props]
-                yield ','.join(attributes) + '\n'
-            except Exception as e:
-                logger.error("Couldn't process a CSV row: "+str(e))
-                logger.exception(e)
-                logger.debug(row)
-    download_filename = u"{}_{}.csv".format(filename, datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+        for dict_row in dataset:
+            cleaned_row = dict2row(props, dict_row)
+            yield ','.join(cleaned_row) + '\n'
+    download_filename = safe_filename(filename)
     headers = {}
     if as_attachment:
         headers["Content-Disposition"] = "attachment;filename="+download_filename

@@ -3,8 +3,7 @@ import { SUBMIT_BUTTON, inputNamed } from './dom';
 
 // helper that will login for you
 const login = (nightmare) => {
-  nightmare.viewport(1280, 700)
-           .insert(inputNamed('email'), config.username)
+  nightmare.insert(inputNamed('email'), config.username)
            .insert(inputNamed('password'), config.password)
            .click(SUBMIT_BUTTON);
 };

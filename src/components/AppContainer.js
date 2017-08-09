@@ -44,7 +44,7 @@ const AppContainer = (props) => {
   }
 
   return (
-    <div className={`app-${name}`}>
+    <div className={`app-contiainer app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
       <header>
         <AppHeader

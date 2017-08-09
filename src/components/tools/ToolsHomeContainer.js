@@ -60,7 +60,7 @@ const ToolsHomeContainer = (props) => {
               name={messages.dashboardToolName}
               className="tool-dashboard"
               description={messages.dashboardToolDescription}
-              screenshotUrl="/static/img/preview-dashboard.png"
+              screenshotUrl={assetUrl('/static/img/preview-dashboard.png')}
               url={DASHBOARD_URL}
             />
           </Col>

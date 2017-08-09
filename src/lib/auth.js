@@ -1,4 +1,4 @@
-import cookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 
 // persmisisons used WITHIN a topic
 export const PERMISSION_TOPIC_NONE = 'none';
@@ -15,15 +15,17 @@ export const PERMISSION_MEDIA_EDIT = 'media-edit';
 // can add and remove tags from stories
 export const PERMISSION_STORY_EDIT = 'story-edit';
 
-const COOKIE_USERNAME = 'mediameter_user_username';
+const COOKIE_USERNAME = 'mc_username';
+
+const cookiesContext = new Cookies();
 
 export function saveCookies(username) {
   // note: this is actually your email address, since username is email in our system
-  cookie.save(COOKIE_USERNAME, username);
+  cookiesContext.set(COOKIE_USERNAME, username);
 }
 
 export function deleteCookies() {
-  cookie.remove(COOKIE_USERNAME);
+  cookiesContext.remove(COOKIE_USERNAME);
 }
 
 export function logout() {
@@ -32,7 +34,7 @@ export function logout() {
 }
 
 export function hasCookies() {
-  const hasUsernameCookie = (cookie.load(COOKIE_USERNAME) !== undefined);
+  const hasUsernameCookie = (cookiesContext.get(COOKIE_USERNAME) !== undefined);
   return hasUsernameCookie;
 }
 

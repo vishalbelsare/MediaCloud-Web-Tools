@@ -29,10 +29,17 @@ class FilteredTopicContainer extends React.Component {
     let subContent = null;
     // If the generation process is still ongoing, ask the user to wait a few minutes
     if (this.snapshotIsSet()) {
+      let childContent;
+      // show spinner until there is a valid timespan
+      if (filters.timespanId) {
+        childContent = children;
+      } else {
+        childContent = <LoadingSpinner />;
+      }
       subContent = (
         <div>
           <TopicFilterControlBar topicId={topicId} location={location} filters={filters} />
-          {children}
+          {childContent}
         </div>
       );
     } else if (fetchStatusInfo !== fetchConstants.FETCH_SUCCEEDED &&
