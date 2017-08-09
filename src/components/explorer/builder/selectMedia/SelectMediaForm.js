@@ -25,7 +25,7 @@ SelectMediaForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
   onSearch: React.PropTypes.func,
   isEditable: React.PropTypes.bool,
-  initialValues: React.PropTypes.object,
+  initialValues: React.PropTypes.string,
   handleSubmit: React.PropTypes.func,
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,

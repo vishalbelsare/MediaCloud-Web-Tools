@@ -1,4 +1,4 @@
-import { FETCH_EXPLORER_COLLECTION_SEARCH, RESET_EXPLORER_COLLECTION_SEARCH } from '../../../actions/sourceActions';
+import { FETCH_EXPLORER_COLLECTION_SEARCH, RESET_EXPLORER_COLLECTION_SEARCH } from '../../../actions/explorerActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const collectionSearch = createAsyncReducer({
@@ -6,8 +6,8 @@ const collectionSearch = createAsyncReducer({
     list: [],
   },
   action: FETCH_EXPLORER_COLLECTION_SEARCH,
-  handleSuccess: payload => ({
-    // add name and id so we can display it in an autocomplete
+  handleSuccess: (payload, state, meta) => ({
+    args: meta.args[0],
     list: payload.list.map(c => ({
       ...c,
       name: `${c.tag_set_label}: ${c.label || c.tag}`,

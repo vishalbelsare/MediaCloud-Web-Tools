@@ -8,9 +8,8 @@ function selectMediaQuery(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_MEDIA_QUERY_ARGS:
       if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
-        const type = action.payload.type;
-        const arg = action.payload.keyword;
-        return { type, arg };
+        const args = action.payload;
+        return { args };
       }
       return updatedState;
     default:

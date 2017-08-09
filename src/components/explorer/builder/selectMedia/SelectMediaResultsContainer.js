@@ -29,12 +29,19 @@ class SelectMediaResultsContainer extends React.Component {
     handleSelection(media);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryArgs, collectionResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
+    let whichStoredKeyword = selectedMediaQueryKeyword;
+    // user the media that matches the selected media query
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
-        whichMedia = collectionResults;
+        if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
+          whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
+          whichStoredKeyword = collectionResults.args.keyword;
+        } else {
+          whichMedia = featured;
+        }
         break;
       case PICK_SOURCE:
       case ADVANCED:
@@ -61,7 +68,7 @@ class SelectMediaResultsContainer extends React.Component {
     }
     return (
       <div className="select-media-container">
-        <SelectMediaForm initialValues={selectedMediaQueryArgs} onSearch={val => this.updateMediaQuery(val)} />
+        <SelectMediaForm initialValues={whichStoredKeyword} onSearch={val => this.updateMediaQuery(val)} />
         {content}
       </div>
     );
@@ -70,25 +77,24 @@ class SelectMediaResultsContainer extends React.Component {
 
 SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  queryArgs: React.PropTypes.object,
   handleSelection: React.PropTypes.func,
   media: React.PropTypes.array,
   updateMediaSelection: React.PropTypes.func.isRequired,
-  selectedMediaQueryArgs: React.PropTypes.string,
+  selectedMediaQueryKeyword: React.PropTypes.string,
   selectedMediaQueryType: React.PropTypes.number,
   featured: React.PropTypes.array,
-  collectionResults: React.PropTypes.array,
-  sourcesResults: React.PropTypes.array,
-  starredResults: React.PropTypes.array,
+  collectionResults: React.PropTypes.object,
+  sourcesResults: React.PropTypes.object,
+  starredResults: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: (state.explorer.media.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.explorer.media.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
-  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.type : null,
-  selectedMediaQueryArgs: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args : null,
+  selectedMediaQueryType: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.type : null,
+  selectedMediaQueryKeyword: state.explorer.media.selectMediaQuery ? state.explorer.media.selectMediaQuery.args.keyword : null,
   sourcesResults: state.explorer.media.media ? state.explorer.media.media : null,
-  media: state.explorer.media.featured ? state.explorer.media.featured.collections : null,
-  collectionResults: state.explorer.media.collectionQueryResults ? state.explorer.media.collectionQueryResults.list : null,
+  featured: state.explorer.media.featured ? state.explorer.media.featured.collections : null,
+  collectionResults: state.explorer.media.collectionQueryResults ? state.explorer.media.collectionQueryResults : null,
   starredResults: state.explorer.media.starredQueryResults ? state.explorer.media.starredQueryResults : null,
 });
 

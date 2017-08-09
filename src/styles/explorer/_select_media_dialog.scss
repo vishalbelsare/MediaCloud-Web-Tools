@@ -1,7 +1,7 @@
 @import '../_constants';
 
 .select-media-dialog {
-  width: 600px !important;
+  width: 90% !important;
   .select-media-dialog-content {
     > div {
       background-color: $white !important;
@@ -18,7 +18,7 @@
   .select-media-dialog-body {
     .select-media-container {
       background-color: $white !important;
-      max-width: 1000px;
+      max-width: 90%;
       margin-right: auto;
       margin-left: auto;
       margin-bottom: 25px;
