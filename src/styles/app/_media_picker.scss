@@ -1,5 +1,9 @@
 @import '../_constants';
 
+.select-media-menu-selected > div {
+  background-color: $material-grey200 !important;
+}
+
 .datacard {
 
   border: 1px solid $material-grey300;

@@ -14,8 +14,8 @@ const StatsWithAction = props => (
     </Col>
     <Col lg={props.columnWidth || 3}>
       <AppButton // need icon also
-        label={props.statProps.selected ? 'Selected' : 'Select'} // the toggle has to be implemented
-        backgroundColor={props.statProps.selected ? '#ccc' : '#fff'}
+        label={props.disabled ? 'Selected' : 'Select'} // the toggle has to be implemented
+        backgroundColor={props.disabled ? '#ccc' : '#fff'}
         onTouchTap={props.onClick}
       />
     </Col>
@@ -26,6 +26,7 @@ const StatsWithAction = props => (
 StatsWithAction.propTypes = {
   // from parent
   statProps: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
   className: PropTypes.string,
   columnWidth: PropTypes.number,

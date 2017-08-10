@@ -23,18 +23,20 @@ class MediaSelectionContainer extends React.Component {
     updateMediaSelection(type);
   };
   render() {
-    // const { selectedMedia } = this.props;
+    const { selectedMediaQueryType } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <div className="explorer-select-media-menu">
+      <div className="select-media-menu">
         <Row>
           <Menu>
             <MenuItem
+              className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
               value={0}
               primaryText={formatMessage(localMessages.pickCollections)}
               onTouchTap={() => this.updateMediaType(PICK_COLLECTION)}
             />
             <MenuItem
+              className={selectedMediaQueryType === 1 ? 'select-media-menu-selected' : ''}
               value={1}
               primaryText={formatMessage(localMessages.pickSources)}
               onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
@@ -59,13 +61,14 @@ MediaSelectionContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   selectedMedia: React.PropTypes.array,
+  selectedMediaQueryType: React.PropTypes.number,
   updateMediaSelection: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
   queries: state.explorer.queries,
-  selectedMediaQuery: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.type : null,
+  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
   fetchStatus: state.explorer.collections.fetchStatus,

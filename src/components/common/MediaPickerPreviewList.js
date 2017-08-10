@@ -9,12 +9,13 @@ import DataCard from './DataCard';
 import StatsWithAction from './statbar/StatsWithAction';
 
 const localMessages = {
-  stat1: { id: 'mediaPicker.stat1', defaultMessage: 'stories' },
-  stat1HelpTitle: { id: 'mediaPicker.stat1.help.title', defaultMessage: 'annoyig' },
-  stat1HelpMsg: { id: 'mediaPicker.stat1.help.message', defaultMessage: 'annoyig' },
-  stat2: { id: 'mediaPicker.stat2', defaultMessage: 'media' },
-  stat2HelpTitle: { id: 'mediaPicker.stat1.help.title', defaultMessage: 'annoyig' },
-  stat2HelpMsg: { id: 'mediaPicker.stat1.help.message', defaultMessage: 'annoyig' },
+  sourceStat: { id: 'mediaPicker.source.stat', defaultMessage: ' Stories' },
+  stat1: { id: 'mediaPicker.coll.stat1', defaultMessage: 'Total Stories' },
+  stat1HelpTitle: { id: 'mediaPicker.coll.stat1.help.title', defaultMessage: 'annoyig' },
+  stat1HelpMsg: { id: 'mediaPicker.coll.stat1.help.message', defaultMessage: 'annoyig' },
+  stat2: { id: 'mediaPicker.coll.tat2', defaultMessage: 'Media Sources' },
+  stat2HelpTitle: { id: 'mediaPicker.coll.stat1.help.title', defaultMessage: 'annoyig' },
+  stat2HelpMsg: { id: 'mediaPicker.coll.stat1.help.message', defaultMessage: 'annoyig' },
   actionMessage1: { id: 'mediaPicker.action1', defaultMessage: 'Select' },
   actionMessage2: { id: 'mediaPicker.action2', defaultMessage: 'Selected' },
 };
@@ -22,29 +23,37 @@ const localMessages = {
 const MediaPickerPreviewList = (props) => {
   const { items, icon, linkInfo, linkDisplay, disabled, onClick } = props;
   let content = null;
+  let statProps = null;
+  const collProps = {
+    stat1: {
+      message: localMessages.stat1,
+      data: '100', // c.media_source_tags
+      // helpTitleMsg: localMessages.stat1HelpTitle,
+      // helpContentMsg: localMessages.stat1HelpMsg,
+    },
+    stat2: {
+      message: localMessages.stat2,
+      data: '200',
+      // helpTitleMsg: localMessages.stat2HelpTitle,
+      // helpContentMsg: localMessages.sta21HelpMsg,
+    },
+    actionMessage1: localMessages.actionMessage1,
+    actionMessage2: localMessages.actionMessage2,
+  };
+  const srcProps = {
+    stat1: {
+      message: localMessages.sourceStat,
+      data: '100',
+    },
+  };
+
   if (items && items.length > 0) {
     content = (
       items.map((c, idx) => {
         const isDisabled = disabled ? disabled(c) : false;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
         // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
-        const statProps = {
-          stat1: {
-            message: localMessages.stat1,
-            data: '100', // c.media_source_tags
-            // helpTitleMsg: localMessages.stat1HelpTitle,
-            // helpContentMsg: localMessages.stat1HelpMsg,
-          },
-          stat2: {
-            message: localMessages.stat2,
-            data: '200',
-            // helpTitleMsg: localMessages.stat2HelpTitle,
-            // helpContentMsg: localMessages.sta21HelpMsg,
-          },
-          selected: c.selected,
-          actionMessage1: localMessages.actionMessage1,
-          actionMessage2: localMessages.actionMessage2,
-        };
+        statProps = c.tags_id ? collProps : srcProps;
         return (
           <Col key={idx} lg={4} xs={12}>
             <DataCard key={idx} className="browse-items" disabled={isDisabled}>
@@ -56,7 +65,7 @@ const MediaPickerPreviewList = (props) => {
                 </div>
               </div>
               <div className="media-picker">
-                <StatsWithAction disabled={statProps.selected} statProps={statProps} onClick={() => onClick(c)} />
+                <StatsWithAction disabled={c.selected} statProps={statProps} onClick={() => onClick(c)} />
               </div>
             </DataCard>
           </Col>
