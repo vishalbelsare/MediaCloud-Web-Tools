@@ -1,4 +1,4 @@
-import { SELECT_MEDIAPICKER_QUERY_ARGS } from '../../../actions/explorerActions';
+import { SELECT_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
 // import { PICK_COLLECTION, PICK_SOURCE, ADVANCED  } from '../../../../lib/explorerUtil';
 
 const INITIAL_STATE = null;

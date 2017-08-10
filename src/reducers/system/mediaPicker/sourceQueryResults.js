@@ -1,4 +1,4 @@
-import { FETCH_MEDIAPICKER_SOURCE_SEARCH, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/explorerActions';
+import { FETCH_MEDIAPICKER_SOURCE_SEARCH, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const sourceQueryResults = createAsyncReducer({
