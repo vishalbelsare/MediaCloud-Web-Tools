@@ -13,9 +13,9 @@ const StatsWithAction = props => (
       <Stat columnWidth={props.columnWidth} {...props.statProps.stat2} />
     </Col>
     <Col lg={props.columnWidth || 3}>
-      <AppButton
-        label="test" // the toggle has to be implemented
-        disabled={props.statProps.selected}
+      <AppButton // need icon also
+        label={props.statProps.selected ? 'Selected' : 'Select'} // the toggle has to be implemented
+        backgroundColor={props.statProps.selected ? '#ccc' : '#fff'}
         onTouchTap={props.onClick}
       />
     </Col>

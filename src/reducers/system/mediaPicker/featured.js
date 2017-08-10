@@ -1,4 +1,4 @@
-import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY } from '../../../actions/systemActions';
+import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY, SELECT_MEDIA } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const featured = createAsyncReducer({
@@ -11,6 +11,17 @@ const featured = createAsyncReducer({
       type: 'collection',
       selected: false, // for adding/removing from selected list
     })),
+  }),
+  [SELECT_MEDIA]: (payload, state) => ({
+    list: state.list.map((c) => {
+      if (c.id === payload.id) {
+        return ({
+          ...c,
+          selected: !c.selected,
+        });
+      }
+      return c;
+    }),
   }),
 });
 export default featured;
