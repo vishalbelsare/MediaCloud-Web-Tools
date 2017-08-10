@@ -151,6 +151,8 @@ def index():
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
 import server.views.stat
+import server.views.media_search
+import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
 server_app = settings.get('server', 'app')
@@ -179,7 +181,6 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.topiccreate
 if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.explorer_query
-    import server.views.explorer.search
     import server.views.explorer.sentences
     import server.views.explorer.stories
     import server.views.explorer.geo

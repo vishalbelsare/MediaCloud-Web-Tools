@@ -2,7 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
-from media_search import media_search, _media_search_worker, _matching_tags_by_set
+from server.views.media_search import media_search, _media_search_worker, _matching_tags_by_set
 
 from server import app
 from server.util.request import api_error_handler

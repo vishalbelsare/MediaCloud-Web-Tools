@@ -2,7 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
-from media_search import media_search, _media_search_worker, _matching_tags_by_set
+from media_search import media_search, _matching_tags_by_set
 from server import app
 from server.util.request import arguments_required, api_error_handler
 from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
