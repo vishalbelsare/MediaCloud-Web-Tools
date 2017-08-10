@@ -6,7 +6,7 @@ import Menu from 'material-ui/Menu';
 import { Row } from 'react-flexbox-grid/lib';
 import { selectMediaPickerQueryArgs } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
-// import SourceOrCollectionChip from '../../../common/SourceOrCollectionChip';
+import SourceOrCollectionChip from '../SourceOrCollectionChip';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
@@ -23,7 +23,7 @@ class MediaSelectionContainer extends React.Component {
     updateMediaSelection(type);
   };
   render() {
-    const { selectedMediaQueryType } = this.props;
+    const { selectedMediaQueryType, selectedMedia } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <div className="select-media-menu">
@@ -51,6 +51,11 @@ class MediaSelectionContainer extends React.Component {
             />
           </Menu>
         </Row>
+        <Row>
+          {selectedMedia.map(obj => (
+            <SourceOrCollectionChip key={obj.tags_id || obj.media_id} object={obj} />
+          ))}
+        </Row>
       </div>
     );
   }
@@ -72,6 +77,7 @@ const mapStateToProps = state => ({
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
   fetchStatus: state.explorer.collections.fetchStatus,
+  selectedMedia: state.system.mediaPicker.selectMedia.list,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

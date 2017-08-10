@@ -3,13 +3,17 @@ import { SELECT_MEDIA, UNSELECT_MEDIA } from '../../../actions/systemActions';
 
 // we may not need this...
 
-const INITIAL_STATE = null;
+const INITIAL_STATE = {
+  list: [],
+};
 
 function selectMedia(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SELECT_MEDIA:
-      // add to selected list
-      break;
+      let updatedSelectedList = [];
+      updatedSelectedList = [...state.list];
+      updatedSelectedList.push(action.payload);
+      return { list: updatedSelectedList };
     case UNSELECT_MEDIA: // maybe we want this...
       // removed from selected list
       break;
