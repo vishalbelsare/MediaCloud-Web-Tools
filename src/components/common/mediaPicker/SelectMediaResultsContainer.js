@@ -3,19 +3,19 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../AsyncContainer';
 import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
-import ContentPreview from '../ContentPreview';
+import MediaPickerPreviewList from '../MediaPickerPreviewList';
 import SelectMediaForm from './SelectMediaForm';
+import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
-/*
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+
 const localMessages = {
-  searchByName: { id: 'system.mediaPicker.select.searchby.name', defaultMessage: 'Search by Name/URL' },
-  searchByMetadata: { id: 'system.mediaPicker.select.searchby.metadata', defaultMessage: 'Search by Metadata' },
-  selectedMedia: { id: 'system.mediaPicker.select.media', defaultMessage: 'Selected Media' },
-  pubCountrySuggestion: { id: 'system.mediaPicker.select.pubCountryTip', defaultMessage: 'published in' },
-  pubStateSuggestion: { id: 'system.mediaPicker.select.pubStateTip', defaultMessage: 'state published in' },
-  pLanguageSuggestion: { id: 'system.mediaPicker.select.pLanguageTip', defaultMessage: 'primary language' },
-}; */
+  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
+  intro: { id: 'system.mediaPicker.select.info',
+    defaultMessage: '<p>This is an intro</p>' },
+  helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
+};
 
 class SelectMediaResultsContainer extends React.Component {
   updateMediaQuery(values) {
@@ -24,8 +24,8 @@ class SelectMediaResultsContainer extends React.Component {
     updateMediaSelection(updatedQueryObj);
   }
   handleSelectMedia(media) {
-    const { handleSelection } = this.props;
-    handleSelection(media);
+    const { handleSelectionOfMedia } = this.props;
+    handleSelectionOfMedia(media);
   }
   render() {
     const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourcesResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
@@ -39,7 +39,7 @@ class SelectMediaResultsContainer extends React.Component {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
           whichStoredKeyword = collectionResults.args;
         } else {
-          whichMedia = featured;
+          whichMedia = featured.list;
         }
         break;
       case PICK_SOURCE:
@@ -59,13 +59,13 @@ class SelectMediaResultsContainer extends React.Component {
     }
     if (whichMedia && whichMedia.length > 0) {
       content = (
-        <ContentPreview
+        <MediaPickerPreviewList
           items={whichMedia}
           classStyle="browse-items"
           itemType="media"
           linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
-          onClick={this.handleSelectMedia}
+          onClick={c => this.handleSelectMedia(c)}
         />
       );
     }
@@ -80,12 +80,12 @@ class SelectMediaResultsContainer extends React.Component {
 
 SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  handleSelection: React.PropTypes.func,
+  handleSelectionOfMedia: React.PropTypes.func.isRequired,
   media: React.PropTypes.array,
   updateMediaSelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,
   selectedMediaQueryType: React.PropTypes.number,
-  featured: React.PropTypes.array,
+  featured: React.PropTypes.object,
   collectionResults: React.PropTypes.object,
   sourcesResults: React.PropTypes.object,
   starredResults: React.PropTypes.object,
@@ -96,7 +96,7 @@ const mapStateToProps = state => ({
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
   sourcesResults: state.system.mediaPicker.sourceQueryResults,
-  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.results : null,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   starredResults: state.system.mediaPicker.starredQueryResults ? state.system.mediaPicker.starredQueryResults : null,
 });
@@ -122,9 +122,9 @@ const mapDispatchToProps = dispatch => ({
       }
     }
   },
-  handleSelection: (selectedMedia) => {
+  handleSelectionOfMedia: (selectedMedia) => {
     if (selectedMedia) {
-      dispatch(selectMedia(selectedMedia));
+      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
   asyncFetch: () => {
@@ -138,7 +138,9 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeAsyncContainer(
-        SelectMediaResultsContainer
+        composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
+          SelectMediaResultsContainer
+        )
       )
     )
   );

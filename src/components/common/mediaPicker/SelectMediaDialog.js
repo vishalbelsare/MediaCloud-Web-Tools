@@ -9,8 +9,13 @@ import SelectMediaResultsContainer from './SelectMediaResultsContainer';
 import { fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 
 const localMessages = {
+  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
+  intro: { id: 'system.mediaPicker.select.info',
+    defaultMessage: '<p>This is an intro</p>' },
+  helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
   selectMediaTitle: { id: 'system.mediaPicker.select', defaultMessage: 'Modify Sources and Collections' },
   searchByName: { id: 'system.mediaPicker.select.searchby.name', defaultMessage: 'Search by Name/URL' },
   selectedMedia: { id: 'system.mediaPicker.select.media', defaultMessage: 'Selected Media' },
@@ -107,7 +112,9 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SelectMediaDialog
+      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
+        SelectMediaDialog
+      )
     )
   );
 

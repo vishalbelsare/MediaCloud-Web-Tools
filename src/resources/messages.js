@@ -90,6 +90,8 @@ const messages = {
   mediaPlural: { id: 'media.plural', defaultMessage: 'Media Sources' },
   mediaName: { id: 'media.name', defaultMessage: 'Name' },
 
+  mediaPickerHelpText: { id: 'mediaPicker', defaultMessage: 'Media Picker Help' },
+
   focus: { id: 'focus', defaultMessage: 'Subtopic' },
   focusHeader: { id: 'focus', defaultMessage: 'Subtopics' },
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },

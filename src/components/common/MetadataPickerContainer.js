@@ -74,6 +74,7 @@ MetadataPickerContainer.propTypes = {
   disabled: PropTypes.bool,
   autocomplete: PropTypes.bool,
   floatingLabelText: PropTypes.string,
+  onClick: PropTypes.func.isRequired,
   // from compositional chain
   intl: PropTypes.object.isRequired,
   renderSelectField: PropTypes.func.isRequired,

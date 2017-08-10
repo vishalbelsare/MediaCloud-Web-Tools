@@ -1,4 +1,4 @@
-import { FETCH_MEDIA_FOR_QUERY } from '../../../actions/explorerActions';
+import { FETCH_MEDIA_FOR_QUERY } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const advancedQueryResults = createAsyncReducer({
