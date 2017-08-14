@@ -17,11 +17,69 @@ const localMessages = {
   helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
 };
 
+
 class SelectMediaResultsContainer extends React.Component {
+  componentWillMount() {
+    const { selectedMedia, selectedMediaQueryType, collectionResults, featured, handleSelectionOfMedia } = this.props;
+    switch (selectedMediaQueryType) {
+      case PICK_COLLECTION:
+        if (selectedMedia && selectedMedia.length > 0) {
+          if (collectionResults && collectionResults.list.length > 0) {
+            collectionResults.list.some(v => selectedMedia.indexOf(v.id));
+          } else if (featured && featured.list.length > 0) {
+            featured.list.map(v => (
+              selectedMedia.map((s) => {
+                if (s.tags_id === v.id && v.selected === false) {
+                  handleSelectionOfMedia(v); // concurrency between selected list and resutl list
+                  return true;
+                }
+                return false;
+              })),
+            );
+          }
+        }
+        break;
+      case PICK_SOURCE:
+      case STARRED:
+        return featured;
+      default:
+        break;
+    }
+    return 0;
+  }
+  componentWillReceiveProps(nextProps) {
+    const { selectedMedia, selectedMediaQueryType, collectionResults, featured, handleSelectionOfMedia } = this.props;
+    switch (selectedMediaQueryType) {
+      case PICK_COLLECTION:
+        if (selectedMedia && selectedMedia.length > 0) {
+          if (collectionResults && collectionResults.list.length > 0) {
+            nextProps.collectionResults.list.some(v => selectedMedia.indexOf(v.id));
+          } else if (featured && featured.list.length > 0) {
+            nextProps.featured.list.map(v => (
+              selectedMedia.map((s) => {
+                if (s.tags_id === v.id && v.selected === false) {
+                  handleSelectionOfMedia(v); // concurrency between selected list and resutl list
+                  return true;
+                }
+                return false;
+              })),
+            );
+          }
+        }
+        break;
+      case PICK_SOURCE:
+      case STARRED:
+        return featured;
+      default:
+        break;
+    }
+    return 0;
+  }
+
   updateMediaQuery(values) {
-    const { updateMediaSelection, selectedMediaQueryType } = this.props;
+    const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
-    updateMediaSelection(updatedQueryObj);
+    updateMediaQuerySelection(updatedQueryObj);
   }
   handleSelectMedia(media) {
     const { handleSelectionOfMedia } = this.props;
@@ -33,6 +91,14 @@ class SelectMediaResultsContainer extends React.Component {
     let whichMedia = null;
     let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
     // user the media that matches the selected media query
+
+    /* maybe just on willMount
+      update the data with the selected info we have from the explorer query
+      selectedMedia.forEach().find in selected media results array
+      and set selected = true
+      so that the MediaSlectionContainer shows the items already selected and
+      the SelectMediaResultsContainer has greyed out buttons appropriately */
+
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
@@ -82,17 +148,19 @@ SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   handleSelectionOfMedia: React.PropTypes.func.isRequired,
   media: React.PropTypes.array,
-  updateMediaSelection: React.PropTypes.func.isRequired,
+  updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,
   selectedMediaQueryType: React.PropTypes.number,
   featured: React.PropTypes.object,
   collectionResults: React.PropTypes.object,
   sourcesResults: React.PropTypes.object,
   starredResults: React.PropTypes.object,
+  selectedMedia: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
   sourcesResults: state.system.mediaPicker.sourceQueryResults,
@@ -102,7 +170,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateMediaSelection: (values) => {
+  updateMediaQuerySelection: (values) => {
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
       switch (values.type) {
@@ -115,7 +183,7 @@ const mapDispatchToProps = dispatch => ({
         case ADVANCED:
           break;
         case STARRED:
-          dispatch(fetchMediaPickerFeaturedCollections(5)); // TODO make this a real search
+          dispatch(fetchMediaPickerFeaturedCollections());
           break;
         default:
           break;

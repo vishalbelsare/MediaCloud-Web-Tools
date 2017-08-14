@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
-import { fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
+import { fetchMediaPickerFeaturedCollections, selectMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -26,6 +26,14 @@ class SelectMediaDialog extends React.Component {
   state = {
     open: false,
   };
+  componentWillMount() {
+    // select the media so we fill the reducer with the previously selected media
+    const { savedCollections, handleInitialSelectionOfMedia } = this.props;
+    if (savedCollections && savedCollections.length > 0) {
+      savedCollections.map(v => handleInitialSelectionOfMedia(v));
+    }
+  }
+
 
   handleModifyClick = (evt) => {
     if (evt) {
@@ -35,7 +43,9 @@ class SelectMediaDialog extends React.Component {
   };
 
   handleRemoveDialogClose = () => {
+    const { onConfirmSelection, selectedMedia } = this.props;
     this.setState({ open: false });
+    onConfirmSelection(selectedMedia); // passed in from containing element
   };
 
   render() {
@@ -43,10 +53,11 @@ class SelectMediaDialog extends React.Component {
     const { formatMessage } = this.props.intl;
     const dialogActions = [
       <AppButton
-        label={formatMessage(messages.cancel)}
+        label={formatMessage(messages.ok)}
         onTouchTap={this.handleRemoveDialogClose}
       />,
     ];
+
     return (
       <div className="explorer-select-media-dialog">
         <EditButton
@@ -89,22 +100,30 @@ SelectMediaDialog.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from parent
   selected: React.PropTypes.object,
+  savedCollections: React.PropTypes.array,
   queryArgs: React.PropTypes.object,
   selectedMedia: React.PropTypes.array,
   handleSelection: React.PropTypes.func.isRequired,
+  handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
+  onConfirmSelection: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  selectedCollections: state.explorer.selected.sources, // maybe we want these dunnoyet
-  selectedSources: state.explorer.selected.collections,
-  fetchStatus: state.explorer.collections.fetchStatus,
-  selectedMedia: state.explorer.selected.collections,
+  savedCollections: state.explorer.selected.collections, // maybe we want these dunnoyet
+  savedSources: state.explorer.selected.sources,
+  fetchStatus: state.system.mediaPicker.selectMedia.fetchStatus,
+  selectedMedia: state.system.mediaPicker.selectMedia.list, // initially empty
 });
 
 const mapDispatchToProps = dispatch => ({
   handleSelection: (values) => {
     if (values) {
       dispatch(fetchMediaPickerFeaturedCollections(5));
+    }
+  },
+  handleInitialSelectionOfMedia: (selectedMedia) => {
+    if (selectedMedia) {
+      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });

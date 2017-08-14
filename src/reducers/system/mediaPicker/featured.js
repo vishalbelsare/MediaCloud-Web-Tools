@@ -13,7 +13,7 @@ const featured = createAsyncReducer({
     })),
   }),
   [SELECT_MEDIA]: (payload, state) => ({
-    list: state.list.map((c) => {
+    list: state.list ? state.list.map((c) => {
       if (c.id === payload.id) {
         return ({
           ...c,
@@ -21,7 +21,7 @@ const featured = createAsyncReducer({
         });
       }
       return c;
-    }),
+    }) : null,
   }),
 });
 export default featured;

@@ -12,7 +12,9 @@ function selectMedia(state = INITIAL_STATE, action) {
     case SELECT_MEDIA:
       let updatedSelectedList = [];
       updatedSelectedList = [...state.list];
-      updatedSelectedList.push(action.payload);
+      if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
+        updatedSelectedList.push(action.payload);
+      }
       return { list: updatedSelectedList };
     case UNSELECT_MEDIA: // maybe we want this...
       // removed from selected list
