@@ -93,18 +93,17 @@ export function topicFocalSetsList(topicId, snapshotId) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/list`, { snapshotId });
 }
 
-export function createFocalSetDefinition(topicId, params) {
-  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'focalTechnique']);
-  return createPostingApiPromise(`api/topics/${topicId}/focal-set-definitions/create`, acceptedParams);
-}
-
 export function listFocalSetDefinitions(topicId) {
   return createApiPromise(`api/topics/${topicId}/focal-set-definitions/list`);
 }
 
-export function createFocusDefinition(topicId, params) {
-  const acceptedParams = acceptParams(params, ['focusName', 'focusDescription', 'focalSetDefinitionsId', 'keywords']);
-  return createPostingApiPromise(`/api/topics/${topicId}/focus-definitions/create`, acceptedParams);
+export function updateOrCreateFocusDefinition(topicId, params) {
+  const acceptedParams = acceptParams(params, [
+    'foci_id',
+    'focalSetName', 'focalSetDescription', 'focalTechnique',
+    'focusName', 'focusDescription', 'focalSetDefinitionId', 'keywords',
+  ]);
+  return createPostingApiPromise(`/api/topics/${topicId}/focus-definitions/update-or-create`, acceptedParams);
 }
 
 export function deleteFocalSetDefinition(topicId, focalSetDefinitionId) {

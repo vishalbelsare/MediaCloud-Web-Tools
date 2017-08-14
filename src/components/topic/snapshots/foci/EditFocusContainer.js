@@ -2,10 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import { push } from 'react-router-redux';
+import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import { fetchFocalSetDefinitions } from '../../../../actions/topicActions';
+import { fetchFocalSetDefinitions, submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
+import { updateFeedback } from '../../../../actions/appActions';
 
+const localMessages = {
+  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
+  focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
+};
 
 class EditFocusContainer extends React.Component {
 
@@ -23,7 +30,7 @@ class EditFocusContainer extends React.Component {
   }
 
   render() {
-    const { topicId, location } = this.props;
+    const { topicId, location, handleDone } = this.props;
     const intialValues = this.getInitialValues();
     return (
       <FocusBuilderWizard
@@ -31,6 +38,7 @@ class EditFocusContainer extends React.Component {
         startStep={1}
         initialValues={intialValues}
         location={location}
+        onDone={handleDone}
       />
     );
   }
@@ -45,6 +53,7 @@ EditFocusContainer.propTypes = {
   focusDefinition: PropTypes.object.isRequired,
   // from dispatch
   fetchStatus: PropTypes.string.isRequired,
+  handleDone: PropTypes.func.isRequired,
 };
 
 const findFocalSetDefById = (state, focusDefId) => {
@@ -66,11 +75,31 @@ const findFocalSetDefById = (state, focusDefId) => {
 const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
+  focusDefId: parseInt(ownProps.params.focusDefId, 10),
   focusDefinition: findFocalSetDefById(state, parseInt(ownProps.params.focusDefId, 10)),  // find the one we want to edit
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: topicId => dispatch(fetchFocalSetDefinitions(topicId)),
+  handleDone: (topicId, formValues) => {
+    const propsToSubmit = {
+      foci_id: parseInt(ownProps.params.focusDefId, 10),
+      ...formValues,
+    };
+    dispatch(submitFocusUpdateOrCreate(topicId, propsToSubmit))
+      .then((results) => {
+        if (results.length === 1) {
+          const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
+          dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+          dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+          dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+          dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+        } else {
+          const focusNoteSavedMessage = ownProps.intl.formatMessage(localMessages.focusNotSaved);
+          dispatch(updateFeedback({ open: true, message: focusNoteSavedMessage }));  // user feedback
+        }
+      });
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
