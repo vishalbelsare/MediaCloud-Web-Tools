@@ -28,12 +28,27 @@ class QueryPicker extends React.Component {
     addAQuery(newQueryObj);
   }
 
-  updateQuery(obj) {
+  updateQuery(newInfo) {
     const { updateCurrentQuery, selected } = this.props;
+    // TODO handle duplicates
     const updateObject = selected;
-    const fieldName = obj.target ? obj.target.name : obj.name;
-    const fieldValue = obj.target ? obj.target.value : obj.value;
-    updateObject[fieldName] = fieldValue;
+    if (newInfo.length) { // assume it's an array
+      newInfo.forEach((obj) => {
+        if (obj.type === 'source') {
+          if (!updateObject.sources.some(s => s.id === obj.id)) {
+            updateObject.sources.push(obj);
+          }
+        } else if (obj.type === 'collection') {
+          if (!updateObject.collections.some(s => s.id === obj.id)) {
+            updateObject.collections.push(obj);
+          }
+        }
+      });
+    } else {
+      const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
+      const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
+      updateObject[fieldName] = fieldValue;
+    }
     updateCurrentQuery(updateObject);
   }
 

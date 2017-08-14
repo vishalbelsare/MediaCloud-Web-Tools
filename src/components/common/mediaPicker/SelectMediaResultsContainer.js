@@ -20,42 +20,21 @@ const localMessages = {
 
 class SelectMediaResultsContainer extends React.Component {
   componentWillMount() {
-    const { selectedMedia, selectedMediaQueryType, collectionResults, featured, handleSelectionOfMedia } = this.props;
-    switch (selectedMediaQueryType) {
-      case PICK_COLLECTION:
-        if (selectedMedia && selectedMedia.length > 0) {
-          if (collectionResults && collectionResults.list.length > 0) {
-            collectionResults.list.some(v => selectedMedia.indexOf(v.id));
-          } else if (featured && featured.list.length > 0) {
-            featured.list.map(v => (
-              selectedMedia.map((s) => {
-                if (s.tags_id === v.id && v.selected === false) {
-                  handleSelectionOfMedia(v); // concurrency between selected list and resutl list
-                  return true;
-                }
-                return false;
-              })),
-            );
-          }
-        }
-        break;
-      case PICK_SOURCE:
-      case STARRED:
-        return featured;
-      default:
-        break;
-    }
-    return 0;
+    this.correlateSelection(this.props);
   }
   componentWillReceiveProps(nextProps) {
+    this.correlateSelection(nextProps);
+  }
+
+  correlateSelection(whichProps) {
     const { selectedMedia, selectedMediaQueryType, collectionResults, featured, handleSelectionOfMedia } = this.props;
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (selectedMedia && selectedMedia.length > 0) {
           if (collectionResults && collectionResults.list.length > 0) {
-            nextProps.collectionResults.list.some(v => selectedMedia.indexOf(v.id));
+            whichProps.collectionResults.list.some(v => selectedMedia.indexOf(v.id));
           } else if (featured && featured.list.length > 0) {
-            nextProps.featured.list.map(v => (
+            whichProps.featured.list.map(v => (
               selectedMedia.map((s) => {
                 if (s.tags_id === v.id && v.selected === false) {
                   handleSelectionOfMedia(v); // concurrency between selected list and resutl list
