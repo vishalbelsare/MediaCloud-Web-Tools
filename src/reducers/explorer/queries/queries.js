@@ -1,6 +1,6 @@
 import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, RESET_QUERIES } from '../../../actions/explorerActions';
 
-const INITIAL_STATE = null;
+const INITIAL_STATE = [];
 
 function queries(state = INITIAL_STATE, action) {
   let updatedState = null;

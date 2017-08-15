@@ -33,6 +33,13 @@ class SelectMediaDialog extends React.Component {
       savedCollections.map(v => handleInitialSelectionOfMedia(v));
     }
   }
+  componentWillReceiveProps(nextProps) {
+    // select the media so we fill the reducer with the previously selected media
+    const { selected, savedCollections, handleInitialSelectionOfMedia } = this.props;
+    if (selected.index !== nextProps.selected.index) {
+      savedCollections.map(v => handleInitialSelectionOfMedia(v));
+    }
+  }
 
 
   handleModifyClick = (evt) => {
@@ -110,6 +117,7 @@ SelectMediaDialog.propTypes = {
 
 const mapStateToProps = state => ({
   savedCollections: state.explorer.selected.collections, // maybe we want these dunnoyet
+  selected: state.explorer.selected,
   savedSources: state.explorer.selected.sources,
   fetchStatus: state.system.mediaPicker.selectMedia.fetchStatus,
   selectedMedia: state.system.mediaPicker.selectMedia.list, // initially empty
@@ -121,9 +129,9 @@ const mapDispatchToProps = dispatch => ({
       dispatch(fetchMediaPickerFeaturedCollections(5));
     }
   },
-  handleInitialSelectionOfMedia: (selectedMedia) => {
-    if (selectedMedia) {
-      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
+  handleInitialSelectionOfMedia: (prevSelectedMedia) => {
+    if (prevSelectedMedia) {
+      dispatch(selectMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });

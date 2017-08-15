@@ -41,7 +41,7 @@ def api_explorer_demo_collections_by_ids():
     coll_list = []
     for tagsId in collIdArray:
         info = mc.tag(tagsId)
-        info['id'] = tagsId
+        info['id'] = int(tagsId)
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
         coll_list.append(info);
     return jsonify(coll_list)
@@ -55,7 +55,7 @@ def api_explorer_demo_sources_by_ids():
     source_id_array = request.args['sources[]'].split(',')
     for mediaId in source_id_array:
         info = mc.media(mediaId)
-        info['id'] = mediaId
+        info['id'] = int(mediaId)
         source_list.append(info)
     return jsonify(source_list)
 

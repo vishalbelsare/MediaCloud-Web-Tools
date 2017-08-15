@@ -27,30 +27,40 @@ class SelectMediaResultsContainer extends React.Component {
   }
 
   correlateSelection(whichProps) {
-    const { selectedMedia, selectedMediaQueryType, collectionResults, featured, handleSelectionOfMedia } = this.props;
+    const { selectedMedia, selectedMediaQueryType, collectionResults, sourceResults, featured, starredResults, handleSelectionOfMedia } = this.props;
+    let whichList = [];
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
-        if (selectedMedia && selectedMedia.length > 0) {
-          if (collectionResults && collectionResults.list.length > 0) {
-            whichProps.collectionResults.list.some(v => selectedMedia.indexOf(v.id));
-          } else if (featured && featured.list.length > 0) {
-            whichProps.featured.list.map(v => (
-              selectedMedia.map((s) => {
-                if ((s.tags_id === v.id || s.id === v.id) && v.selected === false) {
-                  handleSelectionOfMedia(v); // concurrency between selected list and resutl list
-                  return true;
-                }
-                return false;
-              })),
-            );
-          }
+        if (collectionResults && collectionResults.list.length > 0) {
+          whichList = whichProps.collectionResults;
+        } else if (featured && featured.list.length > 0) {
+          whichList = whichProps.featured;
         }
         break;
       case PICK_SOURCE:
+        if (sourceResults && sourceResults.list.length > 0) {
+          whichList = whichProps.sourceResults;
+        }
+        break;
       case STARRED:
-        return featured;
+        if (starredResults && starredResults.list.length > 0) {
+          whichList = whichProps.starredResults;
+        }
+        break;
+      // case ADVANCED: TBD
       default:
         break;
+    }
+    if (selectedMedia && selectedMedia.length > 0) {
+      whichList.list.map(v => (
+        selectedMedia.map((s) => {
+          if ((s.tags_id === v.id || s.id === v.id) && v.selected === false) {
+            handleSelectionOfMedia(v); // concurrency between selected list and resutl list
+            return true;
+          }
+          return false;
+        })),
+      );
     }
     return 0;
   }
@@ -65,7 +75,7 @@ class SelectMediaResultsContainer extends React.Component {
     handleSelectionOfMedia(media);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourcesResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
     let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
@@ -88,9 +98,9 @@ class SelectMediaResultsContainer extends React.Component {
         }
         break;
       case PICK_SOURCE:
-        if (sourcesResults && (sourcesResults.list && (sourcesResults.list.length > 0 || (sourcesResults.args && sourcesResults.args.keyword)))) {
-          whichMedia = sourcesResults.list; // since this is the default, check keyword, otherwise it'll be empty
-          whichStoredKeyword = sourcesResults.args;
+        if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
+          whichMedia = sourceResults.list; // since this is the default, check keyword, otherwise it'll be empty
+          whichStoredKeyword = sourceResults.args;
         }
         break;
       case ADVANCED:
@@ -132,7 +142,7 @@ SelectMediaResultsContainer.propTypes = {
   selectedMediaQueryType: React.PropTypes.number,
   featured: React.PropTypes.object,
   collectionResults: React.PropTypes.object,
-  sourcesResults: React.PropTypes.object,
+  sourceResults: React.PropTypes.object,
   starredResults: React.PropTypes.object,
   selectedMedia: React.PropTypes.array,
 };
@@ -142,7 +152,7 @@ const mapStateToProps = state => ({
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
-  sourcesResults: state.system.mediaPicker.sourceQueryResults,
+  sourceResults: state.system.mediaPicker.sourceQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   starredResults: state.system.mediaPicker.starredQueryResults ? state.system.mediaPicker.starredQueryResults : null,

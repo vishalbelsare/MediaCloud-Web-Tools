@@ -158,7 +158,7 @@ const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries ? state.explorer.queries.queries : null,
+  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   sourcesResults: state.explorer.queries.sources ? state.explorer.queries.sources.results : null,
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
@@ -188,9 +188,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    const collection = [queries.map(query => query.collections)];
+    const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
     const sources = '[]';
-    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":${collection[idx]}}`);
+    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":[${collection[idx]}]}`);
     urlParamString = `[${urlParamString}]`;
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
@@ -206,7 +206,11 @@ const mapDispatchToProps = dispatch => ({
       };
       if (q.sources && q.sources.length > 0) {
         queryInfo.sources = q.sources.map(src => src.media_id || src.id);
-        dispatch(fetchQuerySourcesByIds(queryInfo)); // get sources names
+        dispatch(fetchQuerySourcesByIds(queryInfo))
+        .then((results) => {
+          queryInfo.sources = results;
+          dispatch(updateQuery(queryInfo));
+        });
       }
       if (q.collections && q.collections.length > 0) {
         queryInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
