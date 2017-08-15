@@ -16,6 +16,7 @@ import messages from '../../../resources/messages';
 import ActionMenu from '../../common/ActionMenu';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams } from '../../util/location';
+import { WarningNotice } from '../../common/Notice';
 
 const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
 const COLORS = schemeCategory10;
@@ -32,6 +33,9 @@ const localMessages = {
   notEnoughData: { id: 'topic.summary.nytLabels.notEnoughData',
     defaultMessage: 'Sorry, but only {pct} of the stories have been processed to add themes.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the top themes right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add themes.',
   },
+  lowSignal: { id: 'topic.summary.nytLabels.lowSignal',
+    defaultMessage: 'There aren\'t enough stories with themes to show a useful chart here.  {link} to see details if you\'d like to.',
+  },
 };
 
 class NytLabelSummaryContainer extends React.Component {
@@ -41,8 +45,11 @@ class NytLabelSummaryContainer extends React.Component {
       fetchData(nextProps);
     }
   }
-  downloadCsv = () => {
+  downloadCsv = (evt) => {
     const { topicId, filters } = this.props;
+    if (evt) {
+      evt.preventDefault();
+    }
     const url = `/api/topics/${topicId}/nyt-tags/counts.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
@@ -62,6 +69,19 @@ class NytLabelSummaryContainer extends React.Component {
           rolloverText: `${s.tag}: ${formatNumber(s.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
         })),
       ];
+      let warning;
+      if (dataOverMinTheshold.length === 0) {
+        warning = (
+          <WarningNotice>
+            <FormattedMessage
+              {...localMessages.lowSignal}
+              values={{
+                link: <a href="#download-csv" onClick={this.downloadCSV}> <FormattedMessage {...messages.downloadCSV} /></a>,
+              }}
+            />
+          </WarningNotice>
+        );
+      }
       content = (
         <div>
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -85,6 +105,7 @@ class NytLabelSummaryContainer extends React.Component {
           <h2>
             <FormattedMessage {...localMessages.title} />
           </h2>
+          {warning}
           <BubbleRowChart
             data={bubbleData.slice(0, BUBBLES_TO_SHOW - 1)}
             width={800}
