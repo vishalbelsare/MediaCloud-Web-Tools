@@ -27,23 +27,6 @@ export const addCustomQuery = createAction(ADD_CUSTOM_QUERY, query => query);
 export const UPDATE_QUERY = 'UPDATE_QUERY';
 export const updateQuery = createAction(UPDATE_QUERY, query => query);
 
-export const SELECT_MEDIA = 'SELECT_MEDIA';
-export const selectMedia = createAction(SELECT_MEDIA, media => media);
-
-export const SELECT_MEDIAPICKER_QUERY_ARGS = 'SELECT_MEDIAPICKER_QUERY_ARGS';
-export const selectMediaPickerQueryArgs = createAction(SELECT_MEDIAPICKER_QUERY_ARGS, args => args);
-
-export const FETCH_FEATURED_COLLECTIONS_FOR_QUERY = 'FETCH_FEATURED_COLLECTIONS_FOR_QUERY';
-export const fetchMediaPickerFeaturedCollections = createAsyncAction(FETCH_FEATURED_COLLECTIONS_FOR_QUERY, api.fetchMediaPickerFeaturedCollections);
-
-export const FETCH_MEDIAPICKER_COLLECTION_SEARCH = 'FETCH_MEDIAPICKER_COLLECTION_SEARCH';
-export const fetchMediaPickerCollections = createAsyncAction(FETCH_MEDIAPICKER_COLLECTION_SEARCH, api.fetchMediaPickerCollections, params => params);
-export const RESET_MEDIAPICKER_COLLECTION_SEARCH = 'RESET_MEDIAPICKER_COLLECTION_SEARCH';
-
-export const FETCH_MEDIAPICKER_SOURCE_SEARCH = 'FETCH_MEDIAPICKER_SOURCE_SEARCH';
-export const fetchMediaPickerSources = createAsyncAction(FETCH_MEDIAPICKER_SOURCE_SEARCH, api.fetchMediaPickerSources, params => params);
-export const RESET_MEDIAPICKER_SOURCE_SEARCH = 'RESET_MEDIAPICKER_SOURCE_SEARCH';
-
 export const PREPARE_QUERIES = 'PREPARE_QUERIES';
 export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQueries);
 

@@ -3,13 +3,13 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, updateQuery, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 
 const localMessages = {
@@ -35,7 +35,7 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { user, samples, selected, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { user, samples, selected, queries, collectionLookupFetchStatus, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
@@ -44,7 +44,6 @@ class LoggedInQueryContainer extends React.Component {
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       if (whichProps.location.pathname.includes('/queries/search')) {
         // parse query params
-        // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
         let parsedObjectArray = null;
         try {
           parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
@@ -57,9 +56,10 @@ class LoggedInQueryContainer extends React.Component {
           // TODO how to keep current selection if this is just an *updated* set of queries
           selectQueriesByURLParams(parsedObjectArray);
           setSelectedQuery(parsedObjectArray[0]);
-        } else if (!selected && !whichProps.selected) {
+        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
           selectQueriesByURLParams(parsedObjectArray);
-          setSelectedQuery(parsedObjectArray[0]);
+        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+          setSelectedQuery(queries[0]);
         }
       } else if (whichProps.location.pathname.includes('/queries')) {
         currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
@@ -139,6 +139,8 @@ LoggedInQueryContainer.propTypes = {
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
   sourcesResults: React.PropTypes.array,
+  collectionResults: React.PropTypes.array,
+  collectionLookupFetchStatus: React.PropTypes.string,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -156,8 +158,10 @@ const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries ? state.explorer.queries : null,
-  sourcesResults: state.explorer.sources ? state.explorer.sources.results : null,
+  queries: state.explorer.queries ? state.explorer.queries.queries : null,
+  sourcesResults: state.explorer.queries.sources ? state.explorer.queries.sources.results : null,
+  collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
+  collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
@@ -184,9 +188,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
+    const collection = [queries.map(query => query.collections)];
     const sources = '[]';
-    let urlParamString = queries.map(query => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":${collection}}`);
+    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":${collection[idx]}}`);
     urlParamString = `[${urlParamString}]`;
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
@@ -195,21 +199,26 @@ const mapDispatchToProps = dispatch => ({
   setQueryFromURL: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
     // select first entry
-    dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
     queryArrayFromURL.map((q, idx) => {
       const queryInfo = {
         index: idx,
+        ...q,
       };
       if (q.sources && q.sources.length > 0) {
-        queryInfo.sources = q.sources.map(src => src.media_id);
+        queryInfo.sources = q.sources.map(src => src.media_id || src.id);
         dispatch(fetchQuerySourcesByIds(queryInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        queryInfo.collections = q.collections.map(coll => coll.tags_id);
-        dispatch(fetchQueryCollectionsByIds(queryInfo)); // get collection names
+        queryInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
+        dispatch(fetchQueryCollectionsByIds(queryInfo))
+        .then((results) => {
+          queryInfo.collections = results;
+          dispatch(updateQuery(queryInfo));
+        });
       }
       return 0;
     });
+    // dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
   },
   setSampleSearch: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries

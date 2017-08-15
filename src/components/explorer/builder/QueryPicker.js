@@ -53,24 +53,14 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, sourcesResults, collectionsResults, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
 
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected) {
-      let mergedQueryWithSandCInfo = queries;
-      if (sourcesResults && sourcesResults.length > 0) {
-        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { sources: sourcesResults[idx] }));
-      }
-      // TODO, make sure the indexes are ok here b/c query may not have had an id on either sources or coll
-      // for new queries, we don't have this information for the default yet...
-      if (collectionsResults && collectionsResults.length > 0) {
-        mergedQueryWithSandCInfo = queries.map((r, idx) => Object.assign({}, r, { collections: collectionsResults[idx] ? collectionsResults[idx] : r.collections }));
-      }
-
-      fixedQuerySlides = mergedQueryWithSandCInfo.map((query, index) => (
+      fixedQuerySlides = queries.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
             key={index}
@@ -88,7 +78,7 @@ class QueryPicker extends React.Component {
       if (isEditable) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
-        const newIndex = mergedQueryWithSandCInfo.length; // effectively a +1
+        const newIndex = queries.length; // effectively a +1
         const genDefColor = colorPallette(newIndex);
         const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT, sources: [], color: genDefColor, custom: true };
 
@@ -122,7 +112,7 @@ class QueryPicker extends React.Component {
       );
 
       // indicate which queryPickerItem is selected -
-      const selectedWithSandCLabels = mergedQueryWithSandCInfo.find(q => q.index === selected.index);
+      const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
       const initialValues = selectedWithSandCLabels ? { ...selectedWithSandCLabels } : {};
       return (
         <div>
@@ -162,10 +152,10 @@ QueryPicker.propTypes = {
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
-  queries: state.explorer.queries,
-  sourcesResults: state.explorer.sources.results ? state.explorer.sources.results : null,
-  collectionsResults: state.explorer.collections.results ? state.explorer.collections.results : null,
-  fetchStatus: state.explorer.collections.fetchStatus,
+  queries: state.explorer.queries.queries,
+  sourcesResults: state.explorer.queries.sources.results ? state.explorer.queries.sources.results : null,
+  collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
+  fetchStatus: state.explorer.queries.collections.fetchStatus,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

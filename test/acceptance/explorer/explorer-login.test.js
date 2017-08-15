@@ -15,7 +15,7 @@ describe('From the explorer home page...', () => {
               .exists('.sample-search-item')
               .evaluate(() => document.querySelector('.sample-search-item').innerText)
               .end();
-    expect(result).toContain('Clinto');
+    expect(result).toContain('Clinton');
   });
 
   test('the user is redirected to LoggedInQueryBuilder page after log in', async () => {
@@ -38,6 +38,6 @@ describe('From the explorer home page...', () => {
               .evaluate(() => document.querySelector('h1 span').innerText)
               .end();
 
-    expect(result).toBe('Explore Public Topics');
+    expect(result).toBe('Explorer');
   });
 });

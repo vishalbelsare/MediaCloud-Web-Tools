@@ -58,7 +58,7 @@ class QueryPickerItem extends React.Component {
       // const srcDesc = query.media;
       const totalCount = collCount + srcCount;
       const queryLabel = query.label;
-      const oneCollLabelOrNumber = query.collections[0].label ? query.collections[0].label : query.collections[0];
+      const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : query.collections[0];
       const oneCollLabel = collCount === 1 ? oneCollLabelOrNumber : '';
 
       const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: oneCollLabel }} />;

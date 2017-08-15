@@ -1,9 +1,7 @@
-// import { createReducer } from '../../../lib/reduxHelpers';
 import { UPDATE_QUERY, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, RESET_QUERIES } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = null;
 
-// TODO review with RB
 function queries(state = INITIAL_STATE, action) {
   let updatedState = null;
   switch (action.type) {

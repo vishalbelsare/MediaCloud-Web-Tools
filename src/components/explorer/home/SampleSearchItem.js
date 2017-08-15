@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
 
 const SampleSearchItem = (props) => {
   const { search, user } = props;
@@ -16,9 +15,9 @@ const SampleSearchItem = (props) => {
   } else {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
+    const collection = search.queries.map(query => query.collections.map(c => `[{"id":${c.id}}]`));
     const sources = '[]';
-    urlParamString = search.queries.map(query => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":${sources},"collections":${collection}}`);
+    urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":${sources},"collections":${collection[idx].join()}}`);
     urlParamString = `search/[${urlParamString}]`;
   }
   const link = `/queries/${urlParamString}`;

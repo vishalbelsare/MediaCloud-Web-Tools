@@ -70,7 +70,7 @@ const QueryForm = (props) => {
             </Col>
             <Col lg={1} />
             <Col lg={6}>
-              <SelectMediaDialog selectedMedia={selected.collections} incomingSelectedMedia={selected.collections} onConfirmSelection={selections => onChange(selections)} />
+              <SelectMediaDialog selectedMedia={selected.collections} onConfirmSelection={selections => onChange(selections)} />
               <div className="media-field-wrapper">
                 <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
                 <SourceCollectionsForm

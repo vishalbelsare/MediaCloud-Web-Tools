@@ -36,7 +36,7 @@ class SelectMediaResultsContainer extends React.Component {
           } else if (featured && featured.list.length > 0) {
             whichProps.featured.list.map(v => (
               selectedMedia.map((s) => {
-                if (s.tags_id === v.id && v.selected === false) {
+                if ((s.tags_id === v.id || s.id === v.id) && v.selected === false) {
                   handleSelectionOfMedia(v); // concurrency between selected list and resutl list
                   return true;
                 }

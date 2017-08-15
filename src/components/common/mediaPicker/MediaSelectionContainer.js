@@ -76,7 +76,6 @@ const mapStateToProps = state => ({
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
-  fetchStatus: state.explorer.collections.fetchStatus,
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
