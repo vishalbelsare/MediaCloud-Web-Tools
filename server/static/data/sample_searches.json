@@ -7,7 +7,7 @@
         "q": "clinton",
         "startDate": "2016-06-01",
         "endDate": "2016-12-01",
-        "collections": [9139487],
+        "collections": [{"id": 9139487}],
         "sources": [],
         "label": "Clinton",
         "color": "#1f77b4"
@@ -17,7 +17,7 @@
         "q": "trump",
         "startDate": "2016-06-01",
         "endDate": "2016-12-01",
-        "collections": [9139487],
+        "collections": [{"id": 9139487}],
         "sources": [],
         "label": "Trump",
         "color": "#ff7f0e"
@@ -33,7 +33,7 @@
         "q": "gun*",
         "startDate": "2016-08-01",
         "endDate": "2016-08-15",
-        "collections": [9139487],
+        "collections": [{"id": 9139487}],
         "sources": [],
         "label": "Guns in US Mainstream Media",
         "color": "#1f77b4"
@@ -43,7 +43,7 @@
         "q": "gun*",
         "startDate": "2016-08-01",
         "endDate": "2016-08-15",
-        "collections": [2453107],
+        "collections": [{"id":2453107}],
         "sources": [],
         "label": "Guns in US Regional Media",
         "color": "#ff7f0e"
@@ -59,7 +59,7 @@
       "q": "\"child marriage\" or \"child marriages\" or \"child bride\" or \"child brides\" or \"early marriage\" or \"early marriages\"",
       "startDate": "2016-07-01",
       "endDate": "2017-07-01",
-      "collections": [9201395],
+      "collections": [{"id":9201395}],
       "sources": [],
       "label": "India",
       "color": "#1f77b4"
@@ -74,7 +74,7 @@
       "q": "fgm OR \"female genital mutilation\" OR \"female genital cutting\" OR \"fgc\" OR \"female circumcision\"",
       "startDate": "2016-07-01",
       "endDate": "2017-07-01",
-      "collections": [8875027, 2453107, 9139487, 9139458, 8875108, 8878293, 8878292, 8878294],
+      "collections": [{"id":8875027, "id":2453107, "id":9139487, "id":9139458, "id":8875108, "id":8878293, "id":8878292, "id":8878294}],
       "sources": [],
       "label": "FGM",
       "color": "#1f77b4"
