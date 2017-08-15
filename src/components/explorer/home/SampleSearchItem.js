@@ -16,7 +16,10 @@ const SampleSearchItem = (props) => {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
     const collection = search.queries.map(query => query.collections.map(c => `[{"id":${c.id}}]`));
-    const sources = '[]';
+    let sources = '[]';
+    if (search.queries.sources && search.queries.sources.length > 0) {
+      sources = search.queries.map(query => query.sources.map(c => `[{"id":${c.id}}]`));
+    }
     urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":${sources},"collections":${collection[idx].join()}}`);
     urlParamString = `search/[${urlParamString}]`;
   }

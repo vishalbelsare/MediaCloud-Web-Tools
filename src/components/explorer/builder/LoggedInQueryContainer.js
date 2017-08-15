@@ -53,13 +53,13 @@ class LoggedInQueryContainer extends React.Component {
         }
 
         if (this.props.location.pathname !== whichProps.location.pathname) {
-          // TODO how to keep current selection if this is just an *updated* set of queries
+          // TODO should I check sourceLookup too?
           selectQueriesByURLParams(parsedObjectArray);
           setSelectedQuery(parsedObjectArray[0]);
         } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
           selectQueriesByURLParams(parsedObjectArray);
         } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
-          setSelectedQuery(queries[0]);
+          setSelectedQuery(queries[0]); // once we have the lookups,
         }
       } else if (whichProps.location.pathname.includes('/queries')) {
         currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
@@ -189,8 +189,8 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSearch: (queries) => {
     const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
-    const sources = '[]';
-    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":${sources},"collections":[${collection[idx]}]}`);
+    const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
+    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
     urlParamString = `[${urlParamString}]`;
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
