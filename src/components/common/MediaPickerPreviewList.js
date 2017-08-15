@@ -43,8 +43,14 @@ const MediaPickerPreviewList = (props) => {
   const srcProps = {
     stat1: {
       message: localMessages.sourceStat,
-      data: '100',
+      data: '50',
     },
+    stat2: {
+      message: localMessages.stat2,
+      data: '200',
+    },
+    actionMessage1: localMessages.actionMessage1,
+    actionMessage2: localMessages.actionMessage2,
   };
 
   if (items && items.length > 0) {
@@ -61,7 +67,7 @@ const MediaPickerPreviewList = (props) => {
               <div className="content">
                 <div>
                   <h2>{title}</h2>
-                  <p>{c.description}</p>
+                  <p>{c.description || c.url}</p>
                 </div>
               </div>
               <div className="media-picker">

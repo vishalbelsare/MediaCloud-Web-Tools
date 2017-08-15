@@ -13,6 +13,7 @@ const sourceQueryResults = createAsyncReducer({
       name: `${c.name}`,
       id: c.media_id,
       type: 'source',
+      selected: false,
     })),
   }),
   [SELECT_MEDIA]: (payload, state) => ({

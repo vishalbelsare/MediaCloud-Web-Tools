@@ -79,7 +79,7 @@ const QueryForm = (props) => {
                   destroyOnUnmount={false}
                   enableReinitialize
                   initialValues={cleanedInitialValues}
-                  selected={selected}
+                  selected={cleanedInitialValues}
                   allowRemoval={false}
                 />
               </div>
@@ -127,7 +127,7 @@ const QueryForm = (props) => {
 
 QueryForm.propTypes = {
   // from parent
-  selected: React.PropTypes.object.isRequired,
+  selected: React.PropTypes.array.isRequired,
   onSave: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func,
   buttonLabel: React.PropTypes.string.isRequired,

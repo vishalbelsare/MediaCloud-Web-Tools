@@ -45,7 +45,7 @@ const SourceCollectionsForm = (props) => {
     <div className="explorer-source-collection-form">
       <FieldArray
         form={propTypes.form}
-        name="collections"
+        name="media"
         validate={propTypes.validate}
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}

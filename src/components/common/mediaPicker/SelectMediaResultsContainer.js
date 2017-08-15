@@ -51,7 +51,7 @@ class SelectMediaResultsContainer extends React.Component {
       default:
         break;
     }
-    if (selectedMedia && selectedMedia.length > 0) {
+    if (selectedMedia && selectedMedia.length > 0 && whichList.list && whichList.list.length > 0) {
       whichList.list.map(v => (
         selectedMedia.map((s) => {
           if ((s.tags_id === v.id || s.id === v.id) && v.selected === false) {
@@ -99,14 +99,17 @@ class SelectMediaResultsContainer extends React.Component {
         break;
       case PICK_SOURCE:
         if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
-          whichMedia = sourceResults.list; // since this is the default, check keyword, otherwise it'll be empty
+          whichMedia = sourceResults.list;
           whichStoredKeyword = sourceResults.args;
         }
         break;
       case ADVANCED:
         break;
       case STARRED:
-        whichMedia = starredResults;
+        if (starredResults && (starredResults.list && (starredResults.list.length > 0 || (starredResults.args && starredResults.args.keyword)))) {
+          whichMedia = starredResults.list;
+          whichStoredKeyword = starredResults.args;
+        }
         break;
       default:
         whichMedia = featured;
