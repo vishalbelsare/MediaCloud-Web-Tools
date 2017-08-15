@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
-import { fetchMediaPickerFeaturedCollections, selectMedia } from '../../../actions/systemActions';
+import { fetchMediaPickerFeaturedCollections, selectMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
@@ -26,21 +26,15 @@ class SelectMediaDialog extends React.Component {
   state = {
     open: false,
   };
-  componentWillMount() {
-    // select the media so we fill the reducer with the previously selected media
-    const { savedCollections, handleInitialSelectionOfMedia } = this.props;
-    if (savedCollections && savedCollections.length > 0) {
-      savedCollections.map(v => handleInitialSelectionOfMedia(v));
-    }
-  }
+
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
-    const { selected, savedCollections, handleInitialSelectionOfMedia } = this.props;
+    const { selected, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
     if (selected.index !== nextProps.selected.index) {
-      savedCollections.map(v => handleInitialSelectionOfMedia(v));
+      clearMediaSelectionForQuery();
+      nextProps.savedCollections.map(v => handleInitialSelectionOfMedia(v));
     }
   }
-
 
   handleModifyClick = (evt) => {
     if (evt) {
@@ -112,6 +106,7 @@ SelectMediaDialog.propTypes = {
   selectedMedia: React.PropTypes.array,
   handleSelection: React.PropTypes.func.isRequired,
   handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
+  clearMediaSelectionForQuery: React.PropTypes.func.isRequired,
   onConfirmSelection: React.PropTypes.func.isRequired,
 };
 
@@ -128,6 +123,9 @@ const mapDispatchToProps = dispatch => ({
     if (values) {
       dispatch(fetchMediaPickerFeaturedCollections(5));
     }
+  },
+  clearMediaSelectionForQuery: () => {
+    dispatch(clearSelectedMedia());
   },
   handleInitialSelectionOfMedia: (prevSelectedMedia) => {
     if (prevSelectedMedia) {

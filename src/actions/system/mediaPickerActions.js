@@ -19,3 +19,6 @@ export const RESET_MEDIAPICKER_SOURCE_SEARCH = 'RESET_MEDIAPICKER_SOURCE_SEARCH'
 
 export const SELECT_MEDIA = 'SELECT_MEDIA';
 export const selectMedia = createAction(SELECT_MEDIA, media => media);
+
+export const CLEAR_SELECTED_MEDIA = 'CLEAR_SELECTED_MEDIA';
+export const clearSelectedMedia = createAction(CLEAR_SELECTED_MEDIA, media => media);
