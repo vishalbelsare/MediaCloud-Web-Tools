@@ -1,0 +1,51 @@
+@import '../constants';
+
+.query-picker {
+  border-bottom: 1px solid $material-grey200;
+
+  .slick-slider {
+    margin-bottom: 0px;
+  }
+
+  .query-picker-item {
+    
+    border-left: 1px solid $material-grey200;
+    border-right: 1px solid $material-grey200;
+    margin: 0 !important;
+    padding: 5px 20px !important;
+    height: 110px;
+    text-align: left;
+
+    &:first-child {
+      border-left: 0px;
+    }
+
+    .query-info {
+      margin-left: 20px;
+      display: block;
+      color: $material-grey600;
+    }
+
+    .add-query-item {
+      margin-top: 40px;
+      font-size: 20px;
+      color: $material-grey600;
+    }
+
+  }
+
+  .query-picker-item {
+    .query-picker-editable-name {
+      width: 210px !important;
+    }
+  }
+
+  .query-picker-item-name {
+    padding: 5px 20px;
+  }
+
+  .query-picker-item-selected > div {
+    background-color: $material-grey200 !important;
+  }
+  
+}

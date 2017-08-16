@@ -7,6 +7,7 @@ import topics from './topics/topics';
 import sources from './sources/sources';
 import system from './system/system';
 import notebook from './notebook/notebook';
+import explorer from './explorer/explorer';
 
 const rootReducer = combineReducers({
   app,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   form,
   routing,
   notebook,
+  explorer,
 });
 
 export default rootReducer;

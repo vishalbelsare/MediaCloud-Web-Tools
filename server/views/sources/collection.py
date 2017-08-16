@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 from operator import itemgetter
+
 from multiprocessing import Pool
 import flask_login
 from flask import jsonify, request
@@ -12,6 +13,9 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
 from server.cache import cache
+from server.util.common import collection_media_list
+from server.util.mail import send_html_email
+
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
@@ -348,29 +352,6 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
 def _tag_set_info(user_mc_key, tag_sets_id):
     user_mc = user_admin_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
-
-
-def collection_media_list(user_mc_key, tags_id):
-    more_media = True
-    all_media = []
-    max_media_id = 0
-    while more_media:
-        logger.debug("last_media_id %s", str(max_media_id))
-        media = collection_media_list_page(user_mc_key, tags_id, max_media_id)
-        all_media = all_media + media
-        if len(media) > 0:
-            max_media_id = media[len(media) - 1]['media_id']
-        more_media = len(media) != 0
-    return sorted(all_media, key=lambda t: t['name'].lower())
-
-
-def collection_media_list_page(user_mc_key, tags_id, max_media_id):
-    '''
-    We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
-    and some of the collections have TONS of sources
-    '''
-    user_mc = user_admin_mediacloud_client()
-    return user_mc.mediaList(tags_id=tags_id, last_media_id=max_media_id, rows=100)
 
 
 @app.route('/api/collections/<collection_id>/sentences/count', methods=['GET'])

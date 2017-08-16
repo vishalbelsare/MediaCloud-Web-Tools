@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import IconButton from 'material-ui/IconButton';
@@ -9,14 +8,15 @@ import OpenInNewIcon from 'material-ui/svg-icons/action/open-in-new';
 import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
 import SaveIcon from 'material-ui/svg-icons/content/save';
+import SearchIcon from 'material-ui/svg-icons/action/search';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
+import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
-import HomeIcon from './icons/HomeIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
@@ -61,7 +61,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
       } else if (useBackgroundColor === true) {
         otherProps.backgroundColor = this.state.backgroundColor;
       }
-      const icon = (
+      const button = (
         <IconButton
           tooltip={displayTooltip}
           iconStyle={iconStyle || {}}
@@ -71,35 +71,18 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
           <Icon color={color} {...otherProps} />
         </IconButton>
       );
-      let content;
-      if (linkTarget) { // allow using an iconbutton without the link (in case it is inside an href already)
-        content = (
-          <Link
-            to={linkTarget}
-            onTouchTap={clickHandler}
-            className="icon-button-link"
-            name={displayTooltip}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-          >
-            {icon}
-          </Link>
-        );
-      } else if (clickHandler) {
-        content = (
-          <Link
-            onTouchTap={clickHandler}
-            className="icon-button-link"
-            name={displayTooltip}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-          >
-            {icon}
-          </Link>
-        );
-      } else {
-        content = icon;
-      }
+      const content = (
+        <Link
+          to={linkTarget}
+          onTouchTap={clickHandler}
+          className="icon-button-link"
+          name={displayTooltip}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        >
+          {button}
+        </Link>
+      );
       return (
         <div className="icon-button">
           {content}
@@ -108,16 +91,16 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
     }
   }
   AppIconButton.propTypes = {
-    onClick: PropTypes.func,
-    linkTo: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
+    onClick: React.PropTypes.func,
+    linkTo: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.object,
     ]),
-    iconStyle: PropTypes.object,
-    tooltip: PropTypes.string,
-    intl: PropTypes.object.isRequired,
-    color: PropTypes.string,
-    backgroundColor: PropTypes.string,  // overrides everything else
+    iconStyle: React.PropTypes.object,
+    tooltip: React.PropTypes.string,
+    intl: React.PropTypes.object.isRequired,
+    color: React.PropTypes.string,
+    backgroundColor: React.PropTypes.string,  // overrides everything else
   };
   return injectIntl(AppIconButton);
 }
@@ -133,6 +116,8 @@ export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
 export const AddButton = composeIconButton(AddIcon, messages.add);
+
+export const AddQueryButton = composeIconButton(AddQueryIcon, messages.add);
 
 export const FavoriteButton = composeIconButton(FilledStarIcon, messages.unfavorite);
 
@@ -162,4 +147,4 @@ export const FilterButton = composeIconButton(FilterIcon, messages.filter, false
 
 export const SaveButton = composeIconButton(SaveIcon, messages.save);
 
-export const HomeButton = composeIconButton(HomeIcon, messages.home);
+export const SearchButton = composeIconButton(SearchIcon, messages.search, false);

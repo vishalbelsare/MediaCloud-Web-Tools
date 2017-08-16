@@ -1,0 +1,16 @@
+
+.color-picker {
+  display: inline-block;
+  margin-right: 10px;
+
+  .github-picker {
+    position: absolute !important;
+    z-index: 100 !important;
+  }
+
+  button {
+    padding: 0px;
+    border: 0px;
+  }
+
+}

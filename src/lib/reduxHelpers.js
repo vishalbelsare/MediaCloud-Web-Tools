@@ -143,7 +143,7 @@ export function createAsyncReducer(handlers) {
           fetchStatus: fetchConstants.FETCH_ONGOING,
           lastFetchSuccess: null,
           fetchUid: action.payload.uid,
-          ...reducers.handleFetch(action.payload, state),
+          ...reducers.handleFetch(action.payload, state, action.meta),
         });
       case resolve(handlers.action):
         if (isValid) {
@@ -151,7 +151,7 @@ export function createAsyncReducer(handlers) {
             ...state,
             fetchStatus: fetchConstants.FETCH_SUCCEEDED,
             lastFetchSuccess: new Date(),
-            ...reducers.handleSuccess(action.payload, state),
+            ...reducers.handleSuccess(action.payload, state, action.meta),
           });
         }
         // another request happened after this one, so don't do anything!
@@ -162,7 +162,7 @@ export function createAsyncReducer(handlers) {
             ...state,
             fetchStatus: fetchConstants.FETCH_FAILED,
             lastFetchSuccess: null,
-            ...reducers.handleFailure(action.payload, state),
+            ...reducers.handleFailure(action.payload, state, action.meta),
           });
         }
         // another request happened after this one, so don't do anything!
@@ -171,7 +171,7 @@ export function createAsyncReducer(handlers) {
         if (action.type in extraActionLookup) {
           return Object.assign({}, state, {
             ...state,
-            ...extraActionLookup[action.type](action.payload, state),
+            ...extraActionLookup[action.type](action.payload, state, action.meta),
           });
         }
         return state;
@@ -207,5 +207,111 @@ export function errorReportingMiddleware({ dispatch }) {
       dispatch(addNotice({ level: LEVEL_ERROR, message }));
     }
     return next(action);  // Call the next dispatch method in the middleware chain.
+  };
+}
+
+/**
+ * For any anyc reducers that query N of the same action in parallel, and want to hold the results
+ * in an array of results.  This REQUIRES you to have a "index" parameter in the action, so it knows
+ * where to put the payload in the results array it holds.
+ */
+export function createIndexedAsyncReducer(handlers) {
+  // there might be intial state we need to set up
+  let desiredInitialState = {};
+  if ('initialState' in handlers) {
+    desiredInitialState = handlers.initialState;
+  }
+  const initialState = {
+    results: [],
+    fetchStatus: fetchConstants.FETCH_INVALID,
+    fetchStatuses: [], // array of fetchStatus
+    ...desiredInitialState,
+  };
+  const combineFetchStatuses = (fetchStatuses) => {
+    const allInvalid = fetchStatuses.reduce((total, status) => total && (status === fetchConstants.FETCH_INVALID), true);
+    const anyOngoing = fetchStatuses.reduce((total, status) => total || (status === fetchConstants.FETCH_ONGOING), false);
+    const anyFailed = fetchStatuses.reduce((total, status) => total || (status === fetchConstants.FETCH_FAILED), false);
+    const allSucceeded = fetchStatuses.reduce((total, status) => total && (status === fetchConstants.FETCH_SUCCEEDED), true);
+    if (allInvalid) {
+      return fetchConstants.FETCH_INVALID;
+    }
+    if (anyOngoing) {
+      return fetchConstants.FETCH_ONGOING;
+    }
+    if (anyFailed) {
+      return fetchConstants.FETCH_FAILED;
+    }
+    if (allSucceeded) {
+      return fetchConstants.FETCH_SUCCEEDED;
+    }
+    return fetchConstants.FETCH_ONGOING;
+  };
+  // set up any async reducer handlers the user passed in
+  const reducers = {  // set up some smart defaults for normal behaviour
+    handleFetch: (payload, state, args) => {
+      const index = args[0].index;
+      if (index === undefined) {
+        const error = { error: 'You need to pass the indexedAsyncReducer an index to use!' };
+        throw error;
+      }
+      const updatedFetchStatuses = [...state.fetchStatuses];
+      updatedFetchStatuses[index] = fetchConstants.FETCH_ONGOING;
+      return Object.assign({}, state, {
+        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatuses: updatedFetchStatuses,
+      });
+    },
+    handleSuccess: (payload, state, args) => {
+      const index = args[0].index;
+      const updatedResults = [...state.results];
+      const updatedFetchStatuses = [...state.fetchStatuses];
+      updatedFetchStatuses[index] = fetchConstants.FETCH_SUCCEEDED;
+      updatedResults[index] = payload;
+      return Object.assign({}, state, {
+        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatuses: updatedFetchStatuses,
+        results: updatedResults,
+      });
+    },
+    handleFailure: (payload, state, args) => {
+      const index = args[0].index;
+      const updatedFetchStatuses = [...state.fetchStatuses];
+      updatedFetchStatuses[index] = fetchConstants.FETCH_FAILED;
+      return Object.assign({}, state, {
+        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatuses: updatedFetchStatuses,
+      });
+    },
+  };
+  Object.keys(reducers).forEach((key) => {   // override defaults with custom methods passed in
+    if (key in handlers) {
+      reducers[key] = handlers[key];
+    }
+  });
+  // set up a lookup table for any other things the user passed in
+  const extraActionLookup = {};
+  Object.keys(handlers).forEach((key) => {
+    if (!['action', 'initialState', 'handleFetch', 'handleSuccess', 'handleFailure'].includes(key)) {
+      extraActionLookup[key] = handlers[key];
+    }
+  });
+  // now alter the state appropriately
+  return (state = initialState, action) => {
+    switch (action.type) {
+      case handlers.action:
+        return reducers.handleFetch(action.payload, state, action.payload.args);
+      case resolve(handlers.action):
+        return reducers.handleSuccess(action.payload, state, action.meta.args);  // TODO check...
+      case reject(handlers.action):
+        return reducers.handleFailure(action.payload, state, action.meta.args);
+      default:
+        if (action.type in extraActionLookup) {
+          return Object.assign({}, state, {
+            ...state,
+            ...extraActionLookup[action.type](action.payload, state, action.args),
+          });
+        }
+        return state;
+    }
   };
 }

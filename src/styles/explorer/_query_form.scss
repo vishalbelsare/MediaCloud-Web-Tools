@@ -1,0 +1,58 @@
+@import '../constants';
+
+.query-form-wrapper {
+  margin-top: 30px;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid $material-grey200;
+}
+
+.query-form {
+
+  label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    &.inline {
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+
+  .q-field-wrapper {
+    margin-bottom: 15px;
+  }
+  .color-field-wrapper {
+  }
+  .media-field-wrapper {
+    margin-bottom: 15px;
+  }
+  .dates-field-wrapper {
+    .start-date-wrapper {
+      width: 108px !important;
+    }
+    .date-for-wrapper {
+      padding: 12px;
+      display: inline-block;
+      border-bottom: 1px solid $material-grey200;
+      border-top: 1px solid $material-grey200;
+      padding-top: 14px;
+      line-height: 22px;
+    }
+    .end-date-wrapper {
+      width: 108px !important;
+    }
+  }
+
+  .query-field {
+    border: 1px solid $material-grey200 !important;
+    textarea {
+      margin: 12px !important;
+    }
+    input {
+      margin-left: 12px !important;
+    }
+  }
+
+}
