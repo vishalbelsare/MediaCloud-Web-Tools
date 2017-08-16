@@ -55,7 +55,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
           dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
           dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-          dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
+          dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
           dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
         } else {
           const focusNoteSavedMessage = ownProps.intl.formatMessage(localMessages.focusNotSaved);

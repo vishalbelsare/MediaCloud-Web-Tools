@@ -16,7 +16,7 @@ NEW_FOCAL_SET_PLACEHOLDER_ID = -1
 @flask_login.login_required
 @api_error_handler
 def topic_focus_definition_update_or_create(topics_id):
-        user_mc = user_mediacloud_client()
+    user_mc = user_mediacloud_client()
     name = request.form['focusName']
     description = request.form['focusDescription']
     query = request.form['keywords']
