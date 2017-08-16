@@ -123,7 +123,7 @@ class SelectMediaResultsContainer extends React.Component {
           itemType="media"
           linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
-          onClick={c => this.handleSelectMedia(c)}
+          onSelectMedia={c => this.handleSelectMedia(c)}
         />
       );
     }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Dialog from 'material-ui/Dialog';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
@@ -9,7 +8,6 @@ import SelectMediaResultsContainer from './SelectMediaResultsContainer';
 import { fetchMediaPickerFeaturedCollections, selectMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -52,44 +50,49 @@ class SelectMediaDialog extends React.Component {
   render() {
     const { selectedMedia, queryArgs, handleSelection } = this.props;
     const { formatMessage } = this.props.intl;
-    const dialogActions = [
+    const dialogActions = (
       <AppButton
         label={formatMessage(messages.ok)}
         onTouchTap={this.handleRemoveDialogClose}
-      />,
-    ];
+        type="submit"
+        primary
+      />
+    );
+    let modalContent = null;
+    if (this.state.open) {
+      modalContent = (
+        <div>
+          <div
+            className="select-media-dialog-modal"
+            title={formatMessage(localMessages.selectMediaTitle)}
+            open={this.state.open}
+          >
+            <div className="select-media-dialog-modal-inner">
+              <Grid>
+                <Row>
+                  <Col lg={2}>
+                    <MediaSelectionContainer selectedMedia={selectedMedia} />
+                  </Col>
+                  <Col lg={6}>
+                    <SelectMediaResultsContainer selectedMediaQueryType={0} queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                  </Col>
+                </Row>
+              </Grid>
+            </div>
+            {dialogActions}
+          </div>
+          <div className="backdrop" onTouchTap={this.handleRemoveDialogClose} />
+        </div>
+      );
+    }
 
     return (
-      <div className="explorer-select-media-dialog">
+      <div className="select-media-dialog">
         <EditButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(messages.ok)}
         />
-        <Dialog
-          title={formatMessage(localMessages.selectMediaTitle)}
-          actions={dialogActions}
-          open={this.state.open}
-          onRequestClose={this.handleRemoveDialogClose}
-          className={'select-media-dialog'}
-          bodyClassName={'select-media-dialog-body'}
-          contentClassName={'select-media-dialog-content'}
-          overlayClassName={'select-media-dialog-overlay'}
-          titleClassName={'select-media-dialog-title'}
-          autoDetectWindowHeight
-        >
-          <div className="select-media-dialog-inner">
-            <Grid>
-              <Row>
-                <Col lg={2}>
-                  <MediaSelectionContainer selectedMedia={selectedMedia} />
-                </Col>
-                <Col lg={6}>
-                  <SelectMediaResultsContainer selectedMediaQueryType={0} queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
-                </Col>
-              </Row>
-            </Grid>
-          </div>
-        </Dialog>
+        {modalContent}
       </div>
     );
   }
@@ -137,9 +140,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
-        SelectMediaDialog
-      )
+      SelectMediaDialog
     )
   );
 

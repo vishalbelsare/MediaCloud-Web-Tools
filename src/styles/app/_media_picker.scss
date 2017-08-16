@@ -1,5 +1,23 @@
 @import '../_constants';
 
+.select-media-dialog-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: #fff;
+}
+.backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.3);
+}
+
 .select-media-menu-selected > div {
   background-color: $material-grey200 !important;
 }
