@@ -114,13 +114,13 @@ class QueryPicker extends React.Component {
       // indicate which queryPickerItem is selected -
       const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
       const sourcesAndCollections = selectedWithSandCLabels.sources.concat(selectedWithSandCLabels.collections);
-      const initialValues = sourcesAndCollections ? { media: sourcesAndCollections } : {};
+      const initialValues = sourcesAndCollections ? { ...selectedWithSandCLabels, media: sourcesAndCollections } : {};
       return (
         <div>
           {content}
           <QueryForm
             initialValues={initialValues}
-            selected={sourcesAndCollections}
+            selected={selectedWithSandCLabels}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
