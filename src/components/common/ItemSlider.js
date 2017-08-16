@@ -1,21 +1,35 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Slider from 'react-slick';
+import PreviousIcon from 'material-ui/svg-icons/image/navigate-before';
+import NextIcon from 'material-ui/svg-icons/image/navigate-next';
 
 const ItemSlider = (props) => {
-  const { slides } = props;
-  const settings = {
+  const { slides, settings } = props;
+  const settingsExt = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    ...settings,
   };
 
   // use this if you have a prepped set of JSX tags to send over
+  const nextButton = <NextIcon />;
+  const previousButton = <PreviousIcon />;
   return (
-    <Slider {...settings} style={{ width: 80, height: 100, margin: 10, padding: 10 }}>
+    <Slider
+      {...settingsExt}
+      nextArrow={nextButton}
+      prevArrow={previousButton}
+      style={{
+        width: 80,
+        height: 100,
+        margin: 10,
+        padding: 10,
+      }}
+    >
       { slides }
     </Slider>
   );
@@ -23,14 +37,15 @@ const ItemSlider = (props) => {
 
 ItemSlider.propTypes = {
   // from parent
-  title: PropTypes.string.isRequired,
-  intro: PropTypes.string,
-  slides: PropTypes.array.isRequired,
-  helpButton: PropTypes.node,
+  title: React.PropTypes.string.isRequired,
+  intro: React.PropTypes.string,
+  slides: React.PropTypes.array.isRequired,
+  helpButton: React.PropTypes.node,
+  settings: React.PropTypes.object,
   // from dispatch
-  handleClick: PropTypes.func,
+  handleClick: React.PropTypes.func,
   // from compositional chain
-  intl: PropTypes.object.isRequired,
+  intl: React.PropTypes.object.isRequired,
 };
 
 export default

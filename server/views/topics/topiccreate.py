@@ -12,7 +12,7 @@ from server.views.topics import concatenate_query_for_solr
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/topics/create/preview/sentences/count', methods=['POST'])
+@app.route('/api/topics/create/preview/sentences/count', methods=['GET'])
 @flask_login.login_required
 @form_fields_required('q')
 @api_error_handler

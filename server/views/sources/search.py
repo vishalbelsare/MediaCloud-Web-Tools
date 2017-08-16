@@ -2,6 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
+from server.views.media_search import media_search, _media_search_worker, _matching_tags_by_set
 
 from server import app
 from server.util.request import api_error_handler
@@ -32,11 +33,6 @@ def media_search(search_str):
     return jsonify({'list':source_list})
 
 
-def media_search(search_str, tags_id=None):
-    mc = user_mediacloud_client()
-    return mc.mediaList(name_like=search_str, tags_id=tags_id)
-
-
 @app.route('/api/collections/search/<search_str>', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
@@ -47,16 +43,3 @@ def collection_search(search_str):
     flat_list = [item for sublist in trimmed for item in sublist]
     add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})
-
-
-def _media_search_worker(job):
-    user_mc = user_mediacloud_client()
-    return user_mc.tagList(tag_sets_id=job['tag_sets_id'], public_only=job['public_only'], name_like=job['search_str'])
-
-
-def _matching_tags_by_set(search_str, public_only):
-    search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str, 'public_only': public_only}
-                   for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
-    pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
-    matching_tags_in_collections = pool.map(_media_search_worker, search_jobs)
-    return matching_tags_in_collections
