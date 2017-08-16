@@ -11,6 +11,7 @@ from server.auth import user_mediacloud_key
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/topics/<topics_id>/nyt-tags/coverage', methods=['GET'])
 @api_error_handler
 def topic_nyt_tag_coverage(topics_id):

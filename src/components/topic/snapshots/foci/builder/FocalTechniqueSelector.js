@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_COMMUNITY_DETECTION, FOCAL_TECHNIQUE_AUTO_MAGIC }
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP,
+  FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_AUTO_MAGIC }
   from '../../../../../lib/focalTechniques';
 import { assetUrl } from '../../../../../lib/assetUtil';
 
@@ -16,12 +17,13 @@ const localMessages = {
   keywordName: { id: 'focus.technique.keyword.name', defaultMessage: 'Keyword Search' },
   keywordDescription: { id: 'focus.technique.keyword.description',
     defaultMessage: 'When you know a lot about the coverage, or have some hypotheses to test, you can define a Subtopic by specifying a boolean keyword search.' },
+  retweetName: { id: 'focus.technique.retweet.name', defaultMessage: 'US Audience Partisanship' },
+  retweetDescription: { id: 'focus.technique.retweet.description',
+    defaultMessage: 'When you want to slice your topic by U.S. audience partisanship, as determined by each media source\'s ratio of twitter shares by liberal vs. conservative tweeters.' },
+
   referenceName: { id: 'focus.technique.reference.name', defaultMessage: 'Upload Representative Articles' },
   referenceDescription: { id: 'focus.technique.reference.description',
     defaultMessage: 'When you have a list of stories that you think define a Subtopic, you can upload that list and we\'ll use it to identify similar articles within this Subtopic.' },
-  manualName: { id: 'focus.technique.manual.name', defaultMessage: 'Select a Community' },
-  manualDescription: { id: 'focus.technique.manual.description',
-    defaultMessage: 'When you want to slice and dice a conversation you kind of understand, we will show you a map of the sources and words and you can select a portion of the map to define as a Subtopic.' },
   automagicName: { id: 'focus.technique.automagic.name', defaultMessage: 'Auto-Magic' },
   automagicDescription: { id: 'focus.technique.automagic.description',
     defaultMessage: 'When you aren\'t sure what is going on, we can use an algorithm to detect communities of sub-conversations within the Topic for you, creating a Subtopic for each.' },
@@ -30,11 +32,6 @@ const localMessages = {
 const formSelector = formValueSelector('snapshotFocus');
 
 class FocalTechniqueSelector extends React.Component {
-
-  selectBooleanQuery = () => { this.handleSelection(FOCAL_TECHNIQUE_BOOLEAN_QUERY); }
-  selectReferenceSetUpload = () => { this.handleSelection(FOCAL_TECHNIQUE_REFERENCE_SET); }
-  selectCommunityDetection = () => { this.handleSelection(FOCAL_TECHNIQUE_COMMUNITY_DETECTION); }
-  selectAutoMatic = () => { this.handleSelection(FOCAL_TECHNIQUE_AUTO_MAGIC); }
 
   handleSelection = (focalTechniqueName) => {
     const { change } = this.props;
@@ -48,7 +45,7 @@ class FocalTechniqueSelector extends React.Component {
         <Row>
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
-              onClick={this.selectBooleanQuery}
+              onClick={() => this.handleSelection(FOCAL_TECHNIQUE_BOOLEAN_QUERY)}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY}
               id="technique-boolean-query"
               icon={KeywordSearchIcon}
@@ -58,7 +55,17 @@ class FocalTechniqueSelector extends React.Component {
           </Col>
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
-              onClick={this.selectReferenceSetUpload}
+              onClick={() => this.handleSelection(FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP)}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP}
+              id="Retweet Partisanship"
+              icon={KeywordSearchIcon}
+              nameMsg={localMessages.retweetName}
+              descriptionMsg={localMessages.retweetDescription}
+            />
+          </Col>
+          <Col lg={2} md={2} sm={3} xs={6}>
+            <FocalTechniqueDescription
+              onClick={() => this.handleSelection(FOCAL_TECHNIQUE_REFERENCE_SET)}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_REFERENCE_SET}
               id="technique-reference-set-upload"
               image={assetUrl('/static/img/focal-technique-reference-2x.png')}
@@ -70,19 +77,7 @@ class FocalTechniqueSelector extends React.Component {
           </Col>
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
-              onClick={this.selectCommunityDetection}
-              selected={currentFocalTechnique === FOCAL_TECHNIQUE_COMMUNITY_DETECTION}
-              id="technique-community-selection"
-              image={assetUrl('/static/img/focal-technique-manual-2x.png')}
-              nameMsg={localMessages.manualName}
-              descriptionMsg={localMessages.manualDescription}
-              disabled
-              comingSoon
-            />
-          </Col>
-          <Col lg={2} md={2} sm={3} xs={6}>
-            <FocalTechniqueDescription
-              onClick={this.selectAutoMatic}
+              onClick={() => this.handleSelection(FOCAL_TECHNIQUE_AUTO_MAGIC)}
               selected={currentFocalTechnique === FOCAL_TECHNIQUE_AUTO_MAGIC}
               id="technique-autoMagic-community-detection"
               image={assetUrl('/static/img/focal-technique-automagic-2x.png')}

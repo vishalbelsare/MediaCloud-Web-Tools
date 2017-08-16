@@ -152,7 +152,7 @@ AttentionOverTimeChart.propTypes = {
   data: React.PropTypes.array,
   series: React.PropTypes.array,
   height: React.PropTypes.number.isRequired,
-  lineColor: React.PropTypes.array,
+  lineColor: React.PropTypes.string,
   health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func, // (date0, date1, evt, chartObj)
   total: React.PropTypes.number,

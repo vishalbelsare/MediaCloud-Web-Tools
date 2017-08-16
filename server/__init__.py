@@ -1,8 +1,9 @@
-import os
-import logging.config
 import ConfigParser
 import json
+import logging.config
+import os
 import sys
+import tempfile
 from flask import Flask, render_template
 from flask_webpack import Webpack
 from flask_mail import Mail
@@ -10,7 +11,6 @@ import flask_login
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
-import tempfile
 import mediacloud
 from mediameter.cliff import Cliff
 
@@ -188,8 +188,9 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.stories
     import server.views.topics.topic
     import server.views.topics.words
-    import server.views.topics.focalsets
-    import server.views.topics.foci
+    import server.views.topics.foci.focalsets
+    import server.views.topics.foci.focaldefs
+    import server.views.topics.foci.retweetpartisanship
     import server.views.topics.permissions
     import server.views.topics.maps
     import server.views.topics.nyttags

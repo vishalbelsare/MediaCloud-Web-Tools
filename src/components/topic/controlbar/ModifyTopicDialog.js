@@ -96,7 +96,7 @@ class ModifyTopicDialog extends React.Component {
           </Permissioned>
           <DescriptiveButton
             svgIcon={(<FocusIcon height={50} />)}
-            label={formatMessage(messages.addFocus)}
+            label={formatMessage(messages.manageFoci)}
             description={formatMessage(localMessages.addFocusDetails)}
             onClick={() => onUrlChange(`/topics/${topicId}/snapshot/foci`)}
             id="modify-topic-subtopics"

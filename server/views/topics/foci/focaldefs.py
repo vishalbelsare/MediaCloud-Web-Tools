@@ -42,6 +42,7 @@ def topic_focus_definition_update_or_create(topics_id):
     return jsonify(focus)
 
 
+
 @app.route('/api/topics/<topics_id>/focus-definitions/<foci_definition_id>/delete', methods=['DELETE'])
 @flask_login.login_required
 @api_error_handler

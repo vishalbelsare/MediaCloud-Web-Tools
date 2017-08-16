@@ -97,6 +97,7 @@ const messages = {
   focusCreate: { id: 'focus.create', defaultMessage: 'create a new Subtopic' },
   backToTopic: { id: 'backToTopic', defaultMessage: 'back to Topic' },
   addFocus: { id: 'focus.add', defaultMessage: 'Add a New Subtopic' },
+  manageFoci: { id: 'focus.manage', defaultMessage: 'Manage Subtopics' },
 
   story: { id: 'story', defaultMessage: 'Story' },
   storyPlural: { id: 'stories', defaultMessage: 'Stories' },
@@ -151,7 +152,9 @@ const messages = {
   filter: { id: 'filter', defaultMessage: 'Filter' },
   upload: { id: 'upload', defaultMessage: 'Upload' },
   other: { id: 'other', defaultMessage: 'Other' },
+  home: { id: 'home', defaultMessage: 'Home' },
   required: { id: 'required', defaultMessage: 'Required' },
+  unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },

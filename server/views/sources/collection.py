@@ -13,11 +13,9 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
 from server.cache import cache
-from server.util.common import collection_media_list
-from server.util.mail import send_html_email
 
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields
+from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields, media_with_tag
 from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
@@ -39,7 +37,7 @@ def allowed_file(filename):
 @flask_login.login_required
 @api_error_handler
 def api_metadata_download(collection_id):
-    all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    all_media = media_with_tag(user_mediacloud_key(), collection_id)
 
     metadata_items = []
     for each_dict in all_media:
@@ -126,7 +124,7 @@ def api_collections_by_ids():
     collIdArray = request.args['coll[]'].split(',')
     sources_list = []
     for tagsId in collIdArray:
-        all_media = collection_media_list(user_mediacloud_key(), tagsId)
+        all_media = media_with_tag(user_mediacloud_key(), tagsId)
         info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes': m['public_notes']} for m
                 in all_media]
         add_user_favorite_flag_to_sources(info)
@@ -195,7 +193,7 @@ def api_collection_details(collection_id):
     add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
-    all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    all_media = media_with_tag(user_mediacloud_key(), collection_id)
     add_user_favorite_flag_to_sources(all_media)
     info['media'] = all_media
 
@@ -219,7 +217,7 @@ def api_download_sources_template():
 def api_collection_sources_csv(collection_id):
     user_mc = user_admin_mediacloud_client()
     # info = user_mc.tag(int(collection_id))
-    all_media = collection_media_list(user_mediacloud_key(), collection_id)
+    all_media = media_with_tag(user_mediacloud_key(), collection_id)
     for src in all_media:
         for tag in src['media_source_tags']:
             if is_metadata_tag_set(tag['tag_sets_id']):
@@ -289,7 +287,7 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
-    media_list = collection_media_list(user_mediacloud_key(), collection_id)
+    media_list = media_with_tag(user_mediacloud_key(), collection_id)
     jobs = [{'media': m, 'q': q, 'start_date_str': start_date_str, 'end_date_str': end_date_str} for m in media_list]
     # fetch in parallel to make things faster
     pool = Pool(processes=HISTORICAL_COUNT_POOL_SIZE)
@@ -334,7 +332,7 @@ def collection_source_sentence_counts_csv(collection_id):
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sample_size = 2000  # kind of arbitrary
     # list all sources first
-    sources_by_id = {int(c['media_id']): c for c in collection_media_list(user_mediacloud_key(), tag_sets_id)}
+    sources_by_id = {int(c['media_id']): c for c in media_with_tag(user_mediacloud_key(), tag_sets_id)}
     sentences = mc.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
     # sum the number of sentences per media source
     sentence_counts = {int(media_id): 0 for media_id in sources_by_id.keys()}
