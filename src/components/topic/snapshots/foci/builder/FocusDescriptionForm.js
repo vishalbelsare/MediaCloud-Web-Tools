@@ -21,6 +21,8 @@ const localMessages = {
   newFocalSetDescription: { id: 'focus.techniquePicker.new.description', defaultMessage: 'Pick this if you want to make a new Set for this Subtopic.  Any Subtopics you add to it will be based on keyword searches.' },
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Subtopic.' },
   errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Set.' },
+  cannotChangeFocalSet: { id: 'focus.cannotChangeSet', defaultMessage: 'You can\'t change which set an existing Subtopic is in.' },
+
 };
 
 const formSelector = formValueSelector('snapshotFocus');
@@ -28,10 +30,43 @@ const formSelector = formValueSelector('snapshotFocus');
 const FocusDescriptionForm = (props) => {
   const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, currentFocalSetDefinitionId } = props;
   const { formatMessage } = props.intl;
-  // if they pick "make a new focal set" then let them enter name and description
-  let focalSetContent = null;
-  if (currentFocalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-    focalSetContent = <FocalSetForm initialValues={initialValues} />;
+  // only show focal set selection for editing mode
+  let focalSetContent;
+  if (initialValues.focusDefinitionId === undefined) {
+    // if they pick "make a new focal set" then let them enter name and description
+    let focalSetDetailedContent = null;
+    if (currentFocalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+      focalSetDetailedContent = <FocalSetForm initialValues={initialValues} />;
+    }
+    focalSetContent = (
+      <div className="focal-set-details">
+        <Field
+          name="focalSetDefinitionId"
+          component={renderSelectField}
+          floatingLabelText={localMessages.pickFocalSet}
+        >
+          {focalSetDefinitions.map(focalSetDef =>
+            <MenuItem
+              key={focalSetDef.focal_set_definitions_id}
+              value={focalSetDef.focal_set_definitions_id}
+              primaryText={focalSetDef.name}
+            />
+          )}
+          <MenuItem
+            key={NEW_FOCAL_SET_PLACEHOLDER_ID}
+            value={NEW_FOCAL_SET_PLACEHOLDER_ID}
+            primaryText={formatMessage(localMessages.newFocalSetName)}
+          />
+        </Field>
+        {focalSetDetailedContent}
+      </div>
+    );
+  } else {
+    focalSetContent = (
+      <p>
+        <i><FormattedMessage {...localMessages.cannotChangeFocalSet} /></i>
+      </p>
+    );
   }
   return (
     <div className="focus-create-details-form">
@@ -52,24 +87,6 @@ const FocusDescriptionForm = (props) => {
           />
         </Col>
         <Col lg={3} xs={12}>
-          <Field
-            name="focalSetDefinitionId"
-            component={renderSelectField}
-            floatingLabelText={localMessages.pickFocalSet}
-          >
-            {focalSetDefinitions.map(focalSetDef =>
-              <MenuItem
-                key={focalSetDef.focal_set_definitions_id}
-                value={focalSetDef.focal_set_definitions_id}
-                primaryText={focalSetDef.name}
-              />
-            )}
-            <MenuItem
-              key={NEW_FOCAL_SET_PLACEHOLDER_ID}
-              value={NEW_FOCAL_SET_PLACEHOLDER_ID}
-              primaryText={formatMessage(localMessages.newFocalSetName)}
-            />
-          </Field>
           {focalSetContent}
         </Col>
         <Col lg={1} sm={0} />

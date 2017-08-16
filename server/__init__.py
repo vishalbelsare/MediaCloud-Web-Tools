@@ -31,14 +31,6 @@ server_config_file_path = os.path.join(base_dir, 'config', 'server.config')
 settings = ConfigParser.ConfigParser()
 settings.read(server_config_file_path)
 
-# Set up some logging
-try:
-    entry = Sentry(dsn=settings.get('sentry', 'dsn'))
-    handler = SentryHandler(settings.get('sentry', 'dsn'))
-    setup_logging(handler)
-except Exception:
-    logging.info("no sentry logging")
-
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
     logging_config['handlers']['file']['filename'] = os.path.join(base_dir, logging_config['handlers']['file']['filename'])
@@ -54,6 +46,15 @@ if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
     sys.exit(1)
 else:
     logger.info("Started server in %s mode", server_mode)
+
+
+# setup optional sentry logging service
+try:
+    handler = SentryHandler(settings.get('sentry', 'dsn'))
+    handler.setLevel(logging.ERROR)
+    setup_logging(handler)
+except Exception as e:
+    logger.info("no sentry logging")
 
 # Connect to MediaCloud
 TOOL_API_KEY = settings.get('mediacloud', 'api_key')
@@ -101,6 +102,13 @@ def create_app():
     # set up uploading
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
+    # Set up sentry logging
+    try:
+        sentry_dsn = settings.get('sentry', 'dsn')
+        Sentry(my_app, dsn=sentry_dsn)
+    except Exception as e:
+        logger.info("no sentry logging")
+        logger.error(e)
     # set up webpack
     if is_dev_mode():
         manifest_path = '../build/manifest.json'
@@ -110,8 +118,16 @@ def create_app():
         'DEBUG': is_dev_mode(),
         'WEBPACK_MANIFEST_PATH': manifest_path
     }
-    if is_prod_mode():
-        webpack_config['WEBPACK_ASSETS_URL'] = 'https://d2h2bu87t9cnlp.cloudfront.net/static/gen/{}/'.format(prod_app_name)
+    # caching and CDN config
+    my_app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 7 * 24 * 60 * 60
+    try:
+        cdn_asset_url = settings.get('cdn', 'asset_url')
+        webpack_config['WEBPACK_ASSETS_URL'] = cdn_asset_url
+        logger.info("Asset pipeline: {}".format(cdn_asset_url))
+    except ConfigParser.NoOptionError:
+        logger.info("Asset pipeline: no cdn")
+    except ConfigParser.NoSectionError:
+        logger.info("Asset pipeline: no cdn")
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
     # set up mail sending

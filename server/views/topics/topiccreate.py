@@ -58,7 +58,7 @@ def api_topics_preview_story_sample():
         media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
         tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
     
-    story_count_result = user_mc.storyList(solr_query=solr_query)
+    story_count_result = user_mc.storyList(solr_query=solr_query, sort=user_mc.SORT_RANDOM)
     return jsonify(story_count_result)  
 
 

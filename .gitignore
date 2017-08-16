@@ -16,6 +16,8 @@ data/map-files/*.gexf
 data/map-files/*.json
 data/map-files/*.txt
 server/static/data/all_topics.json
+server/static/data/GoogleNews-vectors-negative300
+server/static/data/GoogleNews-vectors-negative300.syn0.npy
 update_mc_api.sh
 env
 *.csv

@@ -53,19 +53,21 @@ class StoriesSummaryContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/stories`;
     return (
-      <DataCard>
+      <DataCard className="topic-summary-top-stories">
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             <ExploreButton linkTo={filteredLinkTo(exploreUrl, filters)} />
             <ActionMenu>
               <MenuItem
                 className="action-icon-menu-item"
+                id="topic-summary-top-stories-download"
                 primaryText={formatMessage(localMessages.downloadNoFBData)}
                 rightIcon={<DownloadButton />}
                 onTouchTap={this.downloadCsvNoFBData}
               />
               <MenuItem
                 className="action-icon-menu-item"
+                id="topic-summary-top-stories-download-with-facebook"
                 primaryText={formatMessage(localMessages.downloadWithFBData)}
                 rightIcon={<DownloadButton />}
                 onTouchTap={this.downloadCsvWithFBData}

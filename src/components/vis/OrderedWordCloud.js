@@ -3,6 +3,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
 import { injectIntl } from 'react-intl';
+import fontSizeComputer from '../../lib/visUtil';
 
 const localMessages = {
   wordCloudCount: { id: 'wordcloud.rollover.count', defaultMessage: 'Uses: {count}' },
@@ -20,13 +21,6 @@ const DEFAULT_TEXT_COLOR = '#333333';
 const DEFAULT_LINK_COLOR = '#ff0000';
 
 class OrderedWordCloud extends React.Component {
-
-  fontSize = (term, extent, sizeRange) => {
-    const size = sizeRange.min + (((sizeRange.max - sizeRange.min)
-            * (Math.log(term.tfnorm) - Math.log(extent[0]))) / (Math.log(extent[1]) - Math.log(extent[0])));
-    return size;
-  }
-
   listCloudLayout = (words, width, extent, sizeRange) => {
     const canvas = document.getElementById('canvas');   // TODO: replace with a constant
     const canvasContext2d = canvas.getContext('2d');
@@ -35,7 +29,7 @@ class OrderedWordCloud extends React.Component {
       return x;
     }
     words.attr('x', (d) => {
-      const fs = this.fontSize(d, extent, sizeRange);
+      const fs = fontSizeComputer(d, extent, sizeRange);
       canvasContext2d.font = `bold ${fs}px Lato`;    // crazy hack for IE compat, instead of simply this.getComputedTextLength()
       const metrics = canvasContext2d.measureText(d.term);
       const textLength = metrics.width;
@@ -48,7 +42,6 @@ class OrderedWordCloud extends React.Component {
     });
     let y = -0.5 * sizeRange.max;
     let lastAdded = 0;
-    const fontSizeComputer = this.fontSize; // have to do this to get the closure right
     words.attr('y', function handleY(d) { // need closure here for d3.select to work right on the element
       if (d3.select(this).attr('x') === 0) {
         const height = 1.5 * fontSizeComputer(d, extent, sizeRange);
@@ -139,7 +132,7 @@ class OrderedWordCloud extends React.Component {
           .classed('word', true)
           .classed('hide', d => d.display === false)
           .classed('show', d => d.display !== false)
-        .attr('font-size', d => this.fontSize(d, options.fullExtent, sizeRange))
+        .attr('font-size', d => fontSizeComputer(d, options.fullExtent, sizeRange))
         .text(d => d.term)
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {

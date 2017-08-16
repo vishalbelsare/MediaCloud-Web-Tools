@@ -36,7 +36,7 @@ class FocusBuilderWizard extends React.Component {
   }
 
   render() {
-    const { topicId, currentStep, location, initialValues } = this.props;
+    const { topicId, currentStep, location, initialValues, onDone } = this.props;
     const steps = [
       FocusForm1TechniqueContainer,
       FocusForm2ConfigureContainer,
@@ -63,7 +63,7 @@ class FocusBuilderWizard extends React.Component {
             </Step>
           </Stepper>
         </BackLinkingControlBar>
-        <CurrentStepComponent topicId={topicId} location={location} initialValues={initialValues} />
+        <CurrentStepComponent topicId={topicId} location={location} initialValues={initialValues} onDone={onDone} />
       </div>
     );
   }
@@ -76,6 +76,7 @@ FocusBuilderWizard.propTypes = {
   initialValues: PropTypes.object,
   startStep: PropTypes.number,
   location: PropTypes.object,
+  onDone: PropTypes.func.isRequired,
   // from state
   currentStep: PropTypes.number.isRequired,
   // from dispatch
