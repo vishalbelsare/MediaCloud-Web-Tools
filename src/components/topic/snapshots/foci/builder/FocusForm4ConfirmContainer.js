@@ -102,8 +102,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   saveFocus: (topicId, values) => {
     ownProps.onDone(topicId, values);
-    // TODO: add support for saving retweet focal set
-    // dispatch(createRetweetFocalSet(topicId, values));
   },
 });
 
