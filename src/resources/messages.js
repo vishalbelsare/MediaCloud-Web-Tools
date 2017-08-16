@@ -152,6 +152,7 @@ const messages = {
   filter: { id: 'filter', defaultMessage: 'Filter' },
   upload: { id: 'upload', defaultMessage: 'Upload' },
   other: { id: 'other', defaultMessage: 'Other' },
+  home: { id: 'home', defaultMessage: 'Home' },
   required: { id: 'required', defaultMessage: 'Required' },
   unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
 

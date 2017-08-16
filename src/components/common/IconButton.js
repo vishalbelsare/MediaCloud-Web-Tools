@@ -17,6 +17,7 @@ import DeleteIcon from './icons/DeleteIcon';
 import AddIcon from './icons/AddIcon';
 import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
+import HomeIcon from './icons/HomeIcon';
 import FilledStarIcon from './icons/FilledStarIcon';
 import EmptyStarIcon from './icons/EmptyStarIcon';
 import SettingsIcon from './icons/SettingsIcon';
@@ -148,3 +149,5 @@ export const FilterButton = composeIconButton(FilterIcon, messages.filter, false
 export const SaveButton = composeIconButton(SaveIcon, messages.save);
 
 export const SearchButton = composeIconButton(SearchIcon, messages.search, false);
+
+export const HomeButton = composeIconButton(HomeIcon, messages.home);
