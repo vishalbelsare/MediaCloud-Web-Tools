@@ -11,7 +11,7 @@ export const SOURCES_URL = 'https://sources.mediacloud.org/';
 export const BLOG_URL = 'http://mediacloud.org/';
 export const TOOLS_URL = 'https://tools.mediacloud.org/';
 
-const BrandToolbar = (props) => {
+const AppToolbar = (props) => {
   const { backgroundColor, drawer } = props;
   const { formatMessage } = props.intl;
   const styles = { backgroundColor };
@@ -75,7 +75,7 @@ const BrandToolbar = (props) => {
   );
 };
 
-BrandToolbar.propTypes = {
+AppToolbar.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
   // from parent
@@ -85,5 +85,5 @@ BrandToolbar.propTypes = {
 
 export default
   injectIntl(
-    BrandToolbar
+    AppToolbar
   );
