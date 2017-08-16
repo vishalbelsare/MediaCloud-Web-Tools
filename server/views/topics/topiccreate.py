@@ -12,7 +12,7 @@ from server.views.topics import concatenate_query_for_solr
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/topics/create/preview/sentences/count', methods=['POST'])
+@app.route('/api/topics/create/preview/sentences/count', methods=['GET'])
 @flask_login.login_required
 @form_fields_required('q')
 @api_error_handler
@@ -58,7 +58,7 @@ def api_topics_preview_story_sample():
         media_ids=_media_ids_from_sources_param(request.form['sources[]']) if 'sources[]' in request.form else None,
         tags_ids=_media_tag_ids_from_collections_param(request.form['collections[]'])) if 'collections[]' in request.form else None,
     
-    story_count_result = user_mc.storyList(solr_query=solr_query)
+    story_count_result = user_mc.storyList(solr_query=solr_query, sort=user_mc.SORT_RANDOM)
     return jsonify(story_count_result)  
 
 

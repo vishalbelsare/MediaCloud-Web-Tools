@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Chart } from 'react-google-charts';
 
@@ -34,12 +35,12 @@ const WordTree = (props) => {
 };
 
 WordTree.propTypes = {
-  domId: React.PropTypes.string.isRequired,
-  sentences: React.PropTypes.array.isRequired,  // an array sentences
-  startWord: React.PropTypes.string.isRequired,
-  height: React.PropTypes.string.isRequired,
-  type: React.PropTypes.string, // double (default), suffix or prefix
-  onChartReady: React.PropTypes.func,
+  domId: PropTypes.string.isRequired,
+  sentences: PropTypes.array.isRequired,  // an array sentences
+  startWord: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+  type: PropTypes.string, // double (default), suffix or prefix
+  onChartReady: PropTypes.func,
 };
 
 export default WordTree;

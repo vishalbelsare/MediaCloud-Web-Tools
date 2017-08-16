@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -56,19 +57,19 @@ class SelectCollectionContainer extends React.Component {
 }
 
 SelectCollectionContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
-  removeCollectionId: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  removeCollectionId: PropTypes.func.isRequired,
   // from context
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  collectionId: React.PropTypes.number.isRequired,
-  children: React.PropTypes.node.isRequired,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  collectionId: PropTypes.number.isRequired,
+  children: PropTypes.node.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  collection: React.PropTypes.object,
+  fetchStatus: PropTypes.string.isRequired,
+  collection: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

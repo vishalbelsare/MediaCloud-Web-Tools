@@ -62,12 +62,10 @@ class AttentionOverTimeChart extends React.Component {
           return (`${seriesName}<br/>${val}`);
         },
       },
-      yAxis: [{
+      yAxis: {
         min: 0,
-        title: {
-          text: formatMessage(localMessages.seriesTitle),
-        },
-      }],
+        title: formatMessage(localMessages.seriesTitle),
+      },
       exporting: {
       },
     };
@@ -154,10 +152,10 @@ AttentionOverTimeChart.propTypes = {
   data: React.PropTypes.array,
   series: React.PropTypes.array,
   height: React.PropTypes.number.isRequired,
-  lineColor: React.PropTypes.string,
+  lineColor: React.PropTypes.array,
   health: React.PropTypes.array,
   onDataPointClick: React.PropTypes.func, // (date0, date1, evt, chartObj)
-  total: React.PropTypes.number,  // optional total to display just above the chart
+  total: React.PropTypes.number,
   filename: React.PropTypes.string,
   showLegend: React.PropTypes.bool,
   // from composition chain

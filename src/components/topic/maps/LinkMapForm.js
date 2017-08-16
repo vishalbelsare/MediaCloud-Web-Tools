@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { injectIntl } from 'react-intl';
@@ -142,23 +143,23 @@ const LinkMapForm = (props) => {
 
 LinkMapForm.propTypes = {
   // from parent
-  topicId: React.PropTypes.number,
-  initialValues: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  initialValues: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   // form composition
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderCheckbox: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  handleSubmit: React.PropTypes.func,
-  onGetMapData: React.PropTypes.func.isRequired,
-  onViewMapData: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
-  downloadLabel: React.PropTypes.string,
-  viewLabel: React.PropTypes.string,
-  showMap: React.PropTypes.bool.isRequired,
-  fieldParams: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func,
+  onGetMapData: PropTypes.func.isRequired,
+  onViewMapData: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  downloadLabel: PropTypes.string,
+  viewLabel: PropTypes.string,
+  showMap: PropTypes.bool.isRequired,
+  fieldParams: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

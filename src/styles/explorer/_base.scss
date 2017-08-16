@@ -1,0 +1,26 @@
+@import '../constants';
+
+.app-explorer {
+
+  a {
+    color: $explorer-primary;
+  }
+
+  .app-button {
+    &.hovering :hover {
+      background-color: $explorer-darker !important;
+    }
+  }
+
+  .app-icon-button {
+    &.hovering :hover {
+      background-color: $explorer-darker !important;
+    }   
+  }
+
+  .app-icon-filled-star > svg {
+    fill: $explorer-primary;
+  }
+
+}
+

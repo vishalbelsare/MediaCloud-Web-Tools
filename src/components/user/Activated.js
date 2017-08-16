@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -75,8 +76,8 @@ const Activated = (props) => {
 };
 
 Activated.propTypes = {
-  location: React.PropTypes.object.isRequired,
-  intl: React.PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(Activated);

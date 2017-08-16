@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -40,19 +41,19 @@ class SelectSourceContainer extends React.Component {
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Row>
-              <Col lg={3}>
+              <Col lg={12}>
                 <span className="source-edit-link">
                   <Link to={`/sources/${source.media_id}/edit`} >
                     <EditButton />
                     <FormattedMessage {...localMessages.editSource} />
                   </Link>
                 </span>
-              </Col>
-              <Col lg={3}>
-                <Link to={`/sources/${source.media_id}/feeds`} >
-                  <EditButton />
-                  <FormattedMessage {...localMessages.editFeeds} />
-                </Link>
+                <span className="source-edit-feeds-link">
+                  <Link to={`/sources/${source.media_id}/feeds`} >
+                    <EditButton />
+                    <FormattedMessage {...localMessages.editFeeds} />
+                  </Link>
+                </span>
               </Col>
             </Row>
           </Permissioned>
@@ -67,23 +68,23 @@ class SelectSourceContainer extends React.Component {
 }
 
 SelectSourceContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
-  removeSourceId: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  removeSourceId: PropTypes.func.isRequired,
   // from context
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  sourceId: React.PropTypes.number.isRequired,
-  children: React.PropTypes.node.isRequired,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  sourceId: PropTypes.number.isRequired,
+  children: PropTypes.node.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  source: React.PropTypes.object,
+  fetchStatus: PropTypes.string.isRequired,
+  source: PropTypes.object,
 };
 
 SelectSourceContainer.contextTypes = {
-  store: React.PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

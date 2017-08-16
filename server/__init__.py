@@ -6,12 +6,6 @@ import sys
 import tempfile
 
 import flask_login
-import mediacloud
-from flask import Flask, render_template
-from flask_cors import CORS
-from flask_mail import Mail
-from flask_webpack import Webpack
-from mediameter.cliff import Cliff
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
@@ -24,6 +18,7 @@ SERVER_MODE_PROD = "prod"
 SERVER_APP_TOPICS = "topics"
 SERVER_APP_SOURCES = "sources"
 SERVER_APP_TOOLS = "tools"
+SERVER_APP_EXPLORER = "explorer"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,14 +26,6 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 server_config_file_path = os.path.join(base_dir, 'config', 'server.config')
 settings = ConfigParser.ConfigParser()
 settings.read(server_config_file_path)
-
-# Set up some logging
-try:
-    entry = Sentry(dsn=settings.get('sentry', 'dsn'))
-    handler = SentryHandler(settings.get('sentry', 'dsn'))
-    setup_logging(handler)
-except Exception:
-    print "no sentry logging"
 
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
@@ -55,6 +42,15 @@ if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
     sys.exit(1)
 else:
     logger.info("Started server in %s mode", server_mode)
+
+
+# setup optional sentry logging service
+try:
+    handler = SentryHandler(settings.get('sentry', 'dsn'))
+    handler.setLevel(logging.ERROR)
+    setup_logging(handler)
+except Exception as e:
+    logger.info("no sentry logging")
 
 # Connect to MediaCloud
 TOOL_API_KEY = settings.get('mediacloud', 'api_key')
@@ -83,29 +79,51 @@ except Exception as err:
 
 logger.info("Connected to DB: %s@%s", db_name, db_host)
 
-def isDevMode():
+
+def is_dev_mode():
     return server_mode == SERVER_MODE_DEV
 
-def isProdMode():
+
+def is_prod_mode():
     return server_mode == SERVER_MODE_PROD
 
 webpack = Webpack()
 mail = Mail()
 
+
 def create_app():
-    '''
-    Factory method to create the app
-    '''
-    prod_app = settings.get('server', 'app')
+    # Factory method to create the app
+    prod_app_name = settings.get('server', 'app')
     my_app = Flask(__name__)
     # set up uploading
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
+    # Set up sentry logging
+    try:
+        sentry_dsn = settings.get('sentry', 'dsn')
+        Sentry(my_app, dsn=sentry_dsn)
+    except Exception as e:
+        logger.info("no sentry logging")
+        logger.error(e)
     # set up webpack
+    if is_dev_mode():
+        manifest_path = '../build/manifest.json'
+    else:
+        manifest_path = '../server/static/gen/{}/manifest.json'.format(prod_app_name)
     webpack_config = {
-        'DEBUG': isDevMode(),
-        'WEBPACK_MANIFEST_PATH': '../build/manifest.json' if isDevMode() else '../server/static/gen/'+prod_app+'/manifest.json'
+        'DEBUG': is_dev_mode(),
+        'WEBPACK_MANIFEST_PATH': manifest_path
     }
+    # caching and CDN config
+    my_app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 7 * 24 * 60 * 60
+    try:
+        cdn_asset_url = settings.get('cdn', 'asset_url')
+        webpack_config['WEBPACK_ASSETS_URL'] = cdn_asset_url
+        logger.info("Asset pipeline: {}".format(cdn_asset_url))
+    except ConfigParser.NoOptionError:
+        logger.info("Asset pipeline: no cdn")
+    except ConfigParser.NoSectionError:
+        logger.info("Asset pipeline: no cdn")
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
     # set up mail sending
@@ -131,30 +149,26 @@ def create_app():
 app = create_app()
 app.secret_key = settings.get('server', 'secret_key')
 
-CORS(app,
-    resources=r'/*',
-    supports_credentials=True,
-    allow_headers='Content-Type'
-)
-
 # Create user login manager
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-# set up all the views
 
+# set up all the views
 @app.route('/')
 def index():
     logger.debug("homepage request")
     return render_template('index.html')
 
-# now load in the appropriate view endpoints (only on Prod)
+# now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
 import server.views.stat
+import server.views.media_search
+import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
 server_app = settings.get('server', 'app')
-if (server_app == SERVER_APP_SOURCES) or isDevMode():
+if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.collection
     import server.views.sources.collectionedit
     import server.views.sources.source
@@ -164,7 +178,7 @@ if (server_app == SERVER_APP_SOURCES) or isDevMode():
     import server.views.sources.words
     import server.views.sources.geocount
     import server.views.sources.metadata
-if (server_app == SERVER_APP_TOPICS) or isDevMode():
+if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.media
     import server.views.topics.sentences
     import server.views.topics.stories
@@ -178,3 +192,8 @@ if (server_app == SERVER_APP_TOPICS) or isDevMode():
     import server.views.topics.nyttags
     import server.views.topics.geotags
     import server.views.topics.topiccreate
+if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
+    import server.views.explorer.explorer_query
+    import server.views.explorer.sentences
+    import server.views.explorer.stories
+    import server.views.explorer.geo

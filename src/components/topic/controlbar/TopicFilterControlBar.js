@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -7,6 +8,8 @@ import TimespanSelectorContainer from './timespans/TimespanSelectorContainer';
 import LinkWithFilters from '../LinkWithFilters';
 import { filteredLinkTo, filteredLocation } from '../../util/location';
 import { FilterButton, HomeButton } from '../../common/IconButton';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import { toggleFilterControls, filterByFocus, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
@@ -52,12 +55,14 @@ class TopicFilterControlBar extends React.Component {
                   <HomeButton />
                   <b><FormattedMessage {...localMessages.topicHomepage} /></b>
                 </LinkWithFilters>
-                <ModifyTopicDialog
-                  topicId={topicId}
-                  onUrlChange={goToUrl}
-                  needsNewSnapshot={needsNewSnapshot}
-                  onSpiderRequest={handleSpiderRequest}
-                />
+                <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                  <ModifyTopicDialog
+                    topicId={topicId}
+                    onUrlChange={goToUrl}
+                    needsNewSnapshot={needsNewSnapshot}
+                    onSpiderRequest={handleSpiderRequest}
+                  />
+                </Permissioned>
               </Col>
               <Col lg={8} className="right">
                 <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />
@@ -82,22 +87,22 @@ class TopicFilterControlBar extends React.Component {
 
 TopicFilterControlBar.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number,
-  location: React.PropTypes.object.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  location: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string,
-  snapshots: React.PropTypes.array,
-  needsNewSnapshot: React.PropTypes.bool,
+  fetchStatus: PropTypes.string,
+  snapshots: PropTypes.array,
+  needsNewSnapshot: PropTypes.bool,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  handleFilterToggle: React.PropTypes.func.isRequired,
-  handleFocusSelected: React.PropTypes.func.isRequired,
-  handleSpiderRequest: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  handleFilterToggle: PropTypes.func.isRequired,
+  handleFocusSelected: PropTypes.func.isRequired,
+  handleSpiderRequest: PropTypes.func.isRequired,
   // from merge
-  goToUrl: React.PropTypes.func.isRequired,
+  goToUrl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

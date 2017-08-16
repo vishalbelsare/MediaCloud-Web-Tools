@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -39,7 +40,7 @@ const TopicCreate1ConfigureContainer = (props) => {
       </Row>
       <TopicForm
         initialValues={initialValues}
-        onSaveTopic={finishStep}
+        onSubmit={() => finishStep(1)}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
@@ -50,18 +51,18 @@ const TopicCreate1ConfigureContainer = (props) => {
 
 TopicCreate1ConfigureContainer.propTypes = {
   // from parent
-  location: React.PropTypes.object.isRequired,
-  initialValues: React.PropTypes.object,
+  location: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
   // form composition
-  intl: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool,
-  submitting: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool,
+  submitting: PropTypes.bool,
   // from state
-  currentStep: React.PropTypes.number,
-  formData: React.PropTypes.object,
+  currentStep: PropTypes.number,
+  formData: PropTypes.object,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -69,18 +70,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  goToStep: (step) => {
+  finishStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
 });
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      dispatchProps.goToStep(1, values);
-    },
-  });
-}
 
 const reduxFormConfig = {
   form: 'topicForm',
@@ -91,7 +84,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        connect(mapStateToProps, mapDispatchToProps)(
           TopicCreate1ConfigureContainer
         )
       )

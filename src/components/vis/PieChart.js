@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
@@ -59,7 +60,7 @@ PieChart.propTypes = {
   showDataLabels: React.PropTypes.bool.isRequired,
   height: React.PropTypes.number,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

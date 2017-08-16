@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import StatBar from '../../common/statbar/StatBar';
@@ -32,10 +33,10 @@ const TopicTimespanInfo = (props) => {
 
 TopicTimespanInfo.propTypes = {
   // from parent
-  timespan: React.PropTypes.object,
-  topicId: React.PropTypes.number.isRequired,
+  timespan: PropTypes.object,
+  topicId: PropTypes.number.isRequired,
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

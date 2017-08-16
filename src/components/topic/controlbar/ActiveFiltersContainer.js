@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -14,9 +15,9 @@ const ActiveFiltersContainer = (props) => {
 
 ActiveFiltersContainer.propTypes = {
   // from parent
-  onRemoveFocus: React.PropTypes.func.isRequired,
+  onRemoveFocus: PropTypes.func.isRequired,
   // from state
-  selectedFocus: React.PropTypes.object,
+  selectedFocus: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

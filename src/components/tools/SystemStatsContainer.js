@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -58,10 +59,10 @@ const SystemStatsContainer = (props) => {
 };
 
 SystemStatsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  stats: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  stats: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

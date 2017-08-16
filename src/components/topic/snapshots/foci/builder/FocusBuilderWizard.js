@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
@@ -24,13 +25,18 @@ class FocusBuilderWizard extends React.Component {
     goToStep(startStep || 0);
   }
 
+  shouldComponentUpdate = (nextProps) => {
+    const { currentStep } = this.props;
+    return currentStep !== nextProps.currentStep;
+  }
+
   componentWillUnmount = () => {
     const { handleUnmount } = this.props;
     handleUnmount();
   }
 
   render() {
-    const { topicId, currentStep, location, initialValues } = this.props;
+    const { topicId, currentStep, location, initialValues, onDone } = this.props;
     const steps = [
       FocusForm1TechniqueContainer,
       FocusForm2ConfigureContainer,
@@ -57,7 +63,7 @@ class FocusBuilderWizard extends React.Component {
             </Step>
           </Stepper>
         </BackLinkingControlBar>
-        <CurrentStepComponent topicId={topicId} location={location} initialValues={initialValues} />
+        <CurrentStepComponent topicId={topicId} location={location} initialValues={initialValues} onDone={onDone} />
       </div>
     );
   }
@@ -66,15 +72,16 @@ class FocusBuilderWizard extends React.Component {
 
 FocusBuilderWizard.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
-  startStep: React.PropTypes.number,
-  location: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
+  startStep: PropTypes.number,
+  location: PropTypes.object,
+  onDone: PropTypes.func.isRequired,
   // from state
-  currentStep: React.PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired,
   // from dispatch
-  goToStep: React.PropTypes.func.isRequired,
-  handleUnmount: React.PropTypes.func.isRequired,
+  goToStep: PropTypes.func.isRequired,
+  handleUnmount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -86,7 +93,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(goToCreateFocusStep(step));
   },
   handleUnmount: () => {
-    dispatch(goToCreateFocusStep(0));
+    dispatch(goToCreateFocusStep(0)); // reset for next time
   },
 });
 

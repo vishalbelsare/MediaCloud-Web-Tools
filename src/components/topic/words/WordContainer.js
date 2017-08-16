@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -48,10 +49,10 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} xs={12}>
-              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} />
+              <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
-              <WordWordsContainer topicId={topicId} stem={stem} term={term} />
+              <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
           </Row>
           <Row>
@@ -61,7 +62,7 @@ class WordContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <WordStoriesContainer topicId={topicId} stem={stem} term={term} />
+              <WordStoriesContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
           </Row>
           <Row>
@@ -78,18 +79,18 @@ class WordContainer extends React.Component {
 
 WordContainer.propTypes = {
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  location: React.PropTypes.object,
-  intl: React.PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  location: PropTypes.object,
+  intl: PropTypes.object.isRequired,
   // from parent
   // from dispatch
-  selectNewWord: React.PropTypes.func.isRequired,
-  saveParamsToStore: React.PropTypes.func.isRequired,
+  selectNewWord: PropTypes.func.isRequired,
+  saveParamsToStore: PropTypes.func.isRequired,
   // from state
-  topicId: React.PropTypes.number.isRequired,
-  stem: React.PropTypes.string,
-  term: React.PropTypes.string,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  stem: PropTypes.string,
+  term: PropTypes.string,
+  filters: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

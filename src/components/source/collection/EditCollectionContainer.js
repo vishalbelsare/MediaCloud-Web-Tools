@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { push } from 'react-router-redux';
@@ -54,12 +55,12 @@ const EditCollectionContainer = (props) => {
 
 EditCollectionContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleSave: React.PropTypes.func.isRequired,
+  handleSave: PropTypes.func.isRequired,
   // form state
-  collectionId: React.PropTypes.number.isRequired,
-  collection: React.PropTypes.object,
+  collectionId: PropTypes.number.isRequired,
+  collection: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -13,6 +14,7 @@ import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
+import Word2VecContainer from './Word2VecContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicStoryStatsContainer from './TopicStoryStatsContainer';
@@ -89,11 +91,14 @@ class TopicSummaryContainer extends React.Component {
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
             <Row>
               <Col lg={12}>
+                <Word2VecContainer topicId={topicId} filters={filters} />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
                 <GeoTagSummaryContainer topicId={topicId} filters={filters} />
               </Col>
             </Row>
-          </Permissioned>
-          <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
             {filteredStoryCountContent}
             <Row>
               <Col lg={12}>
@@ -124,15 +129,15 @@ class TopicSummaryContainer extends React.Component {
 
 TopicSummaryContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object,
   // from state
-  timespan: React.PropTypes.object,
-  location: React.PropTypes.object,
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number,
-  topicInfo: React.PropTypes.object,
-  user: React.PropTypes.object.isRequired,
+  timespan: PropTypes.object,
+  location: PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number,
+  topicInfo: PropTypes.object,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

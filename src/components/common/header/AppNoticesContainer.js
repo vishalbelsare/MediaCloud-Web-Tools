@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -11,46 +12,58 @@ const localMessages = {
   dismiss: { id: 'notices.dismiss', defaultMessage: 'dismiss' },
 };
 
-const AppNoticesContainer = (props) => {
-  const { notices, handleDismiss } = props;
-  const { formatMessage } = props.intl;
-  let content = null;
-  if (notices.length > 0) {
-    const isNotAllErrors = notices.map(({ level }) => level === LEVEL_ERROR).includes(false);
-    content = (
-      <div id="app-notice-list" className={`app-notice-list-${isNotAllErrors ? 'warnings' : 'errors'}`}>
-        <Grid>
-          <Row>
-            <Col lg={10}>
-              {notices.map((notice, idx) => <AppNotice key={idx} info={notice} />)}
-            </Col>
-            <Col lg={2}>
-              <CloseButton
-                onClick={handleDismiss}
-                tooltip={formatMessage(localMessages.dismiss)}
-                backgroundColor="#000000"
-              />
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
+class AppNoticesContainer extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    const { notices } = this.props;
+    // if there any new notices, scroll to top so user can see them
+    if (nextProps.notices.length > notices.length) {
+      window.scrollTo(0, 0);
+    }
   }
-  return content;
-};
+
+  render() {
+    const { notices, handleDismiss } = this.props;
+    const { formatMessage } = this.props.intl;
+    let content = null;
+    if (notices.length > 0) {
+      const isNotAllErrors = notices.map(({ level }) => level === LEVEL_ERROR).includes(false);
+      content = (
+        <div id="app-notice-list" className={`app-notice-list-${isNotAllErrors ? 'warnings' : 'errors'}`}>
+          <Grid>
+            <Row>
+              <Col lg={10}>
+                {notices.map((notice, idx) => <AppNotice key={idx} info={notice} />)}
+              </Col>
+              <Col lg={2}>
+                <CloseButton
+                  onClick={handleDismiss}
+                  tooltip={formatMessage(localMessages.dismiss)}
+                  backgroundColor="#000000"
+                />
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
+    }
+    return content;
+  }
+
+}
 
 AppNoticesContainer.propTypes = {
   // from parent
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // state
-  notices: React.PropTypes.array,
+  notices: PropTypes.array,
   // from dispatch
-  handleDismiss: React.PropTypes.func.isRequired,
+  handleDismiss: PropTypes.func.isRequired,
 };
 
 AppNoticesContainer.contextTypes = {
-  router: React.PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

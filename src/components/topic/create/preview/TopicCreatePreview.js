@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TopicStoryCountPreview from './TopicStoryCountPreview';
@@ -20,9 +21,9 @@ const TopicCreatePreview = (props) => {
 
 TopicCreatePreview.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  formData: React.PropTypes.object,
+  formData: PropTypes.object,
 };
 
 export default

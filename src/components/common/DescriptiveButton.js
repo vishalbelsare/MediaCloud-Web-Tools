@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
  *
  */
 const DescriptiveButton = (props) => {
-  const { imageUrl, label, svgIcon, description, onClick, className } = props;
+  const { imageUrl, label, svgIcon, description, onClick, className, id } = props;
   let visualContent = null;
   if (imageUrl) {
     visualContent = (<img src={imageUrl} alt={label} width={50} height={50} />);
@@ -12,7 +13,14 @@ const DescriptiveButton = (props) => {
     visualContent = svgIcon;
   }
   return (
-    <div className={`descriptive-button ${className || ''}`} onTouchTap={onClick}>
+    <div
+      id={id}
+      className={`descriptive-button ${className || ''}`}
+      role="button"
+      onClick={onClick}
+      tabIndex={0}
+      onKeyDown={() => null}
+    >
       <div className="image">
         {visualContent}
       </div>
@@ -24,12 +32,13 @@ const DescriptiveButton = (props) => {
 
 DescriptiveButton.propTypes = {
   // from parent
-  imageUrl: React.PropTypes.string,
-  svgIcon: React.PropTypes.node,
-  label: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string.isRequired,
-  onClick: React.PropTypes.func.isRequired,
-  className: React.PropTypes.string,
+  imageUrl: PropTypes.string,
+  svgIcon: PropTypes.node,
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  id: PropTypes.string,
 };
 
 export default DescriptiveButton;

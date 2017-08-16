@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Grid } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
@@ -29,9 +30,9 @@ const ResetPasswordContainer = (props) => {
 
 ResetPasswordContainer.propTypes = {
   // form router
-  location: React.PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   // from dispatch
-  handlePasswordReset: React.PropTypes.func.isRequired,
+  handlePasswordReset: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

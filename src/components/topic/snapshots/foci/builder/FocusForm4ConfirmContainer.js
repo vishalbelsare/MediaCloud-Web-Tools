@@ -1,19 +1,16 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { reduxForm, reset } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { push } from 'react-router-redux';
 import composeIntlForm from '../../../../common/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import RetweetPartisanshipSummary from './retweetPartisanship/RetweetPartisanshipSummary';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, goToCreateFocusStep, createRetweetFocalSet }
-  from '../../../../../actions/topicActions';
-import { updateFeedback } from '../../../../../actions/appActions';
-import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'focus.create.confirm.title', defaultMessage: 'Step 4: Confirm Your Subtopic Changes' },
@@ -48,7 +45,7 @@ const FocusForm4ConfirmContainer = (props) => {
       <Grid>
         <Row>
           <Col lg={12}>
-            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.name }} /></h2>
+            <h2><FormattedMessage {...localMessages.title} values={{ name: formValues.focusName }} /></h2>
           </Col>
         </Row>
         <Row>
@@ -81,17 +78,18 @@ const FocusForm4ConfirmContainer = (props) => {
 
 FocusForm4ConfirmContainer.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  initialValues: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  initialValues: PropTypes.object,
+  onDone: PropTypes.func.isRequired,
   // form context
-  intl: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func.isRequired,
-  submitting: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool,
   // from state
-  formValues: React.PropTypes.object.isRequired,
+  formValues: PropTypes.object.isRequired,
   // from dispatch
-  finishStep: React.PropTypes.func.isRequired,
-  handlePreviousStep: React.PropTypes.func.isRequired,
+  finishStep: PropTypes.func.isRequired,
+  handlePreviousStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -103,79 +101,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(goToCreateFocusStep(2));
   },
   saveFocus: (topicId, values) => {
-    switch (values.focalTechnique) {
-      case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
-        const focalSetSavedMessage = ownProps.intl.formatMessage(localMessages.focalSetSaved);
-        const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
-        const focusNotSaved = ownProps.intl.formatMessage(localMessages.focusNotSaved);
-        const focalSetNotSaved = ownProps.intl.formatMessage(localMessages.focalSetNotSaved);
-        const newFocusDefinition = {
-          focusName: values.focusName,
-          focusDescription: values.focusDescription,
-          keywords: values.keywords,
-        };
-        if (values.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-          // if they are creating a new set we need to save that first
-          const newFocalSetDefinition = {
-            focalSetName: values.focalSetName,
-            focalSetDescription: values.focalSetDescription,
-            focalTechnique: values.focalTechnique,
-          };
-          // save the focal definition
-          dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
-            .then((results) => {
-              if ((results.status) && results.status === 500) {
-                dispatch(updateFeedback({ open: true, message: focalSetNotSaved }));  // user feedback that it failed
-              } else {
-                // TODO: check results to make sure it worked before proceeding
-                dispatch(updateFeedback({ open: true, message: focalSetSavedMessage }));  // user feedback
-                // save the focus
-                newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
-                dispatch(createFocusDefinition(topicId, newFocusDefinition))
-                  .then((moreResults) => {
-                    if ((moreResults.status) && moreResults.status === 500) {
-                      dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
-                    } else {
-                      dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-                      dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-                      dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-                      dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-                    }
-                  });
-              }
-            });
-        } else {
-          // uses and existing set, so just save this definition
-          newFocusDefinition.focalSetDefinitionsId = values.focalSetDefinitionId;
-          dispatch(createFocusDefinition(topicId, newFocusDefinition))
-            .then((results) => {
-              if ((results.status) && results.status === 500) {
-                dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
-              } else {
-                dispatch(setTopicNeedsNewSnapshot(true));           // user feedback that snapshot is needed
-                dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback that it worked
-                dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-                dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-              }
-            });
-        }
-        break;
-      case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
-        // seems easier to just wrap it up for the server to take care of doing it all
-        dispatch(createRetweetFocalSet(topicId, values));
-        break;
-      default:
-        dispatch(updateFeedback({ open: true, message: messages.unimplemented }))
-          .then((results) => {
-            if (results.success === true) {
-              dispatch(updateFeedback({ open: true, message: localMessages.focalSetSaved }));  // user feedback that it worked
-              dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-              dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-            } else {
-              dispatch(updateFeedback({ open: true, message: localMessages.focalSetNotSaved }));  // user feedback that it failed
-            }
-          });
-    }
+    ownProps.onDone(topicId, values);
+    // TODO: add support for saving retweet focal set
+    // dispatch(createRetweetFocalSet(topicId, values));
   },
 });
 
@@ -189,7 +117,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
-  destroyOnUnmount: false,  // so the wizard works
+  destroyOnUnmount: false, // <------ preserve form data
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 };
 
 export default

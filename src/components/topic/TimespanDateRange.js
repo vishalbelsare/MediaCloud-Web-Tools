@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedDate, FormattedMessage, injectIntl } from 'react-intl';
 
@@ -20,9 +21,9 @@ const TimespanDateRange = props => (
 
 TimespanDateRange.propTypes = {
   // from chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  timespan: React.PropTypes.object.isRequired,
+  timespan: PropTypes.object.isRequired,
 };
 
 export default injectIntl(TimespanDateRange);

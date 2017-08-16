@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -86,16 +87,16 @@ class TopicStoryCountPreview extends React.Component {
 
 TopicStoryCountPreview.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  query: React.PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  count: React.PropTypes.number,
-  fetchStatus: React.PropTypes.string.isRequired,
-  user: React.PropTypes.object,
+  count: PropTypes.number,
+  fetchStatus: PropTypes.string.isRequired,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

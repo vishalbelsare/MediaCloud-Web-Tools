@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -50,8 +51,8 @@ const FeaturedCollectionsContainer = (props) => {
 };
 
 FeaturedCollectionsContainer.propTypes = {
-  collections: React.PropTypes.array,
-  intl: React.PropTypes.object.isRequired,
+  collections: PropTypes.array,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

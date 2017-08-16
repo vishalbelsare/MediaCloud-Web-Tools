@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -52,16 +53,16 @@ class CollectionGeographyContainer extends React.Component {
 
 CollectionGeographyContainer.propTypes = {
   // from state
-  geolist: React.PropTypes.array.isRequired,
-  fetchStatus: React.PropTypes.string,
+  geolist: PropTypes.array.isRequired,
+  fetchStatus: PropTypes.string,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from parent
-  collectionName: React.PropTypes.string.isRequired,
-  collectionId: React.PropTypes.number.isRequired,
+  collectionName: PropTypes.string.isRequired,
+  collectionId: PropTypes.number.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
 };
 
 const mapStateToProps = state => ({

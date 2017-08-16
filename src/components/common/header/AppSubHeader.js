@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import FavoriteToggler from '../FavoriteToggler';
@@ -30,13 +31,13 @@ const AppSubHeader = (props) => {
 
 AppSubHeader.propTypes = {
   // from parent
-  title: React.PropTypes.string.isRequired,
-  isFavorite: React.PropTypes.bool,
-  onSetFavorited: React.PropTypes.func,
-  subTitle: React.PropTypes.string,
-  link: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.object,
+  title: PropTypes.string.isRequired,
+  isFavorite: PropTypes.bool,
+  onSetFavorited: PropTypes.func,
+  subTitle: PropTypes.string,
+  link: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
   ]),
 };
 

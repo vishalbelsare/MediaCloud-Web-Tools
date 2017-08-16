@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -7,7 +8,7 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
-const MAX_SUGGESTION_CHARS = 40;
+const MAX_SUGGESTION_CHARS = 70;
 const DEFAULT_MAX_SOURCES_TO_SHOW = 5;
 const DEFAULT_MAX_COLLECTIONS_TO_SHOW = 3;
 
@@ -171,24 +172,24 @@ class SourceSearchContainer extends React.Component {
 }
 
 SourceSearchContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  searchSources: React.PropTypes.bool,      // include source results?
-  searchCollections: React.PropTypes.bool,  // include collection results?
-  searchStaticCollections: React.PropTypes.bool,  // inclue static collecton results?
-  onMediaSourceSelected: React.PropTypes.func,
-  onCollectionSelected: React.PropTypes.func,
-  onAdvancedSearchSelected: React.PropTypes.func,
-  maxSources: React.PropTypes.number,
-  maxCollections: React.PropTypes.number,
+  searchSources: PropTypes.bool,      // include source results?
+  searchCollections: PropTypes.bool,  // include collection results?
+  searchStaticCollections: PropTypes.bool,  // inclue static collecton results?
+  onMediaSourceSelected: PropTypes.func,
+  onCollectionSelected: PropTypes.func,
+  onAdvancedSearchSelected: PropTypes.func,
+  maxSources: PropTypes.number,
+  maxCollections: PropTypes.number,
   // from state
-  sourceFetchStatus: React.PropTypes.array.isRequired,
-  collectionFetchStatus: React.PropTypes.array.isRequired,
-  sourceResults: React.PropTypes.array.isRequired,
-  collectionResults: React.PropTypes.array.isRequired,
+  sourceFetchStatus: PropTypes.array.isRequired,
+  collectionFetchStatus: PropTypes.array.isRequired,
+  sourceResults: PropTypes.array.isRequired,
+  collectionResults: PropTypes.array.isRequired,
   // from dispatch
-  search: React.PropTypes.func.isRequired,
-  disableStaticCollections: React.PropTypes.bool,
+  search: PropTypes.func.isRequired,
+  disableStaticCollections: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -219,7 +220,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 SourceSearchContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

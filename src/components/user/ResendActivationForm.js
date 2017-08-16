@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -58,16 +59,16 @@ const ResendActivationForm = (props) => {
 
 ResendActivationForm.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   // from state
   // from dispatch
-  handleFormSubmission: React.PropTypes.func.isRequired,
+  handleFormSubmission: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({

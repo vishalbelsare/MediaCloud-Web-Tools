@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import DataCard from '../DataCard';
-import composeHelpfulContainer from '../HelpfulContainer';
 
 class Stat extends React.Component {
 
@@ -30,26 +30,24 @@ class Stat extends React.Component {
 
 Stat.propTypes = {
   // from parent
-  message: React.PropTypes.object.isRequired,
-  data: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.object,
+  message: PropTypes.object.isRequired,
+  data: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
   ]).isRequired,
-  helpTitleMsg: React.PropTypes.object,
-  helpContentMsg: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.object,
+  helpTitleMsg: PropTypes.object,
+  helpContentMsg: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
   ]),
   // from context
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
-  setHelpTitleMsg: React.PropTypes.func.isRequired,
-  setHelpContentMsg: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node,
+  setHelpTitleMsg: PropTypes.func,
+  setHelpContentMsg: PropTypes.func,
 };
 
 export default
   injectIntl(
-    composeHelpfulContainer()(
-      Stat
-    )
+    Stat
   );

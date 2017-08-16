@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -174,12 +175,12 @@ class SourceDetailsContainer extends React.Component {
 }
 
 SourceDetailsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  params: React.PropTypes.object.isRequired,       // params from router
-  sourceId: React.PropTypes.number.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  sourceId: PropTypes.number.isRequired,
   // from state
-  source: React.PropTypes.object,
+  source: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => ({

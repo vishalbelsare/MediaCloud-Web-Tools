@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -90,19 +91,19 @@ class InfluentialWordsContainer extends React.Component {
 
 InfluentialWordsContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
   // from state
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  topWords: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string.isRequired,
-  wordCounts: React.PropTypes.array.isRequired,
-  totalWordCounts: React.PropTypes.array.isRequired,
-  selectedTimespan: React.PropTypes.object,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  topWords: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  wordCounts: PropTypes.array.isRequired,
+  totalWordCounts: PropTypes.array.isRequired,
+  selectedTimespan: PropTypes.object,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  handleWordCloudClick: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  handleWordCloudClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

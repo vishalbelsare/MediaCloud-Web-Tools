@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -9,6 +10,7 @@ import messages from '../../../resources/messages';
 import { DownloadButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import { getBrandDarkColor } from '../../../styles/colors';
+import { filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   title: { id: 'word.sentenceCount.title', defaultMessage: 'Sentences that Use this Word' },
@@ -21,14 +23,13 @@ const localMessages = {
 class WordSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId ||
-      (nextProps.stem !== this.props.stem)) {
-      fetchData(nextProps);
+    if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem)) {
+      fetchData(nextProps.filters, nextProps.stem);
     }
   }
   downloadCsv = () => {
     const { topicId, term, filters } = this.props;
-    const url = `/api/topics/${topicId}/word/${term}*/sentences/count.csv?snapshotId=${filters.snapshotId}&timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/words/${term}*/sentences/count.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
   render() {
@@ -51,52 +52,42 @@ class WordSentenceCountContainer extends React.Component {
 
 WordSentenceCountContainer.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
-  // passed in
-  topicId: React.PropTypes.number.isRequired,
-  term: React.PropTypes.string.isRequired,
-  stem: React.PropTypes.string.isRequired,  // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  filters: React.PropTypes.object.isRequired,
-  total: React.PropTypes.number,
-  counts: React.PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
+  // from parent
+  topicId: PropTypes.number.isRequired,
+  term: PropTypes.string.isRequired,
+  stem: PropTypes.string.isRequired,  // from state
+  filters: PropTypes.object.isRequired,
+  // from state
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  counts: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  params: React.PropTypes.object,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  params: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.sentenceCount.fetchStatus,
   total: state.topics.selected.word.sentenceCount.total,
   counts: state.topics.selected.word.sentenceCount.counts,
-  filters: state.topics.selected.filters,
-  stem: state.topics.selected.word.info.stem,
-  term: state.topics.selected.word.info.term,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (stateProps) => {
-    const params = {
-      ...stateProps.filters,
-      sort: stateProps.sort,
-    };
-    dispatch(fetchWordSentenceCounts(ownProps.topicId, stateProps.stem, params));
+  fetchData: (filters, stem) => {
+    dispatch(fetchWordSentenceCounts(ownProps.topicId, stem, filters));
+  },
+  asyncFetch: () => {
+    const { topicId, stem, filters } = ownProps;
+    dispatch(fetchWordSentenceCounts(topicId, stem, filters));
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText)(
         composeAsyncContainer(
           WordSentenceCountContainer

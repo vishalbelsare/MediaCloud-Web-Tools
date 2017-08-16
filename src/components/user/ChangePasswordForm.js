@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -78,18 +79,18 @@ const ChangePasswordContainer = (props) => {
 
 ChangePasswordContainer.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   // from parent
-  showOldPassword: React.PropTypes.bool,
-  titleMsg: React.PropTypes.object.isRequired,
-  buttonMsg: React.PropTypes.object.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
+  showOldPassword: PropTypes.bool,
+  titleMsg: PropTypes.object.isRequired,
+  buttonMsg: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 // in-browser validation callback

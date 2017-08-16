@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -44,8 +45,8 @@ const SourceTable = (props) => {
 };
 
 SourceTable.propTypes = {
-  sources: React.PropTypes.array,
-  intl: React.PropTypes.object.isRequired,
+  sources: PropTypes.array,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(SourceTable);

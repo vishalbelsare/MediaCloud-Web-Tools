@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from '../FocusDescriptionForm';
@@ -37,7 +38,7 @@ KeywordSearchSummary.propTypes = {
   topicId: React.PropTypes.number.isRequired,
   formValues: React.PropTypes.object.isRequired,
   // form context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

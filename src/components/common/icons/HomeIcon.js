@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const HomeIcon = props => (
@@ -9,7 +10,7 @@ const HomeIcon = props => (
 );
 
 HomeIcon.propTypes = {
-  backgroundColor: React.PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default HomeIcon;

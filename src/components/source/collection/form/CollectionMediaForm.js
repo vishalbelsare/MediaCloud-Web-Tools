@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FieldArray, Field, reduxForm, formValueSelector } from 'redux-form';
@@ -224,17 +225,17 @@ class SourceSelectionRendererRaw extends React.Component {
 
 SourceSelectionRendererRaw.propTypes = {
   // from form heper
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
-  initialValues: React.PropTypes.object,
-  renderTextField: React.PropTypes.func.isRequired,
+  fields: PropTypes.object,
+  meta: PropTypes.object,
+  initialValues: PropTypes.object,
+  renderTextField: PropTypes.func.isRequired,
   // from parent
-  submitButton: React.PropTypes.node,
-  currentSources: React.PropTypes.array,
-  sourceUrlsToAdd: React.PropTypes.string,
-  editCollectionId: React.PropTypes.string,
-  onSourcesAdded: React.PropTypes.func.isRequired,
-  intl: React.PropTypes.object.isRequired,
+  submitButton: PropTypes.node,
+  currentSources: PropTypes.array,
+  sourceUrlsToAdd: PropTypes.string,
+  editCollectionId: PropTypes.string,
+  onSourcesAdded: PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const SourceSelectionRenderer =
@@ -260,17 +261,17 @@ const CollectionMediaForm = props => (
 
 CollectionMediaForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  initialValues: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
   // from form helper
   // from parent
-  submitButton: React.PropTypes.node,
+  submitButton: PropTypes.node,
   // from state
-  currentSources: React.PropTypes.array,
-  sourceUrlsToAdd: React.PropTypes.string,
+  currentSources: PropTypes.array,
+  sourceUrlsToAdd: PropTypes.string,
   // from dispatch
-  handleSourceAdded: React.PropTypes.func.isRequired,
+  handleSourceAdded: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

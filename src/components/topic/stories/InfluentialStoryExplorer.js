@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -213,7 +214,7 @@ class InfluentialStoryExplorer extends React.Component {
         })
         .showGroups(false)
         .columns([
-          d => ((d.publishDate === null) ? 'undateable' : moment(d.publishDate).format('MMM D, YYYY')),
+          d => ((d.publishDate === null) ? STORY_PUB_DATE_UNDATEABLE : moment(d.publishDate).format('MMM D, YYYY')),
           d => `<img className="google-icon" src=${googleFavIconUrl(d.domain)} alt=${d.domain} />`,
           d => d.media_name,
           d => `<a href=${d.url} target="_blank">${d.title}</a>`,
@@ -336,11 +337,11 @@ class InfluentialStoryExplorer extends React.Component {
 
 InfluentialStoryExplorer.propTypes = {
   // from the composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  filters: React.PropTypes.object.isRequired,
-  topicId: React.PropTypes.number.isRequired,
-  selectedTimespan: React.PropTypes.object,
+  filters: PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  selectedTimespan: PropTypes.object,
 };
 
 export default

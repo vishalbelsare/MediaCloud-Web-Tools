@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -83,15 +84,15 @@ const LoginFormComponent = (props) => {
 
 LoginFormComponent.propTypes = {
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  location: React.PropTypes.object,
-  redirect: React.PropTypes.string,
-  handleSubmit: React.PropTypes.func.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  location: PropTypes.object,
+  redirect: PropTypes.string,
+  handleSubmit: PropTypes.func.isRequired,
+  renderTextField: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
   // from dispatch
-  onSubmitLoginForm: React.PropTypes.func.isRequired,
+  onSubmitLoginForm: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -100,9 +101,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSubmitLoginForm: (values) => {
-    dispatch(loginWithPassword(values.email, values.password, values.destination))
+    dispatch(loginWithPassword(values.email, values.password))
     .then((response) => {
-      if (response.status === 200) {
+      if (response.key) {
         // redirect to destination if there is one
         const loc = ownProps.location;
         let redirect;

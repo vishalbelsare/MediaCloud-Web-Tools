@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -8,7 +9,7 @@ import { fetchWordWords } from '../../../actions/topicActions';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
-import { filteredLinkTo } from '../../util/location';
+import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
@@ -23,14 +24,14 @@ class WordWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
     if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem || nextProps.term !== this.props.term)) {
-      fetchData(nextProps);
+      fetchData(nextProps.stem, nextProps.filters);
     }
   }
 
   render() {
     const { topicId, filters, words, term, handleWordCloudClick, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
-    const urlDownload = `/api/topics/${topicId}/words/${term}/words.csv`;
+    const urlDownload = `/api/topics/${topicId}/words/${term}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
       <EditableWordCloudDataCard
         words={words}
@@ -47,52 +48,44 @@ class WordWordsContainer extends React.Component {
 
 WordWordsContainer.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  helpButton: React.PropTypes.node.isRequired,
+  intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  filters: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
+  term: PropTypes.string.isRequired,
+  stem: PropTypes.string.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  handleWordCloudClick: PropTypes.func,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  words: React.PropTypes.array.isRequired,
-  handleWordCloudClick: React.PropTypes.func,
-  term: React.PropTypes.string.isRequired,
-  stem: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  words: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.word.words.fetchStatus,
-  filters: state.topics.selected.filters,
   words: state.topics.selected.word.words.list,
-  stem: state.topics.selected.word.info.stem,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (props) => {
-    dispatch(fetchWordWords(ownProps.topicId, props.stem));
+  asyncFetch: () => {
+    dispatch(fetchWordWords(ownProps.topicId, ownProps.stem, ownProps.filters));
   },
-  pushToUrl: url => dispatch(push(url)),
+  fetchData: (stem, filters) => {
+    dispatch(fetchWordWords(ownProps.topicId, stem, filters));
+  },
+  handleWordCloudClick: (word) => {
+    const params = generateParamStr({ ...ownProps.filters, stem: word.stem, term: word.term });
+    const url = `/topics/${ownProps.topicId}/words/${word.term}*?${params}`;
+    dispatch(push(url));
+  },
 });
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData(stateProps);
-    },
-    handleWordCloudClick: (word) => {
-      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
-      const url = `/topics/${ownProps.topicId}/words/${word.term}*?${params}`;
-      dispatchProps.pushToUrl(url);
-    },
-  });
-}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.helpText, messages.wordcloudHelpText])(
         composeAsyncContainer(
           WordWordsContainer

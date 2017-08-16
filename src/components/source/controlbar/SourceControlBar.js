@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
@@ -10,10 +11,10 @@ const SourceControlBar = props => (
     <div className="main">
       <Grid>
         <Row>
-          <Col lg={8} xs={12} className="left">
+          <Col lg={6} xs={12} className="left">
             {props.children}
           </Col>
-          <Col lg={4} xs={12} className="right">
+          <Col lg={6} xs={12} className="right">
             <SourceSearchContainer
               onAdvancedSearchSelected={props.handleAdvancedSearchSelected}
               onMediaSourceSelected={props.handleMediaSourceSelected}
@@ -28,13 +29,13 @@ const SourceControlBar = props => (
 
 SourceControlBar.propTypes = {
   // from parent
-  children: React.PropTypes.node,
+  children: PropTypes.node,
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleMediaSourceSelected: React.PropTypes.func.isRequired,
-  handleCollectionSelected: React.PropTypes.func.isRequired,
-  handleAdvancedSearchSelected: React.PropTypes.func.isRequired,
+  handleMediaSourceSelected: PropTypes.func.isRequired,
+  handleCollectionSelected: PropTypes.func.isRequired,
+  handleAdvancedSearchSelected: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = () => ({

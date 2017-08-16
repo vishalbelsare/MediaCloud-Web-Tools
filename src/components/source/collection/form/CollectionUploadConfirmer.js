@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -46,15 +47,15 @@ const CollectionUploadConfirmer = (props) => {
 
 CollectionUploadConfirmer.propTypes = {
   // from parent
-  onConfirm: React.PropTypes.func,
-  onCancel: React.PropTypes.func,
-  onClickButton: React.PropTypes.func.isRequired,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+  onClickButton: PropTypes.func.isRequired,
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
   // from state
-  fetchStatus: React.PropTypes.string,
-  sources: React.PropTypes.array,
+  fetchStatus: PropTypes.string,
+  sources: PropTypes.array,
 };
 
 const mapStateToProps = state => ({

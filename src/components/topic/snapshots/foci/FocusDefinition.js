@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { DeleteButton, EditButton } from '../../../common/IconButton';
@@ -20,7 +21,7 @@ class FocusDefinition extends React.Component {
     const { focusDefinition, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <div className="focus-definition">
+      <div className="focus-definition" data-focus-definitions-id={focusDefinition.focus_definitions_id}>
         <div className="controls">
           <EditButton linkTo={`/topics/${topicId}/snapshot/foci/${focusDefinition.focus_definitions_id}/edit`} />
           <DeleteButton onClick={this.handleDelete} tooltip={formatMessage(localMessages.focusDelete)} />
@@ -39,11 +40,11 @@ class FocusDefinition extends React.Component {
 
 FocusDefinition.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  focusDefinition: React.PropTypes.object.isRequired,
-  onDelete: React.PropTypes.func,
+  topicId: PropTypes.number.isRequired,
+  focusDefinition: PropTypes.object.isRequired,
+  onDelete: PropTypes.func,
 };
 
 export default

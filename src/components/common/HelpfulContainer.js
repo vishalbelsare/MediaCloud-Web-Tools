@@ -10,21 +10,13 @@ import { HelpButton } from './IconButton';
  * Use this with the JS Composition pattern to make a Container that has a help button.
  * Clicking that button brings up a dialog with the title and text from the message key
  * that you specify.
- * `contentHTMLTextMsg` can be a intl message  or an array of intl message s.
+ * `contentHTMLTextMsgId` can be a intl message id or an array of intl message ids.
  */
-function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
+function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHelpSidebar) {
   return (ChildComponent) => {
     class HelpfulContainer extends React.Component {
       state = {
         open: false,
-        titleMsg: contentTitleMsg,
-        contentMsg: contentHTMLTextMsg,
-      };
-      setTitleMsg = (titleMsg) => {
-        this.setState({ titleMsg });
-      };
-      setContentMsg = (contentMsg) => {
-        this.setState({ contentMsg });
       };
       handleOpen = () => {
         this.setState({ open: true });
@@ -43,12 +35,10 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
         ];
         const helpButton = <HelpButton onClick={this.handleOpen} />;
         let content = null;
-        if (this.state.contentMsg) {
-          if (Array.isArray(this.state.contentMsg)) {
-            content = this.state.contentMsg.map(msg => <FormattedHTMLMessage key={msg.id} {...msg} />);
-          } else {
-            content = <FormattedHTMLMessage {...this.state.contentMsg} />;
-          }
+        if (Array.isArray(contentHTMLTextMsgId)) {
+          content = contentHTMLTextMsgId.map(msgId => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
+        } else {
+          content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
         }
         let displayContent;
         if (showHelpSidebar) {
@@ -68,19 +58,17 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
           displayContent = (
             <ChildComponent
               {...this.props}
+              handleOpenHelp={this.handleOpen}
               helpButton={helpButton}
               helpContent={content}
-              setHelpTitleMsg={this.setTitleMsg}
-              setHelpContentMsg={this.setContentMsg}
             />
           );
         }
-        const dialogTitle = (this.state.titleMsg) ? formatMessage(this.state.titleMsg) : '';
         return (
           <span className="helpful">
             {displayContent}
             <Dialog
-              title={dialogTitle}
+              title={formatMessage(contentTitleMsgId)}
               actions={dialogActions}
               modal={false}
               open={this.state.open}

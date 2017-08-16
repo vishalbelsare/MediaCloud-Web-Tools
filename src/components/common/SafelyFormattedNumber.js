@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl';
 
@@ -13,9 +14,9 @@ const SafelyFormattedNumber = (props) => {
 };
 
 SafelyFormattedNumber.propTypes = {
-  value: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.number,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
   ]),
 };
 

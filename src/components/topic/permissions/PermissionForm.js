@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl } from 'react-intl';
@@ -67,18 +68,18 @@ const PermissionForm = (props) => {
 
 PermissionForm.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  initialValues: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
   // from form helper
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
   // from parent
-  onSave: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func,
-  showDeleteButton: React.PropTypes.bool,
+  onSave: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  showDeleteButton: PropTypes.bool,
 };
 
 function validate(values) {

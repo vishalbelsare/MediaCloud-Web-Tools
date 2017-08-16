@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -37,7 +38,7 @@ const SourceFeedTable = (props) => {
                 {feed.feed_status}
               </td>
               <td>
-                <Link to={`/sources/${feed.url}`}>{feed.url}</Link>
+                <a href={feed.url}>{feed.url}</a>
               </td>
               <td>
                 <Link to={`/sources/${feed.media_id}/feeds/${feed.feeds_id}/edit`} >
@@ -54,8 +55,8 @@ const SourceFeedTable = (props) => {
 };
 
 SourceFeedTable.propTypes = {
-  feeds: React.PropTypes.array,
-  intl: React.PropTypes.object.isRequired,
+  feeds: PropTypes.array,
+  intl: PropTypes.object.isRequired,
 };
 
 export default injectIntl(SourceFeedTable);

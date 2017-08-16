@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -22,23 +23,25 @@ function composeDescribedDataCard(introMessage, descriptionMessage) {
       render() {
         let descriptionContent;
         let toggleButton;
-        if (this.state.showDescription) {
-          toggleButton = (
-            <a onTouchTap={this.toggleVisible}>
-              <FormattedHTMLMessage {...localMessage.hideDescription} />
-            </a>
-          );
-          if (Array.isArray(descriptionMessage)) {
-            descriptionContent = descriptionMessage.map(msgId => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
+        if (descriptionMessage) {  // only toggle extra text if there is any
+          if (this.state.showDescription) {
+            toggleButton = (
+              <a onTouchTap={this.toggleVisible}>
+                <FormattedHTMLMessage {...localMessage.hideDescription} />
+              </a>
+            );
+            if (Array.isArray(descriptionMessage)) {
+              descriptionContent = descriptionMessage.map(msgId => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
+            } else {
+              descriptionContent = <FormattedHTMLMessage {...descriptionMessage} />;
+            }
           } else {
-            descriptionContent = <FormattedHTMLMessage {...descriptionMessage} />;
+            toggleButton = (
+              <a onTouchTap={this.toggleVisible}>
+                <FormattedHTMLMessage {...localMessage.showDescription} />
+              </a>
+            );
           }
-        } else {
-          toggleButton = (
-            <a onTouchTap={this.toggleVisible}>
-              <FormattedHTMLMessage {...localMessage.showDescription} />
-            </a>
-          );
         }
         return (
           <span className="described-data-card">
@@ -62,7 +65,7 @@ function composeDescribedDataCard(introMessage, descriptionMessage) {
     }
 
     DescribedDataCard.propTypes = {
-      intl: React.PropTypes.object.isRequired,
+      intl: PropTypes.object.isRequired,
     };
 
     return injectIntl(DescribedDataCard);

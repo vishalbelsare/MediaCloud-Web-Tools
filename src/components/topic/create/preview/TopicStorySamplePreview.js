@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -7,7 +8,6 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import StoryTable from '../../StoryTable';
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
-import messages from '../../../../resources/messages';
 import { filteredLocation } from '../../../util/location';
 
 const NUM_TO_SHOW = 20;
@@ -50,17 +50,17 @@ class TopicStorySamplePreview extends React.Component {
 
 TopicStorySamplePreview.propTypes = {
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // passed in
-  query: React.PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  total: React.PropTypes.number,
-  stories: React.PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
+  total: PropTypes.number,
+  stories: PropTypes.array,
   // from dispath
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  handleStorySelection: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  handleStorySelection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -107,7 +107,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
+      composeDescribedDataCard(localMessages.descriptionIntro)(
         composeAsyncContainer(
           TopicStorySamplePreview
         )

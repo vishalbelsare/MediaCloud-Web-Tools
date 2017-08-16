@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -43,20 +44,20 @@ class TopicWordsPreview extends React.Component {
 
 TopicWordsPreview.propTypes = {
   // from compositional chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // passed in
-  query: React.PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   // from parent
-  width: React.PropTypes.number,
-  height: React.PropTypes.number,
-  maxFontSize: React.PropTypes.number,
-  minFontSize: React.PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  maxFontSize: PropTypes.number,
+  minFontSize: PropTypes.number,
   // from dispatch
-  asyncFetch: React.PropTypes.func.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  words: React.PropTypes.array,
-  fetchStatus: React.PropTypes.string.isRequired,
+  words: PropTypes.array,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
