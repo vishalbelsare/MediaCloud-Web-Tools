@@ -41,19 +41,19 @@ class SelectSourceContainer extends React.Component {
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Row>
-              <Col lg={3}>
+              <Col lg={12}>
                 <span className="source-edit-link">
                   <Link to={`/sources/${source.media_id}/edit`} >
                     <EditButton />
                     <FormattedMessage {...localMessages.editSource} />
                   </Link>
                 </span>
-              </Col>
-              <Col lg={3}>
-                <Link to={`/sources/${source.media_id}/feeds`} >
-                  <EditButton />
-                  <FormattedMessage {...localMessages.editFeeds} />
-                </Link>
+                <span className="source-edit-feeds-link">
+                  <Link to={`/sources/${source.media_id}/feeds`} >
+                    <EditButton />
+                    <FormattedMessage {...localMessages.editFeeds} />
+                  </Link>
+                </span>
               </Col>
             </Row>
           </Permissioned>

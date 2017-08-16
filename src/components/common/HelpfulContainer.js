@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
@@ -10,13 +11,21 @@ import { HelpButton } from './IconButton';
  * Use this with the JS Composition pattern to make a Container that has a help button.
  * Clicking that button brings up a dialog with the title and text from the message key
  * that you specify.
- * `contentHTMLTextMsgId` can be a intl message id or an array of intl message ids.
+ * `contentHTMLTextMsg` can be a intl message  or an array of intl message s.
  */
-function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHelpSidebar) {
+function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSidebar) {
   return (ChildComponent) => {
     class HelpfulContainer extends React.Component {
       state = {
         open: false,
+        titleMsg: contentTitleMsg,
+        contentMsg: contentHTMLTextMsg,
+      };
+      setTitleMsg = (titleMsg) => {
+        this.setState({ titleMsg });
+      };
+      setContentMsg = (contentMsg) => {
+        this.setState({ contentMsg });
       };
       handleOpen = () => {
         this.setState({ open: true });
@@ -35,10 +44,12 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHe
         ];
         const helpButton = <HelpButton onClick={this.handleOpen} />;
         let content = null;
-        if (Array.isArray(contentHTMLTextMsgId)) {
-          content = contentHTMLTextMsgId.map(msgId => <FormattedHTMLMessage key={msgId.id} {...msgId} />);
-        } else {
-          content = <FormattedHTMLMessage {...contentHTMLTextMsgId} />;
+        if (this.state.contentMsg) {
+          if (Array.isArray(this.state.contentMsg)) {
+            content = this.state.contentMsg.map(msg => <FormattedHTMLMessage key={msg.id} {...msg} />);
+          } else {
+            content = <FormattedHTMLMessage {...this.state.contentMsg} />;
+          }
         }
         let displayContent;
         if (showHelpSidebar) {
@@ -58,17 +69,19 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHe
           displayContent = (
             <ChildComponent
               {...this.props}
-              handleOpenHelp={this.handleOpen}
               helpButton={helpButton}
               helpContent={content}
+              setHelpTitleMsg={this.setTitleMsg}
+              setHelpContentMsg={this.setContentMsg}
             />
           );
         }
+        const dialogTitle = (this.state.titleMsg) ? formatMessage(this.state.titleMsg) : '';
         return (
           <span className="helpful">
             {displayContent}
             <Dialog
-              title={formatMessage(contentTitleMsgId)}
+              title={dialogTitle}
               actions={dialogActions}
               modal={false}
               open={this.state.open}
@@ -82,7 +95,7 @@ function composeHelpfulContainer(contentTitleMsgId, contentHTMLTextMsgId, showHe
     }
 
     HelpfulContainer.propTypes = {
-      intl: React.PropTypes.object.isRequired,
+      intl: PropTypes.object.isRequired,
     };
 
     return injectIntl(HelpfulContainer);

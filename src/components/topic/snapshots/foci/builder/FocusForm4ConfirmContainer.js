@@ -2,17 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { reduxForm, reset } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { push } from 'react-router-redux';
 import composeIntlForm from '../../../../common/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
-import { createFocalSetDefinition, setTopicNeedsNewSnapshot, createFocusDefinition, goToCreateFocusStep }
-  from '../../../../../actions/topicActions';
-import { updateFeedback } from '../../../../../actions/appActions';
+import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
 
 const localMessages = {
@@ -24,10 +21,6 @@ const localMessages = {
   focalSetNew: { id: 'focus.create.confirm.focalSetNew', defaultMessage: '<b>Technique</b>: Create a new one named {name} ({description}' },
   unimplemented: { id: 'focus.create.confirm.unimplemented', defaultMessage: 'Unimplemented' },
   addAnotherFocus: { id: 'focus.create.generateSnapshot', defaultMessage: 'Save and Add Another Subtopic' },
-  focalSetSaved: { id: 'focalSet.saved', defaultMessage: 'We saved your new Set.' },
-  focalSetNotSaved: { id: 'focus.notSaved', defaultMessage: 'Sorry, we couldn\'t save your new Set' },
-  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
-  focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work! Make sure you have a unique Subtopic name?' },
 };
 
 const FocusForm4ConfirmContainer = (props) => {
@@ -94,6 +87,7 @@ FocusForm4ConfirmContainer.propTypes = {
   // from parent
   topicId: PropTypes.number.isRequired,
   initialValues: PropTypes.object,
+  onDone: PropTypes.func.isRequired,
   // form context
   intl: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -114,60 +108,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(goToCreateFocusStep(2));
   },
   saveFocus: (topicId, values) => {
-    const focalSetSavedMessage = ownProps.intl.formatMessage(localMessages.focalSetSaved);
-    const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
-    const focusNotSaved = ownProps.intl.formatMessage(localMessages.focusNotSaved);
-    const focalSetNotSaved = ownProps.intl.formatMessage(localMessages.focalSetNotSaved);
-    const newFocusDefinition = {
-      focusName: values.focusName,
-      focusDescription: values.focusDescription,
-      keywords: values.keywords,
-    };
-    if (values.focalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-      // if they are creating a new set we need to save that first
-      const newFocalSetDefinition = {
-        focalSetName: values.focalSetName,
-        focalSetDescription: values.focalSetDescription,
-        focalTechnique: values.focalTechnique,
-      };
-      // save the focal definition
-      dispatch(createFocalSetDefinition(topicId, newFocalSetDefinition))
-        .then((results) => {
-          if ((results.status) && results.status === 500) {
-            dispatch(updateFeedback({ open: true, message: focalSetNotSaved }));  // user feedback that it failed
-          } else {
-            // TODO: check results to make sure it worked before proceeding
-            dispatch(updateFeedback({ open: true, message: focalSetSavedMessage }));  // user feedback
-            // save the focus
-            newFocusDefinition.focalSetDefinitionsId = results.focal_set_definitions_id;
-            dispatch(createFocusDefinition(topicId, newFocusDefinition))
-              .then((moreResults) => {
-                if ((moreResults.status) && moreResults.status === 500) {
-                  dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
-                } else {
-                  dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-                  dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-                  dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-                  dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-                }
-              });
-          }
-        });
-    } else {
-      // uses and existing set, so just save this definition
-      newFocusDefinition.focalSetDefinitionsId = values.focalSetDefinitionId;
-      dispatch(createFocusDefinition(topicId, newFocusDefinition))
-        .then((results) => {
-          if ((results.status) && results.status === 500) {
-            dispatch(updateFeedback({ open: true, message: focusNotSaved }));  // user feedback that it failed
-          } else {
-            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback that snapshot is needed
-            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback that it worked
-            dispatch(push(`/topics/${ownProps.topicId}/snapshot/foci`)); // go back to focus management page
-            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-          }
-        });
-    }
+    ownProps.onDone(topicId, values);
   },
 });
 

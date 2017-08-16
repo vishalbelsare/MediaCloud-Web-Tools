@@ -21,7 +21,7 @@ class FocusDefinition extends React.Component {
     const { focusDefinition, topicId } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <div className="focus-definition">
+      <div className="focus-definition" data-focus-definitions-id={focusDefinition.focus_definitions_id}>
         <div className="controls">
           <EditButton linkTo={`/topics/${topicId}/snapshot/foci/${focusDefinition.focus_definitions_id}/edit`} />
           <DeleteButton onClick={this.handleDelete} tooltip={formatMessage(localMessages.focusDelete)} />
