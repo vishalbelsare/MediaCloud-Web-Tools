@@ -14,7 +14,6 @@ import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
-import Word2VecContainer from './Word2VecContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import TopicStoryStatsContainer from './TopicStoryStatsContainer';
@@ -89,11 +88,6 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-            <Row>
-              <Col lg={12}>
-                <Word2VecContainer topicId={topicId} filters={filters} />
-              </Col>
-            </Row>
             <Row>
               <Col lg={12}>
                 <GeoTagSummaryContainer topicId={topicId} filters={filters} />

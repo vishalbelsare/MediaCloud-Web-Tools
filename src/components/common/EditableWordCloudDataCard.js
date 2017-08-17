@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Link from 'react-router/lib/Link';
@@ -8,6 +8,7 @@ import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
+import Word2VecChart from '../vis/Word2VecChart';
 import Permissioned from './Permissioned';
 import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
@@ -16,12 +17,17 @@ import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
 
+const VIEW_CLOUD = 'VIEW_CLOUD';
+const VIEW_ORDERED = 'VIEW_ORDERED';
+const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
 
 const localMessages = {
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
   modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
-  modeUnordered: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
+  modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
+  modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'Use Word2Vec 2D Layout' },
+  invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -30,7 +36,7 @@ class EditableWordCloudDataCard extends React.Component {
     editing: false,   // whether you are editing right now or not
     modifiableWords: null, // all the words, including a boolean display property on each
     displayOnlyWords: null, // only the words that are being displayed
-    ordered: true,  // whether you are showing an ordered word cloud or circular layout word cloud
+    view: VIEW_ORDERED, // which view to show (see view constants above)
   };
 
   onEditModeClick = (d, node) => {
@@ -42,8 +48,8 @@ class EditableWordCloudDataCard extends React.Component {
     }
   };
 
-  toggleOrdered = () => {
-    this.setState({ ordered: !this.state.ordered });
+  setView = (nextView) => {
+    this.setState({ view: nextView });
   }
 
   isShowingAllWords = () => (this.state.modifiableWords.length === this.state.displayOnlyWords.length);
@@ -100,32 +106,48 @@ class EditableWordCloudDataCard extends React.Component {
     }
     // set up rendered cloud as appropriate
     let cloudContent;
-    if (this.state.ordered) {
-      cloudContent = (
-        <OrderedWordCloud
-          words={wordsArray}
-          textColor={getBrandDarkColor()}
-          width={width}
-          height={height}
-          maxFontSize={maxFontSize}
-          minFontSize={minFontSize}
-          onWordClick={editingClickHandler}
-          domId={uniqueDomId}
-        />
-      );
-    } else {
-      cloudContent = (
-        <WordCloud
-          words={wordsArray}
-          textColor={getBrandDarkColor()}
-          width={width}
-          height={height}
-          maxFontSize={maxFontSize}
-          minFontSize={minFontSize}
-          onWordClick={editingClickHandler}
-          domId={uniqueDomId}
-        />
-      );
+    switch (this.state.view) {
+      case VIEW_ORDERED:
+        cloudContent = (
+          <OrderedWordCloud
+            words={wordsArray}
+            textColor={getBrandDarkColor()}
+            width={width}
+            height={height}
+            maxFontSize={maxFontSize}
+            minFontSize={minFontSize}
+            onWordClick={editingClickHandler}
+            domId={uniqueDomId}
+          />
+        );
+        break;
+      case VIEW_CLOUD:
+        cloudContent = (
+          <WordCloud
+            words={wordsArray}
+            textColor={getBrandDarkColor()}
+            width={width}
+            height={height}
+            maxFontSize={maxFontSize}
+            minFontSize={minFontSize}
+            onWordClick={editingClickHandler}
+            domId={uniqueDomId}
+          />
+        );
+        break;
+      case VIEW_GOOGLE_W2V:
+        cloudContent = (
+          <Word2VecChart
+            words={wordsArray}
+            domId={uniqueDomId}
+            xProperty="google_w2v_x"
+            yProperty="google_w2v_y"
+          />
+        );
+        break;
+      default:
+        cloudContent = (<FormattedMessage {...localMessages.invalidView} />);
+        break;
     }
     const exploreButton = explore ? (<ExploreButton linkTo={explore} />) : null;
     return (
@@ -137,15 +159,27 @@ class EditableWordCloudDataCard extends React.Component {
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
-                rightIcon={<EditButton />}
-                disabled={!this.state.ordered} // can't edit for now in cloud layout
+                rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
+                disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
                 onTouchTap={this.toggleEditing}
               />
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(this.state.ordered ? localMessages.modeUnordered : localMessages.modeOrdered)}
-                disabled={this.state.editing} // can't edit for now in cloud layout
-                onTouchTap={this.toggleOrdered}
+                primaryText={formatMessage(localMessages.modeOrdered)}
+                disabled={this.state.editing || this.state.view === VIEW_ORDERED}
+                onTouchTap={() => this.setView(VIEW_ORDERED)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.modeCloud)}
+                disabled={this.state.editing || this.state.view === VIEW_CLOUD}
+                onTouchTap={() => this.setView(VIEW_CLOUD)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.modeGoogleW2V)}
+                disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
+                onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
               />
               <MenuItem
                 className="action-icon-menu-item"

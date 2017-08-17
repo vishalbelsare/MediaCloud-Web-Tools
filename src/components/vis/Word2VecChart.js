@@ -16,7 +16,8 @@ const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
 function Word2VecChart(props) {
-  const { words, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized, fullExtent, domId } = props;
+  const { words, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
+          fullExtent, domId, xProperty, yProperty } = props;
   const { formatMessage } = props.intl;
 
   const options = {
@@ -55,6 +56,8 @@ function Word2VecChart(props) {
   if (alreadyNormalized === undefined) {
     options.alreadyNormalized = false;
   }
+  options.xProperty = xProperty || 'x';
+  options.yProperty = yProperty || 'y';
 
   // add in tf normalization
   const allSum = d3.sum(words, term => parseInt(term.count, 10));
@@ -92,11 +95,11 @@ function Word2VecChart(props) {
 
   // Define Scales
   const xScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.x), d3.max(words, d => d.x)])
+    .domain([d3.min(words, d => d[options.xProperty]), d3.max(words, d => d[options.xProperty])])
     .range([margin.left, options.width - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.y), d3.max(words, d => d.y)])
+    .domain([d3.min(words, d => d[options.yProperty]), d3.max(words, d => d[options.yProperty])])
     .range([options.height - margin.top, margin.bottom]);
 
   const colorScale = d3.scaleLinear()
@@ -114,8 +117,8 @@ function Word2VecChart(props) {
     .append('text')
     .attr('text-anchor', 'middle')
     .text(d => d.term)
-    .attr('x', d => xScale(d.x))
-    .attr('y', d => yScale(d.y))
+    .attr('x', d => xScale(d[options.xProperty]))
+    .attr('y', d => yScale(d[options.yProperty]))
     .attr('fill', d => colorScale(d.count))
     .attr('font-size', (d) => {
       const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
@@ -153,6 +156,8 @@ Word2VecChart.propTypes = {
   showTooltips: React.PropTypes.bool,
   alreadyNormalized: React.PropTypes.bool,
   domId: React.PropTypes.string.isRequired,
+  xProperty: React.PropTypes.string,
+  yProperty: React.PropTypes.string,
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };

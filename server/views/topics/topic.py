@@ -8,7 +8,6 @@ from server import app, db, mc
 from server.cache import cache
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
-from server.util.wordembeddings import google_news_2d
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list
 from server.views.topics import access_public_topic
@@ -257,20 +256,3 @@ def topic_search():
     matching_topics = user_mc.topicList(name=search_str)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
-
-
-@app.route('/api/topics/<topic_id>/word2vec', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def topic_word2vec(topic_id):
-    user_mc = user_mediacloud_client()
-    topic_word_counts = user_mc.topicWordCount(topic_id, num_words=50, sample_size=1000)
-    words = [w['term'] for w in topic_word_counts]
-    word2vec_results = google_news_2d(words)
-    terms = map(lambda x: x['term'], topic_word_counts)
-    counts = map(lambda x: x['count'], topic_word_counts)
-    data = []
-    for i in range(len(terms)):
-        data.append({'term': terms[i], 'count': counts[i],
-                     'x': word2vec_results[i]['x'], 'y': word2vec_results[i]['y']})
-    return jsonify({'embeddings': data})
