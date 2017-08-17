@@ -17,15 +17,12 @@ POPULAR_COLLECTION_LIST = [9272347, 9201395, 8877968, 9315147, 9353688, 9173065,
 
 
 def download_sources_csv(all_media, file_prefix):
-
-    what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
-
     if user_has_auth_role(ROLE_MEDIA_EDIT):
         what_type_download = SOURCES_TEMPLATE_PROPS_EDIT
     else:
-        what_type_download = SOURCES_TEMPLATE_PROPS_VIEW # no editor_notes
-
+        what_type_download = SOURCES_TEMPLATE_PROPS_VIEW    # no editor_notes
     return download_media_csv(all_media, file_prefix, what_type_download)
+
 
 @cache
 def _cached_source_story_count(user_mc_key, query):

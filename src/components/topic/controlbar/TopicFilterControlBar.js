@@ -137,7 +137,8 @@ function pendingFocalSetDefinitions(definitions, focalSets) {
 }
 
 function latestSnapshotIsRunning(snapshots) {
-  return snapshots[0].state === 'running';
+  const latestSnapshot = snapshots[0];
+  return (latestSnapshot.state === 'running') || ((latestSnapshot.state === 'completed') && (latestSnapshot.searchable === 0));
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

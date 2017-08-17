@@ -23,7 +23,7 @@ const localMessages = {
   sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
-    defaultMessage: 'The {name} media source is in {count, plural,\n =0 {no collections}\n =1 {one collection}\n other {# collections}\n}.',
+    defaultMessage: 'Here are the collections {name} media source is part of:\n}.',
   },
   favoritedCollectionsTitle: { id: 'source.details.collections.favorited.title', defaultMessage: 'Starred Collections' },
   favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',
@@ -160,7 +160,6 @@ class SourceDetailsContainer extends React.Component {
               title={formatMessage(localMessages.sourceDetailsCollectionsTitle)}
               intro={formatMessage(localMessages.sourceDetailsCollectionsIntro, {
                 name: source.name,
-                count: source.media_source_tags.length,
               })}
               collections={source.media_source_tags}
             />

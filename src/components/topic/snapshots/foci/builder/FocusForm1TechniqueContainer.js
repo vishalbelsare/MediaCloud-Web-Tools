@@ -96,6 +96,7 @@ const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  enableReinitialize: true,
   validate,
 };
 

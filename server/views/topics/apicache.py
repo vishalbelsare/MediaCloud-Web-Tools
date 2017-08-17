@@ -4,6 +4,7 @@ from flask import request
 from server import mc, TOOL_API_KEY
 from server.cache import cache
 from server.util.tags import STORY_UNDATEABLE_TAG
+from server.util.wordembeddings import google_news_2d
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
@@ -118,7 +119,19 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'sample_size': 1000
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
-    return _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
+    word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
+    words = [w['term'] for w in word_data]
+    word2vec_data = _cached_word2vec_google_results(words)
+    for i in range(len(word_data)):
+        word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
+        word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
+    return word_data
+
+
+@cache
+def _cached_word2vec_google_results(words):
+    word2vec_results = google_news_2d(words)
+    return word2vec_results
 
 
 @cache
@@ -223,7 +236,9 @@ def topic_tag_counts(user_mc_key, timespans_id, tag_sets_id, sample_size):
      This doesn't support the other filters, because it has to use sentenceFieldCount,
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
-    query = "timespans_id:{}".format(timespans_id)
+    query = None
+    if timespans_id is not None:
+        query = "timespans_id:{}".format(timespans_id)
     user_mc = user_admin_mediacloud_client()
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)

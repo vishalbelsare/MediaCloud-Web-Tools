@@ -8,15 +8,16 @@ const localMessages = {
   word2vecTerm: { id: 'word2vec.rollover.term', defaultMessage: '{term}' },
 };
 
-const DEFAULT_WIDTH = 730;
-const DEFAULT_HEIGHT = 400;
-const DEFAULT_MIN_FONT_SIZE = 15;
-const DEFAULT_MAX_FONT_SIZE = 45;
+const DEFAULT_WIDTH = 530;
+const DEFAULT_HEIGHT = 320;
+const DEFAULT_MIN_FONT_SIZE = 10;
+const DEFAULT_MAX_FONT_SIZE = 30;
 const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
 function Word2VecChart(props) {
-  const { words, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized, fullExtent, domId } = props;
+  const { words, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
+          fullExtent, domId, xProperty, yProperty } = props;
   const { formatMessage } = props.intl;
 
   const options = {
@@ -55,8 +56,11 @@ function Word2VecChart(props) {
   if (alreadyNormalized === undefined) {
     options.alreadyNormalized = false;
   }
+  options.xProperty = xProperty || 'x';
+  options.yProperty = yProperty || 'y';
 
   // add in tf normalization
+
   const allSum = d3.sum(words, term => parseInt(term.count, 10));
   if (!options.alreadyNormalized) {
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
@@ -92,15 +96,15 @@ function Word2VecChart(props) {
 
   // Define Scales
   const xScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.x), d3.max(words, d => d.x)])
+    .domain([d3.min(words, d => d[options.xProperty]), d3.max(words, d => d[options.xProperty])])
     .range([margin.left, options.width - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.y), d3.max(words, d => d.y)])
+    .domain([d3.min(words, d => d[options.yProperty]), d3.max(words, d => d[options.yProperty])])
     .range([options.height - margin.top, margin.bottom]);
 
   const colorScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.count), d3.max(words, d => d.count)])
+    .domain([d3.min(words, d => d.tfnorm), d3.max(words, d => d.tfnorm)])
     .range([options.minColor, options.maxColor]);
 
   // Add Text Labels
@@ -108,19 +112,20 @@ function Word2VecChart(props) {
   if (fullExtent === undefined) {
     options.fullExtent = d3.extent(words, d => d.tfnorm);
   }
+  const sortedWords = words.sort((a, b) => a.tfnorm - b.tfnorm); // important to sort so z order is right
   const text = d3.select(node).selectAll('text')
-    .data(words)
+    .data(sortedWords)
     .enter()
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .text(d => d.term)
-    .attr('x', d => xScale(d.x))
-    .attr('y', d => yScale(d.y))
-    .attr('fill', d => colorScale(d.count))
-    .attr('font-size', (d) => {
-      const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
-      return `${fs}px`;
-    });
+      .append('text')
+        .attr('text-anchor', 'middle')
+        .text(d => d.term)
+        .attr('x', d => xScale(d[options.xProperty]))
+        .attr('y', d => yScale(d[options.yProperty]))
+        .attr('fill', d => colorScale(d.tfnorm))
+        .attr('font-size', (d) => {
+          const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
+          return `${fs}px`;
+        });
 
   // tool-tip
   text.on('mouseover', (d) => {
@@ -153,6 +158,8 @@ Word2VecChart.propTypes = {
   showTooltips: React.PropTypes.bool,
   alreadyNormalized: React.PropTypes.bool,
   domId: React.PropTypes.string.isRequired,
+  xProperty: React.PropTypes.string,
+  yProperty: React.PropTypes.string,
   // from composition chain
   intl: React.PropTypes.object.isRequired,
 };

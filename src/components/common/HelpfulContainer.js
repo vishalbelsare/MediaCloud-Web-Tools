@@ -46,7 +46,7 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
         let content = null;
         if (this.state.contentMsg) {
           if (Array.isArray(this.state.contentMsg)) {
-            content = this.state.contentMsg.map(msg => <FormattedHTMLMessage key={msg.id} {...msg} />);
+            content = this.state.contentMsg.map(msg => (msg ? <FormattedHTMLMessage key={msg.id} {...msg} /> : ''));
           } else {
             content = <FormattedHTMLMessage {...this.state.contentMsg} />;
           }

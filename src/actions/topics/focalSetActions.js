@@ -7,6 +7,8 @@ export const CREATE_FOCAL_SET_DEFINITION = 'CREATE_FOCAL_SET_DEFINITION';
 export const FETCH_FOCAL_SET_DEFINITIONS = 'FETCH_FOCAL_SET_DEFINITIONS';
 export const DELETE_FOCAL_SET_DEFINITION = 'DELETE_FOCAL_SET_DEFINITION';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
+export const FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS = 'FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS';
+export const FETCH_CREATE_FOCUS_RETWEET_COVERAGE = 'FETCH_CREATE_FOCUS_RETWEET_COVERAGE';
 
 // pass in topicId and snapshotId
 export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
@@ -22,3 +24,6 @@ export const deleteFocalSetDefinition = createAsyncAction(DELETE_FOCAL_SET_DEFIN
 
 export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, id => id);
 
+export const fetchCreateFocusRetweetStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS, api.topicPreviewRetweetPartisanshipStoryCounts);
+
+export const fetchCreateFocusRetweetCoverage = createAsyncAction(FETCH_CREATE_FOCUS_RETWEET_COVERAGE, api.topicPreviewRetweetPartisanshipCoverage);

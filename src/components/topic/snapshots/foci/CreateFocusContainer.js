@@ -5,12 +5,16 @@ import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
-import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
-import { updateFeedback } from '../../../../actions/appActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../lib/focalTechniques';
+import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet } from '../../../../actions/topicActions';
+import { LEVEL_ERROR } from '../../../common/Notice';
+import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
 const localMessages = {
-  focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
+  booleanFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We saved your new Subtopic.' },
+  retweetFocusSaved: { id: 'focus.create.retweetSaved', defaultMessage: 'We created a new set of Subtopics based on our parisan retweet measure.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
+  invalid: { id: 'focus.create.invalid', defaultMessage: 'Sorry - the data has an unknown subtopic technique. It failed!' },
 };
 
 const CreateFocusContainer = (props) => {
@@ -19,6 +23,8 @@ const CreateFocusContainer = (props) => {
   const initialValues = {};
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
+  } else {
+    initialValues.focalTechnique = FOCAL_TECHNIQUE_BOOLEAN_QUERY;
   }
   // if there aren't any focal set defs, the user should have to create a new one
   if (focalSetDefId !== undefined) {
@@ -49,19 +55,36 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleDone: (topicId, formValues) => {
-    dispatch(submitFocusUpdateOrCreate(topicId, formValues))
-      .then((results) => {
-        if (results.length === 1) {
-          const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);
-          dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
-          dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
-          dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
-          dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
-        } else {
-          const focusNoteSavedMessage = ownProps.intl.formatMessage(localMessages.focusNotSaved);
-          dispatch(updateFeedback({ open: true, message: focusNoteSavedMessage }));  // user feedback
-        }
-      });
+    switch (formValues.focalTechnique) {
+      case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
+        dispatch(submitFocusUpdateOrCreate(topicId, formValues))
+          .then((results) => {
+            if (results.length === 1) {
+              const focusSavedMessage = ownProps.intl.formatMessage(localMessages.addnotice);
+              dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+              dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+              dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
+              dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+            } else {
+              const focusNoteSavedMessage = ownProps.intl.formatMessage(localMessages.focusNotSaved);
+              dispatch(updateFeedback({ open: true, message: focusNoteSavedMessage }));  // user feedback
+            }
+          });
+        break;
+      case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
+        dispatch(createRetweetFocalSet(topicId, formValues))
+          .then(() => {
+            const focusSavedMessage = ownProps.intl.formatMessage(localMessages.retweetFocusSaved);
+            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+            dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
+            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+          });
+        break;
+      default:
+        dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.invalid) }));
+        break;
+    }
   },
 });
 
