@@ -60,6 +60,7 @@ function Word2VecChart(props) {
   options.yProperty = yProperty || 'y';
 
   // add in tf normalization
+
   const allSum = d3.sum(words, term => parseInt(term.count, 10));
   if (!options.alreadyNormalized) {
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
@@ -103,7 +104,7 @@ function Word2VecChart(props) {
     .range([options.height - margin.top, margin.bottom]);
 
   const colorScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.count), d3.max(words, d => d.count)])
+    .domain([d3.min(words, d => d.tfnorm), d3.max(words, d => d.tfnorm)])
     .range([options.minColor, options.maxColor]);
 
   // Add Text Labels
@@ -111,19 +112,20 @@ function Word2VecChart(props) {
   if (fullExtent === undefined) {
     options.fullExtent = d3.extent(words, d => d.tfnorm);
   }
+  const sortedWords = words.sort((a, b) => a.tfnorm - b.tfnorm); // important to sort so z order is right
   const text = d3.select(node).selectAll('text')
-    .data(words)
+    .data(sortedWords)
     .enter()
-    .append('text')
-    .attr('text-anchor', 'middle')
-    .text(d => d.term)
-    .attr('x', d => xScale(d[options.xProperty]))
-    .attr('y', d => yScale(d[options.yProperty]))
-    .attr('fill', d => colorScale(d.count))
-    .attr('font-size', (d) => {
-      const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
-      return `${fs}px`;
-    });
+      .append('text')
+        .attr('text-anchor', 'middle')
+        .text(d => d.term)
+        .attr('x', d => xScale(d[options.xProperty]))
+        .attr('y', d => yScale(d[options.yProperty]))
+        .attr('fill', d => colorScale(d.tfnorm))
+        .attr('font-size', (d) => {
+          const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
+          return `${fs}px`;
+        });
 
   // tool-tip
   text.on('mouseover', (d) => {
