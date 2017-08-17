@@ -52,14 +52,18 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updateObject);
   }
 
+  handleOpenStub() {
+    return this.props;
+  }
+
   render() {
-    const { selected, queries, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, collectionsResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
 
     // if DEMO_MODE isEditable = true
-    if (queries && queries.length > 0 && selected) {
+    if (queries && queries.length > 0 && selected && collectionsResults && collectionsResults.length > 0) {
       fixedQuerySlides = queries.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
@@ -113,13 +117,11 @@ class QueryPicker extends React.Component {
 
       // indicate which queryPickerItem is selected -
       const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
-      const sourcesAndCollections = selectedWithSandCLabels.sources.concat(selectedWithSandCLabels.collections);
-      const initialValues = sourcesAndCollections ? { ...selectedWithSandCLabels, media: sourcesAndCollections } : {};
       return (
         <div>
           {content}
           <QueryForm
-            initialValues={initialValues}
+            initialValues={selectedWithSandCLabels}
             selected={selectedWithSandCLabels}
             form="queryForm"
             enableReinitialize
@@ -127,6 +129,7 @@ class QueryPicker extends React.Component {
             buttonLabel={formatMessage(localMessages.querySearch)}
             onSave={handleSearch}
             onChange={event => this.updateQuery(event)}
+            handleOpenHelp={this.handleOpenStub}
             isEditable
           />
         </div>
@@ -149,6 +152,7 @@ QueryPicker.propTypes = {
   // formData: React.PropTypes.object,
   updateCurrentQuery: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
+  handleOpenStub: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({

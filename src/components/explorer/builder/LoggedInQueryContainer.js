@@ -35,7 +35,7 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { user, samples, selected, queries, collectionLookupFetchStatus, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { user, samples, selected, queries, collectionLookupFetchStatus, sourceLookupFetchStatus, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
     const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
@@ -52,13 +52,9 @@ class LoggedInQueryContainer extends React.Component {
           return;
         }
 
-        if (this.props.location.pathname !== whichProps.location.pathname) {
-          // TODO should I check sourceLookup too?
+        if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_INVALID && sourceLookupFetchStatus === fetchConstants.FETCH_INVALID) {
           selectQueriesByURLParams(parsedObjectArray);
-          setSelectedQuery(parsedObjectArray[0]);
-        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
-          selectQueriesByURLParams(parsedObjectArray);
-        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED && sourceLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
           setSelectedQuery(queries[0]); // once we have the lookups,
         }
       } else if (whichProps.location.pathname.includes('/queries')) {
@@ -141,6 +137,7 @@ LoggedInQueryContainer.propTypes = {
   sourcesResults: React.PropTypes.array,
   collectionResults: React.PropTypes.array,
   collectionLookupFetchStatus: React.PropTypes.string,
+  sourceLookupFetchStatus: React.PropTypes.string,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -162,6 +159,7 @@ const mapStateToProps = (state, ownProps) => ({
   sourcesResults: state.explorer.queries.sources ? state.explorer.queries.sources.results : null,
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
+  sourceLookupFetchStatus: state.explorer.queries.sources.fetchStatus,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,

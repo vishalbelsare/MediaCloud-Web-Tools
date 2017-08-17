@@ -40,11 +40,11 @@ class Stat extends React.Component {
 
 Stat.propTypes = {
   // from parent
-  message: PropTypes.object.isRequired,
+  message: PropTypes.object,
   data: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-  ]).isRequired,
+  ]),
   content: PropTypes.object,
   helpTitleMsg: PropTypes.object,
   helpContentMsg: PropTypes.oneOfType([

@@ -27,10 +27,12 @@ class SelectMediaDialog extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
-    const { selected, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
-    if (selected.index !== nextProps.selected.index) {
+    const { selectedMedia, initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
+    if ((JSON.stringify(initMedia) !== JSON.stringify(selectedMedia)) || (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia))) {
       clearMediaSelectionForQuery();
-      nextProps.savedCollections.map(v => handleInitialSelectionOfMedia(v));
+      if (nextProps.initMedia) {
+        nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
+      }
     }
   }
 
@@ -48,7 +50,7 @@ class SelectMediaDialog extends React.Component {
   };
 
   render() {
-    const { selectedMedia, queryArgs, handleSelection } = this.props;
+    const { selectedMedia, handleSelection, lookupTimestamp } = this.props;
     const { formatMessage } = this.props.intl;
     const dialogActions = (
       <AppButton
@@ -74,7 +76,7 @@ class SelectMediaDialog extends React.Component {
                     <MediaSelectionContainer selectedMedia={selectedMedia} />
                   </Col>
                   <Col lg={6}>
-                    <SelectMediaResultsContainer selectedMediaQueryType={0} queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                    <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
                   </Col>
                 </Row>
               </Grid>
@@ -87,7 +89,7 @@ class SelectMediaDialog extends React.Component {
     }
 
     return (
-      <div className="select-media-dialog">
+      <div className="select-media-menu">
         <EditButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(messages.ok)}
@@ -103,10 +105,9 @@ SelectMediaDialog.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
   // from parent
-  selected: React.PropTypes.object,
-  savedCollections: React.PropTypes.array,
-  queryArgs: React.PropTypes.object,
+  initMedia: React.PropTypes.array,
   selectedMedia: React.PropTypes.array,
+  lookupTimestamp: React.PropTypes.string,
   handleSelection: React.PropTypes.func.isRequired,
   handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
   clearMediaSelectionForQuery: React.PropTypes.func.isRequired,
@@ -114,11 +115,9 @@ SelectMediaDialog.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  savedCollections: state.explorer.selected.collections, // maybe we want these dunnoyet
-  selected: state.explorer.selected,
-  savedSources: state.explorer.selected.sources,
   fetchStatus: state.system.mediaPicker.selectMedia.fetchStatus,
   selectedMedia: state.system.mediaPicker.selectMedia.list, // initially empty
+  lookupTimestamp: state.system.mediaPicker.featured.timestamp, // or maybe any of them? trying to get to receive new props when fetch succeeds
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -38,7 +38,7 @@ const QueryForm = (props) => {
 
   const currentColor = selected.color; // for ColorPicker
   const currentQ = selected.q;
-// we may have a query or a query object for initialValues
+  if (!selected) { return null; }
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
       <div className="query-form-wrapper">
@@ -83,7 +83,7 @@ const QueryForm = (props) => {
             </Col>
             <Col lg={1} />
             <Col lg={6}>
-              <SelectMediaDialog onConfirmSelection={selections => onChange(selections)} />
+              <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />
               <div className="media-field-wrapper">
                 <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
                 <SourceCollectionsForm

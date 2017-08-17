@@ -18,42 +18,43 @@ const localMessages = {
 };
 
 const MediaPickerPreviewList = (props) => {
-  const { items, icon, linkInfo, linkDisplay, disabled, onSelectMedia } = props;
+  const { items, icon, linkInfo, linkDisplay, onSelectMedia } = props;
+  const { formatMessage } = props.intl;
   let content = null;
   let statProps = null;
-  const collProps = [
-    { message: localMessages.stat1, data: '100' },
-    { message: localMessages.stat2, data: '200' },
-    { message: localMessages.stat3,
-      content: (
-        <AppButton // need icon also
-          label={props.disabled ? localMessages.actionMessage2 : localMessages.actionMessage1} // the toggle has to be implemented
-          backgroundColor={props.disabled ? '#ccc' : '#fff'}
-          onTouchTap={onSelectMedia}
-        />
-      ),
-    },
-  ];
-  const srcProps = [
-    { message: localMessages.stat1, data: '20' },
-    { message: localMessages.stat2, data: '40' },
-    { message: localMessages.stat3,
-      content: (
-        <AppButton // need icon also
-          label={props.disabled ? localMessages.actionMessage2 : localMessages.actionMessage1} // the toggle has to be implemented
-          backgroundColor={props.disabled ? '#ccc' : '#fff'}
-          onTouchTap={onSelectMedia}
-        />
-      ),
-    },
-  ];
 
   if (items && items.length > 0) {
     content = (
       items.map((c, idx) => {
-        const isDisabled = disabled ? disabled(c) : false;
+        const isDisabled = c.selected;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
         // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
+        const collProps = [
+          { message: localMessages.stat1, data: '100' },
+          { message: localMessages.stat2, data: '200' },
+          { message: localMessages.stat3,
+            content: (
+              <AppButton // need icon also
+                label={isDisabled ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)} // the toggle has to be implemented
+                backgroundColor={isDisabled ? '#ccc' : '#fff'}
+                onClick={() => onSelectMedia(c)}
+              />
+            ),
+          },
+        ];
+        const srcProps = [
+          { message: localMessages.stat1, data: '20' },
+          { message: localMessages.stat2, data: '40' },
+          { message: localMessages.stat3,
+            content: (
+              <AppButton // need icon also
+                label={c.selected ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)} // the toggle has to be implemented
+                backgroundColor={c.selected ? '#ccc' : '#fff'}
+                onClick={() => onSelectMedia(c)}
+              />
+            ),
+          },
+        ];
         statProps = c.tags_id ? collProps : srcProps;
         return (
           <Col key={idx} lg={4} xs={12}>
@@ -66,7 +67,7 @@ const MediaPickerPreviewList = (props) => {
                 </div>
               </div>
               <div className="media-picker">
-                <StatBar disabled={c.selected} stats={statProps} onClick={() => onSelectMedia(c)} />
+                <StatBar disabled={c.selected} stats={statProps} />
               </div>
             </DataCard>
           </Col>

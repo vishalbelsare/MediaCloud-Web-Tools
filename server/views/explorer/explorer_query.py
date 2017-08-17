@@ -40,7 +40,7 @@ def api_explorer_demo_collections_by_ids():
     collIdArray = request.args['collections[]'].split(',')
     coll_list = []
     for tagsId in collIdArray:
-        info = mc.tag(tagsId)
+        info = mc.tag(tagsId) # TODO need to change this to user_mc and handle return val
         info['id'] = int(tagsId)
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
         coll_list.append(info);
