@@ -3,9 +3,10 @@ Media Cloud Web Tools
 
 This is a shared repository for all the front-facing [Media Cloud](https://mediacloud.org) web tools.
 This includes:
+ * [Explorer](https://explorer.mediacloud.org)
  * [Source Manager](https://sources.mediacloud.org)
  * [Topic Mapper](https://topics.mediacloud.org)
-
+ 
 Check out the `doc` folder for more documentation.
 
 Dev Installation
@@ -19,8 +20,8 @@ Python 2.7:
  * `pip install virtualenv` (if necessary) [also install/link pip if you don't have it (if on Mac OS, use sudo easy_install pip)]
  * [`virtualenv venv`](https://virtualenv.pypa.io/en/stable/)
  * activate your virtualenv (OSX: `source venv/bin/activate`, Windows: `call venv\Scripts\activate`) to activate your virtual environment (and not run any global python installations)
- * On Window, make sure to create an environment variable: `set NODE_ENV=dev`
- * in MediaMeter directory>`pip install -r requirements.txt` 
+ * On Windows, make sure to create an environment variable: `set NODE_ENV=dev`
+ * Install the requirements `pip install -r requirements.txt`
 
 Node and npm:  
  * make sure your node installation is up-to-date (we work with v8.2.1 right now)
@@ -63,7 +64,7 @@ You need to open two terminal windows and run one thing in each (so the hot-relo
 Releasing
 ---------
 
-1. Update the version number in the appropriate `src/toolIndex.js` file.
+1. Update the version number in the appropriate `src/[tool]Index.js` file.
 2. Change the server mode in `config/server.config` to `PROD`.
 3. Change the app you want to build in `config/server.config` (set the server/app variable).
 4. Build the release version of the JS and CSS: `npm run topics-release` or `npm run sources-release`.
