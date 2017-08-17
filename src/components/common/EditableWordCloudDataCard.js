@@ -138,8 +138,10 @@ class EditableWordCloudDataCard extends React.Component {
       case VIEW_GOOGLE_W2V:
         cloudContent = (
           <Word2VecChart
-            words={wordsArray.slice(0, 100)}
+            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
             domId={uniqueDomId}
+            width={width}
+            height={height}
             xProperty="google_w2v_x"
             yProperty="google_w2v_y"
           />

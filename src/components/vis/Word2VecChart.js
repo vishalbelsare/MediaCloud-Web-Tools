@@ -8,10 +8,10 @@ const localMessages = {
   word2vecTerm: { id: 'word2vec.rollover.term', defaultMessage: '{term}' },
 };
 
-const DEFAULT_WIDTH = 730;
-const DEFAULT_HEIGHT = 400;
-const DEFAULT_MIN_FONT_SIZE = 15;
-const DEFAULT_MAX_FONT_SIZE = 45;
+const DEFAULT_WIDTH = 530;
+const DEFAULT_HEIGHT = 320;
+const DEFAULT_MIN_FONT_SIZE = 10;
+const DEFAULT_MAX_FONT_SIZE = 30;
 const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
