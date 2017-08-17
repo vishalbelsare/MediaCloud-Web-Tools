@@ -145,8 +145,8 @@ def _cached_featured_collections():
     for tagsId in FEATURED_COLLECTION_LIST:
         info = mc.tag(tagsId)
         info['id'] = tagsId
-        info['wordcount'] = cached_wordcount(None,
-                                             'tags_id_media:' + str(tagsId))  # use None here to use app-level mc object
+        # use None here to use app-level mc object
+        info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tagsId))
         featured_collections += [info]
     return featured_collections
 
@@ -414,9 +414,10 @@ def collection_wordcount_csv(collection_id):
 @app.route('/api/collections/<collection_id>/similar-collections', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def similarCollections(collection_id):
-    info = {}
-    info['similarCollections'] = mc.tagList(similar_tags_id=collection_id)
+def similar_collections(collection_id):
+    info = {
+        'similarCollections': mc.tagList(similar_tags_id=collection_id)
+    }
     return jsonify({'results': info})
 
 
