@@ -133,7 +133,7 @@ DemoQueryBuilderContainer.propTypes = {
   user: React.PropTypes.object.isRequired,
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
-  sourcesResults: React.PropTypes.array,
+  collectionResults: React.PropTypes.array,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -151,8 +151,8 @@ const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries ? state.explorer.queries : null,
-  sourcesResults: state.explorer.sources ? state.explorer.sources.results : null,
+  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
+  collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
@@ -191,11 +191,11 @@ const mapDispatchToProps = dispatch => ({
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
-        demoInfo.sources = q.sources;
+        demoInfo.sources = q.sources.map(src => src.media_id || src.id);
         dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        demoInfo.collections = q.collections;
+        demoInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
         dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
       }
       return 0;
@@ -208,11 +208,11 @@ const mapDispatchToProps = dispatch => ({
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
-        demoInfo.sources = q.sources;
+        demoInfo.sources = q.sources.map(src => src.media_id || src.id);
         dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
       }
       if (q.collections && q.collections.length > 0) {
-        demoInfo.collections = q.collections;
+        demoInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
         dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
       }
       return 0;

@@ -27,6 +27,13 @@ export const addCustomQuery = createAction(ADD_CUSTOM_QUERY, query => query);
 export const UPDATE_QUERY = 'UPDATE_QUERY';
 export const updateQuery = createAction(UPDATE_QUERY, query => query);
 
+export const UPDATE_QUERY_COLLECTION_LOOKUP_INFO = 'UPDATE_QUERY_COLLECTION_LOOKUP_INFO';
+export const updateQueryCollectionLookupInfo = createAction(UPDATE_QUERY_COLLECTION_LOOKUP_INFO, query => query);
+
+export const UPDATE_QUERY_SOURCE_LOOKUP_INFO = 'UPDATE_QUERY_SOURCE_LOOKUP_INFO';
+export const updateQuerySourceLookupInfo = createAction(UPDATE_QUERY_SOURCE_LOOKUP_INFO, query => query);
+
+
 export const PREPARE_QUERIES = 'PREPARE_QUERIES';
 export const prepareQueries = createAsyncAction(PREPARE_QUERIES, api.prepareQueries);
 

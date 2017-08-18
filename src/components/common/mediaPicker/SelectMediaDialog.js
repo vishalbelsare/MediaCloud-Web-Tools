@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
-import { fetchMediaPickerFeaturedCollections, selectMedia, clearSelectedMedia } from '../../../actions/systemActions';
+import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
 
@@ -30,7 +30,7 @@ class SelectMediaDialog extends React.Component {
     const { selectedMedia, initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
     if ((JSON.stringify(initMedia) !== JSON.stringify(selectedMedia)) || (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia))) {
       clearMediaSelectionForQuery();
-      if (nextProps.initMedia) {
+      if (nextProps.initMedia) { // expects an array of media from caller
         nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
       }
     }
@@ -104,7 +104,7 @@ class SelectMediaDialog extends React.Component {
 SelectMediaDialog.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
-  // from parent
+  // from parent/implementer
   initMedia: React.PropTypes.array,
   selectedMedia: React.PropTypes.array,
   lookupTimestamp: React.PropTypes.string,
@@ -131,7 +131,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleInitialSelectionOfMedia: (prevSelectedMedia) => {
     if (prevSelectedMedia) {
-      dispatch(selectMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
+      dispatch(initializePreviouslySelectedMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });

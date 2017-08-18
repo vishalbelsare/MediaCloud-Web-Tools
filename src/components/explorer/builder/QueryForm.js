@@ -27,7 +27,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, selected, buttonLabel, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
+  const { initialValues, isEditable, selected, buttonLabel, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -38,6 +38,10 @@ const QueryForm = (props) => {
 
   const currentColor = selected.color; // for ColorPicker
   const currentQ = selected.q;
+  let mediaPicker = null;
+  if (isEditable) {
+    mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+  }
   if (!selected) { return null; }
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
@@ -83,7 +87,7 @@ const QueryForm = (props) => {
             </Col>
             <Col lg={1} />
             <Col lg={6}>
-              <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />
+              {mediaPicker}
               <div className="media-field-wrapper">
                 <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
                 <SourceCollectionsForm

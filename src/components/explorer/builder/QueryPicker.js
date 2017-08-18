@@ -57,13 +57,15 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, collectionsResults, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, collectionsResults, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
 
     // if DEMO_MODE isEditable = true
-    if (queries && queries.length > 0 && selected && collectionsResults && collectionsResults.length > 0) {
+    if (queries && queries.length > 0 && selected &&
+      collectionsResults && collectionsResults.length > 0 &&
+      sourcesResults && sourcesResults.length >= 0) {
       fixedQuerySlides = queries.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
@@ -116,13 +118,13 @@ class QueryPicker extends React.Component {
       );
 
       // indicate which queryPickerItem is selected -
-      const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
+      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
       return (
         <div>
           {content}
           <QueryForm
-            initialValues={selectedWithSandCLabels}
-            selected={selectedWithSandCLabels}
+            initialValues={selected}
+            selected={selected}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
@@ -130,7 +132,7 @@ class QueryPicker extends React.Component {
             onSave={handleSearch}
             onChange={event => this.updateQuery(event)}
             handleOpenHelp={this.handleOpenStub}
-            isEditable
+            isEditable={isEditable}
           />
         </div>
       );

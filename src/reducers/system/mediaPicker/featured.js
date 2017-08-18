@@ -17,7 +17,7 @@ const featured = createAsyncReducer({
       if (c.id === payload.id) {
         return ({
           ...c,
-          selected: true,
+          selected: !c.selected,
         });
       }
       return c;
