@@ -76,8 +76,8 @@ const mapDispatchToProps = dispatch => ({
     // use default dates, collection, sources
     const dateObj = getPastTwoWeeksDateRange();
     const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
-    // why bother sending this? const sources = '[]';
-    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","collections":${collection}}]`;
+    // const sources = '[]';
+    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection}}]`;
     const demoParams = `[{"q":"${values.keyword}"}]`;
 
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {

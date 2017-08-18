@@ -19,11 +19,11 @@ MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
 @flask_login.login_required
-@arguments_required('keyword')
+@arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_source_search():
     tags = None
-    search_str = request.args['keyword']
+    search_str = request.args['mediaKeyword']
     cleaned_search_str = None if search_str == '*' else search_str
     if 'tags[]' in request.args:
         tags = request.args['tags[]'].split(',')
@@ -36,11 +36,11 @@ def api_mediapicker_source_search():
 
 @app.route('/api/mediapicker/collections/search', methods=['GET'])
 @flask_login.login_required
-@arguments_required('keyword')
+@arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_collection_search():
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    search_str = request.args['keyword']
+    search_str = request.args['mediaKeyword']
     results = _matching_tags_by_set(search_str, public_only)
     trimmed = [r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]

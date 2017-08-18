@@ -9,9 +9,9 @@ class SelectMediaForm extends React.Component {
   shouldComponentUpdate = () => false;
   handleMenuItemKeyDown = (evt) => {
     const { onSearch } = this.props;
-    switch (event.key) {
+    switch (evt.key) {
       case 'Enter':
-        onSearch(evt.target.value);
+        onSearch({ mediaKeyword: evt.target.value });
         break;
       default: break;
     }
@@ -28,7 +28,7 @@ class SelectMediaForm extends React.Component {
       <TextField
         name="mediaKeyword"
         defaultValue={cleanedInitialValues.mediaKeyword}
-        onKeyUp={this.handleMenuItemKeyDown}
+        onKeyPress={this.handleMenuItemKeyDown}
       />
     );
   }
