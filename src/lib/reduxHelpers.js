@@ -227,25 +227,6 @@ export function createIndexedAsyncReducer(handlers) {
     fetchStatuses: [], // array of fetchStatus
     ...desiredInitialState,
   };
-  const combineFetchStatuses = (fetchStatuses) => {
-    const allInvalid = fetchStatuses.reduce((total, status) => total && (status === fetchConstants.FETCH_INVALID), true);
-    const anyOngoing = fetchStatuses.reduce((total, status) => total || (status === fetchConstants.FETCH_ONGOING), false);
-    const anyFailed = fetchStatuses.reduce((total, status) => total || (status === fetchConstants.FETCH_FAILED), false);
-    const allSucceeded = fetchStatuses.reduce((total, status) => total && (status === fetchConstants.FETCH_SUCCEEDED), true);
-    if (allInvalid) {
-      return fetchConstants.FETCH_INVALID;
-    }
-    if (anyOngoing) {
-      return fetchConstants.FETCH_ONGOING;
-    }
-    if (anyFailed) {
-      return fetchConstants.FETCH_FAILED;
-    }
-    if (allSucceeded) {
-      return fetchConstants.FETCH_SUCCEEDED;
-    }
-    return fetchConstants.FETCH_ONGOING;
-  };
   // set up any async reducer handlers the user passed in
   const reducers = {  // set up some smart defaults for normal behaviour
     handleFetch: (payload, state, args) => {
@@ -257,7 +238,7 @@ export function createIndexedAsyncReducer(handlers) {
       const updatedFetchStatuses = [...state.fetchStatuses];
       updatedFetchStatuses[index] = fetchConstants.FETCH_ONGOING;
       return Object.assign({}, state, {
-        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatus: fetchConstants.combineFetchStatuses(updatedFetchStatuses),
         fetchStatuses: updatedFetchStatuses,
       });
     },
@@ -268,7 +249,7 @@ export function createIndexedAsyncReducer(handlers) {
       updatedFetchStatuses[index] = fetchConstants.FETCH_SUCCEEDED;
       updatedResults[index] = payload;
       return Object.assign({}, state, {
-        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatus: fetchConstants.combineFetchStatuses(updatedFetchStatuses),
         fetchStatuses: updatedFetchStatuses,
         results: updatedResults,
       });
@@ -278,7 +259,7 @@ export function createIndexedAsyncReducer(handlers) {
       const updatedFetchStatuses = [...state.fetchStatuses];
       updatedFetchStatuses[index] = fetchConstants.FETCH_FAILED;
       return Object.assign({}, state, {
-        fetchStatus: combineFetchStatuses(updatedFetchStatuses),
+        fetchStatus: fetchConstants.combineFetchStatuses(updatedFetchStatuses),
         fetchStatuses: updatedFetchStatuses,
       });
     },
