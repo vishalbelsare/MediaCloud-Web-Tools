@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { reduxForm } from 'redux-form';
+import { FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
@@ -9,6 +10,7 @@ import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { assetUrl } from '../../../lib/assetUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
 export const TOPIC_FORM_MODE_CREATE = 'TOPIC_FORM_MODE_CREATE';
@@ -22,20 +24,34 @@ const localMessages = {
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
   startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
+  downloadUserGuide: { id: 'topic.create.downloadUserGuide', defaultMessage: 'Downlod the Topic Creation Guide' },
 };
 
 const TopicForm = (props) => {
   const { topicId, onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { formatMessage } = props.intl;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
       <input type="hidden" name="topicId" value={topicId} />
       <Row><Col lg={12}><hr /></Col></Row>
-      <TopicDetailForm
-        form="topicForm"
-        destroyOnUnmount={false}
-        initialValues={initialValues}
-        mode={mode}
-      />
+      <Row>
+        <Col lg={10}>
+          <TopicDetailForm
+            form="topicForm"
+            destroyOnUnmount={false}
+            initialValues={initialValues}
+            mode={mode}
+          />
+        </Col>
+        <Col lg={2}>
+          <a target="_new" href="http://bit.ly/creating-topics-guide">
+            <figure className="document-download">
+              <img alt={formatMessage(localMessages.downloadUserGuide)} src={assetUrl('/static/img/topic-mapper-user-guide.png')} height="160" />
+              <figcaption><FormattedMessage {...localMessages.downloadUserGuide} /></figcaption>
+            </figure>
+          </a>
+        </Col>
+      </Row>
       <Row><Col lg={12}><hr /></Col></Row>
       <SourceCollectionsForm
         title={title}

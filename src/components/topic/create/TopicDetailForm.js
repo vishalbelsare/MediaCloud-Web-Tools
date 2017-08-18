@@ -50,12 +50,12 @@ const TopicDetailForm = (props) => {
   return (
     <div>
       <Row>
-        <Col lg={10}>
+        <Col lg={12}>
           <h2><FormattedMessage {...localMessages.basics} /></h2>
         </Col>
       </Row>
       <Row>
-        <Col lg={5}>
+        <Col lg={6}>
           <Field
             name="name"
             component={renderTextField}
@@ -65,7 +65,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={12}>
           <Field
             name="description"
             component={renderTextField}
@@ -75,7 +75,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={5}>
+        <Col lg={6}>
           <Field
             name="start_date"
             component={renderTextField}
@@ -86,7 +86,7 @@ const TopicDetailForm = (props) => {
             hintText={formatMessage(localMessages.startDate)}
           />
         </Col>
-        <Col lg={5}>
+        <Col lg={6}>
           <Field
             name="end_date"
             component={renderTextField}
@@ -99,7 +99,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={2}>
+        <Col lg={4}>
           <Field
             name="is_public"
             component={renderCheckbox}
@@ -109,7 +109,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={10}>
+        <Col lg={12}>
           <Field
             name="solr_seed_query"
             component={renderTextField}
@@ -124,7 +124,7 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={8}>
+        <Col lg={10}>
           <Card style={{ boxShadow: 'none' }} >
             <CardHeader
               style={{ fontWeight: 'bold' }}

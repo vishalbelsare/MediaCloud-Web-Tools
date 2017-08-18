@@ -18,7 +18,7 @@ const localMessages = {
   createTopicText: { id: 'topic.create.text', defaultMessage: 'You can create a new Topic to add to the MediaCloud system. Copy and paste the keyword query from a Dashboard search into here, and then select dates and media sources and/or collections.  The stories in our database that match will be "seed stories".  Our system will follow links from those stories to find others that match your keyword query, even if they are in sources we don\'t otherwise cover. The combination of stories in our system, and stories that we find via this "spidering" process, will create your Topic.' },
   addCollectionsTitle: { id: 'topic.create.addCollectionsTitle', defaultMessage: 'Select Sources And Collections' },
   addCollectionsIntro: { id: 'topic.create.addCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic:' },
-  sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
+  sourceCollectionsError: { id: 'topic.create.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
 };
 
 const formSelector = formValueSelector('topicForm');
@@ -33,7 +33,7 @@ const TopicCreate1ConfigureContainer = (props) => {
     <Grid>
       <Title render={formatMessage(localMessages.title)} />
       <Row>
-        <Col lg={12}>
+        <Col lg={10}>
           <h1><FormattedMessage {...localMessages.title} /></h1>
           <p><FormattedMessage {...localMessages.createTopicText} /></p>
         </Col>
