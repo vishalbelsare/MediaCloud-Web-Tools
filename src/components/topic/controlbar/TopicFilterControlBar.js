@@ -10,7 +10,7 @@ import { filteredLinkTo, filteredLocation } from '../../util/location';
 import { FilterButton, HomeButton } from '../../common/IconButton';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
-import { toggleFilterControls, filterByFocus, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
+import { toggleFilterControls, filterByFocus, filterByQuery, fetchTopicFocalSetsList, fetchFocalSetDefinitions, setTopicNeedsNewSnapshot, topicStartSpider } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import FilterSelectorContainer from './FilterSelectorContainer';
 import ActiveFiltersContainer from './ActiveFiltersContainer';
@@ -38,7 +38,8 @@ class TopicFilterControlBar extends React.Component {
     }
   }
   render() {
-    const { topicId, location, filters, goToUrl, handleFilterToggle, handleFocusSelected, needsNewSnapshot, handleSpiderRequest } = this.props;
+    const { topicId, location, filters, goToUrl, handleFilterToggle, handleFocusSelected, needsNewSnapshot,
+            handleQuerySelected, handleSpiderRequest } = this.props;
     const { formatMessage } = this.props.intl;
     // both the focus and timespans selectors need the snapshot to be selected first
     let subControls = null;
@@ -68,6 +69,7 @@ class TopicFilterControlBar extends React.Component {
                 <FilterButton onClick={() => handleFilterToggle()} tooltip={formatMessage(localMessages.filterTopic)} />
                 <ActiveFiltersContainer
                   onRemoveFocus={() => handleFocusSelected(REMOVE_FOCUS)}
+                  onRemoveQuery={() => handleQuerySelected(null)}
                 />
               </Col>
             </Row>
@@ -76,6 +78,7 @@ class TopicFilterControlBar extends React.Component {
         <FilterSelectorContainer
           location={location}
           onFocusSelected={handleFocusSelected}
+          onQuerySelected={handleQuerySelected}
         />
         <div className="sub">
           {subControls}
@@ -100,6 +103,7 @@ TopicFilterControlBar.propTypes = {
   fetchData: PropTypes.func.isRequired,
   handleFilterToggle: PropTypes.func.isRequired,
   handleFocusSelected: PropTypes.func.isRequired,
+  handleQuerySelected: PropTypes.func.isRequired,
   handleSpiderRequest: PropTypes.func.isRequired,
   // from merge
   goToUrl: PropTypes.func.isRequired,
@@ -150,6 +154,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const newLocation = filteredLocation(ownProps.location, { focusId: selectedFocusId, timespanId: null });
     dispatch(push(newLocation));
     dispatch(filterByFocus(selectedFocusId));
+  },
+  handleQuerySelected: (query) => {
+    const queryToApply = (query.length === 0) ? null : query;  // treat empty query as removal of query string, using null because '' != *
+    const newLocation = filteredLocation(ownProps.location, { q: queryToApply });
+    dispatch(push(newLocation));
+    dispatch(filterByQuery(queryToApply));
   },
   redirectToUrl: (url, filters) => dispatch(push(filteredLinkTo(url, filters))),
   fetchData: (topicId, snapshotId, snapshots) => {

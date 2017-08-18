@@ -8,13 +8,15 @@ import FocusSelectorContainer from './FocusSelectorContainer';
 import { filterBySnapshot } from '../../../actions/topicActions';
 import { filteredLocation } from '../../util/location';
 import SnapshotSelector from './SnapshotSelector';
+import QuerySelectorContainer from './QuerySelectorContainer';
 
 /**
  * As the parent of other filters, it is useful for this one to own the snapshot selection process,
  * mostly so that heppens first before other things render.
  */
 const FilterSelectorContainer = (props) => {
-  const { filters, topicId, filtersVisible, snapshotId, snapshots, location, handleSnapshotSelected, onFocusSelected } = props;
+  const { filters, topicId, filtersVisible, snapshotId, snapshots, location, handleSnapshotSelected,
+          onFocusSelected, onQuerySelected } = props;
   let content = null;
   let focusSelectorContent = null;
   if (snapshotId) {
@@ -35,8 +37,13 @@ const FilterSelectorContainer = (props) => {
             <Col lg={4} className="focus-selector">
               {focusSelectorContent}
             </Col>
-            <Col lg={1} />
-            <Col lg={4} className="snapshot-selector">
+            <Col lg={5}>
+              <QuerySelectorContainer
+                topicId={topicId}
+                onQuerySelected={onQuerySelected}
+              />
+            </Col>
+            <Col lg={3} className="snapshot-selector">
               <SnapshotSelector
                 selectedId={snapshotId}
                 snapshots={snapshots}
@@ -57,6 +64,7 @@ FilterSelectorContainer.propTypes = {
   location: PropTypes.object.isRequired,
   // from parent
   onFocusSelected: PropTypes.func.isRequired,
+  onQuerySelected: PropTypes.func.isRequired,
   // from dispatch
   handleSnapshotSelected: PropTypes.func.isRequired,
   // from state

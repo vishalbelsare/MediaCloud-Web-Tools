@@ -152,6 +152,7 @@ const messages = {
   readItNow: { id: 'readItNow', defaultMessage: 'Read It Now' },
   moreOptions: { id: 'moreOptions', defaultMessage: 'More Options' },
   filter: { id: 'filter', defaultMessage: 'Filter' },
+  query: { id: 'query', defaultMessage: 'Query' },
   upload: { id: 'upload', defaultMessage: 'Upload' },
   other: { id: 'other', defaultMessage: 'Other' },
   home: { id: 'home', defaultMessage: 'Home' },
