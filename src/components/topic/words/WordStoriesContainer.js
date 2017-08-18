@@ -22,7 +22,7 @@ const localMessages = {
 class WordStoriesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) ||
+    if ((nextProps.filters !== filters) ||
         (nextProps.sort !== sort) ||
         (nextProps.stem !== this.props.stem)) {
       fetchData(nextProps.filters, nextProps.sort, nextProps.stem);

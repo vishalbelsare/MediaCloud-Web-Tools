@@ -30,7 +30,7 @@ class StoryEntitiesContainer extends React.Component {
   }
   downloadCsv = () => {
     const { storiesId, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/stories/${storiesId}/entities.csv?timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/stories/${storiesId}/entities.csv?timespanId=${filters.timespanId}&q=${filters.q}`;
     window.location = url;
   }
   render() {

@@ -20,7 +20,7 @@ const localMessages = {
 class MediaOutlinksContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort)) {
+    if ((nextProps.filters !== filters) || (nextProps.sort !== sort)) {
       fetchData(nextProps);
     }
   }
@@ -30,7 +30,7 @@ class MediaOutlinksContainer extends React.Component {
   }
   downloadCsv = () => {
     const { mediaId, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/media/${mediaId}/outlinks.csv?timespanId=${filters.timespanId}`;
+    const url = `/api/topics/${topicId}/media/${mediaId}/outlinks.csv?timespanId=${filters.timespanId}&q=${filters.q}`;
     window.location = url;
   }
   render() {

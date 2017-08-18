@@ -23,7 +23,7 @@ const WORD_CLOUD_DOM_ID = 'word-cloud';
 class WordWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem || nextProps.term !== this.props.term)) {
+    if (nextProps.filters !== filters || (nextProps.stem !== this.props.stem || nextProps.term !== this.props.term)) {
       fetchData(nextProps.stem, nextProps.filters);
     }
   }

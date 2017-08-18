@@ -58,7 +58,7 @@ class MediaContainer extends React.Component {
   }
 
   render() {
-    const { media, topicId, mediaId } = this.props;
+    const { media, topicId, mediaId, filters } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
     const dialogActions = [
@@ -68,6 +68,27 @@ class MediaContainer extends React.Component {
         onClick={this.handleRemoveDialogClose}
       />,
     ];
+    let summaryStats;
+    if (filters.q) {
+      // say "unknown" here because we can't query for this with a filter query in place :-(
+      summaryStats = [
+        { message: messages.mediaInlinks, data: formatMessage(messages.unknown) },
+        { message: messages.inlinks, data: formatMessage(messages.unknown) },
+        { message: messages.outlinks, data: formatMessage(messages.unknown) },
+        { message: messages.facebookShares, data: formatMessage(messages.unknown) },
+        { message: messages.bitlyClicks, data: formatMessage(messages.unknown) },
+        { message: localMessages.storyCount, data: formatMessage(messages.unknown) },
+      ];
+    } else {
+      summaryStats = [
+        { message: messages.mediaInlinks, data: formatNumber(media.media_inlink_count) },
+        { message: messages.inlinks, data: formatNumber(media.inlink_count) },
+        { message: messages.outlinks, data: formatNumber(media.outlink_count) },
+        { message: messages.facebookShares, data: formatNumber(media.facebook_share_count) },
+        { message: messages.bitlyClicks, data: formatNumber(media.bitly_click_count) },
+        { message: localMessages.storyCount, data: formatNumber(media.story_count) },
+      ];
+    }
     return (
       <div>
         <Title render={titleHandler} />
@@ -99,14 +120,7 @@ class MediaContainer extends React.Component {
           <Row>
             <Col lg={6} md={6} sm={12}>
               <StatBar
-                stats={[
-                  { message: messages.mediaInlinks, data: formatNumber(media.media_inlink_count) },
-                  { message: messages.inlinks, data: formatNumber(media.inlink_count) },
-                  { message: messages.outlinks, data: formatNumber(media.outlink_count) },
-                  { message: messages.facebookShares, data: formatNumber(media.facebook_share_count) },
-                  { message: messages.bitlyClicks, data: formatNumber(media.bitly_click_count) },
-                  { message: localMessages.storyCount, data: formatNumber(media.story_count) },
-                ]}
+                stats={summaryStats}
               />
             </Col>
             <Col lg={6} md={6} sm={12}>
