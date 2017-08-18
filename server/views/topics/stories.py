@@ -94,6 +94,14 @@ def story_undateable_count(topics_id):
     return _public_safe_topic_story_count(topics_id, q)
 
 
+def _add_to_user_query(query_to_add):
+    q_from_request = request.args.get('q')
+    combined_query = q_from_request
+    if (q_from_request is not None) and (len(q_from_request) > 0) and (query_to_add is not None):
+        combined_query = "({}) AND ({})".format(q_from_request, query_to_add)
+    return combined_query
+
+
 @app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
 @api_error_handler
 def story_english_counts(topics_id):
@@ -103,11 +111,11 @@ def story_english_counts(topics_id):
 
 def _public_safe_topic_story_count(topics_id, q):
     if access_public_topic(topics_id):
-        total = topic_story_count(TOOL_API_KEY, topics_id, q=None)
-        matching = topic_story_count(TOOL_API_KEY, topics_id, q=q)  # force a count with just the query
+        total = topic_story_count(TOOL_API_KEY, topics_id, q=_add_to_user_query(None))
+        matching = topic_story_count(TOOL_API_KEY, topics_id, q=_add_to_user_query(q))  # force a count with just the query
     elif is_user_logged_in():
-        total = topic_story_count(user_mediacloud_key(), topics_id, q=None)
-        matching = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
+        total = topic_story_count(user_mediacloud_key(), topics_id, q=_add_to_user_query(None))
+        matching = topic_story_count(user_mediacloud_key(), topics_id, q=_add_to_user_query(q))  # force a count with just the query
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     return jsonify({'counts': {'count': matching['count'], 'total': total['count']}})
