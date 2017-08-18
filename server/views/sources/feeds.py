@@ -68,18 +68,12 @@ def source_feed_list(media_id):
     all_feeds = []
     more_feeds = True
     max_feed_id = 0
-    prev_max_feed_id = 0
     while more_feeds:
         logger.debug("last_feeds_id %d", max_feed_id)
-        feed = source_feed_list_page(media_id, max_feed_id)
-        # if exactly 100 rows are retrieved, we need a way of not ending up in a forever loop
-        if ((max_feed_id == prev_max_feed_id) and (len(feed) == 100)):
-            more_feeds = 0
-        else:
-            max_feed_id = feed[len(feed)-1]['feeds_id']
-            more_feeds = (len(feed) == 100) and (len(feed) != 0)
-        all_feeds = all_feeds + feed
-        prev_max_feed_id = max_feed_id
+        feeds = source_feed_list_page(media_id, max_feed_id)
+        max_feed_id = feeds[-1]['feeds_id'] if len(feeds) > 0 else 0
+        more_feeds = (len(feeds) == 100) and (len(feeds) > 0)
+        all_feeds = all_feeds + feeds
     return sorted(all_feeds, key=lambda t: t['name'])
 
 
