@@ -3,15 +3,15 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
+import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import { fetchTopicMapFiles } from '../../../actions/topicActions';
 
 const localMessages = {
   title: { id: 'topic.summary.mapDownload.title', defaultMessage: 'Download Link and Word Maps' },
-  helpTitle: { id: 'topic.summary.mapDownload.help.title', defaultMessage: 'Link and Word Maps' },
-  helpText: { id: 'topic.summary.mapDownload.help.title', defaultMessage: '<p>When you visit this page for the first time, we start a background process to generate the word map.  This word map is based on the top 100 words from the top 50 sources.  We will be making this system more versatile in the future, but for now this was the quickest way to integrate support.  The map is unique for each snapshot/focus/timespan trio; so if you change to a different timespan a new map will be generated.  These maps are saved, so you won\'t have to generate them more than once.</p>' },
+  helpIntro: { id: 'topic.summary.mapDownload.help.intro', defaultMessage: '<p>Anayzing the content in this topic as a network can help reveal clusters of content all using the same narrative.  Links Maps show which media sources are linking to each other.  Word Maps show which sources use the same words when talking about this topic.' },
+  helpText: { id: 'topic.summary.mapDownload.help.details', defaultMessage: '<p>When you visit this page for the first time, we start a background process to generate the word map.  This word map is based on the top 100 words from the top 50 sources.  We will be making this system more versatile in the future, but for now this was the quickest way to integrate support.  The map is unique for each snapshot/focus/timespan trio; so if you change to a different timespan a new map will be generated.  These maps are saved, so you won\'t have to generate them more than once.</p>' },
   generating: { id: 'topic.summary.mapDownload.generating', defaultMessage: 'Your map is being generated. This can take a while. Please reload this page in a few minutes to see if it is ready.' },
   unknownStatus: { id: 'topic.summary.mapDownload.unknownStatus', defaultMessage: 'We\'re not sure what is up with this file. Sorry!' },
   downloadText: { id: 'topic.summary.mapDownload.download.text', defaultMessage: 'Download a text file of the words used by each source' },
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpText, true)(
+      composeDescribedDataCard(localMessages.helpIntro, localMessages.helpText)(
         composeAsyncContainer(
           DownloadMapContainer
         )
