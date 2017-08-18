@@ -59,7 +59,12 @@ TopicStoryStatsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.geocodedStoryTotals.fetchStatus,  // TODO: respect all the statuses
+  fetchStatus: [
+    state.topics.selected.summary.geocodedStoryTotals.fetchStatus,
+    state.topics.selected.summary.englishStoryTotals.fetchStatus,
+    state.topics.selected.summary.undateableStoryTotals.fetchStatus,
+    state.topics.selected.summary.themedStoryTotals.fetchStatus,
+  ],
   geocodedCounts: state.topics.selected.summary.geocodedStoryTotals.counts,
   englishCounts: state.topics.selected.summary.englishStoryTotals.counts,
   undateableCount: state.topics.selected.summary.undateableStoryTotals.counts,
