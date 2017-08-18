@@ -25,12 +25,12 @@ const localMessages = {
 class DownloadMapContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    if (nextProps.filters !== filters) {
       fetchData(nextProps);
     }
   }
   render() {
-    const { topicId, filters, helpButton, wordMapStatus } = this.props;
+    const { topicId, filters, wordMapStatus } = this.props;
     let wordMapContent = null;
     switch (wordMapStatus) {
       case 'generating':
@@ -64,7 +64,6 @@ class DownloadMapContainer extends React.Component {
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          {helpButton}
         </h2>
         <h3><FormattedMessage {...localMessages.linkMap} />:</h3>
         <p><LinkWithFilters to={`/topics/${topicId}/link-map`} ><FormattedMessage {...localMessages.linkMapDownload} /></LinkWithFilters></p>
@@ -78,7 +77,6 @@ class DownloadMapContainer extends React.Component {
 DownloadMapContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
-  helpButton: PropTypes.node.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,

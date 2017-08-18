@@ -5,7 +5,7 @@ from server import mc, TOOL_API_KEY
 from server.cache import cache
 from server.util.tags import STORY_UNDATEABLE_TAG
 from server.util.wordembeddings import google_news_2d
-from server.auth import user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
+from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
 
@@ -122,11 +122,10 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
     words = [w['term'] for w in word_data]
     word2vec_data = _cached_word2vec_google_results(words)
-    for i in range(len(word_data)):
+    for i in range(len(word2vec_data)):
         word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
     return word_data
-
 
 @cache
 def _cached_word2vec_google_results(words):
@@ -229,17 +228,25 @@ def topic_tag_coverage(topics_id, tags_id):
         return None
     return {'counts': {'count': tagged['count'], 'total': total['count']}}
 
-@cache
-def topic_tag_counts(user_mc_key, timespans_id, tag_sets_id, sample_size):
+
+def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     '''
     Get a breakdown of the most-used tags within a set within a single timespan.
-     This doesn't support the other filters, because it has to use sentenceFieldCount,
+     This supports just timespan_id and q from the request, because it has to use sentenceFieldCount,
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
-    query = None
-    if timespans_id is not None:
-        query = "timespans_id:{}".format(timespans_id)
-    user_mc = user_admin_mediacloud_client()
+    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
+    timespan_query = "timespans_id:{}".format(timespans_id)
+    if q is None:
+        query = timespan_query
+    else:
+        query = "({}) AND ({})".format(q, timespan_query)
+    return _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query)
+
+
+#@cache
+def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
+    user_mc = user_mediacloud_client()
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)
     # add in the pct so we can show relative values within the sample

@@ -34,7 +34,7 @@ class QuerySelector extends React.Component {
           floatingLabelText={formatMessage(localMessages.pickQuery)}
           floatingLabelFixed
           floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
-          value={queryToShow}
+          defaultValue={queryToShow}
           onKeyDown={this.handleMenuItemKeyDown}
           fullWidth
           id="topic-filter-query"

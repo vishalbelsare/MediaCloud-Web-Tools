@@ -25,7 +25,7 @@ class StoryWordsContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    if (nextProps.filters !== filters) {
       fetchData(nextProps);
     }
   }
