@@ -134,8 +134,9 @@ const reduxFormConfig = {
   asyncValidate,
   asyncBlurFields: ['name'],
   destroyOnUnmount: false,
+  forceUnregisterOnUnmount: true,
+  enableReinitialize: true,
   warn,
-  // forceUnregisterOnUnmount: true,
 };
 
 export default
