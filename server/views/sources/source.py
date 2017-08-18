@@ -51,24 +51,23 @@ def source_set_favorited(media_id):
     return jsonify({'isFavorite': favorite})
 
 
-@app.route('/api/sources/<media_id>/getStats')
+@app.route('/api/sources/<media_id>/stats')
 @flask_login.login_required
 @api_error_handler
-def source_get_stats(media_id):
+def source_stats(media_id):
     username = user_name()
     user_mc = user_admin_mediacloud_client()
     results = {}
-# story count
+    # story count
     media_query = "(media_id:{})".format(media_id)
     total_story_count = _cached_source_story_count(username, media_query)
     results['story_count'] = total_story_count
-# health   
+    # health
     media_health = _cached_media_source_health(username, media_id)
-    results['is_healthy'] = media_health['is_healthy']
-    results['start_date'] = media_health['start_date']
+    results['is_healthy'] = media_health['is_healthy'] if 'is_healthy' in media_health else None
+    results['start_date'] = media_health['start_date'] if 'start_date' in media_health else None
     info = _media_source_details(media_id)
     results['collections'] = len(info['media_source_tags'])
-
     # geography tags
     geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
     ratio_geo_tagged_count = float(geoRes[0]['count']) / float(total_story_count) if len(geoRes) > 0 else 0
@@ -77,7 +76,6 @@ def source_get_stats(media_id):
     nytRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_NYT_LABELS_VERSION, sample_size=GEO_SAMPLE_SIZE)
     ratio_nyt_tagged_count = float(nytRes[0]['count']) / float(total_story_count) if len(nytRes) > 0 else 0
     results['nytPct'] = ratio_nyt_tagged_count
-
     return jsonify(results)
 
 @cache
@@ -102,18 +100,19 @@ def _safely_get_health_start_date(health):
     """
     The health might be empty, so call this to default to 1 year ago if it is
     """
-    if health is None:  # maybe no health exists yet, go with one year ago
+    if health is None or len(health) == 0:  # maybe no health exists yet, go with one year ago
         one_year_ago = datetime.now() - relativedelta(years=1)
         start_date = "{0}-{1}-{2}".format(one_year_ago.year, one_year_ago.month, one_year_ago.day)
     else:
         start_date = health['start_date'][:10]
     return start_date
 
+
 def _safely_get_health_end_date(health):
     """
     The health might be empty, so call this to default to today
     """
-    if health is None:  # maybe no health exists yet, go with one year ago
+    if health is None or len(health) == 0:  # maybe no health exists yet, go with one year ago
         now = datetime.now()
         start_date = "{0}-{1}-{2}".format(now.year, now.month, now.day)
     else:

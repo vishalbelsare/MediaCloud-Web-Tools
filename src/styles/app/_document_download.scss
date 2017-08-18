@@ -1,0 +1,21 @@
+@import '../_constants';
+
+figure.document-download {
+  
+  border: 1px solid $material-grey400;
+  display: inline-block;
+  margin: 10px;
+
+  img {
+    display:block;
+    margin:auto;
+  }
+
+  figcaption {
+    background-color: $material-grey400;
+    color: $black;
+    padding: 10px;
+    text-align: center;
+  }
+
+}
