@@ -212,11 +212,7 @@ def topic_tag_coverage(topics_id, tags_id):
     '''
     # respect any query filter the user has set
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
-    tag_query = "tags_id_stories:{}".format(tags_id)
-    if q is None:
-        query_with_tag = tag_query
-    else:
-        query_with_tag = "({}) AND ({})".format(q, tag_query)
+    query_with_tag = add_to_user_query("tags_id_stories:{}".format(tags_id))
     # now get the counts
     if access_public_topic(topics_id):
         total = topic_story_count(TOOL_API_KEY, topics_id)
@@ -244,7 +240,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     return _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query)
 
 
-#@cache
+@cache
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
@@ -301,3 +297,12 @@ def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
         if int(timespan['timespans_id']) == int(timespans_id):
             return timespan
     return None
+
+
+def add_to_user_query(query_to_add):
+    q_from_request = request.args.get('q')
+    if (query_to_add is None) or (len(query_to_add) == 0):
+        return q_from_request
+    if (q_from_request is None) or (len(q_from_request) == 0):
+        return query_to_add
+    return "({}) AND ({})".format(q_from_request, query_to_add)

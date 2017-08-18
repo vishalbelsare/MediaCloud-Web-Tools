@@ -8,7 +8,8 @@ from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, is_user_logged_in
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
-from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, topic_sentence_sample #, topic_media_list
+from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, \
+    topic_sentence_sample, add_to_user_query
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -110,11 +111,7 @@ def topic_word_associated_words_csv(topics_id, word):
 @api_error_handler
 def topic_word_usage_sample(topics_id, word):
     # gotta respect the manual query if there is one
-    q = request.args['q'] if 'q' in request.args else None
-    if (q is not None) and (len(q) > 0):
-        q = u"({}) AND ({})".format(word, q)
-    else:
-        q = word
+    q = add_to_user_query(word)
     # need to use tool API key here because non-admin users can't pull sentences
     results = topic_sentence_sample(TOOL_API_KEY, topics_id, sample_size=1000, q=q)
     # TODO: only pull the 5 words before and after so we
