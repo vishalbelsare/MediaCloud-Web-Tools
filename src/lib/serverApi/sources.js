@@ -205,5 +205,5 @@ export function createSourcesByUrl(urls) {
 }
 
 export function fetchSourceStats(mediaId) {
-  return createApiPromise(`/api/sources/${mediaId}/getStats`);
+  return createApiPromise(`/api/sources/${mediaId}/stats`);
 }

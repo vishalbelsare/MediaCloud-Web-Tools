@@ -77,6 +77,7 @@ const messages = {
   public: { id: 'common.public', defaultMessage: 'Public' },
   private: { id: 'common.private', defaultMessage: 'Private' },
   language: { id: 'common.language', defaultMessage: 'Language' },
+  unknown: { id: 'common.Unknown', defaultMessage: 'Unknown' },
 
   startDate: { id: 'common.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'common.endDate', defaultMessage: 'End Date' },

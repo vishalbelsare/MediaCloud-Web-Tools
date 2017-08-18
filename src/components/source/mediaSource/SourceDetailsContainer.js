@@ -23,7 +23,7 @@ const localMessages = {
   sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
-    defaultMessage: 'Here are the collections {name} media source is part of:\n}.',
+    defaultMessage: 'Here are the collections {name} media source is part of:\n.',
   },
   favoritedCollectionsTitle: { id: 'source.details.collections.favorited.title', defaultMessage: 'Starred Collections' },
   favoritedCollectionsIntro: { id: 'source.details.collections.favorited.intro',

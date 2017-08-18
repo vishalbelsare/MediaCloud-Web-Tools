@@ -19,22 +19,29 @@ const localMessages = {
 
 const SourceStatInfo = (props) => {
   const { sourceId, sourceInfo } = props;
-  const { formatNumber, formatDate } = props.intl;
+  const { formatNumber, formatDate, formatMessage } = props.intl;
   if ((sourceId === null) || (sourceId === undefined)) {
     return null;
   }
-  const isHealthy = (
-    <div className={`${!sourceInfo.isHealthy ? 'source-stat-health-gap' : ''}`}>
-      <FormattedMessage {...localMessages.isHealthy} values={{ value: sourceInfo.is_healthy }} />
-    </div>
-  );
+  // check some health data to see if it is missing
+  let isHealthyContent;
+  if (sourceInfo.is_healthy === null) {
+    isHealthyContent = <FormattedMessage {...messages.unknown} />;
+  } else {
+    isHealthyContent = (
+      <div className={`${!sourceInfo.is_healthy ? 'source-stat-health-gap' : ''}`}>
+        <FormattedMessage {...localMessages.isHealthy} values={{ value: sourceInfo.is_healthy }} />
+      </div>
+    );
+  }
+  const startDate = (sourceInfo.start_date) ? formatDate(sourceInfo.start_date) : formatMessage(messages.unknown);
   return (
     <StatBar
       columnWidth={2}
       stats={[
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
-        { message: localMessages.coveredSince, data: formatDate(sourceInfo.start_date) },
-        { message: localMessages.health, data: isHealthy },
+        { message: localMessages.coveredSince, data: startDate },
+        { message: localMessages.health, data: isHealthyContent },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
         { message: localMessages.geoPct,
           data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }),

@@ -98,18 +98,17 @@ export function cleanDateCounts(countsMap) {
 // Turn a gap list into a list of objects with from/to/color attributes, suitable for use as plot bands in HighCharts
 export function cleanCoverageGaps(gapList) {
   let plotBands = [];
-  if (gapList === null) {
-    return plotBands;
+  if (gapList) {  // if the source has no health data, gapList could be undefined
+    plotBands = gapList.map((gap) => {
+      const weekStart = gapDateToMomemt(gap.stat_week).valueOf();
+      const weekEnd = weekStart + (604800 * 1000);    // + one week
+      return {
+        from: weekStart,
+        to: weekEnd,
+        color: 'rgba(255, 0, 0, .6)',
+      };
+    });
   }
-  plotBands = gapList.map((gap) => {
-    const weekStart = gapDateToMomemt(gap.stat_week).valueOf();
-    const weekEnd = weekStart + (604800 * 1000);    // + one week
-    return {
-      from: weekStart,
-      to: weekEnd,
-      color: 'rgba(255, 0, 0, .6)',
-    };
-  });
   return plotBands;
 }
 

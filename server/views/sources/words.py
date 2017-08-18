@@ -24,7 +24,7 @@ def cached_wordcount(user_mc_key, query, num_words=DEFAULT_NUM_WORDS, sample_siz
     word_data = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
     words = [w['term'] for w in word_data]
     word2vec_data = _cached_word2vec_google_results(words)
-    for i in range(len(word_data)):
+    for i in range(len(word2vec_data)):
         word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
     return word_data
