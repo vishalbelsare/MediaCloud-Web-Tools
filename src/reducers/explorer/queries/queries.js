@@ -21,7 +21,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return null;
     case UPDATE_QUERY_SOURCE_LOOKUP_INFO:
-      if (action.payload) { // just for safety
+      if (action.payload && state && state.length > 0) { // just for safety
         updatedState = [...state];
         queryIndex = state.findIndex(q => q.index !== null && q.index === action.payload.index);
         // we may not have an id if this is a custom query, use index. -- update we may not even use ID... TBD
@@ -31,7 +31,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return null;
     case UPDATE_QUERY_COLLECTION_LOOKUP_INFO:
-      if (action.payload) { // just for safety
+      if (action.payload && state && state.length > 0) { // just for safety
         updatedState = [...state];
         queryIndex = state.findIndex(q => q.index !== null && q.index === action.payload.index);
         // we may not have an id if this is a custom query, use index. -- update we may not even use ID... TBD

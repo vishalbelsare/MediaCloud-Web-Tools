@@ -53,7 +53,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         # add in the media sources they specified
         if len(media_ids) > 0:
             id_chain = media_ids
-            if type(media_ids) is list:
+            if type(media_ids) is list: #if an object versus a string - see sample_searches.json
                 id_chain = [t["id"] for t in media_ids]
             query_media_ids = u" ".join(map(str, id_chain))
             query_media_ids = u" media_id:({})".format(query_media_ids)
@@ -65,7 +65,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         if len(tags_ids) > 0:
             id_chain = tags_ids
             if type(tags_ids) is list:
-                id_chain = [t["id"] for t in tags_ids]
+                id_chain = [t['id'] for t in tags_ids]
             query_tags_ids = u" ".join(map(str, id_chain))
             query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
             query += u'('+query_tags_ids+')'

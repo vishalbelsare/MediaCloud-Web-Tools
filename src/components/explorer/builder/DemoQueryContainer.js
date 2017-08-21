@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 // import QueryForm from './QueryForm';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -192,28 +192,43 @@ const mapDispatchToProps = dispatch => ({
       };
       if (q.sources && q.sources.length > 0) {
         demoInfo.sources = q.sources.map(src => src.media_id || src.id);
-        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+        dispatch(demoQuerySourcesByIds(demoInfo))
+        .then((results) => {
+          demoInfo.sources = results;
+          dispatch(updateQuerySourceLookupInfo(demoInfo)); // updates the query and the selected query
+        });
       }
       if (q.collections && q.collections.length > 0) {
         demoInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
-        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+        dispatch(demoQueryCollectionsByIds(demoInfo))
+        .then((results) => {
+          demoInfo.collections = results;
+          dispatch(updateQueryCollectionLookupInfo(demoInfo)); // updates the query and the selected query
+        });
       }
       return 0;
     });
   },
   setSampleSearch: (searchObj) => {
-    dispatch(selectBySearchId(searchObj)); // select/map search's queries
+    dispatch(selectBySearchId(searchObj));
     searchObj.queries.map((q, idx) => {
       const demoInfo = {
         index: idx,
       };
       if (q.sources && q.sources.length > 0) {
         demoInfo.sources = q.sources.map(src => src.media_id || src.id);
-        dispatch(demoQuerySourcesByIds(demoInfo)); // get sources names
+        dispatch(demoQuerySourcesByIds(demoInfo)).then((results) => {
+          demoInfo.sources = results;
+          dispatch(updateQuerySourceLookupInfo(demoInfo)); // updates the query and the selected query
+        });
       }
       if (q.collections && q.collections.length > 0) {
         demoInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
-        dispatch(demoQueryCollectionsByIds(demoInfo)); // get collection names
+        dispatch(demoQueryCollectionsByIds(demoInfo))
+        .then((results) => {
+          demoInfo.collections = results;
+          dispatch(updateQueryCollectionLookupInfo(demoInfo)); // updates the query and the selected query
+        });
       }
       return 0;
     });
