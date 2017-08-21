@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
-# TODO maybe move all of this up
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
     if (desired_sort is None) or (desired_sort not in valid_sorts):
@@ -39,12 +38,11 @@ def solr_query_from_request(request):
     start_date= request['start_date']
     end_date=request['end_date']
 
-    # TODO it is an error if no sources or collections
     media_ids=_media_ids_from_sources_param(request['sources[]']) if 'sources[]' in request else []
     tags_ids=_tag_ids_from_collections_param(request['collections[]']) if 'collections[]' in request else []
     return concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids)
 
-# helper for topic preview queries -- TODO move up
+# helper for preview queries
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
     query = u'({})'.format(solr_seed_query)
 
@@ -63,9 +61,15 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
             query += " OR "
         # add in the collections they specified
         if len(tags_ids) > 0:
-            id_chain = tags_ids
+            id_chain = []
             if type(tags_ids) is list:
-                id_chain = [t['id'] for t in tags_ids]
+                for t in tags_ids:
+                    if type(t) is dict:
+                        id_chain.append(t['id'] if 'id' in t else 0)
+                    else:
+                        id_chain.append(t)
+            else:
+                id_chain = tags_ids
             query_tags_ids = u" ".join(map(str, id_chain))
             query_tags_ids = u" tags_id_media:({})".format(query_tags_ids)
             query += u'('+query_tags_ids+')'
@@ -78,7 +82,6 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
     
     return query
 
-# TODO defaults cause an error
 def concatenate_query_and_dates(start_date, end_date):
 
     testa = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
