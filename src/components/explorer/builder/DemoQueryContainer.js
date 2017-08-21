@@ -4,17 +4,17 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
-// import QueryForm from './QueryForm';
+import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import * as fetchConstants from '../../../lib/fetchConstants';
+import { LEVEL_ERROR } from '../../common/Notice';
 
-// import { notEmptyString } from '../../../lib/formValidators';
-/* const localMessages = {
-  querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search For' },
-  searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search for ' },
-}; */
+const localMessages = {
+  errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
+};
 const MAX_COLORS = 20;
 
 class DemoQueryBuilderContainer extends React.Component {
@@ -32,26 +32,25 @@ class DemoQueryBuilderContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { samples, selected, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches, addAppNotice } = this.props;
+    const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
 
-    if (whichProps.location.pathname.includes('/queries/demo/search')) {
-      // parse query params
-      // for demo mode, whatever the user enters in the homepage field is interpreted only as a keyword(s)
-      const parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
-      /* const currentQuery = parsedObjectArray.map(q => q.q);
-       let isNewQuerySet = null;
-      if (whichProps && whichProps.selected) {
-        isNewQuerySet = (currentQuery.findIndex(q => q.includes(whichProps.selected.q)) < 0); // this is true even if a new query is beign entered
-      } */
-      if (this.props.location.pathname !== whichProps.location.pathname) {
-        // TODO how to keep current selection if this is just an *updated* set of queries
+    if (whichProps.location.pathname.includes('/demo/search')) {
+        // parse query params
+      let parsedObjectArray = null;
+      try {
+        parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
+      } catch (e) {
+        addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+        return;
+      }
+
+      if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
         selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]);
-      } else if (!selected && !whichProps.selected) {
-        selectQueriesByURLParams(parsedObjectArray);
-        setSelectedQuery(parsedObjectArray[0]);
+      } else if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
       }
     } else if (whichProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
@@ -86,7 +85,7 @@ class DemoQueryBuilderContainer extends React.Component {
         defaultObjVals.sources = [];
       }
       if (q.collections === undefined) {
-        defaultObjVals.collections = [DEFAULT_COLLECTION];
+        defaultObjVals.collections = DEFAULT_COLLECTION_OBJECT_ARRAY;
       }
       const dateObj = getPastTwoWeeksDateRange();
       if (q.startDate === undefined) {
@@ -130,10 +129,12 @@ DemoQueryBuilderContainer.propTypes = {
   initialValues: React.PropTypes.object,
   // from state
   location: React.PropTypes.object,
+  addAppNotice: React.PropTypes.func.isRequired,
   user: React.PropTypes.object.isRequired,
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
   collectionResults: React.PropTypes.array,
+  collectionLookupFetchStatus: React.PropTypes.string,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -153,6 +154,7 @@ const mapStateToProps = (state, ownProps) => ({
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
   queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
+  collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
@@ -161,6 +163,9 @@ const mapStateToProps = (state, ownProps) => ({
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
+  addAppNotice: (info) => {
+    dispatch(addNotice(info));
+  },
   setSelectedQuery: (queryObj) => {
     dispatch(selectQuery(queryObj));
   },
@@ -184,8 +189,7 @@ const mapDispatchToProps = dispatch => ({
   },
   setQueryFromURL: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
-    // select first entry
-    dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
+
     queryArrayFromURL.map((q, idx) => {
       const demoInfo = {
         index: idx,
