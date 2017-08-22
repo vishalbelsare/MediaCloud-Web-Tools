@@ -9,8 +9,9 @@
     transform: translate(-50%, -50%);
     z-index: 9999;
     background: #fff;
-    max-height: calc(100vh - 210px);
     overflow-y: auto;
+    overflow-x: hidden;
+    height: 75%;
   }
   .backdrop {
     position: absolute;

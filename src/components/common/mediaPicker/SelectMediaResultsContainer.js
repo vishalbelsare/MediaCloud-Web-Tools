@@ -9,6 +9,7 @@ import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -77,20 +78,23 @@ class SelectMediaResultsContainer extends React.Component {
     let content = null;
     let whichMedia = null;
     let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
-
+    let whichFetchStatus = null;
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
           whichStoredKeyword = collectionResults.args;
+          whichFetchStatus = collectionResults.fetchStatus;
         } else {
           whichMedia = featured.list;
+          whichFetchStatus = featured.fetchStatus;
         }
         break;
       case PICK_SOURCE:
         if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
           whichMedia = sourceResults.list;
           whichStoredKeyword = sourceResults.args;
+          whichFetchStatus = sourceResults.fetchStatus;
         }
         break;
       case ADVANCED:
@@ -99,13 +103,16 @@ class SelectMediaResultsContainer extends React.Component {
         if (starredResults && (starredResults.list && (starredResults.list.length > 0 || (starredResults.args && starredResults.args.keyword)))) {
           whichMedia = starredResults.list;
           whichStoredKeyword = starredResults.args;
+          whichFetchStatus = sourceResults.fetchStatus;
         }
         break;
       default:
         whichMedia = featured;
         break;
     }
-    if (whichMedia && whichMedia.length > 0) {
+    if (whichFetchStatus === fetchConstants.FETCH_ONGOING) {
+      content = <LoadingSpinner />;
+    } else if (whichMedia && whichMedia.length > 0) {
       content = (
         <MediaPickerPreviewList
           items={whichMedia}

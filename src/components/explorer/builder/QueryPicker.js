@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 import QueryForm from './QueryForm';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
-import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, saveQuerySet } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
@@ -56,6 +56,10 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updateObject);
   }
 
+  handleSaveQuerySet() {
+    const { selected, saveThisQuerySet } = this.props;
+    saveThisQuerySet(selected);
+  }
   handleOpenStub() {
     return this.props;
   }
@@ -138,6 +142,7 @@ class QueryPicker extends React.Component {
             onSave={handleSearch}
             onChange={event => this.updateQuery(event)}
             handleOpenHelp={this.handleOpenStub}
+            handleSaveQuerySet={q => this.handleSaveQuerySet(q)}
             isEditable={canSelectMedia}
           />
         </div>
@@ -158,8 +163,8 @@ QueryPicker.propTypes = {
   setSelectedQuery: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
-  // formData: React.PropTypes.object,
   updateCurrentQuery: React.PropTypes.func.isRequired,
+  saveThisQuerySet: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   handleOpenStub: React.PropTypes.func,
 };
@@ -191,6 +196,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     if (query) {
       dispatch(addCustomQuery(query));
       dispatch(selectQuery(query));
+    }
+  },
+  saveThisQuerySet: (query) => {
+    if (query) {
+      dispatch(saveQuerySet({ label: query.label, query_string: query.q }));
     }
   },
 });

@@ -2,7 +2,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from server import app, mc
+from server import app, mc, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
@@ -13,34 +13,35 @@ from operator import itemgetter
 
 logger = logging.getLogger(__name__)
 
-### MAY NOT BE A FORM TODO
-
 @app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
 def api_explorer_sample_searches():
     return read_sample_searches()
 
 @app.route('/api/explorer/sources/list', methods=['GET'])
+@flask_login.login_required
 @arguments_required('sources[]')
 @api_error_handler
 def api_explorer_sources_by_ids():
-    # TODO do logged in check and use same code path?
+    user_mc = user_admin_mediacloud_client()
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
     for mediaId in source_id_array:
-        info = mc.media(mediaId)
+        info = user_mc.media(mediaId)
         info['id'] = mediaId
         source_list.append(info)
     return jsonify(source_list)
 
 @app.route('/api/explorer/collections/list', methods=['GET'])
+@flask_login.login_required
 @arguments_required('collections[]')
 @api_error_handler
 def api_explorer_demo_collections_by_ids():
+    user_mc = user_admin_mediacloud_client()
     collIdArray = request.args['collections[]'].split(',')
     coll_list = []
     for tagsId in collIdArray:
-        info = mc.tag(tagsId) # TODO need to change this to user_mc and handle return val
+        info = user_mc.tag(tagsId)
         info['id'] = int(tagsId)
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
         coll_list.append(info);
@@ -90,8 +91,16 @@ def _cached_featured_collections():
         featured_collections += [info]
     return featured_collections
 
+@app.route('/api/explorer/saveQuery', methods=['GET'])
+@flask_login.login_required # TODO right?
+@arguments_required('label', 'query_string')
+def save_user_query():
+    username = user_name()
+    # TODO any checking here?
+    db.add_item_to_users_list(username, 'queries', request.args)
+    return jsonify({'savedQuery': request.args['query_string']})
 
-# TODO maybe remove
+# TODO use this or the other collection list retrieval?
 @app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])
 @api_error_handler
 def api_explorer_collection_set(tag_sets_id):
