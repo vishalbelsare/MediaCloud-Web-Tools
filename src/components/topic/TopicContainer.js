@@ -177,6 +177,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               snapshotId: newSnapshotId,
               timespanId: null,
               focusId: null,
+              q: null,
             });
             dispatch(replace(newLocation)); // do a replace, not a push here so the non-snapshot url isn't in the history
             dispatch(filterBySnapshot(newSnapshotId));

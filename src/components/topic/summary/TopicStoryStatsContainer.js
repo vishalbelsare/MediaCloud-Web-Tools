@@ -3,76 +3,85 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicGeocodedStoryCoverage, fetchTopicEnglishStoryCounts, fetchTopicUndateableStoryCounts, fetchTopicNytLabelCoverage } from '../../../actions/topicActions';
+import { fetchTopicEnglishStoryCounts } from '../../../actions/topicActions';
 import StatBar from '../../common/statbar/StatBar';
 import messages from '../../../resources/messages';
 
 const localMessages = {
-  themedCount: { id: 'topic.summary.storystats.themedCount', defaultMessage: 'Stories Checked for Themes' },
-  geocodedCount: { id: 'topic.summary.storystats.geocodedCount', defaultMessage: 'Geocoded Stories' },
-  englishCount: { id: 'topic.summary.storystats.englishCount', defaultMessage: 'English Stories' },
-  undateableCount: { id: 'topic.summary.storystats.undateableCount', defaultMessage: 'Undateable Stories' },
+  storyLinkCount: { id: 'topic.summary.timespanInfo.storyLinkCount', defaultMessage: 'Story Links' },
+  mediumCount: { id: 'topic.summary.timespanInfo.mediumCount', defaultMessage: 'Media Sources' },
+  mediumLinkCount: { id: 'topic.summary.timespanInfo.mediumLinkCount', defaultMessage: 'Media Links' },
+  geocodedCount: { id: 'topic.summary.timespanInfo.geocodedCount', defaultMessage: 'Geocoded Stories' },
+  englishCount: { id: 'topic.summary.timespanInfo.englishCount', defaultMessage: 'English Stories' },
+  storyCount: { id: 'topic.summary.timespanInfo.storyCount', defaultMessage: 'Total Stories' },
 };
 
-const TopicStoryStatsContainer = (props) => {
-  const { timespan, themeCounts, undateableCount, geocodedCounts, englishCounts } = props;
-  const { formatNumber } = props.intl;
-  if ((timespan === null) || (timespan === undefined)) {
-    return null;
+class TopicStoryStatsContainer extends React.Component {
+
+  componentWillReceiveProps(nextProps) {
+    const { filters, fetchData } = this.props;
+    if ((nextProps.filters !== filters)) {
+      fetchData(nextProps.filters);
+    }
   }
-  return (
-    <StatBar
-      columnWidth={6}
-      stats={[
-        { message: localMessages.englishCount,
-          data: formatNumber(englishCounts.count / geocodedCounts.total, { style: 'percent' }) },
-        { message: localMessages.undateableCount,
-          data: formatNumber(undateableCount.count / undateableCount.total, { style: 'percent' }) },
-        { message: localMessages.geocodedCount,
-          data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }),
-          helpTitleMsg: messages.geoHelpTitle,
-          helpContentMsg: messages.geoHelpContent,
-        },
-        { message: localMessages.themedCount,
-          data: formatNumber(themeCounts.count / themeCounts.total, { style: 'percent' }),
-          helpTitleMsg: messages.themeHelpTitle,
-          helpContentMsg: messages.themeHelpContent,
-        },
-      ]}
-    />
-  );
-};
+
+  render() {
+    const { timespan, storyCount, filters } = this.props;
+    const { formatNumber, formatMessage } = this.props.intl;
+    if ((timespan === null) || (timespan === undefined)) {
+      return null;
+    }
+    let stats;
+    if (filters.q) {
+      stats = [
+        { message: localMessages.storyCount, data: formatNumber(storyCount) },
+        { message: localMessages.mediumCount, data: formatMessage(messages.unknown) },
+        { message: localMessages.storyLinkCount, data: formatMessage(messages.unknown) },
+        { message: localMessages.mediumLinkCount, data: formatMessage(messages.unknown) },
+      ];
+    } else {
+      stats = [
+        { message: localMessages.storyCount, data: formatNumber(storyCount) },
+        { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count) },
+        { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count) },
+        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },
+      ];
+    }
+    return (
+      <StatBar
+        columnWidth={3}
+        stats={stats}
+      />
+    );
+  }
+
+}
 
 TopicStoryStatsContainer.propTypes = {
   // from parent
   timespan: PropTypes.object,
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
+  // form state
+  fetchData: PropTypes.func.isRequired,
+  storyCount: PropTypes.number,
   // from composition chain
   intl: PropTypes.object.isRequired,
-  // from state
-  fetchStatus: PropTypes.string.isRequired,
-  geocodedCounts: PropTypes.object,
-  englishCounts: PropTypes.object,
-  themeCounts: PropTypes.object,
-  undateableCount: PropTypes.object,
 };
 
+
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.geocodedStoryTotals.fetchStatus,  // TODO: respect all the statuses
-  geocodedCounts: state.topics.selected.summary.geocodedStoryTotals.counts,
-  englishCounts: state.topics.selected.summary.englishStoryTotals.counts,
-  undateableCount: state.topics.selected.summary.undateableStoryTotals.counts,
-  themeCounts: state.topics.selected.summary.themedStoryTotals.counts,
-  filters: state.topics.selected.filters,
+  fetchStatus: state.topics.selected.summary.englishStoryTotals.fetchStatus,
+  storyCount: state.topics.selected.summary.englishStoryTotals.counts.total,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  // can't use timespan.storyCount because there might be a query filter in place
+  fetchData: (filters) => {
+    dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, filters));
+  },
   asyncFetch: () => {
-    dispatch(fetchTopicGeocodedStoryCoverage(ownProps.topicId, ownProps.filters));
     dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, ownProps.filters));
-    dispatch(fetchTopicUndateableStoryCounts(ownProps.topicId, ownProps.filters));
-    dispatch(fetchTopicNytLabelCoverage(ownProps.topicId, ownProps.filters));
   },
 });
 

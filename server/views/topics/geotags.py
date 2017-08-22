@@ -28,7 +28,7 @@ def topic_geo_tag_coverage(topics_id):
 @api_error_handler
 def topic_geo_tag_counts_csv(topics_id):
     timespans_id = request.args["timespanId"]
-    tags = _geo_tag_counts(user_mediacloud_key(), timespans_id)
+    tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
     return stream_response(tags, ['tag', 'count', 'pct'], "topic-{}-nyt-label-counts".format(topics_id))
 
 
@@ -38,13 +38,13 @@ def topic_geo_tag_counts_csv(topics_id):
 @api_error_handler
 def topic_geo_tag_counts(topics_id):
     timespans_id = request.args["timespanId"]
-    tags = _geo_tag_counts(user_mediacloud_key(), timespans_id)
+    tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
     coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filters
     return jsonify({'results': tags, 'coverage': coverage['counts']})
 
 
-def _geo_tag_counts(user_mc_key, timespans_id):
-    tag_counts = topic_tag_counts(user_mc_key, timespans_id, tag_util.GEO_TAG_SET,
+def _geo_tag_counts(user_mc_key, topics_id):
+    tag_counts = topic_tag_counts(user_mc_key, topics_id, tag_util.GEO_TAG_SET,
                                   tag_util.GEO_SAMPLE_SIZE)
     # filter for countries, add in highcharts metadata
     country_tag_counts = [r for r in tag_counts if

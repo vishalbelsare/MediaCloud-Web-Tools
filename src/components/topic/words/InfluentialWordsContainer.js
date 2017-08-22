@@ -24,7 +24,7 @@ class InfluentialWordsContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, selectedTimespan } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.selectedTimespan !== selectedTimespan)) {
+    if ((nextProps.filters !== filters) || (nextProps.selectedTimespan !== selectedTimespan)) {
       fetchData(nextProps);
     }
   }

@@ -21,7 +21,7 @@ const WORD_CLOUD_DOM_ID = 'topic-summary-word-cloud';
 class WordsSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, fetchData } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId) {
+    if (nextProps.filters !== filters) {
       fetchData(nextProps);
     }
   }

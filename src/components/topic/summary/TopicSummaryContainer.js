@@ -9,14 +9,14 @@ import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
-import TopicTimespanInfo from './TopicTimespanInfo';
+import TopicStoryStatsContainer from './TopicStoryStatsContainer';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
 import GeoTagSummaryContainer from './GeoTagSummaryContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import TopicStoryStatsContainer from './TopicStoryStatsContainer';
+import TopicStoryMetadataStatsContainer from './TopicStoryMetadataStatsContainer';
 
 const localMessages = {
   title: { id: 'topic.summary.public.title', defaultMessage: 'Topic: {name}' },
@@ -57,7 +57,7 @@ class TopicSummaryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <TopicTimespanInfo topicId={topicId} filters={filters} timespan={timespan} />
+              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
             </Col>
           </Row>
           <Row>
@@ -104,7 +104,7 @@ class TopicSummaryContainer extends React.Component {
                 <TopicInfo topic={topicInfo} />
               </Col>
               <Col lg={6}>
-                <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
+                <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
               </Col>
             </Row>
           </Permissioned>

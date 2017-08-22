@@ -11,7 +11,7 @@ import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
-from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts
+from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -103,11 +103,11 @@ def story_english_counts(topics_id):
 
 def _public_safe_topic_story_count(topics_id, q):
     if access_public_topic(topics_id):
-        total = topic_story_count(TOOL_API_KEY, topics_id, q=None)
-        matching = topic_story_count(TOOL_API_KEY, topics_id, q=q)  # force a count with just the query
+        total = topic_story_count(TOOL_API_KEY, topics_id, q=add_to_user_query(None))
+        matching = topic_story_count(TOOL_API_KEY, topics_id, q=add_to_user_query(q))  # force a count with just the query
     elif is_user_logged_in():
-        total = topic_story_count(user_mediacloud_key(), topics_id, q=None)
-        matching = topic_story_count(user_mediacloud_key(), topics_id, q=q)  # force a count with just the query
+        total = topic_story_count(user_mediacloud_key(), topics_id, q=add_to_user_query(None))
+        matching = topic_story_count(user_mediacloud_key(), topics_id, q=add_to_user_query(q))  # force a count with just the query
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     return jsonify({'counts': {'count': matching['count'], 'total': total['count']}})
@@ -202,9 +202,9 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
         del params['fb_data']
 
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
-    props = ['stories_id', 'publish_date', 'date_is_reliable', 
-            'title', 'url', 'media_id', 'media_name',
-            'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
+    props = ['stories_id', 'publish_date', 'date_is_reliable',
+             'title', 'url', 'media_id', 'media_name',
+             'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
              'facebook_share_count', 'language', 'subtopics', 'themes']
     user_mc = user_mediacloud_client()
     try:

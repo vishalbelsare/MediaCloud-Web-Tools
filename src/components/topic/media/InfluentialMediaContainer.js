@@ -22,7 +22,7 @@ const localMessages = {
 class InfluentialMediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort, links } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
+    if ((nextProps.filters !== filters) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
       fetchData(nextProps);
     }
   }

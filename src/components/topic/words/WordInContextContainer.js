@@ -25,7 +25,7 @@ class WordInContextContainer extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId ||
+    if (nextProps.filters !== filters ||
       (nextProps.stem !== this.props.stem)) {
       fetchData(nextProps);
     }

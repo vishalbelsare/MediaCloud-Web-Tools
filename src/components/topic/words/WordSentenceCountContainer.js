@@ -23,7 +23,7 @@ const localMessages = {
 class WordSentenceCountContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters } = this.props;
-    if (nextProps.filters.timespanId !== filters.timespanId || (nextProps.stem !== this.props.stem)) {
+    if (nextProps.filters !== filters || (nextProps.stem !== this.props.stem)) {
       fetchData(nextProps.filters, nextProps.stem);
     }
   }

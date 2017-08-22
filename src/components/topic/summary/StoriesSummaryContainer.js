@@ -29,8 +29,7 @@ const NUM_TO_SHOW = 10;
 class StoriesSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { filters, sort, fetchData } = this.props;
-    if ((nextProps.filters.timespanId !== filters.timespanId) ||
-        (nextProps.sort !== sort)) {
+    if ((nextProps.filters !== filters) || (nextProps.sort !== sort)) {
       fetchData(nextProps);
     }
   }
