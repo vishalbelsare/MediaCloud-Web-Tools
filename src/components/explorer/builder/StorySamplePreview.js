@@ -50,6 +50,34 @@ class StorySamplePreview extends React.Component {
   render() {
     const { results, queries, handleStorySelection } = this.props;
     const { formatMessage } = this.props.intl;
+    let storyListContent;
+    // if there is only one query, don't show tabs
+    if (queries.length === 1) {
+      storyListContent = (
+        <StoryTable
+          className="story-table"
+          stories={results[0]}
+          onChangeFocusSelection={handleStorySelection}
+          maxTitleLength={50}
+        />
+      );
+    } else {
+      storyListContent = (
+        <Tabs>
+          {results.map((storySet, idx) => (
+            <Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
+              <StoryTable
+                className="story-table"
+                stories={storySet}
+                index={idx}
+                onChangeFocusSelection={handleStorySelection}
+                maxTitleLength={50}
+              />
+            </Tab>
+          ))}
+        </Tabs>
+      );
+    }
     return (
       <DataCard>
         <div className="actions">
@@ -67,20 +95,7 @@ class StorySamplePreview extends React.Component {
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
         <br />
-        <Tabs>
-          {results.map((storySet, idx) =>
-            (<Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
-              <StoryTable
-                className="story-table"
-                stories={storySet}
-                index={idx}
-                onChangeFocusSelection={handleStorySelection}
-                maxTitleLength={50}
-              />
-            </Tab>
-            )
-          )}
-        </Tabs>
+        {storyListContent}
       </DataCard>
     );
   }
