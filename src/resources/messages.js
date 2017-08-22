@@ -114,6 +114,7 @@ const messages = {
   },
   word: { id: 'word', defaultMessage: 'Word Source' },
   ok: { id: 'ok', defaultMessage: 'OK' },
+  apply: { id: 'apply', defaultMessage: 'Apply' },
   cancel: { id: 'cancel', defaultMessage: 'Cancel' },
   reset: { id: 'reset', defaultMessage: 'Reset' },
   error: { id: 'error', defaultMessage: 'Error' },

@@ -17,7 +17,7 @@ const ActiveFilters = (props) => {
     focusChip = (
       <Chip
         backgroundColor={'rgb(255,255,255)'}
-        style={{ border: '1px solid rgb(189,189,189)' }}
+        style={{ border: '1px solid rgb(189,189,189)', display: 'inline-flex' }}
         onRequestDelete={onRemoveFocus}
       >
         <FormattedMessage {...messages.focus} />: {focus.name}
@@ -28,7 +28,7 @@ const ActiveFilters = (props) => {
     queryChip = (
       <Chip
         backgroundColor={'rgb(255,255,255)'}
-        style={{ border: '1px solid rgb(189,189,189)' }}
+        style={{ border: '1px solid rgb(189,189,189)', display: 'inline-flex' }}
         onRequestDelete={onRemoveQuery}
       >
         <FormattedMessage {...messages.query} />: {trimToMaxLength(query, MAX_QUERY_LENGTH)}
