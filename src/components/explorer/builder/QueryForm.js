@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
+import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
@@ -17,6 +18,7 @@ const localMessages = {
   query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
   selectSandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Select media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
+  sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
   learnHowTo: { id: 'explorer.queryBuilder.learnHowTo', defaultMessage: 'Learn how to build query strings' },
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
@@ -25,7 +27,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, selected, buttonLabel, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, isEditable, selected, buttonLabel, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -36,7 +38,11 @@ const QueryForm = (props) => {
 
   const currentColor = selected.color; // for ColorPicker
   const currentQ = selected.q;
-// we may have a query or a query object for initialValues
+  let mediaPicker = null;
+  if (isEditable) {
+    mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+  }
+  if (!selected) { return null; }
   return (
     <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
       <div className="query-form-wrapper">
@@ -67,10 +73,21 @@ const QueryForm = (props) => {
                   onChange={onChange}
                 />
               </div>
+              <div>
+                <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.sentenceHeadline} /></label>
+                <Field
+                  name={name}
+                  component={renderSelectField}
+                  defaultValue="sentence"
+                >
+                  <MenuItem value="sentence" primaryText={'Sentence'} />
+                  <MenuItem value="headline" primaryText={'Headline'} />
+                </Field>
+              </div>
             </Col>
             <Col lg={1} />
             <Col lg={6}>
-              <SelectMediaDialog onConfirmSelection={selections => onChange(selections)} />
+              {mediaPicker}
               <div className="media-field-wrapper">
                 <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
                 <SourceCollectionsForm
@@ -127,7 +144,7 @@ const QueryForm = (props) => {
 
 QueryForm.propTypes = {
   // from parent
-  selected: React.PropTypes.array.isRequired,
+  selected: React.PropTypes.object.isRequired,
   onSave: React.PropTypes.func.isRequired,
   onChange: React.PropTypes.func,
   buttonLabel: React.PropTypes.string.isRequired,

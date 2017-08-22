@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, updateQuery, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -35,13 +35,13 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { user, samples, selected, queries, collectionLookupFetchStatus, addAppNotice, selectSearchQueriesById, selectQueriesByURLParams, setSelectedQuery, loadSampleSearches } = this.props;
+    const { loadSampleSearches, selectSearchQueriesById, setSelectedQuery, selectQueriesByURLParams, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
 
     // for Logged In users, we expect the URL to have query, start/end dates and at least one collection. Throw an error if this is missing
-    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+    if (hasPermissions(getUserRoles(whichProps.user), PERMISSION_LOGGED_IN)) {
       if (whichProps.location.pathname.includes('/queries/search')) {
         // parse query params
         let parsedObjectArray = null;
@@ -52,25 +52,21 @@ class LoggedInQueryContainer extends React.Component {
           return;
         }
 
-        if (this.props.location.pathname !== whichProps.location.pathname) {
-          // TODO should I check sourceLookup too?
+        if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
           selectQueriesByURLParams(parsedObjectArray);
-          setSelectedQuery(parsedObjectArray[0]);
-        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
-          selectQueriesByURLParams(parsedObjectArray);
-        } else if (!selected && !whichProps.selected && collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
-          setSelectedQuery(queries[0]); // once we have the lookups,
+        } else if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+          setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
         }
       } else if (whichProps.location.pathname.includes('/queries')) {
         currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
 
-        if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+        if (!whichProps.samples || whichProps.samples.length === 0) { // if not loaded as in bookmarked page
           loadSampleSearches(currentIndexOrQuery); // currentIndex
-        } else if ((!selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
-          selectSearchQueriesById(samples[currentIndexOrQuery]);
-          setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
+        } else if ((!whichProps.selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
+          selectSearchQueriesById(whichProps.samples[currentIndexOrQuery]);
+          setSelectedQuery(whichProps.samples[currentIndexOrQuery].queries[0]);
         } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
-          selectSearchQueriesById(samples[currentIndexOrQuery]);
+          selectSearchQueriesById(whichProps.samples[currentIndexOrQuery]);
         }
       }
     }
@@ -103,18 +99,21 @@ class LoggedInQueryContainer extends React.Component {
   }
 
   render() {
-    const { user, selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
+    const { user, selected, queries, setSelectedQuery, collectionLookupFetchStatus, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <div>Error</div>;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       const isEditable = true;
-      if (queries && queries.length > 0 && selected) {
-        content = (
-          <div>
-            <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
-            <QueryResultsContainer queries={queries} params={location} samples={samples} />
-          </div>
-        );
+      if (queries && queries.length > 0 && selected &&
+        collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        if (selected.sources.length === 0 || (selected.sources.length > 0 && selected.sources[0].url !== undefined)) {
+          content = (
+            <div>
+              <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+              <QueryResultsContainer queries={queries} params={location} samples={samples} />
+            </div>
+          );
+        }
       }
     } else {
       content = <div>No Permissions</div>;
@@ -141,6 +140,7 @@ LoggedInQueryContainer.propTypes = {
   sourcesResults: React.PropTypes.array,
   collectionResults: React.PropTypes.array,
   collectionLookupFetchStatus: React.PropTypes.string,
+  sourceLookupFetchStatuses: React.PropTypes.array,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -162,6 +162,7 @@ const mapStateToProps = (state, ownProps) => ({
   sourcesResults: state.explorer.queries.sources ? state.explorer.queries.sources.results : null,
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
+  sourceLookupFetchStatuses: state.explorer.queries.sources.fetchStatuses,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime,
   samples: state.explorer.samples.list,
@@ -198,7 +199,7 @@ const mapDispatchToProps = dispatch => ({
   },
   setQueryFromURL: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
-    // select first entry
+    // lookup ancillary data eg collection and source info for display purposes in QueryForm
     queryArrayFromURL.map((q, idx) => {
       const queryInfo = {
         index: idx,
@@ -209,7 +210,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(fetchQuerySourcesByIds(queryInfo))
         .then((results) => {
           queryInfo.sources = results;
-          dispatch(updateQuery(queryInfo));
+          dispatch(updateQuerySourceLookupInfo(queryInfo)); // updates the query and the selected query
         });
       }
       if (q.collections && q.collections.length > 0) {
@@ -217,7 +218,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(fetchQueryCollectionsByIds(queryInfo))
         .then((results) => {
           queryInfo.collections = results;
-          dispatch(updateQuery(queryInfo));
+          dispatch(updateQueryCollectionLookupInfo(queryInfo)); // updates the query and the selected query
         });
       }
       return 0;

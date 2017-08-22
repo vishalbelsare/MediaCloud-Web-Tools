@@ -1,15 +1,13 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import Dialog from 'material-ui/Dialog';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
-import { fetchMediaPickerFeaturedCollections, selectMedia, clearSelectedMedia } from '../../../actions/systemActions';
+import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { EditButton } from '../IconButton';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -29,10 +27,12 @@ class SelectMediaDialog extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
-    const { selected, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
-    if (selected.index !== nextProps.selected.index) {
+    const { selectedMedia, initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
+    if ((JSON.stringify(initMedia) !== JSON.stringify(selectedMedia)) || (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia))) {
       clearMediaSelectionForQuery();
-      nextProps.savedCollections.map(v => handleInitialSelectionOfMedia(v));
+      if (nextProps.initMedia) { // expects an array of media from caller
+        nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
+      }
     }
   }
 
@@ -50,46 +50,51 @@ class SelectMediaDialog extends React.Component {
   };
 
   render() {
-    const { selectedMedia, queryArgs, handleSelection } = this.props;
+    const { selectedMedia, handleSelection, lookupTimestamp } = this.props;
     const { formatMessage } = this.props.intl;
-    const dialogActions = [
+    const dialogActions = (
       <AppButton
         label={formatMessage(messages.ok)}
         onTouchTap={this.handleRemoveDialogClose}
-      />,
-    ];
+        type="submit"
+        primary
+      />
+    );
+    let modalContent = null;
+    if (this.state.open) {
+      modalContent = (
+        <div>
+          <div
+            className="select-media-dialog-modal"
+            title={formatMessage(localMessages.selectMediaTitle)}
+            open={this.state.open}
+          >
+            <div className="select-media-dialog-modal-inner">
+              <Grid>
+                <Row>
+                  <Col lg={2}>
+                    <MediaSelectionContainer selectedMedia={selectedMedia} />
+                  </Col>
+                  <Col lg={6}>
+                    <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                  </Col>
+                </Row>
+              </Grid>
+            </div>
+            {dialogActions}
+          </div>
+          <div className="backdrop" onTouchTap={this.handleRemoveDialogClose} />
+        </div>
+      );
+    }
 
     return (
-      <div className="explorer-select-media-dialog">
+      <div className="select-media-menu">
         <EditButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(messages.ok)}
         />
-        <Dialog
-          title={formatMessage(localMessages.selectMediaTitle)}
-          actions={dialogActions}
-          open={this.state.open}
-          onRequestClose={this.handleRemoveDialogClose}
-          className={'select-media-dialog'}
-          bodyClassName={'select-media-dialog-body'}
-          contentClassName={'select-media-dialog-content'}
-          overlayClassName={'select-media-dialog-overlay'}
-          titleClassName={'select-media-dialog-title'}
-          autoDetectWindowHeight
-        >
-          <div className="select-media-dialog-inner">
-            <Grid>
-              <Row>
-                <Col lg={2}>
-                  <MediaSelectionContainer selectedMedia={selectedMedia} />
-                </Col>
-                <Col lg={6}>
-                  <SelectMediaResultsContainer selectedMediaQueryType={0} queryArgs={queryArgs} selectedMedia={selectedMedia} handleSelection={handleSelection} />
-                </Col>
-              </Row>
-            </Grid>
-          </div>
-        </Dialog>
+        {modalContent}
       </div>
     );
   }
@@ -99,11 +104,10 @@ class SelectMediaDialog extends React.Component {
 SelectMediaDialog.propTypes = {
   // from context
   intl: React.PropTypes.object.isRequired,
-  // from parent
-  selected: React.PropTypes.object,
-  savedCollections: React.PropTypes.array,
-  queryArgs: React.PropTypes.object,
+  // from parent/implementer
+  initMedia: React.PropTypes.array,
   selectedMedia: React.PropTypes.array,
+  lookupTimestamp: React.PropTypes.string,
   handleSelection: React.PropTypes.func.isRequired,
   handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
   clearMediaSelectionForQuery: React.PropTypes.func.isRequired,
@@ -111,11 +115,9 @@ SelectMediaDialog.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  savedCollections: state.explorer.selected.collections, // maybe we want these dunnoyet
-  selected: state.explorer.selected,
-  savedSources: state.explorer.selected.sources,
   fetchStatus: state.system.mediaPicker.selectMedia.fetchStatus,
   selectedMedia: state.system.mediaPicker.selectMedia.list, // initially empty
+  lookupTimestamp: state.system.mediaPicker.featured.timestamp, // or maybe any of them? trying to get to receive new props when fetch succeeds
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -129,7 +131,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleInitialSelectionOfMedia: (prevSelectedMedia) => {
     if (prevSelectedMedia) {
-      dispatch(selectMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
+      dispatch(initializePreviouslySelectedMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });
@@ -137,9 +139,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
-        SelectMediaDialog
-      )
+      SelectMediaDialog
     )
   );
 

@@ -31,29 +31,31 @@ class MediaSelectionContainer extends React.Component {
           <Menu>
             <MenuItem
               className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
-              value={0}
+              value={PICK_COLLECTION}
               primaryText={formatMessage(localMessages.pickCollections)}
               onTouchTap={() => this.updateMediaType(PICK_COLLECTION)}
             />
             <MenuItem
               className={selectedMediaQueryType === 1 ? 'select-media-menu-selected' : ''}
-              value={1}
+              value={PICK_SOURCE}
               primaryText={formatMessage(localMessages.pickSources)}
               onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
             />
             <MenuItem
               primaryText={formatMessage(localMessages.pickAdvanced)}
+              value={ADVANCED}
               onTouchTap={() => this.updateMediaType(ADVANCED)}
             />
             <MenuItem
               primaryText={formatMessage(localMessages.pickStarred)}
+              value={STARRED}
               onTouchTap={() => this.updateMediaType(STARRED)}
             />
           </Menu>
         </Row>
         <Row>
           {selectedMedia.map(obj => (
-            <SourceOrCollectionChip key={obj.tags_id || obj.media_id} object={obj} />
+            <SourceOrCollectionChip key={obj.id || obj.tags_id || obj.media_id} object={obj} />
           ))}
         </Row>
       </div>
@@ -71,13 +73,9 @@ MediaSelectionContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  selected: state.explorer.selected,
-  queries: state.explorer.queries,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
-  selectedMedia: state.system.mediaPicker.selectMedia.list,
-  // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 
 const mapDispatchToProps = dispatch => ({

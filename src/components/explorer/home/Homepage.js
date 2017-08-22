@@ -9,7 +9,7 @@ import SearchForm from './SearchForm';
 import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -73,11 +73,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onKeywordSearch: (values, user) => {
     let urlParamString = null;
-    // use default dates, collection, sources
+    // TODO two week range for logged in too?
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT);
+    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT_ARRAY);
     // why bother sending this? const sources = '[]';
-    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","collections":${collection}}]`;
+    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection}}]`;
     const demoParams = `[{"q":"${values.keyword}"}]`;
 
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {

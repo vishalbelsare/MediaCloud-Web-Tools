@@ -6,8 +6,8 @@ import Stat from './Stat';
 
 const StatBar = props => (
   <Row>
-    {props.stats.map(stat => (
-      <Col lg={props.columnWidth || 4} key={stat.message.id}>
+    {props.stats.map((stat, idx) => (
+      <Col lg={props.columnWidth || 4} key={idx}>
         <Stat columnWidth={props.columnWidth} {...stat} />
       </Col>
     ))}

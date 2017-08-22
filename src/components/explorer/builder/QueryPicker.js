@@ -9,7 +9,8 @@ import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -30,7 +31,6 @@ class QueryPicker extends React.Component {
 
   updateQuery(newInfo) {
     const { updateCurrentQuery, selected } = this.props;
-    // TODO handle duplicates
     const updateObject = selected;
     if (newInfo.length) { // assume it's an array
       newInfo.forEach((obj) => {
@@ -52,14 +52,20 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updateObject);
   }
 
+  handleOpenStub() {
+    return this.props;
+  }
+
   render() {
-    const { selected, queries, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, user, collectionsResults, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     let fixedQuerySlides = null;
-
+    let canSelectMedia = false;
     // if DEMO_MODE isEditable = true
-    if (queries && queries.length > 0 && selected) {
+    if (queries && queries.length > 0 && selected &&
+      collectionsResults && collectionsResults.length > 0 &&
+      sourcesResults && sourcesResults.length >= 0) {
       fixedQuerySlides = queries.map((query, index) => (
         <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
           <QueryPickerItem
@@ -73,14 +79,16 @@ class QueryPicker extends React.Component {
           />
         </div>
       ));
-
+      if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
+        canSelectMedia = true;
+      }
       // provide the add Query button, load with default values when Added is clicked
       if (isEditable) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // effectively a +1
         const genDefColor = colorPallette(newIndex);
-        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT, sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>
@@ -112,22 +120,21 @@ class QueryPicker extends React.Component {
       );
 
       // indicate which queryPickerItem is selected -
-      const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
-      const sourcesAndCollections = selectedWithSandCLabels.sources.concat(selectedWithSandCLabels.collections);
-      const initialValues = sourcesAndCollections ? { ...selectedWithSandCLabels, media: sourcesAndCollections } : {};
+      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
       return (
         <div>
           {content}
           <QueryForm
-            initialValues={initialValues}
-            selected={selectedWithSandCLabels}
+            initialValues={selected}
+            selected={selected}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
             buttonLabel={formatMessage(localMessages.querySearch)}
             onSave={handleSearch}
             onChange={event => this.updateQuery(event)}
-            isEditable
+            handleOpenHelp={this.handleOpenStub}
+            isEditable={canSelectMedia}
           />
         </div>
       );
@@ -137,6 +144,7 @@ class QueryPicker extends React.Component {
 }
 
 QueryPicker.propTypes = {
+  user: React.PropTypes.object.isRequired,
   queries: React.PropTypes.array,
   sourcesResults: React.PropTypes.array,
   collectionsResults: React.PropTypes.array,
@@ -149,6 +157,7 @@ QueryPicker.propTypes = {
   // formData: React.PropTypes.object,
   updateCurrentQuery: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
+  handleOpenStub: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -157,6 +166,7 @@ const mapStateToProps = state => ({
   sourcesResults: state.explorer.queries.sources.results ? state.explorer.queries.sources.results : null,
   collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
   fetchStatus: state.explorer.queries.collections.fetchStatus,
+  user: state.user,
   // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
 });
 

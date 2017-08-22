@@ -15,7 +15,7 @@ const SourceOrCollectionChip = (props) => {
     icon = <MediaSourceIcon height={15} />;
   }
   const typeClass = isCollection ? 'chip-collection' : 'chip-media-source';
-  const objectId = object.id || isCollection ? object.tags_id : object.media_id;
+  const objectId = object.id || (isCollection ? object.tags_id : object.media_id);
   const name = isCollection ? (object.name || object.label || object.tag) : (object.name || object.url);
   return (
     <Chip

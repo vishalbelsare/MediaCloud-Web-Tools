@@ -5,60 +5,56 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import DataCard from './DataCard';
-// import { ExploreButton } from './IconButton';
-import StatsWithAction from './statbar/StatsWithAction';
+import AppButton from './AppButton';
+import StatBar from './statbar/StatBar';
 
 const localMessages = {
   sourceStat: { id: 'mediaPicker.source.stat', defaultMessage: ' Stories' },
   stat1: { id: 'mediaPicker.coll.stat1', defaultMessage: 'Total Stories' },
-  stat1HelpTitle: { id: 'mediaPicker.coll.stat1.help.title', defaultMessage: 'annoyig' },
-  stat1HelpMsg: { id: 'mediaPicker.coll.stat1.help.message', defaultMessage: 'annoyig' },
-  stat2: { id: 'mediaPicker.coll.tat2', defaultMessage: 'Media Sources' },
-  stat2HelpTitle: { id: 'mediaPicker.coll.stat1.help.title', defaultMessage: 'annoyig' },
-  stat2HelpMsg: { id: 'mediaPicker.coll.stat1.help.message', defaultMessage: 'annoyig' },
+  stat2: { id: 'mediaPicker.coll.stat2', defaultMessage: 'Media Sources' },
+  stat3: { id: 'mediaPicker.coll.stat3', defaultMessage: 'Select' },
   actionMessage1: { id: 'mediaPicker.action1', defaultMessage: 'Select' },
   actionMessage2: { id: 'mediaPicker.action2', defaultMessage: 'Selected' },
 };
 
 const MediaPickerPreviewList = (props) => {
-  const { items, icon, linkInfo, linkDisplay, disabled, onClick } = props;
+  const { items, icon, linkInfo, linkDisplay, onSelectMedia } = props;
+  const { formatMessage } = props.intl;
   let content = null;
   let statProps = null;
-  const collProps = {
-    stat1: {
-      message: localMessages.stat1,
-      data: '100', // c.media_source_tags
-      // helpTitleMsg: localMessages.stat1HelpTitle,
-      // helpContentMsg: localMessages.stat1HelpMsg,
-    },
-    stat2: {
-      message: localMessages.stat2,
-      data: '200',
-      // helpTitleMsg: localMessages.stat2HelpTitle,
-      // helpContentMsg: localMessages.sta21HelpMsg,
-    },
-    actionMessage1: localMessages.actionMessage1,
-    actionMessage2: localMessages.actionMessage2,
-  };
-  const srcProps = {
-    stat1: {
-      message: localMessages.sourceStat,
-      data: '50',
-    },
-    stat2: {
-      message: localMessages.stat2,
-      data: '200',
-    },
-    actionMessage1: localMessages.actionMessage1,
-    actionMessage2: localMessages.actionMessage2,
-  };
 
   if (items && items.length > 0) {
     content = (
       items.map((c, idx) => {
-        const isDisabled = disabled ? disabled(c) : false;
+        const isDisabled = c.selected;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
         // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
+        const collProps = [
+          { message: localMessages.stat1, data: '100' },
+          { message: localMessages.stat2, data: '200' },
+          { message: localMessages.stat3,
+            content: (
+              <AppButton // need icon also
+                label={isDisabled ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)} // the toggle has to be implemented
+                backgroundColor={isDisabled ? '#ccc' : '#fff'}
+                onClick={() => onSelectMedia(c)}
+              />
+            ),
+          },
+        ];
+        const srcProps = [
+          { message: localMessages.stat1, data: '20' },
+          { message: localMessages.stat2, data: '40' },
+          { message: localMessages.stat3,
+            content: (
+              <AppButton // need icon also
+                label={c.selected ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)} // the toggle has to be implemented
+                backgroundColor={c.selected ? '#ccc' : '#fff'}
+                onClick={() => onSelectMedia(c)}
+              />
+            ),
+          },
+        ];
         statProps = c.tags_id ? collProps : srcProps;
         return (
           <Col key={idx} lg={4} xs={12}>
@@ -71,7 +67,7 @@ const MediaPickerPreviewList = (props) => {
                 </div>
               </div>
               <div className="media-picker">
-                <StatsWithAction disabled={c.selected} statProps={statProps} onClick={() => onClick(c)} />
+                <StatBar disabled={c.selected} stats={statProps} />
               </div>
             </DataCard>
           </Col>
@@ -98,7 +94,7 @@ MediaPickerPreviewList.propTypes = {
   classStyle: PropTypes.string,
   helpButton: PropTypes.node,
   disabled: PropTypes.func,
-  onClick: PropTypes.func,
+  onSelectMedia: PropTypes.func,
   // from compositional chain
   intl: PropTypes.object.isRequired,
   contentType: PropTypes.string,

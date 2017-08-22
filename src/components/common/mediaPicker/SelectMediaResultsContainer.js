@@ -27,37 +27,34 @@ class SelectMediaResultsContainer extends React.Component {
   }
 
   correlateSelection(whichProps) {
-    const { selectedMedia, selectedMediaQueryType, collectionResults, sourceResults, featured, starredResults, handleSelectionOfMedia } = this.props;
     let whichList = [];
-    switch (selectedMediaQueryType) {
+    switch (whichProps.selectedMediaQueryType) {
       case PICK_COLLECTION:
-        if (collectionResults && collectionResults.list.length > 0) {
+        if (whichProps.collectionResults && whichProps.collectionResults.list.length > 0) {
           whichList = whichProps.collectionResults;
-        } else if (featured && featured.list.length > 0) {
+        } else if (whichProps.featured && whichProps.featured.list.length > 0) {
           whichList = whichProps.featured;
         }
         break;
       case PICK_SOURCE:
-        if (sourceResults && sourceResults.list.length > 0) {
-          whichList = whichProps.sourceResults;
-        }
+        whichList = whichProps.sourceResults;
         break;
       case STARRED:
-        if (starredResults && starredResults.list.length > 0) {
-          whichList = whichProps.starredResults;
-        }
+        whichList = whichProps.starredResults;
         break;
       // case ADVANCED: TBD
       default:
         break;
     }
-    if (selectedMedia && selectedMedia.length > 0 && whichList.list && whichList.list.length > 0) {
-      whichList.list.map(v => (
-        selectedMedia.map((s) => {
-          if ((s.tags_id === v.id || s.id === v.id) && v.selected === false) {
-            handleSelectionOfMedia(v); // concurrency between selected list and resutl list
+    if (whichProps.selectedMedia && whichProps.selectedMedia.length > 0 && whichList.list && whichList.list.length > 0) {
+      // update current list regardless - find matches in selected and issue select_media action
+      // infinite loop though if we dont' stop...
+      whichProps.selectedMedia.map(s => (
+        whichList.list.map((v) => {
+          if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
+            this.props.handleSelectionOfMedia(s); // update if
             return true;
-          }
+          } // TODO else we shoudl unselect
           return false;
         })),
       );
@@ -75,18 +72,10 @@ class SelectMediaResultsContainer extends React.Component {
     handleSelectionOfMedia(media);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
+    const { timestamp, selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
     let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
-    // user the media that matches the selected media query
-
-    /* maybe just on willMount
-      update the data with the selected info we have from the explorer query
-      selectedMedia.forEach().find in selected media results array
-      and set selected = true
-      so that the MediaSlectionContainer shows the items already selected and
-      the SelectMediaResultsContainer has greyed out buttons appropriately */
 
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
@@ -119,17 +108,18 @@ class SelectMediaResultsContainer extends React.Component {
       content = (
         <MediaPickerPreviewList
           items={whichMedia}
+          timestamp={timestamp}
           classStyle="browse-items"
           itemType="media"
           linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
-          onClick={c => this.handleSelectMedia(c)}
+          onSelectMedia={c => this.handleSelectMedia(c)}
         />
       );
     }
     return (
       <div className="select-media-container">
-        <SelectMediaForm initialValues={whichStoredKeyword} onSearch={val => this.updateMediaQuery(val)} />
+        <SelectMediaForm initValues={whichStoredKeyword} onSearch={val => this.updateMediaQuery(val)} />
         {content}
       </div>
     );
@@ -144,6 +134,7 @@ SelectMediaResultsContainer.propTypes = {
   selectedMediaQueryKeyword: React.PropTypes.string,
   selectedMediaQueryType: React.PropTypes.number,
   featured: React.PropTypes.object,
+  timestamp: React.PropTypes.string,
   collectionResults: React.PropTypes.object,
   sourceResults: React.PropTypes.object,
   starredResults: React.PropTypes.object,
@@ -157,6 +148,7 @@ const mapStateToProps = state => ({
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
+  timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   starredResults: state.system.mediaPicker.starredQueryResults ? state.system.mediaPicker.starredQueryResults : null,
 });

@@ -1,4 +1,4 @@
-import { FETCH_MEDIAPICKER_SOURCE_SEARCH, SELECT_MEDIA, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/systemActions';
+import { FETCH_MEDIAPICKER_SOURCE_SEARCH, MEDIA_PICKER_SELECT_MEDIA, RESET_MEDIAPICKER_SOURCE_SEARCH } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const sourceQueryResults = createAsyncReducer({
@@ -16,7 +16,7 @@ const sourceQueryResults = createAsyncReducer({
       selected: false,
     })),
   }),
-  [SELECT_MEDIA]: (payload, state) => ({
+  [MEDIA_PICKER_SELECT_MEDIA]: (payload, state) => ({
     list: state.list.map((c) => {
       if (c.id === payload.id) {
         return ({
