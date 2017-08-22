@@ -10,7 +10,6 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
-import messages from '../../../resources/messages';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 // const NUM_TO_SHOW = 20;
@@ -19,13 +18,11 @@ const DEFAULT_COLLECTION = 9139487;
 // TODO check all these messages
 
 const localMessages = {
-  title: { id: 'explorer.stories.title', defaultMessage: 'Story Samples' },
-  helpTitle: { id: 'explorer.stories.help.title', defaultMessage: 'About Story Samples' },
-  helpText: { id: 'explorer.stories.help.text',
-    defaultMessage: '<p>This chart shows you estimated coverage of your seed query</p>',
+  title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
+  helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a small sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the top right to download a CSV of stories with their urls.</p>' },
+  helpDetails: { id: 'explorer.stories.help.text',
+    defaultMessage: '<p>Due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',
   },
-  descriptionIntro: { id: 'explorer.stories.help.title', defaultMessage: 'This is a random sample of stories.' },
-  tabStory: { id: 'explorer.stories.tab', defaultMessage: 'Tab for Query' },
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
@@ -174,7 +171,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.storiesTableHelpText])(
+      composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
         composeAsyncContainer(
           StorySamplePreview
         )

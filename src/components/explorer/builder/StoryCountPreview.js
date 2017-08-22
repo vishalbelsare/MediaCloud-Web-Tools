@@ -17,12 +17,13 @@ const DEFAULT_SOURCES = '';
 const DEFAULT_COLLECTION = 9139487;
 
 const localMessages = {
-  title: { id: 'explorer.storyCount.title', defaultMessage: 'Story Counts' },
-  descriptionIntro: { id: 'explorer.storyCount.help.into',
-    defaultMessage: 'A topic can include up to 100,000 stories.',
+  title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Stories' },
+  helpIntro: { id: 'explorer.storyCount.help.into',
+    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the cirlces to see the exact numbers, or click the menu in the top right to download the data.</p>',
   },
-  totalRolloverLabel: { id: 'explorer.storyCount.total', defaultMessage: 'All Stories' },
-  totalLabel: { id: 'explorer.storyCount.total', defaultMessage: 'Total Stories' },
+  helpDetails: { id: 'explorer.storyCount.help.details',
+    defaultMessage: '<p></p>',
+  },
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
