@@ -16,7 +16,8 @@ const localMessages = {
   addButton: { id: 'explorer.queryBuilder.saveAll', defaultMessage: 'Search' },
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
   query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
-  selectSandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Select media' },
+  selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Select media' },
+  SandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
   sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
@@ -39,8 +40,10 @@ const QueryForm = (props) => {
   const currentColor = selected.color; // for ColorPicker
   const currentQ = selected.q;
   let mediaPicker = null;
+  let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
   if (isEditable) {
     mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+    mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
   }
   if (!selected) { return null; }
   return (
@@ -89,7 +92,7 @@ const QueryForm = (props) => {
             <Col lg={6}>
               {mediaPicker}
               <div className="media-field-wrapper">
-                <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>
+                {mediaLabel}
                 <SourceCollectionsForm
                   className="query-field"
                   form="queryForm"
@@ -109,6 +112,7 @@ const QueryForm = (props) => {
                   type="inline"
                   component={renderTextField}
                   underlineShow={false}
+                  disabled={!isEditable}
                 />
                 <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
                 <Field
@@ -118,6 +122,7 @@ const QueryForm = (props) => {
                   type="inline"
                   component={renderTextField}
                   underlineShow={false}
+                  disabled={!isEditable}
                 />
               </div>
             </Col>

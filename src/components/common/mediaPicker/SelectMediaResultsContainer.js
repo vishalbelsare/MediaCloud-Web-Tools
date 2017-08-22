@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../AsyncContainer';
-import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
+import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
 import MediaPickerPreviewList from '../MediaPickerPreviewList';
 import SelectMediaForm from './SelectMediaForm';
 import messages from '../../../resources/messages';
@@ -52,7 +52,7 @@ class SelectMediaResultsContainer extends React.Component {
       whichProps.selectedMedia.map(s => (
         whichList.list.map((v) => {
           if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
-            this.props.handleSelectionOfMedia(s); // update if
+            this.props.handleMediaConcurrency(s); // update if
             return true;
           } // TODO else we shoudl unselect
           return false;
@@ -67,10 +67,11 @@ class SelectMediaResultsContainer extends React.Component {
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
     updateMediaQuerySelection(updatedQueryObj);
   }
-  handleSelectMedia(media) {
-    const { handleSelectionOfMedia } = this.props;
-    handleSelectionOfMedia(media);
+  handleToggleAndSelectMedia(media) {
+    const { handleToggleAndSelectMedia } = this.props;
+    handleToggleAndSelectMedia(media);
   }
+
   render() {
     const { timestamp, selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
@@ -113,7 +114,7 @@ class SelectMediaResultsContainer extends React.Component {
           itemType="media"
           linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
-          onSelectMedia={c => this.handleSelectMedia(c)}
+          onSelectMedia={c => this.handleToggleAndSelectMedia(c)}
         />
       );
     }
@@ -128,7 +129,8 @@ class SelectMediaResultsContainer extends React.Component {
 
 SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  handleSelectionOfMedia: React.PropTypes.func.isRequired,
+  handleMediaConcurrency: React.PropTypes.func.isRequired,
+  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
   media: React.PropTypes.array,
   updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,
@@ -174,8 +176,14 @@ const mapDispatchToProps = dispatch => ({
       }
     }
   },
-  handleSelectionOfMedia: (selectedMedia) => {
+  handleMediaConcurrency: (selectedMedia) => {
     if (selectedMedia) {
+      dispatch(toggleMedia(selectedMedia));
+    }
+  },
+  handleToggleAndSelectMedia: (selectedMedia) => {
+    if (selectedMedia) {
+      dispatch(toggleMedia(selectedMedia));
       dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
