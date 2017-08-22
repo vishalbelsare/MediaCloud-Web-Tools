@@ -59,8 +59,9 @@ class QueryPicker extends React.Component {
   render() {
     const { selected, queries, user, collectionsResults, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
-    let content = null;
-    let fixedQuerySlides = null;
+    let queryPickerContent; // editable if demo mode
+    let queryFormContent; // hidden if demo mode
+    let fixedQuerySlides;
     let canSelectMedia = false;
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected &&
@@ -107,7 +108,7 @@ class QueryPicker extends React.Component {
 
         fixedQuerySlides.push(emptyQuerySlide);
       }
-      content = (
+      queryPickerContent = (
         <div className="query-picker">
           <Grid>
             <ItemSlider
@@ -118,12 +119,8 @@ class QueryPicker extends React.Component {
           </Grid>
         </div>
       );
-
-      // indicate which queryPickerItem is selected -
-      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
-      return (
-        <div>
-          {content}
+      if (!isEditable) {  // if logged in show full form
+        queryFormContent = (
           <QueryForm
             initialValues={selected}
             selected={selected}
@@ -136,6 +133,14 @@ class QueryPicker extends React.Component {
             handleOpenHelp={this.handleOpenStub}
             isEditable={canSelectMedia}
           />
+        );
+      }
+      // indicate which queryPickerItem is selected -
+      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
+      return (
+        <div>
+          {queryPickerContent}
+          {queryFormContent}
         </div>
       );
     }
