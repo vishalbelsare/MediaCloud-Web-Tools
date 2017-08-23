@@ -9,6 +9,7 @@ import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { generateQueryParamString } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 
@@ -189,10 +190,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
-    const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
-    let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
-    urlParamString = `[${urlParamString}]`;
+    const urlParamString = generateQueryParamString(queries);
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
     // this should keep the current selection...

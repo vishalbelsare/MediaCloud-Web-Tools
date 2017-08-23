@@ -199,7 +199,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   saveThisQuerySet: (query) => {
-    if (query) {
+    if (query) { // TODO - save as JSON
       dispatch(saveQuerySet({ label: query.label, query_string: query.q }));
     }
   },
