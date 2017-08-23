@@ -8,21 +8,21 @@ import StoryCountPreview from './StoryCountPreview';
 import GeoPreview from './GeoPreview';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, params, samples } = props;
+  const { queries, user, params } = props;
   return (
     <Grid>
       <Row>
         <Col lg={12} xs={12}>
-          <AttentionComparisonContainer queries={queries} user={user} params={params} sampleSearches={samples} />
+          <AttentionComparisonContainer queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StorySamplePreview queries={queries} user={user} params={params} sampleSearches={samples} />
+          <StorySamplePreview queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StoryCountPreview queries={queries} user={user} params={params} sampleSearches={samples} />
+          <StoryCountPreview queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <GeoPreview queries={queries} user={user} params={params} sampleSearches={samples} />
+          <GeoPreview queries={queries} user={user} params={params} />
         </Col>
       </Row>
     </Grid>
@@ -31,18 +31,14 @@ const QueryResultsContainer = (props) => {
 
 QueryResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  selected: React.PropTypes.object,
-  queries: React.PropTypes.array,
   // from context
   params: React.PropTypes.object,       // params from router
   // from state
-  lastSearchTime: React.PropTypes.object,
-  samples: React.PropTypes.array,
   user: React.PropTypes.object,
+  queries: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
-  // lastSearchTime: state.explorer.queries.list,
   user: state.user,
   queries: state.explorer.queries.queries,
 });

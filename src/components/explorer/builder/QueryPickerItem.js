@@ -18,7 +18,7 @@ class QueryPickerItem extends React.Component {
   }
 
   render() {
-    const { query, isEditable, displayLabel, selectThisQuery, updateQuery } = this.props;
+    const { query, isEditable, displayLabel, selectThisQuery, updateQueryProperty } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -29,7 +29,7 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQuery(e, val)}
+              onChange={(e, val) => updateQueryProperty('color', val)}
             />
             <TextField
               className="query-picker-editable-name"
@@ -37,7 +37,7 @@ class QueryPickerItem extends React.Component {
               name="q"
               value={query.q}
               hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => updateQuery(e, val)}
+              onChange={(e, val) => updateQueryProperty('q', val)}
             />
           </div>
         );
@@ -46,7 +46,7 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQuery(e, val)}
+              onChange={(e, val) => updateQueryProperty('color', val)}
             />&nbsp;
             {query.q}
           </div>
@@ -100,7 +100,7 @@ QueryPickerItem.propTypes = {
   isEditable: React.PropTypes.bool.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
   selectThisQuery: React.PropTypes.func,
-  updateQuery: React.PropTypes.func.isRequired,
+  updateQueryProperty: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

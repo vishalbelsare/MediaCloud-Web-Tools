@@ -35,14 +35,30 @@ function dataAsSeries(data) {
   return { values, intervalMs, start: dates[0] };
 }
 
+const queryPropertyHasChanged = (queries, nextQueries, propName) => {
+  const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const propHasChanged = currentProps !== nextProps;
+  return propHasChanged;
+};
+
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
       nextProps.urlQueryString !== urlQueryString) {
-    // TODO also check for name and color changes
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { results, queries } = this.props;
+    // only re-render if results, any labels, or any colors have changed
+    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+    return (
+      ((labelsHaveChanged || colorsHaveChanged))
+       || (results !== nextProps.results)
+    );
   }
   downloadCsv = (query) => {
     let url = null;
@@ -110,7 +126,6 @@ AttentionComparisonContainer.propTypes = {
   // from parent
   lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
-  selected: React.PropTypes.object.isRequired,
   // from composition
   params: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
@@ -119,7 +134,6 @@ AttentionComparisonContainer.propTypes = {
   recordLastSearchTime: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
-  sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -128,7 +142,6 @@ AttentionComparisonContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  selected: state.explorer.selected,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,

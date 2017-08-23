@@ -107,7 +107,6 @@ StorySamplePreview.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
-  sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state

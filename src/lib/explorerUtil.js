@@ -8,3 +8,13 @@ export const PICK_COLLECTION = 0;
 export const PICK_SOURCE = 1;
 export const ADVANCED = 2;
 export const STARRED = 3;
+
+const MAX_QUERY_LABEL_LENGTH = 60;
+
+export function smartLabelForQuery(query) {
+  let smartLabel = query.q;
+  if (query.q.length > MAX_QUERY_LABEL_LENGTH) {
+    smartLabel = `${smartLabel.substr(0, MAX_QUERY_LABEL_LENGTH)}...`;
+  }
+  return smartLabel;
+}

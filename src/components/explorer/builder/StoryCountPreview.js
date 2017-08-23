@@ -9,7 +9,6 @@ import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
@@ -104,7 +103,6 @@ StoryCountPreview.propTypes = {
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
-  sampleSearches: React.PropTypes.array, // TODO, could we get here without any sample searches? yes if logged in...
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -166,7 +164,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
+       composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
         composeAsyncContainer(
           StoryCountPreview
         )
