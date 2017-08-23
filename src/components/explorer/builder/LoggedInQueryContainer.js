@@ -36,7 +36,7 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   checkPropsAndDispatch(whichProps) {
-    const { loadSampleSearches, selectSearchQueriesById, setSelectedQuery, selectQueriesByURLParams, addAppNotice } = this.props;
+    const { samples, selected, loadSampleSearches, selectSearchQueriesById, setSelectedQuery, selectQueriesByURLParams, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
@@ -53,7 +53,9 @@ class LoggedInQueryContainer extends React.Component {
           return;
         }
 
-        if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
+        if (!selected && !whichProps.selected &&
+          (!whichProps.queries || whichProps.queries.length === 0 ||
+          whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID)) {
           selectQueriesByURLParams(parsedObjectArray);
         } else if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
           setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
@@ -63,11 +65,10 @@ class LoggedInQueryContainer extends React.Component {
 
         if (!whichProps.samples || whichProps.samples.length === 0) { // if not loaded as in bookmarked page
           loadSampleSearches(currentIndexOrQuery); // currentIndex
-        } else if ((!whichProps.selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
-          selectSearchQueriesById(whichProps.samples[currentIndexOrQuery]);
-          setSelectedQuery(whichProps.samples[currentIndexOrQuery].queries[0]);
-        } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
-          selectSearchQueriesById(whichProps.samples[currentIndexOrQuery]);
+        } else if (!selected && !whichProps.selected && (!whichProps.queries || whichProps.queries.length === 0)) {
+          selectSearchQueriesById(samples[currentIndexOrQuery]);
+        } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+          setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
         }
       }
     }
