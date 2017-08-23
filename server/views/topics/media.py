@@ -56,12 +56,14 @@ def topic_media_csv(topics_id):
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count', methods=['GET'])
+@flask_login.login_required
 @api_error_handler
 def topic_media_sentence_count(topics_id, media_id):
     return jsonify(topic_sentence_counts(user_mediacloud_key(), topics_id, fq='media_id:'+media_id))
 
 
 @app.route('/api/topics/<topics_id>/media/<media_id>/sentences/count.csv', methods=['GET'])
+@flask_login.login_required
 def topic_media_sentence_count_csv(topics_id, media_id):
     return stream_sentence_count_csv(user_mediacloud_key(), 'media-'+str(media_id)+'-sentence-counts',
         topics_id, fq="media_id:"+media_id)
