@@ -1,9 +1,10 @@
-import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY, MEDIA_PICKER_SELECT_MEDIA } from '../../../actions/systemActions';
+import { FETCH_FEATURED_COLLECTIONS_FOR_QUERY, MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST } from '../../../actions/systemActions';
 import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const featured = createAsyncReducer({
   action: FETCH_FEATURED_COLLECTIONS_FOR_QUERY,
-  handleSuccess: payload => ({
+  handleSuccess: (payload, state, meta) => ({
+    args: Object.assign({}, meta.args[0], { selected: false }), // for adding/removing from selected list
     list: payload.results.map(c => ({
       ...c,
       name: `${c.tag_set_label}: ${c.label || c.tag}`,
@@ -12,7 +13,7 @@ const featured = createAsyncReducer({
       selected: false, // for adding/removing from selected list
     })),
   }),
-  [MEDIA_PICKER_SELECT_MEDIA]: (payload, state) => ({
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
     list: state.list ? state.list.map((c) => {
       if (c.id === payload.id) {
         return ({
