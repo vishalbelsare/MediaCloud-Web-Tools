@@ -191,7 +191,7 @@ const mapDispatchToProps = dispatch => ({
       dispatch(updateQuery(newQuery));
     });
     const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
-    const newLocation = `queries/demo/search/[${urlParamString}]`;
+    const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
   },
   setQueryFromURL: (queryArrayFromURL) => {
