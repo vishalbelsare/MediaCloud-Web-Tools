@@ -14,7 +14,7 @@ function selectMedia(state = INITIAL_STATE, action) {
       updatedSelectedList = [...state.list];
       if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
         const selectedObj = action.payload;
-        selectedObj.selected = true; // set this now, this is the initial master list
+        selectedObj.selected = true; // set this now, this is the init master list
         updatedSelectedList.push(selectedObj);
       }
       return { list: updatedSelectedList };
@@ -22,8 +22,11 @@ function selectMedia(state = INITIAL_STATE, action) {
       updatedSelectedList = [...state.list];
       if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
         const selectedObj = action.payload;
-        selectedObj.selected = !selectedObj.selected; // toggle in this case
+        selectedObj.selected = true;
         updatedSelectedList.push(selectedObj);
+      } else {
+        const mediaIndex = updatedSelectedList.findIndex(s => s.id === action.payload.id);
+        updatedSelectedList.pop(mediaIndex);
       }
       return { list: updatedSelectedList };
     case MEDIA_PICKER_CLEAR_SELECTED_MEDIA: // maybe we want this...

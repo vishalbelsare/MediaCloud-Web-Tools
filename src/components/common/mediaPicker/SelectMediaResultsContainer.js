@@ -2,13 +2,14 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../AsyncContainer';
-import { selectMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
+import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections, fetchMediaPickerSources, fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
 import MediaPickerPreviewList from '../MediaPickerPreviewList';
 import SelectMediaForm from './SelectMediaForm';
 import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -52,7 +53,7 @@ class SelectMediaResultsContainer extends React.Component {
       whichProps.selectedMedia.map(s => (
         whichList.list.map((v) => {
           if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
-            this.props.handleSelectionOfMedia(s); // update if
+            this.props.handleMediaConcurrency(s); // update if
             return true;
           } // TODO else we shoudl unselect
           return false;
@@ -67,29 +68,33 @@ class SelectMediaResultsContainer extends React.Component {
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
     updateMediaQuerySelection(updatedQueryObj);
   }
-  handleSelectMedia(media) {
-    const { handleSelectionOfMedia } = this.props;
-    handleSelectionOfMedia(media);
+  handleToggleAndSelectMedia(media) {
+    const { handleToggleAndSelectMedia } = this.props;
+    handleToggleAndSelectMedia(media);
   }
+
   render() {
     const { timestamp, selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
     let whichMedia = null;
     let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
-
+    let whichFetchStatus = null;
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
           whichStoredKeyword = collectionResults.args;
+          whichFetchStatus = collectionResults.fetchStatus;
         } else {
           whichMedia = featured.list;
+          whichFetchStatus = featured.fetchStatus;
         }
         break;
       case PICK_SOURCE:
         if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
           whichMedia = sourceResults.list;
           whichStoredKeyword = sourceResults.args;
+          whichFetchStatus = sourceResults.fetchStatus;
         }
         break;
       case ADVANCED:
@@ -98,13 +103,16 @@ class SelectMediaResultsContainer extends React.Component {
         if (starredResults && (starredResults.list && (starredResults.list.length > 0 || (starredResults.args && starredResults.args.keyword)))) {
           whichMedia = starredResults.list;
           whichStoredKeyword = starredResults.args;
+          whichFetchStatus = sourceResults.fetchStatus;
         }
         break;
       default:
         whichMedia = featured;
         break;
     }
-    if (whichMedia && whichMedia.length > 0) {
+    if (whichFetchStatus === fetchConstants.FETCH_ONGOING) {
+      content = <LoadingSpinner />;
+    } else if (whichMedia && whichMedia.length > 0) {
       content = (
         <MediaPickerPreviewList
           items={whichMedia}
@@ -113,7 +121,7 @@ class SelectMediaResultsContainer extends React.Component {
           itemType="media"
           linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
-          onSelectMedia={c => this.handleSelectMedia(c)}
+          onSelectMedia={c => this.handleToggleAndSelectMedia(c)}
         />
       );
     }
@@ -128,7 +136,8 @@ class SelectMediaResultsContainer extends React.Component {
 
 SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  handleSelectionOfMedia: React.PropTypes.func.isRequired,
+  handleMediaConcurrency: React.PropTypes.func.isRequired,
+  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
   media: React.PropTypes.array,
   updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,
@@ -174,8 +183,14 @@ const mapDispatchToProps = dispatch => ({
       }
     }
   },
-  handleSelectionOfMedia: (selectedMedia) => {
+  handleMediaConcurrency: (selectedMedia) => {
     if (selectedMedia) {
+      dispatch(toggleMedia(selectedMedia));
+    }
+  },
+  handleToggleAndSelectMedia: (selectedMedia) => {
+    if (selectedMedia) {
+      dispatch(toggleMedia(selectedMedia));
       dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },

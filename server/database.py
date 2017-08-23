@@ -24,7 +24,7 @@ class AppDatabase():
         return self.find_by_username(username) is not None
 
     def add_user_named(self, username):
-        return self._conn.users.insert({'username': username, 'favoriteTopics': [], 'favoriteSources': [], 'favoriteCollections': []})
+        return self._conn.users.insert({'username': username, 'favoriteTopics': [], 'favoriteSources': [], 'favoriteCollections': [], 'savedQueries': []})
 
     def find_by_username(self, username):
         return self._conn.users.find_one({'username': username})

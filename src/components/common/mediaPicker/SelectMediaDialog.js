@@ -25,10 +25,16 @@ class SelectMediaDialog extends React.Component {
     open: false,
   };
 
+  componentWillMount() {
+    const { initMedia, handleInitialSelectionOfMedia } = this.props;
+    if (initMedia && initMedia.length > 0) { // expects an array of media from caller
+      initMedia.map(v => handleInitialSelectionOfMedia(v));
+    }
+  }
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
-    const { selectedMedia, initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
-    if ((JSON.stringify(initMedia) !== JSON.stringify(selectedMedia)) || (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia))) {
+    const { initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
+    if (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia)) {
       clearMediaSelectionForQuery();
       if (nextProps.initMedia) { // expects an array of media from caller
         nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
