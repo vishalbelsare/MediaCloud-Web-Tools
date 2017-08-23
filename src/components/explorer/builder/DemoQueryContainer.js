@@ -3,12 +3,14 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo, fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo,
+         fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
+         resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo, updateQuery } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, smartLabelForQuery } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 
@@ -182,10 +184,15 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSearch: (queries) => {
     // let urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
+    // update the query labels with automagic naming (if they haven't been edited already)
+    queries.forEach((q) => {
+      const newQuery = { ...q };
+      newQuery.label = smartLabelForQuery(newQuery);
+      dispatch(updateQuery(newQuery));
+    });
     const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
-    // this should keep the current selection...
   },
   setQueryFromURL: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries

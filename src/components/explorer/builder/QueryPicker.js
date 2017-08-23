@@ -1,9 +1,11 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
+import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
+import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery, saveQuerySet } from '../../../actions/explorerActions';
@@ -27,6 +29,15 @@ class QueryPicker extends React.Component {
   addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
+  }
+
+  // called by query picker to update things like label or color
+  updateQueryProperty(query, propertyName, newValue) {
+    const { updateCurrentQuery } = this.props;
+    const updatedQuery = { ...query };
+    updatedQuery[propertyName] = newValue;
+    // now update it in the store
+    updateCurrentQuery(updatedQuery);
   }
 
   updateQuery(newInfo) {
@@ -67,9 +78,11 @@ class QueryPicker extends React.Component {
   render() {
     const { selected, queries, user, collectionsResults, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
-    let content = null;
-    let fixedQuerySlides = null;
+    let queryPickerContent; // editable if demo mode
+    let queryFormContent; // hidden if demo mode
+    let fixedQuerySlides;
     let canSelectMedia = false;
+    const userLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     // if DEMO_MODE isEditable = true
     if (queries && queries.length > 0 && selected &&
       collectionsResults && collectionsResults.length > 0 &&
@@ -83,13 +96,11 @@ class QueryPicker extends React.Component {
             isEditable={isEditable} // if custom, true for either mode, else if logged in no
             displayLabel={false}
             selectThisQuery={() => setSelectedQuery(query, index)}
-            updateQuery={q => this.updateQuery(q)}
+            updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
           />
         </div>
       ));
-      if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-        canSelectMedia = true;
-      }
+      canSelectMedia = userLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
       if (isEditable) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
@@ -115,23 +126,41 @@ class QueryPicker extends React.Component {
 
         fixedQuerySlides.push(emptyQuerySlide);
       }
-      content = (
-        <div className="query-picker">
+      let demoSearchButtonContent; // in demo mode we need a search button outside the form (cause we can't see the form)
+      if (!userLoggedIn) {
+        demoSearchButtonContent = (
           <Grid>
-            <ItemSlider
-              title={formatMessage(localMessages.intro)}
-              slides={fixedQuerySlides}
-              settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
-            />
+            <Row>
+              <Col lg={10} />
+              <Col lg={1}>
+                <AppButton
+                  style={{ marginTop: 30 }}
+                  type="submit"
+                  label={formatMessage(messages.search)}
+                  primary
+                  onTouchTap={handleSearch}
+                />
+              </Col>
+            </Row>
           </Grid>
+        );
+      }
+      queryPickerContent = (
+        <div className="query-picker-wrapper">
+          <div className="query-picker">
+            <Grid>
+              <ItemSlider
+                title={formatMessage(localMessages.intro)}
+                slides={fixedQuerySlides}
+                settings={{ height: 60, dots: false, slidesToShow: 4, slidesToScroll: 1, infinite: false, arrows: fixedQuerySlides.length > 4 }}
+              />
+            </Grid>
+          </div>
+          {demoSearchButtonContent}
         </div>
       );
-
-      // indicate which queryPickerItem is selected -
-      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
-      return (
-        <div>
-          {content}
+      if (!isEditable) {  // if logged in show full form
+        queryFormContent = (
           <QueryForm
             initialValues={selected}
             selected={selected}
@@ -145,6 +174,14 @@ class QueryPicker extends React.Component {
             handleSaveQuerySet={q => this.handleSaveQuerySet(q)}
             isEditable={canSelectMedia}
           />
+        );
+      }
+      // indicate which queryPickerItem is selected -
+      // const selectedWithSandCLabels = queries.find(q => q.index === selected.index);
+      return (
+        <div>
+          {queryPickerContent}
+          {queryFormContent}
         </div>
       );
     }

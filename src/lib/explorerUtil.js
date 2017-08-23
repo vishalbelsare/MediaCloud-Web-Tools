@@ -9,12 +9,22 @@ export const PICK_SOURCE = 1;
 export const ADVANCED = 2;
 export const STARRED = 3;
 
-export function generateQueryParamString (queries) {
+
+export function generateQueryParamString(queries) {
   const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
   const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
   let urlParamString = queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
   urlParamString = `[${urlParamString}]`;
 
   return urlParamString;
+}
 
+const MAX_QUERY_LABEL_LENGTH = 60;
+
+export function smartLabelForQuery(query) {
+  let smartLabel = query.q;
+  if (query.q.length > MAX_QUERY_LABEL_LENGTH) {
+    smartLabel = `${smartLabel.substr(0, MAX_QUERY_LABEL_LENGTH)}...`;
+  }
+  return smartLabel;
 }

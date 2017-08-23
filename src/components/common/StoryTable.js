@@ -72,6 +72,7 @@ class StoryTable extends React.Component {
                   dateToShow += '?';
                 }
               }
+              const bitlyContent = story.bitly_click_count ? <FormattedNumber value={story.bitly_click_count} /> : <FormattedMessage {...messages.unknown} />;
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
@@ -86,7 +87,7 @@ class StoryTable extends React.Component {
                     <a href={story.media_url} rel="noopener noreferrer" target="_blank">{story.media_name}</a>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><FormattedNumber value={story.bitly_click_count !== undefined && story.bitly_click_count !== null ? story.bitly_click_count : '?'} /></td>
+                  <td>{bitlyContent}</td>
                 </tr>
               );
             }
