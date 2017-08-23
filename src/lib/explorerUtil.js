@@ -28,3 +28,11 @@ export function smartLabelForQuery(query) {
   }
   return smartLabel;
 }
+
+export function queryPropertyHasChanged(queries, nextQueries, propName) {
+  const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const propHasChanged = currentProps !== nextProps;
+  return propHasChanged;
+}
+

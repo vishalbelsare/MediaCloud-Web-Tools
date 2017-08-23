@@ -10,10 +10,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
-const DEFAULT_SOURCES = '';
-const DEFAULT_COLLECTION = 9139487;
 
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Stories' },
@@ -30,10 +29,19 @@ class StoryCountPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
-    // TODO also check for name and color changes
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { results, queries } = this.props;
+    // only re-render if results, any labels, or any colors have changed
+    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+    return (
+      ((labelsHaveChanged || colorsHaveChanged))
+       || (results !== nextProps.results)
+    );
   }
   downloadCsv = (query) => {
     let url = null;
@@ -145,7 +153,7 @@ const mapDispatchToProps = (dispatch, state) => ({
         const demoInfo = {
           index, // should be same as q.index btw
           search_id: q.searchId, // may or may not have these
-          query_id: q.id, // TODO if undefined, what to do?
+          query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
         return dispatch(fetchDemoQueryStoryCount(demoInfo)); // id

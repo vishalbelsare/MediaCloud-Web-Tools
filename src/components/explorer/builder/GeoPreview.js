@@ -13,7 +13,8 @@ import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
 import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
@@ -27,10 +28,20 @@ class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
     // TODO also check for name and color changes
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { results, queries } = this.props;
+    // only re-render if results, any labels, or any colors have changed
+    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+    return (
+      ((labelsHaveChanged || colorsHaveChanged))
+       || (results !== nextProps.results)
+    );
   }
   downloadCsv = (query) => {
     let url = null;

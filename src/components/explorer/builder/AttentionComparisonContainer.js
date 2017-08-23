@@ -13,7 +13,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
@@ -34,13 +34,6 @@ function dataAsSeries(data) {
   const values = data.map(d => Math.round(d.count / intervalDays));
   return { values, intervalMs, start: dates[0] };
 }
-
-const queryPropertyHasChanged = (queries, nextQueries, propName) => {
-  const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
-  const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
-  const propHasChanged = currentProps !== nextProps;
-  return propHasChanged;
-};
 
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {

@@ -49,9 +49,11 @@ class DemoQueryBuilderContainer extends React.Component {
         return;
       }
 
-      if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID) {
+      if (!selected && !whichProps.selected &&
+        (!whichProps.queries || whichProps.queries.length === 0 ||
+        whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID)) {
         selectQueriesByURLParams(parsedObjectArray);
-      } else if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+      } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
         setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
       }
     } else if (whichProps.location.pathname.includes('/queries/demo')) {
@@ -59,11 +61,10 @@ class DemoQueryBuilderContainer extends React.Component {
 
       if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
         loadSampleSearches(currentIndexOrQuery); // currentIndex
-      } else if ((!selected && !whichProps.selected) || (whichProps.selected && whichProps.selected.searchId !== currentIndexOrQuery)) {
+      } else if (!selected && !whichProps.selected && (!whichProps.queries || whichProps.queries.length === 0)) {
         selectSearchQueriesById(samples[currentIndexOrQuery]);
+      } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
         setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
-      } else if (this.props.location.pathname !== whichProps.location.pathname) { // if the currentIndex and queries are different from our currently index and queries
-        selectSearchQueriesById(samples[currentIndexOrQuery]);
       }
     }
   }
