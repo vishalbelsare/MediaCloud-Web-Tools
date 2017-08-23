@@ -3,13 +3,13 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { generateQueryParamString } from '../../../lib/explorerUtil';
+import { generateQueryParamString, smartLabelForQuery } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 
@@ -190,6 +190,12 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
+    queries.forEach((q) => {
+      const newQuery = { ...q };
+      newQuery.label = smartLabelForQuery(newQuery);
+      dispatch(updateQuery(newQuery));
+    });
+
     const urlParamString = generateQueryParamString(queries);
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));

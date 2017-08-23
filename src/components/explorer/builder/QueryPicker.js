@@ -159,7 +159,7 @@ class QueryPicker extends React.Component {
           {demoSearchButtonContent}
         </div>
       );
-      if (!isEditable) {  // if logged in show full form
+      if (userLoggedIn) {  // if logged in show full form
         queryFormContent = (
           <QueryForm
             initialValues={selected}
