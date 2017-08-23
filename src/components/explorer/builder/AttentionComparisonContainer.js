@@ -46,7 +46,7 @@ class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
