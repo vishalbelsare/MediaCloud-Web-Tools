@@ -2,13 +2,13 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import Title from 'react-title-component';
 import AppContainer from '../AppContainer';
-// import SourcesDrawer from './SourcesDrawer';
+import ExplorerDrawer from './ExplorerDrawer';
 import messages from '../../resources/messages';
 
 const ExplorerApp = (props) => {
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(messages.explorerToolName)} | ${parentTitle}`;
-  // const drawer = <SourcesDrawer />;
+  const drawer = <ExplorerDrawer />;
   return (
     <div>
       <Title render={titleHandler} />
@@ -16,7 +16,7 @@ const ExplorerApp = (props) => {
         name="explorer"
         title={formatMessage(messages.explorerToolName)}
         description={formatMessage(messages.explorerToolDescription)}
-        // drawer={drawer}
+        drawer={drawer}
       >
         {props.children}
       </AppContainer>
