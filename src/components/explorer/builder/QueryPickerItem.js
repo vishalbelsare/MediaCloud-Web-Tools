@@ -29,7 +29,7 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQueryProperty('color', val)}
+              onChange={e => updateQueryProperty(e.name, e.value)}
             />
             <TextField
               className="query-picker-editable-name"
@@ -46,7 +46,7 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQueryProperty('color', val)}
+              onChange={e => updateQueryProperty(e.name, e.value)}
             />&nbsp;
             {query.q}
           </div>
