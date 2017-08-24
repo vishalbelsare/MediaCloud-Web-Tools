@@ -13,6 +13,7 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, smartLabelForQuery } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
@@ -107,7 +108,7 @@ class DemoQueryBuilderContainer extends React.Component {
   render() {
     const { selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
-    let content = <div>Error</div>;
+    let content = <LoadingSpinner />;
     const isEditable = location.pathname.includes('queries/demo/search');
     if (queries && queries.length > 0 && selected) {
       content = (

@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import ColorPicker from '../../common/ColorPicker';
+import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
@@ -20,7 +21,7 @@ class QueryPickerItem extends React.Component {
     const { handleSearch } = this.props;
     switch (evt.key) {
       case 'Enter':
-        handleSearch({ mediaKeyword: evt.target.value });
+        handleSearch();
         break;
       default: break;
     }
@@ -80,7 +81,7 @@ class QueryPickerItem extends React.Component {
           <div className="query-info">
             {displayLabel ? query.label : ''}
             {oneCollStatus}<br />
-            {query.startDate}--{query.endDate}
+            {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
       } else if (totalCount > 0) {
@@ -89,7 +90,7 @@ class QueryPickerItem extends React.Component {
             {displayLabel ? query.label : ''}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
-            {new Date(query.start_date)}to{query.end_date}
+            {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
       }
@@ -112,6 +113,7 @@ QueryPickerItem.propTypes = {
   displayLabel: React.PropTypes.bool.isRequired,
   onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
+  handleSearch: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

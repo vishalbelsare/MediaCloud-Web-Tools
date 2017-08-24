@@ -97,6 +97,7 @@ class QueryPicker extends React.Component {
             displayLabel={false}
             onQuerySelected={() => handleQuerySelected(query, index)}
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
+            handleSearch={handleSearch}
           />
         </div>
       ));

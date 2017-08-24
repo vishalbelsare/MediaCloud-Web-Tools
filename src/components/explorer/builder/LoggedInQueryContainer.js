@@ -12,6 +12,7 @@ import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib
 import { generateQueryParamString, smartLabelForQuery } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
@@ -103,7 +104,7 @@ class LoggedInQueryContainer extends React.Component {
   render() {
     const { user, selected, queries, setSelectedQuery, collectionLookupFetchStatus, handleSearch, samples, location } = this.props;
     // const { formatMessage } = this.props.intl;
-    let content = <div>Error</div>;
+    let content = <LoadingSpinner />;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       const isEditable = true;
       if (queries && queries.length > 0 && selected &&
