@@ -48,6 +48,7 @@ class AttentionComparisonContainer extends React.Component {
     // only re-render if results, any labels, or any colors have changed
     const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
     const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+
     return (
       ((labelsHaveChanged || colorsHaveChanged))
        || (results !== nextProps.results)

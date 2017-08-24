@@ -18,6 +18,17 @@ const localMessages = {
 };
 
 class QueryPickerItem extends React.Component {
+  state = {
+    showIconMenu: false,
+  };
+  handleFocusItem = (e) => {
+    this.setState({ showIconMenu: true, e });
+  }
+  handleBlurAndSelection = () => {
+    const { onQuerySelected } = this.props;
+    this.setState({ showIconMenu: true });
+    onQuerySelected();
+  }
   handleColorClick(color) {
     this.setState({ showColor: color });
   }
@@ -32,7 +43,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isEditable, isSelected, displayLabel, onQuerySelected, updateQueryProperty, handleDeleteQuery, loadEditLabelDialog } = this.props;
+    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, handleDeleteQuery, loadEditLabelDialog } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -41,7 +52,7 @@ class QueryPickerItem extends React.Component {
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
     let iconOptions = null;
-    if (user.isLoggedIn) {
+    if (user.isLoggedIn && this.state.showIconMenu) {
       iconOptions = (
         <IconMenu
           className="query-picker-icon-button"
@@ -53,7 +64,7 @@ class QueryPickerItem extends React.Component {
           <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
         </IconMenu>
       );
-    } else if (!isThisAProtectedQuery) { // can delete only if this is a custom query (vs sample query) for demo users
+    } else if (!isThisAProtectedQuery && this.state.showIconMenu) { // can delete only if this is a custom query (vs sample query) for demo users
       iconOptions = (
         <IconMenu
           className="query-picker-icon-button"
@@ -92,7 +103,11 @@ class QueryPickerItem extends React.Component {
               color={query.color}
               onChange={e => updateQueryProperty(e.name, e.value)}
             />&nbsp;
-            <span className="query-picker-name">{query.q}</span>
+            <span
+              className="query-picker-name"
+            >
+              {query.q}
+            </span>
             {iconOptions}
           </div>
         );
@@ -110,7 +125,6 @@ class QueryPickerItem extends React.Component {
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
 
       if (srcCount === 0 && collCount === 1) {
-        // TODO start_date vs startDate
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
@@ -131,7 +145,10 @@ class QueryPickerItem extends React.Component {
     }
     const extraClassNames = (isSelected) ? 'selected' : '';
     return (
-      <div className={`query-picker-item ${extraClassNames}`} onTouchTap={onQuerySelected}>
+      <div
+        className={`query-picker-item ${extraClassNames}`}
+        onTouchTap={() => this.handleBlurAndSelection()}
+      >
         {nameInfo}
         {subT}
       </div>

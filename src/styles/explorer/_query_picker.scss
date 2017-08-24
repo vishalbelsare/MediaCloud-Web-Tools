@@ -20,9 +20,18 @@
       border-left: 0px;
     }
 
+    .query-picker-icon-button {
+        opacity: 0;
+    }
+
     &.selected {
       background-color: $material-grey200 !important;
+
+      .query-picker-icon-button {
+        opacity: 1;
+      }
     }
+
 
     .query-info {
       margin-left: 20px;
