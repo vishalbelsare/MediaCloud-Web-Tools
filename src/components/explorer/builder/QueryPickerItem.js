@@ -16,6 +16,15 @@ class QueryPickerItem extends React.Component {
   handleColorClick(color) {
     this.setState({ showColor: color });
   }
+  handleMenuItemKeyDown = (evt) => {
+    const { handleSearch } = this.props;
+    switch (evt.key) {
+      case 'Enter':
+        handleSearch({ mediaKeyword: evt.target.value });
+        break;
+      default: break;
+    }
+  };
 
   render() {
     const { query, isEditable, displayLabel, selectThisQuery, updateQueryProperty } = this.props;
@@ -38,6 +47,7 @@ class QueryPickerItem extends React.Component {
               value={query.q}
               hintText={query.q || formatMessage(localMessages.searchHint)}
               onChange={(e, val) => updateQueryProperty('q', val)}
+              onKeyPress={this.handleMenuItemKeyDown}
             />
           </div>
         );
@@ -79,7 +89,7 @@ class QueryPickerItem extends React.Component {
             {displayLabel ? query.label : ''}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
-            {query.start_date}--{query.end_date}
+            {new Date(query.start_date)}to{query.end_date}
           </div>
         );
       }
