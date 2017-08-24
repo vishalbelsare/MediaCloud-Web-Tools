@@ -1,6 +1,10 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ColorPicker from '../../common/ColorPicker';
 import { getShortDate } from '../../../lib/dateUtil';
 
@@ -28,11 +32,39 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { query, isEditable, isSelected, displayLabel, onQuerySelected, updateQueryProperty } = this.props;
+    const { user, query, isEditable, isSelected, displayLabel, onQuerySelected, updateQueryProperty, handleDeleteQuery, loadEditLabelDialog } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
 
+    /* query fields are only editable in place for Demo mode. the user can delete a query
+      in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
+    */
+    let iconOptions = null;
+    if (user.isLoggedIn) {
+      iconOptions = (
+        <IconMenu
+          className="query-picker-icon-button"
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => loadEditLabelDialog()} />
+          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+        </IconMenu>
+      );
+    } else if (!user.isLoggedIn) { // can delete, that's it
+      iconOptions = (
+        <IconMenu
+          className="query-picker-icon-button"
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
+          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+        </IconMenu>
+      );
+    }
     if (query) {
       if (isEditable) {
         nameInfo = (
@@ -50,6 +82,7 @@ class QueryPickerItem extends React.Component {
               onChange={(e, val) => updateQueryProperty('q', val)}
               onKeyPress={this.handleMenuItemKeyDown}
             />
+            {iconOptions}
           </div>
         );
       } else {
@@ -60,6 +93,7 @@ class QueryPickerItem extends React.Component {
               onChange={e => updateQueryProperty(e.name, e.value)}
             />&nbsp;
             <span className="query-picker-name">{query.q}</span>
+            {iconOptions}
           </div>
         );
       }
@@ -114,8 +148,11 @@ QueryPickerItem.propTypes = {
   onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
+  handleDeleteQuery: React.PropTypes.func.isRequired,
+  loadEditLabelDialog: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
+  user: React.PropTypes.object.isRequired,
 };
 
 

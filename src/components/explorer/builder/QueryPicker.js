@@ -8,7 +8,7 @@ import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
-import { selectQuery, updateQuery, addCustomQuery, saveQuerySet } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, saveQuerySet, deleteQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
@@ -76,20 +76,21 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch } = this.props;
+    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch, handleDeleteQuery } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
     let fixedQuerySlides;
     let canSelectMedia = false;
     const userLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
-    // if DEMO_MODE isEditable = true
+    // if DEMO_MODE queryPickerItem label isEditable = true
     if (queries && queries.length > 0 && selected &&
       collectionsResults && collectionsResults.length > 0 &&
       sourcesResults && sourcesResults.length >= 0) {
       fixedQuerySlides = queries.map((query, index) => (
         <div key={index}>
           <QueryPickerItem
+            user={user}
             key={index}
             query={query}
             isSelected={selected.index === index}
@@ -98,6 +99,8 @@ class QueryPicker extends React.Component {
             onQuerySelected={() => handleQuerySelected(query, index)}
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             handleSearch={handleSearch}
+            handleDeleteQuery={handleDeleteQuery}
+            // loadDialog={loadQueryEditDialog}
           />
         </div>
       ));
@@ -202,6 +205,7 @@ QueryPicker.propTypes = {
   isEditable: React.PropTypes.bool.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
   updateCurrentQuery: React.PropTypes.func.isRequired,
+  handleDeleteQuery: React.PropTypes.func.isRequired,
   saveThisQuerySet: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   handleOpenStub: React.PropTypes.func,
@@ -239,6 +243,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   saveThisQuerySet: (query) => {
     if (query) { // TODO - save as JSON
       dispatch(saveQuerySet({ label: query.label, query_string: query.q }));
+    }
+  },
+  handleDeleteQuery: (query) => {
+    if (query) {
+      dispatch(deleteQuery(query));
     }
   },
 });
