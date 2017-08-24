@@ -18,7 +18,7 @@ class QueryPickerItem extends React.Component {
   }
 
   render() {
-    const { query, isEditable, displayLabel, selectThisQuery, updateQueryProperty } = this.props;
+    const { query, isEditable, isSelected, displayLabel, onQuerySelected, updateQueryProperty } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -48,7 +48,7 @@ class QueryPickerItem extends React.Component {
               color={query.color}
               onChange={e => updateQueryProperty(e.name, e.value)}
             />&nbsp;
-            {query.q}
+            <span className="query-picker-name">{query.q}</span>
           </div>
         );
       }
@@ -84,9 +84,9 @@ class QueryPickerItem extends React.Component {
         );
       }
     }
-
+    const extraClassNames = (isSelected) ? 'selected' : '';
     return (
-      <div className="query-picker-item" onTouchTap={selectThisQuery}>
+      <div className={`query-picker-item ${extraClassNames}`} onTouchTap={onQuerySelected}>
         {nameInfo}
         {subT}
       </div>
@@ -97,9 +97,10 @@ class QueryPickerItem extends React.Component {
 QueryPickerItem.propTypes = {
   // from parent
   query: React.PropTypes.object,
+  isSelected: React.PropTypes.bool.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
-  selectThisQuery: React.PropTypes.func,
+  onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
