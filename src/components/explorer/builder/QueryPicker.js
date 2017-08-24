@@ -76,7 +76,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, user, collectionsResults, sourcesResults, setSelectedQuery, isEditable, handleSearch } = this.props;
+    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -88,14 +88,14 @@ class QueryPicker extends React.Component {
       collectionsResults && collectionsResults.length > 0 &&
       sourcesResults && sourcesResults.length >= 0) {
       fixedQuerySlides = queries.map((query, index) => (
-        <div key={index} className={selected.index === index ? 'query-picker-item-selected' : ''}>
+        <div key={index}>
           <QueryPickerItem
             key={index}
             query={query}
-            selected={selected}
+            isSelected={selected.index === index}
             isEditable={isEditable} // if custom, true for either mode, else if logged in no
             displayLabel={false}
-            selectThisQuery={() => setSelectedQuery(query, index)}
+            onQuerySelected={() => handleQuerySelected(query, index)}
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
           />
         </div>
@@ -197,7 +197,7 @@ QueryPicker.propTypes = {
   fetchStatus: React.PropTypes.string.isRequired,
   selected: React.PropTypes.object,
   intl: React.PropTypes.object.isRequired,
-  setSelectedQuery: React.PropTypes.func.isRequired,
+  handleQuerySelected: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
   updateCurrentQuery: React.PropTypes.func.isRequired,
@@ -218,7 +218,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  setSelectedQuery: (query, index) => {
+  handleQuerySelected: (query, index) => {
     const queryWithIndex = Object.assign({}, query, { index });
     dispatch(selectQuery(queryWithIndex));
   },

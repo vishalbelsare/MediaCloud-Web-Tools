@@ -20,6 +20,10 @@
       border-left: 0px;
     }
 
+    &.selected {
+      background-color: $material-grey200 !important;
+    }
+
     .query-info {
       margin-left: 20px;
       display: block;
@@ -32,20 +36,14 @@
       color: $material-grey600;
     }
 
-  }
-
-  .query-picker-item {
     .query-picker-editable-name {
       width: 210px !important;
     }
-  }
 
-  .query-picker-item-name {
-    padding: 5px 20px;
-  }
+    .query-picker-name {
+      font-size: 16px;
+    }
 
-  .query-picker-item-selected > div {
-    background-color: $material-grey200 !important;
   }
   
 }
