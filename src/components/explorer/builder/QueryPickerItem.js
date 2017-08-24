@@ -36,7 +36,7 @@ class QueryPickerItem extends React.Component {
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
-
+    const isThisAProtectedQuery = !user.isLoggedIn && query.searchId !== null && query.searchId !== undefined;
     /* query fields are only editable in place for Demo mode. the user can delete a query
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
@@ -53,7 +53,7 @@ class QueryPickerItem extends React.Component {
           <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
         </IconMenu>
       );
-    } else if (!user.isLoggedIn) { // can delete, that's it
+    } else if (!isThisAProtectedQuery) { // can delete only if this is a custom query (vs sample query) for demo users
       iconOptions = (
         <IconMenu
           className="query-picker-icon-button"

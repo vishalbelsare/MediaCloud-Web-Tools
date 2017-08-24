@@ -47,6 +47,7 @@ class SelectMediaDialog extends React.Component {
       evt.preventDefault();
     }
     this.setState({ open: true });
+    // need to set body to overflow: hidden somehow...
   };
 
   handleRemoveDialogClose = () => {

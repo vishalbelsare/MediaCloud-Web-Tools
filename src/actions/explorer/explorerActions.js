@@ -64,6 +64,9 @@ export const demoQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIO
 export const SAVE_QUERY_SET = 'SAVE_QUERY_SET';
 export const saveQuerySet = createAsyncAction(SAVE_QUERY_SET, api.saveQuerySet, props => props);
 
+export const DELETE_QUERY = 'DELETE_QUERY';
+export const deleteQuery = createAction(DELETE_QUERY);
+
 export const RESET_QUERIES = 'RESET_QUERIES';
 export const resetQueries = createAction(RESET_QUERIES);
 

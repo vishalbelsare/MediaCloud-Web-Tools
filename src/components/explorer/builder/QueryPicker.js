@@ -248,6 +248,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleDeleteQuery: (query) => {
     if (query) {
       dispatch(deleteQuery(query));
+      // dispatch(selectQuery());
     }
   },
 });
