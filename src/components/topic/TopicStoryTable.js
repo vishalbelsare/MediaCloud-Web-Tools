@@ -19,14 +19,36 @@ const ICON_STYLE = { margin: 0, padding: 0, width: 12, height: 12 };
 
 class TopicStoryTable extends React.Component {
 
-  sortBySocial = () => {
-    const { onChangeSort } = this.props;
-    onChangeSort('social');
-  }
-
-  sortByInlinks = () => {
-    const { onChangeSort } = this.props;
-    onChangeSort('inlink');
+  sortableHeader = (sortKey, textMsg) => {
+    const { onChangeSort, sortedBy } = this.props;
+    const { formatMessage } = this.props.intl;
+    let content;
+    if (onChangeSort) {
+      if (sortedBy === sortKey) {
+        // currently sorted by this key
+        content = (
+          <div>
+            <b><FormattedMessage {...textMsg} /></b>
+            <ArrowDropDownIcon style={ICON_STYLE} />
+          </div>
+        );
+      } else {
+        // link to sort by this key
+        content = (
+          <a
+            href={`#${formatMessage(textMsg)}`}
+            onClick={(e) => { e.preventDefault(); onChangeSort(sortKey); }}
+            title={formatMessage(textMsg)}
+          >
+            <FormattedMessage {...textMsg} />
+          </a>
+        );
+      }
+    } else {
+      // not sortable
+      content = <FormattedMessage {...textMsg} />;
+    }
+    return content;
   }
 
   handleReadItClick = (story) => {
@@ -34,51 +56,8 @@ class TopicStoryTable extends React.Component {
   }
 
   render() {
-    const { stories, onChangeSort, onChangeFocusSelection, topicId, sortedBy, maxTitleLength } = this.props;
+    const { stories, onChangeFocusSelection, topicId, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
-    let inlinkHeader = null;
-    let socialHeader = null;
-    if ((onChangeSort !== undefined) && (onChangeSort !== null)) {
-      if (sortedBy === 'inlink') {
-        inlinkHeader = (
-          <div>
-            <FormattedMessage {...messages.mediaInlinks} />
-            <ArrowDropDownIcon style={ICON_STYLE} />
-          </div>
-        );
-      } else {
-        inlinkHeader = (
-          <a
-            href={`#${formatMessage(messages.sortByMediaInlinks)}`}
-            onClick={(e) => { e.preventDefault(); this.sortByInlinks(); }}
-            title={formatMessage(messages.sortByMediaInlinks)}
-          >
-            <FormattedMessage {...messages.mediaInlinks} />
-          </a>
-        );
-      }
-      if (sortedBy === 'social') {
-        socialHeader = (
-          <div>
-            <FormattedMessage {...messages.bitlyClicks} />
-            <ArrowDropDownIcon style={ICON_STYLE} />
-          </div>
-        );
-      } else {
-        socialHeader = (
-          <a
-            href={`#${formatMessage(messages.sortByBitlyClicks)}`}
-            onClick={(e) => { e.preventDefault(); this.sortBySocial(); }}
-            title={formatMessage(messages.sortByBitlyClicks)}
-          >
-            <FormattedMessage {...messages.bitlyClicks} />
-          </a>
-        );
-      }
-    } else {
-      inlinkHeader = <FormattedMessage {...messages.mediaInlinks} />;
-      socialHeader = <FormattedMessage {...messages.bitlyClicks} />;
-    }
     return (
       <div className="story-table">
         <table>
@@ -88,10 +67,10 @@ class TopicStoryTable extends React.Component {
               <th>{}</th>
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
-              <th>{inlinkHeader}</th>
+              <th>{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
               <th><FormattedMessage {...messages.outlinks} /></th>
-              <th>{socialHeader}</th>
-              <th><FormattedMessage {...messages.facebookShares} /></th>
+              <th>{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
+              <th>{this.sortableHeader('facebook', messages.facebookShares)}</th>
               <th>{}</th>
               <th><FormattedMessage {...messages.focusHeader} /></th>
             </tr>

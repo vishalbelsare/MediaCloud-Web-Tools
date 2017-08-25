@@ -9,7 +9,9 @@ import datetime
 
 logger = logging.getLogger(__name__)
 
-SORT_SOCIAL = 'social'
+SORT_FACEBOOK = 'facebook'
+SORT_BITLY = 'bitly'
+SORT_TWITTER = 'twitter'
 SORT_INLINK = 'inlink'
 
 TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
@@ -18,8 +20,8 @@ TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
                          'pub_country', 'pub_state', 'primary_language']
 
 
-def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
-    valid_sorts = [SORT_SOCIAL, SORT_INLINK]
+def validated_sort(desired_sort, default_sort=SORT_FACEBOOK):
+    valid_sorts = [SORT_FACEBOOK, SORT_BITLY, SORT_TWITTER, SORT_INLINK]
     if (desired_sort is None) or (desired_sort not in valid_sorts):
         return default_sort
     return desired_sort
