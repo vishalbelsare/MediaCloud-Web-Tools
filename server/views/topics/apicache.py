@@ -46,7 +46,7 @@ def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
 
 def topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
-    Return filterd story count within topic.
+    Return filtered story count within topic.
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     merged_args = {
