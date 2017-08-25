@@ -22,7 +22,9 @@ const localMessages = {
 class InfluentialMediaContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { fetchData, filters, sort, links } = this.props;
-    if ((nextProps.filters !== filters) || (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
+    // can't compare filters the object here because it changes on load
+    if ((nextProps.filters.timespanId !== filters.timespanId) || (nextProps.filters.q !== filters.q) ||
+      (nextProps.sort !== sort) || (nextProps.links.current !== links.current)) {
       fetchData(nextProps);
     }
   }
