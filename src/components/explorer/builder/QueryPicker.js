@@ -74,20 +74,33 @@ class QueryPicker extends React.Component {
   handleOpenStub() {
     return this.props;
   }
+  isDeletable() {
+    const { queries } = this.props;
+    return queries.length >= 2; // because we always have an empty query in the query array
+  }
+  handleDeleteAndSelectQuery(query) {
+    const { queries, handleDeleteQuery } = this.props;
+    const queryIndex = queries.findIndex(q => q.index !== null && q.index === query.index);
+    const replaceSelectionWithWhichQuery = queryIndex === 0 ? 1 : 0; // replace with the query, not the position
+    if (this.isDeletable()) {
+      handleDeleteQuery(query, queries[replaceSelectionWithWhichQuery]);
+    }
+  }
 
   render() {
-    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch, handleDeleteQuery } = this.props;
+    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
     let fixedQuerySlides;
     let canSelectMedia = false;
     const userLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
-    // if DEMO_MODE queryPickerItem label isEditable = true
-    if (queries && queries.length > 0 && selected &&
+
+    const unDeletedQueries = queries.filter(q => !q.deleted);
+    if (unDeletedQueries && unDeletedQueries.length > 0 && selected &&
       collectionsResults && collectionsResults.length > 0 &&
       sourcesResults && sourcesResults.length >= 0) {
-      fixedQuerySlides = queries.map((query, index) => (
+      fixedQuerySlides = unDeletedQueries.map((query, index) => (
         <div key={index}>
           <QueryPickerItem
             user={user}
@@ -95,11 +108,12 @@ class QueryPicker extends React.Component {
             query={query}
             isSelected={selected.index === index}
             isEditable={isEditable} // if custom, true for either mode, else if logged in no
+            isDeletable={() => this.isDeletable()}
             displayLabel={false}
             onQuerySelected={() => handleQuerySelected(query, index)}
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             handleSearch={handleSearch}
-            handleDeleteQuery={handleDeleteQuery}
+            handleDeleteQuery={() => this.handleDeleteAndSelectQuery(query)}
             // loadDialog={loadQueryEditDialog}
           />
         </div>
@@ -109,7 +123,7 @@ class QueryPicker extends React.Component {
       if (isEditable) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
-        const newIndex = queries.length; // effectively a +1
+        const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
 
@@ -203,8 +217,10 @@ QueryPicker.propTypes = {
   intl: React.PropTypes.object.isRequired,
   handleQuerySelected: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
+  isDeletable: React.PropTypes.func,
   handleSearch: React.PropTypes.func.isRequired,
   updateCurrentQuery: React.PropTypes.func.isRequired,
+  handleDeleteAndSelectQuery: React.PropTypes.func,
   handleDeleteQuery: React.PropTypes.func.isRequired,
   saveThisQuerySet: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
@@ -245,9 +261,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(saveQuerySet({ label: query.label, query_string: query.q }));
     }
   },
-  handleDeleteQuery: (query) => {
+  handleDeleteQuery: (query, replacementSelectionQuery) => {
     if (query) {
       dispatch(deleteQuery(query)); // will change queries, but not URL, this is the problem
+      dispatch(selectQuery(replacementSelectionQuery));
     }
   },
 });

@@ -21,13 +21,22 @@ class QueryPickerItem extends React.Component {
   state = {
     showIconMenu: false,
   };
-  handleFocusItem = (e) => {
-    this.setState({ showIconMenu: true, e });
+  handleFocusItem = () => {
+    const { isDeletable } = this.props;
+    if (isDeletable()) {
+      this.setState({ showIconMenu: true });
+    } else {
+      this.setState({ showIconMenu: false });
+    }
   }
   handleBlurAndSelection = () => {
-    const { onQuerySelected } = this.props;
-    this.setState({ showIconMenu: true });
-    onQuerySelected();
+    const { onQuerySelected, isDeletable } = this.props;
+    if (isDeletable()) {
+      this.setState({ showIconMenu: true });
+      onQuerySelected();
+    } else {
+      this.setState({ showIconMenu: false });
+    }
   }
   handleColorClick(color) {
     this.setState({ showColor: color });
@@ -161,6 +170,7 @@ QueryPickerItem.propTypes = {
   query: React.PropTypes.object,
   isSelected: React.PropTypes.bool.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
+  isDeletable: React.PropTypes.func.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
   onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
