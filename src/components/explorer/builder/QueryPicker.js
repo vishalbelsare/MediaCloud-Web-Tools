@@ -247,8 +247,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleDeleteQuery: (query) => {
     if (query) {
-      dispatch(deleteQuery(query));
-      // dispatch(selectQuery());
+      dispatch(deleteQuery(query)); // will change queries, but not URL, this is the problem
     }
   },
 });

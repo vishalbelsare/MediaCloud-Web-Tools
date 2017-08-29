@@ -59,7 +59,7 @@ function queries(state = INITIAL_STATE, action) {
         if (updatedState.length === 1) return updatedState; // they can't delete all the queries
         queryIndex = updatedState.findIndex(q => q.index !== null && q.index === action.payload.index);
 
-        updatedState.pop(queryIndex);
+        updatedState.splice(queryIndex, 1);
         return updatedState;
       }
       return state;

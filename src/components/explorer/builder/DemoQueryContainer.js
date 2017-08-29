@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo,
          fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
-         resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo, updateQuery } from '../../../actions/explorerActions';
+         resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo, updateQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -185,13 +185,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    // let urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${q.color}","sources":[${q.sources}],"collections":[${q.collections.map(c => (typeof c === 'number' ? c : c.tags_id || c.id))}]}`);
-    // update the query labels with automagic naming (if they haven't been edited already)
+    // update URL location according to updated queries
     queries.forEach((q) => {
       const newQuery = { ...q };
       newQuery.label = smartLabelForQuery(newQuery);
       dispatch(updateQuery(newQuery));
     });
+    dispatch(updateTimestampForQueries);
     const urlParamString = queries.map(q => `{"index":${q.index},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));

@@ -7,7 +7,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import GeoChart from '../../vis/GeoChart';
-import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
+import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
@@ -29,19 +29,21 @@ class GeoPreview extends React.Component {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime ||
       (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
-    // TODO also check for name and color changes
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
-    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-    return (
-      ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextProps.results)
-    );
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return queries.length; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -129,9 +131,8 @@ const mapDispatchToProps = (dispatch, state) => ({
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query
     */
-  // TODO not using ownProps, will we need this or will all the needed info already be in the selected query?
-
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetGeo());
     if (isLoggedInUser) {
       state.queries.map((q) => {
         const infoToQuery = {

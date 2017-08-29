@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchDemoQueryStoryCount, fetchQueryStoryCount } from '../../../actions/explorerActions';
+import { fetchDemoQueryStoryCount, fetchQueryStoryCount, resetStoryCounts } from '../../../actions/explorerActions';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import { DownloadButton } from '../../common/IconButton';
@@ -36,12 +36,15 @@ class StoryCountPreview extends React.Component {
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
-    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-    return (
-      ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextProps.results)
-    );
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return queries.length; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -132,6 +135,7 @@ const mapDispatchToProps = (dispatch, state) => ({
     */
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetStoryCounts());
     if (isLoggedInUser) {
       // if (idx) { // specific change/update here
       //  dispatch(fetchQueryStoryCount(query, idx));

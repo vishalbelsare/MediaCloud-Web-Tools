@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -38,6 +38,7 @@ function dataAsSeries(data) {
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
       (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
@@ -46,13 +47,15 @@ class AttentionComparisonContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
-    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-
-    return (
-      ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextProps.results)
-    );
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return queries.length; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -151,6 +154,7 @@ const mapDispatchToProps = (dispatch, state) => ({
     // for n queries, run the dispatch with each parsed query
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetSentenceCounts()); // necessary if a query deletion has occurred
 
     if (isLoggedInUser) {
       state.queries.map((q) => {
