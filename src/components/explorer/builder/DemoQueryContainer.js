@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo,
          fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
-         resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo, updateQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
+         resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo, updateQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -177,7 +177,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetSelected());
     dispatch(resetQueries());
     dispatch(resetSentenceCounts());
-    dispatch(resetSamples());
+    dispatch(resetSampleStories());
     dispatch(resetStoryCounts());
     dispatch(resetGeo());
   },
