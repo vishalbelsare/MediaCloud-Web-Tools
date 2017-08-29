@@ -118,7 +118,6 @@ class DemoQueryBuilderContainer extends React.Component {
         </div>
       );
     }
-    // TODO, decide whether to show QueryForm if in Demo mode
     return (
       <div>
         { content }

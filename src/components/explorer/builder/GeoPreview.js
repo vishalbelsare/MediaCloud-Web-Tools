@@ -68,6 +68,18 @@ class GeoPreview extends React.Component {
   render() {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
+    let geoChartSection = null;
+    if (results && results.length > 0) {
+      geoChartSection = (
+        results.map((geoSet, idx) =>
+            (<GridTile key={idx}>
+              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
+              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
+            </GridTile>
+            )
+          )
+      );
+    }
     return (
       <DataCard>
         <div className="actions">
@@ -88,13 +100,7 @@ class GeoPreview extends React.Component {
           className="geo-mini-cards"
           cellHeight={400}
         >
-          {results.map((geoSet, idx) =>
-            (<GridTile key={idx}>
-              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
-            </GridTile>
-            )
-          )}
+          {geoChartSection}
         </GridList>
       </DataCard>
     );

@@ -3,7 +3,9 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, updateQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo, fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, resetSelected, resetQueries, resetSentenceCounts, resetSamples, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
+  fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, updateTimestampForQueries,
+  resetSelected, resetQueries, resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
@@ -58,7 +60,7 @@ class LoggedInQueryContainer extends React.Component {
           (!whichProps.queries || whichProps.queries.length === 0 ||
           whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID)) {
           selectQueriesByURLParams(parsedObjectArray);
-        } else if (!whichProps.selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
           setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
         }
       } else if (whichProps.location.pathname.includes('/queries')) {
@@ -121,7 +123,6 @@ class LoggedInQueryContainer extends React.Component {
     } else {
       content = <div>No Permissions</div>;
     }
-    // TODO, decide whether to show QueryForm if in Demo mode
     return (
       <div>
         { content }
@@ -184,7 +185,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetSelected());
     dispatch(resetQueries());
     dispatch(resetSentenceCounts());
-    dispatch(resetSamples());
+    dispatch(resetSampleStories());
     dispatch(resetStoryCounts());
     dispatch(resetGeo());
   },
@@ -192,13 +193,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
-    queries.forEach((q) => {
+    const unDeletedQueries = queries.filter(q => !q.deleted);
+    unDeletedQueries.forEach((q) => {
       const newQuery = { ...q };
       newQuery.label = smartLabelForQuery(newQuery);
       dispatch(updateQuery(newQuery));
     });
-
-    const urlParamString = generateQueryParamString(queries);
+    dispatch(updateTimestampForQueries);
+    const urlParamString = generateQueryParamString(unDeletedQueries);
     const newLocation = `queries/search/${urlParamString}`;
     dispatch(push(newLocation));
     // this should keep the current selection...

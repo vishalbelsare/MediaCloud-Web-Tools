@@ -76,7 +76,8 @@ class QueryPicker extends React.Component {
   }
   isDeletable() {
     const { queries } = this.props;
-    return queries.length >= 2; // because we always have an empty query in the query array
+    const unDeletedQueries = queries.filter(q => !q.deleted);
+    return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
   }
   handleDeleteAndSelectQuery(query) {
     const { queries, handleDeleteQuery } = this.props;

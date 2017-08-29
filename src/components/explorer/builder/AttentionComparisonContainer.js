@@ -72,11 +72,12 @@ class AttentionComparisonContainer extends React.Component {
     // stich together bubble chart data
 
     // because these results are indexed, we can merge these two arrays
+    // we may have more results than queries b/c queries can be deleted but not executed
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     // stich together line chart data
     let series = [];
-    if (mergedResultsWithQueryInfo !== undefined) {
+    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo !== null && mergedResultsWithQueryInfo.length > 0) {
       series = [
         ...mergedResultsWithQueryInfo.map((query, idx) => {    // add series for all the results
           const data = dataAsSeries(cleanDateCounts(query.split));

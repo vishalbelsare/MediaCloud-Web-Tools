@@ -63,7 +63,7 @@ class StoryCountPreview extends React.Component {
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     let bubbleData = [];
-    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo.length > 0) {
+    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo !== null && mergedResultsWithQueryInfo.length > 0) {
       bubbleData = [
         ...mergedResultsWithQueryInfo.sort((a, b) => b.count - a.count).map((query, idx) => ({
           value: query.count,
