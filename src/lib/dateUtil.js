@@ -17,7 +17,7 @@ const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 // "2017-04-13 12:26:59.649513"
 const SNAPSHOT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
 
-const SHORT_DATE_STRING = 'MMM Do YY';
+// const SHORT_DATE_STRING = 'MMM Do YY';
 
 export const PAST_WEEK = 'week';
 export const PAST_TWO_WEEKS = 'two_weeks';
@@ -31,7 +31,7 @@ export function getCurrentDate() {
 }
 
 export function getShortDate(dateString) {
-  return moment(dateString).format(SHORT_DATE_STRING);
+  return moment(dateString).format('ll');
 }
 
 export function isMoreThanAYearInPast(dateInPast) {
