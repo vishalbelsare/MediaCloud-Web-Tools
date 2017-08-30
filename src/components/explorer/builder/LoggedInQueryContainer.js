@@ -110,7 +110,7 @@ class LoggedInQueryContainer extends React.Component {
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-      const isEditable = true;
+      const isEditable = false;
       if (queries && queries.length > 0 && selected &&
         collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
         if (selected.sources.length === 0 || (selected.sources.length > 0 && selected.sources[0].url !== undefined)) {

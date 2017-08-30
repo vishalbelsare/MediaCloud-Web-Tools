@@ -1,10 +1,12 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import { getShortDate } from '../../../lib/dateUtil';
 
@@ -20,6 +22,8 @@ const localMessages = {
 class QueryPickerItem extends React.Component {
   state = {
     showIconMenu: false,
+    labelChangeDialogOpen: false,
+    tempLabel: '',
   };
   handleFocusItem = () => {
     const { isDeletable } = this.props;
@@ -38,6 +42,24 @@ class QueryPickerItem extends React.Component {
       this.setState({ showIconMenu: false });
     }
   }
+  updateTempLabel = (val) => {
+    this.setState({ tempLabel: val });
+  }
+  handleOpen = () => {
+    const { query } = this.props;
+    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, tempLabel: query.label });
+  };
+
+  handleClose = () => {
+    this.setState({ labelChangeDialogOpen: false });
+  };
+  handleChangeAndClose = () => {
+    const { updateQueryProperty } = this.props;
+    this.setState({ labelChangeDialogOpen: false });
+    const updatedLabel = this.state.tempLabel;
+    updateQueryProperty('label', updatedLabel);
+  };
+
   handleColorClick(color) {
     this.setState({ showColor: color });
   }
@@ -52,7 +74,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, loadEditLabelDialog } = this.props;
+    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -60,6 +82,19 @@ class QueryPickerItem extends React.Component {
     /* query fields are only editable in place for Demo mode. the user can delete a query
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
+    const actions = [
+      <AppButton
+        label="Cancel"
+        primary
+        onClick={this.handleClose}
+      />,
+      <AppButton
+        label="Submit"
+        primary
+        keyboardFocused
+        onClick={() => this.handleChangeAndClose(query)}
+      />,
+    ];
     let iconOptions = null;
     if (user.isLoggedIn && this.state.showIconMenu) {
       iconOptions = (
@@ -69,7 +104,7 @@ class QueryPickerItem extends React.Component {
           anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => loadEditLabelDialog()} />
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
           <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
         </IconMenu>
       );
@@ -104,6 +139,23 @@ class QueryPickerItem extends React.Component {
               }}
               onKeyPress={this.handleMenuItemKeyDown}
             />
+            <Dialog
+              title="Update Label"
+              actions={actions}
+              modal={false}
+              open={this.state.labelChangeDialogOpen}
+              onRequestClose={this.handleClose}
+            >
+              <TextField
+                className="query-picker-editable-name"
+                id="tempLabel"
+                name="tempLabel"
+                onChange={(e, val) => {
+                  this.updateTempLabel(val); // both are connected
+                }}
+                hintText={query.q || formatMessage(localMessages.searchHint)}
+              />
+            </Dialog>
             {iconOptions}
           </div>
         );
@@ -117,7 +169,7 @@ class QueryPickerItem extends React.Component {
             <span
               className="query-picker-name"
             >
-              {query.q}
+              {query.label}
             </span>
             {iconOptions}
           </div>
