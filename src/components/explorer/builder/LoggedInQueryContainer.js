@@ -198,6 +198,7 @@ const mapDispatchToProps = dispatch => ({
       newQuery.label = smartLabelForQuery(newQuery);
       dispatch(updateQuery(newQuery));
     });
+    dispatch(resetSelected());
     dispatch(updateTimestampForQueries());
     const urlParamString = generateQueryParamString(unDeletedQueries);
     const newLocation = `/queries/search/[${urlParamString}]`;

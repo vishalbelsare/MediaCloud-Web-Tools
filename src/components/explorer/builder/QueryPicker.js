@@ -25,7 +25,6 @@ const localMessages = {
 const MAX_COLORS = 20;
 
 class QueryPicker extends React.Component {
-
   addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
@@ -50,18 +49,12 @@ class QueryPicker extends React.Component {
   updateQuery(newInfo) {
     const { updateCurrentQuery, selected } = this.props;
     const updateObject = selected;
-    if (newInfo.length) { // assume it's an array
-      newInfo.forEach((obj) => {
-        if (obj.type === 'source') {
-          if (!updateObject.sources.some(s => parseInt(s.id, 10) === parseInt(obj.id, 10))) {
-            updateObject.sources.push(obj);
-          }
-        } else if (obj.type === 'collection') {
-          if (!updateObject.collections.some(s => parseInt(s.id, 10) === parseInt(obj.id, 10))) {
-            updateObject.collections.push(obj);
-          }
-        }
-      });
+    if (newInfo.length) { // assume it's an array, and either sources or collections
+      if (newInfo[0].type === 'source' || newInfo[0].media_id !== undefined) {
+        updateObject.sources = newInfo; // replace
+      } else if (newInfo[0].type === 'collection' || newInfo[0].tags_id !== undefined) {
+        updateObject.collections = newInfo;
+      }
     } else {
       const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
       const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
