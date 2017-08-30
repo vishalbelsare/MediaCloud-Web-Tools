@@ -139,23 +139,6 @@ class QueryPickerItem extends React.Component {
               }}
               onKeyPress={this.handleMenuItemKeyDown}
             />
-            <Dialog
-              title="Update Label"
-              actions={actions}
-              modal={false}
-              open={this.state.labelChangeDialogOpen}
-              onRequestClose={this.handleClose}
-            >
-              <TextField
-                className="query-picker-editable-name"
-                id="tempLabel"
-                name="tempLabel"
-                onChange={(e, val) => {
-                  this.updateTempLabel(val); // both are connected
-                }}
-                hintText={query.q || formatMessage(localMessages.searchHint)}
-              />
-            </Dialog>
             {iconOptions}
           </div>
         );
@@ -213,6 +196,23 @@ class QueryPickerItem extends React.Component {
         onTouchTap={() => this.handleBlurAndSelection()}
       >
         {nameInfo}
+        <Dialog
+          title="Update Label"
+          actions={actions}
+          modal={false}
+          open={this.state.labelChangeDialogOpen}
+          onRequestClose={this.handleClose}
+        >
+          <TextField
+            className="query-picker-editable-name"
+            id="tempLabel"
+            name="tempLabel"
+            onChange={(e, val) => {
+              this.updateTempLabel(val); // both are connected
+            }}
+            hintText={query.q || formatMessage(localMessages.searchHint)}
+          />
+        </Dialog>
         {subT}
       </div>
     );
