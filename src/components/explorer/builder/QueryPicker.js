@@ -30,11 +30,11 @@ class QueryPicker extends React.Component {
     addAQuery(newQueryObj);
   }
   updateDemoQueryLabel(query, newValue) {
+    // update both label and q for query
     const { updateCurrentQuery } = this.props;
     const updatedQuery = { ...query };
     updatedQuery.label = newValue;
     updatedQuery.q = newValue;
-    // now update it in the store
     updateCurrentQuery(updatedQuery);
   }
   // called by query picker to update things like label or color
@@ -108,7 +108,7 @@ class QueryPicker extends React.Component {
             key={index}
             query={query}
             isSelected={selected.index === query.index}
-            isEditable={isEditable} // if custom, true for either mode, else if logged in no
+            isLabelEditable={isEditable} // if custom, true for either mode, else if logged in no
             isDeletable={() => this.isDeletable()}
             displayLabel={false}
             onQuerySelected={() => handleQuerySelected(query, query.index ? query.index : index)} // careful! unDeleted has different index
@@ -122,7 +122,7 @@ class QueryPicker extends React.Component {
       ));
       canSelectMedia = userLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
-      if (isEditable) {
+      if (userLoggedIn) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
