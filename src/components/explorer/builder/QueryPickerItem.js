@@ -52,7 +52,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, handleDeleteQuery, loadEditLabelDialog } = this.props;
+    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, loadEditLabelDialog } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -100,8 +100,7 @@ class QueryPickerItem extends React.Component {
               value={query.q}
               hintText={query.q || formatMessage(localMessages.searchHint)}
               onChange={(e, val) => {
-                updateQueryProperty('q', val); // both are connected
-                updateQueryProperty('label', val);
+                updateDemoQueryLabel(val); // both are connected
               }}
               onKeyPress={this.handleMenuItemKeyDown}
             />
@@ -177,6 +176,7 @@ QueryPickerItem.propTypes = {
   displayLabel: React.PropTypes.bool.isRequired,
   onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
+  updateDemoQueryLabel: React.PropTypes.func.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
   handleDeleteQuery: React.PropTypes.func.isRequired,
   loadEditLabelDialog: React.PropTypes.func,

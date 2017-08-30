@@ -30,7 +30,14 @@ class QueryPicker extends React.Component {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
   }
-
+  updateDemoQueryLabel(query, newValue) {
+    const { updateCurrentQuery } = this.props;
+    const updatedQuery = { ...query };
+    updatedQuery.label = newValue;
+    updatedQuery.q = newValue;
+    // now update it in the store
+    updateCurrentQuery(updatedQuery);
+  }
   // called by query picker to update things like label or color
   updateQueryProperty(query, propertyName, newValue) {
     const { updateCurrentQuery } = this.props;
@@ -113,6 +120,7 @@ class QueryPicker extends React.Component {
             displayLabel={false}
             onQuerySelected={() => handleQuerySelected(query, query.index ? query.index : index)} // careful! unDeleted has different index
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
+            updateDemoQueryLabel={newValue => this.updateDemoQueryLabel(query, newValue)}
             handleSearch={handleSearch}
             handleDeleteQuery={() => this.handleDeleteAndSelectQuery(query)}
             // loadDialog={loadQueryEditDialog}
