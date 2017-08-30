@@ -50,9 +50,10 @@ class DemoQueryBuilderContainer extends React.Component {
         return;
       }
 
-      if (!selected && !whichProps.selected &&
+      if (this.props.lastSearchTime !== whichProps.lastSearchTime ||
+        (!selected && !whichProps.selected &&
         (!whichProps.queries || whichProps.queries.length === 0 ||
-        whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID)) {
+        whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID))) {
         selectQueriesByURLParams(parsedObjectArray);
       } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
         setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
@@ -106,7 +107,7 @@ class DemoQueryBuilderContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, handleSearch, samples, location } = this.props;
+    const { selected, queries, setSelectedQuery, handleSearch, samples, location, lastSearchTime } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     const isEditable = location.pathname.includes('queries/demo/search');
@@ -114,7 +115,7 @@ class DemoQueryBuilderContainer extends React.Component {
       content = (
         <div>
           <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
-          <QueryResultsContainer queries={queries} params={location} samples={samples} />
+          <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
         </div>
       );
     }
@@ -141,6 +142,7 @@ DemoQueryBuilderContainer.propTypes = {
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
+  lastSearchTime: React.PropTypes.number,
   setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
   resetExplorerData: React.PropTypes.func.isRequired,
@@ -159,7 +161,7 @@ const mapStateToProps = (state, ownProps) => ({
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
   urlQueryString: ownProps.location.pathname,
-  lastSearchTime: state.explorer.lastSearchTime,
+  lastSearchTime: state.explorer.lastSearchTime.time,
   samples: state.explorer.samples.list,
   user: state.user,
 });
@@ -191,7 +193,7 @@ const mapDispatchToProps = dispatch => ({
       newQuery.label = smartLabelForQuery(newQuery);
       dispatch(updateQuery(newQuery));
     });
-    dispatch(updateTimestampForQueries);
+    dispatch(updateTimestampForQueries());
     const urlParamString = unDeletedQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));

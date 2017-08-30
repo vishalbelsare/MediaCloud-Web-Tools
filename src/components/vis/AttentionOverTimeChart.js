@@ -121,7 +121,7 @@ class AttentionOverTimeChart extends React.Component {
       }];
     } else if (series !== undefined && series.length > 0) {
       allSeries = series;
-      config.plotOptions.series.marker.enabled = (series[0].data.length < SERIES_MARKER_THRESHOLD);
+      config.plotOptions.series.marker.enabled = series[0].data ? (series[0].data.length < SERIES_MARKER_THRESHOLD) : false;
     }
     config.series = allSeries;
     // show total if it is included

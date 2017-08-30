@@ -107,11 +107,11 @@ class QueryPicker extends React.Component {
             user={user}
             key={index}
             query={query}
-            isSelected={selected.index === index}
+            isSelected={selected.index === query.index}
             isEditable={isEditable} // if custom, true for either mode, else if logged in no
             isDeletable={() => this.isDeletable()}
             displayLabel={false}
-            onQuerySelected={() => handleQuerySelected(query, index)}
+            onQuerySelected={() => handleQuerySelected(query, query.index ? query.index : index)} // careful! unDeleted has different index
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             handleSearch={handleSearch}
             handleDeleteQuery={() => this.handleDeleteAndSelectQuery(query)}
@@ -241,7 +241,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleQuerySelected: (query, index) => {
-    const queryWithIndex = Object.assign({}, query, { index });
+    const queryWithIndex = Object.assign({}, query, { index }); // if this doesn't exist...
     dispatch(selectQuery(queryWithIndex));
   },
   updateCurrentQuery: (query) => {

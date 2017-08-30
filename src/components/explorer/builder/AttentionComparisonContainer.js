@@ -73,6 +73,7 @@ class AttentionComparisonContainer extends React.Component {
 
     // because these results are indexed, we can merge these two arrays
     // we may have more results than queries b/c queries can be deleted but not executed
+    // so we have to do the following
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     // stich together line chart data
@@ -80,15 +81,17 @@ class AttentionComparisonContainer extends React.Component {
     if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo !== null && mergedResultsWithQueryInfo.length > 0) {
       series = [
         ...mergedResultsWithQueryInfo.map((query, idx) => {    // add series for all the results
-          const data = dataAsSeries(cleanDateCounts(query.split));
-          return {
-            id: idx,
-            name: query.label,
-            data: data.values,
-            pointStart: data.start,
-            pointInterval: data.intervalMs,
-            color: query.color,
-          };
+          if (query.split) {
+            const data = dataAsSeries(cleanDateCounts(query.split));
+            return {
+              id: idx,
+              name: query.label,
+              data: data ? data.values : null,
+              pointStart: data.start,
+              pointInterval: data.intervalMs,
+              color: query.color,
+            };
+          } return {};
         }),
       ];
     }
@@ -139,7 +142,6 @@ AttentionComparisonContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,

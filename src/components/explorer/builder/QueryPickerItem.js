@@ -86,7 +86,7 @@ class QueryPickerItem extends React.Component {
       );
     }
     if (query) {
-      if (isEditable) {
+      if (isEditable) { // this is now only occurring for the demo user
         nameInfo = (
           <div>
             <ColorPicker
@@ -99,7 +99,10 @@ class QueryPickerItem extends React.Component {
               name="q"
               value={query.q}
               hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => updateQueryProperty('q', val)}
+              onChange={(e, val) => {
+                updateQueryProperty('q', val); // both are connected
+                updateQueryProperty('label', val);
+              }}
               onKeyPress={this.handleMenuItemKeyDown}
             />
             {iconOptions}
