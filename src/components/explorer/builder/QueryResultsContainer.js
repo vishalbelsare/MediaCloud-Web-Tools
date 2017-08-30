@@ -17,13 +17,13 @@ const QueryResultsContainer = (props) => {
           <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StorySamplePreview queries={queries} user={user} params={params} />
+          <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StoryCountPreview queries={queries} user={user} params={params} />
+          <StoryCountPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <GeoPreview queries={queries} user={user} params={params} />
+          <GeoPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
       </Row>
     </Grid>

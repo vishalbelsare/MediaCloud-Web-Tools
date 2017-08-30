@@ -14,7 +14,7 @@ export function generateQueryParamString(queries) {
   const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
   const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
   let urlParamString = queries.map((query, idx) => `{"index":${idx},"q":"${query.q}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
-  urlParamString = `[${urlParamString}]`;
+  urlParamString = `${urlParamString}`;
 
   return urlParamString;
 }

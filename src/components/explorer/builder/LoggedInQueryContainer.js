@@ -56,9 +56,11 @@ class LoggedInQueryContainer extends React.Component {
           return;
         }
 
-        if (!selected && !whichProps.selected &&
+        if (this.props.lastSearchTime !== whichProps.lastSearchTime ||
+          url !== this.props.location.pathname || // url has been updated by handleSearch
+          (!selected && !whichProps.selected &&
           (!whichProps.queries || whichProps.queries.length === 0 ||
-          whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID)) {
+          whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID))) {
           selectQueriesByURLParams(parsedObjectArray);
         } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
           setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
@@ -104,7 +106,7 @@ class LoggedInQueryContainer extends React.Component {
   }
 
   render() {
-    const { user, selected, queries, setSelectedQuery, collectionLookupFetchStatus, handleSearch, samples, location } = this.props;
+    const { user, selected, queries, setSelectedQuery, collectionLookupFetchStatus, handleSearch, samples, location, lastSearchTime } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
@@ -115,7 +117,7 @@ class LoggedInQueryContainer extends React.Component {
           content = (
             <div>
               <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
-              <QueryResultsContainer queries={queries} params={location} samples={samples} />
+              <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
             </div>
           );
         }
@@ -141,10 +143,8 @@ LoggedInQueryContainer.propTypes = {
   addAppNotice: React.PropTypes.func.isRequired,
   selected: React.PropTypes.object,
   queries: React.PropTypes.array,
-  sourcesResults: React.PropTypes.array,
   collectionResults: React.PropTypes.array,
   collectionLookupFetchStatus: React.PropTypes.string,
-  sourceLookupFetchStatuses: React.PropTypes.array,
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
@@ -156,6 +156,7 @@ LoggedInQueryContainer.propTypes = {
   loadSampleSearches: React.PropTypes.func.isRequired,
   fetchSamples: React.PropTypes.func.isRequired,
   urlQueryString: React.PropTypes.string,
+  lastSearchTime: React.PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -163,12 +164,10 @@ const mapStateToProps = (state, ownProps) => ({
   selected: state.explorer.selected,
   selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
   queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
-  sourcesResults: state.explorer.queries.sources ? state.explorer.queries.sources.results : null,
   collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
-  sourceLookupFetchStatuses: state.explorer.queries.sources.fetchStatuses,
   urlQueryString: ownProps.location.pathname,
-  lastSearchTime: state.explorer.lastSearchTime,
+  lastSearchTime: state.explorer.lastSearchTime.time,
   samples: state.explorer.samples.list,
   user: state.user,
 });
@@ -199,9 +198,9 @@ const mapDispatchToProps = dispatch => ({
       newQuery.label = smartLabelForQuery(newQuery);
       dispatch(updateQuery(newQuery));
     });
-    dispatch(updateTimestampForQueries);
+    dispatch(updateTimestampForQueries());
     const urlParamString = generateQueryParamString(unDeletedQueries);
-    const newLocation = `queries/search/${urlParamString}`;
+    const newLocation = `/queries/search/[${urlParamString}]`;
     dispatch(push(newLocation));
     // this should keep the current selection...
   },

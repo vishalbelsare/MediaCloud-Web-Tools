@@ -26,6 +26,7 @@ const localMessages = {
 class StorySamplePreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
       (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
@@ -42,7 +43,7 @@ class StorySamplePreview extends React.Component {
          || (results !== nextProps.results)
       );
     }
-    return queries.length; // if both results and queries are empty, don't update
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -142,10 +143,8 @@ const mapDispatchToProps = (dispatch, state) => ({
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetSampleStories());
     if (isLoggedInUser) {
-      // if (idx) { // specific change/update here
-      //  dispatch(fetchQuerySampleStories(query, idx));
-      // } else { // get all results
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,

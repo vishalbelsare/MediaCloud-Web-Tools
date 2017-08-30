@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries, resetSentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -55,7 +55,7 @@ class AttentionComparisonContainer extends React.Component {
          || (results !== nextProps.results)
       );
     }
-    return queries.length; // if both results and queries are empty, don't update
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -132,7 +132,6 @@ AttentionComparisonContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  recordLastSearchTime: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
   // from mergeProps
@@ -149,9 +148,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  recordLastSearchTime: () => {
-    dispatch(updateTimestampForQueries());
-  },
   fetchData: (params, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
@@ -160,7 +156,8 @@ const mapDispatchToProps = (dispatch, state) => ({
     dispatch(resetSentenceCounts()); // necessary if a query deletion has occurred
 
     if (isLoggedInUser) {
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,
@@ -173,10 +170,6 @@ const mapDispatchToProps = (dispatch, state) => ({
       });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
-      // find queries on stack without id but with index and with q, and add?
-      // hmm problem here b/c we already have it in here
-      // const newQueries = state.queries.filter(q => q.id === null && q.index);
-      // runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw
@@ -193,7 +186,6 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.recordLastSearchTime();
       dispatchProps.fetchData(ownProps, ownProps.queries);
     },
   });

@@ -27,6 +27,7 @@ const localMessages = {
 class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
       (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
@@ -43,7 +44,7 @@ class GeoPreview extends React.Component {
          || (results !== nextProps.results)
       );
     }
-    return queries.length; // if both results and queries are empty, don't update
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -69,7 +70,7 @@ class GeoPreview extends React.Component {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
     let geoChartSection = null;
-    if (results && results.length > 0) {
+    if (results && results.length > 0 && queries && queries.length > 0) {
       geoChartSection = (
         results.map((geoSet, idx) =>
             (<GridTile key={idx}>
@@ -140,7 +141,8 @@ const mapDispatchToProps = (dispatch, state) => ({
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetGeo());
     if (isLoggedInUser) {
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,
