@@ -59,10 +59,6 @@ class QueryPicker extends React.Component {
       const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
       const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
       updateObject[fieldName] = fieldValue;
-      // TODO check the logic of this. if demo mode and the user changes the q, label should be equivalent?
-      if (fieldName === 'q') {
-        updateObject.label = fieldValue;
-      }
     }
     updateCurrentQuery(updateObject);
   }
