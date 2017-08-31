@@ -43,23 +43,21 @@ class QueryPicker extends React.Component {
     const updatedQuery = { ...query };
     updatedQuery[propertyName] = newValue;
     // now update it in the store
-    updateCurrentQuery(updatedQuery);
+    updateCurrentQuery(updatedQuery, propertyName);
   }
 
-  updateQuery(newInfo) {
-    const { updateCurrentQuery, selected } = this.props;
+  handleFormChange(newInfo, selected) {
+    const { updateCurrentQuery } = this.props;
     const updateObject = selected;
-    if (newInfo.length) { // assume it's an array, and either sources or collections
-      if (newInfo[0].type === 'source' || newInfo[0].media_id !== undefined) {
-        updateObject.sources = newInfo; // replace
-      } else if (newInfo[0].type === 'collection' || newInfo[0].tags_id !== undefined) {
-        updateObject.collections = newInfo;
-      }
-    } else {
-      const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-      const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
-      updateObject[fieldName] = fieldValue;
+    const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
+    if (newInfo.media && newInfo.media.length) { // assume it's an array, and either sources or collections
+      const updatedSources = newInfo.media.filter(m => m.type === 'source' || m.media_id);
+      const updatedCollections = newInfo.media.filter(m => m.type === 'collection' || m.tags_id);
+      updateObject.collections = updatedCollections;
+      updateObject.sources = updatedSources;
     }
+    const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
+    updateObject[fieldName] = fieldValue; // don't overwrite all fields b/c of source and collections...
     updateCurrentQuery(updateObject);
   }
 
@@ -118,12 +116,13 @@ class QueryPicker extends React.Component {
       ));
       canSelectMedia = userLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
-      if (userLoggedIn) {
+      if (userLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
-        const defaultQuery = { index: newIndex, label: 'enter query', q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
+        const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
+        const defaultQuery = { index: newIndex, label: newQueryLabel, q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>
@@ -185,7 +184,7 @@ class QueryPicker extends React.Component {
             destroyOnUnmount={false}
             buttonLabel={formatMessage(localMessages.querySearch)}
             onSave={handleSearch}
-            onChange={event => this.updateQuery(event)}
+            onChange={event => this.handleFormChange(event, selected)}
             handleOpenHelp={this.handleOpenStub}
             handleSaveQuerySet={q => this.handleSaveQuerySet(q)}
             isEditable={canSelectMedia}
@@ -236,16 +235,14 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   handleQuerySelected: (query, index) => {
     const queryWithIndex = Object.assign({}, query, { index }); // if this doesn't exist...
     dispatch(selectQuery(queryWithIndex));
   },
-  updateCurrentQuery: (query) => {
+  updateCurrentQuery: (query, fieldName) => {
     if (query) {
-      dispatch(updateQuery(query));
-    } else {
-      dispatch(updateQuery(ownProps.selected)); // this won't e right
+      dispatch(updateQuery({ query, fieldName }));
     }
   },
   addAQuery: (query) => {

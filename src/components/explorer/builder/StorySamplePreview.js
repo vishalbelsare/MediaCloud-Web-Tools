@@ -75,7 +75,7 @@ class StorySamplePreview extends React.Component {
       storyListContent = (
         <Tabs>
           {results.map((storySet, idx) => (
-            <Tab label={queries && queries.length > idx ? queries[idx].q : 'empty'} key={idx}>
+            <Tab label={queries && queries.length > idx ? queries[idx].label : 'empty'} key={idx}>
               <StoryTable
                 className="story-table"
                 stories={storySet}

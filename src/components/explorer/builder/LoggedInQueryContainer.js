@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
-import { selectQuery, updateQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
+import { selectQuery, selectBySearchId, selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchSampleSearches, fetchQuerySourcesByIds, fetchQueryCollectionsByIds, updateTimestampForQueries,
   resetSelected, resetQueries, resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
@@ -11,7 +11,7 @@ import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 // import { notEmptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { generateQueryParamString, smartLabelForQuery } from '../../../lib/explorerUtil';
+import { generateQueryParamString } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 import LoadingSpinner from '../../common/LoadingSpinner';
@@ -193,11 +193,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSearch: (queries) => {
     const unDeletedQueries = queries.filter(q => !q.deleted);
-    unDeletedQueries.forEach((q) => {
-      const newQuery = { ...q };
-      newQuery.label = smartLabelForQuery(newQuery);
-      dispatch(updateQuery(newQuery));
-    });
     dispatch(resetSelected());
     dispatch(updateTimestampForQueries());
     const urlParamString = generateQueryParamString(unDeletedQueries);

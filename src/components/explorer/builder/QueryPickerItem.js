@@ -74,7 +74,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
+    const { user, query, isLabelEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -121,7 +121,7 @@ class QueryPickerItem extends React.Component {
       );
     }
     if (query) {
-      if (isEditable) { // this is now only occurring for the demo user
+      if (isLabelEditable) { // this is now only occurring for the demo user
         nameInfo = (
           <div>
             <ColorPicker
@@ -164,7 +164,7 @@ class QueryPickerItem extends React.Component {
       // const srcDesc = query.media;
       const totalCount = collCount + srcCount;
       const queryLabel = query.label;
-      const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : query.collections[0].tags_id;
+      const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
       const oneCollLabel = collCount === 1 ? oneCollLabelOrNumber : '';
 
       const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: oneCollLabel }} />;
@@ -208,9 +208,9 @@ class QueryPickerItem extends React.Component {
             id="tempLabel"
             name="tempLabel"
             onChange={(e, val) => {
-              this.updateTempLabel(val); // both are connected
+              this.updateTempLabel(val);
             }}
-            hintText={query.q || formatMessage(localMessages.searchHint)}
+            hintText={query.label || formatMessage(localMessages.searchHint)}
           />
         </Dialog>
         {subT}
@@ -223,7 +223,7 @@ QueryPickerItem.propTypes = {
   // from parent
   query: React.PropTypes.object,
   isSelected: React.PropTypes.bool.isRequired,
-  isEditable: React.PropTypes.bool.isRequired,
+  isLabelEditable: React.PropTypes.bool.isRequired,
   isDeletable: React.PropTypes.func.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
   onQuerySelected: React.PropTypes.func,
