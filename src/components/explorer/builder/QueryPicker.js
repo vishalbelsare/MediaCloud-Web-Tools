@@ -35,7 +35,7 @@ class QueryPicker extends React.Component {
     const updatedQuery = { ...query };
     updatedQuery.label = newValue;
     updatedQuery.q = newValue;
-    updateCurrentQuery(updatedQuery);
+    updateCurrentQuery(updatedQuery, 'label');
   }
   // called by query picker to update things like label or color
   updateQueryProperty(query, propertyName, newValue) {
@@ -50,9 +50,9 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updateObject = selected;
     const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-    if (newInfo.media && newInfo.media.length) { // assume it's an array, and either sources or collections
-      const updatedSources = newInfo.media.filter(m => m.type === 'source' || m.media_id);
-      const updatedCollections = newInfo.media.filter(m => m.type === 'collection' || m.tags_id);
+    if (newInfo.length) { // assume it's an array, and either sources or collections
+      const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);
+      const updatedCollections = newInfo.filter(m => m.type === 'collection' || m.tags_id);
       updateObject.collections = updatedCollections;
       updateObject.sources = updatedSources;
     }
