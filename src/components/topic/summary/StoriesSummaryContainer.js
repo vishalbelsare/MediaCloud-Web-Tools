@@ -10,7 +10,7 @@ import { fetchTopicTopStories, sortTopicTopStories, filterByFocus } from '../../
 import DataCard from '../../common/DataCard';
 import Permissioned from '../../common/Permissioned';
 import LinkWithFilters from '../LinkWithFilters';
-import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { ExploreButton, DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import TopicStoryTable from '../TopicStoryTable';
@@ -48,9 +48,10 @@ class StoriesSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, filters, handleFocusSelected } = this.props;
+    const { stories, sort, topicId, filters, handleFocusSelected, user } = this.props;
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/stories`;
+    const isLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     return (
       <DataCard className="topic-summary-top-stories">
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -82,7 +83,7 @@ class StoriesSummaryContainer extends React.Component {
         <TopicStoryTable
           stories={stories}
           topicId={topicId}
-          onChangeSort={this.onChangeSort}
+          onChangeSort={isLoggedIn ? this.onChangeSort : null}
           onChangeFocusSelection={handleFocusSelected}
           sortedBy={sort}
           maxTitleLength={50}
@@ -107,12 +108,14 @@ StoriesSummaryContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   sort: PropTypes.string.isRequired,
   stories: PropTypes.array,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topStories.fetchStatus,
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.stories,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

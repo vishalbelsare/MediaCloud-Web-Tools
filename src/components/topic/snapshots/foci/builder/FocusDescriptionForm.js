@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import composeIntlForm from '../../../../common/IntlForm';
 import FocalSetForm from './FocalSetForm';
 import { emptyString, nullOrUndefined } from '../../../../../lib/formValidators';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY } from '../../../../../lib/focalTechniques';
+import { trimToMaxLength } from '../../../../../lib/stringUtil';
 
 export const NEW_FOCAL_SET_PLACEHOLDER_ID = -1;
 
@@ -22,100 +23,113 @@ const localMessages = {
   errorNameYourFocus: { id: 'focus.error.noName', defaultMessage: 'You need to name your Subtopic.' },
   errorPickASet: { id: 'focus.error.noSet', defaultMessage: 'You need to pick or create a Set.' },
   cannotChangeFocalSet: { id: 'focus.cannotChangeSet', defaultMessage: 'You can\'t change which set an existing Subtopic is in.' },
-
+  defaultDescriptionKeywords: { id: 'focus.create.setup3.defualtNameKeywords', defaultMessage: 'Stories with a sentence matching "{keywords}"' },
 };
 
-const formSelector = formValueSelector('snapshotFocus');
+class FocusDescriptionForm extends React.Component {
 
-const FocusDescriptionForm = (props) => {
-  const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, currentFocalSetDefinitionId } = props;
-  const { formatMessage } = props.intl;
-  // only show focal set selection for editing mode
-  let focalSetContent;
-  if (initialValues.focusDefinitionId === undefined) {
-    // if they pick "make a new focal set" then let them enter name and description
-    let focalSetDetailedContent = null;
-    if (currentFocalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
-      focalSetDetailedContent = <FocalSetForm initialValues={initialValues} />;
+  componentWillMount() {
+    const { change, focalTechnique, keywords } = this.props;
+    const { formatMessage } = this.props.intl;
+    // set smart-looking default focus name/description based on the focal technique currently selected
+    if (focalTechnique === FOCAL_TECHNIQUE_BOOLEAN_QUERY) {
+      const trimmedKeywordsForTitles = trimToMaxLength(keywords, 25);
+      const focusName = trimmedKeywordsForTitles;
+      const focusDescription = formatMessage(localMessages.defaultDescriptionKeywords, { keywords: trimmedKeywordsForTitles });
+      change('focusName', focusName);
+      change('focusDescription', focusDescription);
     }
-    focalSetContent = (
-      <div className="focal-set-details">
-        <Field
-          name="focalSetDefinitionId"
-          component={renderSelectField}
-          floatingLabelText={localMessages.pickFocalSet}
-        >
-          {focalSetDefinitions.map(focalSetDef =>
+  }
+
+  render() {
+    const { renderTextField, renderSelectField, focalSetDefinitions, initialValues, currentFocalSetDefinitionId, focalTechnique } = this.props;
+    const { formatMessage } = this.props.intl;
+    // only show focal set selection for editing mode
+    let focalSetContent;
+    if (initialValues.focusDefinitionId === undefined) {
+      // if they pick "make a new focal set" then let them enter name and description
+      let focalSetDetailedContent = null;
+      if (currentFocalSetDefinitionId === NEW_FOCAL_SET_PLACEHOLDER_ID) {
+        focalSetDetailedContent = <FocalSetForm initialValues={initialValues} focalTechnique={focalTechnique} />;
+      }
+      focalSetContent = (
+        <div className="focal-set-details">
+          <Field
+            name="focalSetDefinitionId"
+            component={renderSelectField}
+            floatingLabelText={localMessages.pickFocalSet}
+          >
+            {focalSetDefinitions.map(focalSetDef =>
+              <MenuItem
+                key={focalSetDef.focal_set_definitions_id}
+                value={focalSetDef.focal_set_definitions_id}
+                primaryText={focalSetDef.name}
+              />
+            )}
             <MenuItem
-              key={focalSetDef.focal_set_definitions_id}
-              value={focalSetDef.focal_set_definitions_id}
-              primaryText={focalSetDef.name}
+              key={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              value={NEW_FOCAL_SET_PLACEHOLDER_ID}
+              primaryText={formatMessage(localMessages.newFocalSetName)}
             />
-          )}
-          <MenuItem
-            key={NEW_FOCAL_SET_PLACEHOLDER_ID}
-            value={NEW_FOCAL_SET_PLACEHOLDER_ID}
-            primaryText={formatMessage(localMessages.newFocalSetName)}
-          />
-        </Field>
-        {focalSetDetailedContent}
+          </Field>
+          {focalSetDetailedContent}
+        </div>
+      );
+    } else {
+      focalSetContent = (
+        <p>
+          <i><FormattedMessage {...localMessages.cannotChangeFocalSet} /></i>
+        </p>
+      );
+    }
+    return (
+      <div className="focus-create-details-form">
+        <Row>
+          <Col lg={3} xs={12}>
+            <Field
+              name="focusName"
+              component={renderTextField}
+              floatingLabelText={localMessages.focusName}
+            />
+          </Col>
+          <Col lg={3} xs={12}>
+            <Field
+              name="focusDescription"
+              component={renderTextField}
+              multiLine
+              floatingLabelText={localMessages.focusDescription}
+            />
+          </Col>
+          <Col lg={3} xs={12}>
+            {focalSetContent}
+          </Col>
+          <Col lg={1} sm={0} />
+          <Col lg={2} sm={12}>
+            <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
+            <p className="light"><i><FormattedMessage {...localMessages.describeFocalSet} /></i></p>
+          </Col>
+        </Row>
       </div>
     );
-  } else {
-    focalSetContent = (
-      <p>
-        <i><FormattedMessage {...localMessages.cannotChangeFocalSet} /></i>
-      </p>
-    );
   }
-  return (
-    <div className="focus-create-details-form">
-      <Row>
-        <Col lg={3} xs={12}>
-          <Field
-            name="focusName"
-            component={renderTextField}
-            floatingLabelText={localMessages.focusName}
-          />
-        </Col>
-        <Col lg={3} xs={12}>
-          <Field
-            name="focusDescription"
-            component={renderTextField}
-            multiLine
-            floatingLabelText={localMessages.focusDescription}
-          />
-        </Col>
-        <Col lg={3} xs={12}>
-          {focalSetContent}
-        </Col>
-        <Col lg={1} sm={0} />
-        <Col lg={2} sm={12}>
-          <p className="light"><i><FormattedMessage {...localMessages.describeFocusAbout} /></i></p>
-          <p className="light"><i><FormattedMessage {...localMessages.describeFocalSet} /></i></p>
-        </Col>
-      </Row>
-    </div>
-  );
-};
+
+}
 
 FocusDescriptionForm.propTypes = {
   // from parent
   topicId: PropTypes.number.isRequired,
   initialValues: PropTypes.object.isRequired,
   focalSetDefinitions: PropTypes.array.isRequired,
+  focalTechnique: PropTypes.string.isRequired,
+  currentFocalSetDefinitionId: PropTypes.number,
+  keywords: PropTypes.string,
   // form composition
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
+  change: PropTypes.func.isRequired,
   // from state
-  currentFocalSetDefinitionId: PropTypes.number,
 };
-
-const mapStateToProps = state => ({
-  // pull the focal set id out of the form so we know when to show the focal set create sub form
-  currentFocalSetDefinitionId: parseInt(formSelector(state, 'focalSetDefinitionId'), 10),
-});
 
 function validate(values) {
   const errors = {};
@@ -131,6 +145,7 @@ function validate(values) {
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false,  // so the wizard works
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate,
 };
 
@@ -138,9 +153,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm(reduxFormConfig)(
-        connect(mapStateToProps)(
-          FocusDescriptionForm
-        )
+        FocusDescriptionForm
       )
     )
   );

@@ -121,14 +121,14 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
     words = [w['term'] for w in word_data]
-    word2vec_data = _cached_word2vec_google_results(words)
+    word2vec_data = _cached_word2vec_google_2d_results(words)
     for i in range(len(word2vec_data)):
         word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
     return word_data
 
 @cache
-def _cached_word2vec_google_results(words):
+def _cached_word2vec_google_2d_results(words):
     word2vec_results = google_news_2d(words)
     return word2vec_results
 

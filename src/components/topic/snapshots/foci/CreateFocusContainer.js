@@ -28,12 +28,12 @@ const CreateFocusContainer = (props) => {
   }
   // if there aren't any focal set defs, the user should have to create a new one
   if (focalSetDefId !== undefined) {
-    initialValues.focalSetDefinitionId = focalSetDefId;
+    initialValues.focalSetDefinitionId = parseInt(focalSetDefId, 10);
   }
   return (
     <FocusBuilderWizard
       topicId={topicId}
-      startStep={0}
+      startStep={focalTechnique ? 1 : 0}
       initialValues={initialValues}
       location={location}
       onDone={handleDone}
@@ -44,9 +44,12 @@ const CreateFocusContainer = (props) => {
 CreateFocusContainer.propTypes = {
   // from dispatch
   handleDone: PropTypes.func.isRequired,
+  // from state
+  formData: PropTypes.object,
   // from context:
   topicId: PropTypes.number.isRequired,
   location: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -60,7 +63,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(submitFocusUpdateOrCreate(topicId, formValues))
           .then((results) => {
             if (results.length === 1) {
-              const focusSavedMessage = ownProps.intl.formatMessage(localMessages.addnotice);
+              const focusSavedMessage = ownProps.intl.formatMessage(localMessages.booleanFocusSaved);
               dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
               dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
               dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page

@@ -10,7 +10,7 @@ import { fetchTopicTopMedia, sortTopicTopMedia } from '../../../actions/topicAct
 import DataCard from '../../common/DataCard';
 import LinkWithFilters from '../LinkWithFilters';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DownloadButton, ExploreButton } from '../../common/IconButton';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 
@@ -45,9 +45,10 @@ class MediaSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { media, sort, topicId, filters } = this.props;
+    const { media, sort, topicId, filters, user } = this.props;
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/media`;
+    const isLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
     return (
       <DataCard>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
@@ -61,7 +62,12 @@ class MediaSummaryContainer extends React.Component {
             <FormattedMessage {...localMessages.title} />
           </LinkWithFilters>
         </h2>
-        <MediaTable media={media} onChangeSort={this.onChangeSort} sortedBy={sort} topicId={topicId} />
+        <MediaTable
+          media={media}
+          onChangeSort={isLoggedIn ? this.onChangeSort : null}
+          sortedBy={sort}
+          topicId={topicId}
+        />
       </DataCard>
     );
   }
@@ -80,12 +86,14 @@ MediaSummaryContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   sort: PropTypes.string.isRequired,
   media: PropTypes.array,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topMedia.fetchStatus,
   sort: state.topics.selected.summary.topMedia.sort,
   media: state.topics.selected.summary.topMedia.media,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({

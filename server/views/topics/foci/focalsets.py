@@ -38,8 +38,9 @@ def topic_focal_set_definition_delete(topics_id, focal_set_definitions_id):
     definitions = user_mc.topicFocalSetDefinitionList(topics_id)
     for focal_set_def in definitions:
         if focal_set_def['focal_set_definitions_id'] == int(focal_set_definitions_id):
-            for focus_def in focal_set_def['focus_definitions']:
-                user_mc.topicFocalSetDefinitionDelete(topics_id, str(focus_def['focus_definitions_id']))
+            if 'focus_definitions' in focal_set_def: # be careful - the set could be empty!
+                for focus_def in focal_set_def['focus_definitions']:
+                    user_mc.topicFocalSetDefinitionDelete(topics_id, str(focus_def['focus_definitions_id']))
     # now delete the set def itself
     results = user_mc.topicFocalSetDefinitionDelete(topics_id, focal_set_definitions_id)
     return jsonify(results)

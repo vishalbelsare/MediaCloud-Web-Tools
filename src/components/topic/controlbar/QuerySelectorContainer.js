@@ -8,7 +8,7 @@ const QuerySelectorContainer = (props) => {
   const { query, onQuerySelected } = props;
   return (
     <QuerySelector
-      query={query}
+      query={query || ''}
       onQuerySelected={onQuerySelected}
     />
   );
