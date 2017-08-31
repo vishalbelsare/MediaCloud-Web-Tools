@@ -49,16 +49,12 @@ class QueryPicker extends React.Component {
   updateQuery(newInfo) {
     const { updateCurrentQuery, selected } = this.props;
     const updateObject = selected;
-    if (newInfo.length) { // assume it's an array, and either sources or collections
-      if (newInfo[0].type === 'source' || newInfo[0].media_id !== undefined) {
-        updateObject.sources = newInfo; // replace
-      } else if (newInfo[0].type === 'collection' || newInfo[0].tags_id !== undefined) {
-        updateObject.collections = newInfo;
-      }
-    } else {
-      const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-      const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
-      updateObject[fieldName] = fieldValue;
+    const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
+    if (newInfo.media && newInfo.media.length) { // assume it's an array, and either sources or collections
+      const updatedSources = newInfo.media.filter(m => m.type === 'source' || m.media_id);
+      const updatedCollections = newInfo.media.filter(m => m.type === 'collection' || m.tags_id);
+      updateObject.collections = updatedCollections;
+      updateObject.sources = updatedSources;
     }
     updateCurrentQuery(updateObject);
   }

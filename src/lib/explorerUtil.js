@@ -21,8 +21,10 @@ export function generateQueryParamString(queries) {
 
 const MAX_QUERY_LABEL_LENGTH = 60;
 
+// come from home page versus within QueryBuilder..
 export function smartLabelForQuery(query) {
   let smartLabel = query.q;
+  // const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
   if (query.q.length > MAX_QUERY_LABEL_LENGTH) {
     smartLabel = `${smartLabel.substr(0, MAX_QUERY_LABEL_LENGTH)}...`;
   }

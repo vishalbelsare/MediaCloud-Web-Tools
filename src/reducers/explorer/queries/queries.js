@@ -11,12 +11,12 @@ function queries(state = INITIAL_STATE, action) {
       updatedState.push(action.payload);
       return updatedState;
     case UPDATE_QUERY:
-      if (action.payload) { // just for safety
+      if (action.payload.query) { // update entire query object versus field at a time like in selected reducer
         updatedState = [...state];
-        queryIndex = state.findIndex(q => q.index !== null && q.index === action.payload.index);
+        queryIndex = state.findIndex(q => q.index !== null && q.index === action.payload.query.index);
         // we may not have an id if this is a custom query, use index. -- update we may not even use ID... TBD
-        queryIndex = queryIndex > -1 ? queryIndex : action.payload.index;
-        updatedState[queryIndex] = action.payload;
+        queryIndex = queryIndex > -1 ? queryIndex : action.payload.query.index;
+        updatedState[queryIndex] = action.payload.query;
         return updatedState;
       }
       return null;

@@ -12,7 +12,14 @@ function selected(state = INITIAL_STATE, action) {
       if (updatedState == null) {
         updatedState = action.payload;
       }
-      updatedState.media = [].concat(action.payload.collections).concat(action.payload.sources);
+
+      // syncing-wise replacing the whole object is tricky esp w/r sources, collections and the async retrieval of those names, descriptions
+      if (action.payload.fieldName) {
+        updatedState[action.payload.fieldName] = action.payload.query[action.payload.fieldName];
+      }
+      if (action.payload.query.collections && action.payload.query.sources) {
+        updatedState.media = [].concat(action.payload.query.collections).concat(action.payload.query.sources);
+      }
       // so we prep for the mediaPicker implementation
       return updatedState;
     case RESET_SELECTED:

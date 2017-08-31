@@ -5,12 +5,12 @@ import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import { selectQuery, selectBySearchId, selectBySearchParams, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo,
          fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
-         resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo, updateQuery, updateTimestampForQueries } from '../../../actions/explorerActions';
+         resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo, updateTimestampForQueries } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, smartLabelForQuery } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import { LEVEL_ERROR } from '../../common/Notice';
 import LoadingSpinner from '../../common/LoadingSpinner';
@@ -188,11 +188,6 @@ const mapDispatchToProps = dispatch => ({
   handleSearch: (queries) => {
     // update URL location according to updated queries
     const unDeletedQueries = queries.filter(q => !q.deleted);
-    unDeletedQueries.forEach((q) => {
-      const newQuery = { ...q };
-      newQuery.label = smartLabelForQuery(newQuery);
-      dispatch(updateQuery(newQuery));
-    });
     dispatch(updateTimestampForQueries());
     const urlParamString = unDeletedQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;

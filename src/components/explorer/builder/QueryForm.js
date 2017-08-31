@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
+// import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
@@ -29,7 +29,7 @@ const localMessages = {
 };
 
 const QueryForm = (props) => {
-  const { initialValues, isEditable, selected, buttonLabel, handleSaveQuerySet, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderSelectField } = props;
+  const { initialValues, isEditable, selected, buttonLabel, handleSaveQuerySet, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   const { formatMessage } = props.intl;
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -76,17 +76,6 @@ const QueryForm = (props) => {
                   color={currentColor}
                   onChange={onChange}
                 />
-              </div>
-              <div>
-                <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.sentenceHeadline} /></label>
-                <Field
-                  name={name}
-                  component={renderSelectField}
-                  defaultValue="sentence"
-                >
-                  <MenuItem value="sentence" primaryText={'Sentence'} />
-                  <MenuItem value="headline" primaryText={'Headline'} />
-                </Field>
               </div>
             </Col>
             <Col lg={1} />
