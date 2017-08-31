@@ -50,9 +50,15 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         query += " AND ("
         # add in the media sources they specified
         if len(media_ids) > 0:
-            id_chain = media_ids
+            id_chain = []
             if type(media_ids) is list: #if an object versus a string - see sample_searches.json
-                id_chain = [t["id"] for t in media_ids]
+                for t in media_ids:
+                    if type(t) is dict:
+                        id_chain.append(t['id'] if 'id' in t else 0)
+                    else:
+                        id_chain.append(t)
+            else:
+                id_chain = media_ids
             query_media_ids = u" ".join(map(str, id_chain))
             query_media_ids = u" media_id:({})".format(query_media_ids)
             query += '('+query_media_ids+')'

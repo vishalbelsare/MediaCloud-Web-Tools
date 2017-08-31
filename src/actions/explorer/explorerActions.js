@@ -64,6 +64,9 @@ export const demoQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIO
 export const SAVE_QUERY_SET = 'SAVE_QUERY_SET';
 export const saveQuerySet = createAsyncAction(SAVE_QUERY_SET, api.saveQuerySet, props => props);
 
+export const DELETE_QUERY = 'DELETE_QUERY';
+export const deleteQuery = createAction(DELETE_QUERY);
+
 export const RESET_QUERIES = 'RESET_QUERIES';
 export const resetQueries = createAction(RESET_QUERIES);
 
@@ -73,8 +76,8 @@ export const resetSelected = createAction(RESET_SELECTED);
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
-export const RESET_SAMPLES = 'RESET_SAMPLES';
-export const resetSamples = createAction(RESET_SAMPLES);
+export const RESET_SAMPLE_STORIES = 'RESET_SAMPLE_STORIES';
+export const resetSampleStories = createAction(RESET_SAMPLE_STORIES);
 
 export const RESET_STORY_COUNTS = 'RESET_STORY_COUNTS';
 export const resetStoryCounts = createAction(RESET_STORY_COUNTS);

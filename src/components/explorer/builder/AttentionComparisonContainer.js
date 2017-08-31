@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, updateTimestampForQueries } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -13,7 +13,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
@@ -35,30 +35,27 @@ function dataAsSeries(data) {
   return { values, intervalMs, start: dates[0] };
 }
 
-const queryPropertyHasChanged = (queries, nextQueries, propName) => {
-  const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
-  const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
-  const propHasChanged = currentProps !== nextProps;
-  return propHasChanged;
-};
-
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
-    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-    return (
-      ((labelsHaveChanged || colorsHaveChanged))
-       || (results !== nextProps.results)
-    );
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -75,22 +72,26 @@ class AttentionComparisonContainer extends React.Component {
     // stich together bubble chart data
 
     // because these results are indexed, we can merge these two arrays
+    // we may have more results than queries b/c queries can be deleted but not executed
+    // so we have to do the following
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     // stich together line chart data
     let series = [];
-    if (mergedResultsWithQueryInfo !== undefined) {
+    if (mergedResultsWithQueryInfo !== undefined && mergedResultsWithQueryInfo !== null && mergedResultsWithQueryInfo.length > 0) {
       series = [
         ...mergedResultsWithQueryInfo.map((query, idx) => {    // add series for all the results
-          const data = dataAsSeries(cleanDateCounts(query.split));
-          return {
-            id: idx,
-            name: query.label,
-            data: data.values,
-            pointStart: data.start,
-            pointInterval: data.intervalMs,
-            color: query.color,
-          };
+          if (query.split) {
+            const data = dataAsSeries(cleanDateCounts(query.split));
+            return {
+              id: idx,
+              name: query.label,
+              data: data ? data.values : null,
+              pointStart: data.start,
+              pointInterval: data.intervalMs,
+              color: query.color,
+            };
+          } return {};
         }),
       ];
     }
@@ -131,7 +132,6 @@ AttentionComparisonContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
-  recordLastSearchTime: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   urlQueryString: React.PropTypes.object.isRequired,
   // from mergeProps
@@ -141,7 +141,6 @@ AttentionComparisonContainer.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
   urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
@@ -149,17 +148,16 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  recordLastSearchTime: () => {
-    dispatch(updateTimestampForQueries());
-  },
   fetchData: (params, queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetSentenceCounts()); // necessary if a query deletion has occurred
 
     if (isLoggedInUser) {
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,
@@ -172,10 +170,6 @@ const mapDispatchToProps = (dispatch, state) => ({
       });
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
-      // find queries on stack without id but with index and with q, and add?
-      // hmm problem here b/c we already have it in here
-      // const newQueries = state.queries.filter(q => q.id === null && q.index);
-      // runTheseQueries = runTheseQueries.concat(newQueries);
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw
@@ -192,7 +186,6 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.recordLastSearchTime();
       dispatchProps.fetchData(ownProps, ownProps.queries);
     },
   });

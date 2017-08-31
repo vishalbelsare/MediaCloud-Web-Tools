@@ -9,6 +9,16 @@ export const PICK_SOURCE = 1;
 export const ADVANCED = 2;
 export const STARRED = 3;
 
+
+export function generateQueryParamString(queries) {
+  const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
+  const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
+  let urlParamString = queries.map((query, idx) => `{"index":${idx},"label":"${query.label}","q":"${query.q}","color":"${escape(query.color)}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
+  urlParamString = `${urlParamString}`;
+
+  return urlParamString;
+}
+
 const MAX_QUERY_LABEL_LENGTH = 60;
 
 export function smartLabelForQuery(query) {
@@ -18,3 +28,11 @@ export function smartLabelForQuery(query) {
   }
   return smartLabel;
 }
+
+export function queryPropertyHasChanged(queries, nextQueries, propName) {
+  const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
+  const propHasChanged = currentProps !== nextProps;
+  return propHasChanged;
+}
+

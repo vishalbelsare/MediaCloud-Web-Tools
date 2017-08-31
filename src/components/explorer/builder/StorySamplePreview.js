@@ -9,13 +9,10 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
-import { fetchQuerySampleStories, fetchDemoQuerySampleStories } from '../../../actions/explorerActions';
+import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
 // const NUM_TO_SHOW = 20;
-const DEFAULT_SOURCES = '';
-const DEFAULT_COLLECTION = 9139487;
-// TODO check all these messages
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -29,11 +26,24 @@ const localMessages = {
 class StorySamplePreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
-    // TODO also check for name and color changes
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { results, queries } = this.props;
+    // only re-render if results, any labels, or any colors have changed
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -49,7 +59,10 @@ class StorySamplePreview extends React.Component {
     const { formatMessage } = this.props.intl;
     let storyListContent;
     // if there is only one query, don't show tabs
-    if (queries.length === 1) {
+    // TODO/FYI this updates immediately if there is a deletion in QueryPicker..
+    if (results.length === 0) {
+      storyListContent = null;
+    } else if (queries.length === 1) {
       storyListContent = (
         <StoryTable
           className="story-table"
@@ -128,11 +141,10 @@ const mapDispatchToProps = (dispatch, state) => ({
     // for n queries, run the dispatch with each parsed query
 
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetSampleStories());
     if (isLoggedInUser) {
-      // if (idx) { // specific change/update here
-      //  dispatch(fetchQuerySampleStories(query, idx));
-      // } else { // get all results
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,

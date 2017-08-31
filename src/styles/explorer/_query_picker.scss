@@ -20,6 +20,19 @@
       border-left: 0px;
     }
 
+    .query-picker-icon-button {
+        opacity: 0;
+    }
+
+    &.selected {
+      background-color: $material-grey200 !important;
+
+      .query-picker-icon-button {
+        opacity: 1;
+      }
+    }
+
+
     .query-info {
       margin-left: 20px;
       display: block;
@@ -32,20 +45,19 @@
       color: $material-grey600;
     }
 
-  }
-
-  .query-picker-item {
     .query-picker-editable-name {
       width: 210px !important;
     }
-  }
 
-  .query-picker-item-name {
-    padding: 5px 20px;
-  }
+    .query-picker-icon-button {
+      width: 20px !important;
+      float: right !important;
+    }
 
-  .query-picker-item-selected > div {
-    background-color: $material-grey200 !important;
+    .query-picker-name {
+      font-size: 16px;
+    }
+
   }
   
 }

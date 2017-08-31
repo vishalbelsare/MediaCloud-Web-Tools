@@ -1,4 +1,4 @@
-import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, RESET_QUERIES } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, DELETE_QUERY, RESET_QUERIES } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = [];
 
@@ -51,6 +51,16 @@ function queries(state = INITIAL_STATE, action) {
       if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
         const queryData = action.payload.map(q => Object.assign({}, q, { id: null, searchId: null }));
         return queryData;
+      }
+      return state;
+    case DELETE_QUERY:
+      if (action.payload) {
+        updatedState = [...state];
+        if (updatedState.length === 1) return updatedState; // they can't delete all the queries
+        queryIndex = updatedState.findIndex(q => q.index !== null && q.index === action.payload.index);
+
+        updatedState[queryIndex].deleted = true;
+        return updatedState;
       }
       return state;
     case RESET_QUERIES:

@@ -1,7 +1,14 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
+import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
@@ -13,23 +20,113 @@ const localMessages = {
 };
 
 class QueryPickerItem extends React.Component {
+  state = {
+    showIconMenu: false,
+    labelChangeDialogOpen: false,
+    tempLabel: '',
+  };
+  handleFocusItem = () => {
+    const { isDeletable } = this.props;
+    if (isDeletable()) {
+      this.setState({ showIconMenu: true });
+    } else {
+      this.setState({ showIconMenu: false });
+    }
+  }
+  handleBlurAndSelection = () => {
+    const { onQuerySelected, isDeletable } = this.props;
+    if (isDeletable()) {
+      this.setState({ showIconMenu: true });
+      onQuerySelected();
+    } else {
+      this.setState({ showIconMenu: false });
+    }
+  }
+  updateTempLabel = (val) => {
+    this.setState({ tempLabel: val });
+  }
+  handleOpen = () => {
+    const { query } = this.props;
+    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, tempLabel: query.label });
+  };
+
+  handleClose = () => {
+    this.setState({ labelChangeDialogOpen: false });
+  };
+  handleChangeAndClose = () => {
+    const { updateQueryProperty } = this.props;
+    this.setState({ labelChangeDialogOpen: false });
+    const updatedLabel = this.state.tempLabel;
+    updateQueryProperty('label', updatedLabel);
+  };
+
   handleColorClick(color) {
     this.setState({ showColor: color });
   }
+  handleMenuItemKeyDown = (evt) => {
+    const { handleSearch } = this.props;
+    switch (evt.key) {
+      case 'Enter':
+        handleSearch();
+        break;
+      default: break;
+    }
+  };
 
   render() {
-    const { query, isEditable, displayLabel, selectThisQuery, updateQueryProperty } = this.props;
+    const { user, query, isEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
-
+    const isThisAProtectedQuery = !user.isLoggedIn && query.searchId !== null && query.searchId !== undefined;
+    /* query fields are only editable in place for Demo mode. the user can delete a query
+      in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
+    */
+    const actions = [
+      <AppButton
+        label="Cancel"
+        primary
+        onClick={this.handleClose}
+      />,
+      <AppButton
+        label="Submit"
+        primary
+        keyboardFocused
+        onClick={() => this.handleChangeAndClose(query)}
+      />,
+    ];
+    let iconOptions = null;
+    if (user.isLoggedIn && this.state.showIconMenu) {
+      iconOptions = (
+        <IconMenu
+          className="query-picker-icon-button"
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
+          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+        </IconMenu>
+      );
+    } else if (!isThisAProtectedQuery && this.state.showIconMenu) { // can delete only if this is a custom query (vs sample query) for demo users
+      iconOptions = (
+        <IconMenu
+          className="query-picker-icon-button"
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
+          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+        </IconMenu>
+      );
+    }
     if (query) {
-      if (isEditable) {
+      if (isEditable) { // this is now only occurring for the demo user
         nameInfo = (
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQueryProperty('color', val)}
+              onChange={e => updateQueryProperty(e.name, e.value)}
             />
             <TextField
               className="query-picker-editable-name"
@@ -37,8 +134,12 @@ class QueryPickerItem extends React.Component {
               name="q"
               value={query.q}
               hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => updateQueryProperty('q', val)}
+              onChange={(e, val) => {
+                updateDemoQueryLabel(val); // both are connected
+              }}
+              onKeyPress={this.handleMenuItemKeyDown}
             />
+            {iconOptions}
           </div>
         );
       } else {
@@ -46,9 +147,14 @@ class QueryPickerItem extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={(e, val) => updateQueryProperty('color', val)}
+              onChange={e => updateQueryProperty(e.name, e.value)}
             />&nbsp;
-            {query.q}
+            <span
+              className="query-picker-name"
+            >
+              {query.label}
+            </span>
+            {iconOptions}
           </div>
         );
       }
@@ -65,12 +171,11 @@ class QueryPickerItem extends React.Component {
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
 
       if (srcCount === 0 && collCount === 1) {
-        // TODO start_date vs startDate
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
             {oneCollStatus}<br />
-            {query.startDate}--{query.endDate}
+            {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
       } else if (totalCount > 0) {
@@ -79,15 +184,35 @@ class QueryPickerItem extends React.Component {
             {displayLabel ? query.label : ''}
             <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
             <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
-            {query.start_date}--{query.end_date}
+            {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
       }
     }
-
+    const extraClassNames = (isSelected) ? 'selected' : '';
     return (
-      <div className="query-picker-item" onTouchTap={selectThisQuery}>
+      <div
+        className={`query-picker-item ${extraClassNames}`}
+        onTouchTap={() => this.handleBlurAndSelection()}
+      >
         {nameInfo}
+        <Dialog
+          title="Update Label"
+          actions={actions}
+          modal={false}
+          open={this.state.labelChangeDialogOpen}
+          onRequestClose={this.handleClose}
+        >
+          <TextField
+            className="query-picker-editable-name"
+            id="tempLabel"
+            name="tempLabel"
+            onChange={(e, val) => {
+              this.updateTempLabel(val); // both are connected
+            }}
+            hintText={query.q || formatMessage(localMessages.searchHint)}
+          />
+        </Dialog>
         {subT}
       </div>
     );
@@ -97,12 +222,19 @@ class QueryPickerItem extends React.Component {
 QueryPickerItem.propTypes = {
   // from parent
   query: React.PropTypes.object,
+  isSelected: React.PropTypes.bool.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
+  isDeletable: React.PropTypes.func.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
-  selectThisQuery: React.PropTypes.func,
+  onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
+  updateDemoQueryLabel: React.PropTypes.func.isRequired,
+  handleSearch: React.PropTypes.func.isRequired,
+  handleDeleteQuery: React.PropTypes.func.isRequired,
+  loadEditLabelDialog: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
+  user: React.PropTypes.object.isRequired,
 };
 
 

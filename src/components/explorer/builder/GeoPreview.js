@@ -7,13 +7,14 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
 import GeoChart from '../../vis/GeoChart';
-import { fetchDemoQueryGeo, fetchQueryGeo } from '../../../actions/explorerActions';
+import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
 import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION } from '../../../lib/explorerUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
@@ -26,11 +27,24 @@ const localMessages = {
 class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { urlQueryString, lastSearchTime, fetchData } = this.props;
+
     if (nextProps.lastSearchTime !== lastSearchTime ||
-      nextProps.urlQueryString !== urlQueryString) {
-    // TODO also check for name and color changes
+      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
       fetchData(nextProps.urlQueryString, nextProps.queries);
     }
+  }
+  shouldComponentUpdate(nextProps) {
+    const { results, queries } = this.props;
+    // only re-render if results, any labels, or any colors have changed
+    if (results.length) { // may have reset results so avoid test if results is empty
+      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
+      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      return (
+        ((labelsHaveChanged || colorsHaveChanged))
+         || (results !== nextProps.results)
+      );
+    }
+    return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
     let url = null;
@@ -55,6 +69,18 @@ class GeoPreview extends React.Component {
   render() {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
+    let geoChartSection = null;
+    if (results && results.length > 0 && queries && queries.length > 0) {
+      geoChartSection = (
+        results.map((geoSet, idx) =>
+            (<GridTile key={idx}>
+              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
+              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
+            </GridTile>
+            )
+          )
+      );
+    }
     return (
       <DataCard>
         <div className="actions">
@@ -75,13 +101,7 @@ class GeoPreview extends React.Component {
           className="geo-mini-cards"
           cellHeight={400}
         >
-          {results.map((geoSet, idx) =>
-            (<GridTile key={idx}>
-              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
-            </GridTile>
-            )
-          )}
+          {geoChartSection}
         </GridList>
       </DataCard>
     );
@@ -118,11 +138,11 @@ const mapDispatchToProps = (dispatch, state) => ({
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query
     */
-  // TODO not using ownProps, will we need this or will all the needed info already be in the selected query?
-
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
+    dispatch(resetGeo());
     if (isLoggedInUser) {
-      state.queries.map((q) => {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
           end_date: q.endDate,

@@ -8,21 +8,22 @@ import StoryCountPreview from './StoryCountPreview';
 import GeoPreview from './GeoPreview';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, params } = props;
+  const { queries, user, params, lastSearchTime } = props;
+  // const unDeletedQueries = queries.filter(q => !q.deleted);
   return (
     <Grid>
       <Row>
         <Col lg={12} xs={12}>
-          <AttentionComparisonContainer queries={queries} user={user} params={params} />
+          <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StorySamplePreview queries={queries} user={user} params={params} />
+          <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <StoryCountPreview queries={queries} user={user} params={params} />
+          <StoryCountPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <GeoPreview queries={queries} user={user} params={params} />
+          <GeoPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
       </Row>
     </Grid>
@@ -36,6 +37,7 @@ QueryResultsContainer.propTypes = {
   // from state
   user: React.PropTypes.object,
   queries: React.PropTypes.array,
+  lastSearchTime: React.PropTypes.number,
 };
 
 const mapStateToProps = state => ({
