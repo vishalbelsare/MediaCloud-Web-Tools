@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
+import Link from 'react-router/lib/Link';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import TopicSearchContainer from './search/TopicSearchContainer';
@@ -10,6 +11,8 @@ import LoginForm from '../user/LoginForm';
 import TopicIcon from '../common/icons/TopicIcon';
 import PublicTopicListContainer from './list/PublicTopicListContainer';
 import DataCard from '../common/DataCard';
+import { AddButton } from '../common/IconButton';
+import messages from '../../resources/messages';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Home' },
@@ -31,7 +34,12 @@ const TopicsHomeContainer = (props) => {
           <div className="main">
             <Grid>
               <Row>
-                <Col lg={8} />
+                <Col lg={8} className="left">
+                  <Link to="topics/create">
+                    <AddButton />
+                    <FormattedMessage {...messages.createNewTopic} />
+                  </Link>
+                </Col>
                 <Col lg={4}>
                   <TopicSearchContainer />
                 </Col>
