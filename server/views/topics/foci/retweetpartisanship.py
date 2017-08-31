@@ -62,7 +62,7 @@ def retweet_partisanship_coverage(topics_id):
     return jsonify({'counts': {'count': tagged_story_count, 'total': total_stories}})
 
 
-@cache
+#@cache
 def cached_media_tags(tag_sets_id):
     partisanship_tags = cached_tags_in_tag_set(tag_sets_id)
     for tag in partisanship_tags:
