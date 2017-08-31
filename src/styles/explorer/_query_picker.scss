@@ -34,7 +34,7 @@
 
 
     .query-info {
-      margin-left: 20px;
+      margin-left: 23px;
       display: block;
       color: $material-grey600;
     }
@@ -56,6 +56,10 @@
 
     .query-picker-name {
       font-size: 16px;
+      padding-top: 20px;
+      padding-bottom: 10px;
+      display: inline-block;
+      font-weight: bold;
     }
 
   }
