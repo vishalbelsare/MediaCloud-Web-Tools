@@ -17,8 +17,6 @@ const formSelector = formValueSelector('snapshotFocus');
 const localMessages = {
   title: { id: 'focus.create.setup3.title', defaultMessage: 'Step 3: Describe Your Subtopic' },
   retweetIntro: { id: 'focus.create.setup3.retweetIntro', defaultMessage: 'This will create a set with one subtopic for each of the partisan quintiles.  For example, any story from a media source in the "center left" group will be put into the "center left" subtopic in this set.  Name thet set and we will create the 5 subtopics within it.  Give it a name that makes these subtopics easy to identify later.' },
-  defaultSetNameRetweet: { id: 'focus.create.setup3.retweet.setName', defaultMessage: 'Retweet Partisanship' },
-  defaultSetDescriptionRetweet: { id: 'focus.create.setup3.retweet.setDescription', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
 };
 
 const FocusForm3DescribeContainer = (props) => {
@@ -37,6 +35,9 @@ const FocusForm3DescribeContainer = (props) => {
         topicId={topicId}
         initialValues={initialValues}
         focalSetDefinitions={focalSetDefinitions}
+        focalTechnique={formData.focalTechnique}
+        currentFocalSetDefinitionId={formData.focalSetDefinitionId}
+        keywords={formData.keywords}
       />);
       break;
     case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
@@ -47,12 +48,9 @@ const FocusForm3DescribeContainer = (props) => {
         <Row>
           <Col lg={10}>
             <FocalSetForm
-              initialValues={{
-                ...initialValues,
-                focalSetName: formatMessage(localMessages.defaultSetNameRetweet),
-                focalSetDescription: formatMessage(localMessages.defaultSetDescriptionRetweet),
-              }}
+              initialValues={initialValues}
               introContent={introContent}
+              focalTechnique={formData.focalTechnique}
               fullWidth
             />
           </Col>
@@ -104,7 +102,7 @@ FocusForm3DescribeContainer.propTypes = {
 const mapStateToProps = state => ({
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
   fetchStatus: state.topics.selected.focalSets.definitions.fetchStatus,
-  formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId'),
+  formData: formSelector(state, 'focalTechnique', 'focalSetDefinitionId', 'keywords'),
 });
 
 const mapDispatchToProps = dispatch => ({

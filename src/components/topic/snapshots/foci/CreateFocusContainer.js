@@ -3,28 +3,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import { reset, formValueSelector } from 'redux-form';
+import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
 import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../lib/focalTechniques';
 import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet } from '../../../../actions/topicActions';
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
-import { trimToMaxLength } from '../../../../lib/stringUtil';
 
 const localMessages = {
   booleanFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We saved your new Subtopic.' },
   retweetFocusSaved: { id: 'focus.create.retweetSaved', defaultMessage: 'We created a new set of Subtopics based on our parisan retweet measure.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
   invalid: { id: 'focus.create.invalid', defaultMessage: 'Sorry - the data has an unknown subtopic technique. It failed!' },
-  defaultDescriptionKeywords: { id: 'focus.create.setup3.defualtNameKeywords', defaultMessage: 'Stories with a sentence matching "{keywords}"' },
 };
 
-const formSelector = formValueSelector('snapshotFocus');
-
 const CreateFocusContainer = (props) => {
-  const { topicId, location, handleDone, keywords } = props;
+  const { topicId, location, handleDone } = props;
   const { focalSetDefId, focalTechnique } = props.location.query;
-  const { formatMessage } = props.intl;
   const initialValues = {};
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
@@ -35,17 +30,11 @@ const CreateFocusContainer = (props) => {
   if (focalSetDefId !== undefined) {
     initialValues.focalSetDefinitionId = parseInt(focalSetDefId, 10);
   }
-  const trimmedKeywordsForTitles = trimToMaxLength(keywords, 25);
   return (
     <FocusBuilderWizard
       topicId={topicId}
       startStep={focalTechnique ? 1 : 0}
-      initialValues={{
-        ...initialValues,
-        keywords,
-        focusName: trimmedKeywordsForTitles,
-        focusDescription: keywords ? formatMessage(localMessages.defaultDescriptionKeywords, { keywords: trimmedKeywordsForTitles }) : undefined,
-      }}
+      initialValues={initialValues}
       location={location}
       onDone={handleDone}
     />
@@ -56,7 +45,7 @@ CreateFocusContainer.propTypes = {
   // from dispatch
   handleDone: PropTypes.func.isRequired,
   // from state
-  keywords: PropTypes.string,
+  formData: PropTypes.object,
   // from context:
   topicId: PropTypes.number.isRequired,
   location: PropTypes.object.isRequired,
@@ -65,7 +54,6 @@ CreateFocusContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
-  keywords: formSelector(state, 'keywords'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
