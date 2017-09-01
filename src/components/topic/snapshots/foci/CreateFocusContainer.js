@@ -60,7 +60,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleDone: (topicId, formValues) => {
     switch (formValues.focalTechnique) {
       case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
-        dispatch(submitFocusUpdateOrCreate(topicId, formValues))
+        return dispatch(submitFocusUpdateOrCreate(topicId, formValues))
           .then((results) => {
             if (results.length === 1) {
               const focusSavedMessage = ownProps.intl.formatMessage(localMessages.booleanFocusSaved);
@@ -73,9 +73,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
               dispatch(updateFeedback({ open: true, message: focusNoteSavedMessage }));  // user feedback
             }
           });
-        break;
       case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
-        dispatch(createRetweetFocalSet(topicId, formValues))
+        return dispatch(createRetweetFocalSet(topicId, formValues))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.retweetFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
@@ -83,10 +82,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
-        break;
       default:
-        dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.invalid) }));
-        break;
+        return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.invalid) }));
     }
   },
 });
