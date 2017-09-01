@@ -25,11 +25,12 @@ const localMessages = {
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
   queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
-  saveQueries: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Query Set' },
+  loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
+  saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
 };
 
 const QueryForm = (props) => {
-  const { initialValues, isEditable, selected, buttonLabel, handleSaveQuerySet, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
+  const { initialValues, isEditable, selected, buttonLabel, handleLoadSearch, handleSaveSearch, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
   const { formatMessage } = props.intl;
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -121,12 +122,21 @@ const QueryForm = (props) => {
       </div>
       <Grid>
         <Row>
-          <Col lg={9} />
+          <Col lg={6} />
           <Col lg={2}>
             <AppButton
               style={{ marginTop: 30 }}
-              onClick={handleSaveQuerySet}
-              label={formatMessage(localMessages.saveQueries)}
+              onClick={handleLoadSearch}
+              label={formatMessage(localMessages.loadSavedSearches)}
+              disabled={submitting}
+              secondary
+            />
+          </Col>
+          <Col lg={2}>
+            <AppButton
+              style={{ marginTop: 30 }}
+              onClick={handleSaveSearch}
+              label={formatMessage(localMessages.saveSearch)}
               disabled={submitting}
               secondary
             />
@@ -159,7 +169,8 @@ QueryForm.propTypes = {
   renderSelectField: React.PropTypes.func.isRequired,
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
-  handleSaveQuerySet: React.PropTypes.func.isRequired,
+  handleLoadSearch: React.PropTypes.func.isRequired,
+  handleSaveSearch: React.PropTypes.func.isRequired,
   handleOpenHelp: React.PropTypes.func.isRequired,
   // from form healper
   updateQuery: React.PropTypes.func,

@@ -8,7 +8,7 @@ import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
-import { selectQuery, updateQuery, addCustomQuery, saveQuerySet, deleteQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
@@ -61,10 +61,6 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updateObject);
   }
 
-  handleSaveQuerySet() {
-    const { selected, saveThisQuerySet } = this.props;
-    saveThisQuerySet(selected);
-  }
   handleOpenStub() {
     return this.props;
   }
@@ -186,7 +182,8 @@ class QueryPicker extends React.Component {
             onSave={handleSearch}
             onChange={event => this.handleFormChange(event, selected)}
             handleOpenHelp={this.handleOpenStub}
-            handleSaveQuerySet={q => this.handleSaveQuerySet(q)}
+            handleLoadSearch={loadUserSearches}
+            handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
           />
         );
@@ -219,7 +216,8 @@ QueryPicker.propTypes = {
   updateCurrentQuery: React.PropTypes.func.isRequired,
   handleDeleteAndSelectQuery: React.PropTypes.func,
   handleDeleteQuery: React.PropTypes.func.isRequired,
-  saveThisQuerySet: React.PropTypes.func.isRequired,
+  loadUserSearches: React.PropTypes.func.isRequired,
+  saveUserSearch: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   handleOpenStub: React.PropTypes.func,
 };
@@ -251,9 +249,14 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectQuery(query));
     }
   },
-  saveThisQuerySet: (query) => {
-    if (query) { // TODO - save as JSON
-      dispatch(saveQuerySet({ label: query.label, query_string: query.q }));
+  loadUserSearch: (query) => {
+    if (query) { // TODO - pop up a dialog and fetch the data
+      dispatch(loadUserSearches());
+    }
+  },
+  saveUserSearch: (query) => {
+    if (query) { // TODO - save as JSON, and save full URL
+      dispatch(saveUserSearch({ label: query.label, query_string: query.q }));
     }
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {
