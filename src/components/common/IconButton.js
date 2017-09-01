@@ -73,7 +73,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
         </IconButton>
       );
       let content;
-      if (linkTarget) {
+      if (linkTarget || clickHandler) {
         content = (
           <Link
             to={linkTarget}
