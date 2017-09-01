@@ -2,13 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import composeDescribedDataCard from '../../../common/DescribedDataCard';
 import composeAsyncContainer from '../../../common/AsyncContainer';
-import StoryTable from '../../StoryTable';
+import StoryTable from '../../../common/StoryTable';  // use this istead of TopicStoryTable because here we don't have extra metadata
 import { fetchStorySampleByQuery } from '../../../../actions/topicActions';
 import DataCard from '../../../common/DataCard';
-import { filteredLocation } from '../../../util/location';
 
 const NUM_TO_SHOW = 20;
 
@@ -32,7 +30,7 @@ class TopicStorySamplePreview extends React.Component {
     }
   }
   render() {
-    const { stories, handleStorySelection } = this.props;
+    const { stories } = this.props;
     return (
       <DataCard>
         <h2>
@@ -40,7 +38,6 @@ class TopicStorySamplePreview extends React.Component {
         </h2>
         <StoryTable
           stories={stories}
-          onChangeFocusSelection={handleStorySelection}
           maxTitleLength={50}
         />
       </DataCard>
@@ -60,7 +57,6 @@ TopicStorySamplePreview.propTypes = {
   // from dispath
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
-  handleStorySelection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -69,7 +65,7 @@ const mapStateToProps = state => ({
   stories: state.topics.create.preview.matchingStories.list,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (query) => {
     const infoForQuery = {
       q: query.solr_seed_query,
@@ -85,14 +81,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoForQuery['sources[]'] = query.sourcesAndCollections.map(s => s.media_id);
     }
     dispatch(fetchStorySampleByQuery(infoForQuery));
-  },
-  handleStorySelection: () => {
-    // TODO get target, push that link
-    const params = {
-      ...ownProps.filters,
-    };
-    const newLocation = filteredLocation(ownProps.location, params);
-    dispatch(push(newLocation));
   },
 });
 

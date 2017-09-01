@@ -86,7 +86,10 @@ TopicForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   error: PropTypes.string,
-  asyncValidating: PropTypes.bool.isRequired,
+  asyncValidating: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
   submitting: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   intro: PropTypes.string.isRequired,
@@ -147,6 +150,9 @@ const reduxFormConfig = {
   asyncValidate,
   asyncBlurFields: ['name'],
   warn,
+  // so the create wizard works
+  destroyOnUnmount: false,
+  forceUnregisterOnUnmount: true,
 };
 
 export default
