@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
-import { filteredLinkTo } from '../../util/location';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -90,18 +89,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  reallyHandleSave: (values, topicInfo, filters) => {
-    const infoToSave = {
-      name: values.name,
-      description: values.description,
-      start_date: values.start_date,
-      end_date: values.end_date,
-      solr_seed_query: values.solr_seed_query,
-      max_iterations: values.max_iterations,
-      ch_monitor_id: values.ch_monitor_id,
-      is_public: values.is_public,
-      twitter_topics_id: values.twitter_topics_id,
-    };
+  reallyHandleSave: (values, topicInfo) => {
+    const infoToSave = { ...values };   // clone it so we can edit as needed
     infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
@@ -110,7 +99,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoToSave['sources[]'] = '';
       infoToSave['collections[]'] = '';
     }
-    dispatch(updateTopic(ownProps.params.topicId, infoToSave))
+    return dispatch(updateTopic(ownProps.params.topicId, infoToSave))
       .then((results) => {
         if (results.topics_id) {
           // let them know it worked
@@ -121,7 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           }
           // update topic info and redirect back to topic summary
           dispatch(fetchTopicSummary(results.topics_id))
-            .then(() => dispatch(push(filteredLinkTo(`/topics/${results.topics_id}/summary`, filters))));
+            .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
@@ -132,9 +121,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleSave: (values) => {
-      dispatchProps.reallyHandleSave(values, stateProps.topicInfo, stateProps.filters); // need topicInfo to do comparison to fire notices
-    },
+     // need topicInfo to do comparison to fire notices
+    handleSave: values => dispatchProps.reallyHandleSave(values, stateProps.topicInfo, stateProps.filters),
   });
 }
 

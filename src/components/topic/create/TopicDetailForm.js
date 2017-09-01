@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
-import { Field, reduxForm, propTypes, validate } from 'redux-form';
+import { Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import MenuItem from 'material-ui/MenuItem';
@@ -185,8 +185,6 @@ TopicDetailForm.propTypes = {
   renderCheckbox: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   renderDatePickerInline: PropTypes.func.isRequired,
-  // from form helper
-  handleSubmit: PropTypes.func.isRequired,
   // from parent
   mode: PropTypes.string.isRequired,
   initialValues: PropTypes.object,
@@ -194,7 +192,5 @@ TopicDetailForm.propTypes = {
 
 export default
   composeIntlForm(
-    reduxForm({ propTypes, validate })(
-      TopicDetailForm
-    )
+    TopicDetailForm
   );

@@ -28,7 +28,7 @@ const localMessages = {
 };
 
 const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, initialValues, title, intro, mode } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode } = props;
   const { formatMessage } = props.intl;
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
@@ -37,8 +37,6 @@ const TopicForm = (props) => {
       <Row>
         <Col lg={10}>
           <TopicDetailForm
-            form="topicForm"
-            destroyOnUnmount={false}
             initialValues={initialValues}
             mode={mode}
           />
@@ -56,8 +54,6 @@ const TopicForm = (props) => {
       <SourceCollectionsForm
         title={title}
         intro={intro}
-        form="topicForm"
-        destroyOnUnmount={false}
         initialValues={initialValues}
         allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
         maxSources={10}
@@ -69,7 +65,7 @@ const TopicForm = (props) => {
           <AppButton
             style={{ marginTop: 30 }}
             type="submit"
-            disabled={pristine || submitting}
+            disabled={pristine || submitting || asyncValidating === true}
             label={initialValues.buttonLabel}
             primary
           />
@@ -90,6 +86,7 @@ TopicForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   error: PropTypes.string,
+  asyncValidating: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   intro: PropTypes.string.isRequired,
@@ -149,9 +146,6 @@ const reduxFormConfig = {
   validate,
   asyncValidate,
   asyncBlurFields: ['name'],
-  destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true,
-  enableReinitialize: true,
   warn,
 };
 
