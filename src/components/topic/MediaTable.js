@@ -49,14 +49,12 @@ class MediaTable extends React.Component {
         <table>
           <tbody>
             <tr>
-              <th />
-              <th><FormattedMessage {...messages.mediaName} /></th>
+              <th colSpan="2"><FormattedMessage {...messages.mediaName} /></th>
               <th><FormattedMessage {...messages.storyPlural} /></th>
-              <th>{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
-              <th><FormattedMessage {...messages.outlinks} /></th>
-              <th>{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
-              <th>{this.sortableHeader('facebook', messages.facebookShares)}</th>
-              <th>{}</th>
+              <th className="numeric">{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
+              <th className="numeric"><FormattedMessage {...messages.outlinks} /></th>
+              <th className="numeric">{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
+              <th className="numeric">{this.sortableHeader('facebook', messages.facebookShares)}</th>
             </tr>
             {media.map((m, idx) =>
               (<tr key={m.media_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
@@ -68,11 +66,11 @@ class MediaTable extends React.Component {
                     {m.name}
                   </LinkWithFilters>
                 </td>
-                <td><FormattedNumber value={m.story_count !== undefined ? m.story_count : '?'} /></td>
-                <td><FormattedNumber value={m.media_inlink_count !== undefined ? m.media_inlink_count : '?'} /></td>
-                <td><FormattedNumber value={m.outlink_count !== undefined ? m.outlink_count : '?'} /></td>
-                <td><FormattedNumber value={m.bitly_click_count !== undefined ? m.bitly_click_count : '?'} /></td>
-                <td><FormattedNumber value={m.facebook_share_count !== undefined ? m.facebook_share_count : '?'} /></td>
+                <td className="numeric"><FormattedNumber value={m.story_count !== undefined ? m.story_count : '?'} /></td>
+                <td className="numeric"><FormattedNumber value={m.media_inlink_count !== undefined ? m.media_inlink_count : '?'} /></td>
+                <td className="numeric"><FormattedNumber value={m.outlink_count !== undefined ? m.outlink_count : '?'} /></td>
+                <td className="numeric"><FormattedNumber value={m.bitly_click_count !== undefined ? m.bitly_click_count : '?'} /></td>
+                <td className="numeric"><FormattedNumber value={m.facebook_share_count !== undefined ? m.facebook_share_count : '?'} /></td>
               </tr>)
             )}
           </tbody>

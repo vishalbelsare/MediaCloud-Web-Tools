@@ -60,6 +60,10 @@ table th {
 	position: relative;
 	background-color: inherit;
   padding: 5px;
+
+  &.numeric {
+    text-align: right;
+  }
 }
 
 table tr:nth-child(even),
@@ -75,6 +79,10 @@ table tr.odd {
 table td {
   padding: 13px;
   font-size: 13px;
+
+  &.numeric {
+    text-align: right;
+  }
 }
 
 footer {

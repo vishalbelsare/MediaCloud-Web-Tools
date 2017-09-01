@@ -67,10 +67,10 @@ class TopicStoryTable extends React.Component {
               <th>{}</th>
               <th><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
-              <th>{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
-              <th><FormattedMessage {...messages.outlinks} /></th>
-              <th>{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
-              <th>{this.sortableHeader('facebook', messages.facebookShares)}</th>
+              <th className="numeric">{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
+              <th className="numeric"><FormattedMessage {...messages.outlinks} /></th>
+              <th className="numeric">{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
+              <th className="numeric">{this.sortableHeader('facebook', messages.facebookShares)}</th>
               <th>{}</th>
               <th><FormattedMessage {...messages.focusHeader} /></th>
             </tr>
@@ -123,10 +123,10 @@ class TopicStoryTable extends React.Component {
                     </LinkWithFilters>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td><SafelyFormattedNumber value={story.media_inlink_count} /></td>
-                  <td><SafelyFormattedNumber value={story.outlink_count} /></td>
-                  <td><SafelyFormattedNumber value={story.bitly_click_count} /></td>
-                  <td><SafelyFormattedNumber value={story.facebook_share_count} /></td>
+                  <td className="numeric"><SafelyFormattedNumber value={story.media_inlink_count} /></td>
+                  <td className="numeric"><SafelyFormattedNumber value={story.outlink_count} /></td>
+                  <td className="numeric"><SafelyFormattedNumber value={story.bitly_click_count} /></td>
+                  <td className="numeric"><SafelyFormattedNumber value={story.facebook_share_count} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>

@@ -1,9 +1,10 @@
 import React from 'react';
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import ArrowDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import messages from '../../resources/messages';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
+import SafelyFormattedNumber from './SafelyFormattedNumber';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
@@ -51,10 +52,9 @@ class StoryTable extends React.Component {
           <tbody>
             <tr>
               <th><FormattedMessage {...messages.storyTitle} /></th>
-              <th>{}</th>
-              <th><FormattedMessage {...messages.media} /></th>
+              <th colSpan="2"><FormattedMessage {...messages.media} /></th>
               <th><FormattedMessage {...messages.storyDate} /></th>
-              <th>{socialHeader}</th>
+              <th className="numeric">{socialHeader}</th>
               <th>{}</th>
             </tr>
             {stories.map((story, idx) => {
@@ -72,7 +72,6 @@ class StoryTable extends React.Component {
                   dateToShow += '?';
                 }
               }
-              const bitlyContent = story.bitly_click_count ? <FormattedNumber value={story.bitly_click_count} /> : <FormattedMessage {...messages.unknown} />;
               return (
                 <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                   <td>
@@ -87,7 +86,7 @@ class StoryTable extends React.Component {
                     <a href={story.media_url} rel="noopener noreferrer" target="_blank">{story.media_name}</a>
                   </td>
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
-                  <td>{bitlyContent}</td>
+                  <td className="numeric"><SafelyFormattedNumber value={story.bitly_click_count} /></td>
                 </tr>
               );
             }
