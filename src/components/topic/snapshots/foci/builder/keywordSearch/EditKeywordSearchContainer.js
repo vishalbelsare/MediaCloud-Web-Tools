@@ -30,8 +30,24 @@ class EditKeywordSearchContainer extends React.Component {
     this.state = { keywords: null };
   }
 
+  updateKeywords = () => {
+    const { currentKeywords } = this.props;
+    this.setState({ keywords: currentKeywords });
+  }
+
+  handleKeyDown = (event) => {
+    switch (event.key) {
+      case 'Enter':
+        this.updateKeywords();
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
-    const { topicId, renderTextField, currentKeywords, currentFocalTechnique, handleSubmit, onPreviousStep, finishStep } = this.props;
+    const { topicId, renderTextField, currentFocalTechnique, handleSubmit, onPreviousStep, finishStep } = this.props;
     const { formatMessage } = this.props.intl;
     let previewContent = null;
     let nextButtonDisabled = true;
@@ -61,6 +77,7 @@ class EditKeywordSearchContainer extends React.Component {
                 component={renderTextField}
                 floatingLabelText={messages.searchByKeywords}
                 fullWidth
+                onKeyDown={this.handleKeyDown}
               />
             </Col>
             <Col lg={2} xs={12}>
@@ -68,7 +85,7 @@ class EditKeywordSearchContainer extends React.Component {
                 id="keyword-search-preview-button"
                 label={formatMessage(messages.search)}
                 style={{ marginTop: 33 }}
-                onClick={() => this.setState({ keywords: currentKeywords })}
+                onClick={this.updateKeywords}
               />
             </Col>
           </Row>
