@@ -16,7 +16,7 @@ const localMessages = {
   addButton: { id: 'explorer.queryBuilder.saveAll', defaultMessage: 'Search' },
   feedback: { id: 'explorer.queryBuilder.feedback', defaultMessage: 'We saved your new source' },
   query: { id: 'explorer.queryBuilder.query', defaultMessage: 'Enter a query' },
-  selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Select media' },
+  selectSandC: { id: 'explorer.queryBuilder.selectSAndC', defaultMessage: 'Add media' },
   SandC: { id: 'explorer.queryBuilder.sAndC', defaultMessage: 'Media' },
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
   sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
@@ -91,7 +91,7 @@ const QueryForm = (props) => {
                   enableReinitialize
                   initialValues={cleanedInitialValues}
                   selected={cleanedInitialValues}
-                  allowRemoval={false}
+                  allowRemoval={isEditable}
                 />
               </div>
               <div className="dates-field-wrapper">

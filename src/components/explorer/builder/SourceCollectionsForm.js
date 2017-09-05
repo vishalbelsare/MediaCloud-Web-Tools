@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../../common/IntlForm';
-import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
+import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 
 const renderCollectionSelector = ({ allowRemoval, fields }) => (
   <div>
@@ -23,7 +23,7 @@ const renderCollectionSelector = ({ allowRemoval, fields }) => (
                 tempObj = info.input.value;
               }
               return (
-                <SourceOrCollectionChip object={tempObj} onDelete={handleDelete} />
+                <SourceOrCollectionWidget object={tempObj} onDelete={handleDelete} />
               );
             }}
           />

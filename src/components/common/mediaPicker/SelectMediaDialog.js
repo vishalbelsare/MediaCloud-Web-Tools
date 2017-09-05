@@ -7,7 +7,7 @@ import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
 import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
-import { EditButton } from '../IconButton';
+import { AddButton } from '../IconButton';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -79,7 +79,7 @@ class SelectMediaDialog extends React.Component {
             <div className="select-media-dialog-modal-inner">
               <Grid>
                 <Row>
-                  <Col lg={2}>
+                  <Col lg={3}>
                     <MediaSelectionContainer selectedMedia={selectedMedia} />
                   </Col>
                   <Col lg={6}>
@@ -97,7 +97,7 @@ class SelectMediaDialog extends React.Component {
 
     return (
       <div className="select-media-menu">
-        <EditButton
+        <AddButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(messages.ok)}
         />

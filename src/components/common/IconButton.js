@@ -14,6 +14,7 @@ import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
 import HelpIcon from './icons/HelpIcon';
 import DeleteIcon from './icons/DeleteIcon';
+import DeleteMediaIcon from './icons/DeleteMediaIcon';
 import AddIcon from './icons/AddIcon';
 import AddQueryIcon from './icons/AddQueryIcon';
 import EditIcon from './icons/EditIcon';
@@ -66,7 +67,7 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
         <IconButton
           tooltip={displayTooltip}
           iconStyle={iconStyle || {}}
-          style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color }}
+          style={{ padding: 0, border: 0, width: defaultWidth || 26, height: defaultHeight || 26, color, backgroundColor }}
           tooltipStyles={{ top: 20 }}
         >
           <Icon color={color} {...otherProps} />
@@ -113,6 +114,8 @@ export const DownloadButton = composeIconButton(DownloadIcon, messages.download)
 export const HelpButton = composeIconButton(HelpIcon, messages.help);
 
 export const DeleteButton = composeIconButton(DeleteIcon, messages.delete);
+
+export const DeleteMediaButton = composeIconButton(DeleteMediaIcon, messages.delete);
 
 export const RemoveButton = composeIconButton(RemoveIcon, messages.remove);
 
