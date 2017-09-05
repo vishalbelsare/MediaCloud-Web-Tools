@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
@@ -7,16 +7,16 @@ import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
 import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
-import { AddButton } from '../IconButton';
+import { AddQueryButton } from '../IconButton';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
   intro: { id: 'system.mediaPicker.select.info',
     defaultMessage: '<p>This is an intro</p>' },
   helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
-  selectMediaTitle: { id: 'system.mediaPicker.select', defaultMessage: 'Modify Sources and Collections' },
+  selectMediaTitle: { id: 'system.mediaPicker.selectMediaTitle', defaultMessage: 'Select Media' },
   searchByName: { id: 'system.mediaPicker.select.searchby.name', defaultMessage: 'Search by Name/URL' },
-  selectedMedia: { id: 'system.mediaPicker.select.media', defaultMessage: 'Selected Media' },
+  addMedia: { id: 'system.mediaPicker.select.addMedia', defaultMessage: 'Add Media' },
 };
 
 class SelectMediaDialog extends React.Component {
@@ -97,11 +97,11 @@ class SelectMediaDialog extends React.Component {
 
     return (
       <div className="select-media-menu">
-        <AddButton
+        <FormattedMessage {...localMessages.addMedia} />
+        <AddQueryButton
           onClick={this.handleModifyClick}
-          tooltip={formatMessage(messages.ok)}
-        />
-        {modalContent}
+          tooltip={formatMessage(localMessages.addMedia)}
+        />{modalContent}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
@@ -21,6 +22,8 @@ const localMessages = {
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
 };
+
+const formSelector = formValueSelector('queryForm');
 
 const MAX_COLORS = 20;
 
@@ -50,9 +53,15 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updateObject = selected;
     const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-    if (newInfo.length) { // assume it's an array, and either sources or collections
+    // TODO I think we could simplify these two paths... one from the dialog, one from the form...
+    if (newInfo.length) { // assume it's an array, update from media array
       const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);
       const updatedCollections = newInfo.filter(m => m.type === 'collection' || m.tags_id);
+      updateObject.collections = updatedCollections;
+      updateObject.sources = updatedSources;
+    } else if (newInfo.media && newInfo.media.length) { // assume it's an array, update from media array
+      const updatedSources = newInfo.media.filter(m => m.type === 'source' || m.media_id);
+      const updatedCollections = newInfo.media.filter(m => m.type === 'collection' || m.tags_id);
       updateObject.collections = updatedCollections;
       updateObject.sources = updatedSources;
     }
@@ -229,7 +238,7 @@ const mapStateToProps = state => ({
   collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
   fetchStatus: state.explorer.queries.collections.fetchStatus,
   user: state.user,
-  // formData: formSelector(state, 'q', 'start_date', 'end_date', 'color'),
+  formData: formSelector(state, 'media'),
 });
 
 

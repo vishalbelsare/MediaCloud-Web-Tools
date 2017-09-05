@@ -14,7 +14,6 @@ const SourceOrCollectionWidget = (props) => {
     <div
       className={`mediaWidget ${typeClass}`}
       key={`mediaWidget${objectId}`}
-      onRequestDelete={onDelete}
       onTouchTap={onClick}
     >
       <Col>
@@ -22,7 +21,7 @@ const SourceOrCollectionWidget = (props) => {
         {children}
       </Col>
       <Col>
-        <DeleteMediaButton />
+        <DeleteMediaButton onClick={onDelete} />
       </Col>
     </div>
   );

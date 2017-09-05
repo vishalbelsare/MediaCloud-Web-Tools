@@ -1,35 +1,30 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../../common/IntlForm';
 import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 
 const renderCollectionSelector = ({ allowRemoval, fields }) => (
   <div>
-    <Row>
-      <Col lg={8}>
-        {fields.map((name, index) => (
-          <Field
-            key={name}
-            name={name}
-            component={(info) => {
-              const handleDelete = (allowRemoval || info.meta.dirty) ? () => { fields.remove(index); } : undefined;
-              const val = info.input.value;
-              let tempObj = {};
-              if (val && typeof val === 'number') {
-                tempObj.id = val;
-              } else {
-                tempObj = info.input.value;
-              }
-              return (
-                <SourceOrCollectionWidget object={tempObj} onDelete={handleDelete} />
-              );
-            }}
-          />
-        ))}
-      </Col>
-    </Row>
+    {fields.map((name, index) => (
+      <Field
+        key={name}
+        name={name}
+        component={(info) => {
+          const handleDelete = (allowRemoval || info.meta.dirty) && fields.length > 1 ? () => { fields.remove(index); } : undefined;
+          const val = info.input.value;
+          let tempObj = {};
+          if (val && typeof val === 'number') {
+            tempObj.id = val;
+          } else {
+            tempObj = info.input.value;
+          }
+          return (
+            <SourceOrCollectionWidget object={tempObj} onDelete={handleDelete} />
+          );
+        }}
+      />
+    ))}
   </div>
 );
 renderCollectionSelector.propTypes = {
