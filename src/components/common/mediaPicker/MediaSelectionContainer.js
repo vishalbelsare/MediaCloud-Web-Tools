@@ -3,10 +3,10 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
-import { Row } from 'react-flexbox-grid/lib';
+import { Grid, Row } from 'react-flexbox-grid/lib';
 import { selectMediaPickerQueryArgs } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
-import SourceOrCollectionChip from '../SourceOrCollectionChip';
+import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
@@ -27,37 +27,37 @@ class MediaSelectionContainer extends React.Component {
     const { formatMessage } = this.props.intl;
     return (
       <div className="select-media-menu">
-        <Row>
-          <Menu>
-            <MenuItem
-              className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
-              value={PICK_COLLECTION}
-              primaryText={formatMessage(localMessages.pickCollections)}
-              onTouchTap={() => this.updateMediaType(PICK_COLLECTION)}
-            />
-            <MenuItem
-              className={selectedMediaQueryType === 1 ? 'select-media-menu-selected' : ''}
-              value={PICK_SOURCE}
-              primaryText={formatMessage(localMessages.pickSources)}
-              onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
-            />
-            <MenuItem
-              primaryText={formatMessage(localMessages.pickAdvanced)}
-              value={ADVANCED}
-              onTouchTap={() => this.updateMediaType(ADVANCED)}
-            />
-            <MenuItem
-              primaryText={formatMessage(localMessages.pickStarred)}
-              value={STARRED}
-              onTouchTap={() => this.updateMediaType(STARRED)}
-            />
-          </Menu>
-        </Row>
-        <Row>
+        <Menu>
+          <MenuItem
+            className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
+            value={PICK_COLLECTION}
+            primaryText={formatMessage(localMessages.pickCollections)}
+            onTouchTap={() => this.updateMediaType(PICK_COLLECTION)}
+          />
+          <MenuItem
+            className={selectedMediaQueryType === 1 ? 'select-media-menu-selected' : ''}
+            value={PICK_SOURCE}
+            primaryText={formatMessage(localMessages.pickSources)}
+            onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
+          />
+          <MenuItem
+            primaryText={formatMessage(localMessages.pickAdvanced)}
+            value={ADVANCED}
+            onTouchTap={() => this.updateMediaType(ADVANCED)}
+          />
+          <MenuItem
+            primaryText={formatMessage(localMessages.pickStarred)}
+            value={STARRED}
+            onTouchTap={() => this.updateMediaType(STARRED)}
+          />
+        </Menu>
+        <Grid>
           {selectedMedia.map(obj => (
-            <SourceOrCollectionChip key={obj.id || obj.tags_id || obj.media_id} object={obj} />
+            <Row>
+              <SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} />
+            </Row>
           ))}
-        </Row>
+        </Grid>
       </div>
     );
   }

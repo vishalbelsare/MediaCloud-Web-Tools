@@ -106,7 +106,7 @@ class LoggedInQueryContainer extends React.Component {
   }
 
   render() {
-    const { user, selected, queries, setSelectedQuery, collectionLookupFetchStatus, handleSearch, samples, location, lastSearchTime } = this.props;
+    const { user, selected, queries, collectionLookupFetchStatus, handleSearch, samples, location, lastSearchTime } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
@@ -116,7 +116,7 @@ class LoggedInQueryContainer extends React.Component {
         if (selected.sources.length === 0 || (selected.sources.length > 0 && selected.sources[0].url !== undefined)) {
           content = (
             <div>
-              <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+              <QueryBuilderContainer isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
               <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
             </div>
           );
@@ -193,7 +193,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSearch: (queries) => {
     const unDeletedQueries = queries.filter(q => !q.deleted);
-    dispatch(resetSelected());
+    // dispatch(resetSelected());
     dispatch(updateTimestampForQueries());
     const urlParamString = generateQueryParamString(unDeletedQueries);
     const newLocation = `/queries/search/[${urlParamString}]`;

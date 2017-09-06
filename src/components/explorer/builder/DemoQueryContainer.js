@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as d3 from 'd3';
@@ -12,11 +12,12 @@ import QueryResultsContainer from './QueryResultsContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
-import { LEVEL_ERROR } from '../../common/Notice';
+import { LEVEL_ERROR, WarningNotice } from '../../common/Notice';
 import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
+  register: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Register for a free Media Cloud account to get access to all the Dashboard features! <a href="http://tools.mediacloud.org/#/user/signup">Register Now</a>' },
 };
 const MAX_COLORS = 20;
 
@@ -114,6 +115,8 @@ class DemoQueryBuilderContainer extends React.Component {
     if (queries && queries.length > 0 && selected) {
       content = (
         <div>
+          <WarningNotice><FormattedHTMLMessage {...localMessages.register} />
+          </WarningNotice>
           <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
           <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
         </div>

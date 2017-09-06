@@ -17,34 +17,22 @@ const localMessages = {
   collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
   collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
+  queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
 
 class QueryPickerItem extends React.Component {
   state = {
-    showIconMenu: false,
     labelChangeDialogOpen: false,
     tempLabel: '',
   };
-  handleFocusItem = () => {
-    const { isDeletable } = this.props;
-    if (isDeletable()) {
-      this.setState({ showIconMenu: true });
-    } else {
-      this.setState({ showIconMenu: false });
-    }
-  }
+
   handleBlurAndSelection = () => {
-    const { onQuerySelected, isDeletable } = this.props;
-    if (isDeletable()) {
-      this.setState({ showIconMenu: true });
-      onQuerySelected();
-    } else {
-      this.setState({ showIconMenu: false });
-    }
-  }
+    const { onQuerySelected } = this.props;
+    onQuerySelected();
+  };
   updateTempLabel = (val) => {
     this.setState({ tempLabel: val });
-  }
+  };
   handleOpen = () => {
     const { query } = this.props;
     this.setState({ showIconMenu: false, labelChangeDialogOpen: true, tempLabel: query.label });
@@ -60,9 +48,9 @@ class QueryPickerItem extends React.Component {
     updateQueryProperty('label', updatedLabel);
   };
 
-  handleColorClick(color) {
+  handleColorClick = (color) => {
     this.setState({ showColor: color });
-  }
+  };
   handleMenuItemKeyDown = (evt) => {
     const { handleSearch } = this.props;
     switch (evt.key) {
@@ -74,7 +62,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isLabelEditable, isSelected, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
+    const { user, query, isLabelEditable, isSelected, isDeletable, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = null;
     let subT = null;
@@ -89,39 +77,52 @@ class QueryPickerItem extends React.Component {
         onClick={this.handleClose}
       />,
       <AppButton
-        label="Submit"
+        label="Save"
         primary
         keyboardFocused
         onClick={() => this.handleChangeAndClose(query)}
       />,
     ];
     let iconOptions = null;
-    if (user.isLoggedIn && this.state.showIconMenu) {
-      iconOptions = (
-        <IconMenu
-          className="query-picker-icon-button"
-          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
+    /* should we show the icon menu? we do if Item is selected and
+    - if demo, if custon and not only
+    - if logged in, either custom or sample and not only
+    */
+    let menuChildren = null;
+    if (isSelected) {
+      if (user.isLoggedIn && isDeletable()) { // if logged in and this is not the only QueryPickerItem
+        menuChildren = (
+          <div>
+            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
+            <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+          </div>
+        );
+      } else if (user.isLoggedIn) {
+        menuChildren = (
+          <div>
+            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
+          </div>
+        );
+      } else if (!user.isLoggedIn && !isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
+        menuChildren = (
           <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-        </IconMenu>
-      );
-    } else if (!isThisAProtectedQuery && this.state.showIconMenu) { // can delete only if this is a custom query (vs sample query) for demo users
-      iconOptions = (
-        <IconMenu
-          className="query-picker-icon-button"
-          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-        </IconMenu>
-      );
+        );
+      }
+      if (menuChildren !== null) {
+        iconOptions = (
+          <IconMenu
+            className="query-picker-icon-button"
+            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          >
+            {menuChildren}
+          </IconMenu>
+        );
+      }
     }
     if (query) {
-      if (isLabelEditable) { // this is now only occurring for the demo user
+      if (isLabelEditable) { // determine whether the label is editable or not (demo or logged in)
         nameInfo = (
           <div>
             <ColorPicker
@@ -197,12 +198,13 @@ class QueryPickerItem extends React.Component {
       >
         {nameInfo}
         <Dialog
-          title="Update Label"
+          title="Change Query Label"
           actions={actions}
           modal={false}
           open={this.state.labelChangeDialogOpen}
           onRequestClose={this.handleClose}
         >
+          <h2><FormattedMessage {...localMessages.queryDialog} /></h2>
           <TextField
             className="query-picker-editable-name"
             id="tempLabel"

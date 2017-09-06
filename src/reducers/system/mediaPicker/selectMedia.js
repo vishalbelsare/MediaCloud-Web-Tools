@@ -20,13 +20,13 @@ function selectMedia(state = INITIAL_STATE, action) {
       return { list: updatedSelectedList };
     case MEDIA_PICKER_SELECT_MEDIA:
       updatedSelectedList = [...state.list];
-      if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
+      if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // if not there, add
         const selectedObj = action.payload;
         selectedObj.selected = true;
         updatedSelectedList.push(selectedObj);
-      } else {
+      } else { // if there, treat as a removal/toggle
         const mediaIndex = updatedSelectedList.findIndex(s => s.id === action.payload.id);
-        updatedSelectedList.pop(mediaIndex);
+        updatedSelectedList.splice(mediaIndex, 1);
       }
       return { list: updatedSelectedList };
     case MEDIA_PICKER_CLEAR_SELECTED_MEDIA: // maybe we want this...

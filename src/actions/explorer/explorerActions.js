@@ -61,8 +61,11 @@ export const FETCH_QUERY_COLLECTIONS = 'FETCH_QUERY_COLLECTIONS';
 export const fetchQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIONS, api.fetchQueryCollectionsByIds, props => props);
 export const demoQueryCollectionsByIds = createAsyncAction(FETCH_QUERY_COLLECTIONS, api.demoQueryCollectionsByIds, props => props);
 
-export const SAVE_QUERY_SET = 'SAVE_QUERY_SET';
-export const saveQuerySet = createAsyncAction(SAVE_QUERY_SET, api.saveQuerySet, props => props);
+export const SAVE_USER_SEARCH = 'SAVE_USER_SEARCH';
+export const saveUserSearch = createAsyncAction(SAVE_USER_SEARCH, api.saveUserSearch, props => props);
+
+export const LOAD_USER_SEARCHES = 'LOAD_USER_SEARCHES';
+export const loadUserSearches = createAsyncAction(LOAD_USER_SEARCHES, api.loadUserSearches, props => props);
 
 export const DELETE_QUERY = 'DELETE_QUERY';
 export const deleteQuery = createAction(DELETE_QUERY);

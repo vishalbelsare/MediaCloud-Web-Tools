@@ -72,7 +72,11 @@ export function fetchQueryCollectionsByIds(params) {
   return createApiPromise('api/explorer/collections/list', acceptedParams);
 }
 
-export function saveQuerySet(params) {
+export function loadUserSearches() {
+  return createApiPromise('api/explorer/loadUserSearches');
+}
+
+export function saveUserSearch(params) {
   const acceptedParams = acceptParams(params, ['label', 'query_string']);
   return createApiPromise('api/explorer/saveQuery', acceptedParams);
 }
