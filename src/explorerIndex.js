@@ -8,9 +8,9 @@ import initializeApp from './index';
  * This serves as the primary entry point to the Media Cloud Topic Mapper app.
  */
 
-ReactGA.initialize('UA-60744513-7');
+ReactGA.initialize('UA-60744513-11');
 
-setVersion('1.7.0');
+setVersion('1.11.0');
 
 setAppName('explorer');
 
