@@ -15,7 +15,7 @@ setVersion('1.7.0');
 setAppName('explorer');
 
 setAppColors({
-  light: '#daf3ee',
+  light: '#e0b4a3',
   dark: '#e14c11',
   darker: '#e14c11',
 });
