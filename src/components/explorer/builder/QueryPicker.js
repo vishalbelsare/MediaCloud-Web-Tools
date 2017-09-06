@@ -122,7 +122,7 @@ class QueryPicker extends React.Component {
       canSelectMedia = userLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
       if (userLoggedIn || isEditable) {
-        const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
+        const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);

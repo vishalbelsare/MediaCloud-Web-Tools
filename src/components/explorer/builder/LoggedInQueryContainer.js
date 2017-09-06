@@ -81,7 +81,7 @@ class LoggedInQueryContainer extends React.Component {
 
   parseJSONParams = (queriesFromURL) => {
     let parsedObjectArray = JSON.parse(queriesFromURL);
-    const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
+    const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
     const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, color: unescape(q.color), defaultColor: colorPallette(idx) }));
     parsedObjectArray = parsedObjectArrayWithDefColor.map((q, idx) => {
       const defaultObjVals = {};
