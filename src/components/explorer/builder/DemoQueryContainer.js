@@ -41,8 +41,9 @@ class DemoQueryBuilderContainer extends React.Component {
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
 
+    // if a search (and not samples) we need to parse the querystring
     if (whichProps.location.pathname.includes('/demo/search')) {
-        // parse query params
+      // make sure JSON is valid
       let parsedObjectArray = null;
       try {
         parsedObjectArray = this.parseJSONParams(currentIndexOrQuery);
@@ -52,21 +53,32 @@ class DemoQueryBuilderContainer extends React.Component {
       }
 
       if (this.props.lastSearchTime !== whichProps.lastSearchTime ||
+        (url !== this.props.location.pathname) ||
         (!selected && !whichProps.selected &&
         (!whichProps.queries || whichProps.queries.length === 0 ||
         whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID))) {
+        // change queries if:
+        //   url has changed
+        //   OR searchTime has change
+        //   OR coming into search page for first time
         selectQueriesByURLParams(parsedObjectArray);
       } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        // select the first query by default if:
+        //   there is nothing selected but you've got all the collection data needed to paint it
         setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
       }
+
+    // if it is a sample search then handle it differently
     } else if (whichProps.location.pathname.includes('/queries/demo')) {
       currentIndexOrQuery = parseInt(currentIndexOrQuery, 10);
-
-      if (!samples || samples.length === 0) { // if not loaded as in bookmarked page
+      if (!samples || samples.length === 0) {
+        // if they hit the URL directly with the sample id
         loadSampleSearches(currentIndexOrQuery); // currentIndex
       } else if (!selected && !whichProps.selected && (!whichProps.queries || whichProps.queries.length === 0)) {
+        // if they are hitting a sample search but we haven't loaded it into the queries yet
         selectSearchQueriesById(samples[currentIndexOrQuery]);
       } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
+        // select the first query by default once we have the collections loaded
         setSelectedQuery(samples[currentIndexOrQuery].queries[0]);
       }
     }
