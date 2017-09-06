@@ -15,13 +15,11 @@ import { getBrandLightColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
-
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'explorer.geo.info',
     defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 class GeoPreview extends React.Component {
@@ -89,7 +87,7 @@ class GeoPreview extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />

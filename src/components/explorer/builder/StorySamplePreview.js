@@ -12,6 +12,7 @@ import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import messages from '../../../resources/messages';
 // const NUM_TO_SHOW = 20;
 
 const localMessages = {
@@ -20,7 +21,6 @@ const localMessages = {
   helpDetails: { id: 'explorer.stories.help.text',
     defaultMessage: '<p>Due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',
   },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 class StorySamplePreview extends React.Component {
@@ -96,7 +96,7 @@ class StorySamplePreview extends React.Component {
               <MenuItem
                 key={idx}
                 className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
                 rightIcon={<DownloadButton />}
                 onTouchTap={() => this.downloadCsv(q)}
               />

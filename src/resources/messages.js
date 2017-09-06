@@ -160,6 +160,7 @@ const messages = {
   home: { id: 'home', defaultMessage: 'Home' },
   required: { id: 'required', defaultMessage: 'Required' },
   unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
+  downloadDataCsv: { id: 'downloadDataCsv', defaultMessage: 'Download {name} data CSV' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },

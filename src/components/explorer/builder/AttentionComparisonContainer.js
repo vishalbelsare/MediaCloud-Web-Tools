@@ -14,13 +14,13 @@ import ActionMenu from '../../common/ActionMenu';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Sentences Over Time' },
   descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of sentences that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels.</p>' },
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the average number of sentences that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the sentences per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
-  downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -106,7 +106,7 @@ class AttentionComparisonContainer extends React.Component {
                     <MenuItem
                       key={idx}
                       className="action-icon-menu-item"
-                      primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
+                      primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
                       rightIcon={<DownloadButton />}
                       onTouchTap={() => this.downloadCsv(q)}
                     />
