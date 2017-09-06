@@ -204,7 +204,8 @@ const mapDispatchToProps = dispatch => ({
     // update URL location according to updated queries
     const unDeletedQueries = queries.filter(q => !q.deleted);
     dispatch(updateTimestampForQueries());
-    const urlParamString = unDeletedQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
+    const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
+    const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
   },
