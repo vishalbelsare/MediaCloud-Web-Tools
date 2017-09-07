@@ -32,6 +32,8 @@ class QueryPicker extends React.Component {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
   }
+  focusRequested = field => field.focus();
+
   updateDemoQueryLabel(query, newValue) {
     // update both label and q for query
     const { updateCurrentQuery } = this.props;
@@ -194,6 +196,7 @@ class QueryPicker extends React.Component {
             handleLoadSearch={loadUserSearches}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
+            focusRequested={this.focusRequested}
           />
         );
       }

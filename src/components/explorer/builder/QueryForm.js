@@ -29,133 +29,159 @@ const localMessages = {
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
 };
 
-const QueryForm = (props) => {
-  const { initialValues, isEditable, selected, buttonLabel, handleLoadSearch, handleSaveSearch, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField } = props;
-  const { formatMessage } = props.intl;
-  const cleanedInitialValues = initialValues ? { ...initialValues } : {};
-  if (cleanedInitialValues.disabled === undefined) {
-    cleanedInitialValues.disabled = false;
+const focusQueryInputField = (input) => {
+  if (input) {
+    setTimeout(() => {
+      input.input.refs.input.focus();
+    }, 100);
   }
+};
 
-  if (selected === null) return 'Error';
-
-  const currentColor = selected.color; // for ColorPicker
-  const currentQ = selected.q;
-  let mediaPicker = null;
-  let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
-  if (isEditable) {
-    mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
-    mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+class QueryForm extends React.Component {
+  componentDidMount() {
+    this.queryRef.input.refs.input.focus();
   }
-  if (!selected) { return null; }
-  return (
-    <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
-      <div className="query-form-wrapper">
+  // required to be able to reference the Field/TextField component in order to set focus
+  preserveRef = ref => (this.queryRef = ref);
+
+  render() {
+    const { initialValues, isEditable, selected, buttonLabel, handleLoadSearch, handleSaveSearch, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderTextFieldWithFocus } = this.props;
+    const { formatMessage } = this.props.intl;
+    const cleanedInitialValues = initialValues ? { ...initialValues } : {};
+
+    if (cleanedInitialValues.disabled === undefined) {
+      cleanedInitialValues.disabled = false;
+    }
+
+    if (selected === null) return 'Error';
+    else if (this.queryRef) { // set the focus to query field ref when a query is selected
+      focusQueryInputField(this.queryRef);
+    }
+    const currentColor = selected.color; // for ColorPicker
+    const currentQ = selected.q;
+    let mediaPicker = null;
+    let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
+    if (isEditable) {
+      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+      mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+    }
+    if (!selected) { return null; }
+    // if we have a ref field, we have intend to set the focus to a particular field - the query field
+    // essentially an autofocus for the form
+    if (this.queryRef) {
+      focusQueryInputField(this.queryRef);
+    }
+    return (
+      <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
+        <div className="query-form-wrapper">
+          <Grid>
+            <Row>
+              <Col lg={5}>
+                <div className="q-field-wrapper">
+                  <label htmlFor="q"><FormattedMessage {...localMessages.query} /></label>
+                  <Field
+                    className="query-field"
+                    name="q"
+                    type="text"
+                    value={currentQ}
+                    multiLine
+                    rows={3}
+                    rowsMax={4}
+                    fullWidth
+                    onChange={this.focusSelect}
+                    withRef
+                    saveRef={(input) => { this.preserveRef(input); }}
+                    component={renderTextFieldWithFocus}
+                  />
+                  <a href="#query-help" onClick={handleOpenHelp}><FormattedMessage {...localMessages.learnHowTo} /></a>
+                </div>
+                <div className="color-field-wrapper">
+                  <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
+                  <ColorPicker
+                    name="color"
+                    color={currentColor}
+                    onChange={onChange}
+                  />
+                </div>
+              </Col>
+              <Col lg={1} />
+              <Col lg={6}>
+                <div className="media-field-wrapper">
+                  {mediaLabel}
+                  <SourceCollectionsForm
+                    className="query-field"
+                    form="queryForm"
+                    destroyOnUnmount={false}
+                    enableReinitialize
+                    initialValues={cleanedInitialValues}
+                    selected={cleanedInitialValues}
+                    allowRemoval={isEditable}
+                    onChange={onChange}
+                  />
+                  {mediaPicker}
+                </div>
+                <div className="dates-field-wrapper">
+                  <label htmlFor="startDate"><FormattedMessage {...localMessages.dates} /></label>
+                  <Field
+                    className="query-field start-date-wrapper"
+                    maxLength="12"
+                    name="startDate"
+                    type="inline"
+                    component={renderTextField}
+                    underlineShow={false}
+                    disabled={!isEditable}
+                  />
+                  <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
+                  <Field
+                    className="query-field end-date-wrapper"
+                    maxLength="12"
+                    name="endDate"
+                    type="inline"
+                    component={renderTextField}
+                    underlineShow={false}
+                    disabled={!isEditable}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
         <Grid>
           <Row>
-            <Col lg={5}>
-              <div className="q-field-wrapper">
-                <label htmlFor="q"><FormattedMessage {...localMessages.query} /></label>
-                <Field
-                  className="query-field"
-                  name="q"
-                  type="text"
-                  value={currentQ}
-                  underlineShow={false}
-                  multiLine
-                  rows={3}
-                  rowsMax={4}
-                  fullWidth
-                  component={renderTextField}
-                />
-                <a href="#query-help" onClick={handleOpenHelp}><FormattedMessage {...localMessages.learnHowTo} /></a>
-              </div>
-              <div className="color-field-wrapper">
-                <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
-                <ColorPicker
-                  name="color"
-                  color={currentColor}
-                  onChange={onChange}
-                />
-              </div>
+            <Col lg={6} />
+            <Col lg={2}>
+              <AppButton
+                style={{ marginTop: 30 }}
+                onClick={handleLoadSearch}
+                label={formatMessage(localMessages.loadSavedSearches)}
+                disabled={submitting}
+                secondary
+              />
             </Col>
-            <Col lg={1} />
-            <Col lg={6}>
-              <div className="media-field-wrapper">
-                {mediaLabel}
-                <SourceCollectionsForm
-                  className="query-field"
-                  form="queryForm"
-                  destroyOnUnmount={false}
-                  enableReinitialize
-                  initialValues={cleanedInitialValues}
-                  selected={cleanedInitialValues}
-                  allowRemoval={isEditable}
-                  onChange={onChange}
-                />
-                {mediaPicker}
-              </div>
-              <div className="dates-field-wrapper">
-                <label htmlFor="startDate"><FormattedMessage {...localMessages.dates} /></label>
-                <Field
-                  className="query-field start-date-wrapper"
-                  maxLength="12"
-                  name="startDate"
-                  type="inline"
-                  component={renderTextField}
-                  underlineShow={false}
-                  disabled={!isEditable}
-                />
-                <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
-                <Field
-                  className="query-field end-date-wrapper"
-                  maxLength="12"
-                  name="endDate"
-                  type="inline"
-                  component={renderTextField}
-                  underlineShow={false}
-                  disabled={!isEditable}
-                />
-              </div>
+            <Col lg={2}>
+              <AppButton
+                style={{ marginTop: 30 }}
+                onClick={handleSaveSearch}
+                label={formatMessage(localMessages.saveSearch)}
+                disabled={submitting}
+                secondary
+              />
+            </Col>
+            <Col lg={1}>
+              <AppButton
+                style={{ marginTop: 30 }}
+                type="submit"
+                label={buttonLabel}
+                disabled={submitting}
+                primary
+              />
             </Col>
           </Row>
         </Grid>
-      </div>
-      <Grid>
-        <Row>
-          <Col lg={6} />
-          <Col lg={2}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              onClick={handleLoadSearch}
-              label={formatMessage(localMessages.loadSavedSearches)}
-              disabled={submitting}
-              secondary
-            />
-          </Col>
-          <Col lg={2}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              onClick={handleSaveSearch}
-              label={formatMessage(localMessages.saveSearch)}
-              disabled={submitting}
-              secondary
-            />
-          </Col>
-          <Col lg={1}>
-            <AppButton
-              style={{ marginTop: 30 }}
-              type="submit"
-              label={buttonLabel}
-              disabled={submitting}
-              primary
-            />
-          </Col>
-        </Row>
-      </Grid>
-    </form>
-  );
-};
+      </form>
+    );
+  }
+}
 
 QueryForm.propTypes = {
   // from parent
@@ -168,6 +194,7 @@ QueryForm.propTypes = {
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,
   renderSelectField: React.PropTypes.func.isRequired,
+  renderTextFieldWithFocus: React.PropTypes.func.isRequired,
   fields: React.PropTypes.object,
   meta: React.PropTypes.object,
   handleLoadSearch: React.PropTypes.func.isRequired,
@@ -179,6 +206,7 @@ QueryForm.propTypes = {
   pristine: React.PropTypes.bool.isRequired,
   submitting: React.PropTypes.bool.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
+  focusRequested: React.PropTypes.func.isRequired,
 };
 
 /* function validate(values) {
