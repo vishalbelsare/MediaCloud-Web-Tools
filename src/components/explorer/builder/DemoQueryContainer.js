@@ -120,7 +120,7 @@ class DemoQueryBuilderContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, handleSearch, samples, location, lastSearchTime } = this.props;
+    const { selected, queries, handleSearch, samples, location, lastSearchTime } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     const isEditable = location.pathname.includes('queries/demo/search');
@@ -129,7 +129,7 @@ class DemoQueryBuilderContainer extends React.Component {
         <div>
           <WarningNotice><FormattedHTMLMessage {...localMessages.register} />
           </WarningNotice>
-          <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+          <QueryBuilderContainer isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
           <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
         </div>
       );

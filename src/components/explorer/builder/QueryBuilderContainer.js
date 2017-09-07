@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import QueryPicker from './QueryPicker';
 
 const QueryBuilderContainer = (props) => {
-  const { queries, isEditable, handleSearch, handleDeleteQuery } = props;
+  const { queries, isEditable, handleSearch } = props;
   return (
     <div className="query-builder">
-      <QueryPicker isEditable={isEditable} handleSearch={() => handleSearch(queries)} handleDelete={() => handleDeleteQuery()} />
+      <QueryPicker isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
     </div>
   );
 };
@@ -16,8 +16,6 @@ QueryBuilderContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
-  setSelectedQuery: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
   queries: React.PropTypes.array,
 };
 

@@ -30,7 +30,7 @@ const localMessages = {
 };
 
 const focusQueryInputField = (input) => {
-  if (input) {
+  if (input && input.input) {
     setTimeout(() => {
       input.input.refs.input.focus();
     }, 100);
