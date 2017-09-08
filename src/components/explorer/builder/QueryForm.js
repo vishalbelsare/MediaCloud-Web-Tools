@@ -8,7 +8,7 @@ import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
-// import { emptyString } from '../../../lib/formValidators';
+import { emptyString } from '../../../lib/formValidators';
 import SelectMediaDialog from '../../common/mediaPicker/SelectMediaDialog';
 
 const localMessages = {
@@ -30,7 +30,7 @@ const localMessages = {
 };
 
 const focusQueryInputField = (input) => {
-  if (input && input.input) {
+  if (input && input.input && input.input.refs) {
     setTimeout(() => {
       input.input.refs.input.focus();
     }, 100);
@@ -209,25 +209,22 @@ QueryForm.propTypes = {
   focusRequested: React.PropTypes.func.isRequired,
 };
 
-/* function validate(values) {
+function validate(values) {
   const errors = {};
-  if (emptyString(values.query)) {
-    errors.name = localMessages.queryError;
-  }
-  if (emptyString(values.color)) {
-    errors.url = localMessages.colorError;
+  if (emptyString(values.q)) {
+    errors.q = { _error: 'Cannot be blank' };
   }
   if (!values.collections || !values.collections.length) {
     errors.collections = { _error: 'At least one collection must be chosen' };
   }
   return errors;
-} */
+}
 
 export default
   injectIntl(
     composeIntlForm(
       composeHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
-        reduxForm({ propTypes })(
+        reduxForm({ propTypes, validate })(
           QueryForm
         ),
       ),
