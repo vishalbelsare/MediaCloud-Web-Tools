@@ -27,12 +27,15 @@ const localMessages = {
   queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
   loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
+  queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
 };
 
 const focusQueryInputField = (input) => {
-  if (input && input.input && input.input.refs) {
+  if (input && input.input !== null && input.input.refs) {
     setTimeout(() => {
-      input.input.refs.input.focus();
+      if (input.input !== null) {
+        input.input.refs.input.focus();
+      }
     }, 100);
   }
 };
@@ -209,10 +212,12 @@ QueryForm.propTypes = {
   focusRequested: React.PropTypes.func.isRequired,
 };
 
-function validate(values) {
+function validate(values, props) {
+  const { formatMessage } = props.intl;
   const errors = {};
   if (emptyString(values.q)) {
-    errors.q = { _error: 'Cannot be blank' };
+    const errString = formatMessage(localMessages.queryStringError, { name: values.label });
+    errors.q = { _error: errString };
   }
   if (!values.collections || !values.collections.length) {
     errors.collections = { _error: 'At least one collection must be chosen' };

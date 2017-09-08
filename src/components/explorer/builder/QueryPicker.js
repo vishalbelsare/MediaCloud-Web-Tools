@@ -55,7 +55,7 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updateObject = selected;
     const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-    // TODO I think we could simplify these two paths... one from the dialog, one from the form...
+    // TODO I think we should simplify these two paths... one from the dialog, one from the form...
     if (newInfo.length) { // assume it's an array, update from media array
       const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);
       const updatedCollections = newInfo.filter(m => m.type === 'collection' || m.tags_id);
@@ -141,7 +141,7 @@ class QueryPicker extends React.Component {
                   tooltip={formatMessage(localMessages.addQuery)}
                   onClick={() => this.addAQuery(defaultQuery)}
                 />
-                <FormattedMessage {...localMessages.addQuery} />
+                <a href="" onTouchTap={() => this.addAQuery(defaultQuery)}><FormattedMessage {...localMessages.addQuery} /></a>
               </div>
             </div>
           </div>
