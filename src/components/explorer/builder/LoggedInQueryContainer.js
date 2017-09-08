@@ -9,7 +9,7 @@ import { selectQuery, selectBySearchId, selectBySearchParams, updateQuerySourceL
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from './QueryResultsContainer';
-// import { notEmptyString } from '../../../lib/formValidators';
+import { emptyString } from '../../../lib/formValidators';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { generateQueryParamString } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
@@ -18,6 +18,7 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
+  queryStringEmpty: { id: 'explorer.queryBuilder.queryStringEmpty', defaultMessage: 'At least one query: {name}, contain an empty query parameter. Please either fill in or delete query.' },
 };
 
 const MAX_COLORS = 20;
@@ -111,6 +112,7 @@ class LoggedInQueryContainer extends React.Component {
     let content = <LoadingSpinner />;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       const isEditable = false;
+      // don't render unless we have all the pieces
       if (queries && queries.length > 0 && selected &&
         collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
         if (selected.sources.length === 0 || (selected.sources.length > 0 && selected.sources[0].url !== undefined)) {
@@ -173,7 +175,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   addAppNotice: (info) => {
     dispatch(addNotice(info));
   },
@@ -192,8 +194,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
   handleSearch: (queries) => {
+    const emptyQueryStrings = queries.filter(q => emptyString(q.q));
+    if (emptyQueryStrings.length > 0) {
+      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.queryStringEmpty, { name: emptyQueryStrings[0].label }) }));
+      return;
+    }
     const unDeletedQueries = queries.filter(q => !q.deleted);
-    // dispatch(resetSelected());
+    dispatch(resetSelected());
+    dispatch(resetQueries());
     dispatch(updateTimestampForQueries());
     const urlParamString = generateQueryParamString(unDeletedQueries);
     const newLocation = `/queries/search/[${urlParamString}]`;

@@ -229,7 +229,7 @@ QueryPicker.propTypes = {
   updateCurrentQuery: React.PropTypes.func.isRequired,
   handleDeleteAndSelectQuery: React.PropTypes.func,
   handleDeleteQuery: React.PropTypes.func.isRequired,
-  loadUserSearches: React.PropTypes.func.isRequired,
+  loadUserSearches: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   handleOpenStub: React.PropTypes.func,
@@ -237,7 +237,7 @@ QueryPicker.propTypes = {
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
-  queries: state.explorer.queries.queries,
+  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   sourcesResults: state.explorer.queries.sources.results ? state.explorer.queries.sources.results : null,
   collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
   fetchStatus: state.explorer.queries.collections.fetchStatus,
