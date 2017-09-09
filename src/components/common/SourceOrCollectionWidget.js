@@ -12,8 +12,8 @@ const SourceOrCollectionWidget = (props) => {
   const name = isCollection ? (object.name || object.label || object.tag) : (object.name || object.url);
   return (
     <div
-      className={`mediaWidget ${typeClass}`}
-      key={`mediaWidget${objectId}`}
+      className={`media-widget ${typeClass}`}
+      key={`media-widget${objectId}`}
       onTouchTap={onClick}
     >
       <Col>

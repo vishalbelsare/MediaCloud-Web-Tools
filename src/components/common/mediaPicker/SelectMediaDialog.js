@@ -96,12 +96,12 @@ class SelectMediaDialog extends React.Component {
     }
 
     return (
-      <div className="select-media-menu">
-        <FormattedMessage {...localMessages.addMedia} />
+      <div className="add-media">
         <AddQueryButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(localMessages.addMedia)}
         />{modalContent}
+        <FormattedMessage {...localMessages.addMedia} />
       </div>
     );
   }
