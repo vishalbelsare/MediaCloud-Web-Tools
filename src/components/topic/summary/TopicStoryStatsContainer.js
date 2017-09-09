@@ -8,12 +8,14 @@ import StatBar from '../../common/statbar/StatBar';
 import messages from '../../../resources/messages';
 
 const localMessages = {
-  storyLinkCount: { id: 'topic.summary.timespanInfo.storyLinkCount', defaultMessage: 'Story Links' },
-  mediumCount: { id: 'topic.summary.timespanInfo.mediumCount', defaultMessage: 'Media Sources' },
-  mediumLinkCount: { id: 'topic.summary.timespanInfo.mediumLinkCount', defaultMessage: 'Media Links' },
-  geocodedCount: { id: 'topic.summary.timespanInfo.geocodedCount', defaultMessage: 'Geocoded Stories' },
-  englishCount: { id: 'topic.summary.timespanInfo.englishCount', defaultMessage: 'English Stories' },
   storyCount: { id: 'topic.summary.timespanInfo.storyCount', defaultMessage: 'Total Stories' },
+  storyCountHelp: { id: 'topic.summary.timespanInfo.storyCount.help', defaultMessage: 'This the total number of stories within this topic that match the timespan you\'ve selected and the filters you have in place. This includes the seed stories and any stories we found via the "spidering" process that follows links form those see stories iteratively to discover more stories about your topic.' },
+  mediumCount: { id: 'topic.summary.timespanInfo.mediumCount', defaultMessage: 'Media Sources' },
+  mediumCountHelp: { id: 'topic.summary.timespanInfo.mediumCount.help', defaultMessage: 'The number of unique media sources that published any stories within this timespan that match the filters you have in place. If you are filtering by a search query we can\'t easily compute this number' },
+  storyLinkCount: { id: 'topic.summary.timespanInfo.storyLinkCount', defaultMessage: 'Story Links' },
+  storyLinkCountHelp: { id: 'topic.summary.timespanInfo.storyLinkCount.help', defaultMessage: 'The number of links between stories within this timespan that match the filters you have in place.  A story link is a hyperlink from one story to another. For example, if there was only one Chicago Tribune story linked to and it was linked to by 3 New York times stories and 2 Boston Globe stories, then the story links count would be 5. If you are filtering by a search query we can\'t easily compute this number' },
+  mediumLinkCount: { id: 'topic.summary.timespanInfo.mediumLinkCount', defaultMessage: 'Media Links' },
+  mediumLinkCountHelp: { id: 'topic.summary.timespanInfo.mediumLinkCount.help', defaultMessage: 'The number of links between media sources with stories within this timespan that match the filters you have in place. A media link is when one media source links any number of times to another media source. For example, if there was only one Chicago Tribune story linked to and it was linked to by 3 New York times stories and 2 Boston Globe stories, then the story links count would be 2 (because only two unqiue media sources linked to the Chicago Tribune story). If you are filtering by a search query we can\'t easily compute this number' },
 };
 
 class TopicStoryStatsContainer extends React.Component {
@@ -33,6 +35,7 @@ class TopicStoryStatsContainer extends React.Component {
     }
     let stats;
     if (filters.q) {
+      // if there is a query filter in place, then we can't get many of these stats easily :-(
       stats = [
         { message: localMessages.storyCount, data: formatNumber(storyCount) },
         { message: localMessages.mediumCount, data: formatMessage(messages.unknown) },
@@ -41,10 +44,10 @@ class TopicStoryStatsContainer extends React.Component {
       ];
     } else {
       stats = [
-        { message: localMessages.storyCount, data: formatNumber(storyCount) },
-        { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count) },
-        { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count) },
-        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count) },
+        { message: localMessages.storyCount, data: formatNumber(storyCount), helpTitleMsg: localMessages.storyCount, helpContentMsg: localMessages.storyCountHelp },
+        { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count), helpTitleMsg: localMessages.mediumCount, helpContentMsg: localMessages.mediumCountHelp },
+        { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count), helpTitleMsg: localMessages.storyLinkCount, helpContentMsg: localMessages.storyLinkCountHelp },
+        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count), helpTitleMsg: localMessages.mediumLinkCount, helpContentMsg: localMessages.mediumLinkCountHelp },
       ];
     }
     return (
