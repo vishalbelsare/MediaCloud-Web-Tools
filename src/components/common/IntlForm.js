@@ -14,7 +14,6 @@ import DatePicker from 'material-ui/DatePicker';
  */
 function composeIntlForm(Component) {
   class IntlFormForm extends React.Component {
-
     intlIfObject = (value) => {
       if (typeof value === 'object') {
         return <FormattedMessage {...value} />;
@@ -40,6 +39,21 @@ function composeIntlForm(Component) {
           errorText={touched &&
             ((error ? this.intlIfObject(error) : null)
               || (warning ? this.intlIfObject(warning) : null))}
+          {...input}
+          {...intlCustom}
+        />
+      );
+    };
+    renderTextFieldWithFocus = ({ input, saveRef, meta: { touched, error, warning }, ...custom }) => {
+      const intlCustom = this.intlCustomProps(custom);
+
+      return (
+        <TextField
+          className="form-field-text"
+          errorText={touched &&
+            ((error ? this.intlIfObject(error) : null)
+              || (warning ? this.intlIfObject(warning) : null))}
+          ref={saveRef}
           {...input}
           {...intlCustom}
         />
@@ -116,6 +130,7 @@ function composeIntlForm(Component) {
         renderSelectField: this.renderSelectField,
         renderAutoComplete: this.renderAutoComplete,
         renderDatePickerInline: this.renderDatePickerInline,
+        renderTextFieldWithFocus: this.renderTextFieldWithFocus,
       };
       return (
         <Component {...this.props} {...helpers} />

@@ -20,6 +20,11 @@ const localMessages = {
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
 
+const focusUsernameInputField = (input) => {
+  if (input) {
+    setTimeout(() => { input.focus(); }, 100);
+  }
+};
 class QueryPickerItem extends React.Component {
   state = {
     labelChangeDialogOpen: false,
@@ -139,6 +144,7 @@ class QueryPickerItem extends React.Component {
                 updateDemoQueryLabel(val); // both are connected
               }}
               onKeyPress={this.handleMenuItemKeyDown}
+              ref={focusUsernameInputField}
             />
             {iconOptions}
           </div>
@@ -191,6 +197,7 @@ class QueryPickerItem extends React.Component {
       }
     }
     const extraClassNames = (isSelected) ? 'selected' : '';
+
     return (
       <div
         className={`query-picker-item ${extraClassNames}`}
@@ -212,6 +219,7 @@ class QueryPickerItem extends React.Component {
             onChange={(e, val) => {
               this.updateTempLabel(val);
             }}
+            ref={focusUsernameInputField}
             hintText={query.label || formatMessage(localMessages.searchHint)}
           />
         </Dialog>
