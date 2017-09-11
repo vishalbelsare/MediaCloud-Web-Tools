@@ -76,7 +76,7 @@ def stream_story_samples_csv(filename, stories):
     simply be passed on to a call to topicStoryList.
     '''
     props = ['stories_id', 'publish_date',
-            'title', 'media_name']
+            'title', 'url', 'media_name','media_id', 'language']
     return csv.stream_response(stories, props, filename)
 
 @app.route('/api/explorer/story/count', methods=['GET'])
