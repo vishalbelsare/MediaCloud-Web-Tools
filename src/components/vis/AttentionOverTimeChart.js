@@ -14,7 +14,7 @@ const localMessages = {
   chartTitle: { id: 'chart.sentencesOverTime.title', defaultMessage: 'Attention Over Time' },
   tooltipSeriesName: { id: 'chart.sentencesOverTime.tooltipSeriesName', defaultMessage: 'Series: {name}' },
   tooltipText: { id: 'chart.sentencesOverTime.tooltipText', defaultMessage: 'Average {count} {count, plural, =1 {sentence} other {sentences} }/day' },
-  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'sentences/day' },
+  seriesTitle: { id: 'chart.sentencesOverTime.seriesTitle', defaultMessage: 'avg sentences/day' },
   totalCount: { id: 'chart.sentencesOverTime.totalCount',
     defaultMessage: 'We have collected {total, plural, =0 {No sentences} one {One sentence} other {{formattedTotal} sentences} }.',
   },
@@ -64,7 +64,7 @@ class AttentionOverTimeChart extends React.Component {
       },
       yAxis: {
         min: 0,
-        title: formatMessage(localMessages.seriesTitle),
+        title: { text: formatMessage(localMessages.seriesTitle) },
       },
       exporting: {
       },
