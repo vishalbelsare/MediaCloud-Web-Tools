@@ -7,7 +7,7 @@ from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_
 from server.cache import cache
 import server.util.csv as csv
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import prep_simple_solr_query, concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
 import json
 # load the shared settings file
@@ -109,39 +109,44 @@ def api_explorer_demo_story_count():
 def cached_story_count(query):
     return mc.storyCount(solr_query=query)
 
-def stream_story_count_csv(fn, search_id_or_query, index):
+def stream_story_count_csv(fn, search_id_or_query_list):
     '''
     Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
     simply be passed on to a call to topicStoryList.
     '''
+    # if we have a search id, we load the samples from our sample searches file
     filename = ''
+    story_count_results = []
     SAMPLE_SEARCHES = load_sample_searches()
     try:
-        search_id = int(search_id_or_query)
+        search_id = int(search_id_or_query_list)
         if search_id >= 0:
             SAMPLE_SEARCHES = load_sample_searches()
-            current_search = SAMPLE_SEARCHES[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
 
-            if int(index) < len(current_search): 
-                start_date = current_search[int(index)]['startDate']
-                end_date = current_search[int(index)]['endDate']
-                filename = fn + current_search[int(index)]['q']
+            sample_queries = SAMPLE_SEARCHES[search_id]['queries']
+
+            for query in sample_queries:
+                solr_query = prep_simple_solr_query(query)
+                storyList = cached_story_count(solr_query)
+                query_and_story_count = {'query' : query['label'], 'count' : storyList['count']}
+                story_count_results.append(query_and_story_count)
 
     except Exception as e:
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        solr_query = parse_query_with_keywords(current_query)
-        filename = fn + current_query['q']
+        custom_queries = json.loads(search_id_or_query_list)
 
-    story_count_result = cached_story_count(solr_query)
-    props = ['count']
-    return csv.stream_response(story_count_result, props, filename)
+        for query in custom_queries:
+            solr_query = parse_query_with_keywords(query)
+            filename = fn + query['q']
 
-@app.route('/api/explorer/stories/count.csv/<search_id_or_query>/<index>', methods=['GET'])
-def explorer_story_count_csv(search_id_or_query, index):
+            storyList = cached_story_count(solr_query)
+            query_and_story_count = {'query' : query['label'], 'count' : storyList['count']}
+            story_count_results.append(query_and_story_count)
+    
+    props = ['query','count']
+    return csv.stream_response(story_count_results, props, filename)
 
 
-    return stream_story_count_csv('explorer-stories-', search_id_or_query, index)
+@app.route('/api/explorer/stories/count.csv/<search_id_or_query_list>', methods=['GET'])
+def explorer_story_count_csv(search_id_or_query_list):
+    return stream_story_count_csv('explorer-stories-', search_id_or_query_list)
 
