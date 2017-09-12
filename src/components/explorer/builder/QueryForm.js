@@ -44,6 +44,7 @@ class QueryForm extends React.Component {
   componentDidMount() {
     this.queryRef.input.refs.input.focus();
   }
+
   // required to be able to reference the Field/TextField component in order to set focus
   preserveRef = ref => (this.queryRef = ref);
 
@@ -58,7 +59,9 @@ class QueryForm extends React.Component {
 
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
-      focusQueryInputField(this.queryRef);
+      if (selected.q === undefined || selected.q === '*') {
+        focusQueryInputField(this.queryRef);
+      }
     }
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
@@ -71,9 +74,6 @@ class QueryForm extends React.Component {
     if (!selected) { return null; }
     // if we have a ref field, we have intend to set the focus to a particular field - the query field
     // essentially an autofocus for the form
-    if (this.queryRef) {
-      focusQueryInputField(this.queryRef);
-    }
     return (
       <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
         <div className="query-form-wrapper">

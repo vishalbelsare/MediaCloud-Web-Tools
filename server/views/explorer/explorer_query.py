@@ -6,9 +6,11 @@ from server import app, mc, db
 from server.cache import cache
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
-from server.views.sources import FEATURED_COLLECTION_LIST
+from server.views.sources import FEATURED_COLLECTION_LIST, _cached_source_story_count
 from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.util.tags import _cached_media_with_tag_page
 from server.views.explorer import solr_query_from_request, read_sample_searches
+import datetime
 from operator import itemgetter
 
 logger = logging.getLogger(__name__)
@@ -80,19 +82,39 @@ def api_explorer_featured_collections():
     return jsonify({'results': featured_collections})
 
 
-@cache
+# @cache
+# TODO should be in media_picker I think
 # if details is true, add story count, source count also
 def _cached_featured_collections():
     featured_collections = []
-    for tagsId in FEATURED_COLLECTION_LIST:
-        info = mc.tag(tagsId)
-        info['id'] = tagsId
-        # info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tagsId))  # use None here to use app-level mc object
-        featured_collections += [info]
+    for tags_id in FEATURED_COLLECTION_LIST:
+        coll = mc.tag(tags_id)
+        coll['id'] = tags_id
+        source_count_estimate = _cached_media_with_tag_page(tags_id, 0)
+        coll['media_count'] = len(source_count_estimate)
+
+        how_lively_is_this_collection = 0
+        # story count
+        for media in source_count_estimate:
+            one_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=7)
+            start_date = one_weeks_before_now
+            end_date = datetime.datetime.now()
+            publish_date = mc.publish_date_query(start_date,
+                                              end_date,
+                                              True, True)
+            media_query = "(media_id:{})".format(media['media_id']) + " AND (+" + publish_date + ")"
+
+            how_lively_is_this_collection += _cached_source_story_count(user_mediacloud_key(), media_query)
+            # approximate liveliness - if there are more stories than 100, we know this is a reasonably active source/collection
+            if how_lively_is_this_collection > 100:
+                break
+        coll['story_count'] = how_lively_is_this_collection
+        featured_collections.append(coll)
+
     return featured_collections
 
 @app.route('/api/explorer/saveQuery', methods=['GET'])
-@flask_login.login_required # TODO right?
+@flask_login.login_required
 @arguments_required('label', 'query_string')
 def save_user_query():
     username = user_name()

@@ -82,7 +82,7 @@ class SelectMediaDialog extends React.Component {
                   <Col lg={3}>
                     <MediaSelectionContainer selectedMedia={selectedMedia} />
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={8}>
                     <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
                   </Col>
                 </Row>

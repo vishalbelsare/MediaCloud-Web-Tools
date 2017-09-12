@@ -7,6 +7,12 @@ import TextField from 'material-ui/TextField';
 
 class SelectMediaForm extends React.Component {
   shouldComponentUpdate = () => false;
+
+  focusUsernameInputField = (input) => {
+    if (input) {
+      setTimeout(() => { input.focus(); }, 100);
+    }
+  }
   handleMenuItemKeyDown = (evt) => {
     const { onSearch } = this.props;
     switch (evt.key) {
@@ -29,6 +35,7 @@ class SelectMediaForm extends React.Component {
         name="mediaKeyword"
         defaultValue={cleanedInitialValues.mediaKeyword}
         onKeyPress={this.handleMenuItemKeyDown}
+        ref={this.focusUsernameInputField}
       />
     );
   }
