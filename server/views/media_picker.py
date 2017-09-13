@@ -21,7 +21,7 @@ MAX_COLLECTIONS = 20
 MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
 
-# TODO there are two very similar calls in sources/search.py - string vs arguments passed. may need args so not yet extracting
+# TODO there are two very similar calls in sources/search.py - overall _ vs camelcase, and then args vs vs
 
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
 @flask_login.login_required
@@ -48,6 +48,7 @@ def collection_details_worker(info):
     total_sources = len(_cached_media_with_tag_page(info['tags_id'], 0))
     coll_data = {
         'tags_id': info['tags_id'],
+        'type': info['tag_set_label'],
         'label': info['label'],
         'description': info['tag_set_description'],
         'story_count': total_story_count,
@@ -66,10 +67,11 @@ def api_mediapicker_collection_search():
     results = _matching_tags_by_set(search_str, public_only) # from pool
     trimmed_collections = [r[:MAX_COLLECTIONS] for r in results]
     flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
-
-    pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-    set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
-    pool.terminate()  # extra s
+    set_of_queried_collections = []
+    if len(flat_list_of_collections) > 0:
+        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+        set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
+        pool.terminate()  # extra s
 
     return jsonify({'list': set_of_queried_collections})
 

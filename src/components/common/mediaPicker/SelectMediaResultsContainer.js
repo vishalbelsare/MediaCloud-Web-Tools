@@ -122,7 +122,7 @@ class SelectMediaResultsContainer extends React.Component {
           timestamp={timestamp}
           classStyle="browse-items"
           itemType="media"
-          linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
+          linkInfo={c => `${c.type}/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
           onSelectMedia={c => this.handleToggleAndSelectMedia(c)}
         />
