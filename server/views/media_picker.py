@@ -41,37 +41,19 @@ def api_mediapicker_source_search():
     return jsonify({'list':source_list})
 
 
-def _source_story_counts_worker(info):
-    source = info['media']
-    media_query = "(media_id:{}) {}".format(source['media_id'], info['q'])
-    total_story_count = _cached_source_story_count(user_mediacloud_key(), media_query)
-
-    source_data = {
-        'media_id': source['media_id'],
-        'media_name': source['name'],
-        'media_url': source['url'],
-        'total_stories': total_story_count,
-    }
-    return source_data
-
-
-def _collection_source_story_counts(collection_id):
+def collection_details_worker(info):
     user_mc = user_admin_mediacloud_client()
-    one_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=7)
-    start_date = one_weeks_before_now
-    end_date = datetime.datetime.now()
-
-    start_date_str = start_date.strftime("%Y-%m-%d")
-    end_date_str =  end_date.strftime("%Y-%m-%d")
-    q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
-    media_list = _cached_media_with_tag_page(collection_id, 0) # paging through all of it?
-    jobs = [{'media': m, 'q': q, 'start_date_str': start_date_str, 'end_date_str': end_date_str} for m in media_list]
-
-    # fetch in parallel to make things faster
-    pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-    results = pool.map(_source_story_counts_worker, jobs)  # blocks until they are all done
-    pool.terminate()  # extra safe garbage collection
-    return results
+    collection_story_query = "tags_id_media:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(info['tags_id'])
+    total_story_count = user_mc.storyCount(collection_story_query)['count']
+    total_sources = len(_cached_media_with_tag_page(info['tags_id'], 0))
+    coll_data = {
+        'tags_id': info['tags_id'],
+        'label': info['label'],
+        'description': info['tag_set_description'],
+        'story_count': total_story_count,
+        'media_count': total_sources,
+    }
+    return coll_data
 
 
 @app.route('/api/mediapicker/collections/search', methods=['GET'])
@@ -81,22 +63,14 @@ def _collection_source_story_counts(collection_id):
 def api_mediapicker_collection_search():
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
-    results = _matching_tags_by_set(search_str, public_only)
+    results = _matching_tags_by_set(search_str, public_only) # from pool
     trimmed_collections = [r[:MAX_COLLECTIONS] for r in results]
-    flat_list = [item for sublist in trimmed_collections for item in sublist]
+    flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
 
-    set_of_queried_collections = []
-    how_lively_is_this_collection = 0
+    pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+    set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
+    pool.terminate()  # extra s
 
-    one_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=7)
-    start_date = one_weeks_before_now
-    end_date = datetime.datetime.now()
-    for coll in flat_list:
-        tags_id = coll['tags_id']
-        
-        how_lively_is_this_collection += len(_collection_source_story_counts(tags_id))
-
-        coll['story_count'] = how_lively_is_this_collection
-        set_of_queried_collections.append(coll)
     return jsonify({'list': set_of_queried_collections})
+
 

@@ -85,6 +85,7 @@ class SelectMediaResultsContainer extends React.Component {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
           whichStoredKeyword = collectionResults.args;
           whichFetchStatus = collectionResults.fetchStatus;
+          whichMedia.type = 'collections';
         } else {
           whichMedia = featured.list;
           whichFetchStatus = featured.fetchStatus;
@@ -95,6 +96,7 @@ class SelectMediaResultsContainer extends React.Component {
           whichMedia = sourceResults.list;
           whichStoredKeyword = sourceResults.args;
           whichFetchStatus = sourceResults.fetchStatus;
+          whichMedia.type = 'sources';
         }
         break;
       case ADVANCED:
@@ -104,6 +106,7 @@ class SelectMediaResultsContainer extends React.Component {
           whichMedia = starredResults.list;
           whichStoredKeyword = starredResults.args;
           whichFetchStatus = sourceResults.fetchStatus;
+          whichMedia.type = 'collections';
         }
         break;
       default:
@@ -119,7 +122,7 @@ class SelectMediaResultsContainer extends React.Component {
           timestamp={timestamp}
           classStyle="browse-items"
           itemType="media"
-          linkInfo={c => `whichMedia/${c.tags_id || c.media_id}`}
+          linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
           linkDisplay={c => (c.label ? c.label : c.name)}
           onSelectMedia={c => this.handleToggleAndSelectMedia(c)}
         />

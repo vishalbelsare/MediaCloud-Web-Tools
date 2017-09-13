@@ -24,4 +24,5 @@ def _matching_tags_by_set(search_str, public_only):
                    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
     pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
     matching_tags_in_collections = pool.map(_media_search_worker, search_jobs)
+    pool.terminate()
     return matching_tags_in_collections
