@@ -10,7 +10,7 @@ import initializeApp from './index';
 
 ReactGA.initialize('UA-60744513-7');
 
-setVersion('1.11.1');
+setVersion('1.11.2');
 
 setAppName('topics');
 
