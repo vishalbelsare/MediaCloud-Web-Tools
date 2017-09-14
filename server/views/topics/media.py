@@ -145,6 +145,9 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
         cols_to_export = TOPICS_TEMPLATE_PROPS
+        if not add_metadata:
+            cols_to_export = cols_to_export[:-4]    # remove the metadata cols
+
         while more_media:
             page = topic_media_list(user_mediacloud_key(), topics_id, **params)
             media_list = page['media']
@@ -156,8 +159,6 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
                     for eachItem in media_info['media_source_tags']:
                         if is_metadata_tag_set(eachItem['tag_sets_id']):
                             format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
-            else:
-                cols_to_export = cols_to_export[:-4]    # remove the metadata cols
 
             all_media = all_media + media_list
 
