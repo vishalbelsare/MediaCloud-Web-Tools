@@ -124,7 +124,6 @@ def parse_query_with_keywords(args) :
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     current_query = ''
-    # TODO should we allow this from the client?
     # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
 
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults

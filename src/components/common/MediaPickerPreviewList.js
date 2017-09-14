@@ -27,7 +27,7 @@ const MediaPickerPreviewList = (props) => {
     content = (
       items.map((c, idx) => {
         const isDisabled = c.selected;
-        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
+        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>); // TODO we need to open a new window
         // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
         const collProps = [
           { message: localMessages.stat1, data: c.story_count },
@@ -44,7 +44,6 @@ const MediaPickerPreviewList = (props) => {
         ];
         const srcProps = [
           { message: localMessages.stat1, data: c.story_count },
-          { message: localMessages.stat2, data: c.media_count },
           { message: localMessages.stat3,
             content: (
               <AppButton // need icon also

@@ -2,7 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
-from media_search import _matching_tags_by_set, _matching_sources_by_set
+from media_search import _matching_collections_by_set, _matching_sources_by_set
 from server import app, mc, db
 from server.util.request import arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
@@ -81,13 +81,13 @@ def collection_details_worker(info):
 def api_mediapicker_collection_search():
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
-    results = _matching_sources_by_set(search_str, public_only) # from pool
+    results = _matching_collections_by_set(search_str, public_only) # from pool
     trimmed_collections = [r[:MAX_COLLECTIONS] for r in results]
     flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
     set_of_queried_collections = []
     if len(flat_list_of_collections) > 0:
         pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        set_of_queried_collections = pool.map(source_details_worker, flat_list_of_collections)
+        set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
         pool.terminate()  # extra s
 
     return jsonify({'list': set_of_queried_collections})

@@ -23,7 +23,7 @@ def _collection_search_worker(job):
     user_mc = user_mediacloud_client()
     return user_mc.tagList(tag_sets_id=job['tag_sets_id'], public_only=job['public_only'], name_like=job['search_str'])
 
-def _matching_tags_by_set(search_str, public_only):
+def _matching_collections_by_set(search_str, public_only):
     search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str, 'public_only': public_only}
                    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
     pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)

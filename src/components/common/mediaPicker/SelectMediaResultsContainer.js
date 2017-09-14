@@ -55,7 +55,7 @@ class SelectMediaResultsContainer extends React.Component {
           if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
             this.props.handleMediaConcurrency(s); // update if
             return true;
-          } // TODO else we shoudl unselect
+          }
           return false;
         })),
       );
@@ -76,26 +76,27 @@ class SelectMediaResultsContainer extends React.Component {
   render() {
     const { timestamp, selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, sourceResults, starredResults, featured } = this.props; // TODO differentiate betwee coll and src
     let content = null;
-    let whichMedia = null;
-    let whichStoredKeyword = { keyword: selectedMediaQueryKeyword };
-    let whichFetchStatus = null;
+    let whichMedia = {};
+    whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
+    whichMedia.FetchStatus = null;
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
           whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
-          whichStoredKeyword = collectionResults.args;
-          whichFetchStatus = collectionResults.fetchStatus;
+          whichMedia.storedKeyword = collectionResults.args;
+          whichMedia.fetchStatus = collectionResults.fetchStatus;
           whichMedia.type = 'collections';
         } else {
           whichMedia = featured.list;
-          whichFetchStatus = featured.fetchStatus;
+          whichMedia.type = 'collections';
+          whichMedia.fetchStatus = featured.fetchStatus;
         }
         break;
       case PICK_SOURCE:
         if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
           whichMedia = sourceResults.list;
-          whichStoredKeyword = sourceResults.args;
-          whichFetchStatus = sourceResults.fetchStatus;
+          whichMedia.storedKeyword = sourceResults.args;
+          whichMedia.fetchStatus = sourceResults.fetchStatus;
           whichMedia.type = 'sources';
         }
         break;
@@ -104,16 +105,17 @@ class SelectMediaResultsContainer extends React.Component {
       case STARRED:
         if (starredResults && (starredResults.list && (starredResults.list.length > 0 || (starredResults.args && starredResults.args.keyword)))) {
           whichMedia = starredResults.list;
-          whichStoredKeyword = starredResults.args;
-          whichFetchStatus = sourceResults.fetchStatus;
+          whichMedia.storedKeyword = starredResults.args;
+          whichMedia.fetchStatus = sourceResults.fetchStatus;
           whichMedia.type = 'collections';
         }
         break;
       default:
         whichMedia = featured;
+        whichMedia.type = 'collections';
         break;
     }
-    if (whichFetchStatus === fetchConstants.FETCH_ONGOING) {
+    if (whichMedia.storedKeyword !== null && (whichMedia.fetchStatus === null || whichMedia.fetchStatus === fetchConstants.FETCH_ONGOING)) {
       content = <LoadingSpinner />;
     } else if (whichMedia && whichMedia.length > 0) {
       content = (
@@ -130,7 +132,7 @@ class SelectMediaResultsContainer extends React.Component {
     }
     return (
       <div className="select-media-container">
-        <SelectMediaForm initValues={whichStoredKeyword} onSearch={val => this.updateMediaQuery(val)} />
+        <SelectMediaForm initValues={whichMedia.storedKeyword} onSearch={val => this.updateMediaQuery(val)} />
         {content}
       </div>
     );
@@ -157,7 +159,7 @@ const mapStateToProps = state => ({
   fetchStatus: (state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.collectionQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
-  selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.keyword : null,
+  selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
