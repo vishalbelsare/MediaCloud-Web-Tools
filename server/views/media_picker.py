@@ -26,7 +26,7 @@ STORY_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching
 
 def source_details_worker(info):
     user_mc = user_admin_mediacloud_client()
-    source_story_query = "tags_id_media:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(info['media_id'])
+    source_story_query = "media_id:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(info['media_id'])
     total_story_count = user_mc.storyCount(source_story_query)['count']
     coll_data = {
         'media_id': info['media_id'],
