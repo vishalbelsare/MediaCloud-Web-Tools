@@ -66,7 +66,7 @@ def collection_details_worker(info):
     coll_data = {
         'tags_id': info['tags_id'],
         'type': info['tag_set_label'],
-        'label': info['label'],
+        'label': info['label'] or info['tag'],
         'description': info['tag_set_description'],
         'story_count': total_story_count,
         'media_count': total_sources,

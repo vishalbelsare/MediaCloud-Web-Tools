@@ -10,7 +10,7 @@ const collectionSearch = createAsyncReducer({
     args: Object.assign({}, meta.args[0], { selected: false }), // for adding/removing from selected list
     list: payload.list.map(c => ({
       ...c,
-      name: `${c.tag_set_label}: ${c.label || c.tag}`,
+      name: `${c.label || c.tag}`,
       id: c.tags_id,
       type: 'collection',
       selected: false,
