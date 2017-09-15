@@ -2,12 +2,9 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import AppButton from '../../common/AppButton';
-import ColorPicker from '../../common/ColorPicker';
+import QueryPickerLoggedInHeader from './QueryPickerLoggedInHeader';
+import QueryPickerDemoHeader from './QueryPickerDemoHeader';
 import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
@@ -67,11 +64,10 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isLabelEditable, isSelected, isDeletable, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
+    const { user, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, handleSearch } = this.props;
     const { formatMessage } = this.props.intl;
-    let nameInfo = null;
     let subT = null;
-    const isThisAProtectedQuery = !user.isLoggedIn && query.searchId !== null && query.searchId !== undefined;
+    let headerInfo = null;
     /* query fields are only editable in place for Demo mode. the user can delete a query
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
@@ -88,81 +84,28 @@ class QueryPickerItem extends React.Component {
         onClick={() => this.handleChangeAndClose(query)}
       />,
     ];
-    let iconOptions = null;
-    /* should we show the icon menu? we do if Item is selected and
-    - if demo, if custon and not only
-    - if logged in, either custom or sample and not only
-    */
-    let menuChildren = null;
-    if (isSelected) {
-      if (user.isLoggedIn && isDeletable()) { // if logged in and this is not the only QueryPickerItem
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
-            <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-          </div>
-        );
-      } else if (user.isLoggedIn) {
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
-          </div>
-        );
-      } else if (!user.isLoggedIn && !isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
-        menuChildren = (
-          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-        );
-      }
-      if (menuChildren !== null) {
-        iconOptions = (
-          <IconMenu
-            className="query-picker-icon-button"
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-            {menuChildren}
-          </IconMenu>
-        );
-      }
-    }
     if (query) {
-      if (isLabelEditable) { // determine whether the label is editable or not (demo or logged in)
-        nameInfo = (
-          <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />
-            <TextField
-              className="query-picker-editable-name"
-              id="q"
-              name="q"
-              value={query.q}
-              hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => {
-                updateDemoQueryLabel(val); // both are connected
-              }}
-              onKeyPress={this.handleMenuItemKeyDown}
-              ref={focusUsernameInputField}
-            />
-            {iconOptions}
-          </div>
+      if (user.isLoggedIn) {
+        headerInfo = (
+          <QueryPickerLoggedInHeader
+            user={user} query={query}
+            handleOpen={this.handleOpen}
+            isDeletable={isDeletable}
+            displayLabel={displayLabel} handleDeleteQuery={handleDeleteQuery}
+            handleSearch={handleSearch} updateQueryProperty={updateQueryProperty}
+            handleMenuItemKeyDown={this.handleMenuItemKeyDown}
+          />
         );
-      } else {
-        nameInfo = (
-          <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />&nbsp;
-            <span
-              className="query-picker-name"
-            >
-              {query.label}
-            </span>
-            {iconOptions}
-          </div>
+      } else { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
+        headerInfo = (
+          <QueryPickerDemoHeader
+            user={user} query={query}
+            handleOpen={this.handleOpen}
+            isDeletable={isDeletable} handleDeleteQuery={handleDeleteQuery}
+            handleSearch={handleSearch} updateQueryProperty={updateQueryProperty}
+            updateDemoQueryLabel={updateDemoQueryLabel}
+            isLabelEditable={isLabelEditable} handleMenuItemKeyDown={this.handleMenuItemKeyDown} focusUsernameInputField={focusUsernameInputField}
+          />
         );
       }
 
@@ -203,7 +146,7 @@ class QueryPickerItem extends React.Component {
         className={`query-picker-item ${extraClassNames}`}
         onTouchTap={() => this.handleBlurAndSelection()}
       >
-        {nameInfo}
+        {headerInfo}
         <Dialog
           title="Change Query Label"
           actions={actions}
@@ -211,7 +154,7 @@ class QueryPickerItem extends React.Component {
           open={this.state.labelChangeDialogOpen}
           onRequestClose={this.handleClose}
         >
-          <h2><FormattedMessage {...localMessages.queryDialog} /></h2>
+          <p><FormattedMessage {...localMessages.queryDialog} /></p>
           <TextField
             className="query-picker-editable-name"
             id="tempLabel"
