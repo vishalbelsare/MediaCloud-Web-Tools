@@ -12,7 +12,8 @@ from server.views.topics import concatenate_query_for_solr
 
 logger = logging.getLogger(__name__)
 
-@app.route('/api/topics/create/preview/sentences/count', methods=['GET'])
+
+@app.route('/api/topics/create/preview/sentences/count', methods=['POST'])
 @flask_login.login_required
 @form_fields_required('q')
 @api_error_handler
@@ -27,6 +28,7 @@ def api_topics_preview_sentences_count():
 
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.form['start_date'], split_end_date=request.form['end_date'], split=True)
     return jsonify(sentence_count_result)
+
 
 @app.route('/api/topics/create/preview/story/count', methods=['POST'])
 @flask_login.login_required
@@ -44,6 +46,7 @@ def api_topics_preview_story_count():
     story_count_result = user_mc.storyCount(solr_query=solr_query)
     # maybe check admin role before we run this?
     return jsonify(story_count_result)  # give them back new data, so they can update the client
+
 
 @app.route('/api/topics/create/preview/stories/sample', methods=['POST'])
 @flask_login.login_required

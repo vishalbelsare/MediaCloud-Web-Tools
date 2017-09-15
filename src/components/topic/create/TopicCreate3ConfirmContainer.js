@@ -64,11 +64,18 @@ const TopicCreate3ConfirmContainer = (props) => {
       <p>
         <b><FormattedHTMLMessage {...messages.topicSourceCollectionsProp} /></b>:
       </p>
-      {formValues.sourcesAndCollections.map(object => <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />)}
+      {formValues.sourcesAndCollections.map(object =>
+        <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />
+      )}
       <br />
       <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
       &nbsp; &nbsp;
-      <AppButton type="submit" label={formatMessage(localMessages.createTopic)} primary onClick={() => finishStep()} />
+      <AppButton
+        type="submit"
+        label={formatMessage(localMessages.createTopic)}
+        primary
+        onClick={() => finishStep()}
+      />
     </Grid>
   );
 };
@@ -156,6 +163,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 const reduxFormConfig = {
   form: 'topicForm',
   destroyOnUnmount: false,  // so the wizard works
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 };
 
 export default

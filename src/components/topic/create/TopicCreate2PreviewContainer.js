@@ -19,9 +19,7 @@ const TopicCreate2PreviewContainer = (props) => {
   const { handleNextStep, handlePreviousStep, formData } = props;
   const { formatMessage } = props.intl;
 
-  const content = (<TopicCreatePreview
-    formData={formData}
-  />);
+  const content = <TopicCreatePreview formData={formData} />;
 
   return (
     <Grid>
@@ -55,7 +53,6 @@ TopicCreate2PreviewContainer.propTypes = {
   handleNextStep: PropTypes.func.isRequired,
   // from dispatch
   finishStep: PropTypes.func.isRequired,
-  goToStep: PropTypes.func.isRequired,
   // from form
   formData: PropTypes.object,
 };
@@ -71,9 +68,6 @@ const mapDispatchToProps = dispatch => ({
   },
   handleNextStep: () => {
     dispatch(goToCreateTopicStep(2));
-  },
-  goToStep: (step) => {
-    dispatch(goToCreateTopicStep(step));
   },
 });
 

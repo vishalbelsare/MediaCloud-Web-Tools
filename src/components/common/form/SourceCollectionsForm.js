@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
+import { FieldArray, Field } from 'redux-form';
 import composeIntlForm from '../IntlForm';
 import SourceSearchContainer from '../../source/controlbar/SourceSearchContainer';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
@@ -53,6 +53,7 @@ const renderCollectionSelector = ({ intro, allowRemoval, maxSources, maxCollecti
     </Row>
   </div>
 );
+
 renderCollectionSelector.propTypes = {
   fields: PropTypes.object,
   meta: PropTypes.object,
@@ -73,10 +74,8 @@ const SourceCollectionsForm = (props) => {
         </Col>
       </Row>
       <FieldArray
-        form={propTypes.form}
         name="sourcesAndCollections"
         intro={intro}
-        validate={propTypes.validate}
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}
         initialValues={initialValues}
@@ -101,8 +100,6 @@ SourceCollectionsForm.propTypes = {
 export default
   injectIntl(
     composeIntlForm(
-      reduxForm({ propTypes })(
-        SourceCollectionsForm
-      )
+      SourceCollectionsForm
     )
   );

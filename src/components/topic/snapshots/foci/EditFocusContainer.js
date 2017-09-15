@@ -86,7 +86,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       foci_id: parseInt(ownProps.params.focusDefId, 10),
       ...formValues,
     };
-    dispatch(submitFocusUpdateOrCreate(topicId, propsToSubmit))
+    return dispatch(submitFocusUpdateOrCreate(topicId, propsToSubmit))
       .then((results) => {
         if (results.length === 1) {
           const focusSavedMessage = ownProps.intl.formatMessage(localMessages.focusSaved);

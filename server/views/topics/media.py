@@ -132,26 +132,33 @@ def media_outlinks_csv(topics_id, media_id):
                                  link_from_media_id=media_id, timespans_id=timespans_id, q=q)
 
 
+
 def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
     '''
     Helper method to stream a list of media back to the client as a csv.  Any args you pass in will be
     simply be passed on to a call to topicMediaList.
     '''
+    add_metadata = False  # off for now because this is SUPER slow
     all_media = []
     more_media = True
     params = kwargs
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     try:
+        cols_to_export = TOPICS_TEMPLATE_PROPS
+        if not add_metadata:
+            cols_to_export = cols_to_export[:-4]    # remove the metadata cols
+
         while more_media:
             page = topic_media_list(user_mediacloud_key(), topics_id, **params)
             media_list = page['media']
             user_mc = user_admin_mediacloud_client()
 
-            for media_item in media_list:
-                media_info = user_mc.media(media_item['media_id'])
-                for eachItem in media_info['media_source_tags']:
-                    if is_metadata_tag_set(eachItem['tag_sets_id']):
-                        format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
+            if add_metadata:
+                for media_item in media_list:
+                    media_info = user_mc.media(media_item['media_id'])
+                    for eachItem in media_info['media_source_tags']:
+                        if is_metadata_tag_set(eachItem['tag_sets_id']):
+                            format_metadata_fields(media_item, eachItem['tag_sets_id'], eachItem['tag'])
 
             all_media = all_media + media_list
 
@@ -161,7 +168,7 @@ def _stream_media_list_csv(user_mc_key, filename, topics_id, **kwargs):
             else:
                 more_media = False
 
-        return csv.download_media_csv(all_media, filename, TOPICS_TEMPLATE_PROPS)
+        return csv.download_media_csv(all_media, filename, cols_to_export)
     except Exception as exception:
         return json.dumps({'error': str(exception)}, separators=(',', ':')), 400
 

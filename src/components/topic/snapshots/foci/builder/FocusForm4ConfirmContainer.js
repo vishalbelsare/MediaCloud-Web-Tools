@@ -100,16 +100,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePreviousStep: () => {
     dispatch(goToCreateFocusStep(2));
   },
-  saveFocus: (topicId, values) => {
-    ownProps.onDone(topicId, values);
-  },
+  saveFocus: (topicId, values) => ownProps.onDone(topicId, values),
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: (values) => {
-      dispatchProps.saveFocus(ownProps.topicId, values);
-    },
+    finishStep: values => dispatchProps.saveFocus(ownProps.topicId, values),
   });
 }
 
