@@ -35,7 +35,7 @@ class MediaSelectionContainer extends React.Component {
 
     return (
       <div className="select-media-menu">
-        <Menu>
+        <Menu style={{ zIndex: 'inherit', width: 200 }} >
           <MenuItem
             className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
             value={PICK_COLLECTION}

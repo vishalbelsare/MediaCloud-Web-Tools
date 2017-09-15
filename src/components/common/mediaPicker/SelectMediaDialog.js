@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
@@ -77,16 +77,14 @@ class SelectMediaDialog extends React.Component {
             open={this.state.open}
           >
             <div className="select-media-dialog-modal-inner">
-              <Grid>
-                <Row>
-                  <Col lg={3}>
-                    <MediaSelectionContainer selectedMedia={selectedMedia} />
-                  </Col>
-                  <Col lg={8}>
-                    <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
-                  </Col>
-                </Row>
-              </Grid>
+              <Row>
+                <Col lg={3}>
+                  <MediaSelectionContainer selectedMedia={selectedMedia} />
+                </Col>
+                <Col lg={9}>
+                  <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                </Col>
+              </Row>
             </div>
             {dialogActions}
           </div>
