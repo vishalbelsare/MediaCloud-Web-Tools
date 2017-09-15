@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
   subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Welcome to the Media Cloud Explorer' },
   summary: { id: 'explorer.intro.summary', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
-  description: { id: 'explorer.intro.description', defaultMessage: 'Dashboard is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over acustom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
+  description: { id: 'explorer.intro.description', defaultMessage: 'Explorer is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over a custom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
