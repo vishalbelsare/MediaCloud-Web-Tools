@@ -7,14 +7,18 @@
   border-bottom: 1px solid $material-grey200;
 
   .media-field-wrapper {
-    .mediaWidget {
-      background-color:'rgb(255,255,255)';
-      padding: 5px;
-      border: 1px solid rgb(204,204,204);
+    .media-widget {
+      padding: 10px;
+      border: 1px solid $material-grey200;
       .icon-button {
         float: right !important;
-        margin-top: -15px;
+        margin-top: -17px;
       }
+    }
+    .add-media {
+      border: 1px solid $material-grey200;
+      border-top: 0px;
+      padding: 10px;
     }
   }
 }

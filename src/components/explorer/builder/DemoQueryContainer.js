@@ -86,7 +86,7 @@ class DemoQueryBuilderContainer extends React.Component {
 
   parseJSONParams = (queriesFromURL) => {
     let parsedObjectArray = JSON.parse(queriesFromURL);
-    const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
+    const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
     const parsedObjectArrayWithDefColor = parsedObjectArray.map((q, idx) => ({ ...q, color: unescape(q.color), defaultColor: colorPallette(idx) }));
     parsedObjectArray = parsedObjectArrayWithDefColor.map((q, idx) => {
       const defaultObjVals = {};
@@ -120,7 +120,7 @@ class DemoQueryBuilderContainer extends React.Component {
   }
 
   render() {
-    const { selected, queries, setSelectedQuery, handleSearch, samples, location, lastSearchTime } = this.props;
+    const { selected, queries, handleSearch, samples, location, lastSearchTime } = this.props;
     // const { formatMessage } = this.props.intl;
     let content = <LoadingSpinner />;
     const isEditable = location.pathname.includes('queries/demo/search');
@@ -129,7 +129,7 @@ class DemoQueryBuilderContainer extends React.Component {
         <div>
           <WarningNotice><FormattedHTMLMessage {...localMessages.register} />
           </WarningNotice>
-          <QueryBuilderContainer isEditable={isEditable} setSelectedQuery={setSelectedQuery} handleSearch={() => handleSearch(queries)} />
+          <QueryBuilderContainer isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
           <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
         </div>
       );
@@ -204,7 +204,8 @@ const mapDispatchToProps = dispatch => ({
     // update URL location according to updated queries
     const unDeletedQueries = queries.filter(q => !q.deleted);
     dispatch(updateTimestampForQueries());
-    const urlParamString = unDeletedQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
+    const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
+    const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
   },

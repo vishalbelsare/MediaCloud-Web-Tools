@@ -25,7 +25,7 @@ class ColorPicker extends React.Component {
     const { color } = this.props;
     let colorPicker = null;
     if (this.state.displayColorPicker) {
-      colorPicker = <GithubPicker triangle="hide" color={color} onChange={this.handleClose} />;
+      colorPicker = <GithubPicker triangle="hide" color={color} onChange={this.handleClose} colors={['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB']} />;
     } else {
       colorPicker = <button onClick={this.handleClick} style={{ cursor: 'pointer', width: 10, height: 10, borderRadius: 10, backgroundColor: `${color}`, display: 'inline-block' }} />;
     }

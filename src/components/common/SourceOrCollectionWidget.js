@@ -9,11 +9,11 @@ const SourceOrCollectionWidget = (props) => {
 
   const typeClass = isCollection ? 'collection' : 'source';
   const objectId = object.id || (isCollection ? object.tags_id : object.media_id);
-  const name = isCollection ? (object.name || object.label || object.tag) : (object.name || object.url);
+  const name = isCollection ? (object.name || object.label || object.tag) : (object.name || object.label || object.url);
   return (
     <div
-      className={`mediaWidget ${typeClass}`}
-      key={`mediaWidget${objectId}`}
+      className={`media-widget ${typeClass}`}
+      key={`media-widget${objectId}`}
       onTouchTap={onClick}
     >
       <Col>

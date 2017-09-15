@@ -1,7 +1,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from server.views.media_search import media_search, _matching_tags_by_set
+from server.views.media_search import media_search, _matching_collections_by_set
 
 from server import app
 from server.util.request import api_error_handler
@@ -35,7 +35,7 @@ def api_media_search(search_str):
 @api_error_handler
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    results = _matching_tags_by_set(search_str, public_only)
+    results = _matching_collections_by_set(search_str, public_only)
     trimmed = [r[:MAX_COLLECTIONS] for r in results]
     flat_list = [item for sublist in trimmed for item in sublist]
     add_user_favorite_flag_to_collections(flat_list)

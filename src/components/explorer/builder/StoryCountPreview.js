@@ -10,7 +10,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import messages from '../../../resources/messages';
+import { downloadSvg } from '../../util/svg';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
@@ -47,12 +49,17 @@ class StoryCountPreview extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
-  downloadCsv = (query) => {
+  // if demo, use only sample search queries to download
+  downloadCsv = () => {
+    const { queries } = this.props;
     let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/count.csv/${query.searchId}/${query.index}`;
+    const testFirstQuery = queries[0];
+    if (parseInt(testFirstQuery.searchId, 10) >= 0) {
+      url = `/api/explorer/stories/count.csv/${testFirstQuery.searchId}`;
     } else {
-      url = `/api/explorer/stories/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+      const unDeletedQueries = queries.filter(q => !q.deleted);
+      const urlParamString = generateQueryParamString(unDeletedQueries);
+      url = `/api/explorer/stories/count.csv/[${urlParamString}]`;
     }
     window.location = url;
   }
@@ -85,15 +92,18 @@ class StoryCountPreview extends React.Component {
       <DataCard>
         <div className="actions">
           <ActionMenu>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadCSV, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
-            )}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadCSV)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={this.downloadCsv}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
+            />
           </ActionMenu>
         </div>
         <h2>

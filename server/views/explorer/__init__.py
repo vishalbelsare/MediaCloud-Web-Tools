@@ -42,6 +42,22 @@ def solr_query_from_request(request):
     tags_ids=_tag_ids_from_collections_param(request['collections[]']) if 'collections[]' in request else []
     return concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids)
 
+# note similarity above.  JSON versus python prepped fields
+def prep_simple_solr_query(query):
+    current_query = query['q']
+    start_date = query['startDate']
+    end_date = query['endDate']
+    media_ids = query['sources']
+    tags_ids = query['collections']
+
+    solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
+        start_date= start_date,
+        end_date=end_date,
+        media_ids=media_ids,
+        tags_ids=tags_ids)
+
+    return solr_query
+
 # helper for preview queries
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
     query = u'({})'.format(solr_seed_query)
@@ -108,7 +124,6 @@ def parse_query_with_keywords(args) :
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     current_query = ''
-    # TODO should we allow this from the client?
     # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
 
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
@@ -142,7 +157,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     current_query = ''
     try:
-        if isinstance(args_or_query, int):
+        if isinstance(args_or_query, int): # special handling for an indexed query
             index = int(args_or_query)
         else:
             index = int(args_or_query['index']) if 'index' in args_or_query else None

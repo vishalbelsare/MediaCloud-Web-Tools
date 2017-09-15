@@ -32,6 +32,8 @@ class QueryPicker extends React.Component {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);
   }
+  focusRequested = field => field.focus();
+
   updateDemoQueryLabel(query, newValue) {
     // update both label and q for query
     const { updateCurrentQuery } = this.props;
@@ -53,7 +55,7 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updateObject = selected;
     const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-    // TODO I think we could simplify these two paths... one from the dialog, one from the form...
+    // TODO I think we should simplify these two paths... one from the dialog, one from the form...
     if (newInfo.length) { // assume it's an array, update from media array
       const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);
       const updatedCollections = newInfo.filter(m => m.type === 'collection' || m.tags_id);
@@ -122,12 +124,13 @@ class QueryPicker extends React.Component {
       canSelectMedia = userLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
       if (userLoggedIn || isEditable) {
-        const colorPallette = idx => d3.schemeCategory20[idx < MAX_COLORS ? idx : 0];
+        const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
-        const defaultQuery = { index: newIndex, label: newQueryLabel, q: '', description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
+        const defaultQueryField = userLoggedIn ? '*' : '';
+        const defaultQuery = { index: newIndex, label: newQueryLabel, q: defaultQueryField, description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>
@@ -138,7 +141,7 @@ class QueryPicker extends React.Component {
                   tooltip={formatMessage(localMessages.addQuery)}
                   onClick={() => this.addAQuery(defaultQuery)}
                 />
-                <FormattedMessage {...localMessages.addQuery} />
+                <a href="" onTouchTap={() => this.addAQuery(defaultQuery)}><FormattedMessage {...localMessages.addQuery} /></a>
               </div>
             </div>
           </div>
@@ -194,6 +197,7 @@ class QueryPicker extends React.Component {
             handleLoadSearch={loadUserSearches}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
+            focusRequested={this.focusRequested}
           />
         );
       }
@@ -225,7 +229,7 @@ QueryPicker.propTypes = {
   updateCurrentQuery: React.PropTypes.func.isRequired,
   handleDeleteAndSelectQuery: React.PropTypes.func,
   handleDeleteQuery: React.PropTypes.func.isRequired,
-  loadUserSearches: React.PropTypes.func.isRequired,
+  loadUserSearches: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   handleOpenStub: React.PropTypes.func,
@@ -233,7 +237,7 @@ QueryPicker.propTypes = {
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
-  queries: state.explorer.queries.queries,
+  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   sourcesResults: state.explorer.queries.sources.results ? state.explorer.queries.sources.results : null,
   collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
   fetchStatus: state.explorer.queries.collections.fetchStatus,

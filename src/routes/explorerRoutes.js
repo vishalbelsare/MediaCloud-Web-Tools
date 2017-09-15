@@ -7,7 +7,7 @@ import DemoQueryContainer from '../components/explorer/builder/DemoQueryContaine
 import LoggedInQueryContainer from '../components/explorer/builder/LoggedInQueryContainer';
 import ExplorerApp from '../components/explorer/ExplorerApp';
 import { requireAuth } from './routes';
-// import About from '../components/explorer/About';
+import userRoutes from './userRoutes';
 
 const explorerRoutes = (
   <Route path="/" component={ExplorerApp}>
@@ -20,6 +20,8 @@ const explorerRoutes = (
       <Route path="demo/:id" component={DemoQueryContainer} />
       <Route path="search/:queryParams" component={LoggedInQueryContainer} onEnter={requireAuth} />
     </Route>
+
+    {userRoutes}
   </Route>
 );
 

@@ -27,11 +27,11 @@ const MediaPickerPreviewList = (props) => {
     content = (
       items.map((c, idx) => {
         const isDisabled = c.selected;
-        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>);
+        const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>); // TODO we need to open a new window
         // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
         const collProps = [
-          { message: localMessages.stat1, data: '100' },
-          { message: localMessages.stat2, data: '200' },
+          { message: localMessages.stat1, data: c.story_count },
+          { message: localMessages.stat2, data: c.media_count },
           { message: localMessages.stat3,
             content: (
               <AppButton // need icon also
@@ -43,8 +43,7 @@ const MediaPickerPreviewList = (props) => {
           },
         ];
         const srcProps = [
-          { message: localMessages.stat1, data: '20' },
-          { message: localMessages.stat2, data: '40' },
+          { message: localMessages.stat1, data: c.story_count },
           { message: localMessages.stat3,
             content: (
               <AppButton // need icon also
@@ -57,20 +56,22 @@ const MediaPickerPreviewList = (props) => {
         ];
         statProps = c.tags_id ? collProps : srcProps;
         return (
-          <Col key={idx} lg={4} xs={12}>
-            <DataCard key={idx} className="browse-items" disabled={isDisabled}>
-              {icon}
-              <div className="content">
-                <div>
-                  <h2>{title}</h2>
-                  <p>{c.description || c.url}</p>
+          <div>
+            <Col lg={8}>
+              <DataCard key={idx} className="browse-items" disabled={isDisabled}>
+                {icon}
+                <div className="content">
+                  <div>
+                    <h2>{title}</h2>
+                    <p>{c.description || c.url}</p>
+                  </div>
                 </div>
-              </div>
+              </DataCard>
               <div className="media-picker">
                 <StatBar disabled={c.selected} stats={statProps} />
               </div>
-            </DataCard>
-          </Col>
+            </Col>
+          </div>
         );
       })
     );

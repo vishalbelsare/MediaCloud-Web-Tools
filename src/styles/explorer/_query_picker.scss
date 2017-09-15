@@ -43,6 +43,9 @@
       margin-top: 40px;
       font-size: 20px;
       color: $material-grey600;
+      a {
+        color: $material-grey600;
+      }
     }
 
     .query-picker-editable-name {

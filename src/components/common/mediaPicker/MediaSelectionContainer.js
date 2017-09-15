@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
 import { Grid, Row } from 'react-flexbox-grid/lib';
-import { selectMediaPickerQueryArgs } from '../../../actions/systemActions';
+import { selectMediaPickerQueryArgs, toggleMedia, selectMedia } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
@@ -23,8 +23,16 @@ class MediaSelectionContainer extends React.Component {
     updateMediaSelection(type);
   };
   render() {
-    const { selectedMediaQueryType, selectedMedia } = this.props;
+    const { selectedMediaQueryType, selectedMedia, handleToggleAndSelectMedia } = this.props;
     const { formatMessage } = this.props.intl;
+    const content =
+      selectedMedia.map((obj) => {
+        const handleDelete = () => {
+          handleToggleAndSelectMedia(obj);
+        };
+        return (<Grid><Row><SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} onDelete={handleDelete} /></Row></Grid>);
+      });
+
     return (
       <div className="select-media-menu">
         <Menu>
@@ -51,13 +59,7 @@ class MediaSelectionContainer extends React.Component {
             onTouchTap={() => this.updateMediaType(STARRED)}
           />
         </Menu>
-        <Grid>
-          {selectedMedia.map(obj => (
-            <Row>
-              <SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} />
-            </Row>
-          ))}
-        </Grid>
+        {content}
       </div>
     );
   }
@@ -70,6 +72,7 @@ MediaSelectionContainer.propTypes = {
   selectedMedia: React.PropTypes.array,
   selectedMediaQueryType: React.PropTypes.number,
   updateMediaSelection: React.PropTypes.func.isRequired,
+  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -82,6 +85,12 @@ const mapDispatchToProps = dispatch => ({
   updateMediaSelection: (type) => {
     if (type >= 0) {
       dispatch(selectMediaPickerQueryArgs({ type }));
+    }
+  },
+  handleToggleAndSelectMedia: (selectedMedia) => {
+    if (selectedMedia) {
+      dispatch(toggleMedia(selectedMedia));
+      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });
