@@ -11,9 +11,9 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { getBrandLightColor } from '../../../styles/colors';
+import { getBrandDarkColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
@@ -67,16 +67,24 @@ class GeoPreview extends React.Component {
   render() {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
-    let geoChartSection = null;
-    if (results && results.length > 0 && queries && queries.length > 0) {
-      geoChartSection = (
-        results.map((geoSet, idx) =>
-            (<GridTile key={idx}>
-              <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-              <GeoChart data={geoSet} countryMaxColorScale={getBrandLightColor()} />
-            </GridTile>
-            )
-          )
+    let content = null;
+    if (results.length === 1) {
+      content = <GeoChart data={results[0]} countryMaxColorScale={getBrandDarkColor()} hideLegend />;
+    } else {
+      const mapTiles = results.map((geoSet, idx) =>
+        (<GridTile key={idx}>
+          <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
+          <GeoChart data={geoSet} countryMaxColorScale={getBrandDarkColor()} hideLegend />
+        </GridTile>
+        )
+      );
+      content = (
+        <GridList
+          className="geo-mini-cards"
+          cellHeight={400}
+        >
+          {mapTiles}
+        </GridList>
       );
     }
     return (
@@ -95,12 +103,7 @@ class GeoPreview extends React.Component {
           </ActionMenu>
         </div>
         <h2><FormattedMessage {...localMessages.title} /></h2>
-        <GridList
-          className="geo-mini-cards"
-          cellHeight={400}
-        >
-          {geoChartSection}
-        </GridList>
+        {content}
       </DataCard>
     );
   }
@@ -146,8 +149,8 @@ const mapDispatchToProps = (dispatch, state) => ({
           end_date: q.endDate,
           q: q.q,
           index: q.index,
-          sources: [DEFAULT_SOURCES],
-          collections: [DEFAULT_COLLECTION],
+          sources: q.sources.map(s => s.id),
+          collections: q.collections.map(c => c.id),
         };
         return dispatch(fetchQueryGeo(infoToQuery));
       });

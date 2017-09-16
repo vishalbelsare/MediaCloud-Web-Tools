@@ -10,7 +10,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
 
@@ -155,8 +155,8 @@ const mapDispatchToProps = (dispatch, state) => ({
           end_date: q.endDate,
           q: q.q,
           index: q.index,
-          sources: [DEFAULT_SOURCES],
-          collections: [DEFAULT_COLLECTION],
+          sources: q.sources.map(s => s.id),
+          collections: q.collections.map(c => c.id),
         };
         return dispatch(fetchQueryStoryCount(infoToQuery));
       });

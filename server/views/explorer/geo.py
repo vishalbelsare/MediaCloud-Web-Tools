@@ -30,14 +30,9 @@ def api_explorer_demo_geotag_count():
 def cached_geotags(query):
     return mc.sentenceFieldCount('*', query, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)
 
-def geotag_count():
-    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
+def geotag_count():
     search_id = int(request.args['search_id']) if 'search_id' in request.args else None
-    index = int(request.args['index']) if 'index' in request.args else None
-    
     if search_id not in [None, -1]:
         SAMPLE_SEARCHES = load_sample_searches()
         current_search = SAMPLE_SEARCHES[search_id]['queries']
@@ -53,11 +48,11 @@ def geotag_count():
     res = cached_geotags(solr_query)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:
-        geonamesId = int(r['tag'].split('_')[1])
-        if geonamesId not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():   # only include countries
+        geonames_id = int(r['tag'].split('_')[1])
+        if geonames_id not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():   # only include countries
             continue
-        r['geonamesId'] = geonamesId    # TODO: move this to JS?
-        r['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[geonamesId]
+        r['geonamesId'] = geonames_id    # TODO: move this to JS?
+        r['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[geonames_id]
         r['count'] = (float(r['count'])/float(tag_utl.GEO_SAMPLE_SIZE))    # WTF: why is the API returning this as a string and not a number?
         for hq in HIGHCHARTS_KEYS:
             if hq['properties']['iso-a3'] == r['alpha3']:

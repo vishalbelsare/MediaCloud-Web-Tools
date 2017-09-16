@@ -19,7 +19,7 @@ const localMessages = {
 class GeoChart extends React.Component {
 
   getConfig() {
-    const { data, countryMinColorScale, countryMaxColorScale, hoverColor } = this.props;
+    const { data, countryMinColorScale, countryMaxColorScale, hoverColor, hideLegend } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const options = {
       countryMinColorScale,
@@ -34,6 +34,9 @@ class GeoChart extends React.Component {
     }
     if (hoverColor === undefined) {
       options.hoverColor = '#BADA55';
+    }
+    if (hideLegend === undefined) {
+      options.hideLegend = false;
     }
     const config = {
       // Initiate the chart
@@ -88,7 +91,9 @@ class GeoChart extends React.Component {
           format: '{point.name} {point.count} ',
         },
       }],
-      legend: {
+    };
+    if (!options.hideLegend) {
+      config.legend = {
         layout: 'vertical',
         valueDecimals: 0,
         backgroundColor: 'rgba(255,255,255,0.9)',
@@ -103,8 +108,12 @@ class GeoChart extends React.Component {
         align: 'left',
         verticalAlign: 'bottom',
         floating: true,
-      },
-    };
+      };
+    } else {
+      config.legend = {
+        enabled: false,
+      };
+    }
     return config;
   }
 
@@ -145,6 +154,7 @@ GeoChart.propTypes = {
   hoverColor: PropTypes.string,
   onCountryClick: PropTypes.func,
   intl: PropTypes.object.isRequired,
+  hideLegend: PropTypes.bool,
 };
 
 export default injectIntl(GeoChart);

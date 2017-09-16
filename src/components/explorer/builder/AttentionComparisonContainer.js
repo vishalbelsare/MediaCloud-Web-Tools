@@ -13,7 +13,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
-import { DEFAULT_SOURCES, DEFAULT_COLLECTION, queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -163,8 +163,8 @@ const mapDispatchToProps = (dispatch, state) => ({
           end_date: q.endDate,
           q: q.q,
           index: q.index,
-          sources: [DEFAULT_SOURCES],
-          collections: [DEFAULT_COLLECTION],
+          sources: q.sources.map(s => s.id),
+          collections: q.collections.map(c => c.id),
         };
         return dispatch(fetchQuerySentenceCounts(infoToQuery));
       });

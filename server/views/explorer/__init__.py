@@ -130,15 +130,14 @@ def parse_query_with_keywords(args) :
         current_query = args['q']
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = args['sources[]'] if 'sources[]' in args else []
-        tags_ids = args['collections[]'] if 'collections[]' in args else [9139487]
+        media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
+        tags_ids = args['collections'].split(',') if 'collections' in args and len(args['collections']) > 0 else [9139487]
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-            start_date= start_date,
-            end_date=end_date,
-            media_ids=media_ids,
-            tags_ids=tags_ids)
-
+                                                start_date=start_date,
+                                                end_date=end_date,
+                                                media_ids=media_ids,
+                                                tags_ids=tags_ids)
 
     # otherwise, default
     except Exception as e:
