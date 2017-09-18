@@ -28,7 +28,6 @@ const MediaPickerPreviewList = (props) => {
       items.map((c) => {
         const isDisabled = c.selected;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>); // TODO we need to open a new window
-        // const exploreButton = isDisabled ? null : (<ExploreButton linkTo={linkInfo(c)} />);
         const ActionButton = (isDisabled) ? DeleteButton : AddButton;
         const actionMsg = isDisabled ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1);
         const collProps = [
@@ -51,8 +50,7 @@ const MediaPickerPreviewList = (props) => {
           { message: localMessages.stat3,
             content: (
               <AddButton // need icon also
-                label={c.selected ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)} // the toggle has to be implemented
-                backgroundColor={c.selected ? '#ccc' : '#fff'}
+                label={c.selected ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)}
                 onClick={() => onSelectMedia(c)}
               />
             ),

@@ -18,6 +18,7 @@ class SelectMediaForm extends React.Component {
     switch (evt.key) {
       case 'Enter':
         onSearch({ mediaKeyword: evt.target.value });
+        evt.preventDefault();
         break;
       default: break;
     }
