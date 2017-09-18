@@ -15,6 +15,8 @@ const localMessages = {
   stat3: { id: 'mediaPicker.coll.stat3', defaultMessage: 'Select' },
   actionMessage1: { id: 'mediaPicker.action1', defaultMessage: 'Add Collection' },
   actionMessage2: { id: 'mediaPicker.action2', defaultMessage: 'Remove Collection' },
+  sourceActionMessage1: { id: 'mediaPicker.action1.source', defaultMessage: 'Add Source' },
+  sourceActionMessage2: { id: 'mediaPicker.action2.source', defaultMessage: 'Remove Source' },
 };
 
 const MediaPickerPreviewList = (props) => {
@@ -29,7 +31,8 @@ const MediaPickerPreviewList = (props) => {
         const isDisabled = c.selected;
         const title = isDisabled ? (linkDisplay(c)) : (<Link to={linkInfo(c)}>{linkDisplay(c)}</Link>); // TODO we need to open a new window
         const ActionButton = (isDisabled) ? DeleteButton : AddButton;
-        const actionMsg = isDisabled ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1);
+        const collActionMsg = isDisabled ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1);
+        const sourceActionMsg = isDisabled ? formatMessage(localMessages.sourceActionMessage2) : formatMessage(localMessages.sourceActionMessage1);
         const collProps = [
           { message: localMessages.stat1, data: humanReadableNumber(c.story_count, 1, formatNumber) },
           { message: localMessages.stat2, data: (c.media_count === 100) ? `${c.media_count}+` : c.media_count },
@@ -37,10 +40,10 @@ const MediaPickerPreviewList = (props) => {
             content: (
               <div className="media-action">
                 <ActionButton
-                  label={actionMsg}
+                  label={collActionMsg}
                   onClick={() => onSelectMedia(c)}
                 />
-                <small>{actionMsg}</small>
+                <small>{collActionMsg}</small>
               </div>
             ),
           },
@@ -49,10 +52,13 @@ const MediaPickerPreviewList = (props) => {
           { message: localMessages.stat1, data: humanReadableNumber(c.story_count, 1, formatNumber) },
           { message: localMessages.stat3,
             content: (
-              <AddButton // need icon also
-                label={c.selected ? formatMessage(localMessages.actionMessage2) : formatMessage(localMessages.actionMessage1)}
-                onClick={() => onSelectMedia(c)}
-              />
+              <div className="media-action">
+                <ActionButton
+                  label={sourceActionMsg}
+                  onClick={() => onSelectMedia(c)}
+                />
+                <small>{sourceActionMsg}</small>
+              </div>
             ),
           },
         ];
@@ -67,8 +73,8 @@ const MediaPickerPreviewList = (props) => {
               <div className="media-stats">
                 <Row>
                   {statProps.map((stat, idx) => (
-                    <Col lg={4} style={{ paddingLeft: 0, paddingRight: 0 }}>
-                      <div className={`stat-wrapper ${idx === 0 ? 'first' : ''}`} key={idx}>
+                    <Col lg={4} style={{ paddingLeft: 0, paddingRight: 0 }} key={idx}>
+                      <div className={`stat-wrapper ${idx === 0 ? 'first' : ''}`}>
                         <Stat {...stat} />
                       </div>
                     </Col>

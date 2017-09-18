@@ -31,17 +31,17 @@ class SelectMediaResultsContainer extends React.Component {
   }
 
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword } = this.props;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, handleMediaConcurrency, handleToggleAndSelectMedia } = this.props;
     let content = null;
     const whichMedia = {};
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
-    whichMedia.FetchStatus = null;
+    whichMedia.fetchStatus = null;
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
-        content = <SelectMediaCollectionResultsContainer keyword={whichMedia.storedKeyword} />;
+        content = <SelectMediaCollectionResultsContainer keyword={whichMedia.storedKeyword} handleMediaConcurrency={handleMediaConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
       case PICK_SOURCE:
-        content = <SelectMediaSourceResultsContainer keyword={whichMedia.storedKeyword} />;
+        content = <SelectMediaSourceResultsContainer keyword={whichMedia.storedKeyword} handleMediaConcurrency={handleMediaConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
       case ADVANCED:
         break;

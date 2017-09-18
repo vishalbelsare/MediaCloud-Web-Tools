@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
+import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
 import MediaPickerPreviewList from '../MediaPickerPreviewList';
 import messages from '../../../resources/messages';
 import * as fetchConstants from '../../../lib/fetchConstants';
@@ -62,7 +62,7 @@ class SelectMediaCollectionResultsContainer extends React.Component {
   }
 
   render() {
-    const { timestamp, selectedMediaQueryKeyword, collectionResults, featured } = this.props;
+    const { selectedMediaQueryKeyword, collectionResults, featured } = this.props;
     let content = null;
     let whichMedia = {};
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
@@ -83,7 +83,6 @@ class SelectMediaCollectionResultsContainer extends React.Component {
       content = (
         <MediaPickerPreviewList
           items={whichMedia}
-          timestamp={timestamp}
           classStyle="browse-items"
           itemType="media"
           linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
@@ -105,7 +104,6 @@ SelectMediaCollectionResultsContainer.propTypes = {
   selectedMediaQueryKeyword: React.PropTypes.string,
   selectedMediaQueryType: React.PropTypes.number,
   featured: React.PropTypes.object,
-  timestamp: React.PropTypes.string,
   collectionResults: React.PropTypes.object,
   selectedMedia: React.PropTypes.array,
 };
@@ -116,7 +114,6 @@ const mapStateToProps = state => ({
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
-  timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
 });
 
@@ -125,17 +122,6 @@ const mapDispatchToProps = dispatch => ({
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
       dispatch(fetchMediaPickerCollections(values));
-    }
-  },
-  handleMediaConcurrency: (selectedMedia) => {
-    if (selectedMedia) {
-      dispatch(toggleMedia(selectedMedia));
-    }
-  },
-  handleToggleAndSelectMedia: (selectedMedia) => {
-    if (selectedMedia) {
-      dispatch(toggleMedia(selectedMedia));
-      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });
