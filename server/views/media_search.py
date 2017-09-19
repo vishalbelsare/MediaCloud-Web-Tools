@@ -28,12 +28,12 @@ def _matching_collections_by_set(search_str, public_only):
                    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
     pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
     matching_tags_in_collections = pool.map(_collection_search_worker, search_jobs)
-    pool.terminate()
+    pool.close()
     return matching_tags_in_collections
 
 def _matching_sources_by_set(search_str, public_only):
     search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str} for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS ] # provide for tags_id?
     pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
     matching_sources = pool.map(_source_search_worker, search_jobs)
-    pool.terminate()
+    pool.close()
     return matching_sources

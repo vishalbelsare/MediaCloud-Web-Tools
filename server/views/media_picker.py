@@ -50,7 +50,7 @@ def api_mediapicker_source_search():
     if len(flat_list_of_sources) > 0:
         pool = Pool(processes=STORY_COUNT_POOL_SIZE)
         set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
-        pool.terminate()  # extra s
+        pool.close()
 
     return jsonify({'list': set_of_queried_sources})
 
@@ -84,7 +84,7 @@ def api_mediapicker_collection_search():
     if len(flat_list_of_collections) > 0:
         pool = Pool(processes=STORY_COUNT_POOL_SIZE)
         set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
-        pool.terminate()  # extra s
+        pool.close()
 
     return jsonify({'list': set_of_queried_collections})
 
@@ -106,5 +106,5 @@ def _cached_featured_collection_list():
         featured_collections.append(coll)
     pool = Pool(processes=STORY_COUNT_POOL_SIZE)
     set_of_queried_collections = pool.map(collection_details_worker, featured_collections)
-    pool.terminate()  # extra safety
+    pool.close()
     return set_of_queried_collections
