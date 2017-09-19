@@ -3,6 +3,7 @@ import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const sourceQueryResults = createAsyncReducer({
   initialState: {
+    args: { type: 1, mediaKeyword: null },
     list: [],
   },
   action: FETCH_MEDIAPICKER_SOURCE_SEARCH,
@@ -27,7 +28,7 @@ const sourceQueryResults = createAsyncReducer({
       return c;
     }) : null,
   }),
-  [RESET_MEDIAPICKER_SOURCE_SEARCH]: () => ({ list: [] }),
+  [RESET_MEDIAPICKER_SOURCE_SEARCH]: () => ({ args: { type: 1, mediaKeyword: null }, list: [] }),
 });
 
 export default sourceQueryResults;

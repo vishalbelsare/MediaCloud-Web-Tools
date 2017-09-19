@@ -1,4 +1,4 @@
-import { SELECT_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
+import { SELECT_MEDIAPICKER_QUERY_ARGS, RESET_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
 // import { PICK_COLLECTION, PICK_SOURCE, ADVANCED  } from '../../../../lib/explorerUtil';
 
 const INITIAL_STATE = null;
@@ -12,6 +12,8 @@ function selectMediaQuery(state = INITIAL_STATE, action) {
         return { args };
       }
       return updatedState;
+    case RESET_MEDIAPICKER_QUERY_ARGS:
+      return { type: 0, mediaKeyword: null };
     default:
       return state;
   }
