@@ -55,6 +55,8 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updateObject = selected;
     const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
+
+    if (newInfo.target && newInfo.target.name === 'mediaKeyword') return; // ignore searchform in mediaPicker... TODO weird special casing
     // TODO I think we should simplify these two paths... one from the dialog, one from the form...
     if (newInfo.length) { // assume it's an array, update from media array
       const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);

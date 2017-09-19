@@ -28,7 +28,7 @@ class SelectMediaForm extends React.Component {
     const { initValues } = this.props;
 
     const cleanedInitialValues = initValues ? { ...initValues } : {};
-    if (cleanedInitialValues.mediaKeyword === undefined) {
+    if (cleanedInitialValues.mediaKeyword === undefined || cleanedInitialValues.mediaKeyword === null) {
       cleanedInitialValues.mediaKeyword = '';
     }
     return (
