@@ -10,6 +10,7 @@ import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 
 const localMessages = {
   basics: { id: 'topic.form.section.basics', defaultMessage: 'Basics' },
@@ -119,7 +120,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={localMessages.seedQuery}
           />
-          <small><FormattedMessage {...localMessages.seedQueryDescription} /></small>
+          <small><b><QueryHelpDialog /></b> <FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}
         </Col>
       </Row>
