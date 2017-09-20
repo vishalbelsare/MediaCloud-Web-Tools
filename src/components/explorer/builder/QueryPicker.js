@@ -73,10 +73,6 @@ class QueryPicker extends React.Component {
     updateObject[fieldName] = fieldValue; // don't overwrite all fields b/c of source and collections...
     updateCurrentQuery(updateObject);
   }
-
-  handleOpenStub() {
-    return this.props;
-  }
   isDeletable() {
     const { queries } = this.props;
     const unDeletedQueries = queries.filter(q => !q.deleted);
@@ -195,7 +191,6 @@ class QueryPicker extends React.Component {
             buttonLabel={formatMessage(localMessages.querySearch)}
             onSave={handleSearch}
             onChange={event => this.handleFormChange(event, selected)}
-            handleOpenHelp={this.handleOpenStub}
             handleLoadSearch={loadUserSearches}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
@@ -234,7 +229,6 @@ QueryPicker.propTypes = {
   loadUserSearches: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
-  handleOpenStub: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
