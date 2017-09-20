@@ -14,12 +14,12 @@ export const fetchMediaPickerFeaturedCollections = createAsyncAction(FETCH_FEATU
 export const FETCH_MEDIAPICKER_COLLECTION_SEARCH = 'FETCH_MEDIAPICKER_COLLECTION_SEARCH';
 export const fetchMediaPickerCollections = createAsyncAction(FETCH_MEDIAPICKER_COLLECTION_SEARCH, api.fetchMediaPickerCollections, params => params);
 export const RESET_MEDIAPICKER_COLLECTION_SEARCH = 'RESET_MEDIAPICKER_COLLECTION_SEARCH';
-export const resetMediaPickerCollections = createAsyncAction(RESET_MEDIAPICKER_COLLECTION_SEARCH, params => params);
+export const resetMediaPickerCollections = createAction(RESET_MEDIAPICKER_COLLECTION_SEARCH, params => params);
 
 export const FETCH_MEDIAPICKER_SOURCE_SEARCH = 'FETCH_MEDIAPICKER_SOURCE_SEARCH';
 export const fetchMediaPickerSources = createAsyncAction(FETCH_MEDIAPICKER_SOURCE_SEARCH, api.fetchMediaPickerSources, params => params);
 export const RESET_MEDIAPICKER_SOURCE_SEARCH = 'RESET_MEDIAPICKER_SOURCE_SEARCH';
-export const resetMediaPickerSources = createAsyncAction(RESET_MEDIAPICKER_SOURCE_SEARCH, params => params);
+export const resetMediaPickerSources = createAction(RESET_MEDIAPICKER_SOURCE_SEARCH, params => params);
 
 export const MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA = 'MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA';
 export const initializePreviouslySelectedMedia = createAction(MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA, media => media);

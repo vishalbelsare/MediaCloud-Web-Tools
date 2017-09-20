@@ -41,7 +41,6 @@ class SelectMediaDialog extends React.Component {
       }
     }
   }
-
   handleModifyClick = (evt) => {
     if (evt) {
       evt.preventDefault();

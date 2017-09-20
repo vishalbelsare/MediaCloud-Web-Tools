@@ -1,11 +1,12 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { selectMediaPickerQueryArgs, fetchMediaPickerCollections, resetMediaPickerCollections } from '../../../actions/systemActions';
+import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
 import MediaPickerWrapper from './MediaPickerWrapper';
 import messages from '../../../resources/messages';
-import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
+import SelectMediaForm from './SelectMediaForm';
+import SelectMediaFeaturedAsyncContainer from './SelectMediaFeaturedAsyncContainer';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -21,30 +22,32 @@ class SelectMediaCollectionResultsContainer extends React.Component {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType, mediaKeyword: nextProps.selectedMediaQueryKeyword });
     }
   }
-  componentWillUnmount() {
-    resetMediaPickerCollections();
-  }
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryKeyword, collectionResults, featured, handleToggleAndSelectMedia } = this.props;
+    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia } = this.props;
     let whichMedia = [];
+    let content = null;
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
-    whichMedia.FetchStatus = null;
+    whichMedia.fetchStatus = null;
+    whichMedia.type = 'collections';
     if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
       whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
       whichMedia.storedKeyword = collectionResults.args;
       whichMedia.fetchStatus = collectionResults.fetchStatus;
+      content = <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     } else {
-      whichMedia = featured.list;
-      whichMedia.fetchStatus = featured.fetchStatus;
+      content = <SelectMediaFeaturedAsyncContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
-    whichMedia.type = 'collections';
-
-    return <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+    return (
+      <div>
+        <SelectMediaForm initValues={whichMedia.storedKeyword} onSearch={val => this.updateMediaQuery(val)} />
+        {content}
+      </div>
+    );
   }
 }
 
@@ -58,10 +61,9 @@ SelectMediaCollectionResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.collectionQueryResults.fetchStatus === (fetchConstants.FETCH_SUCCEEDED || state.system.mediaPicker.featured.fetchStatus === fetchConstants.FETCH_SUCCEEDED) ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  fetchStatus: state.system.mediaPicker.collectionQueryResults.fetchStatus,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
-  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
 });
 
