@@ -36,6 +36,7 @@ class AppButton extends React.Component {
       ...this.props,
       className: `app-button ${this.state.hoverClass} ${customClassName}`,
     };
+    delete buttonProps.intl;
     // automatically localize the label if it is a message object
     if ((buttonProps.label) && (typeof buttonProps.label === 'object')) {
       buttonProps.label = formatMessage(buttonProps.label);
