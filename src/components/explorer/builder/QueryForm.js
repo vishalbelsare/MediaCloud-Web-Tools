@@ -49,8 +49,8 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, isEditable, selected, buttonLabel, handleLoadSearch, handleSaveSearch, submitting, handleSubmit, onSave, onChange, renderTextField, renderTextFieldWithFocus } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { initialValues, isEditable, selected, buttonLabel, /* handleLoadSearch, handleSaveSearch, */
+      submitting, handleSubmit, onSave, onChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
 
     if (cleanedInitialValues.disabled === undefined) {
@@ -151,7 +151,8 @@ class QueryForm extends React.Component {
         </div>
         <Grid>
           <Row>
-            <Col lg={6} />
+            <Col lg={11} />
+            {/*
             <Col lg={2}>
               <AppButton
                 style={{ marginTop: 30 }}
@@ -170,6 +171,7 @@ class QueryForm extends React.Component {
                 secondary
               />
             </Col>
+            */}
             <Col lg={1}>
               <AppButton
                 style={{ marginTop: 30 }}
