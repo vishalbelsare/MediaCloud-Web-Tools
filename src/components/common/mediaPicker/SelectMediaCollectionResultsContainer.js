@@ -17,11 +17,6 @@ const localMessages = {
 
 
 class SelectMediaCollectionResultsContainer extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedMediaQueryKeyword !== this.props.selectedMediaQueryKeyword) {
-      this.updateMediaQuery({ type: nextProps.selectedMediaQueryType, mediaKeyword: nextProps.selectedMediaQueryKeyword });
-    }
-  }
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
