@@ -7,6 +7,7 @@ import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import MediaPickerWrapper from './MediaPickerWrapper';
 import SelectMediaForm from './SelectMediaForm';
+import LoadingSpinner from '../LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -24,30 +25,34 @@ class SelectMediaResultsContainer extends React.Component {
   }
 
   render() {
-    const { selectedMediaQueryKeyword, sourceResults } = this.props;
+    const { fetchStatus, selectedMediaQueryKeyword, sourceResults, handleToggleAndSelectMedia } = this.props;
     let whichMedia = [];
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
     whichMedia.fetchStatus = null;
-
+    let content = null;
     if (selectedMediaQueryKeyword === null || selectedMediaQueryKeyword === undefined) {
-      return <div>No results</div>;
+      content = 'no results';
+    } else if (fetchStatus !== fetchConstants.FETCH_SUCCEEDED) {
+      content = <LoadingSpinner />;
     } else if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
       whichMedia = sourceResults.list;
       whichMedia.storedKeyword = sourceResults.args;
       whichMedia.fetchStatus = sourceResults.fetchStatus;
       whichMedia.type = 'sources';
+      content = <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
 
     return (
       <div>
         <SelectMediaForm initValues={whichMedia.storedKeyword} onSearch={val => this.updateMediaQuery(val)} />
-        <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={this.handleToggleAndSelectMedia} />;
+        {content}
       </div>
     );
   }
 }
 
 SelectMediaResultsContainer.propTypes = {
+  fetchStatus: React.PropTypes.string,
   handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
   updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,
