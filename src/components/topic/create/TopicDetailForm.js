@@ -26,6 +26,7 @@ const localMessages = {
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
+  logogram: { id: 'topic.form.detail.logogram', defaultMessage: 'Content in a Logographic Language? (ie. Chinese or Japanese Kanji?)' },
   crimsonHexagon: { id: 'topic.form.detail.crimsonHexagon', defaultMessage: 'Crimson Hexagon Id' },
   crimsonHexagonHelp: { id: 'topic.form.detail.crimsonHexagon.help', defaultMessage: 'If you have set up a Crimson Hexagon monitor on our associated account, enter it\'s numeric ID here and we will automatically pull in all the stories linked to by tweets in your monitor.' },
   maxIterations: { id: 'topic.form.detail.maxIterations', defaultMessage: 'Max Spider Iterations' },
@@ -100,12 +101,22 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={8}>
           <Field
             name="is_public"
             component={renderCheckbox}
             fullWidth
             label={formatMessage(localMessages.public)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={8}>
+          <Field
+            name="is_logogram"
+            component={renderCheckbox}
+            fullWidth
+            label={formatMessage(localMessages.logogram)}
           />
         </Col>
       </Row>

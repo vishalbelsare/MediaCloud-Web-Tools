@@ -92,6 +92,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   reallyHandleSave: (values, topicInfo) => {
     const infoToSave = { ...values };   // clone it so we can edit as needed
     infoToSave.is_public = infoToSave.is_public ? 1 : 0;
+    infoToSave.is_logogram = infoToSave.is_logogram ? 1 : 0;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
       infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
