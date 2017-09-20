@@ -239,6 +239,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             default:
               // don't alert user about anything
           }
+        } else if (snapshots.length > 1) {
+          // for some reason the second snapshot isn't showing up in the jobs list
+          const latestSnapshot = snapshots[0];
+          if (!snapshotIsUsable(latestSnapshot)) {
+            dispatch(addNotice({
+              level: LEVEL_INFO,
+              message: ownProps.intl.formatMessage(localMessages.snapshotImporting),
+            }));
+          }
         }
       });
   },

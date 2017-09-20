@@ -85,7 +85,7 @@ def api_topics_preview_word_count():
 
 @app.route('/api/topics/create', methods=['PUT'])
 @flask_login.login_required
-@form_fields_required('name', 'description', 'solr_seed_query', 'start_date','end_date')
+@form_fields_required('name', 'description', 'solr_seed_query', 'start_date', 'end_date')
 @api_error_handler
 def topic_create():
     user_mc = user_admin_mediacloud_client()
@@ -97,6 +97,7 @@ def topic_create():
 
     optional_args = {
         'is_public': request.form['is_public'] if 'is_public' in request.form else None,
+        'is_logogram': request.form['is_logogram'] if 'is_logogram' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None,
