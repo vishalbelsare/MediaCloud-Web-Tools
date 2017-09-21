@@ -25,22 +25,38 @@ const MAX_COLORS = 20;
 
 class LoggedInQueryContainer extends React.Component {
   componentWillMount() {
-    const { user, selected } = this.props;
-    if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-      if (!selected) {
-        this.checkPropsAndDispatch(this.props);
-      }
-    }
+    this.setQueryFromUrl(this.props.location.pathname);
+    /* if (!selected) {
+      this.checkPropsAndDispatch(this.props);
+    } */
   }
   componentWillReceiveProps(nextProps) {
-    this.checkPropsAndDispatch(nextProps);
+    const { location } = this.props;
+    // if URL has been updated, reparse and store
+    if (nextProps.location.pathname !== location.pathname) {
+      this.setQueryFromUrl(nextProps.location.pathname);
+    }
+
   }
   componentWillUnmount() {
     const { resetExplorerData } = this.props;
     resetExplorerData();
   }
+  setQueryFromUrl(url) {
+    const { addAppNotice, saveQueriesFromParsedUrl } = this.props;
+    const { formatMessage } = this.props.intl;
+    const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
+    let parsedQueryFromUrl;
+    try {
+      parsedQueryFromUrl = this.parseJSONParams(queryAsJsonStr);
+    } catch (e) {
+      addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+      return;
+    }
+    saveQueriesFromParsedUrl(parsedQueryFromUrl);
+  }
   checkPropsAndDispatch(whichProps) {
-    const { samples, selected, loadSampleSearches, selectSearchQueriesById, setSelectedQuery, selectQueriesByURLParams, addAppNotice } = this.props;
+    const { samples, selected, loadSampleSearches, selectSearchQueriesById, setSelectedQuery, saveQueriesFromParsedUrl, addAppNotice } = this.props;
     const { formatMessage } = this.props.intl;
     const url = whichProps.location.pathname;
     let currentIndexOrQuery = url.slice(url.lastIndexOf('/') + 1, url.length);
@@ -62,7 +78,7 @@ class LoggedInQueryContainer extends React.Component {
           (!selected && !whichProps.selected &&
           (!whichProps.queries || whichProps.queries.length === 0 ||
           whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_INVALID))) {
-          selectQueriesByURLParams(parsedObjectArray);
+          saveQueriesFromParsedUrl(parsedObjectArray);
         } else if (!selected && !whichProps.selected && whichProps.collectionLookupFetchStatus === fetchConstants.FETCH_SUCCEEDED) {
           setSelectedQuery(whichProps.queries[0]); // once we have the lookups,
         }
@@ -118,7 +134,7 @@ class LoggedInQueryContainer extends React.Component {
         if (selected.sources.length === 0 || (selected.sources.length > 0 && selected.sources[0].url !== undefined)) {
           content = (
             <div>
-              <QueryBuilderContainer isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
+              <QueryBuilderContainer isEditable={isEditable} onSearch={handleSearch} />
               <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
             </div>
           );
@@ -150,13 +166,11 @@ LoggedInQueryContainer.propTypes = {
   samples: React.PropTypes.array,
   query: React.PropTypes.object,
   handleSearch: React.PropTypes.func.isRequired,
-  setSampleSearch: React.PropTypes.func.isRequired,
   setSelectedQuery: React.PropTypes.func.isRequired,
   resetExplorerData: React.PropTypes.func.isRequired,
   selectSearchQueriesById: React.PropTypes.func.isRequired,
-  selectQueriesByURLParams: React.PropTypes.func.isRequired,
+  saveQueriesFromParsedUrl: React.PropTypes.func.isRequired,
   loadSampleSearches: React.PropTypes.func.isRequired,
-  fetchSamples: React.PropTypes.func.isRequired,
   urlQueryString: React.PropTypes.string,
   lastSearchTime: React.PropTypes.number,
 };
@@ -164,9 +178,9 @@ LoggedInQueryContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   // queryFetchStatus: state.explorer.queries.fetchStatus,
   selected: state.explorer.selected,
-  selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
-  collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
+  selectedQuery: state.explorer.selected,
+  queries: state.explorer.queries.queries,
+  collectionResults: state.explorer.queries.collections,
   collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
   urlQueryString: ownProps.location.pathname,
   lastSearchTime: state.explorer.lastSearchTime.time,
@@ -193,27 +207,30 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateQueryList: (queryObj) => {
     dispatch(selectBySearchId(queryObj)); // query obj or search id?
   },
-  handleSearch: (queries) => {
-    const emptyQueryStrings = queries.filter(q => emptyString(q.q));
-    if (emptyQueryStrings.length > 0) {
-      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.queryStringEmpty, { name: emptyQueryStrings[0].label }) }));
-      return;
+  runSearch: (queries) => {
+    if (true) {
+      console.log(queries);
+    } else {
+      const emptyQueryStrings = queries.filter(q => emptyString(q.q));
+      if (emptyQueryStrings.length > 0) {
+        dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.queryStringEmpty, { name: emptyQueryStrings[0].label }) }));
+        return;
+      }
+      const unDeletedQueries = queries.filter(q => !q.deleted);
+      dispatch(resetSelected());
+      dispatch(resetQueries());
+      dispatch(updateTimestampForQueries());
+      const urlParamString = generateQueryParamString(unDeletedQueries);
+      const newLocation = `/queries/search/[${urlParamString}]`;
+      dispatch(push(newLocation));
+      // this should keep the current selection...
     }
-    const unDeletedQueries = queries.filter(q => !q.deleted);
-    dispatch(resetSelected());
-    dispatch(resetQueries());
-    dispatch(updateTimestampForQueries());
-    const urlParamString = generateQueryParamString(unDeletedQueries);
-    const newLocation = `/queries/search/[${urlParamString}]`;
-    dispatch(push(newLocation));
-    // this should keep the current selection...
   },
-  setQueryFromURL: (queryArrayFromURL) => {
+  saveQueriesFromParsedUrl: (queryArrayFromURL) => {
     dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into queries
     // lookup ancillary data eg collection and source info for display purposes in QueryForm
-    queryArrayFromURL.map((q, idx) => {
+    queryArrayFromURL.map((q) => {
       const queryInfo = {
-        index: idx,
         ...q,
       };
       if (q.sources && q.sources.length > 0) {
@@ -236,7 +253,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     });
     // dispatch(selectQuery(queryArrayFromURL[0])); // default select first query
   },
-  setSampleSearch: (searchObj) => {
+  selectSearchQueriesById: (searchObj) => {
     dispatch(selectBySearchId(searchObj)); // select/map search's queries
     searchObj.queries.map((q, idx) => {
       const queryInfo = {
@@ -253,21 +270,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       return 0;
     });
   },
-  fetchSamples: () => {
+  loadSampleSearches: () => {
     dispatch(fetchSampleSearches()); // fetch all searches
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    selectSearchQueriesById: (searchObj) => {
-      dispatchProps.setSampleSearch(searchObj);
-    },
-    selectQueriesByURLParams: (queryArray) => {
-      dispatchProps.setQueryFromURL(queryArray);
-    },
-    loadSampleSearches: (currentIndex) => {
-      dispatchProps.fetchSamples(currentIndex);
+    handleSearch: () => {
+      dispatchProps.runSearch(stateProps.queries);
     },
   });
 }

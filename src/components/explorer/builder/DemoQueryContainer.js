@@ -129,7 +129,7 @@ class DemoQueryBuilderContainer extends React.Component {
         <div>
           <WarningNotice><FormattedHTMLMessage {...localMessages.register} />
           </WarningNotice>
-          <QueryBuilderContainer isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
+          <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch(queries)} />
           <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
         </div>
       );

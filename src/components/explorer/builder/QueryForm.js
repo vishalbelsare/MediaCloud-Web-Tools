@@ -49,14 +49,16 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, isEditable, selected, buttonLabel, /* handleLoadSearch, handleSaveSearch, */
-      submitting, handleSubmit, onSave, onChange, renderTextField, renderTextFieldWithFocus } = this.props;
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, /* handleLoadSearch, handleSaveSearch, */
+      submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
-
     if (cleanedInitialValues.disabled === undefined) {
       cleanedInitialValues.disabled = false;
     }
-
+    cleanedInitialValues.media = [  // merge sources and collections into one list for display with `renderFields`
+      ...initialValues.sources,
+      ...initialValues.collections,
+    ];
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
       if (selected.q === undefined || selected.q === '*') {
@@ -68,14 +70,14 @@ class QueryForm extends React.Component {
     let mediaPicker = null;
     let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
     if (isEditable) {
-      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onMediaChange(selections)} />;
       mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
     }
     if (!selected) { return null; }
     // if we have a ref field, we have intend to set the focus to a particular field - the query field
     // essentially an autofocus for the form
     return (
-      <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
+      <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave)}>
         <div className="query-form-wrapper">
           <Grid>
             <Row>
@@ -103,7 +105,7 @@ class QueryForm extends React.Component {
                   <ColorPicker
                     name="color"
                     color={currentColor}
-                    onChange={onChange}
+                    onChange={onColorChange}
                   />
                 </div>
               </Col>
@@ -117,9 +119,7 @@ class QueryForm extends React.Component {
                     destroyOnUnmount={false}
                     enableReinitialize
                     initialValues={cleanedInitialValues}
-                    selected={cleanedInitialValues}
                     allowRemoval={isEditable}
-                    onChange={onChange}
                   />
                   {mediaPicker}
                 </div>
@@ -178,6 +178,7 @@ class QueryForm extends React.Component {
                 type="submit"
                 label={buttonLabel}
                 disabled={submitting}
+                onClick={onWillSearch}
                 primary
               />
             </Col>
@@ -192,9 +193,11 @@ QueryForm.propTypes = {
   // from parent
   selected: React.PropTypes.object.isRequired,
   onSave: React.PropTypes.func.isRequired,
-  onChange: React.PropTypes.func,
+  onColorChange: React.PropTypes.func,
+  onMediaChange: React.PropTypes.func,
   buttonLabel: React.PropTypes.string.isRequired,
   initialValues: React.PropTypes.object,
+  onWillSearch: React.PropTypes.func,
   // from context
   intl: React.PropTypes.object.isRequired,
   renderTextField: React.PropTypes.func.isRequired,

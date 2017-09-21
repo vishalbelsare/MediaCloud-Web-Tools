@@ -54,17 +54,17 @@ class QueryPickerItem extends React.Component {
     this.setState({ showColor: color });
   };
   handleMenuItemKeyDown = (evt) => {
-    const { handleSearch } = this.props;
+    const { onSearch } = this.props;
     switch (evt.key) {
       case 'Enter':
-        handleSearch();
+        onSearch();
         break;
       default: break;
     }
   };
 
   render() {
-    const { user, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, handleSearch } = this.props;
+    const { user, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, onSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let subT = null;
     let headerInfo = null;
@@ -92,7 +92,7 @@ class QueryPickerItem extends React.Component {
             handleOpen={this.handleOpen}
             isDeletable={isDeletable}
             displayLabel={displayLabel} handleDeleteQuery={handleDeleteQuery}
-            handleSearch={handleSearch} updateQueryProperty={updateQueryProperty}
+            handleSearch={onSearch} updateQueryProperty={updateQueryProperty}
             handleMenuItemKeyDown={this.handleMenuItemKeyDown}
           />
         );
@@ -102,7 +102,7 @@ class QueryPickerItem extends React.Component {
             user={user} query={query}
             handleOpen={this.handleOpen}
             isDeletable={isDeletable} handleDeleteQuery={handleDeleteQuery}
-            handleSearch={handleSearch} updateQueryProperty={updateQueryProperty}
+            handleSearch={onSearch} updateQueryProperty={updateQueryProperty}
             updateDemoQueryLabel={updateDemoQueryLabel}
             isLabelEditable={isLabelEditable} handleMenuItemKeyDown={this.handleMenuItemKeyDown} focusUsernameInputField={focusUsernameInputField}
           />
@@ -182,7 +182,7 @@ QueryPickerItem.propTypes = {
   onQuerySelected: React.PropTypes.func,
   updateQueryProperty: React.PropTypes.func.isRequired,
   updateDemoQueryLabel: React.PropTypes.func.isRequired,
-  handleSearch: React.PropTypes.func.isRequired,
+  onSearch: React.PropTypes.func.isRequired,
   handleDeleteQuery: React.PropTypes.func.isRequired,
   loadEditLabelDialog: React.PropTypes.func,
   // from composition

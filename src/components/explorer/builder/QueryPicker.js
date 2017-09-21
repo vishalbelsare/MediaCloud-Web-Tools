@@ -27,6 +27,9 @@ const formSelector = formValueSelector('queryForm');
 
 const MAX_COLORS = 20;
 
+// TODO: implement this logic from Dashboard
+const autoMagicQueryLabel = query => query.q;
+
 class QueryPicker extends React.Component {
   addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
@@ -51,33 +54,33 @@ class QueryPicker extends React.Component {
     updateCurrentQuery(updatedQuery, propertyName);
   }
 
-  handleFormChange(newInfo, selected) {
-    const { updateCurrentQuery } = this.props;
-    const updateObject = selected;
-    const fieldName = newInfo.target ? newInfo.target.name : newInfo.name;
-
-    if (newInfo.target && newInfo.target.name === 'mediaKeyword') return; // ignore searchform in mediaPicker... TODO weird special casing
-    // TODO I think we should simplify these two paths... one from the dialog, one from the form...
-    if (newInfo.length) { // assume it's an array, update from media array
-      const updatedSources = newInfo.filter(m => m.type === 'source' || m.media_id);
-      const updatedCollections = newInfo.filter(m => m.type === 'collection' || m.tags_id);
-      updateObject.collections = updatedCollections;
-      updateObject.sources = updatedSources;
-    } else if (newInfo.media && newInfo.media.length) { // assume it's an array, update from media array
-      const updatedSources = newInfo.media.filter(m => m.type === 'source' || m.media_id);
-      const updatedCollections = newInfo.media.filter(m => m.type === 'collection' || m.tags_id);
-      updateObject.collections = updatedCollections;
-      updateObject.sources = updatedSources;
-    }
-    const fieldValue = newInfo.target ? newInfo.target.value : newInfo.value;
-    updateObject[fieldName] = fieldValue; // don't overwrite all fields b/c of source and collections...
-    updateCurrentQuery(updateObject);
+  handleColorChange = (newColorInfo) => {
+    // when user changes color we want to change it on all charts right away
+    const { selected, updateCurrentQuery } = this.props;
+    const updatedQuery = {
+      ...selected,
+      color: newColorInfo.value,
+    };
+    updateCurrentQuery(updatedQuery, 'color');
   }
+
+  handleMediaChange = (sourceAndCollections) => {
+    // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
+    const { selected, updateCurrentQuery } = this.props;
+    const updatedQuery = { ...selected };
+    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    updatedQuery.collections = updatedCollections;
+    updatedQuery.sources = updatedSources;
+    updateCurrentQuery(updatedQuery);
+  }
+
   isDeletable() {
     const { queries } = this.props;
     const unDeletedQueries = queries.filter(q => !q.deleted);
     return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
   }
+
   handleDeleteAndSelectQuery(query) {
     const { queries, handleDeleteQuery } = this.props;
     const queryIndex = queries.findIndex(q => q.index !== null && q.index === query.index);
@@ -87,8 +90,34 @@ class QueryPicker extends React.Component {
     }
   }
 
+  saveChangesToSelectedQuery() {
+    const { selected, formQuery, updateCurrentQuery } = this.props;
+    const updatedQuery = {
+      ...selected,
+      ...formQuery,
+      label: autoMagicQueryLabel(formQuery),
+    };
+    updateCurrentQuery(updatedQuery, 'label');
+  }
+
+  handleSelectedQueryChange(nextSelectedQuery, nextSelectedIndex) {
+    const { handleQuerySelected } = this.props;
+    // first update the one we are unmounting
+    this.saveChangesToSelectedQuery();
+    // now mark the new one we want to display (careful! unDeleted has different index)
+    handleQuerySelected(nextSelectedQuery, nextSelectedQuery.index ? nextSelectedQuery.index : nextSelectedIndex);
+  }
+
+  saveAndSearch = () => {
+    // wrap the save handler here because we need to save the changes to the selected query the user
+    // might have made on the form, and then search
+    const { onSearch } = this.props;
+    this.saveChangesToSelectedQuery();
+    onSearch();
+  }
+
   render() {
-    const { selected, queries, user, collectionsResults, sourcesResults, handleQuerySelected, isEditable, handleSearch } = this.props;
+    const { selected, queries, user, collectionsResults, sourcesResults, isEditable } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -110,10 +139,10 @@ class QueryPicker extends React.Component {
             isLabelEditable={isEditable} // if custom, true for either mode, else if logged in no
             isDeletable={() => this.isDeletable()}
             displayLabel={false}
-            onQuerySelected={() => handleQuerySelected(query, query.index ? query.index : index)} // careful! unDeleted has different index
+            onQuerySelected={() => this.handleSelectedQueryChange(query, index)}
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             updateDemoQueryLabel={newValue => this.updateDemoQueryLabel(query, newValue)}
-            handleSearch={handleSearch}
+            onSearch={this.saveAndSearch}
             handleDeleteQuery={() => this.handleDeleteAndSelectQuery(query)}
             // loadDialog={loadQueryEditDialog}
           />
@@ -159,7 +188,7 @@ class QueryPicker extends React.Component {
                   type="submit"
                   label={formatMessage(messages.search)}
                   primary
-                  onTouchTap={handleSearch}
+                  onTouchTap={this.saveAndSearch}
                 />
               </Col>
             </Row>
@@ -189,8 +218,9 @@ class QueryPicker extends React.Component {
             enableReinitialize
             destroyOnUnmount={false}
             buttonLabel={formatMessage(localMessages.querySearch)}
-            onSave={handleSearch}
-            onChange={event => this.handleFormChange(event, selected)}
+            onSave={this.saveAndSearch}
+            onColorChange={this.handleColorChange}
+            onMediaChange={this.handleMediaChange}
             handleLoadSearch={loadUserSearches}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
@@ -222,13 +252,14 @@ QueryPicker.propTypes = {
   handleQuerySelected: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   isDeletable: React.PropTypes.func,
-  handleSearch: React.PropTypes.func.isRequired,
+  onSearch: React.PropTypes.func.isRequired,
   updateCurrentQuery: React.PropTypes.func.isRequired,
   handleDeleteAndSelectQuery: React.PropTypes.func,
   handleDeleteQuery: React.PropTypes.func.isRequired,
   loadUserSearches: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
+  formQuery: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -238,7 +269,7 @@ const mapStateToProps = state => ({
   collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
   fetchStatus: state.explorer.queries.collections.fetchStatus,
   user: state.user,
-  formData: formSelector(state, 'media'),
+  formQuery: formSelector(state, 'q', 'color', 'media', 'startDate', 'endDate'),
 });
 
 

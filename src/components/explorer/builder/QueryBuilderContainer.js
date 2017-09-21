@@ -4,17 +4,17 @@ import { connect } from 'react-redux';
 import QueryPicker from './QueryPicker';
 
 const QueryBuilderContainer = (props) => {
-  const { queries, isEditable, handleSearch } = props;
+  const { isEditable, onSearch } = props;
   return (
     <div className="query-builder">
-      <QueryPicker isEditable={isEditable} handleSearch={() => handleSearch(queries)} />
+      <QueryPicker isEditable={isEditable} onSearch={onSearch} />
     </div>
   );
 };
 
 QueryBuilderContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  handleSearch: React.PropTypes.func.isRequired,
+  onSearch: React.PropTypes.func.isRequired,
   isEditable: React.PropTypes.bool.isRequired,
   queries: React.PropTypes.array,
 };
