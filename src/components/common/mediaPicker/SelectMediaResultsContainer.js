@@ -22,32 +22,57 @@ class SelectMediaResultsContainer extends React.Component {
     this.correlateSelection(this.props);
   }
   componentWillReceiveProps(nextProps) {
+    // const { handleMediaConcurrency } = this.props;
     if (nextProps.selectedMediaQueryType !== this.props.selectedMediaQueryType) {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType });
     }
-    this.correlateSelection(nextProps);
+    if (nextProps.selectedMedia !== this.props.selectedMedia) {
+      this.correlateSelection(nextProps);
+    }
   }
   componentWillUnmount() {
     const { resetComponents } = this.props;
     resetComponents();
   }
+
   correlateSelection(whichProps) {
     let whichList = [];
-    whichList = whichProps.sourceResults;
 
-    // updated what has been selected
+    switch (whichProps.selectedMediaQueryType) {
+      case PICK_COLLECTION:
+        if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
+          whichList = whichProps.collectionResults;
+        } else {
+          whichList = whichProps.featured;
+        }
+        break;
+      case PICK_SOURCE:
+        whichList = whichProps.sourceResults;
+        break;
+      default:
+        break;
+    }
+    // updated what has been un/selected - make sure results are in sync with selectedMedia store
     if (whichProps.selectedMedia && whichProps.selectedMedia.length > 0 &&
-      whichList && whichList !== undefined && whichList.list.length > 0) {
-      // update current list regardless - find matches in selected and issue select_media action
-      whichProps.selectedMedia.map(s => (
-        whichList.list.map((v) => {
+      whichList && whichList !== undefined && whichList.list && whichList.list.length > 0) {
+      // deselect/ turn everything off
+      whichList.list.filter((m) => {
+        if (m.selected) {
+          this.props.toggleConcurrency(m, false);
+        }
+        return m;
+      });
+
+      // select/ turn on what should be
+      whichList.list.map(v => (
+        whichProps.selectedMedia.filter((s) => { // if selected in selectedMedia and and not updated in results yet
           if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
-            this.props.handleMediaConcurrency(s); // update if
-            return true;
+            this.props.toggleConcurrency(v, true); // turn on selection/disable add
+            return null;
           }
-          return false;
-        })),
-      );
+          return v;
+        })
+      ));
     }
     return 0;
   }
@@ -61,7 +86,7 @@ class SelectMediaResultsContainer extends React.Component {
   }
 
   render() {
-    const { selectedMediaQueryType, handleMediaConcurrency, handleToggleAndSelectMedia } = this.props;
+    const { selectedMediaQueryType, toggleConcurrency, handleToggleAndSelectMedia } = this.props;
     let content = null;
     const whichMedia = {};
     whichMedia.fetchStatus = null;
@@ -69,13 +94,13 @@ class SelectMediaResultsContainer extends React.Component {
       case PICK_COLLECTION:
         content = (
           <SelectMediaCollectionResultsContainer
-            handleMediaConcurrency={handleMediaConcurrency}
+            handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         );
         break;
       case PICK_SOURCE:
-        content = <SelectMediaSourceResultsContainer handleMediaConcurrency={handleMediaConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+        content = <SelectMediaSourceResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
       case ADVANCED:
         break;
@@ -92,11 +117,15 @@ class SelectMediaResultsContainer extends React.Component {
 
 SelectMediaResultsContainer.propTypes = {
   intl: React.PropTypes.object.isRequired,
-  handleMediaConcurrency: React.PropTypes.func.isRequired,
+  toggleConcurrency: React.PropTypes.func.isRequired,
   handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
   updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryType: React.PropTypes.number,
   resetComponents: React.PropTypes.func.isRequired,
+  featured: React.PropTypes.object,
+  collectionResults: React.PropTypes.object,
+  sourceResults: React.PropTypes.object,
+  selectedMedia: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
@@ -104,7 +133,8 @@ const mapStateToProps = state => ({
   selectedMedia: state.system.mediaPicker.selectMedia.list,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
-
+  collectionResults: state.system.mediaPicker.collectionQueryResults,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -113,14 +143,14 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectMediaPickerQueryArgs(values));
     }
   },
-  handleMediaConcurrency: (selectedMedia) => {
+  toggleConcurrency: (selectedMedia, onOrOff) => {
     if (selectedMedia) {
-      dispatch(toggleMedia(selectedMedia));
+      dispatch(toggleMedia({ selectedMedia, setSelected: onOrOff })); // for search results selectedMedia >> results
     }
   },
   handleToggleAndSelectMedia: (selectedMedia) => {
     if (selectedMedia) {
-      dispatch(toggleMedia(selectedMedia)); // TODO come back to this.. can we turn this into one call
+      // dispatch(toggleMedia(selectedMedia));
       dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
     }
   },
