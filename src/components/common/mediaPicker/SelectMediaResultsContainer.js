@@ -58,24 +58,17 @@ class SelectMediaResultsContainer extends React.Component {
     // updated what has been un/selected - make sure results are in sync with selectedMedia store
     if (whichProps.selectedMedia && whichProps.selectedMedia.length > 0 &&
       whichList && whichList !== undefined && whichList.list && whichList.list.length > 0) {
-      // deselect/ turn everything off
-      whichList.list.filter((m) => {
-        if (m.selected) {
+      // sync up selectedMedia and result sets.
+      whichList.list.map((m) => {
+        const mediaIndex = whichProps.selectedMedia.findIndex(q => q.id === m.id);
+
+        if (m.selected && mediaIndex < 0) {
           this.props.toggleConcurrency(m, false);
+        } else if (!m.selected && mediaIndex >= 0) {
+          this.props.toggleConcurrency(m, true);
         }
         return m;
       });
-
-      // select/ turn on what should be
-      whichList.list.map(v => (
-        whichProps.selectedMedia.filter((s) => { // if selected in selectedMedia and and not updated in results yet
-          if ((s.tags_id === v.id || s.id === v.id) && !v.selected) {
-            this.props.toggleConcurrency(v, true); // turn on selection/disable add
-            return null;
-          }
-          return v;
-        })
-      ));
     }
     return 0;
   }
