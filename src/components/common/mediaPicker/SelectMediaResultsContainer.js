@@ -26,7 +26,10 @@ class SelectMediaResultsContainer extends React.Component {
     if (nextProps.selectedMediaQueryType !== this.props.selectedMediaQueryType) {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType });
     }
-    if (nextProps.selectedMedia !== this.props.selectedMedia) {
+    if (nextProps.selectedMedia !== this.props.selectedMedia ||
+      nextProps.collectionResults !== this.props.collectionResults ||
+      nextProps.featured !== this.props.featured ||
+      nextProps.sourceResults !== this.props.sourceResults) {
       this.correlateSelection(nextProps);
     }
   }

@@ -28,7 +28,7 @@ export const MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST = 'MEDIA_PICKER_TOGGLE_MEDIA_IN_L
 export const toggleMedia = createAction(MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST, media => media);
 
 export const MEDIA_PICKER_SELECT_MEDIA = 'MEDIA_PICKER_SELECT_MEDIA';
-export const selectMedia = createAsyncAction(MEDIA_PICKER_SELECT_MEDIA, media => media);
+export const selectMedia = createAction(MEDIA_PICKER_SELECT_MEDIA, media => media);
 
 export const MEDIA_PICKER_CLEAR_SELECTED_MEDIA = 'MEDIA_PICKER_CLEAR_SELECTED_MEDIA';
 export const clearSelectedMedia = createAction(MEDIA_PICKER_CLEAR_SELECTED_MEDIA, media => media);
