@@ -20,12 +20,12 @@ const collectionSearch = createAsyncReducer({
     })),
   }),
   [RESET_MEDIAPICKER_COLLECTION_SEARCH]: () => initialState,
-  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state, meta) => ({
     list: state.list.map((c) => {
       if (c.id === payload.id) {
         return ({
           ...c,
-          selected: !c.selected,
+          selected: meta.onOrOff,
         });
       }
       return c;

@@ -22,11 +22,12 @@ function selectMedia(state = INITIAL_STATE, action) {
       updatedSelectedList = [...state.list];
       if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // if not there, add
         const selectedObj = action.payload;
-        selectedObj.selected = true;
+        selectedObj.selected = selectedObj.selected === undefined ? true : !selectedObj.selected;
         updatedSelectedList.push(selectedObj);
       } else { // if there, treat as a removal/toggle
         const mediaIndex = updatedSelectedList.findIndex(s => s.id === action.payload.id);
-        updatedSelectedList.splice(mediaIndex, 1);
+        // mediaObj.selected = !(mediaObj.selected);
+        updatedSelectedList.splice(mediaIndex, 1); // in display check matches
       }
       return { list: updatedSelectedList };
     case MEDIA_PICKER_CLEAR_SELECTED_MEDIA: // maybe we want this...

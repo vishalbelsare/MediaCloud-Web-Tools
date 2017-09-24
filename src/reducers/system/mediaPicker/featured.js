@@ -13,17 +13,11 @@ const featured = createAsyncReducer({
       selected: false, // for adding/removing from selected list
     })),
   }),
-  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
-    list: state.list ? state.list.map((c) => {
-      if (c.id === payload.id) {
-        return ({
-          ...c,
-          selected: !c.selected,
-        });
-      }
-      return c;
-    }) : null,
-    timestamp: Date.now().toString(),
-  }),
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => {
+    const updatedState = [...state.list];
+    const mediaIndex = updatedState.findIndex(q => q.id !== null && q.id === payload.selectedMedia.id);
+    updatedState[mediaIndex].selected = payload.setSelected;
+    return { list: updatedState };
+  },
 });
 export default featured;
