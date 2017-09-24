@@ -25,11 +25,9 @@ const localMessages = {
 
 class StorySamplePreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { urlQueryString, lastSearchTime, fetchData } = this.props;
-
-    if (nextProps.lastSearchTime !== lastSearchTime ||
-      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
-      fetchData(nextProps.urlQueryString, nextProps.queries);
+    const { lastSearchTime, fetchData } = this.props;
+    if (nextProps.lastSearchTime !== lastSearchTime) {
+      fetchData(nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -119,7 +117,6 @@ StorySamplePreview.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
-  urlQueryString: React.PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
@@ -127,19 +124,17 @@ StorySamplePreview.propTypes = {
   handleStorySelection: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
-  urlQueryString: ownProps.params,
   fetchStatus: state.explorer.stories.fetchStatus,
   results: state.explorer.stories.results,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (ownProps, queries) => {
+  fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetSampleStories());
     if (isLoggedInUser) {
@@ -174,7 +169,7 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps);
+      dispatchProps.fetchData(ownProps.queries);
     },
   });
 }

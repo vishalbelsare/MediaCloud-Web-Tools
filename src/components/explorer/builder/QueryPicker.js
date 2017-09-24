@@ -28,7 +28,7 @@ const formSelector = formValueSelector('queryForm');
 const MAX_COLORS = 20;
 
 // TODO: implement this logic from Dashboard
-const autoMagicQueryLabel = query => query.q;
+export const autoMagicQueryLabel = query => query.q;
 
 class QueryPicker extends React.Component {
   addAQuery(newQueryObj) {

@@ -11,7 +11,6 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { getBrandDarkColor } from '../../../styles/colors';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
@@ -24,11 +23,10 @@ const localMessages = {
 
 class GeoPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { urlQueryString, lastSearchTime, fetchData } = this.props;
+    const { lastSearchTime, fetchData } = this.props;
 
-    if (nextProps.lastSearchTime !== lastSearchTime ||
-      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
-      fetchData(nextProps.urlQueryString, nextProps.queries);
+    if (nextProps.lastSearchTime !== lastSearchTime) {
+      fetchData(nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -69,12 +67,12 @@ class GeoPreview extends React.Component {
     const { formatMessage } = intl;
     let content = null;
     if (results.length === 1) {
-      content = <GeoChart data={results[0]} countryMaxColorScale={getBrandDarkColor()} hideLegend />;
+      content = <GeoChart data={results[0]} countryMaxColorScale={queries[0].color} hideLegend />;
     } else {
       const mapTiles = results.map((geoSet, idx) =>
         (<GridTile key={idx}>
           <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-          <GeoChart data={geoSet} countryMaxColorScale={getBrandDarkColor()} hideLegend />
+          <GeoChart data={geoSet} countryMaxColorScale={queries[idx].color} hideLegend />
         </GridTile>
         )
       );
@@ -119,23 +117,21 @@ GeoPreview.propTypes = {
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
-  urlQueryString: React.PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
-  urlQueryString: ownProps.params,
   fetchStatus: state.explorer.geo.fetchStatus,
   results: state.explorer.geo.results,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (params, queries) => {
+  fetchData: (queries) => {
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query
     */
@@ -172,7 +168,7 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps);
+      dispatchProps.fetchData(ownProps.queries);
     },
   });
 }

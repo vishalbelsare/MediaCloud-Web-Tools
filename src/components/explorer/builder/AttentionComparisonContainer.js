@@ -37,11 +37,9 @@ function dataAsSeries(data) {
 
 class AttentionComparisonContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { urlQueryString, lastSearchTime, fetchData } = this.props;
-
-    if (nextProps.lastSearchTime !== lastSearchTime ||
-      (nextProps.urlQueryString && urlQueryString && nextProps.urlQueryString.pathname !== urlQueryString.pathname)) {
-      fetchData(nextProps.urlQueryString, nextProps.queries);
+    const { lastSearchTime, fetchData } = this.props;
+    if (nextProps.lastSearchTime !== lastSearchTime) {
+      fetchData(nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -128,33 +126,29 @@ AttentionComparisonContainer.propTypes = {
   lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
   // from composition
-  params: React.PropTypes.object.isRequired,
   intl: React.PropTypes.object.isRequired,
   // from dispatch
   fetchData: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
-  urlQueryString: React.PropTypes.object.isRequired,
   // from mergeProps
   asyncFetch: React.PropTypes.func.isRequired,
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
+  lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
-  urlQueryString: ownProps.params,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
-  fetchData: (params, queries) => {
+  fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-
     const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetSentenceCounts()); // necessary if a query deletion has occurred
-
     if (isLoggedInUser) {
       const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q) => {
@@ -186,7 +180,7 @@ const mapDispatchToProps = (dispatch, state) => ({
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps, ownProps.queries);
+      dispatchProps.fetchData(ownProps.queries);
     },
   });
 }

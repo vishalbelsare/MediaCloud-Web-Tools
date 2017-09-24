@@ -30,7 +30,7 @@ class GeoChart extends React.Component {
       options.countryMinColorScale = '#ffffff';
     }
     if (countryMaxColorScale === undefined) {
-      options.countryMinColorScale = getBrandDarkColor();
+      options.countryMaxColorScale = getBrandDarkColor();
     }
     if (hoverColor === undefined) {
       options.hoverColor = '#BADA55';
