@@ -10,9 +10,9 @@ import { getShortDate } from '../../../lib/dateUtil';
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
     defaultMessage: 'no media sources or collections' },
-  sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
-  collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
-  collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
+  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
+  collectionsSummaryOne: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
+  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
@@ -22,37 +22,38 @@ const focusUsernameInputField = (input) => {
     setTimeout(() => { input.focus(); }, 100);
   }
 };
+
 class QueryPickerItem extends React.Component {
   state = {
     labelChangeDialogOpen: false,
-    tempLabel: '',
+    labelInDialog: '',  // the actual label they type into the change-label popup dialog
   };
 
   handleBlurAndSelection = () => {
     const { onQuerySelected } = this.props;
     onQuerySelected();
   };
-  updateTempLabel = (val) => {
-    this.setState({ tempLabel: val });
-  };
-  handleOpen = () => {
-    const { query } = this.props;
-    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, tempLabel: query.label });
+
+  updateLabelInDialog = (val) => {
+    this.setState({ labelInDialog: val });
   };
 
-  handleClose = () => {
+  handleLabelEditRequest = () => {
+    const { query } = this.props;
+    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, labelInDialog: query.label });
+  };
+
+  handleLabelClose = () => {
     this.setState({ labelChangeDialogOpen: false });
   };
-  handleChangeAndClose = () => {
+
+  handleLabelChangeAndClose = () => {
     const { updateQueryProperty } = this.props;
     this.setState({ labelChangeDialogOpen: false });
-    const updatedLabel = this.state.tempLabel;
+    const updatedLabel = this.state.labelInDialog;
     updateQueryProperty('label', updatedLabel);
   };
 
-  handleColorClick = (color) => {
-    this.setState({ showColor: color });
-  };
   handleMenuItemKeyDown = (evt) => {
     const { onSearch } = this.props;
     switch (evt.key) {
@@ -63,8 +64,13 @@ class QueryPickerItem extends React.Component {
     }
   };
 
+  handleColorChange = (newColor) => {
+    const { updateQueryProperty } = this.props;
+    updateQueryProperty('color', newColor);
+  }
+
   render() {
-    const { isLoggedIn, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, onSearch } = this.props;
+    const { isLoggedIn, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateDemoQueryLabel, onDelete } = this.props;
     const { formatMessage } = this.props.intl;
     let subT = null;
     let headerInfo = null;
@@ -75,13 +81,13 @@ class QueryPickerItem extends React.Component {
       <AppButton
         label="Cancel"
         primary
-        onClick={this.handleClose}
+        onClick={this.handleLabelClose}
       />,
       <AppButton
         label="Save"
         primary
         keyboardFocused
-        onClick={() => this.handleChangeAndClose(query)}
+        onClick={() => this.handleLabelChangeAndClose(query)}
       />,
     ];
     if (query) {
@@ -89,10 +95,11 @@ class QueryPickerItem extends React.Component {
         headerInfo = (
           <QueryPickerLoggedInHeader
             query={query}
-            handleOpen={this.handleOpen}
+            onLabelEditRequest={this.handleLabelEditRequest}
             isDeletable={isDeletable}
-            displayLabel={displayLabel} handleDeleteQuery={handleDeleteQuery}
-            handleSearch={onSearch} updateQueryProperty={updateQueryProperty}
+            displayLabel={displayLabel}
+            onDelete={onDelete}
+            onColorChange={this.handleColorChange}
             handleMenuItemKeyDown={this.handleMenuItemKeyDown}
           />
         );
@@ -100,11 +107,13 @@ class QueryPickerItem extends React.Component {
         headerInfo = (
           <QueryPickerDemoHeader
             query={query}
-            handleOpen={this.handleOpen}
-            isDeletable={isDeletable} handleDeleteQuery={handleDeleteQuery}
-            handleSearch={onSearch} updateQueryProperty={updateQueryProperty}
+            isDeletable={isDeletable}
+            onDelete={onDelete}
+            onColorChange={this.handleColorChange}
             updateDemoQueryLabel={updateDemoQueryLabel}
-            isLabelEditable={isLabelEditable} handleMenuItemKeyDown={this.handleMenuItemKeyDown} focusUsernameInputField={focusUsernameInputField}
+            isLabelEditable={isLabelEditable}
+            handleMenuItemKeyDown={this.handleMenuItemKeyDown}
+            focusUsernameInputField={focusUsernameInputField}
           />
         );
       }
@@ -117,7 +126,7 @@ class QueryPickerItem extends React.Component {
       const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
       const oneCollLabel = collCount === 1 ? oneCollLabelOrNumber : '';
 
-      const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: oneCollLabel }} />;
+      const oneCollStatus = <FormattedMessage {...localMessages.collectionsSummaryOne} values={{ label: oneCollLabel }} />;
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
 
       if (srcCount === 0 && collCount === 1) {
@@ -132,8 +141,8 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
-            <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.collectionsSummary} values={{ collCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.sourcesSummary} values={{ srcCount, label: queryLabel }} /><br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -152,15 +161,15 @@ class QueryPickerItem extends React.Component {
           actions={actions}
           modal={false}
           open={this.state.labelChangeDialogOpen}
-          onRequestClose={this.handleClose}
+          onRequestClose={this.handleLabelClose}
         >
           <p><FormattedMessage {...localMessages.queryDialog} /></p>
           <TextField
             className="query-picker-editable-name"
-            id="tempLabel"
-            name="tempLabel"
+            id="labelInDialog"
+            name="labelInDialog"
             onChange={(e, val) => {
-              this.updateTempLabel(val);
+              this.updateLabelInDialog(val);
             }}
             ref={focusUsernameInputField}
             hintText={query.label || formatMessage(localMessages.searchHint)}
@@ -183,7 +192,7 @@ QueryPickerItem.propTypes = {
   updateQueryProperty: React.PropTypes.func.isRequired,
   updateDemoQueryLabel: React.PropTypes.func.isRequired,
   onSearch: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
+  onDelete: React.PropTypes.func.isRequired,
   loadEditLabelDialog: React.PropTypes.func,
   isLoggedIn: React.PropTypes.bool.isRequired,
   // from composition

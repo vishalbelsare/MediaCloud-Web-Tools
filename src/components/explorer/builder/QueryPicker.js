@@ -105,8 +105,21 @@ class QueryPicker extends React.Component {
   saveAndSearch = () => {
     // wrap the save handler here because we need to save the changes to the selected query the user
     // might have made on the form, and then search
-    const { onSearch } = this.props;
-    this.saveChangesToSelectedQuery();
+    const { onSearch, queries, isLoggedIn, updateOneQuery } = this.props;
+    if (isLoggedIn) {
+      this.saveChangesToSelectedQuery();
+    } else {
+      // for demo mode we have to save all the queries they entered first, and then search
+      queries.forEach((q) => {
+        const queryText = document.getElementById(`query-${q.index}-q`).value;  // not super robust,
+        const updatedQuery = {
+          ...q,
+          q: queryText,
+        };
+        updatedQuery.label = autoMagicQueryLabel(updatedQuery); // have to call this alone because input is the whole query
+        updateOneQuery(updatedQuery);
+      });
+    }
     onSearch();
   }
 
@@ -134,7 +147,7 @@ class QueryPicker extends React.Component {
             updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             updateDemoQueryLabel={newValue => this.updateDemoQueryLabel(query, newValue)}
             onSearch={this.saveAndSearch}
-            handleDeleteQuery={() => this.handleDeleteAndSelectQuery(query)}
+            onDelete={() => this.handleDeleteAndSelectQuery(query)}
             // loadDialog={loadQueryEditDialog}
           />
         </div>
@@ -247,6 +260,7 @@ QueryPicker.propTypes = {
   loadUserSearch: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
   handleDeleteQuery: React.PropTypes.func.isRequired,
+  updateOneQuery: React.PropTypes.func.isRequired,
   // from parent
   isEditable: React.PropTypes.bool.isRequired,
   isDeletable: React.PropTypes.func,
@@ -270,6 +284,9 @@ const mapDispatchToProps = dispatch => ({
     if (query) {
       dispatch(updateQuery({ query, fieldName }));
     }
+  },
+  updateOneQuery: (query) => {
+    dispatch(updateQuery({ query }));
   },
   addAQuery: (query) => {
     if (query) {

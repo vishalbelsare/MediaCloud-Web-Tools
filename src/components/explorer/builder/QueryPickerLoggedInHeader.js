@@ -9,7 +9,7 @@ import ColorPicker from '../../common/ColorPicker';
 
 class QueryPickerLoggedInHeader extends React.Component {
   render() {
-    const { query, isDeletable, updateQueryProperty, handleDeleteQuery, handleOpen } = this.props;
+    const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
     // const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     let menuChildren = null;
@@ -17,14 +17,14 @@ class QueryPickerLoggedInHeader extends React.Component {
     if (isDeletable()) { // if this is not the only QueryPickerItem
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
-          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />
         </div>
       );
     } else {
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
         </div>
       );
     }
@@ -45,7 +45,7 @@ class QueryPickerLoggedInHeader extends React.Component {
           <div>
             <ColorPicker
               color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
+              onChange={e => onColorChange(e.value)}
             />&nbsp;
             <span
               className="query-picker-name"
@@ -67,11 +67,10 @@ QueryPickerLoggedInHeader.propTypes = {
   isDeletable: React.PropTypes.func.isRequired,
   displayLabel: React.PropTypes.bool.isRequired,
   onQuerySelected: React.PropTypes.func,
-  updateQueryProperty: React.PropTypes.func.isRequired,
+  onColorChange: React.PropTypes.func.isRequired,
   handleSearch: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func,
-  handleOpen: React.PropTypes.func,
-  loadEditLabelDialog: React.PropTypes.func,
+  onDelete: React.PropTypes.func,
+  onLabelEditRequest: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };

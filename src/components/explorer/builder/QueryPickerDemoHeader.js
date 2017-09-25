@@ -13,7 +13,7 @@ const localMessages = {
 
 class QueryPickerDemoHeader extends React.Component {
   render() {
-    const { query, isLabelEditable, isDeletable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
+    const { query, isLabelEditable, isDeletable, onColorChange, onDelete, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     const isThisAProtectedQuery = query.searchId !== null && query.searchId !== undefined;
@@ -25,7 +25,7 @@ class QueryPickerDemoHeader extends React.Component {
     if (query) {
       if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
         menuChildren = (
-          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+          <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />
         );
       }
       if (menuChildren !== null) {
@@ -40,22 +40,22 @@ class QueryPickerDemoHeader extends React.Component {
           </IconMenu>
         );
       }
+      const colorPickerContent = (
+        <ColorPicker
+          color={query.color}
+          onChange={e => onColorChange(e.value)}
+        />
+      );
       if (isLabelEditable) { // determine whether the label is editable or not (demo or logged in)
         nameInfo = (
           <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />
+            {colorPickerContent}
             <TextField
               className="query-picker-editable-name"
-              id="q"
+              id={`query-${query.index}-q`}
               name="q"
-              value={query.q}
-              hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => {
-                updateDemoQueryLabel(val); // both are connected
-              }}
+              defaultValue={query.q}
+              hintText={formatMessage(localMessages.searchHint)}
               onKeyPress={handleMenuItemKeyDown}
               ref={focusUsernameInputField}
             />
@@ -65,10 +65,8 @@ class QueryPickerDemoHeader extends React.Component {
       } else {  // the labels are not editable when the Demo user views the sample searches
         nameInfo = (
           <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />&nbsp;
+            {colorPickerContent}
+            &nbsp;
             <span
               className="query-picker-name"
             >
@@ -84,18 +82,14 @@ class QueryPickerDemoHeader extends React.Component {
 }
 QueryPickerDemoHeader.propTypes = {
   // from parent
-  query: React.PropTypes.object,
-  isSelected: React.PropTypes.bool.isRequired,
+  query: React.PropTypes.object.isRequired,
   isLabelEditable: React.PropTypes.bool.isRequired,
   isDeletable: React.PropTypes.func.isRequired,
-  onQuerySelected: React.PropTypes.func,
-  updateQueryProperty: React.PropTypes.func.isRequired,
+  onColorChange: React.PropTypes.func.isRequired,
   updateDemoQueryLabel: React.PropTypes.func.isRequired,
-  handleSearch: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
+  onDelete: React.PropTypes.func.isRequired,
   handleMenuItemKeyDown: React.PropTypes.func.isRequired,
   focusUsernameInputField: React.PropTypes.func.isRequired,
-  loadEditLabelDialog: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
 };
