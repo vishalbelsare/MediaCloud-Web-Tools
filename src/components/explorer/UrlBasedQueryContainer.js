@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { schemeCategory10 } from 'd3';
+import { push } from 'react-router-redux';
 import composeAsyncContainer from '../common/AsyncContainer';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { LEVEL_ERROR } from '../common/Notice';
@@ -33,13 +34,14 @@ function composeUrlBasedQueryContainer() {
         // console.log('parse from url');
       }
       componentWillReceiveProps(nextProps) {
-        const { location } = this.props;
+        const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
         // console.log('new props');
-        // if URL has been updated, reparse and store
-        if (nextProps.location.pathname !== location.pathname) {
+        // if URL has been updated by hand, reparse and store
+        if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
           this.setQueryFromUrl(nextProps.location.pathname);
+        // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
           // mark the whole thing as ready once any sources and collections have been set
@@ -47,6 +49,8 @@ function composeUrlBasedQueryContainer() {
             // console.log('  got media info from server, ready!');
             this.setState({ queryInStore: true });  // mark that the parsing process has finished
           }
+        } else if (lastSearchTime !== nextProps.lastSearchTime) {
+          updateUrl(nextProps.queries, isLoggedIn);
         } else {
           // console.log('  other change');
         }
@@ -130,9 +134,11 @@ function composeUrlBasedQueryContainer() {
       fetchStatus: PropTypes.string.isRequired,
       samples: PropTypes.array,
       queries: PropTypes.array,
+      lastSearchTime: React.PropTypes.number,
       // from dispatch
       saveQueriesFromParsedUrl: PropTypes.func.isRequired,
       addAppNotice: PropTypes.func.isRequired,
+      updateUrl: PropTypes.func.isRequired,
     };
 
     const mapStateToProps = state => ({
@@ -140,6 +146,7 @@ function composeUrlBasedQueryContainer() {
       fetchStatus: state.explorer.samples.fetchStatus,
       samples: state.explorer.samples.list,
       queries: state.explorer.queries.queries,
+      lastSearchTime: state.explorer.lastSearchTime.time,
     });
 
     // push any updates (including selected) into queries in state, will trigger async load in sub sections
@@ -177,6 +184,15 @@ function composeUrlBasedQueryContainer() {
       },
       asyncFetch: () => {
         dispatch(fetchSampleSearches());   // inefficient: we need the sample searches loaded just in case
+      },
+      updateUrl: (queries, isLoggedIn) => {
+        const unDeletedQueries = queries.filter(q => q.deleted !== true);
+        const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
+        if (!isLoggedIn) {
+          const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
+          const newLocation = `/queries/demo/search/[${urlParamString}]`;
+          dispatch(push(newLocation));
+        }
       },
     });
 

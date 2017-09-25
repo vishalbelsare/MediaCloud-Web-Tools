@@ -71,7 +71,7 @@ class QueryPicker extends React.Component {
 
   isDeletable() {
     const { queries } = this.props;
-    const unDeletedQueries = queries.filter(q => !q.deleted);
+    const unDeletedQueries = queries.filter(q => q.deleted !== true);
     return unDeletedQueries.length >= 2; // because we always have an empty query in the query array
   }
 
@@ -110,7 +110,7 @@ class QueryPicker extends React.Component {
       this.saveChangesToSelectedQuery();
     } else {
       // for demo mode we have to save all the queries they entered first, and then search
-      const nonDeletedQueries = queries.filter(q => !q.deleted);
+      const nonDeletedQueries = queries.filter(q => q.deleted !== true);
       nonDeletedQueries.forEach((q) => {
         const queryText = document.getElementById(`query-${q.index}-q`).value;  // not super robust,
         const updatedQuery = {
@@ -132,7 +132,7 @@ class QueryPicker extends React.Component {
     let fixedQuerySlides;
     let canSelectMedia = false;
 
-    const unDeletedQueries = queries.filter(q => !q.deleted);
+    const unDeletedQueries = queries.filter(q => q.deleted !== true);
     if (unDeletedQueries && unDeletedQueries.length > 0 && selected) {
       fixedQuerySlides = unDeletedQueries.map((query, index) => (
         <div key={index}>

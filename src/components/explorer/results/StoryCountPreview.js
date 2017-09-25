@@ -55,7 +55,7 @@ class StoryCountPreview extends React.Component {
     if (parseInt(testFirstQuery.searchId, 10) >= 0) {
       url = `/api/explorer/stories/count.csv/${testFirstQuery.searchId}`;
     } else {
-      const unDeletedQueries = queries.filter(q => !q.deleted);
+      const unDeletedQueries = queries.filter(q => q.deleted !== true);
       const urlParamString = generateQueryParamString(unDeletedQueries);
       url = `/api/explorer/stories/count.csv/[${urlParamString}]`;
     }

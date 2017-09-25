@@ -9,7 +9,7 @@ import GeoPreview from './GeoPreview';
 
 const QueryResultsContainer = (props) => {
   const { queries, user, params, lastSearchTime } = props;
-  // const unDeletedQueries = queries.filter(q => !q.deleted);
+  // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
       <Row>

@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.queryStringEmpty, { name: emptyQueryStrings[0].label }) }));
       return;
     }
-    const unDeletedQueries = queries.filter(q => !q.deleted);
+    const unDeletedQueries = queries.filter(q => q.deleted !== true);
     dispatch(resetSelected());
     dispatch(resetQueries());
     dispatch(updateTimestampForQueries());

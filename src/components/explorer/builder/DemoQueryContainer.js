@@ -2,10 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { selectQuery, selectBySearchId, updateQueryCollectionLookupInfo, updateQuerySourceLookupInfo,
-         fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
-         resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo, updateTimestampForQueries } from '../../../actions/explorerActions';
+// import { push } from 'react-router-redux';
+import { selectQuery, resetSelected, resetQueries, resetSentenceCounts, resetSampleStories, resetStoryCounts,
+  resetGeo, updateTimestampForQueries } from '../../../actions/explorerActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from '../results/QueryResultsContainer';
 import { WarningNotice } from '../../common/Notice';
@@ -35,7 +34,7 @@ class DemoQueryBuilderContainer extends React.Component {
       <div className="query-container query-container-demo">
         <WarningNotice><FormattedHTMLMessage {...localMessages.register} />
         </WarningNotice>
-        <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch(queries)} />
+        <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch()} />
         <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
       </div>
     );
@@ -48,39 +47,23 @@ DemoQueryBuilderContainer.propTypes = {
   initialValues: PropTypes.object,
   // from state
   location: PropTypes.object,
-  selected: PropTypes.object,
-  queries: PropTypes.array,
-  collectionResults: PropTypes.array,
-  collectionLookupFetchStatus: PropTypes.string,
+  queries: PropTypes.array.isRequired,
   samples: PropTypes.array,
-  query: PropTypes.object,
-  handleSearch: PropTypes.func.isRequired,
   lastSearchTime: PropTypes.number,
-  setSampleSearch: PropTypes.func.isRequired,
-  setSelectedQuery: PropTypes.func.isRequired,
   resetExplorerData: PropTypes.func.isRequired,
-  fetchSamples: PropTypes.func.isRequired,
-  urlQueryString: PropTypes.string,
   selectFirstQuery: PropTypes.func,
+
+  handleSearch: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  // queryFetchStatus: state.explorer.queries.fetchStatus,
-  selected: state.explorer.selected,
-  selectedQuery: state.explorer.selected ? state.explorer.selected.q : '',
-  queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
-  collectionResults: state.explorer.queries.collections ? state.explorer.queries.collections.results : null,
-  collectionLookupFetchStatus: state.explorer.queries.collections.fetchStatus,
-  urlQueryString: ownProps.location.pathname,
+const mapStateToProps = state => ({
+  queries: state.explorer.queries.queries,
   lastSearchTime: state.explorer.lastSearchTime.time,
   samples: state.explorer.samples.list,
 });
 
 // push any updates (including selected) into queries in state, will trigger async load in sub sections
 const mapDispatchToProps = dispatch => ({
-  setSelectedQuery: (queryObj) => {
-    dispatch(selectQuery(queryObj));
-  },
   resetExplorerData: () => { // TODO we will reduce this down to one call
     dispatch(resetSelected());
     dispatch(resetQueries());
@@ -89,50 +72,32 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetStoryCounts());
     dispatch(resetGeo());
   },
-  handleSearch: (queries) => {
-    // update URL location according to updated queries
-    const unDeletedQueries = queries.filter(q => !q.deleted);
+  selectFirstQuery: (query) => {
+    dispatch(selectQuery(query));
+  },
+  reallyHandleSearch: () => {
     dispatch(updateTimestampForQueries());
+    // update URL location according to updated queries
+/*    const unDeletedQueries = queries.filter(q => q.deleted !== true);
     const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
     const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
-  },
-  setSampleSearch: (searchObj) => {
-    dispatch(selectBySearchId(searchObj));
-    searchObj.queries.map((q, idx) => {
-      const demoInfo = {
-        index: idx,
-      };
-      if (q.sources && q.sources.length > 0) {
-        demoInfo.sources = q.sources.map(src => src.media_id || src.id);
-        dispatch(demoQuerySourcesByIds(demoInfo)).then((results) => {
-          demoInfo.sources = results;
-          dispatch(updateQuerySourceLookupInfo(demoInfo)); // updates the query and the selected query
-        });
-      }
-      if (q.collections && q.collections.length > 0) {
-        demoInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
-        dispatch(demoQueryCollectionsByIds(demoInfo))
-        .then((results) => {
-          demoInfo.collections = results;
-          dispatch(updateQueryCollectionLookupInfo(demoInfo)); // updates the query and the selected query
-        });
-      }
-      return 0;
-    });
-  },
-  fetchSamples: () => {
-    dispatch(fetchSampleSearches()); // fetch all searches
-  },
-  selectFirstQuery: (query) => {
-    dispatch(selectQuery(query));
+    */
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleSearch: () => {
+      dispatchProps.reallyHandleSearch(stateProps.queries);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeUrlBasedQueryContainer()(
         DemoQueryBuilderContainer
       )
