@@ -60,13 +60,13 @@ class QueryPicker extends React.Component {
 
   handleMediaChange = (sourceAndCollections) => {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
-    const { selected, updateCurrentQuery } = this.props;
+    const { selected, updateCurrentQueryThenReselect } = this.props;
     const updatedQuery = { ...selected };
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
     updatedQuery.collections = updatedCollections;
     updatedQuery.sources = updatedSources;
-    updateCurrentQuery(updatedQuery);
+    updateCurrentQueryThenReselect(updatedQuery);
   }
 
   isDeletable() {
@@ -257,6 +257,7 @@ QueryPicker.propTypes = {
   // from dispatch
   handleQuerySelected: React.PropTypes.func.isRequired,
   updateCurrentQuery: React.PropTypes.func.isRequired,
+  updateCurrentQueryThenReselect: React.PropTypes.func.isRequired,
   addAQuery: React.PropTypes.func.isRequired,
   loadUserSearch: React.PropTypes.func,
   saveUserSearch: React.PropTypes.func.isRequired,
@@ -280,6 +281,12 @@ const mapDispatchToProps = dispatch => ({
   handleQuerySelected: (query, index) => {
     const queryWithIndex = Object.assign({}, query, { index }); // if this doesn't exist...
     dispatch(selectQuery(queryWithIndex));
+  },
+  updateCurrentQueryThenReselect: (query, fieldName) => {
+    if (query) {
+      dispatch(updateQuery({ query, fieldName }));
+      dispatch(selectQuery(query));
+    }
   },
   updateCurrentQuery: (query, fieldName) => {
     if (query) {

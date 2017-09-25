@@ -61,7 +61,7 @@ class SelectMediaResultsContainer extends React.Component {
       // sync up selectedMedia and result sets.
       whichList.list.map((m) => {
         const mediaIndex = whichProps.selectedMedia.findIndex(q => q.id === m.id);
-
+        // this isn't fully working bc sometimes both these lists are in sycn but the UI is not!
         if (m.selected && mediaIndex < 0) {
           this.props.toggleConcurrency(m, false);
         } else if (!m.selected && mediaIndex >= 0) {
