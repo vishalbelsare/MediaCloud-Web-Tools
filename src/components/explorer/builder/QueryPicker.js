@@ -24,8 +24,6 @@ const localMessages = {
 
 const formSelector = formValueSelector('queryForm');
 
-const MAX_COLORS = 20;
-
 class QueryPicker extends React.Component {
   addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
@@ -144,7 +142,7 @@ class QueryPicker extends React.Component {
       canSelectMedia = isLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
       if (isLoggedIn || isEditable) {
-        const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
+        const colorPallette = idx => d3.schemeCategory10[idx % 10];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
