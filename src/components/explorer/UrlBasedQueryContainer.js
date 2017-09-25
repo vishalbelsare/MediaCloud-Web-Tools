@@ -10,8 +10,7 @@ import { addNotice } from '../../actions/appActions';
 import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
-import { autoMagicQueryLabel } from './builder/QueryPicker';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
 
 const localMessages = {
@@ -85,6 +84,7 @@ function composeUrlBasedQueryContainer() {
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
             label: autoMagicQueryLabel(query),
             ...query, // let anything on URL override label and color
+            q: decodeURIComponent(query.q),
             color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
             index,  // redo index to be zero-based on reload of query
             ...extraDefaults, // for demo mode

@@ -94,7 +94,7 @@ const mapDispatchToProps = dispatch => ({
     const unDeletedQueries = queries.filter(q => !q.deleted);
     dispatch(updateTimestampForQueries());
     const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
-    const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${q.q}","color":"${escape(q.color)}"}`);
+    const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
     const newLocation = `/queries/demo/search/[${urlParamString}]`;
     dispatch(push(newLocation));
   },

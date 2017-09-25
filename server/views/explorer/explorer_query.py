@@ -33,16 +33,12 @@ def api_explorer_sources_by_ids():
 
 
 @app.route('/api/explorer/collections/list', methods=['GET'])
+@flask_login.login_required
 @arguments_required('collections[]')
 @api_error_handler
-def api_explorer_demo_collections_by_ids():
-    if is_user_logged_in():
-        client_mc = user_admin_mediacloud_client()
-        collection_ids = request.args['collections[]'].split(',')
-    else:
-        # TODO: catch if these are non-default ones and throw a 401?
-        client_mc = mc
-        collection_ids = request.args['collections[]'].split(',')
+def api_explorer_collections_by_ids():
+    client_mc = user_admin_mediacloud_client()
+    collection_ids = request.args['collections[]'].split(',')
     collection_list = []
     for tags_id in collection_ids:
         info = client_mc.tag(tags_id)
@@ -66,7 +62,7 @@ def api_explorer_demo_sources_by_ids():
 @app.route('/api/explorer/demo/collections/list', methods=['GET'])
 @arguments_required('collections[]')
 @api_error_handler
-def api_explorer_collections_by_ids():
+def api_explorer_demo_collections_by_ids():
     collIdArray = request.args['collections[]'].split(',')
     coll_list = []
     for tagsId in collIdArray:

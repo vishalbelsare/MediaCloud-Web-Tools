@@ -1,3 +1,5 @@
+import { trimToMaxLength } from './stringUtil';
+
 export const DEFAULT_SOURCES = '';
 
 export const DEFAULT_COLLECTION = 9139487;
@@ -38,3 +40,5 @@ export function queryPropertyHasChanged(queries, nextQueries, propName) {
   return propHasChanged;
 }
 
+// TODO: implement this logic from Dashboard
+export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, 30));

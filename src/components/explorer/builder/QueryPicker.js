@@ -12,7 +12,7 @@ import QueryPickerItem from './QueryPickerItem';
 import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
@@ -26,9 +26,6 @@ const localMessages = {
 const formSelector = formValueSelector('queryForm');
 
 const MAX_COLORS = 20;
-
-// TODO: implement this logic from Dashboard
-export const autoMagicQueryLabel = query => query.q;
 
 class QueryPicker extends React.Component {
   addAQuery(newQueryObj) {
