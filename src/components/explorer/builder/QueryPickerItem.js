@@ -64,7 +64,7 @@ class QueryPickerItem extends React.Component {
   };
 
   render() {
-    const { user, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, onSearch } = this.props;
+    const { isLoggedIn, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, onSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let subT = null;
     let headerInfo = null;
@@ -85,10 +85,10 @@ class QueryPickerItem extends React.Component {
       />,
     ];
     if (query) {
-      if (user.isLoggedIn) {
+      if (isLoggedIn) {
         headerInfo = (
           <QueryPickerLoggedInHeader
-            user={user} query={query}
+            query={query}
             handleOpen={this.handleOpen}
             isDeletable={isDeletable}
             displayLabel={displayLabel} handleDeleteQuery={handleDeleteQuery}
@@ -99,7 +99,7 @@ class QueryPickerItem extends React.Component {
       } else { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
         headerInfo = (
           <QueryPickerDemoHeader
-            user={user} query={query}
+            query={query}
             handleOpen={this.handleOpen}
             isDeletable={isDeletable} handleDeleteQuery={handleDeleteQuery}
             handleSearch={onSearch} updateQueryProperty={updateQueryProperty}
@@ -185,9 +185,9 @@ QueryPickerItem.propTypes = {
   onSearch: React.PropTypes.func.isRequired,
   handleDeleteQuery: React.PropTypes.func.isRequired,
   loadEditLabelDialog: React.PropTypes.func,
+  isLoggedIn: React.PropTypes.bool.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object.isRequired,
 };
 
 

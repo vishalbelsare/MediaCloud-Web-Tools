@@ -13,17 +13,17 @@ const localMessages = {
 
 class QueryPickerDemoHeader extends React.Component {
   render() {
-    const { user, query, isLabelEditable, isDeletable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
+    const { query, isLabelEditable, isDeletable, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
     const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
-    const isThisAProtectedQuery = !user.isLoggedIn && query.searchId !== null && query.searchId !== undefined;
+    const isThisAProtectedQuery = query.searchId !== null && query.searchId !== undefined;
     /*
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
     let iconOptions = null;
     let menuChildren = null;
     if (query) {
-      if (!user.isLoggedIn && !isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
+      if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
         menuChildren = (
           <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
         );
@@ -98,7 +98,6 @@ QueryPickerDemoHeader.propTypes = {
   loadEditLabelDialog: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object,
 };
 
 

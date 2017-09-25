@@ -13,7 +13,6 @@ import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSea
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
-import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -114,22 +113,19 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { selected, queries, user, collectionsResults, sourcesResults, isEditable } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, loadUserSearch } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
     let fixedQuerySlides;
     let canSelectMedia = false;
-    const userLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
 
     const unDeletedQueries = queries.filter(q => !q.deleted);
-    if (unDeletedQueries && unDeletedQueries.length > 0 && selected &&
-      collectionsResults && collectionsResults.length > 0 &&
-      sourcesResults && sourcesResults.length >= 0) {
+    if (unDeletedQueries && unDeletedQueries.length > 0 && selected) {
       fixedQuerySlides = unDeletedQueries.map((query, index) => (
         <div key={index}>
           <QueryPickerItem
-            user={user}
+            isLoggedIn={isLoggedIn}
             key={index}
             query={query}
             isSelected={selected.index === query.index}
@@ -145,15 +141,15 @@ class QueryPicker extends React.Component {
           />
         </div>
       ));
-      canSelectMedia = userLoggedIn;
+      canSelectMedia = isLoggedIn;
       // provide the add Query button, load with default values when Added is clicked
-      if (userLoggedIn || isEditable) {
+      if (isLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory10[idx < MAX_COLORS ? idx : 0];
         const dateObj = getPastTwoWeeksDateRange();
         const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
-        const defaultQueryField = userLoggedIn ? '*' : '';
+        const defaultQueryField = isLoggedIn ? '*' : '';
         const defaultQuery = { index: newIndex, label: newQueryLabel, q: defaultQueryField, description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
 
         const emptyQuerySlide = (
@@ -174,7 +170,7 @@ class QueryPicker extends React.Component {
         fixedQuerySlides.push(emptyQuerySlide);
       }
       let demoSearchButtonContent; // in demo mode we need a search button outside the form (cause we can't see the form)
-      if (!userLoggedIn) {
+      if (!isLoggedIn) {
         demoSearchButtonContent = (
           <Grid>
             <Row>
@@ -206,7 +202,7 @@ class QueryPicker extends React.Component {
           {demoSearchButtonContent}
         </div>
       );
-      if (userLoggedIn) {  // if logged in show full form
+      if (isLoggedIn) {  // if logged in show full form
         queryFormContent = (
           <QueryForm
             initialValues={selected}
@@ -218,7 +214,7 @@ class QueryPicker extends React.Component {
             onSave={this.saveAndSearch}
             onColorChange={this.handleColorChange}
             onMediaChange={this.handleMediaChange}
-            handleLoadSearch={loadUserSearches}
+            handleLoadSearch={loadUserSearch}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
@@ -239,33 +235,30 @@ class QueryPicker extends React.Component {
 }
 
 QueryPicker.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  queries: React.PropTypes.array,
-  sourcesResults: React.PropTypes.array,
-  collectionsResults: React.PropTypes.array,
-  fetchStatus: React.PropTypes.string.isRequired,
+  // from state
   selected: React.PropTypes.object,
+  queries: React.PropTypes.array,
+  isLoggedIn: React.PropTypes.bool.isRequired,
+  formQuery: React.PropTypes.object,
+  // from composition
   intl: React.PropTypes.object.isRequired,
+  // from dispatch
   handleQuerySelected: React.PropTypes.func.isRequired,
+  updateCurrentQuery: React.PropTypes.func.isRequired,
+  addAQuery: React.PropTypes.func.isRequired,
+  loadUserSearch: React.PropTypes.func,
+  saveUserSearch: React.PropTypes.func.isRequired,
+  handleDeleteQuery: React.PropTypes.func.isRequired,
+  // from parent
   isEditable: React.PropTypes.bool.isRequired,
   isDeletable: React.PropTypes.func,
   onSearch: React.PropTypes.func.isRequired,
-  updateCurrentQuery: React.PropTypes.func.isRequired,
-  handleDeleteAndSelectQuery: React.PropTypes.func,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
-  loadUserSearches: React.PropTypes.func,
-  saveUserSearch: React.PropTypes.func.isRequired,
-  addAQuery: React.PropTypes.func.isRequired,
-  formQuery: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
   selected: state.explorer.selected,
   queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
-  sourcesResults: state.explorer.queries.sources.results ? state.explorer.queries.sources.results : null,
-  collectionsResults: state.explorer.queries.collections.results ? state.explorer.queries.collections.results : null,
-  fetchStatus: state.explorer.queries.collections.fetchStatus,
-  user: state.user,
+  isLoggedIn: state.user.isLoggedIn,
   formQuery: formSelector(state, 'q', 'color', 'media', 'startDate', 'endDate'),
 });
 

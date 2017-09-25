@@ -9,38 +9,36 @@ import ColorPicker from '../../common/ColorPicker';
 
 class QueryPickerLoggedInHeader extends React.Component {
   render() {
-    const { user, query, isDeletable, updateQueryProperty, handleDeleteQuery, handleOpen } = this.props;
+    const { query, isDeletable, updateQueryProperty, handleDeleteQuery, handleOpen } = this.props;
     // const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     let menuChildren = null;
     let iconOptions = null;
-    if (user && user.isLoggedIn) {
-      if (isDeletable()) { // if logged in and this is not the only QueryPickerItem
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
-            <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-          </div>
-        );
-      } else {
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
-          </div>
-        );
-      }
-      if (menuChildren !== null) {
-        iconOptions = (
-          <IconMenu
-            className="query-picker-icon-button"
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-            {menuChildren}
-          </IconMenu>
-        );
-      }
+    if (isDeletable()) { // if this is not the only QueryPickerItem
+      menuChildren = (
+        <div>
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
+          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
+        </div>
+      );
+    } else {
+      menuChildren = (
+        <div>
+          <MenuItem primaryText="Edit Query Label" onTouchTap={() => handleOpen()} />
+        </div>
+      );
+    }
+    if (menuChildren !== null) {
+      iconOptions = (
+        <IconMenu
+          className="query-picker-icon-button"
+          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+        >
+          {menuChildren}
+        </IconMenu>
+      );
 
       if (query) {
         nameInfo = (
@@ -76,7 +74,6 @@ QueryPickerLoggedInHeader.propTypes = {
   loadEditLabelDialog: React.PropTypes.func,
   // from composition
   intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object,
 };
 
 
