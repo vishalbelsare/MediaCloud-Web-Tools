@@ -95,6 +95,8 @@ function composeUrlBasedQueryContainer() {
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
       isAllMediaDetailsReady() {
+        // we will only render the wrapped component once all the details of the sources and collections
+        // have been fetched from the server and put in the right place on each query
         const { queries } = this.props;
         if (queries.length === 0) return false; // need to bail if no queries (ie. first page mount)
         const queryCollectionStatus = queries.map(q => q.collections.length === 0 ||
@@ -124,8 +126,6 @@ function composeUrlBasedQueryContainer() {
       intl: PropTypes.object.isRequired,
       location: PropTypes.object,
       // from store
-      collectionsFetchStatus: PropTypes.string,
-      sourcesFetchStatus: PropTypes.string,
       isLoggedIn: PropTypes.bool.isRequired,
       fetchStatus: PropTypes.string.isRequired,
       samples: PropTypes.array,
@@ -137,8 +137,6 @@ function composeUrlBasedQueryContainer() {
 
     const mapStateToProps = state => ({
       isLoggedIn: state.user.isLoggedIn,
-      collectionsFetchStatus: state.explorer.queries.collections.fetchStatus,  // prefetch status for collections
-      sourcesFetchStatus: state.explorer.queries.sources.fetchStatus,  // prefetch status for sources
       fetchStatus: state.explorer.samples.fetchStatus,
       samples: state.explorer.samples.list,
       queries: state.explorer.queries.queries,
