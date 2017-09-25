@@ -42,7 +42,7 @@ def api_explorer_demo_collections_by_ids():
     else:
         # TODO: catch if these are non-default ones and throw a 401?
         client_mc = mc
-        collection_ids = DEFAULT_COLLECTION_IDS  # don't let demo users search anything but defaults
+        collection_ids = request.args['collections[]'].split(',')
     collection_list = []
     for tags_id in collection_ids:
         info = client_mc.tag(tags_id)

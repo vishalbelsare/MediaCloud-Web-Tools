@@ -3,11 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { schemeCategory10 } from 'd3';
+import composeAsyncContainer from '../common/AsyncContainer';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { LEVEL_ERROR } from '../common/Notice';
 import { addNotice } from '../../actions/appActions';
-import { selectBySearchParams, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
-  fetchQuerySourcesByIds, fetchQueryCollectionsByIds } from '../../actions/explorerActions';
+import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
+  fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import { autoMagicQueryLabel } from './builder/QueryPicker';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../lib/explorerUtil';
@@ -54,36 +55,43 @@ function composeUrlBasedQueryContainer() {
         }
       }
       setQueryFromUrl(url) {
-        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
+        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn, samples } = this.props;
         const { formatMessage } = this.props.intl;
         const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
+        // here we need to handle sample ids vs. url-encoded query
+        const sampleSearchId = parseInt(queryAsJsonStr, 10);
         let queriesFromUrl;
-        try {
-          queriesFromUrl = JSON.parse(queryAsJsonStr);
-        } catch (e) {
-          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-          return;
+        if (!isNaN(sampleSearchId)) {
+          queriesFromUrl = samples[sampleSearchId].queries;
+        } else {
+          try {
+            queriesFromUrl = JSON.parse(queryAsJsonStr);
+          } catch (e) {
+            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+            return;
+          }
+          let extraDefaults = {};
+          // add in an index, label, and color if they are not there
+          if (!isLoggedIn) {  // and demo mode needs some extra stuff too
+            const defaultDates = getPastTwoWeeksDateRange();
+            extraDefaults = {
+              sources: [],
+              collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
+              startDate: defaultDates.start,
+              endDate: defaultDates.end,
+              search_id: sampleSearchId,
+            };
+          }
+          queriesFromUrl = queriesFromUrl.map((query, index) => ({
+            label: autoMagicQueryLabel(query),
+            ...query, // let anything on URL override label and color
+            color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
+            index,  // redo index to be zero-based on reload of query
+            ...extraDefaults, // for demo mode
+          }));
         }
-        let extraDefaults = {};
-        // add in an index, label, and color if they are not there
-        if (!isLoggedIn) {  // and demo mode needs some extra stuff too
-          const defaultDates = getPastTwoWeeksDateRange();
-          extraDefaults = {
-            sources: [],
-            collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
-            startDate: defaultDates.start,
-            endDate: defaultDates.end,
-          };
-        }
-        queriesFromUrl = queriesFromUrl.map((query, index) => ({
-          label: autoMagicQueryLabel(query),
-          ...query, // let anything on URL override label and color
-          color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
-          index,  // redo index to be zero-based on reload of query
-          ...extraDefaults, // for demo mode
-        }));
         // push the queries in to the store
-        saveQueriesFromParsedUrl(queriesFromUrl);
+        saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
       render() {
         let content;
@@ -102,11 +110,13 @@ function composeUrlBasedQueryContainer() {
 
     UrlBasedQueryContainer.propTypes = {
       intl: PropTypes.object.isRequired,
-      location: React.PropTypes.object,
+      location: PropTypes.object,
       // from store
-      collectionsFetchStatus: React.PropTypes.string,
-      sourcesFetchStatus: React.PropTypes.string,
-      isLoggedIn: React.PropTypes.bool.isRequired,
+      collectionsFetchStatus: PropTypes.string,
+      sourcesFetchStatus: PropTypes.string,
+      isLoggedIn: PropTypes.bool.isRequired,
+      fetchStatus: PropTypes.string.isRequired,
+      samples: PropTypes.array,
       // from dispatch
       saveQueriesFromParsedUrl: PropTypes.func.isRequired,
       addAppNotice: PropTypes.func.isRequired,
@@ -116,6 +126,8 @@ function composeUrlBasedQueryContainer() {
       isLoggedIn: state.user.isLoggedIn,
       collectionsFetchStatus: state.explorer.queries.collections.fetchStatus,  // prefetch status for collections
       sourcesFetchStatus: state.explorer.queries.sources.fetchStatus,  // prefetch status for sources
+      fetchStatus: state.explorer.samples.fetchStatus,
+      samples: state.explorer.samples.list,
     });
 
     // push any updates (including selected) into queries in state, will trigger async load in sub sections
@@ -124,24 +136,26 @@ function composeUrlBasedQueryContainer() {
         dispatch(addNotice(info));
       },
       // handles demo mode by allowing you to pass in extraDefaults
-      saveQueriesFromParsedUrl: (queryArrayFromURL) => {
-        dispatch(selectBySearchParams(queryArrayFromURL)); // load query data into the store
+      saveQueriesFromParsedUrl: (queriesToUse, isLoggedIn) => {
+        dispatch(selectBySearchParams(queriesToUse)); // load query data into the store
         // lookup ancillary data eg collection and source info for display purposes in QueryForm
-        queryArrayFromURL.forEach((q) => {
+        queriesToUse.forEach((q) => {
           const queryInfo = {
             ...q,
           };
+          const sourceDetailsAction = isLoggedIn ? fetchQuerySourcesByIds : demoQuerySourcesByIds;
           if (q.sources && q.sources.length > 0) {
             queryInfo.sources = q.sources.map(src => src.media_id || src.id);
-            dispatch(fetchQuerySourcesByIds(queryInfo))
+            dispatch(sourceDetailsAction(queryInfo))
             .then((results) => {
               queryInfo.sources = results;
               dispatch(updateQuerySourceLookupInfo(queryInfo)); // updates the query and the selected query
             });
           }
+          const collectionDetailsAction = isLoggedIn ? fetchQueryCollectionsByIds : demoQueryCollectionsByIds;
           if (q.collections && q.collections.length > 0) {
             queryInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
-            dispatch(fetchQueryCollectionsByIds(queryInfo))
+            dispatch(collectionDetailsAction(queryInfo))
             .then((results) => {
               queryInfo.collections = results;
               dispatch(updateQueryCollectionLookupInfo(queryInfo)); // updates the query and the selected query
@@ -149,11 +163,16 @@ function composeUrlBasedQueryContainer() {
           }
         });
       },
+      asyncFetch: () => {
+        dispatch(fetchSampleSearches());   // inefficient: we need the sample searches loaded just in case
+      },
     });
 
     return injectIntl(
       connect(mapStateToProps, mapDispatchToProps)(
-        UrlBasedQueryContainer
+        composeAsyncContainer(
+          UrlBasedQueryContainer
+        )
       )
     );
   };
