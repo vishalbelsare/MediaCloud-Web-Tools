@@ -7,7 +7,7 @@ import { updateTimestampForQueries, resetSelected, resetQueries, resetSentenceCo
   resetStoryCounts, resetGeo, selectQuery } from '../../../actions/explorerActions';
 import { addNotice } from '../../../actions/appActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
-import QueryResultsContainer from './QueryResultsContainer';
+import QueryResultsContainer from '../results/QueryResultsContainer';
 import { emptyString } from '../../../lib/formValidators';
 import { generateQueryParamString } from '../../../lib/explorerUtil';
 import { LEVEL_ERROR } from '../../common/Notice';

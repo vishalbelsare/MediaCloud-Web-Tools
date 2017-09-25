@@ -7,7 +7,7 @@ import { selectQuery, selectBySearchId, updateQueryCollectionLookupInfo, updateQ
          fetchSampleSearches, demoQuerySourcesByIds, demoQueryCollectionsByIds, resetSelected, resetQueries,
          resetSentenceCounts, resetSampleStories, resetStoryCounts, resetGeo, updateTimestampForQueries } from '../../../actions/explorerActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
-import QueryResultsContainer from './QueryResultsContainer';
+import QueryResultsContainer from '../results/QueryResultsContainer';
 import { WarningNotice } from '../../common/Notice';
 import composeUrlBasedQueryContainer from '../UrlBasedQueryContainer';
 
