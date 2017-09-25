@@ -84,6 +84,7 @@ function composeUrlBasedQueryContainer() {
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
             label: autoMagicQueryLabel(query),
             ...query, // let anything on URL override label and color
+            // remember demo queries won't have sources or collections on the URL
             sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
             collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
             q: decodeURIComponent(query.q),
