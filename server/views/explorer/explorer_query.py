@@ -7,7 +7,7 @@ from server.cache import cache
 from server.auth import user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, read_sample_searches
+from server.views.explorer import solr_query_from_request, read_sample_searches, DEFAULT_COLLECTION_IDS
 from operator import itemgetter
 
 logger = logging.getLogger(__name__)
@@ -31,20 +31,24 @@ def api_explorer_sources_by_ids():
         source_list.append(info)
     return jsonify(source_list)
 
+
 @app.route('/api/explorer/collections/list', methods=['GET'])
-@flask_login.login_required
 @arguments_required('collections[]')
 @api_error_handler
 def api_explorer_demo_collections_by_ids():
-    user_mc = user_admin_mediacloud_client()
-    collIdArray = request.args['collections[]'].split(',')
-    coll_list = []
-    for tagsId in collIdArray:
-        info = user_mc.tag(tagsId)
-        info['id'] = int(tagsId)
-        # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
-        coll_list.append(info);
-    return jsonify(coll_list)
+    if is_user_logged_in():
+        client_mc = user_admin_mediacloud_client()
+        collection_ids = request.args['collections[]'].split(',')
+    else:
+        # TODO: catch if these are non-default ones and throw a 401?
+        client_mc = mc
+        collection_ids = DEFAULT_COLLECTION_IDS  # don't let demo users search anything but defaults
+    collection_list = []
+    for tags_id in collection_ids:
+        info = client_mc.tag(tags_id)
+        info['id'] = int(tags_id)
+        collection_list.append(info)
+    return jsonify(collection_list)
 
 
 @app.route('/api/explorer/demo/sources/list', methods=['GET'])

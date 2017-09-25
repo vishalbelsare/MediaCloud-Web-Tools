@@ -11,7 +11,7 @@ import QueryResultsContainer from './QueryResultsContainer';
 import { emptyString } from '../../../lib/formValidators';
 import { generateQueryParamString } from '../../../lib/explorerUtil';
 import { LEVEL_ERROR } from '../../common/Notice';
-import composeSerializableQueryContainer from '../SerializableQueryContainer';
+import composeUrlBasedQueryContainer from '../UrlBasedQueryContainer';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
@@ -32,7 +32,7 @@ class LoggedInQueryContainer extends React.Component {
     const { queries, handleSearch, samples, lastSearchTime } = this.props;
     const isEditable = false;
     return (
-      <div>
+      <div className="query-container query-container-logged-in">
         <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch(queries)} />
         <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} samples={samples} />
       </div>
@@ -97,7 +97,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeSerializableQueryContainer()(
+      composeUrlBasedQueryContainer()(
         LoggedInQueryContainer
       )
     )

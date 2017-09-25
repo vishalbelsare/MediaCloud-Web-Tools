@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
+DEFAULT_COLLECTION_IDS = [ 9139487 ];
+
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
     if (desired_sort is None) or (desired_sort not in valid_sorts):
@@ -131,7 +133,7 @@ def parse_query_with_keywords(args) :
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
         media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
-        tags_ids = args['collections'].split(',') if 'collections' in args and len(args['collections']) > 0 else [9139487]
+        tags_ids = args['collections'].split(',') if 'collections' in args and len(args['collections']) > 0 else DEFAULT_COLLECTION_IDS
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
                                                 start_date=start_date,
