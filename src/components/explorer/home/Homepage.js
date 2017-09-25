@@ -2,6 +2,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { schemeCategory10 } from 'd3';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
@@ -9,7 +10,7 @@ import SearchForm from './SearchForm';
 import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -72,18 +73,23 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onKeywordSearch: (values, user) => {
-    let urlParamString = null;
-    // TODO two week range for logged in too?
-    const dateObj = getPastTwoWeeksDateRange();
-    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT_ARRAY);
-    // why bother sending this? const sources = '[]';
-    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection}}]`;
-    const demoParams = `[{"q":"${values.keyword}"}]`;
-
+    let urlParamString;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-      urlParamString = `search/${defParams}`;
+      const defaultDates = getPastTwoWeeksDateRange();
+      const queries = [{
+        q: values.keyword,
+        startDate: defaultDates.start,
+        endDate: defaultDates.end,
+        color: schemeCategory10[0],
+        collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
+        sources: [],
+      }];
+      queries[0].label = autoMagicQueryLabel(queries[0]);
+      const queryStr = generateQueryParamString(queries);
+      urlParamString = `search/${queryStr}`;
     } else {
-      urlParamString = `demo/search/${demoParams}`;
+      const queryStr = `[{"q":"${encodeURIComponent(values.keyword)}"}]`;
+      urlParamString = `demo/search/${queryStr}`;
     }
     dispatch(push(`/queries/${urlParamString}`));
   },

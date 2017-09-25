@@ -13,24 +13,16 @@ export const STARRED = 3;
 
 
 export function generateQueryParamString(queries) {
-  const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
-  const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
-  let urlParamString = queries.map((query, idx) => `{"index":${idx},"label":"${query.label}","q":"${query.q}","color":"${escape(query.color)}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
-  urlParamString = `${urlParamString}`;
-
-  return urlParamString;
-}
-
-const MAX_QUERY_LABEL_LENGTH = 60;
-
-// come from home page versus within QueryBuilder..
-export function smartLabelForQuery(query) {
-  let smartLabel = query.q;
-  // const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
-  if (query.q.length > MAX_QUERY_LABEL_LENGTH) {
-    smartLabel = `${smartLabel.substr(0, MAX_QUERY_LABEL_LENGTH)}...`;
-  }
-  return smartLabel;
+  const queriesForUrl = queries.map(query => ({
+    label: encodeURIComponent(query.label),
+    q: encodeURIComponent(query.q),
+    color: encodeURIComponent(query.color),
+    startDate: query.startDate,
+    endDate: query.endDate,
+    sources: query.sources.map(s => s.id),
+    collections: query.collections.map(s => s.id),
+  }));
+  return JSON.stringify(queriesForUrl);
 }
 
 export function queryPropertyHasChanged(queries, nextQueries, propName) {
@@ -41,4 +33,5 @@ export function queryPropertyHasChanged(queries, nextQueries, propName) {
 }
 
 // TODO: implement this logic from Dashboard
-export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, 30));
+const MAX_QUERY_LABEL_LENGTH = 60;
+export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, MAX_QUERY_LABEL_LENGTH));

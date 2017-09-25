@@ -84,6 +84,8 @@ function composeUrlBasedQueryContainer() {
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
             label: autoMagicQueryLabel(query),
             ...query, // let anything on URL override label and color
+            sources: query.sources.map(s => ({ id: s, media_id: s })),
+            collections: query.collections.map(s => ({ id: s, tags_id: s })),
             q: decodeURIComponent(query.q),
             color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
             index,  // redo index to be zero-based on reload of query

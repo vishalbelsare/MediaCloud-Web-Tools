@@ -65,10 +65,7 @@ QueryPickerLoggedInHeader.propTypes = {
   // from parent
   query: React.PropTypes.object,
   isDeletable: React.PropTypes.func.isRequired,
-  displayLabel: React.PropTypes.bool.isRequired,
-  onQuerySelected: React.PropTypes.func,
   onColorChange: React.PropTypes.func.isRequired,
-  handleSearch: React.PropTypes.func.isRequired,
   onDelete: React.PropTypes.func,
   onLabelEditRequest: React.PropTypes.func,
   // from composition
