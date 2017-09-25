@@ -110,7 +110,8 @@ class QueryPicker extends React.Component {
       this.saveChangesToSelectedQuery();
     } else {
       // for demo mode we have to save all the queries they entered first, and then search
-      queries.forEach((q) => {
+      const nonDeletedQueries = queries.filter(q => !q.deleted);
+      nonDeletedQueries.forEach((q) => {
         const queryText = document.getElementById(`query-${q.index}-q`).value;  // not super robust,
         const updatedQuery = {
           ...q,

@@ -59,6 +59,7 @@ def api_explorer_demo_sources_by_ids():
         source_list.append(info)
     return jsonify(source_list)
 
+
 @app.route('/api/explorer/demo/collections/list', methods=['GET'])
 @arguments_required('collections[]')
 @api_error_handler
@@ -72,6 +73,7 @@ def api_explorer_demo_collections_by_ids():
         coll_list.append(info);
     return jsonify(coll_list)
 
+
 @app.route('/api/explorer/saveQuery', methods=['GET'])
 @flask_login.login_required
 @arguments_required('label', 'query_string')
@@ -80,6 +82,7 @@ def save_user_query():
     # TODO any checking here?
     db.add_item_to_users_list(username, 'queries', request.args)
     return jsonify({'savedQuery': request.args['query_string']})
+
 
 # TODO use this or the other collection list retrieval?
 @app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])

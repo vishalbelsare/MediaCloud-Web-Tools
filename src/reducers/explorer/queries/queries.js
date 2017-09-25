@@ -48,11 +48,8 @@ function queries(state = INITIAL_STATE, action) {
       }
       return state;
     case SELECT_SEARCH_BY_PARAMS: // select this set of queries as passed in by URL
-      if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
-        const queryData = action.payload.map(q => Object.assign({}, q, { id: null, searchId: null }));
-        return queryData;
-      }
-      return state;
+      updatedState = action.payload.map(q => Object.assign({}, q));
+      return updatedState;
     case DELETE_QUERY:
       if (action.payload) {
         updatedState = [...state];

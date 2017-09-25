@@ -10,9 +10,8 @@ import { getShortDate } from '../../../lib/dateUtil';
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
     defaultMessage: 'no media sources or collections' },
-  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
-  collectionsSummaryOne: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
-  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
+  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{sourceCount, plural, \n =1 {# source} \n other {# sources }\n}' },
+  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
@@ -30,8 +29,11 @@ class QueryPickerItem extends React.Component {
   };
 
   handleBlurAndSelection = () => {
-    const { onQuerySelected } = this.props;
-    onQuerySelected();
+    const { onQuerySelected, query } = this.props;
+    // don't allow selection in demo sample mode
+    if (query.searchId === undefined) {
+      onQuerySelected();
+    }
   };
 
   updateLabelInDialog = (val) => {
@@ -118,18 +120,18 @@ class QueryPickerItem extends React.Component {
         );
       }
 
-      const collCount = query.collections ? query.collections.length : 0;
-      const srcCount = query.sources ? query.sources.length : 0;
+      const collectionCount = query.collections ? query.collections.length : 0;
+      const sourceCount = query.sources ? query.sources.length : 0;
       // const srcDesc = query.media;
-      const totalCount = collCount + srcCount;
+      const totalMediaCount = collectionCount + sourceCount;
       const queryLabel = query.label;
       const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
-      const oneCollLabel = collCount === 1 ? oneCollLabelOrNumber : '';
+      const oneCollLabel = collectionCount === 1 ? oneCollLabelOrNumber : '';
 
-      const oneCollStatus = <FormattedMessage {...localMessages.collectionsSummaryOne} values={{ label: oneCollLabel }} />;
-      subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
+      const oneCollStatus = oneCollLabel;
+      subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalMediaCount }} />;
 
-      if (srcCount === 0 && collCount === 1) {
+      if (sourceCount === 0 && collectionCount === 1) {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
@@ -137,12 +139,12 @@ class QueryPickerItem extends React.Component {
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
-      } else if (totalCount > 0) {
+      } else if (totalMediaCount > 0) {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            <FormattedMessage {...localMessages.collectionsSummary} values={{ collCount, label: queryLabel }} /><br />
-            <FormattedMessage {...localMessages.sourcesSummary} values={{ srcCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.collectionsSummary} values={{ collectionCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.sourcesSummary} values={{ sourceCount, label: queryLabel }} /><br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );

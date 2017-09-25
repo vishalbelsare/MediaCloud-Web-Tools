@@ -61,6 +61,7 @@ function composeUrlBasedQueryContainer() {
         const sampleSearchId = parseInt(queryAsJsonStr, 10);
         let queriesFromUrl;
         if (!isNaN(sampleSearchId)) {
+          // need to add in the id of the search here - why isn't this in there already?
           queriesFromUrl = samples[sampleSearchId].queries;
         } else {
           try {
@@ -78,7 +79,6 @@ function composeUrlBasedQueryContainer() {
               collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
               startDate: defaultDates.start,
               endDate: defaultDates.end,
-              search_id: sampleSearchId,
             };
           }
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
