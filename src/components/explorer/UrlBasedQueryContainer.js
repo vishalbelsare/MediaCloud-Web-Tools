@@ -9,7 +9,7 @@ import { LEVEL_ERROR } from '../common/Notice';
 import { addNotice } from '../../actions/appActions';
 import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
-import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
+// import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
 
@@ -43,9 +43,7 @@ function composeUrlBasedQueryContainer() {
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
           // mark the whole thing as ready once any sources and collections have been set
-          const readyFetchStatusStates = [FETCH_INVALID, FETCH_SUCCEEDED];
-          if (readyFetchStatusStates.includes(nextProps.collectionsFetchStatus) &&
-              readyFetchStatusStates.includes(nextProps.sourcesFetchStatus)) {
+          if (this.isAllMediaDetailsReady()) {
             // console.log('  got media info from server, ready!');
             this.setState({ queryInStore: true });  // mark that the parsing process has finished
           }
@@ -82,8 +80,8 @@ function composeUrlBasedQueryContainer() {
             };
           }
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
-            label: autoMagicQueryLabel(query),
             ...query, // let anything on URL override label and color
+            label: query.label ? decodeURIComponent(query.label) : autoMagicQueryLabel(query),
             // remember demo queries won't have sources or collections on the URL
             sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
             collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
@@ -95,6 +93,17 @@ function composeUrlBasedQueryContainer() {
         }
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
+      }
+      isAllMediaDetailsReady() {
+        const { queries } = this.props;
+        if (queries.length === 0) return false; // need to bail if no queries (ie. first page mount)
+        const queryCollectionStatus = queries.map(q => q.collections.length === 0 ||
+          q.collections.reduce((combined, c) => combined && c.tag_sets_id !== undefined, true));
+        const collectionsAreReady = queryCollectionStatus.reduce((combined, q) => combined && q, true);
+        const querySourceStatus = queries.map(q => q.sources.length === 0 ||
+          q.sources.reduce((combined, s) => combined && s.name !== undefined, true));
+        const sourcesAreReady = querySourceStatus.reduce((combined, q) => combined && q, true);
+        return collectionsAreReady && sourcesAreReady;
       }
       render() {
         let content;
@@ -120,6 +129,7 @@ function composeUrlBasedQueryContainer() {
       isLoggedIn: PropTypes.bool.isRequired,
       fetchStatus: PropTypes.string.isRequired,
       samples: PropTypes.array,
+      queries: PropTypes.array,
       // from dispatch
       saveQueriesFromParsedUrl: PropTypes.func.isRequired,
       addAppNotice: PropTypes.func.isRequired,
@@ -131,6 +141,7 @@ function composeUrlBasedQueryContainer() {
       sourcesFetchStatus: state.explorer.queries.sources.fetchStatus,  // prefetch status for sources
       fetchStatus: state.explorer.samples.fetchStatus,
       samples: state.explorer.samples.list,
+      queries: state.explorer.queries.queries,
     });
 
     // push any updates (including selected) into queries in state, will trigger async load in sub sections
