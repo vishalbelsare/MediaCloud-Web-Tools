@@ -35,7 +35,7 @@ class SelectMediaCollectionResultsContainer extends React.Component {
       whichMedia.fetchStatus = collectionResults.fetchStatus;
       content = <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     } else {
-      content = <SelectMediaFeaturedAsyncContainer whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+      content = <SelectMediaFeaturedAsyncContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
     return (
       <div>

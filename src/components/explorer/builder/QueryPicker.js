@@ -57,6 +57,17 @@ class QueryPicker extends React.Component {
     };
     updateCurrentQuery(updatedQuery, 'color');
   }
+  handleMediaDelete = (toBeDeletedObj) => {
+    // the user has removed media from the Query Form SourceCollectionsForm
+    const { formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
+    const updatedMedia = formQuery.media.filter(m => m.id !== toBeDeletedObj.id);
+    const updatedSources = updatedMedia.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = updatedMedia.filter(m => m.type === 'collection' || m.tags_id);
+    updatedMedia.collections = updatedCollections;
+    updatedMedia.sources = updatedSources;
+    updateCurrentQuery(updatedMedia, null);
+  }
+
 
   handleMediaChange = (sourceAndCollections) => {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
@@ -226,6 +237,7 @@ class QueryPicker extends React.Component {
             onSave={this.saveAndSearch}
             onColorChange={this.handleColorChange}
             onMediaChange={this.handleMediaChange}
+            onMediaDelete={this.handleMediaDelete}
             handleLoadSearch={loadUserSearch}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
