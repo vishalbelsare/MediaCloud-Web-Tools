@@ -27,9 +27,8 @@ class SelectMediaResultsContainer extends React.Component {
       this.updateMediaQuery({ type: nextProps.selectedMediaQueryType });
     }
     if (nextProps.selectedMedia !== this.props.selectedMedia ||
-      nextProps.collectionResults !== this.props.collectionResults ||
-      nextProps.featured !== this.props.featured ||
-      nextProps.sourceResults !== this.props.sourceResults) {
+      // because featured collections has an async call, we either compare selected to featured here, or do something else
+      (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess)) {
       this.correlateSelection(nextProps);
     }
   }
@@ -55,16 +54,16 @@ class SelectMediaResultsContainer extends React.Component {
       default:
         break;
     }
-    // updated what has been un/selected - make sure results are in sync with selectedMedia store
+    // if selected media has changed, update current results
     if (whichProps.selectedMedia && whichProps.selectedMedia.length > 0 &&
-      whichList && whichList !== undefined && whichList.list && whichList.list.length > 0) {
-      // sync up selectedMedia and result sets.
+      // we can't be sure we have received results yet
+      whichList.list && whichList.list.length > 0) {
+      // sync up selectedMedia and push to result sets.
       whichList.list.map((m) => {
         const mediaIndex = whichProps.selectedMedia.findIndex(q => q.id === m.id);
-        // this isn't fully working bc sometimes both these lists are in sycn but the UI is not!
-        if (m.selected && mediaIndex < 0) {
+        if (mediaIndex < 0) {
           this.props.toggleConcurrency(m, false);
-        } else if (!m.selected && mediaIndex >= 0) {
+        } else if (mediaIndex >= 0) {
           this.props.toggleConcurrency(m, true);
         }
         return m;
@@ -131,6 +130,7 @@ const mapStateToProps = state => ({
   timestamp: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.timestamp : null,
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
+  sourceResults: state.system.mediaPicker.sourceQueryResults,
 });
 
 const mapDispatchToProps = dispatch => ({

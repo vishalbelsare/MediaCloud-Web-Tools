@@ -70,7 +70,7 @@ class QueryForm extends React.Component {
     let mediaPicker = null;
     let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
     if (isEditable) {
-      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onMediaChange(selections)} />;
+      mediaPicker = <SelectMediaDialog initMedia={cleanedInitialValues.media} onConfirmSelection={selections => onMediaChange(selections)} />;
       mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
     }
     if (!selected) { return null; }

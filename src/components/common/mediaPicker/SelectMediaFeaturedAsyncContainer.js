@@ -14,7 +14,8 @@ const SelectMediaFeaturedAsyncContainer = (props) => {
   if (fetchStatus !== fetchConstants.FETCH_SUCCEEDED) {
     return <LoadingSpinner />;
   }
-  whichMedia = featured.list;
+  whichMedia = [];
+  whichMedia = featured;
   whichMedia.fetchStatus = featured.fetchStatus;
   whichMedia.type = 'collections';
 
@@ -23,13 +24,13 @@ const SelectMediaFeaturedAsyncContainer = (props) => {
 
 SelectMediaFeaturedAsyncContainer.propTypes = {
   fetchStatus: React.PropTypes.string,
-  featured: React.PropTypes.object,
+  featured: React.PropTypes.array,
   handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.system.mediaPicker.featured.fetchStatus,
-  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
+  featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured.list : null,
 });
 
 const mapDispatchToProps = dispatch => ({

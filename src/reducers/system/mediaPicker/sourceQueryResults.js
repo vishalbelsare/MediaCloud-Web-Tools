@@ -18,15 +18,15 @@ const sourceQueryResults = createAsyncReducer({
     })),
   }),
   [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
-    list: state.list ? state.list.map((c) => {
-      if (c.id === payload.id) {
+    list: state.list.map((c) => {
+      if (c.id === payload.selectedMedia.id) {
         return ({
           ...c,
-          selected: !c.selected,
+          selected: payload.setSelected,
         });
       }
       return c;
-    }) : null,
+    }),
   }),
   [RESET_MEDIAPICKER_SOURCE_SEARCH]: () => ({ args: { type: 1, mediaKeyword: null }, list: [] }),
 });
