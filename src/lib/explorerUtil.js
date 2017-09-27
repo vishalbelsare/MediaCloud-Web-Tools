@@ -11,7 +11,7 @@ export const PICK_SOURCE = 1;
 export const ADVANCED = 2;
 export const STARRED = 3;
 
-
+// we use the media bucket to grab updated and deleted media from two different operations. hence, we need to check that value first
 export function generateQueryParamString(queries) {
   const queriesForUrl = queries.map(query => ({
     label: encodeURIComponent(query.label),
@@ -19,8 +19,8 @@ export function generateQueryParamString(queries) {
     color: encodeURIComponent(query.color),
     startDate: query.startDate,
     endDate: query.endDate,
-    sources: query.sources.map(s => s.id),
-    collections: query.collections.map(s => s.id),
+    sources: query.media ? query.media.filter(m => m.type === 'source' || m.media_id).map(s => s.id) : query.sources.map(s => s.id), // de-aggregate media bucket into sources and collections
+    collections: query.media ? query.media.filter(m => m.type === 'collection' || m.tags_id).map(s => s.id) : query.collections.map(s => s.id),
   }));
   return JSON.stringify(queriesForUrl);
 }
