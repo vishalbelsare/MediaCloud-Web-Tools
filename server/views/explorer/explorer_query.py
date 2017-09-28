@@ -3,7 +3,6 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, mc, db
-from server.cache import cache
 from server.auth import user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
 from server.util.request import form_fields_required, api_error_handler, arguments_required
@@ -30,7 +29,6 @@ def api_explorer_sources_by_ids():
         info['id'] = mediaId
         source_list.append(info)
     return jsonify(source_list)
-
 
 @app.route('/api/explorer/collections/list', methods=['GET'])
 @flask_login.login_required
@@ -64,13 +62,15 @@ def api_explorer_demo_sources_by_ids():
 @arguments_required('collections[]')
 @api_error_handler
 def api_explorer_demo_collections_by_ids():
-    collIdArray = request.args['collections[]'].split(',')
+    collection_ids = request.args['collections[]'].split(',')
     coll_list = []
-    for tagsId in collIdArray:
-        info = mc.tag(tagsId)
-        info['id'] = tagsId
+    for tags_id in collection_ids:
+        tags_id = tags_id.encode('ascii', 'ignore') # if empty, the unicode char will cause an error
+        if len (tags_id) > 0:
+            info = mc.tag(tags_id)
+            info['id'] = tags_id
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
-        coll_list.append(info);
+            coll_list.append(info)
     return jsonify(coll_list)
 
 

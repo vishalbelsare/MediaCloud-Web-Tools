@@ -164,7 +164,7 @@ function composeUrlBasedQueryContainer() {
           };
           const sourceDetailsAction = isLoggedIn ? fetchQuerySourcesByIds : demoQuerySourcesByIds;
           if (q.sources && q.sources.length > 0) {
-            queryInfo.sources = q.sources.map(src => src.media_id || src.id);
+            queryInfo.sources = q.sources.map(src => src.media_id || src.id || src); // the latter in case of sample search
             dispatch(sourceDetailsAction(queryInfo))
             .then((results) => {
               queryInfo.sources = results;
@@ -173,7 +173,7 @@ function composeUrlBasedQueryContainer() {
           }
           const collectionDetailsAction = isLoggedIn ? fetchQueryCollectionsByIds : demoQueryCollectionsByIds;
           if (q.collections && q.collections.length > 0) {
-            queryInfo.collections = q.collections.map(coll => coll.tags_id || coll.id);
+            queryInfo.collections = q.collections.map(coll => coll.tags_id || coll.id || coll); // the latter in case of sample search
             dispatch(collectionDetailsAction(queryInfo))
             .then((results) => {
               queryInfo.collections = results;
