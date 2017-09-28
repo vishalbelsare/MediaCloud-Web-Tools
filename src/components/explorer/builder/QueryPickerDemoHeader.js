@@ -6,6 +6,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ColorPicker from '../../common/ColorPicker';
+import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 
 const localMessages = {
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
@@ -49,17 +50,22 @@ class QueryPickerDemoHeader extends React.Component {
       if (isLabelEditable) { // determine whether the label is editable or not (demo or logged in)
         nameInfo = (
           <div>
-            {colorPickerContent}
-            <TextField
-              className="query-picker-editable-name"
-              id={`query-${query.index}-q`}
-              name="q"
-              defaultValue={query.q}
-              hintText={formatMessage(localMessages.searchHint)}
-              onKeyPress={handleMenuItemKeyDown}
-              ref={focusUsernameInputField}
-            />
-            {iconOptions}
+            <div>
+              {colorPickerContent}
+              <TextField
+                className="query-picker-editable-name"
+                id={`query-${query.index}-q`}
+                name="q"
+                defaultValue={query.q}
+                hintText={formatMessage(localMessages.searchHint)}
+                onKeyPress={handleMenuItemKeyDown}
+                ref={focusUsernameInputField}
+              />
+              {iconOptions}
+            </div>
+            <div className="query-help-info">
+              <QueryHelpDialog />
+            </div>
           </div>
         );
       } else {  // the labels are not editable when the Demo user views the sample searches
