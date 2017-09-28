@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
 import { Grid, Row } from 'react-flexbox-grid/lib';
-import { selectMediaPickerQueryArgs, toggleMedia, selectMedia } from '../../../actions/systemActions';
+import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
@@ -23,12 +23,12 @@ class MediaSelectionContainer extends React.Component {
     updateMediaSelection(type);
   };
   render() {
-    const { selectedMediaQueryType, selectedMedia, handleToggleAndSelectMedia } = this.props;
+    const { selectedMediaQueryType, selectedMedia, handleUnselectMedia } = this.props;
     const { formatMessage } = this.props.intl;
     const content =
       selectedMedia.map((obj) => {
         const handleDelete = () => {
-          handleToggleAndSelectMedia(obj);
+          handleUnselectMedia(obj);
         };
         return (<Grid><Row><SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} onDelete={handleDelete} /></Row></Grid>);
       });
@@ -72,7 +72,7 @@ MediaSelectionContainer.propTypes = {
   selectedMedia: React.PropTypes.array,
   selectedMediaQueryType: React.PropTypes.number,
   updateMediaSelection: React.PropTypes.func.isRequired,
-  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
+  handleUnselectMedia: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -87,10 +87,10 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectMediaPickerQueryArgs({ type }));
     }
   },
-  handleToggleAndSelectMedia: (selectedMedia) => {
+  handleUnselectMedia: (selectedMedia) => {
     if (selectedMedia) {
-      dispatch(toggleMedia(selectedMedia));
-      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
+      const unselectecMedia = Object.assign({}, selectedMedia, { selected: false });
+      dispatch(selectMedia(unselectecMedia)); // disable MediaPickerPreviewList button too
     }
   },
 });

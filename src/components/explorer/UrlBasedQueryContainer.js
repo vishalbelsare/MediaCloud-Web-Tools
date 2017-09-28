@@ -11,7 +11,7 @@ import { addNotice } from '../../actions/appActions';
 import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 // import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
 
 const localMessages = {
@@ -191,6 +191,10 @@ function composeUrlBasedQueryContainer() {
         if (!isLoggedIn) {
           const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
           const newLocation = `/queries/demo/search/[${urlParamString}]`;
+          dispatch(push(newLocation));
+        } else {
+          const urlParamString = generateQueryParamString(unDeletedQueries);
+          const newLocation = `/queries/search/${urlParamString}`;
           dispatch(push(newLocation));
         }
       },

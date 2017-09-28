@@ -19,12 +19,12 @@ class LoggedInQueryContainer extends React.Component {
     resetExplorerData();
   }
   render() {
-    const { queries, handleSearch, samples, lastSearchTime } = this.props;
+    const { queries, handleSearch, samples, location, lastSearchTime } = this.props;
     const isEditable = false;
     return (
       <div className="query-container query-container-logged-in">
-        <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch(queries)} />
-        <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} samples={samples} />
+        <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch()} />
+        <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} />
       </div>
     );
   }
@@ -39,6 +39,7 @@ LoggedInQueryContainer.propTypes = {
   queries: PropTypes.array,
   samples: PropTypes.array,
   query: PropTypes.object,
+  location: PropTypes.object,
   // from dispatch
   resetExplorerData: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired,
@@ -66,7 +67,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetGeo());
   },
   reallyHandleSearch: () => {
-    dispatch(updateTimestampForQueries());
+    dispatch(updateTimestampForQueries()); // but this doesn't update the query... only the timestamp.. nextprops.queries should be new?
+    // update URL location according to updated queries
   },
   selectFirstQuery: (query) => {
     dispatch(selectQuery(query));

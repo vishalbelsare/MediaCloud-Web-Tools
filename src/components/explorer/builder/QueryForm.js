@@ -49,7 +49,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, /* handleLoadSearch, handleSaveSearch, */
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -70,7 +70,7 @@ class QueryForm extends React.Component {
     let mediaPicker = null;
     let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
     if (isEditable) {
-      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onMediaChange(selections)} />;
+      mediaPicker = <SelectMediaDialog initMedia={selected.media ? selected.media : cleanedInitialValues.media} onConfirmSelection={selections => onMediaChange(selections)} />;
       mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
     }
     if (!selected) { return null; }
@@ -118,6 +118,7 @@ class QueryForm extends React.Component {
                     form="queryForm"
                     destroyOnUnmount={false}
                     enableReinitialize
+                    onDelete={onMediaDelete}
                     initialValues={cleanedInitialValues}
                     allowRemoval={isEditable}
                   />
@@ -207,6 +208,7 @@ QueryForm.propTypes = {
   meta: React.PropTypes.object,
   handleLoadSearch: React.PropTypes.func.isRequired,
   handleSaveSearch: React.PropTypes.func.isRequired,
+  onMediaDelete: React.PropTypes.func.isRequired,
   // from form healper
   updateQuery: React.PropTypes.func,
   handleSubmit: React.PropTypes.func,
