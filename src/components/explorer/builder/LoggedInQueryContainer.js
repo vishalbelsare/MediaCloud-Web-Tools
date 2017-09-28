@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { updateTimestampForQueries, resetSelected, resetQueries, resetSentenceCounts, resetSampleStories,
+import { updateTimestampForQueries, resetSelected, resetSentenceCounts, resetSampleStories,
   resetStoryCounts, resetGeo, selectQuery } from '../../../actions/explorerActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from '../results/QueryResultsContainer';
@@ -60,7 +60,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   resetExplorerData: () => { // TODO we will reduce this down to one call
     dispatch(resetSelected());
-    dispatch(resetQueries());
+    // dispatch(resetQueries());
     dispatch(resetSentenceCounts());
     dispatch(resetSampleStories());
     dispatch(resetStoryCounts());

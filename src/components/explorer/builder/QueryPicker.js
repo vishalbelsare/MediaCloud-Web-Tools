@@ -254,7 +254,9 @@ class QueryPicker extends React.Component {
         </div>
       );
     }
-    return ('error - no queries ');
+    return (
+      <div>error - no queries</div>
+    );
   }
 }
 
