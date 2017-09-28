@@ -1,0 +1,34 @@
+@import '../constants';
+
+.marketing-feature-list {
+
+  .marketing-feature-item {
+    padding-top: 30px;
+    padding-bottom: 30px;
+
+    h2 {
+      font-size: 30px;
+    }
+
+    p {
+    }
+
+    img {
+      border: 1px solid $material-grey300;
+      margin-top: 30px;
+    }
+
+    &.image-on-left {
+    }
+
+    &.image-on-right {
+      background-color: $material-grey100;      
+    }
+
+  }
+
+  margin-top: 30px;
+
+  margin-bottom: 100px;
+
+}

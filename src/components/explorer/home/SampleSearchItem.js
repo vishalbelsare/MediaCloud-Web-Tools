@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { assetUrl } from '../../../lib/assetUtil';
 
 const SampleSearchItem = (props) => {
   const { search, user } = props;
@@ -25,7 +26,7 @@ const SampleSearchItem = (props) => {
   return (
     <div className="sample-search-item">
       <h2><Link to={link}>{search.name}</Link></h2>
-      <Link to={link}><img src={`/static/img/sample-searches/${search.imageName}`} alt={search.name} /></Link>
+      <Link to={link}><img src={assetUrl(`/static/img/sample-searches/${search.imageName}`)} alt={search.name} /></Link>
     </div>
   );
 };

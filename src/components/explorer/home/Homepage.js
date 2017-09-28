@@ -11,12 +11,12 @@ import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
+import MarketingFeatureList from './MarketingFeatureList';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
-  subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Welcome to the Media Cloud Explorer' },
-  summary: { id: 'explorer.intro.summary', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
-  description: { id: 'explorer.intro.description', defaultMessage: 'Explorer is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over a custom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
+  subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Explore Online News with Media Cloud' },
+  description: { id: 'explorer.intro.description', defaultMessage: 'Use the Media Cloud Explorer to search half a billion stories from more than 50,000 sources. We pull in stories from online news media, blogs, and other sources to let you research media attention to issues you are interested in. Track shifts in media attention, identify competing media narratives, compare coverage in different media sectors - these are all tasks Media Cloud can help you with.' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
@@ -27,12 +27,13 @@ const Homepage = (props) => {
     sideBarContent = (
       <Grid>
         <Row>
-          <Col md={7}>
+          <Col lg={1} />
+          <Col lg={5}>
             <h1><FormattedMessage {...localMessages.subtitle} /></h1>
-            <h2><FormattedMessage {...localMessages.summary} /></h2>
             <p><FormattedMessage {...localMessages.description} /></p>
           </Col>
-          <Col md={5}>
+          <Col lg={1} />
+          <Col lg={4}>
             <DataCard>
               <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
               <LoginForm />
@@ -43,7 +44,7 @@ const Homepage = (props) => {
     );
   }
   return (
-    <div>
+    <div className="homepage">
       <Grid>
         <Row>
           <Col lg={12}>
@@ -53,6 +54,7 @@ const Homepage = (props) => {
       </Grid>
       <SampleSearchContainer />
       {sideBarContent}
+      <MarketingFeatureList />
     </div>
   );
 };
