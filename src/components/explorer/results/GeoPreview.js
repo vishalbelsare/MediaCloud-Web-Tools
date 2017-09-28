@@ -72,7 +72,7 @@ class GeoPreview extends React.Component {
       const mapTiles = results.map((geoSet, idx) =>
         (<GridTile key={idx}>
           <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-          <GeoChart data={geoSet} countryMaxColorScale={queries[idx].color} hideLegend />
+          <GeoChart data={geoSet} countryMaxColorScale={queries && queries.length > idx ? queries[idx].color : ''} hideLegend />
         </GridTile>
         )
       );
