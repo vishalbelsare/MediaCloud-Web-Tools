@@ -12,6 +12,7 @@ import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
 import MarketingFeatureList from './MarketingFeatureList';
+import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -55,6 +56,9 @@ const Homepage = (props) => {
       <SampleSearchContainer />
       {sideBarContent}
       <MarketingFeatureList />
+      <Grid>
+        <SystemStatsContainer />
+      </Grid>
     </div>
   );
 };
