@@ -16,7 +16,9 @@ const featured = createAsyncReducer({
   [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => {
     const updatedState = [...state.list];
     const mediaIndex = updatedState.findIndex(q => q.id !== null && q.id === payload.selectedMedia.id);
-    updatedState[mediaIndex].selected = payload.setSelected;
+    if (mediaIndex >= 0) {
+      updatedState[mediaIndex].selected = payload.setSelected;
+    }
     return { list: updatedState };
   },
 });

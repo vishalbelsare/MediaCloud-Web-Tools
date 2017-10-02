@@ -24,9 +24,9 @@ def api_explorer_sources_by_ids():
     user_mc = user_admin_mediacloud_client()
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
-    for mediaId in source_id_array:
-        info = user_mc.media(mediaId)
-        info['id'] = mediaId
+    for media_id in source_id_array:
+        info = user_mc.media(media_id)
+        info['id'] = int(media_id)
         source_list.append(info)
     return jsonify(source_list)
 
@@ -51,9 +51,9 @@ def api_explorer_collections_by_ids():
 def api_explorer_demo_sources_by_ids():
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
-    for mediaId in source_id_array:
-        info = mc.media(mediaId)
-        info['id'] = int(mediaId)
+    for media_id in source_id_array:
+        info = mc.media(media_id)
+        info['id'] = int(media_id)
         source_list.append(info)
     return jsonify(source_list)
 
