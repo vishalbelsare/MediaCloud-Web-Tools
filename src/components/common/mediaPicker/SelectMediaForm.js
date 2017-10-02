@@ -1,9 +1,13 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
-// import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-// import AppButton from '../../../common/AppButton';
-// import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE } from '../../../../lib/tagUtil';
+import AppButton from '../../common/AppButton';
+
+const localMessages = {
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Pick A Collection' },
+  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Pick A Source' },
+  search: { id: 'system.mediaPicker.select.search', defaultMessage: 'Search' },
+};
 
 class SelectMediaForm extends React.Component {
   shouldComponentUpdate = () => false;
@@ -25,19 +29,32 @@ class SelectMediaForm extends React.Component {
   };
 
   render() {
-    const { initValues } = this.props;
+    const { initValues, submitting } = this.props;
+    const { formatMessage } = this.props.intl;
 
     const cleanedInitialValues = initValues ? { ...initValues } : {};
+    const instruction = initValues ? localMessages.pickCollections : localMessages.pickSources;
     if (cleanedInitialValues.mediaKeyword === undefined || cleanedInitialValues.mediaKeyword === null) {
       cleanedInitialValues.mediaKeyword = '';
     }
     return (
-      <TextField
-        name="mediaKeyword"
-        defaultValue={cleanedInitialValues.mediaKeyword}
-        onKeyPress={this.handleMenuItemKeyDown}
-        ref={this.focusUsernameInputField}
-      />
+      <div>
+        <FormattedMessage {...instruction} />
+        <TextField
+          name="mediaKeyword"
+          defaultValue={cleanedInitialValues.mediaKeyword}
+          onKeyPress={this.handleMenuItemKeyDown}
+          ref={this.focusUsernameInputField}
+        />
+        <AppButton
+          style={{ marginTop: 30 }}
+          type="submit"
+          label={formatMessage(localMessages.search)}
+          disabled={submitting}
+          onClick={this.handleMenuItemKeyDown}
+          primary
+        />
+      </div>
     );
   }
 }
@@ -48,6 +65,7 @@ SelectMediaForm.propTypes = {
   onSearch: React.PropTypes.func,
   isEditable: React.PropTypes.bool,
   initValues: React.PropTypes.object,
+  submitting: React.PropTypes.bool,
 };
 
 export default

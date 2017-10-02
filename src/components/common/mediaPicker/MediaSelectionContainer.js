@@ -5,15 +5,15 @@ import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
 import { Grid, Row } from 'react-flexbox-grid/lib';
 import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE, ADVANCED, STARRED } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
   pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Pick A Collection' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Pick A Source' },
-  pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
-  pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
+  // pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
+  // pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
 
 class MediaSelectionContainer extends React.Component {
@@ -47,16 +47,6 @@ class MediaSelectionContainer extends React.Component {
             value={PICK_SOURCE}
             primaryText={formatMessage(localMessages.pickSources)}
             onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
-          />
-          <MenuItem
-            primaryText={formatMessage(localMessages.pickAdvanced)}
-            value={ADVANCED}
-            onTouchTap={() => this.updateMediaType(ADVANCED)}
-          />
-          <MenuItem
-            primaryText={formatMessage(localMessages.pickStarred)}
-            value={STARRED}
-            onTouchTap={() => this.updateMediaType(STARRED)}
           />
         </Menu>
         {content}

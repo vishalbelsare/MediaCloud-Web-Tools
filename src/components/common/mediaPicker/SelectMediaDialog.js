@@ -33,13 +33,16 @@ class SelectMediaDialog extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
-    const { initMedia, handleInitialSelectionOfMedia, clearMediaSelectionForQuery } = this.props;
+    const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia)) {
-      clearMediaSelectionForQuery();
       if (nextProps.initMedia) { // expects an array of media from caller
         nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
       }
     }
+  }
+  componentWillUnmount() {
+    const { reset } = this.props;
+    reset();
   }
   handleModifyClick = (evt) => {
     if (evt) {
@@ -114,8 +117,8 @@ SelectMediaDialog.propTypes = {
   lookupTimestamp: React.PropTypes.string,
   handleSelection: React.PropTypes.func.isRequired,
   handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
-  clearMediaSelectionForQuery: React.PropTypes.func.isRequired,
   onConfirmSelection: React.PropTypes.func.isRequired,
+  reset: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -130,7 +133,7 @@ const mapDispatchToProps = dispatch => ({
       dispatch(fetchMediaPickerFeaturedCollections(5));
     }
   },
-  clearMediaSelectionForQuery: () => {
+  reset: () => {
     dispatch(clearSelectedMedia());
   },
   handleInitialSelectionOfMedia: (prevSelectedMedia) => {
