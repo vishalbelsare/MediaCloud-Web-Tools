@@ -52,10 +52,12 @@ class SelectMediaDialog extends React.Component {
     // need to set body to overflow: hidden somehow...
   };
 
-  handleRemoveDialogClose = () => {
+  handleRemoveDialogClose = (confirm) => {
     const { onConfirmSelection, selectedMedia } = this.props;
     this.setState({ open: false });
-    onConfirmSelection(selectedMedia); // passed in from containing element
+    if (confirm) {
+      onConfirmSelection(selectedMedia); // passed in from containing element
+    }
   };
 
   render() {
@@ -64,7 +66,7 @@ class SelectMediaDialog extends React.Component {
     const dialogActions = (
       <AppButton
         label={formatMessage(messages.ok)}
-        onTouchTap={this.handleRemoveDialogClose}
+        onTouchTap={() => this.handleRemoveDialogClose(true)}
         type="submit"
         primary
       />
@@ -90,7 +92,7 @@ class SelectMediaDialog extends React.Component {
             </div>
             {dialogActions}
           </div>
-          <div className="backdrop" onTouchTap={this.handleRemoveDialogClose} />
+          <div className="backdrop" onTouchTap={() => this.handleRemoveDialogClose(false)} />
         </div>
       );
     }

@@ -28,6 +28,8 @@ class SelectMediaResultsContainer extends React.Component {
     }
     if (nextProps.selectedMedia !== this.props.selectedMedia ||
       // because featured collections has an async call, we either compare selected to featured here, or do something else
+      // if the results have changed from a keyword entry, we need to update the UI
+      (nextProps.sourceResults && nextProps.sourceResults.lastFetchSuccess !== this.props.sourceResults.lastFetchSuccess) ||
       (nextProps.featured && nextProps.featured.lastFetchSuccess !== this.props.featured.lastFetchSuccess)) {
       this.correlateSelection(nextProps);
     }
