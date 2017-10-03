@@ -3,7 +3,8 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Menu from 'material-ui/Menu';
-import { Grid, Row } from 'react-flexbox-grid/lib';
+import Divider from 'material-ui/Divider';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
@@ -30,7 +31,7 @@ class MediaSelectionContainer extends React.Component {
         const handleDelete = () => {
           handleUnselectMedia(obj);
         };
-        return (<Grid><Row><SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} onDelete={handleDelete} /></Row></Grid>);
+        return (<Grid><Row /><Row /><Row><Col lg={3}><SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} onDelete={handleDelete} /></Col></Row></Grid>);
       });
 
     return (
@@ -49,6 +50,7 @@ class MediaSelectionContainer extends React.Component {
             onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
           />
         </Menu>
+        <Divider />
         {content}
       </div>
     );

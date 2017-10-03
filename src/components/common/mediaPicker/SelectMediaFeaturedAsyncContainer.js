@@ -8,8 +8,12 @@ import * as fetchConstants from '../../../lib/fetchConstants';
 import TAG_SET_MC_ID from '../../../lib/tagUtil';
 import LoadingSpinner from '../LoadingSpinner';
 
+const localMessages = {
+  title: { id: 'system.mediaPicker.select.featured.title', defaultMessage: 'Featured Collections' },
+};
 const SelectMediaFeaturedAsyncContainer = (props) => {
   const { fetchStatus, featured, handleToggleAndSelectMedia } = props;
+  const { formatMessage } = props.intl;
   let whichMedia = [];
   if (fetchStatus !== fetchConstants.FETCH_SUCCEEDED) {
     return <LoadingSpinner />;
@@ -19,10 +23,11 @@ const SelectMediaFeaturedAsyncContainer = (props) => {
   whichMedia.fetchStatus = featured.fetchStatus;
   whichMedia.type = 'collections';
 
-  return <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+  return <MediaPickerWrapper title={formatMessage(localMessages.title)} whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
 };
 
 SelectMediaFeaturedAsyncContainer.propTypes = {
+  intl: React.PropTypes.object.isRequired,
   fetchStatus: React.PropTypes.string,
   featured: React.PropTypes.array,
   handleToggleAndSelectMedia: React.PropTypes.func.isRequired,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
 import MediaPickerWrapper from './MediaPickerWrapper';
@@ -9,7 +9,7 @@ import SelectMediaForm from './SelectMediaForm';
 import SelectMediaFeaturedAsyncContainer from './SelectMediaFeaturedAsyncContainer';
 
 const localMessages = {
-  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
+  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'Collections matching "{name}"' },
   intro: { id: 'system.mediaPicker.select.info',
     defaultMessage: '<p>This is an intro</p>' },
   helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
@@ -29,17 +29,18 @@ class SelectMediaCollectionResultsContainer extends React.Component {
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
     whichMedia.fetchStatus = null;
     whichMedia.type = 'collections';
+    const formattedTitle = <FormattedMessage {...localMessages.title} values={{ name: whichMedia.storedKeyword.mediaKeyword }} />;
     if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
       whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
       whichMedia.storedKeyword = collectionResults.args;
       whichMedia.fetchStatus = collectionResults.fetchStatus;
-      content = <MediaPickerWrapper whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+      content = <MediaPickerWrapper title={formattedTitle} whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     } else {
       content = <SelectMediaFeaturedAsyncContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
     return (
       <div>
-        <SelectMediaForm initValues={whichMedia.storedKeyword} onSearch={val => this.updateMediaQuery(val)} />
+        <SelectMediaForm initValues={whichMedia} onSearch={val => this.updateMediaQuery(val)} />
         {content}
       </div>
     );
@@ -47,6 +48,7 @@ class SelectMediaCollectionResultsContainer extends React.Component {
 }
 
 SelectMediaCollectionResultsContainer.propTypes = {
+  intl: React.PropTypes.object.isRequired,
   handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
   updateMediaQuerySelection: React.PropTypes.func.isRequired,
   selectedMediaQueryKeyword: React.PropTypes.string,

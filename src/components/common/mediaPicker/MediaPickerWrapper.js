@@ -12,7 +12,7 @@ import MediaPickerPreviewList from '../MediaPickerPreviewList';
 class MediaPickerWrapper extends React.Component {
 
   render() {
-    const { whichMedia, handleToggleAndSelectMedia } = this.props;
+    const { title, whichMedia, handleToggleAndSelectMedia } = this.props;
     let content = null;
     if (whichMedia.storedKeyword !== null && whichMedia.storedKeyword !== undefined &&
       whichMedia.storedKeyword.mediaKeyword &&
@@ -20,14 +20,17 @@ class MediaPickerWrapper extends React.Component {
       content = <LoadingSpinner />;
     } else if (whichMedia && whichMedia.length > 0) {
       content = (
-        <MediaPickerPreviewList
-          items={whichMedia}
-          classStyle="browse-items"
-          itemType="media"
-          linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
-          linkDisplay={c => (c.label ? c.label : c.name)}
-          onSelectMedia={c => handleToggleAndSelectMedia(c)}
-        />
+        <div>
+          <h2>{title}</h2>
+          <MediaPickerPreviewList
+            items={whichMedia}
+            classStyle="browse-items"
+            itemType="media"
+            linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
+            linkDisplay={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
+            onSelectMedia={c => handleToggleAndSelectMedia(c)}
+          />
+        </div>
       );
     }
     return content;
@@ -37,6 +40,7 @@ class MediaPickerWrapper extends React.Component {
 
 MediaPickerWrapper.propTypes = {
   // from parent
+  title: PropTypes.string,
   whichMedia: PropTypes.array,
   handleToggleAndSelectMedia: PropTypes.func,
 };
