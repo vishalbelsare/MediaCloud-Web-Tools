@@ -13,6 +13,10 @@ const localMessages = {
 };
 
 class QueryPickerDemoHeader extends React.Component {
+  sendToLink = () => {
+    const registrationUrl = '/login';
+    window.open(registrationUrl, '_blank');
+  };
   render() {
     const { query, isLabelEditable, isDeletable, onColorChange, onDelete, handleMenuItemKeyDown, focusUsernameInputField } = this.props;
     const { formatMessage } = this.props.intl;
@@ -22,14 +26,16 @@ class QueryPickerDemoHeader extends React.Component {
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
     let iconOptions = null;
-    let menuChildren = null;
+    let menuRegister = null;
+    let menuDelete = null;
     if (query) {
-      if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
-        menuChildren = (
-          <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />
-        );
+      if (!isThisAProtectedQuery) {
+        menuRegister = <MenuItem primaryText="Register To Edit" onTouchTap={this.sendToLink} />;
       }
-      if (menuChildren !== null) {
+      if (!isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
+        menuDelete = <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />;
+      }
+      if (menuRegister !== null || menuDelete !== null) {
         iconOptions = (
           <IconMenu
             className="query-picker-icon-button"
@@ -37,7 +43,8 @@ class QueryPickerDemoHeader extends React.Component {
             anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
             targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           >
-            {menuChildren}
+            {menuRegister}
+            {menuDelete}
           </IconMenu>
         );
       }
