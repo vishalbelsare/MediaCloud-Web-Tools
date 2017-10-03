@@ -48,7 +48,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return state;
     case SELECT_SEARCH_BY_PARAMS: // select this set of queries as passed in by URL
-      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: true }));
+      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: false }));
       return updatedState;
     case DELETE_QUERY:
       if (action.payload) {
