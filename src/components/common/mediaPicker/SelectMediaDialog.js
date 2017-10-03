@@ -49,12 +49,14 @@ class SelectMediaDialog extends React.Component {
       evt.preventDefault();
     }
     this.setState({ open: true });
+    document.body.style.overflow = 'hidden';
     // need to set body to overflow: hidden somehow...
   };
 
   handleRemoveDialogClose = (confirm) => {
     const { onConfirmSelection, selectedMedia } = this.props;
     this.setState({ open: false });
+    document.body.style.overflow = 'auto';
     if (confirm) {
       onConfirmSelection(selectedMedia); // passed in from containing element
     }
