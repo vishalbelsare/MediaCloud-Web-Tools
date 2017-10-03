@@ -37,6 +37,7 @@ class QueryPicker extends React.Component {
     const updatedQuery = { ...query };
     updatedQuery.label = newValue;
     updatedQuery.q = newValue;
+    updatedQuery.autoNaming = false;
     updateCurrentQuery(updatedQuery, 'label');
   }
   // called by query picker to update things like label or color
@@ -44,6 +45,9 @@ class QueryPicker extends React.Component {
     const { updateCurrentQuery } = this.props;
     const updatedQuery = { ...query };
     updatedQuery[propertyName] = newValue;
+    if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
+      updatedQuery.autoNaming = false;
+    }
     // now update it in the store
     updateCurrentQuery(updatedQuery, propertyName);
   }
@@ -100,7 +104,7 @@ class QueryPicker extends React.Component {
     const updatedQuery = {
       ...selected,
       ...formQuery,
-      label: autoMagicQueryLabel(formQuery),
+      label: selected.autoNaming === true ? autoMagicQueryLabel(formQuery) : selected.label,
     };
     updateCurrentQuery(updatedQuery, 'label');
   }
@@ -128,7 +132,7 @@ class QueryPicker extends React.Component {
           ...q,
           q: queryText,
         };
-        updatedQuery.label = autoMagicQueryLabel(updatedQuery); // have to call this alone because input is the whole query
+        updatedQuery.label = updatedQuery.autoNaming ? autoMagicQueryLabel(updatedQuery) : updatedQuery.label; // have to call this alone because input is the whole query
         updateOneQuery(updatedQuery);
       });
     }
@@ -173,7 +177,7 @@ class QueryPicker extends React.Component {
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
         const defaultQueryField = isLoggedIn ? '*' : '';
-        const defaultQuery = { index: newIndex, label: newQueryLabel, q: defaultQueryField, description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, custom: true };
+        const defaultQuery = { index: newIndex, label: newQueryLabel, q: defaultQueryField, description: 'new', startDate: dateObj.start, endDate: dateObj.end, collections: DEFAULT_COLLECTION_OBJECT_ARRAY, sources: [], color: genDefColor, autoNaming: true };
 
         const emptyQuerySlide = (
           <div key={fixedQuerySlides.length}>
