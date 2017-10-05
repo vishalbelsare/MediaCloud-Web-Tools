@@ -19,15 +19,18 @@ const localMessages = {
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
 };
 
+const LEFT = 0;
+const RIGHT = 1;
+
 class ComparativeWordCloudContainer extends React.Component {
   state = {
-    leftQuery: [],
-    rightQuery: [],
+    leftQuery: '',
+    rightQuery: '',
   };
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
+      fetchData(nextProps.queries); // TODO not right
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -52,18 +55,28 @@ class ComparativeWordCloudContainer extends React.Component {
     }
     window.location = url;
   }
-  selectThisQuery = (targetIndex) => {
+  selectThisQuery = (value, targetIndex) => {
     // get value and which menu (left or right) and then run comparison
     // get query out of queries at queries[targetIndex] and pass "q" to fetch
     // store choice of selectField
-    this.setState({ leftQuery: targetIndex, rightQuery: targetIndex });
+    const { fetchData } = this.props;
+    if (targetIndex === LEFT) {
+      this.setState({ leftQuery: value.q });
+    } else {
+      this.setState({ rightQuery: value.q });
+    }
+    fetchData(this.state);
   }
 
   render() {
-    const { queries, compareQueries, handleWordCloudClick } = this.props;
-    const menuItems = queries.map((q, idx) =>
-      <MenuItem value={idx} primaryText={q.label} onTouchTap={() => this.selectThisQuery(idx)} />
+    const { queries, results, handleWordCloudClick } = this.props;
+    const menuItems = queries.map(q =>
+      <MenuItem value={q.q} primaryText={q.label} />
     );
+
+    // test the results before we pass to cowc, are there two valid sets of arrays
+    const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
+
     return (
       <Grid>
         <h2><FormattedMessage {...localMessages.title} /></h2>
@@ -75,12 +88,20 @@ class ComparativeWordCloudContainer extends React.Component {
         </Row>
         <Row>
           <Col>
-            <SelectField>
+            <SelectField
+              floatingLabelText="Frequency"
+              value={this.state.leftQuery}
+              onChange={value => this.selectThisQuery(value, LEFT)}
+            >
               {menuItems}
             </SelectField>
           </Col>
           <Col>
-            <SelectField>
+            <SelectField
+              floatingLabelText="Frequency"
+              value={this.state.rightQuery}
+              onChange={value => this.selectThisQuery(value, RIGHT)}
+            >
               {menuItems}
             </SelectField>
           </Col>
@@ -89,8 +110,8 @@ class ComparativeWordCloudContainer extends React.Component {
           <Col lg={6}>
             <DataCard>
               <ComparativeOrderedWordCloud
-                leftWords={compareQueries[0]}
-                rightWords={compareQueries[1]}
+                leftWords={mergedResultsWithQueryInfo[0]}
+                rightWords={mergedResultsWithQueryInfo[1]}
                 textColor={getBrandDarkColor()}
                 onWordClick={handleWordCloudClick}
               />
@@ -106,7 +127,6 @@ class ComparativeWordCloudContainer extends React.Component {
 ComparativeWordCloudContainer.propTypes = {
   lastSearchTime: React.PropTypes.number.isRequired,
   queries: React.PropTypes.array.isRequired,
-  compareQueries: React.PropTypes.array.isRequired,
   // from composition
   intl: React.PropTypes.object.isRequired,
   // from dispatch
@@ -128,7 +148,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (props) => {
-    dispatch(fetchExplorerTopWords(props.compareQueries));
+    dispatch(fetchExplorerTopWords(props)); // query 1, query 2
   },
   goToUrl: url => dispatch(push(url)),
 });
@@ -141,7 +161,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.goToUrl(url);
     },
     asyncFetch: () => {
-      dispatchProps.fetchData({
+      dispatchProps.fetchData({ // query 1, query 2
       });
     },
   });
