@@ -7,6 +7,7 @@ import StatBar from '../common/statbar/StatBar';
 const localMessages = {
   pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
   pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
+  mediaType: { id: 'source.pubState', defaultMessage: 'Media Type' },
   primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
   countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
   languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
@@ -36,6 +37,7 @@ const SourceMetadataStatBar = (props) => {
             helpTitleMsg: messages.geoHelpTitle,
             helpContentMsg: [localMessages.geoHelpDetailedContent, messages.geoHelpContent],
           },
+          { message: localMessages.mediaType, data: source.mediaTypeTag ? source.mediaTypeTag.label : '?' },
         ]}
       />
     </div>

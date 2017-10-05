@@ -40,18 +40,18 @@ def api_metadata_download(collection_id):
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
 
     metadata_items = []
-    for each_dict in all_media:
-        for eachItem in each_dict['media_source_tags']:
-            if is_metadata_tag_set(eachItem['tag_sets_id']):
+    for media_source in all_media:
+        for tag in media_source['media_source_tags']:
+            if is_metadata_tag_set(tag['tag_sets_id']):
                 found = False
                 for dictItem in metadata_items:
-                    if dictItem['metadataId'] == eachItem['tag_sets_id']:
+                    if dictItem['metadataId'] == tag['tag_sets_id']:
                         temp = dictItem['tagged']
                         dictItem.update({'tagged': temp + 1})
                         found = True
                 if not found:
                     metadata_items.append(
-                        {'metadataCoverage': eachItem['tag_set'], 'metadataId': eachItem['tag_sets_id'], 'tagged': 1})
+                        {'metadataCoverage': tag['tag_set'], 'metadataId': tag['tag_sets_id'], 'tagged': 1})
 
     for i in metadata_items:
         temp = len(all_media) - i['tagged']
