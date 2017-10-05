@@ -13,6 +13,11 @@ export function fetchDemoQuerySentenceCounts(params) {
   return createApiPromise('/api/explorer/demo/sentences/count', acceptedParams);
 }
 
+export function fetchDemoQueryTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
+}
+
 export function fetchDemoQuerySampleStories(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
@@ -43,6 +48,11 @@ export function demoQueryCollectionsByIds(params) {
 export function fetchQuerySentenceCounts(params) {
   const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
   return createApiPromise('/api/explorer/sentences/count', acceptedParams);
+}
+
+export function fetchQueryTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/words/count', acceptedParams);
 }
 
 export function fetchQuerySampleStories(params) {

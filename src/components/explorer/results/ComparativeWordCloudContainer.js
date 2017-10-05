@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchExplorerTopWords } from '../../../actions/topicActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -17,6 +17,10 @@ import ComparativeOrderedWordCloud from '../../vis/ComparativeOrderedWordCloud';
 const localMessages = {
   title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Comparative Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
+  leftTitleMsg: { id: 'explorer.comparativeWords.left', defaultMessage: 'Comparative Words' },
+  centerTitleMsg: { id: 'explorer.comparativeWords.center', defaultMessage: 'Comparative Words' },
+  rightTitleMsg: { id: 'explorer.comparativeWords.right', defaultMessage: 'Comparative Words' },
+
 };
 
 const LEFT = 0;
@@ -30,7 +34,7 @@ class ComparativeWordCloudContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries); // TODO not right
+      fetchData(nextProps.queries);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -75,7 +79,7 @@ class ComparativeWordCloudContainer extends React.Component {
     );
 
     // test the results before we pass to cowc, are there two valid sets of arrays
-    const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
+    // const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     return (
       <Grid>
@@ -107,13 +111,16 @@ class ComparativeWordCloudContainer extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col lg={6}>
+          <Col lg={12}>
             <DataCard>
               <ComparativeOrderedWordCloud
-                leftWords={mergedResultsWithQueryInfo[0]}
-                rightWords={mergedResultsWithQueryInfo[1]}
+                leftWords={results[0]}
+                rightWords={results[1]}
                 textColor={getBrandDarkColor()}
                 onWordClick={handleWordCloudClick}
+                leftTitleMsg={localMessages.leftTitleMsg}
+                centerTitleMsg={localMessages.centerTitleMsg}
+                rightTitleMsg={localMessages.rightTitleMsg}
               />
             </DataCard>
           </Col>
@@ -142,13 +149,40 @@ ComparativeWordCloudContainer.propTypes = {
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   user: state.user,
-  fetchStatus: state.explorer.comparativeWordCount.fetchStatus,
-  results: state.explorer.comparativeWordCount.results,
+  fetchStatus: state.explorer.topWords.fetchStatus,
+  results: state.explorer.topWords.results,
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchData: (props) => {
-    dispatch(fetchExplorerTopWords(props)); // query 1, query 2
+const mapDispatchToProps = (dispatch, state) => ({
+  fetchData: (queries) => {
+    // this should trigger when the user clicks the Search button or changes the URL
+    // for n queries, run the dispatch with each parsed query
+    // dispatch(resetComparativeWordCloud()); // necessary if a query deletion has occurred
+    if (state.user.isLoggedIn) {
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q) => {
+        const infoToQuery = {
+          start_date: q.startDate,
+          end_date: q.endDate,
+          q: q.q,
+          index: q.index,
+          sources: q.sources.map(s => s.id),
+          collections: q.collections.map(c => c.id),
+        };
+        return dispatch(fetchQueryTopWords(infoToQuery));
+      });
+    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || state.queries;
+      runTheseQueries.map((q, index) => {
+        const demoInfo = {
+          index, // should be same as q.index btw
+          search_id: q.searchId, // may or may not have these
+          query_id: q.id, // could be undefined
+          q: q.q, // only if no query id, means demo user added a keyword
+        };
+        return dispatch(fetchDemoQueryTopWords(demoInfo));
+      });
+    }
   },
   goToUrl: url => dispatch(push(url)),
 });
@@ -161,8 +195,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.goToUrl(url);
     },
     asyncFetch: () => {
-      dispatchProps.fetchData({ // query 1, query 2
-      });
+      dispatchProps.fetchData(ownProps.queries);
     },
   });
 }

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
-import { FormattedHtml, injectIntl } from 'react-intl';
+import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import OrderedWordCloud from './OrderedWordCloud';
 
@@ -38,7 +38,7 @@ const ComparativeOrderedWordCloud = (props) => {
     <div className="comparative-ordered-word-cloud">
       <Row>
         <Col lg={4}>
-          <h2><FormattedHtml {...leftTitleMsg} /></h2>
+          <h2><FormattedHTMLMessage {...leftTitleMsg} /></h2>
           <OrderedWordCloud
             words={left}
             alreadyNormalized
@@ -47,7 +47,7 @@ const ComparativeOrderedWordCloud = (props) => {
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHtml {...centerTitleMsg} /></h2>
+          <h2><FormattedHTMLMessage {...centerTitleMsg} /></h2>
           <OrderedWordCloud
             words={center}
             alreadyNormalized
@@ -56,7 +56,7 @@ const ComparativeOrderedWordCloud = (props) => {
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHtml {...rightTitleMsg} /></h2>
+          <h2><FormattedHTMLMessage {...rightTitleMsg} /></h2>
           <OrderedWordCloud
             words={right}
             alreadyNormalized

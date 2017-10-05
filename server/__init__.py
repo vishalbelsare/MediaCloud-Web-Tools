@@ -199,5 +199,6 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
 if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.explorer_query
     import server.views.explorer.sentences
+    import server.views.explorer.words
     import server.views.explorer.stories
     import server.views.explorer.geo

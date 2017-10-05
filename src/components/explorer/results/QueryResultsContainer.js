@@ -3,6 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AttentionComparisonContainer from './AttentionComparisonContainer';
+import ComparativeWordCloudContainer from './ComparativeWordCloudContainer';
 import StorySamplePreview from './StorySamplePreview';
 import StoryCountPreview from './StoryCountPreview';
 import GeoPreview from './GeoPreview';
@@ -15,6 +16,9 @@ const QueryResultsContainer = (props) => {
       <Row>
         <Col lg={12} xs={12}>
           <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+        </Col>
+        <Col lg={12} xs={12}>
+          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
           <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
