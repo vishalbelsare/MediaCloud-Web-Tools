@@ -28,7 +28,7 @@ class SourceGeographyContainer extends React.Component {
     const { source } = this.props;
     const countryName = geo.name;
     const countryTagId = geo.tags_id;
-    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":1,"name":"${source.name} - ${countryName}","color":"55868A"}]`;
+    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_stories:${countryTagId})"]/[{"sources":[${source.media_id}]}]/["${source.health.start_date.substring(0, 10)}"]/["${source.health.end_date.substring(0, 10)}"]/[{"uid":1,"name":"${source.name} - ${countryName}","color":"55868A"}]`;
     window.open(url, '_blank');
   }
   render() {
