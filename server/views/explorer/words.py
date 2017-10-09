@@ -24,10 +24,14 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_explorer_words():
     user_mc = user_admin_mediacloud_client()
-    solr_query = parse_query_with_keywords(request.args)
- 
-    story_count_result = cached_wordcount(user_mc, solr_query)
-    return jsonify(story_count_result)  
+    comparedQueries = request.args['comparedQueries[]'].split(',')
+    results = []
+    for cQ in comparedQueries:
+        dictQ = {x[0] : x[1] for x in [x.split("=") for x in cQ[1:].split("&") ]}
+        solr_query = parse_query_with_keywords(dictQ)
+        story_count_result = cached_wordcount(user_mc, solr_query)
+        results.append(story_count_result)
+    return jsonify({"results": results})  
 
 
 @app.route('/api/explorer/demo/words/count')

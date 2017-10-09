@@ -53,7 +53,7 @@ class SelectMediaForm extends React.Component {
         </Col>
         <Col lg={1}>
           <AppButton
-            style={{ marginTop: 0 }}
+            style={{ marginTop: 10 }}
             type="submit"
             label={formatMessage(localMessages.search)}
             disabled={submitting}

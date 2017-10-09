@@ -1,4 +1,4 @@
-import { createApiPromise, acceptParams } from '../apiUtil';
+import { createApiPromise, acceptParams, generateParamStr } from '../apiUtil';
 
 export function fetchSampleSearches() {
   return createApiPromise('/api/explorer/sample-searches');
@@ -50,8 +50,11 @@ export function fetchQuerySentenceCounts(params) {
   return createApiPromise('/api/explorer/sentences/count', acceptedParams);
 }
 
-export function fetchQueryTopWords(params) {
-  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+export function fetchQueryTopWords(queryA, queryB) {
+  const acceptedParams = [];
+  const acceptedParamsA = acceptParams(queryA, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  const acceptedParamsB = acceptParams(queryB, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  acceptedParams['comparedQueries[]'] = [generateParamStr(acceptedParamsA), generateParamStr(acceptedParamsB)];
   return createApiPromise('/api/explorer/words/count', acceptedParams);
 }
 

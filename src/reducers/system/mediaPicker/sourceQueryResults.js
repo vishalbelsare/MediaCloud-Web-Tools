@@ -12,7 +12,7 @@ const sourceQueryResults = createAsyncReducer({
     list: payload.list.map(c => ({
       ...c,
       name: `${c.name}`,
-      id: c.media_id,
+      id: parseInt(c.media_id, 10),
       type: 'source',
       selected: false,
     })),

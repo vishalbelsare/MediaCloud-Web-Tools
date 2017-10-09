@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -31,10 +31,16 @@ class ComparativeWordCloudContainer extends React.Component {
     leftQuery: '',
     rightQuery: '',
   };
+  componentWillMount() {
+    const { queries } = this.props;
+    const leftQ = queries[0];
+    const rightQ = queries.length > 1 ? queries[1] : queries[0];
+    this.setState({ leftQuery: leftQ, rightQuery: rightQ });
+  }
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData(nextProps.queries);
+      fetchData([this.state.leftQuery, this.state.rightQuery]);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -59,74 +65,79 @@ class ComparativeWordCloudContainer extends React.Component {
     }
     window.location = url;
   }
-  selectThisQuery = (value, targetIndex) => {
+  selectThisQuery = (targetIndex, value) => {
     // get value and which menu (left or right) and then run comparison
     // get query out of queries at queries[targetIndex] and pass "q" to fetch
     // store choice of selectField
-    const { fetchData } = this.props;
+    const { fetchData, queries } = this.props;
+    const chosenComparison = queries;
     if (targetIndex === LEFT) {
-      this.setState({ leftQuery: value.q });
+      this.setState({ leftQuery: value });
+      chosenComparison[LEFT] = value;
     } else {
-      this.setState({ rightQuery: value.q });
+      this.setState({ rightQuery: value });
+      chosenComparison[RIGHT] = value;
     }
-    fetchData(this.state);
+    fetchData(chosenComparison);
   }
 
   render() {
     const { queries, results, handleWordCloudClick } = this.props;
-    const menuItems = queries.map(q =>
-      <MenuItem value={q.q} primaryText={q.label} />
+    const menuItems = queries.map((q, idx) =>
+      <MenuItem key={idx} value={q} primaryText={q.label} />
     );
 
     // test the results before we pass to cowc, are there two valid sets of arrays
     // const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-
-    return (
-      <Grid>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
-        <Row>
-          <Col lg={12} md={12} sm={12}>
-            <h1><FormattedMessage {...localMessages.title} /></h1>
-            <p><FormattedMessage {...localMessages.intro} /></p>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <SelectField
-              floatingLabelText="Frequency"
-              value={this.state.leftQuery}
-              onChange={value => this.selectThisQuery(value, LEFT)}
-            >
-              {menuItems}
-            </SelectField>
-          </Col>
-          <Col>
-            <SelectField
-              floatingLabelText="Frequency"
-              value={this.state.rightQuery}
-              onChange={value => this.selectThisQuery(value, RIGHT)}
-            >
-              {menuItems}
-            </SelectField>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            <DataCard>
-              <ComparativeOrderedWordCloud
-                leftWords={results[0]}
-                rightWords={results[1]}
-                textColor={getBrandDarkColor()}
-                onWordClick={handleWordCloudClick}
-                leftTitleMsg={localMessages.leftTitleMsg}
-                centerTitleMsg={localMessages.centerTitleMsg}
-                rightTitleMsg={localMessages.rightTitleMsg}
-              />
-            </DataCard>
-          </Col>
-        </Row>
-      </Grid>
-    );
+    if (results && results.length > 0) {
+      return (
+        <Grid>
+          <h2><FormattedMessage {...localMessages.title} /></h2>
+          <Row>
+            <Col lg={12} md={12} sm={12}>
+              <h1><FormattedMessage {...localMessages.title} /></h1>
+              <p><FormattedMessage {...localMessages.intro} /></p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <SelectField
+                floatingLabelText="Frequency"
+                value={this.state.leftQuery}
+                onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
+              >
+                {menuItems}
+              </SelectField>
+            </Col>
+            <Col>
+              <SelectField
+                floatingLabelText="Frequency"
+                value={this.state.rightQuery}
+                onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
+              >
+                {menuItems}
+              </SelectField>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <DataCard>
+                <ComparativeOrderedWordCloud
+                  leftWords={results[0]}
+                  rightWords={results[1]}
+                  textColor={getBrandDarkColor()}
+                  onWordClick={handleWordCloudClick}
+                  leftTitleMsg={localMessages.leftTitleMsg}
+                  centerTitleMsg={localMessages.centerTitleMsg}
+                  rightTitleMsg={localMessages.rightTitleMsg}
+                />
+              </DataCard>
+            </Col>
+          </Row>
+        </Grid>
+      );
+    }
+    return <div>Error</div>;
   }
 
 }
@@ -157,20 +168,18 @@ const mapDispatchToProps = (dispatch, state) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // dispatch(resetComparativeWordCloud()); // necessary if a query deletion has occurred
+    dispatch(resetTopWords()); // necessary if a query deletion has occurred
     if (state.user.isLoggedIn) {
       const runTheseQueries = queries || state.queries;
-      runTheseQueries.map((q) => {
-        const infoToQuery = {
-          start_date: q.startDate,
-          end_date: q.endDate,
-          q: q.q,
-          index: q.index,
-          sources: q.sources.map(s => s.id),
-          collections: q.collections.map(c => c.id),
-        };
-        return dispatch(fetchQueryTopWords(infoToQuery));
-      });
+      const comparedQueries = runTheseQueries.map(q => ({
+        start_date: q.startDate,
+        end_date: q.endDate,
+        q: q.q,
+        index: q.index,
+        sources: q.sources.map(s => s.id),
+        collections: q.collections.map(c => c.id),
+      }));
+      return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
       runTheseQueries.map((q, index) => {
@@ -183,6 +192,7 @@ const mapDispatchToProps = (dispatch, state) => ({
         return dispatch(fetchDemoQueryTopWords(demoInfo));
       });
     }
+    return 0;
   },
   goToUrl: url => dispatch(push(url)),
 });
