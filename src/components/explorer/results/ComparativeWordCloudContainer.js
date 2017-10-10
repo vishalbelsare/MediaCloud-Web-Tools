@@ -72,19 +72,20 @@ class ComparativeWordCloudContainer extends React.Component {
     const { fetchData, queries } = this.props;
     const chosenComparison = [...queries];
     if (targetIndex === LEFT) {
-      this.setState({ leftQuery: value });
-      chosenComparison[LEFT] = value;
+      this.setState({ leftQuery: queries[value] });
+      chosenComparison[LEFT] = queries[value];
+      fetchData([chosenComparison[LEFT], this.state.rightQuery]);
     } else {
-      this.setState({ rightQuery: value });
-      chosenComparison[RIGHT] = value;
+      this.setState({ rightQuery: queries[value] });
+      chosenComparison[RIGHT] = queries[value];
+      fetchData([this.state.leftQuery, chosenComparison[RIGHT]]);
     }
-    fetchData(chosenComparison);
   }
 
   render() {
     const { queries, results, handleWordCloudClick } = this.props;
     const menuItems = queries.map((q, idx) =>
-      <MenuItem key={idx} value={q} primaryText={q.label} />
+      <MenuItem key={idx} value={idx} primaryText={q.label} />
     );
 
     // test the results before we pass to cowc, are there two valid sets of arrays
@@ -103,7 +104,7 @@ class ComparativeWordCloudContainer extends React.Component {
             <Col>
               <SelectField
                 floatingLabelText="Frequency"
-                value={this.state.leftQuery}
+                value={this.state.leftQuery.index}
                 onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
               >
                 {menuItems}
@@ -112,7 +113,7 @@ class ComparativeWordCloudContainer extends React.Component {
             <Col>
               <SelectField
                 floatingLabelText="Frequency"
-                value={this.state.rightQuery}
+                value={this.state.rightQuery.index}
                 onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
               >
                 {menuItems}
