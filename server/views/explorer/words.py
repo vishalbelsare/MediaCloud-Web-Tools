@@ -30,7 +30,6 @@ def api_explorer_words():
         results.append(word_count_result)
     return jsonify({"results": results})  
 
-
 @app.route('/api/explorer/demo/words/count')
 @api_error_handler
 def api_explorer_demo_words():
