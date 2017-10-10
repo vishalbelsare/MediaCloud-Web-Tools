@@ -2,13 +2,11 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from server import app, db, mc
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
+from server import app, mc
 from server.cache import cache
 import server.util.csv as csv
-from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import prep_simple_solr_query, concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import datetime
+from server.util.request import api_error_handler
+from server.views.explorer import prep_simple_solr_query, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import json
 # load the shared settings file
 

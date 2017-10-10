@@ -6,7 +6,7 @@ from server import app, mc, db
 from server.auth import user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, read_sample_searches, DEFAULT_COLLECTION_IDS
+from server.views.explorer import solr_query_from_request, read_sample_searches
 from operator import itemgetter
 
 logger = logging.getLogger(__name__)

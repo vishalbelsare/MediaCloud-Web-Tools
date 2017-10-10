@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -70,7 +70,7 @@ class ComparativeWordCloudContainer extends React.Component {
     // get query out of queries at queries[targetIndex] and pass "q" to fetch
     // store choice of selectField
     const { fetchData, queries } = this.props;
-    const chosenComparison = queries;
+    const chosenComparison = [...queries];
     if (targetIndex === LEFT) {
       this.setState({ leftQuery: value });
       chosenComparison[LEFT] = value;
@@ -168,7 +168,7 @@ const mapDispatchToProps = (dispatch, state) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    dispatch(resetTopWords()); // necessary if a query deletion has occurred
+    // dispatch(resetTopWords()); // necessary if a query deletion has occurred
     if (state.user.isLoggedIn) {
       const runTheseQueries = queries || state.queries;
       const comparedQueries = runTheseQueries.map(q => ({
@@ -182,15 +182,13 @@ const mapDispatchToProps = (dispatch, state) => ({
       return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
     } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || state.queries;
-      runTheseQueries.map((q, index) => {
-        const demoInfo = {
-          index, // should be same as q.index btw
-          search_id: q.searchId, // may or may not have these
-          query_id: q.id, // could be undefined
-          q: q.q, // only if no query id, means demo user added a keyword
-        };
-        return dispatch(fetchDemoQueryTopWords(demoInfo));
-      });
+      const comparedQueries = runTheseQueries.map(q => ({
+        index: q.index, // should be same as q.index btw
+        search_id: q.searchId, // may or may not have these
+        query_id: q.id, // could be undefined
+        q: q.q, // only if no query id, means demo user added a keyword
+      }));
+      return dispatch(fetchDemoQueryTopWords(comparedQueries[0], comparedQueries[1]));
     }
     return 0;
   },
@@ -205,7 +203,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.goToUrl(url);
     },
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.queries);
+      dispatchProps.fetchData([ownProps.queries[0], ownProps.queries[1]]);
     },
   });
 }

@@ -14,7 +14,7 @@ export function fetchDemoQuerySentenceCounts(params) {
 }
 
 export function fetchDemoQueryTopWords(params) {
-  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
 }
 

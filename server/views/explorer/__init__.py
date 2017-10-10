@@ -1,12 +1,11 @@
-import json
 import logging
-import flask_login
+from server.cache import cache
 import os
 import json
-from server import app, base_dir, mc
+from server import mc
 from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param
-from flask import jsonify, send_from_directory
-from server.auth import is_user_logged_in, user_admin_mediacloud_client
+from flask import send_from_directory
+from server.auth import is_user_logged_in
 import datetime
 
 logger = logging.getLogger(__name__)
@@ -133,7 +132,13 @@ def parse_query_with_keywords(args) :
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
         media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
-        tags_ids = args['collections'].split(',') if 'collections' in args and len(args['collections']) > 0 else DEFAULT_COLLECTION_IDS
+        if 'collections' in args:
+            if len(args['collections']) == 1:
+                tags_ids = args['collections']
+            else:
+                tags_ids = args['collections'].split(',')
+        else:
+            tags_ids = DEFAULT_COLLECTION_IDS
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
                                                 start_date=start_date,
@@ -143,6 +148,7 @@ def parse_query_with_keywords(args) :
 
     # otherwise, default
     except Exception as e:
+        tags_ids = args['collections']
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
@@ -193,6 +199,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     return solr_query
 
+@cache
 def load_sample_searches():
     json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
     # load the sample searches file

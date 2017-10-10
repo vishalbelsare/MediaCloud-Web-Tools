@@ -2,15 +2,12 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from operator import itemgetter
 from server import app, mc
-from server.auth import user_admin_mediacloud_client
-from server.cache import cache
+from server.auth import user_admin_mediacloud_client, is_user_logged_in
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.views.explorer import solr_query_from_request, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import datetime
-import json
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+
 # load the shared settings file
 DEFAULT_NUM_WORDS = 100
 DEFAULT_SAMPLE_SIZE = 5000
@@ -24,13 +21,13 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def api_explorer_words():
     user_mc = user_admin_mediacloud_client()
-    comparedQueries = request.args['comparedQueries[]'].split(',')
+    compared_queries = request.args['compared_queries[]'].split(',')
     results = []
-    for cQ in comparedQueries:
-        dictQ = {x[0] : x[1] for x in [x.split("=") for x in cQ[1:].split("&") ]}
-        solr_query = parse_query_with_keywords(dictQ)
-        story_count_result = cached_wordcount(user_mc, solr_query)
-        results.append(story_count_result)
+    for cq in compared_queries:
+        dictq = {x[0] : x[1] for x in [x.split("=") for x in cq[1:].split("&") ]}
+        solr_query = parse_query_with_keywords(dictq)
+        word_count_result = cached_wordcount(user_mc, solr_query)
+        results.append(word_count_result)
     return jsonify({"results": results})  
 
 
@@ -41,13 +38,22 @@ def api_explorer_demo_words():
     
     if search_id not in [None, -1]:
         SAMPLE_SEARCHES = load_sample_searches()
-        current_search = SAMPLE_SEARCHES[search_id]['queries']
-        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+        compared_sample_queries = SAMPLE_SEARCHES[search_id]['queries']
+        results = []
+        for cq in compared_sample_queries:
+            solr_query = parse_query_with_keywords(cq)
+            word_count_result = cached_wordcount(mc, solr_query)
+            results.append(word_count_result)
     else:
-        solr_query = parse_query_with_keywords(request.args)
+        compared_queries = request.args['compared_queries[]'].split(',')
+        results = []
+        for cq in compared_queries:
+            dictq = {x[0] : x[1] for x in [x.split("=") for x in cq[1:].split("&") ]}
+            solr_query = parse_query_with_keywords(dictq)
+            word_count_result = cached_wordcount(mc, solr_query)
+            results.append(word_count_result)
 
-    story_count_result = cached_wordcount(mc, solr_query)
-    return jsonify(story_count_result)     
+    return jsonify({"results": results})     
 
 @app.route('/api/explorer/words/wordcount.csv', methods=['GET'])
 @api_error_handler
@@ -66,7 +72,10 @@ def explorer_wordcount_csv():
     return stream_wordcount_csv(mc, 'wordcounts-Explorer', solr_query)
 
 def cached_wordcount(user_mc_key, query, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
-    api_client = mc if user_mc_key is None else user_admin_mediacloud_client()
+    if is_user_logged_in():   # no user session
+        api_client = user_admin_mediacloud_client()
+    else:
+        api_client = mc
     res = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
     return res
 

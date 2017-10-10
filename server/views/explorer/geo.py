@@ -2,14 +2,13 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from server import app, db, mc
+from server import app, mc
 import server.util.csv as csv
 from server.cache import cache
-from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.util.request import api_error_handler
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 import server.util.tags as tag_utl
-from server.views.explorer import concatenate_query_for_solr, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import datetime
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import json
 # load the shared settings file
 
