@@ -9,7 +9,7 @@ from server.auth import user_mediacloud_key, is_user_logged_in
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, \
-    topic_sentence_sample, add_to_user_query
+    topic_sentence_sample, add_to_user_query, DEFAULT_WORD_COUNT_SAMPLE_SIZE
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -54,9 +54,14 @@ def topic_words(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_words_csv(topics_id):
-    response = topic_word_counts(user_mediacloud_key(), topics_id)
-    props = ['term', 'stem', 'count']
-    return csv.stream_response(response, props, 'sampled-words')
+    sample_size = DEFAULT_WORD_COUNT_SAMPLE_SIZE
+    word_counts = topic_word_counts(user_mediacloud_key(), topics_id)
+    # add in normalization
+    for w in word_counts:
+        w['sample_size'] = sample_size
+        w['ratio'] = float(w['count']) / float(DEFAULT_WORD_COUNT_SAMPLE_SIZE)
+    props = ['term', 'stem', 'count', 'sample_size', 'ratio']
+    return csv.stream_response(word_counts, props, 'topic-{}-sampled-words'.format(topics_id))
 
 
 @app.route('/api/topics/<topics_id>/words/<word>/sentences/count', methods=['GET'])

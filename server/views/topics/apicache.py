@@ -105,6 +105,7 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
         local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryList(topics_id, **kwargs)
 
+DEFAULT_WORD_COUNT_SAMPLE_SIZE = 1000
 
 def topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''
@@ -116,7 +117,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': 1000
+        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
