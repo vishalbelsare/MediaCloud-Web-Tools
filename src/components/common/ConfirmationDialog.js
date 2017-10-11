@@ -37,6 +37,7 @@ class ConfirmationDialog extends React.Component {
           title={title}
           actions={actions}
           modal={false}
+          className="app-dialog"
           open={open}
           onRequestClose={this.handleCancel}
         >
