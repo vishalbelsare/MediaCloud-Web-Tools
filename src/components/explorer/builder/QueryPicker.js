@@ -25,6 +25,15 @@ const localMessages = {
 const formSelector = formValueSelector('queryForm');
 
 class QueryPicker extends React.Component {
+  // load selected if collections have been updated
+ /* componentWillReceiveProps(nextProps) {
+    const { queries, selected, handleQuerySelected } = nextProps;
+    const selectedCollectionStatus = selected.collections.reduce((combined, c) => combined && c.tag_sets_id !== undefined, true);
+    if (!selectedCollectionStatus) {
+      const selectedIndex = queries.findIndex(q => q.id === selected.id);
+      handleQuerySelected(queries[selectedIndex]);
+    }
+  } */
   addAQuery(newQueryObj) {
     const { addAQuery } = this.props;
     addAQuery(newQueryObj);

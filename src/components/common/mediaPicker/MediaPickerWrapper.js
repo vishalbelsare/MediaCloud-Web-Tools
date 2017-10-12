@@ -27,7 +27,7 @@ class MediaPickerWrapper extends React.Component {
             classStyle="browse-items"
             itemType="media"
             linkInfo={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
-            linkDisplay={c => `${whichMedia.type}/${c.tags_id || c.media_id}`}
+            linkDisplay={c => `${c.name}`}
             onSelectMedia={c => handleToggleAndSelectMedia(c)}
           />
         </div>
