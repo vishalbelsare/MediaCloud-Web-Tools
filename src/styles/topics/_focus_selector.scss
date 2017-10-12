@@ -1,6 +1,13 @@
 
 .focus-selector-wrapper {
-  
-  
+  position: relative;
+
+  .selected-focus-details {
+    position: absolute;
+    top: 17px;
+    left: 82px;
+    color: rgb(224, 224, 224); 
+    font-size: 16px;
+  }
   
 }

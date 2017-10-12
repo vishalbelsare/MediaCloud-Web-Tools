@@ -51,15 +51,18 @@ class FocusDefinition extends React.Component {
     ];
     return (
       <div className="focus-definition" data-focus-definitions-id={focusDefinition.focus_definitions_id}>
-        <div className="controls">
-          <EditButton linkTo={`/topics/${topicId}/snapshot/foci/${focusDefinition.focus_definitions_id}/edit`} />
-          <DeleteButton onClick={this.showDeleteDialog} tooltip={formatMessage(localMessages.focusDelete)} />
-        </div>
-        <p>
-          <b>{focusDefinition.name}</b>
-        </p>
+        <h3>
+          {focusDefinition.name}
+          <div className="controls">
+            <EditButton linkTo={`/topics/${topicId}/snapshot/foci/${focusDefinition.focus_definitions_id}/edit`} />
+            <DeleteButton onClick={this.showDeleteDialog} tooltip={formatMessage(localMessages.focusDelete)} />
+          </div>
+        </h3>
         <p>
           {focusDefinition.description}
+        </p>
+        <p>
+          <FormattedMessage {...messages.query} />: <code>{focusDefinition.query}</code>
         </p>
         <Dialog
           title={formatMessage(localMessages.deleteConfirmTitle)}
