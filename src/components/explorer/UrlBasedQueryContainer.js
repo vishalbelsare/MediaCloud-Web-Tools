@@ -49,9 +49,6 @@ function composeUrlBasedQueryContainer() {
             // console.log('  got media info from server, ready!');
             this.setState({ queryInStore: true });  // mark that the parsing process has finished
           }
-        } else if (!this.isAllMediaDetailsReady()) {
-            // console.log('  got media info from server, ready!');
-          this.setState({ queryInStore: false });  // mark that the parsing process has finished
         } else if (lastSearchTime !== nextProps.lastSearchTime) {
           updateUrl(nextProps.queries, isLoggedIn);
         } else {
