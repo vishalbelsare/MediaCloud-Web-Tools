@@ -28,7 +28,7 @@ def api_explorer_words():
         solr_query = parse_query_with_keywords(dictq)
         word_count_result = cached_wordcount(user_mc, solr_query)
         results.append(word_count_result)
-    return jsonify({"results": results})  
+    return jsonify({"list": results})  
 
 @app.route('/api/explorer/demo/words/count')
 @api_error_handler
@@ -52,7 +52,7 @@ def api_explorer_demo_words():
             word_count_result = cached_wordcount(mc, solr_query)
             results.append(word_count_result)
 
-    return jsonify({"results": results})     
+    return jsonify({"list": results})     
 
 @app.route('/api/explorer/words/wordcount.csv', methods=['GET'])
 @api_error_handler

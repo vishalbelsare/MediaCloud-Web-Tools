@@ -18,7 +18,7 @@ const QueryResultsContainer = (props) => {
           <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} />
         </Col>
         <Col lg={12} xs={12}>
           <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />

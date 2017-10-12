@@ -22,7 +22,8 @@ export function fetchDemoQueryTopWords(queryA, queryB) {
     acceptedParamsA = acceptParams(queryA, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
     acceptedParamsB = acceptParams(queryB, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
   }
-  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA), generateParamStr(acceptedParamsB)];
+  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA)];
+  if (queryB) acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
   return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
 }
 
@@ -30,7 +31,8 @@ export function fetchQueryTopWords(queryA, queryB) {
   const acceptedParams = [];
   const acceptedParamsA = acceptParams(queryA, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
   const acceptedParamsB = acceptParams(queryB, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
-  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA), generateParamStr(acceptedParamsB)];
+  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA)];
+  if (queryB) acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
   return createApiPromise('/api/explorer/words/count', acceptedParams);
 }
 
@@ -65,6 +67,11 @@ export function demoQueryCollectionsByIds(params) {
   const acceptedParams = acceptParams(params, ['index', 'collections']);
   acceptedParams['collections[]'] = params.collections;
   return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
+}
+
+export function fetchQuerySentenceCounts(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/sentences/count', acceptedParams);
 }
 
 export function fetchQuerySampleStories(params) {

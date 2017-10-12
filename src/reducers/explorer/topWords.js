@@ -5,11 +5,15 @@ import { FETCH_QUERY_TOP_WORDS, RESET_QUERY_TOP_WORDS } from '../../actions/expl
 
 const topWords = createAsyncReducer({
   initialState: ({
-    results: [],
+    list: [],
   }),
   action: FETCH_QUERY_TOP_WORDS,
+  handleSuccess: payload => ({
+    // override default handler so we can change the string dates into JS date objects
+    list: payload.list,
+  }),
   [RESET_QUERY_TOP_WORDS]: () => ({
-    results: [],
+    list: [],
   }),
 });
 export default topWords;
