@@ -15,7 +15,7 @@ const localMessages = {
   title: { id: 'source.summary.map.title', defaultMessage: 'Geographic Attention' },
   helpTitle: { id: 'source.summary.map.help.title', defaultMessage: 'Geographic Attention' },
   intro: { id: 'source.summary.map.intro',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned by this source (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the this source covers it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries stories from this source are about (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the this source covers it.</p>' },
 };
 
 class SourceGeographyContainer extends React.Component {
