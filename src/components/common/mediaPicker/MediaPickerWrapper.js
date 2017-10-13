@@ -4,11 +4,6 @@ import LoadingSpinner from '../LoadingSpinner';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import MediaPickerPreviewList from '../MediaPickerPreviewList';
 
-/**
- * Simple wrapper so we can style all the button the same.  Use this instead of
- * material-ui's RaisedButton.
- * @see http://stackoverflow.com/questions/39458150/is-it-possible-to-add-a-custom-hover-color-to-raised-buttons
- */
 class MediaPickerWrapper extends React.Component {
 
   render() {

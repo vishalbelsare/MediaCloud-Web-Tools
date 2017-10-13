@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import messages from '../../../resources/messages';
 import MediaSelectionContainer from './MediaSelectionContainer';
 import SelectMediaResultsContainer from './SelectMediaResultsContainer';
@@ -65,34 +64,30 @@ class SelectMediaDialog extends React.Component {
   render() {
     const { selectedMedia, handleSelection, lookupTimestamp } = this.props;
     const { formatMessage } = this.props.intl;
-    const dialogActions = (
-      <AppButton
-        label={formatMessage(messages.ok)}
-        onTouchTap={() => this.handleRemoveDialogClose(true)}
-        type="submit"
-        primary
-      />
-    );
     let modalContent = null;
     if (this.state.open) {
       modalContent = (
-        <div>
+        <div className="select-media-dialog-wrapper">
           <div
             className="select-media-dialog-modal"
             title={formatMessage(localMessages.selectMediaTitle)}
             open={this.state.open}
           >
-            <div className="select-media-dialog-modal-inner">
-              <Row>
-                <Col lg={3}>
-                  <MediaSelectionContainer selectedMedia={selectedMedia} />
-                </Col>
-                <Col lg={9}>
-                  <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
-                </Col>
-              </Row>
+            <div className="select-media-dialog-inner">
+              <div className="select-media-sidebar">
+                <MediaSelectionContainer selectedMedia={selectedMedia} />
+                <AppButton
+                  className="select-media-ok-button"
+                  label={formatMessage(messages.ok)}
+                  onTouchTap={() => this.handleRemoveDialogClose(true)}
+                  type="submit"
+                  primary
+                />
+              </div>
+              <div className="select-media-content">
+                <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+              </div>
             </div>
-            {dialogActions}
           </div>
           <div className="backdrop" onTouchTap={() => this.handleRemoveDialogClose(false)} />
         </div>
@@ -104,7 +99,8 @@ class SelectMediaDialog extends React.Component {
         <AddQueryButton
           onClick={this.handleModifyClick}
           tooltip={formatMessage(localMessages.addMedia)}
-        />{modalContent}
+        />
+        {modalContent}
         <FormattedMessage {...localMessages.addMedia} />
       </div>
     );

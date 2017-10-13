@@ -1,14 +1,17 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
-  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Pick A Collection' },
-  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Pick A Source' },
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search For Collections' },
+  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search For Sources' },
   search: { id: 'system.mediaPicker.select.search', defaultMessage: 'Search' },
 };
+
+// const formSelector = formValueSelector('queryForm');
 
 class SelectMediaForm extends React.Component {
   shouldComponentUpdate = () => false;
@@ -30,34 +33,30 @@ class SelectMediaForm extends React.Component {
   };
 
   render() {
-    const { initValues, submitting } = this.props;
+    const { initValues, hintText } = this.props;
     const { formatMessage } = this.props.intl;
 
     const storedKeyword = initValues.storedKeyword;
-    const instruction = initValues.type ? localMessages.pickCollections : localMessages.pickSources;
     if (storedKeyword.mediaKeyword === undefined || storedKeyword.mediaKeyword === null) {
       storedKeyword.mediaKeyword = '';
     }
     return (
       <Row>
-        <Col lg={2} className="media-picker-type-instruction">
-          <FormattedMessage {...instruction} />
-        </Col>
-        <Col lg={4}>
+        <Col lg={6}>
           <TextField
             name="mediaKeyword"
             defaultValue={storedKeyword.mediaKeyword}
             onKeyPress={this.handleMenuItemKeyDown}
             ref={this.focusUsernameInputField}
+            fullWidth
+            hintText={hintText}
           />
         </Col>
-        <Col lg={1}>
+        <Col lg={2}>
           <AppButton
             style={{ marginTop: 10 }}
-            type="submit"
             label={formatMessage(localMessages.search)}
-            disabled={submitting}
-            onClick={this.handleMenuItemKeyDown}
+            onClick={evt => console.log(evt.target)}
             primary
           />
         </Col>
@@ -66,13 +65,13 @@ class SelectMediaForm extends React.Component {
   }
 }
 
-
 SelectMediaForm.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  onSearch: React.PropTypes.func,
-  isEditable: React.PropTypes.bool,
-  initValues: React.PropTypes.array,
-  submitting: React.PropTypes.bool,
+  intl: PropTypes.object.isRequired,
+  onSearch: PropTypes.func,
+  isEditable: PropTypes.bool,
+  initValues: PropTypes.array,
+  submitting: PropTypes.bool,
+  hintText: PropTypes.string,
 };
 
 export default

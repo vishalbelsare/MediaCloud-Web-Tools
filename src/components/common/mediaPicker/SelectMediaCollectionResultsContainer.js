@@ -1,18 +1,14 @@
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
 import MediaPickerWrapper from './MediaPickerWrapper';
-import messages from '../../../resources/messages';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SelectMediaForm from './SelectMediaForm';
 import SelectMediaFeaturedAsyncContainer from './SelectMediaFeaturedAsyncContainer';
 
 const localMessages = {
-  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'Collections matching "{name}"' },
-  intro: { id: 'system.mediaPicker.select.info',
-    defaultMessage: '<p>This is an intro</p>' },
-  helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
+  title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
+  hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search collections by name' },
 };
 
 
@@ -24,23 +20,33 @@ class SelectMediaCollectionResultsContainer extends React.Component {
   }
   render() {
     const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia } = this.props;
+    const { formatMessage } = this.props.intl;
     let whichMedia = [];
     let content = null;
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
     whichMedia.fetchStatus = null;
     whichMedia.type = 'collections';
-    const formattedTitle = <FormattedMessage {...localMessages.title} values={{ name: whichMedia.storedKeyword.mediaKeyword }} />;
     if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
       whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
       whichMedia.storedKeyword = collectionResults.args;
       whichMedia.fetchStatus = collectionResults.fetchStatus;
-      content = <MediaPickerWrapper title={formattedTitle} whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+      content = (
+        <MediaPickerWrapper
+          title={formatMessage(localMessages.title, { name: whichMedia.storedKeyword.mediaKeyword })}
+          whichMedia={whichMedia}
+          handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+        />
+      );
     } else {
       content = <SelectMediaFeaturedAsyncContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
     return (
       <div>
-        <SelectMediaForm initValues={whichMedia} onSearch={val => this.updateMediaQuery(val)} />
+        <SelectMediaForm
+          initValues={whichMedia}
+          onSearch={val => this.updateMediaQuery(val)}
+          hintText={formatMessage(localMessages.hintText)}
+        />
         {content}
       </div>
     );
@@ -76,9 +82,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
-        SelectMediaCollectionResultsContainer
-      )
+      SelectMediaCollectionResultsContainer
     )
   );
 

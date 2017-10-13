@@ -14,21 +14,65 @@
     overflow-x: hidden;
     height: 85%;
 
-    .select-media-container {
-      background-color: $white !important;
-      max-width: 90%;
-      margin-right: auto;
-      margin-left: auto;
-      margin-bottom: 25px;
+    .select-media-dialog-inner {
 
-      .media-picker-type-instruction {
-        margin-top:15px;
-        font-size: 16px !important;
+      .select-media-sidebar {
+        float: left;
+        width: 330px;
+        position: fixed;
+        border-right: 1px solid $material-grey400;
+
+        .select-media-menu {
+          .select-media-option {
+            padding: 30px;
+            border-bottom: 1px solid $material-grey400;
+            h3 {
+              margin: 0px;
+              padding: 0px;
+              font-size: 20px;
+              font-weight: normal;
+            }
+            &.selected {
+              background-color: $material-grey200 !important;
+            }
+            &:hover {
+              background-color: $material-grey400 !important;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .select-media-selected-list {
+          padding: 30px;
+        }
+
+        .select-media-ok-button {
+          margin-left: 30px;
+        }
+
       }
-      .media-picker-type-button {
-        margin-top:-5px;
-        font-size: 16px !important;
+
+      .select-media-content {
+        margin-left: 330px;
+        padding: 30px;
+        min-height: 100%;
+        overflow-y: scroll;
+
+        .select-media-container {
+          background-color: $white !important;
+
+          .media-picker-type-instruction {
+            margin-top:15px;
+            font-size: 16px !important;
+          }
+          .media-picker-type-button {
+            margin-top:-5px;
+            font-size: 16px !important;
+          }
+        }
+
       }
+
     }
 
   }
@@ -40,11 +84,7 @@
     top: 0;
     left: 0;
     z-index: 9998;
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  .select-media-menu-selected > div {
-    background-color: $material-grey200 !important;
+    background: rgba(0, 0, 0, 0.6);
   }
 
 }

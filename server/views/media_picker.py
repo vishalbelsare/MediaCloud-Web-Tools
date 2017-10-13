@@ -2,6 +2,8 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
+from operator import itemgetter
+
 from server.cache import cache
 from media_search import _matching_collections_by_set, _matching_sources_by_set
 from server import app, mc
@@ -51,7 +53,7 @@ def api_mediapicker_source_search():
         pool = Pool(processes=STORY_COUNT_POOL_SIZE)
         set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
         pool.close()
-
+    set_of_queried_sources = sorted(set_of_queried_sources, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_sources})
 
 

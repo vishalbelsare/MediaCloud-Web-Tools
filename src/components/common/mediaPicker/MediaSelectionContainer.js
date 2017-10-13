@@ -1,18 +1,15 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from 'material-ui/MenuItem';
-import Menu from 'material-ui/Menu';
-import Divider from 'material-ui/Divider';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
 import { PICK_COLLECTION, PICK_SOURCE } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
-  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Pick A Collection' },
-  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Pick A Source' },
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search Collections' },
+  pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
+  selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
   // pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
   // pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
@@ -25,33 +22,34 @@ class MediaSelectionContainer extends React.Component {
   };
   render() {
     const { selectedMediaQueryType, selectedMedia, handleUnselectMedia } = this.props;
-    const { formatMessage } = this.props.intl;
-    const content =
-      selectedMedia.map((obj) => {
-        const handleDelete = () => {
-          handleUnselectMedia(obj);
-        };
-        return (<Grid><Row /><Row /><Row><Col lg={3}><SourceOrCollectionWidget key={obj.id || obj.tags_id || obj.media_id} object={obj} onDelete={handleDelete} /></Col></Row></Grid>);
-      });
-
+    const selectedMediaList =
+      selectedMedia.map(obj => (
+        <SourceOrCollectionWidget
+          key={obj.id || obj.tags_id || obj.media_id}
+          object={obj}
+          onDelete={() => handleUnselectMedia(obj)}
+        />
+      ));
+    const options = [
+      { label: localMessages.pickCollections, value: PICK_COLLECTION },
+      { label: localMessages.pickSources, value: PICK_SOURCE },
+    ];
     return (
-      <div className="select-media-menu">
-        <Menu style={{ zIndex: 'inherit', width: 200 }} >
-          <MenuItem
-            className={selectedMediaQueryType === 0 ? 'select-media-menu-selected' : ''}
-            value={PICK_COLLECTION}
-            primaryText={formatMessage(localMessages.pickCollections)}
-            onTouchTap={() => this.updateMediaType(PICK_COLLECTION)}
-          />
-          <MenuItem
-            className={selectedMediaQueryType === 1 ? 'select-media-menu-selected' : ''}
-            value={PICK_SOURCE}
-            primaryText={formatMessage(localMessages.pickSources)}
-            onTouchTap={() => this.updateMediaType(PICK_SOURCE)}
-          />
-        </Menu>
-        <Divider />
-        {content}
+      <div>
+        <div className="select-media-menu">
+          {options.map(option => (
+            <div
+              className={`select-media-option ${(selectedMediaQueryType === option.value) ? 'selected' : ''}`}
+              onTouchTap={() => this.updateMediaType(option.value)}
+            >
+              <h3><FormattedMessage {...option.label} /></h3>
+            </div>
+          ))}
+        </div>
+        <div className="select-media-selected-list">
+          <h3><FormattedMessage {...localMessages.selectedMedia} /></h3>
+          {selectedMediaList}
+        </div>
       </div>
     );
   }

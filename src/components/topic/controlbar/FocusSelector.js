@@ -5,10 +5,9 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { REMOVE_FOCUS } from './TopicFilterControlBar';
 import { getBrandDarkerColor } from '../../../styles/colors';
+import messages from '../../../resources/messages';
 
 const localMessages = {
-  pickFocus: { id: 'focus.pick', defaultMessage: 'Pick a Subtopic' },
-  noFocus: { id: 'focus.none', defaultMessage: 'No Subtopic' },
 };
 
 class FocusSelector extends React.Component {
@@ -36,11 +35,19 @@ class FocusSelector extends React.Component {
       if (f1Name > f2Name) return 1;
       return 0;
     });
+    let detailsContent;
+    if (selectedId !== REMOVE_FOCUS) {
+      detailsContent = (
+        <div className="selected-focus-details">
+          details
+        </div>
+      );
+    }
     // default to none
     return (
       <div className="focus-selector-wrapper">
         <SelectField
-          floatingLabelText={formatMessage(localMessages.pickFocus)}
+          floatingLabelText={formatMessage(messages.focusPick)}
           floatingLabelFixed
           floatingLabelStyle={{ color: 'rgb(224,224,224)', opacity: 0.8 }}
           selectedMenuItemStyle={{ color: getBrandDarkerColor(), fontWeight: 'bold' }}
@@ -56,8 +63,9 @@ class FocusSelector extends React.Component {
               primaryText={focusName(focus)}
             />
           )}
-          <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(localMessages.noFocus)} />
+          <MenuItem value={REMOVE_FOCUS} primaryText={formatMessage(messages.removeFocus)} />
         </SelectField>
+        {detailsContent}
       </div>
     );
   }
