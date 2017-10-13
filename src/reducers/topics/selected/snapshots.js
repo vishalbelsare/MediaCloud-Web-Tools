@@ -6,6 +6,8 @@ export const TOPIC_SNAPSHOT_STATE_QUEUED = 'queued';
 export const TOPIC_SNAPSHOT_STATE_RUNNING = 'running';
 export const TOPIC_SNAPSHOT_STATE_COMPLETED = 'completed';
 export const TOPIC_SNAPSHOT_STATE_ERROR = 'error';
+// catch an error state that is happening but we don't know why yet!
+export const TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED = 'created but not queued';
 
 export const snapshotIsUsable = s => (s.state === TOPIC_SNAPSHOT_STATE_COMPLETED) && (s.searchable === 1);
 
