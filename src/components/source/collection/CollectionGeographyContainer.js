@@ -29,7 +29,7 @@ class CollectionGeographyContainer extends React.Component {
     const { collectionId, collectionName } = this.props;
     const countryName = geo.name;
     const countryTagId = geo.tags_id;
-    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_story_sentences: ${countryTagId})"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
+    const url = `https://dashboard.mediacloud.org/#query/["(tags_id_stories:${countryTagId})"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${collectionName} - ${countryName}","color":"55868A"}]`;
     window.open(url, '_blank');
   }
   render() {

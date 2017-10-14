@@ -10,7 +10,8 @@ import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';
 import MetadataCoverageItem from './MetadataCoverageItem';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS,
+  TAG_SET_MEDIA_TYPE } from '../../../lib/tagUtil';
 
 const localMessages = {
   chartTitle: { id: 'collection.summary.metadatacoverage.chart.title', defaultMessage: 'Metadata' },
@@ -32,7 +33,9 @@ const localMessages = {
   pCountryOfFocusTitle: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.title', defaultMessage: 'Country of Focus' },
   pCountryOfFocusTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.tagged', defaultMessage: 'with country of focus' },
   pCountryOfFocusNotTagged: { id: 'collection.summary.metadatacoverage.pCountryOfFocus.notTagged', defaultMessage: 'unknown country of focus' },
-
+  mediaTypeTitle: { id: 'collection.summary.metadatacoverage.mediaType.title', defaultMessage: 'Media Type' },
+  mediaTypeTagged: { id: 'collection.summary.metadatacoverage.mediaType.tagged', defaultMessage: 'with a media type' },
+  mediaTypeNotTagged: { id: 'collection.summary.metadatacoverage.mediaType.notTagged', defaultMessage: 'with no media type' },
 };
 
 class CollectionMetadataCoverageSummaryContainer extends React.Component {
@@ -55,7 +58,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
     } else {
       content = (
         <Row>
-          <Col lg={3}>
+          <Col lg={2}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubCountryTitle)}
               sources={sources}
@@ -64,7 +67,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
             />
           </Col>
-          <Col lg={3}>
+          <Col lg={2}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubStateTitle)}
               sources={sources}
@@ -73,7 +76,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubStateNotTagged)}
             />
           </Col>
-          <Col lg={3}>
+          <Col lg={2}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pLanguageTitle)}
               sources={sources}
@@ -82,13 +85,22 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
             />
           </Col>
-          <Col lg={3}>
+          <Col lg={2}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pCountryOfFocusTitle)}
               sources={sources}
               metadataId={TAG_SET_COUNTRY_OF_FOCUS}
               taggedText={formatMessage(localMessages.pCountryOfFocusTagged)}
               notTaggedText={formatMessage(localMessages.pCountryOfFocusNotTagged)}
+            />
+          </Col>
+          <Col lg={2}>
+            <MetadataCoverageItem
+              title={formatMessage(localMessages.mediaTypeTitle)}
+              sources={sources}
+              metadataId={TAG_SET_MEDIA_TYPE}
+              taggedText={formatMessage(localMessages.mediaTypeTagged)}
+              notTaggedText={formatMessage(localMessages.mediaTypeNotTagged)}
             />
           </Col>
         </Row>

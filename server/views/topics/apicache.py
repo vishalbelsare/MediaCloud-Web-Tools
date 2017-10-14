@@ -105,6 +105,7 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
         local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryList(topics_id, **kwargs)
 
+DEFAULT_WORD_COUNT_SAMPLE_SIZE = 1000
 
 def topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''
@@ -116,7 +117,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': 1000
+        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
@@ -126,6 +127,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
     return word_data
+
 
 @cache
 def _cached_word2vec_google_2d_results(words):
@@ -233,16 +235,16 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     timespan_query = "timespans_id:{}".format(timespans_id)
-    if q is None:
+    if (q is None) or (len(q) == 0):
         query = timespan_query
     else:
         query = "({}) AND ({})".format(q, timespan_query)
     return _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query)
 
 
-@cache
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
+    # we don't need ot use topics_id here because the timespans_id is in the query argument
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)
     # add in the pct so we can show relative values within the sample

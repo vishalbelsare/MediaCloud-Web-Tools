@@ -10,6 +10,7 @@ import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 
 const localMessages = {
   basics: { id: 'topic.form.section.basics', defaultMessage: 'Basics' },
@@ -25,6 +26,7 @@ const localMessages = {
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
+  logogram: { id: 'topic.form.detail.logogram', defaultMessage: 'Content in a Logographic Language? (ie. Chinese or Japanese Kanji?)' },
   crimsonHexagon: { id: 'topic.form.detail.crimsonHexagon', defaultMessage: 'Crimson Hexagon Id' },
   crimsonHexagonHelp: { id: 'topic.form.detail.crimsonHexagon.help', defaultMessage: 'If you have set up a Crimson Hexagon monitor on our associated account, enter it\'s numeric ID here and we will automatically pull in all the stories linked to by tweets in your monitor.' },
   maxIterations: { id: 'topic.form.detail.maxIterations', defaultMessage: 'Max Spider Iterations' },
@@ -99,12 +101,22 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={4}>
+        <Col lg={8}>
           <Field
             name="is_public"
             component={renderCheckbox}
             fullWidth
             label={formatMessage(localMessages.public)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={8}>
+          <Field
+            name="is_logogram"
+            component={renderCheckbox}
+            fullWidth
+            label={formatMessage(localMessages.logogram)}
           />
         </Col>
       </Row>
@@ -119,7 +131,7 @@ const TopicDetailForm = (props) => {
             fullWidth
             floatingLabelText={localMessages.seedQuery}
           />
-          <small><FormattedMessage {...localMessages.seedQueryDescription} /></small>
+          <small><b><QueryHelpDialog /></b> <FormattedMessage {...localMessages.seedQueryDescription} /></small>
           {queryWarning}
         </Col>
       </Row>
