@@ -24,7 +24,7 @@ def topic_list():
     else:
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
-        topics = user_mc.topicList(link_id=link_id)
+        topics = user_mc.topicList(link_id=link_id, limit=50)
         _add_user_favorite_flag_to_topics(topics['topics'])
         return jsonify({'topics': {'personal': topics}})
 
@@ -37,7 +37,7 @@ def does_user_have_a_running_topic():
     more_topics = True
     link_id = None
     while more_topics:
-        results = user_mc.topicList(link_id=link_id)
+        results = user_mc.topicList(link_id=link_id, limit=100)
         topics = results['topics']
         queued_and_running_topics += [t for t in topics if t['state'] in ['running', 'queued']
                                       and t['user_permission'] in ['admin']]
@@ -64,7 +64,7 @@ def topic_filter_cascade_list():
     if is_user_logged_in():
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
-        results = user_mc.topicList(link_id=link_id)
+        results = user_mc.topicList(link_id=link_id, limit=105)
         user_topics = results['topics']
         favorite_topic_ids = db.get_users_lists(user_name(), 'favorite'
                                                              'Topics')
@@ -87,7 +87,7 @@ def sorted_public_topic_list():
         local_mc = user_mediacloud_client()
     else:
         local_mc = mc
-    public_topics_list = local_mc.topicList(public=True)['topics']
+    public_topics_list = local_mc.topicList(public=True, limit=50)['topics']
     return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
@@ -254,6 +254,6 @@ def topic_spider(topics_id):
 def topic_search():
     search_str = request.args['searchStr']
     user_mc = user_admin_mediacloud_client()
-    matching_topics = user_mc.topicList(name=search_str)
+    matching_topics = user_mc.topicList(name=search_str, limit=15)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
