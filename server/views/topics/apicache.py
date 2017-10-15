@@ -11,6 +11,9 @@ from server.views.topics import validated_sort, access_public_topic
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_WORD_COUNT_SAMPLE_SIZE = 2000
+WORD_COUNT_DOWNLOAD_COLUMNS = ['term', 'stem', 'count', 'sample_size', 'ratio']
+
 
 def topic_media_list(user_mc_key, topics_id, **kwargs):
     '''
@@ -105,7 +108,17 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
         local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryList(topics_id, **kwargs)
 
-DEFAULT_WORD_COUNT_SAMPLE_SIZE = 1000
+
+def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q):
+    sample_size = DEFAULT_WORD_COUNT_SAMPLE_SIZE
+    word_counts = topic_word_counts(user_mediacloud_key(), topics_id,
+                                    q=q, ngram_size=ngram_size)
+    # add in normalization
+    for w in word_counts:
+        w['sample_size'] = sample_size
+        w['ratio'] = float(w['count']) / float(DEFAULT_WORD_COUNT_SAMPLE_SIZE)
+    return word_counts
+
 
 def topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''
@@ -117,7 +130,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE
+        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE,
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)

@@ -12,7 +12,8 @@ import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
-from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query
+from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
+    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -130,9 +131,11 @@ def story_words(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def story_words_csv(topics_id, stories_id):
-    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q='stories_id:'+stories_id)
-    props = ['term', 'stem', 'count']
-    return csv.stream_response(word_list, props, 'story-'+str(stories_id)+'-words')
+    query = add_to_user_query('stories_id:'+stories_id)
+    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size, q=query)
+    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+                               'topic-{}-story-{}-sampled-ngrams-{}-word'.format(topics_id, stories_id, ngram_size))
 
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])

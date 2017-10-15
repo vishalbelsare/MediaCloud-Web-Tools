@@ -9,7 +9,7 @@ from server.auth import user_mediacloud_key, is_user_logged_in
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_word_counts, topic_story_list, topic_sentence_counts, \
-    topic_sentence_sample, add_to_user_query, DEFAULT_WORD_COUNT_SAMPLE_SIZE
+    topic_sentence_sample, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -54,14 +54,11 @@ def topic_words(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_words_csv(topics_id):
-    sample_size = DEFAULT_WORD_COUNT_SAMPLE_SIZE
-    word_counts = topic_word_counts(user_mediacloud_key(), topics_id)
-    # add in normalization
-    for w in word_counts:
-        w['sample_size'] = sample_size
-        w['ratio'] = float(w['count']) / float(DEFAULT_WORD_COUNT_SAMPLE_SIZE)
-    props = ['term', 'stem', 'count', 'sample_size', 'ratio']
-    return csv.stream_response(word_counts, props, 'topic-{}-sampled-words'.format(topics_id))
+    query = add_to_user_query(None)
+    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+                               'topic-{}-sampled-ngrams-{}-word'.format(topics_id, ngram_size))
 
 
 @app.route('/api/topics/<topics_id>/words/<word>/sentences/count', methods=['GET'])
@@ -106,9 +103,11 @@ def topic_word_associated_words(topics_id, word):
 @flask_login.login_required
 @api_error_handler
 def topic_word_associated_words_csv(topics_id, word):
-    response = topic_word_counts(user_mediacloud_key(), topics_id, q=word)
-    props = ['term', 'stem', 'count']
-    return csv.stream_response(response, props, 'word-'+word+'-sampled-words')
+    query = add_to_user_query(word)
+    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+                               'topic-{}-{}-sampled-ngrams-{}-word'.format(topics_id, word, ngram_size))
 
 
 @app.route('/api/topics/<topics_id>/words/<word>/sample-usage', methods=['GET'])

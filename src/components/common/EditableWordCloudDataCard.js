@@ -28,6 +28,9 @@ const localMessages = {
   modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
   modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'Use Word2Vec 2D Layout' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
+  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
+  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
+  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -70,9 +73,13 @@ class EditableWordCloudDataCard extends React.Component {
     this.setState({ editing: !this.state.editing });
   };
 
-  downloadCsv = () => {
+  downloadCsv = (ngramSize) => {
     const { downloadUrl } = this.props;
-    window.location = downloadUrl;
+    let url = downloadUrl;
+    if (ngramSize) {
+      url = `${url}&ngram_size=${ngramSize}`;
+    }
+    window.location = url;
   };
 
   render() {
@@ -185,10 +192,24 @@ class EditableWordCloudDataCard extends React.Component {
               />
               <MenuItem
                 className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadCSV)}
+                primaryText={formatMessage(localMessages.downloadWordCSV)}
                 rightIcon={<DownloadButton />}
                 disabled={this.state.editing} // can't download until done editing
-                onTouchTap={this.downloadCsv}
+                onTouchTap={() => this.downloadCsv(1)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadBigramCSV)}
+                rightIcon={<DownloadButton />}
+                disabled={this.state.editing} // can't download until done editing
+                onTouchTap={() => this.downloadCsv(2)}
+              />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(localMessages.downloadTrigramCSV)}
+                rightIcon={<DownloadButton />}
+                disabled={this.state.editing} // can't download until done editing
+                onTouchTap={() => this.downloadCsv(3)}
               />
               <MenuItem
                 className="action-icon-menu-item"
