@@ -49,6 +49,8 @@ class QueryHelpDialog extends React.Component {
         <Dialog
           title={formatMessage(localMessages.title)}
           actions={dialogActions}
+          modal
+          className="app-dialog"
           open={this.state.open}
           onRequestClose={this.handleClose}
         >

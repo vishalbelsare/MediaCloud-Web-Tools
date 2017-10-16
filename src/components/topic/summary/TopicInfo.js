@@ -10,11 +10,13 @@ import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 const localMessages = {
   title: { id: 'topic.summary.info.title', defaultMessage: 'About this Topic' },
   state: { id: 'topic.state', defaultMessage: 'State' },
+  timespan: { id: 'topic.summary.timespan', defaultMessage: '<b>Timespan</b>: {start} to {end} ({period})' },
+  filtersHeader: { id: 'topic.summary.filters.header', defaultMessage: 'Current Filters' },
 };
 
 const TopicInfo = (props) => {
-  const { topic } = props;
-  const { formatMessage } = props.intl;
+  const { topic, timespan, focus } = props;
+  const { formatMessage, formatDate } = props.intl;
   let stateMessage = '';
   if (topic.state !== 'error') {
     stateMessage = topic.message; // show details to everyone if in normal state
@@ -24,6 +26,39 @@ const TopicInfo = (props) => {
   }
   let sourcesAndCollections = topic.media ? [...topic.media] : [];
   sourcesAndCollections = topic.media_tags ? [...sourcesAndCollections, ...topic.media_tags] : sourcesAndCollections;
+  let timespanContent;
+  if (timespan) {
+    timespanContent = (
+      <p>
+        <FormattedHTMLMessage
+          {...localMessages.timespan}
+          values={{
+            start: formatDate(timespan.startDateObj, { month: 'short', year: 'numeric', day: 'numeric' }),
+            end: formatDate(timespan.endDateObj, { month: 'short', year: 'numeric', day: 'numeric' }),
+            period: timespan.period,
+          }}
+        />
+      </p>
+    );
+  } else {
+    timespanContent = (
+      <p><b><FormattedMessage {...messages.timespan} /></b>: ?</p>
+    );
+  }
+  let focusContent;
+  if (focus && focus.focalSet) {
+    focusContent = (
+      <p>
+        <b><FormattedMessage {...messages.focus} /></b>: {focus.focalSet.name}: {focus.name}
+        <br />
+        <FormattedMessage {...messages.query} />: <code>{focus.query}</code>
+      </p>
+    );
+  } else {
+    focusContent = (
+      <p><b><FormattedHTMLMessage {...messages.focus} /></b>: <FormattedMessage {...messages.none} /></p>
+    );
+  }
   return (
     <DataCard className="topic-info">
       <h2>
@@ -54,12 +89,17 @@ const TopicInfo = (props) => {
         <b><FormattedHTMLMessage {...messages.topicValidationProp} /></b>
         <code>{topic.pattern}</code>
       </p>
+      <h3><FormattedMessage {...localMessages.filtersHeader} /></h3>
+      {timespanContent}
+      {focusContent}
     </DataCard>
   );
 };
 
 TopicInfo.propTypes = {
   topic: PropTypes.object.isRequired,
+  timespan: PropTypes.object,
+  focus: PropTypes.object,
   intl: PropTypes.object.isRequired,
 };
 

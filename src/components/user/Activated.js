@@ -5,16 +5,16 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router';
 import AppButton from '../common/AppButton';
 import { ErrorNotice } from '../common/Notice';
-import messages from '../..//resources/messages';
 
 const localMessages = {
   workedTitle: { id: 'user.activated.worked.title', defaultMessage: 'Your Account is Activated' },
-  workedInto: { id: 'user.activated.worked.intro', defaultMessage: 'Your Media Cloud account is now active!' },
+  workedIntro: { id: 'user.activated.worked.intro', defaultMessage: 'Your Media Cloud account is now active!' },
   failedTitle: { id: 'user.activated.failed.title', defaultMessage: 'Account Activation Failed' },
   loginNow: { id: 'user.activated.login', defaultMessage: 'Login to Media Cloud' },
   invalidToken: { id: 'user.activated.invalidToken', defaultMessage: 'That is an invalid token.' },
   invalidTokenActions: { id: 'user.activated.invalidTokenActions', defaultMessage: 'You\'ve probably already activated your account, in which case <a href="/#/login">you can login now</a>.  If that isn\'t working, click the button to resend the acccount activation link.' },
   didNotWork: { id: 'user.activated.invalidTokenActions', defaultMessage: 'Sorry, but that didn\'t work for some reason.  Try the link again, or click the button below to resend the acccount activation link.' },
+  resendActivation: { id: 'user.activated.resend', defaultMessage: 'Resend Activation Email' },
 };
 
 const Activated = (props) => {
@@ -27,14 +27,14 @@ const Activated = (props) => {
     <Link to="/user/resend-activation">
       <AppButton
         primary
-        label={formatMessage(messages.resendActivation)}
+        label={formatMessage(localMessages.resendActivation)}
       />
     </Link>
   );
   if (success) {
     content = (
       <div>
-        <p><FormattedMessage {...localMessages.workedInto} /></p>
+        <p><FormattedMessage {...localMessages.workedIntro} /></p>
         <Link to="/login">
           <AppButton
             primary

@@ -92,6 +92,7 @@ class StoryContainer extends React.Component {
               </h1>
               <Dialog
                 title={formatMessage(localMessages.removeTitle)}
+                className="app-dialog"
                 actions={dialogActions}
                 modal={false}
                 open={this.state.open}

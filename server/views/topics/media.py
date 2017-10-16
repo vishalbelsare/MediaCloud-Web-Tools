@@ -11,7 +11,7 @@ from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
 from server.views.topics.sentences import stream_sentence_count_csv
 from server.views.topics.stories import stream_story_list_csv
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts, \
-    topic_story_list, add_to_user_query
+    topic_story_list, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.util.request import filters_from_args, api_error_handler
 from server.views.topics import access_public_topic
 
@@ -186,6 +186,7 @@ def media_words(topics_id, media_id):
 @flask_login.login_required
 def media_words_csv(topics_id, media_id):
     query = add_to_user_query('media_id:'+media_id)
-    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q=query)
-    props = ['term', 'stem', 'count']
-    return csv.stream_response(word_list, props, 'media-'+str(media_id)+'-words')
+    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size=ngram_size, q=query)
+    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+                               'topic-{}-media-{}-sampled-ngrams-{}-word'.format(topics_id, media_id, ngram_size))

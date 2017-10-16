@@ -108,6 +108,7 @@ class MediaContainer extends React.Component {
             </Col>
           </Row>
           <Dialog
+            className="app-dialog"
             title={formatMessage(localMessages.removeTitle)}
             actions={dialogActions}
             modal={false}

@@ -3,6 +3,7 @@ import json
 from flask import jsonify, request
 import flask_login
 from operator import itemgetter
+from itertools import groupby
 
 from server import app, cliff, mc, TOOL_API_KEY
 from server.auth import is_user_logged_in
@@ -11,14 +12,17 @@ import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
-from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query
+from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
+    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
 PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
 
+
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
+@flask_login.login_required
 @api_error_handler
 def story(topics_id, stories_id):
 
@@ -73,6 +77,7 @@ def _cached_geoname(geonames_id):
 
 
 @app.route('/api/topics/<topics_id>/stories/counts', methods=['GET'])
+@flask_login.login_required
 @api_error_handler
 def story_counts(topics_id):
     local_key = None
@@ -88,6 +93,7 @@ def story_counts(topics_id):
 
 
 @app.route('/api/topics/<topics_id>/stories/undateable-counts', methods=['GET'])
+@flask_login.login_required
 @api_error_handler
 def story_undateable_count(topics_id):
     q = "tags_id_stories:{}".format(tag_util.STORY_UNDATEABLE_TAG)
@@ -95,6 +101,7 @@ def story_undateable_count(topics_id):
 
 
 @app.route('/api/topics/<topics_id>/stories/english-counts', methods=['GET'])
+@flask_login.login_required
 @api_error_handler
 def story_english_counts(topics_id):
     q = "language:en"
@@ -124,9 +131,11 @@ def story_words(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/words.csv', methods=['GET'])
 @flask_login.login_required
 def story_words_csv(topics_id, stories_id):
-    word_list = topic_word_counts(user_mediacloud_key(), topics_id, q='stories_id:'+stories_id)
-    props = ['term', 'stem', 'count']
-    return csv.stream_response(word_list, props, 'story-'+str(stories_id)+'-words')
+    query = add_to_user_query('stories_id:'+stories_id)
+    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size, q=query)
+    return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
+                               'topic-{}-story-{}-sampled-ngrams-{}-word'.format(topics_id, stories_id, ngram_size))
 
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks', methods=['GET'])
@@ -158,7 +167,6 @@ def story_outlinks_csv(topics_id, stories_id):
 
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
-@api_error_handler
 @api_error_handler
 def topic_stories(topics_id):
     local_mc = None
@@ -271,9 +279,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
 @api_error_handler
 def story_entities(topics_id, stories_id):
     # we don't care about money, number, duration, date, misc, ordinal
-    entities = cached_entities(user_mediacloud_key(), stories_id)
-    if entities is not None:
-        entities = [e for e in entities if e['type'] in PRIMARY_ENTITY_TYPES ]
+    entities = cached_entities_from_cliff(user_mediacloud_key(), stories_id)
     return jsonify({'list': entities})
 
 
@@ -282,45 +288,38 @@ def story_entities(topics_id, stories_id):
 @api_error_handler
 def story_entities_csv(topics_id, stories_id):
     # in the download include all entity types
-    entities = cached_entities(user_mediacloud_key(), stories_id)
-    if entities is None:
-        # none means not processed by corenlp, but for download just make it empty
-        entities = []
-    props = ['type', 'name', 'words']
+    entities = cached_entities_from_cliff(user_mediacloud_key(), stories_id)
+    props = ['type', 'name', 'frequency']
     return csv.stream_response(entities, props, 'story-'+str(stories_id)+'-entities')
 
-def cached_entities(user_mediacloud_key, stories_id):
-    user_mc = user_mediacloud_client()
-    nlp_results = user_mc.storyCoreNlpList(story_id_list=[stories_id])
-    if nlp_results[0]['corenlp'] == "story is not annotated":
-        return None
-    story_nlp = nlp_results[0]['corenlp']['_']['corenlp']
-    # set up for entity counting
+
+def cached_entities_from_cliff(user_mediacloud_key, stories_id):
     entities = []
-    current_entity_words = []
-    current_entity_type = None  # entities can be split across multiple consecutive words
-    # iterate through the words collecting any named entities
-    for sentence in story_nlp['sentences']:
-        for token in sentence['tokens']:
-            if (len(token['ne']) > 1):
-                current_entity_type = token['ne']
-                current_entity_words.append(token['word'])
-            else:  # found a non-entity, so check if the preceeding word(s) were an entity and add it to the mix
-                if current_entity_type is not None:
-                    entities.append({'type': current_entity_type,
-                                     'name': " ".join(current_entity_words),
-                                     'words': len(current_entity_words)})
-                current_entity_words = []
-                current_entity_type = None
-    # turn the lists into counts
-    unique_entities = {}
-    for entity in entities:
-        unique_key = entity['type'] + entity['name'] + str(entity['words'])
-        if unique_key in unique_entities.keys():
-            unique_entities[unique_key]['frequency'] += 1
-        else:
-            unique_entities[unique_key] = entity
-            unique_entities[unique_key]['frequency'] = 1
-    unique_entities = list(unique_entities.values())
-    unique_entities = sorted(unique_entities, key=itemgetter('frequency'), reverse=True)
+    # grab story text
+    story = mc.story(stories_id, text=True)
+    # get entities
+    cliff_results = cliff.parseText(story['story_text'])
+    # clean up for reporting
+    for org in cliff_results ['results']['organizations']:
+        entities.append({
+            'type': 'ORGANIZATION',
+            'name': org['name'],
+            'frequency': org['count']
+        })
+    for person in cliff_results ['results']['people']:
+        entities.append({
+            'type': 'PERSON',
+            'name': person['name'],
+            'frequency': person['count']
+        })
+    # places don't have frequency set correctly, so we need to sum them
+    place_names = [place['name'] for place in cliff_results ['results']['places']['mentions']]
+    locations = [{
+        'type': 'LOCATION',
+        'name': key,
+        'frequency': len(list(group))
+    } for key, group in groupby(place_names)]
+    entities += locations
+    # sort smartly
+    unique_entities = sorted(entities, key=itemgetter('frequency'), reverse=True)
     return unique_entities

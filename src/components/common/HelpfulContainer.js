@@ -84,6 +84,7 @@ function composeHelpfulContainer(contentTitleMsg, contentHTMLTextMsg, showHelpSi
               title={dialogTitle}
               actions={dialogActions}
               modal={false}
+              className="app-dialog"
               open={this.state.open}
               onRequestClose={this.handleClose}
             >
