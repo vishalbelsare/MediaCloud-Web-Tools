@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -16,9 +16,9 @@ import WordSelectWrapper from './WordSelectWrapper';
 const localMessages = {
   title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Comparative Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
-  leftTitleMsg: { id: 'explorer.comparativeWords.left', defaultMessage: 'Comparative Words' },
-  centerTitleMsg: { id: 'explorer.comparativeWords.center', defaultMessage: 'Comparative Words' },
-  rightTitleMsg: { id: 'explorer.comparativeWords.right', defaultMessage: 'Comparative Words' },
+  leftTitleMsg: { id: 'explorer.comparativeWords.left', defaultMessage: 'Words Matching {name}' },
+  centerTitleMsg: { id: 'explorer.comparativeWords.center', defaultMessage: 'Comparison between {leftName} and {rightName}' },
+  rightTitleMsg: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words Matching {name}' },
 
 };
 const LEFT = 0;
@@ -107,7 +107,7 @@ class ComparativeWordCloudContainer extends React.Component {
           </Row>
         </Grid>
       );
-    } else if (results && results.length > 0) {
+    } else if (results && results.length > 0 && leftQuery !== null) {
       return (
         <Grid>
           <h2><FormattedMessage {...localMessages.title} /></h2>
@@ -124,11 +124,13 @@ class ComparativeWordCloudContainer extends React.Component {
                 <ComparativeOrderedWordCloud
                   leftWords={results[0]}
                   rightWords={results[1]}
+                  leftTextColor={leftQuery.color}
+                  rightTextColor={rightQuery.color}
                   textColor={getBrandDarkColor()}
                   onWordClick={handleWordCloudClick}
-                  leftTitleMsg={localMessages.leftTitleMsg}
-                  centerTitleMsg={localMessages.centerTitleMsg}
-                  rightTitleMsg={localMessages.rightTitleMsg}
+                  leftTitleMsg={<FormattedHTMLMessage {...localMessages.leftTitleMsg} values={{ name: leftQuery.label }} />}
+                  centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitleMsg} values={{ leftName: leftQuery.label, rightName: rightQuery.label }} />}
+                  rightTitleMsg={<FormattedHTMLMessage {...localMessages.rightTitleMsg} values={{ name: rightQuery.label }} />}
                 />
               </DataCard>
             </Col>

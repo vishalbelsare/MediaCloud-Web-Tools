@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
-import { FormattedHTMLMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import OrderedWordCloud from './OrderedWordCloud';
 
 const WORDS_TO_SHOW = 100;
 
 const ComparativeOrderedWordCloud = (props) => {
-  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg } = props;
+  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg, leftTextColor, rightTextColor } = props;
   const leftSum = d3.sum(leftWords, d => d.count);
   const rightSum = d3.sum(rightWords, d => d.count);
   let topLeft = leftWords.slice(0, WORDS_TO_SHOW);
@@ -38,16 +38,17 @@ const ComparativeOrderedWordCloud = (props) => {
     <div className="comparative-ordered-word-cloud">
       <Row>
         <Col lg={4}>
-          <h2><FormattedHTMLMessage {...leftTitleMsg} /></h2>
+          <h2>{leftTitleMsg}</h2>
           <OrderedWordCloud
             words={left}
             alreadyNormalized
             fullExtent={fullExtent}
             width={390}
+            textColor={leftTextColor}
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHTMLMessage {...centerTitleMsg} /></h2>
+          <h2>{centerTitleMsg}</h2>
           <OrderedWordCloud
             words={center}
             alreadyNormalized
@@ -56,12 +57,13 @@ const ComparativeOrderedWordCloud = (props) => {
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHTMLMessage {...rightTitleMsg} /></h2>
+          <h2>{rightTitleMsg}</h2>
           <OrderedWordCloud
             words={right}
             alreadyNormalized
             fullExtent={fullExtent}
             width={390}
+            textColor={rightTextColor}
           />
         </Col>
       </Row>
@@ -79,7 +81,8 @@ ComparativeOrderedWordCloud.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
-  textColor: PropTypes.string,
+  leftTextColor: PropTypes.string,
+  rightTextColor: PropTypes.string,
   onWordClick: PropTypes.func,
   linkColor: PropTypes.string,
   showTooltips: PropTypes.bool,
