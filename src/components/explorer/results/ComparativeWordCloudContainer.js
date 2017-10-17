@@ -6,7 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField } from '../../../actions/explorerActions';
-import { generateParamStr } from '../../../lib/apiUtil';
+// import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ComparativeOrderedWordCloud from '../../vis/ComparativeOrderedWordCloud';
@@ -89,12 +89,6 @@ class ComparativeWordCloudContainer extends React.Component {
         <Grid>
           <h2><FormattedMessage {...localMessages.title} /></h2>
           <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-              <p><FormattedMessage {...localMessages.intro} /></p>
-            </Col>
-          </Row>
-          <Row>
             <Col lg={12}>
               <DataCard>
                 <OrderedWordCloud
@@ -109,33 +103,29 @@ class ComparativeWordCloudContainer extends React.Component {
       );
     } else if (results && results.length > 0 && leftQuery !== null) {
       return (
-        <Grid>
-          <h2><FormattedMessage {...localMessages.title} /></h2>
-          <Row>
-            <Col lg={12} md={12} sm={12}>
-              <h1><FormattedMessage {...localMessages.title} /></h1>
-              <p><FormattedMessage {...localMessages.intro} /></p>
-            </Col>
-          </Row>
-          <WordSelectWrapper queries={queries} selectComparativeWords={this.selectAndFetchComparedQueries} leftQuery={leftQuery} rightQuery={rightQuery} />
-          <Row>
-            <Col lg={12}>
-              <DataCard>
-                <ComparativeOrderedWordCloud
-                  leftWords={results[0]}
-                  rightWords={results[1]}
-                  leftTextColor={leftQuery.color}
-                  rightTextColor={rightQuery.color}
-                  textColor={getBrandDarkColor()}
-                  onWordClick={handleWordCloudClick}
-                  leftTitleMsg={<FormattedHTMLMessage {...localMessages.leftTitleMsg} values={{ name: leftQuery.label }} />}
-                  centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitleMsg} values={{ leftName: leftQuery.label, rightName: rightQuery.label }} />}
-                  rightTitleMsg={<FormattedHTMLMessage {...localMessages.rightTitleMsg} values={{ name: rightQuery.label }} />}
-                />
-              </DataCard>
-            </Col>
-          </Row>
-        </Grid>
+        <DataCard>
+          <Grid>
+            <Row>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+            </Row>
+            <Row>
+              <WordSelectWrapper queries={queries} selectComparativeWords={this.selectAndFetchComparedQueries} leftQuery={leftQuery} rightQuery={rightQuery} />
+            </Row>
+            <Row>
+              <ComparativeOrderedWordCloud
+                leftWords={results[0]}
+                rightWords={results[1]}
+                leftTextColor={leftQuery.color}
+                rightTextColor={rightQuery.color}
+                textColor={getBrandDarkColor()}
+                onWordClick={handleWordCloudClick}
+                leftTitleMsg={<FormattedHTMLMessage {...localMessages.leftTitleMsg} values={{ name: leftQuery.label }} />}
+                centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitleMsg} values={{ leftName: leftQuery.label, rightName: rightQuery.label }} />}
+                rightTitleMsg={<FormattedHTMLMessage {...localMessages.rightTitleMsg} values={{ name: rightQuery.label }} />}
+              />
+            </Row>
+          </Grid>
+        </DataCard>
       );
     }
     return <div>Error</div>;
@@ -203,10 +193,13 @@ const mapDispatchToProps = (dispatch, state) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleWordCloudClick: (word) => {
-      const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
-      const url = `/topics/${stateProps.topicId}/words/${word.stem}*?${params}`;
-      dispatchProps.goToUrl(url);
+    handleWordCloudClick: () => {
+      // const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
+      // add chosen word to query
+      // which word was clicked, from where, add to that query.q and into the url
+      // dispatch update query
+      // then
+      // dispatchProps.goToUrl(url);
     },
     asyncFetch: () => {
       if (ownProps.queries && ownProps.queries.length > 0) {
