@@ -53,6 +53,10 @@ export const FETCH_QUERY_TOP_WORDS = 'FETCH_QUERY_TOP_WORDS';
 export const fetchQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchQueryTopWords, params => params);
 export const fetchDemoQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchDemoQueryTopWords, params => params);
 
+export const SELECT_COMPARATIVE_WORD_FIELD = 'SELECT_COMPARATIVE_WORD_FIELD';
+export const selectComparativeWordField = createAction(SELECT_COMPARATIVE_WORD_FIELD, params => params);
+
+
 export const FETCH_QUERY_GEO = 'FETCH_QUERY_GEO';
 export const fetchQueryGeo = createAsyncAction(FETCH_QUERY_GEO, api.fetchQueryGeo, params => params);
 export const fetchDemoQueryGeo = createAsyncAction(FETCH_QUERY_GEO, api.fetchDemoQueryGeo, params => params);

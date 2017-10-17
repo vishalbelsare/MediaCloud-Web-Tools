@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField } from '../../../actions/explorerActions';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -21,22 +21,27 @@ const localMessages = {
   rightTitleMsg: { id: 'explorer.comparativeWords.right', defaultMessage: 'Comparative Words' },
 
 };
+const LEFT = 0;
+const RIGHT = 1;
 
 class ComparativeWordCloudContainer extends React.Component {
   componentWillMount() {
-    const { queries } = this.props;
-    const leftQ = queries[0];
-    const rightQ = queries.length > 1 ? queries[1] : queries[0];
-    this.setState({ leftQuery: leftQ, rightQuery: rightQ });
+    const { queries, leftQuery, selectComparativeWords } = this.props;
+    if (leftQuery === null) { // selections haven't been set yet so do init
+      const leftQ = queries[0];
+      const rightQ = queries.length > 1 ? queries[1] : queries[0];
+      selectComparativeWords(leftQ, LEFT);
+      selectComparativeWords(rightQ, RIGHT);
+    }
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData } = this.props;
+    const { lastSearchTime, fetchData, leftQuery, rightQuery } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData([this.state.leftQuery, this.state.rightQuery]);
+      fetchData([leftQuery, rightQuery]);
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
+    const { results, queries, leftQuery, rightQuery } = this.props;
     // only re-render if results, any labels, or any colors have changed
     if (results.length) { // may have reset results so avoid test if results is empty
       const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
@@ -44,6 +49,8 @@ class ComparativeWordCloudContainer extends React.Component {
       return (
         ((labelsHaveChanged || colorsHaveChanged))
          || (results !== nextProps.results)
+         || (nextProps.leftQuery !== leftQuery
+         || nextProps.rightQuery !== rightQuery)
       );
     }
     return false; // if both results and queries are empty, don't update
@@ -52,6 +59,17 @@ class ComparativeWordCloudContainer extends React.Component {
   componentWillUnmount() {
     this.setState({ leftQuery: '', rightQuery: '' });
   }
+
+  selectAndFetchComparedQueries = (queryObj, target) => {
+    const { fetchData, leftQuery, rightQuery, selectComparativeWords } = this.props;
+    selectComparativeWords(queryObj, target);
+    if (target === LEFT) {
+      fetchData([queryObj, rightQuery]);
+    } else {
+      fetchData([leftQuery, queryObj]);
+    }
+  }
+
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
@@ -63,7 +81,7 @@ class ComparativeWordCloudContainer extends React.Component {
   }
 
   render() {
-    const { queries, results, handleWordCloudClick, fetchData } = this.props;
+    const { queries, results, handleWordCloudClick, leftQuery, rightQuery } = this.props;
     // test the results before we pass to cowc, are there two valid sets of arrays
     // const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
     if (results && results.length === 1) {
@@ -99,7 +117,7 @@ class ComparativeWordCloudContainer extends React.Component {
               <p><FormattedMessage {...localMessages.intro} /></p>
             </Col>
           </Row>
-          <WordSelectWrapper queries={queries} fetchComparedQueries={() => fetchData()} />
+          <WordSelectWrapper queries={queries} selectComparativeWords={this.selectAndFetchComparedQueries} leftQuery={leftQuery} rightQuery={rightQuery} />
           <Row>
             <Col lg={12}>
               <DataCard>
@@ -136,6 +154,9 @@ ComparativeWordCloudContainer.propTypes = {
   // from state
   fetchStatus: React.PropTypes.string.isRequired,
   handleWordCloudClick: PropTypes.func.isRequired,
+  selectComparativeWords: PropTypes.func.isRequired,
+  leftQuery: React.PropTypes.object,
+  rightQuery: React.PropTypes.object,
 };
 
 const mapStateToProps = state => ({
@@ -143,9 +164,14 @@ const mapStateToProps = state => ({
   user: state.user,
   fetchStatus: state.explorer.topWords.fetchStatus,
   results: state.explorer.topWords.list,
+  leftQuery: state.explorer.topWords.left,
+  rightQuery: state.explorer.topWords.right,
 });
 
 const mapDispatchToProps = (dispatch, state) => ({
+  selectComparativeWords: (query, target) => {
+    dispatch(selectComparativeWordField({ query, target }));
+  },
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
@@ -153,12 +179,12 @@ const mapDispatchToProps = (dispatch, state) => ({
     if (state.user.isLoggedIn) {
       const runTheseQueries = queries || state.queries;
       const comparedQueries = runTheseQueries.map(q => ({
-        start_date: q.startDate,
-        end_date: q.endDate,
+        start_date: q.startDate || q.start_date,
+        end_date: q.endDate || q.start_date,
         q: q.q,
         index: q.index,
-        sources: q.sources.map(s => s.id),
-        collections: q.collections.map(c => c.id),
+        sources: q.sources.map(s => s.id || s.media_id),
+        collections: q.collections.map(c => c.id || c.tags_id),
       }));
       return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
     }

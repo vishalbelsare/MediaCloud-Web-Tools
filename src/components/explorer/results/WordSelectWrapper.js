@@ -14,53 +14,57 @@ const LEFT = 0;
 const RIGHT = 1;
 
 class WordSelectWrapper extends React.Component {
-  state = {
-    leftQuery: '',
-    rightQuery: '',
-  };
+  componentWillReceiveProps(nextProps) {
+    const { selectComparativeWords, leftQuery, rightQuery } = this.props;
+    if (nextProps.leftQuery !== leftQuery ||
+      nextProps.rightQuery !== rightQuery) {
+      selectComparativeWords(nextProps.leftQuery, LEFT);
+      selectComparativeWords(nextProps.rightQuery, RIGHT);
+    }
+  }
   selectThisQuery = (targetIndex, value) => {
     // get value and which menu (left or right) and then run comparison
     // get query out of queries at queries[targetIndex] and pass "q" to fetch
     // store choice of selectField
-    const { fetchComparedQueries, queries } = this.props;
+    const { selectComparativeWords, queries } = this.props;
     let queryObj = {};
     queryObj = queries[value];
     if (targetIndex === LEFT) {
-      this.setState({ leftQuery: queryObj });
-      fetchComparedQueries([queryObj, this.state.rightQuery]);
+      selectComparativeWords(queryObj, LEFT);
     } else {
-      this.setState({ rightQuery: queryObj });
-      fetchComparedQueries([this.state.leftQuery, queryObj]);
+      selectComparativeWords(queryObj, RIGHT);
     }
   }
   render() {
-    const { queries } = this.props;
+    const { queries, leftQuery, rightQuery } = this.props;
     const menuItems = queries.map((q, idx) =>
       <MenuItem key={idx} value={idx} primaryText={q.label} />
     );
     let content = null;
-    content = (
-      <Row>
-        <Col>
-          <SelectField
-            floatingLabelText="Frequency"
-            value={this.state.leftQuery.index}
-            onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
-          >
-            {menuItems}
-          </SelectField>
-        </Col>
-        <Col>
-          <SelectField
-            floatingLabelText="Frequency"
-            value={this.state.rightQuery.index}
-            onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
-          >
-            {menuItems}
-          </SelectField>
-        </Col>
-      </Row>
-    );
+    if (leftQuery !== null) {
+      content = (
+        <Row>
+          <Col>
+            <SelectField
+              floatingLabelText="Left Column"
+              value={leftQuery.index || queries[0].index}
+              onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
+            >
+              {menuItems}
+            </SelectField>
+          </Col>
+          <Col>
+            <SelectField
+              floatingLabelText="Right Column"
+              value={rightQuery.index || queries[1].index}
+              onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
+            >
+              {menuItems}
+            </SelectField>
+          </Col>
+        </Row>
+      );
+    }
     return content;
   }
 
@@ -70,7 +74,9 @@ WordSelectWrapper.propTypes = {
   // from parent
   title: PropTypes.string,
   queries: PropTypes.array,
-  fetchComparedQueries: PropTypes.func,
+  selectComparativeWords: PropTypes.func,
+  leftQuery: PropTypes.object,
+  rightQuery: PropTypes.object,
 };
 
 export default WordSelectWrapper;
