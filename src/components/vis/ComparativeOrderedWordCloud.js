@@ -8,7 +8,7 @@ import OrderedWordCloud from './OrderedWordCloud';
 const WORDS_TO_SHOW = 100;
 
 const ComparativeOrderedWordCloud = (props) => {
-  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg, leftTextColor, rightTextColor } = props;
+  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg, leftTextColor, rightTextColor, onWordClick } = props;
   const leftSum = d3.sum(leftWords, d => d.count);
   const rightSum = d3.sum(rightWords, d => d.count);
   let topLeft = leftWords.slice(0, WORDS_TO_SHOW);
@@ -45,6 +45,7 @@ const ComparativeOrderedWordCloud = (props) => {
             fullExtent={fullExtent}
             width={390}
             textColor={leftTextColor}
+            onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
@@ -54,6 +55,7 @@ const ComparativeOrderedWordCloud = (props) => {
             alreadyNormalized
             fullExtent={fullExtent}
             width={390}
+            onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
@@ -64,6 +66,7 @@ const ComparativeOrderedWordCloud = (props) => {
             fullExtent={fullExtent}
             width={390}
             textColor={rightTextColor}
+            onWordClick={onWordClick}
           />
         </Col>
       </Row>

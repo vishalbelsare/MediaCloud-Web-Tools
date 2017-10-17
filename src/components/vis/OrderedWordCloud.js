@@ -137,6 +137,9 @@ class OrderedWordCloud extends React.Component {
         .text(d => d.term)
         .attr('font-weight', 'bold')
         .on('mouseover', (d) => {
+          const event = d3.event;
+          d3.select(event.target).attr('fill', options.linkColor)
+            .attr('cursor', 'pointer');
           if (options.showTooltips) {
             let tooltipHtml = formatMessage(localMessages.wordCloudStem, { stem: d.stem });
             tooltipHtml += '<br />';
@@ -152,6 +155,9 @@ class OrderedWordCloud extends React.Component {
           }
         })
         .on('mouseout', () => {
+          const event = d3.event;
+          d3.select(event.target).attr('fill', options.textColor)
+            .attr('cursor', 'arrow');
           if (options.showTooltips) {
             tooltipDiv.transition()
               .duration(500)
