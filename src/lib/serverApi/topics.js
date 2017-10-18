@@ -8,6 +8,10 @@ export function topicsPublicList() {
   return createApiPromise('/api/topics/list');
 }
 
+export function topicsAdminList() {
+  return createApiPromise('/api/topics/admin/list');
+}
+
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }

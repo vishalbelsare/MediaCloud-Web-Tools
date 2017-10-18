@@ -8,11 +8,14 @@ import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_ADMIN } from '../../lib/auth';
 import messages from '../../resources/messages';
 
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
   home: { id: 'topics.menu.items.home', defaultMessage: 'Home' },
+  listTopics: { id: 'topics.menu.items.listTopics', defaultMessage: 'Admin: Topic Status Dashboard' },
 };
 
 class TopicsDrawer extends React.Component {
@@ -49,6 +52,11 @@ class TopicsDrawer extends React.Component {
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/create'); }}>
             <FormattedMessage {...messages.createNewTopic} />
           </MenuItem>
+          <Permissioned onlyRole={PERMISSION_ADMIN}>
+            <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/topics/status'); }}>
+              <FormattedMessage {...localMessages.listTopics} />
+            </MenuItem>
+          </Permissioned>
         </div>
       );
     }
