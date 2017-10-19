@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
 // import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -43,7 +43,7 @@ class ComparativeWordCloudContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
     const { results, queries, leftQuery, rightQuery } = this.props;
     // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
+    if (results && results.length) { // may have reset results so avoid test if results is empty
       const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
       const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
       return (
@@ -164,6 +164,11 @@ const mapDispatchToProps = (dispatch, state) => ({
   selectComparativeWords: (query, target) => {
     dispatch(selectComparativeWordField({ query, target }));
   },
+  updateCurrentQuery: (query, fieldName) => {
+    if (query) {
+      dispatch(updateQuery({ query, fieldName }));
+    }
+  },
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
@@ -193,13 +198,15 @@ const mapDispatchToProps = (dispatch, state) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleWordCloudClick: () => {
-      // const params = generateParamStr({ ...stateProps.filters, stem: word.stem, term: word.term });
-      // add chosen word to query
-      // which word was clicked, from where, add to that query.q and into the url
-      // dispatch update query
-      // then
-      // dispatchProps.goToUrl(url);
+    handleWordCloudClick: (word) => {
+      ownProps.queries.map((qry) => {
+        const updatedQry = {
+          ...qry,
+          q: `${qry.q} AND ${word.term}`,
+        };
+        return dispatchProps.updateCurrentQuery(updatedQry, 'q');
+      });
+      ownProps.onSearch();
     },
     asyncFetch: () => {
       if (ownProps.queries && ownProps.queries.length > 0) {

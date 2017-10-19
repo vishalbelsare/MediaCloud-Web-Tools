@@ -9,7 +9,7 @@ import StoryCountPreview from './StoryCountPreview';
 import GeoPreview from './GeoPreview';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, params, lastSearchTime } = props;
+  const { queries, user, params, lastSearchTime, onSearch } = props;
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
@@ -18,7 +18,7 @@ const QueryResultsContainer = (props) => {
           <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
         </Col>
         <Col lg={12} xs={12}>
-          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} />
+          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} onSearch={() => onSearch()} />
         </Col>
         <Col lg={12} xs={12}>
           <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
@@ -42,6 +42,7 @@ QueryResultsContainer.propTypes = {
   user: React.PropTypes.object,
   queries: React.PropTypes.array,
   lastSearchTime: React.PropTypes.number,
+  onSearch: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
