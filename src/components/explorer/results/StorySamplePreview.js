@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Tabs, Tab } from 'material-ui/Tabs';
 import MenuItem from 'material-ui/MenuItem';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import DataCard from '../../common/DataCard';
@@ -13,6 +12,8 @@ import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStorie
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
+import QueryResultsSelector from './QueryResultsSelector';
+
 // const NUM_TO_SHOW = 20;
 
 const localMessages = {
@@ -24,20 +25,24 @@ const localMessages = {
 };
 
 class StorySamplePreview extends React.Component {
+  state = {
+    selectedQueryIndex: 0,
+  }
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
     if (results.length) { // may have reset results so avoid test if results is empty
       const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
       const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
       return (
-        ((labelsHaveChanged || colorsHaveChanged))
+        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
          || (results !== nextProps.results)
       );
     }
@@ -55,37 +60,6 @@ class StorySamplePreview extends React.Component {
   render() {
     const { results, queries, handleStorySelection } = this.props;
     const { formatMessage } = this.props.intl;
-    let storyListContent;
-    // if there is only one query, don't show tabs
-    // TODO/FYI this updates immediately if there is a deletion in QueryPicker..
-    if (results.length === 0) {
-      storyListContent = null;
-    } else if (queries.length === 1) {
-      storyListContent = (
-        <StoryTable
-          className="story-table"
-          stories={results[0]}
-          onChangeFocusSelection={handleStorySelection}
-          maxTitleLength={50}
-        />
-      );
-    } else {
-      storyListContent = (
-        <Tabs>
-          {results.map((storySet, idx) => (
-            <Tab label={queries && queries.length > idx ? queries[idx].label : 'empty'} key={idx}>
-              <StoryTable
-                className="story-table"
-                stories={storySet}
-                index={idx}
-                onChangeFocusSelection={handleStorySelection}
-                maxTitleLength={50}
-              />
-            </Tab>
-          ))}
-        </Tabs>
-      );
-    }
     return (
       <DataCard>
         <div className="actions">
@@ -101,9 +75,19 @@ class StorySamplePreview extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
-        <br />
-        {storyListContent}
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          <QueryResultsSelector
+            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+          />
+        </h2>
+        <StoryTable
+          className="story-table"
+          stories={results[this.state.selectedQueryIndex]}
+          onChangeFocusSelection={handleStorySelection}
+          maxTitleLength={50}
+        />
       </DataCard>
     );
   }

@@ -1,0 +1,26 @@
+
+ul.query-results-selector {
+
+  margin: 0px;
+  padding: 0px;
+  display: inline-block;
+
+  li {
+    font-weight: normal;    
+    opacity: 0.4;
+    display: inline-block;
+    margin-left: 10px;
+
+    &.selected {
+      font-weight: bold;
+      opacity: 1;
+    }
+
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+  }
+
+}

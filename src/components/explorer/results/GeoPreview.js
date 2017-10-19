@@ -1,7 +1,6 @@
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { GridList, GridTile } from 'material-ui/GridList';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
@@ -13,6 +12,7 @@ import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
 import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Coverage' },
@@ -22,6 +22,9 @@ const localMessages = {
 };
 
 class GeoPreview extends React.Component {
+  state = {
+    selectedQueryIndex: 0,
+  }
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
 
@@ -29,14 +32,15 @@ class GeoPreview extends React.Component {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { results, queries } = this.props;
     // only re-render if results, any labels, or any colors have changed
     if (results.length) { // may have reset results so avoid test if results is empty
       const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
       const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
+      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
       return (
-        ((labelsHaveChanged || colorsHaveChanged))
+        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
          || (results !== nextProps.results)
       );
     }
@@ -65,26 +69,6 @@ class GeoPreview extends React.Component {
   render() {
     const { results, intl, queries } = this.props;
     const { formatMessage } = intl;
-    let content = null;
-    if (results.length === 1) {
-      content = <GeoChart data={results[0]} countryMaxColorScale={queries[0].color} hideLegend />;
-    } else {
-      const mapTiles = results.map((geoSet, idx) =>
-        (<GridTile key={idx}>
-          <h3>{queries && queries.length > idx ? queries[idx].label : ''}</h3>
-          <GeoChart data={geoSet} countryMaxColorScale={queries && queries.length > idx ? queries[idx].color : ''} hideLegend />
-        </GridTile>
-        )
-      );
-      content = (
-        <GridList
-          className="geo-mini-cards"
-          cellHeight={400}
-        >
-          {mapTiles}
-        </GridList>
-      );
-    }
     return (
       <DataCard>
         <div className="actions">
@@ -100,8 +84,18 @@ class GeoPreview extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2><FormattedMessage {...localMessages.title} /></h2>
-        {content}
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+          <QueryResultsSelector
+            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+          />
+        </h2>
+        <GeoChart
+          data={results[this.state.selectedQueryIndex]}
+          countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
+          hideLegend
+        />
       </DataCard>
     );
   }
