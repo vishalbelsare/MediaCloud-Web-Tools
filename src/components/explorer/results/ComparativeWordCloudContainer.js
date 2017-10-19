@@ -14,7 +14,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import WordSelectWrapper from './WordSelectWrapper';
 
 const localMessages = {
-  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Comparative Words' },
+  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Language Used' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   leftTitleMsg: { id: 'explorer.comparativeWords.left', defaultMessage: 'Words Matching {name}' },
   centerTitleMsg: { id: 'explorer.comparativeWords.center', defaultMessage: 'Comparison between {leftName} and {rightName}' },
@@ -84,17 +84,17 @@ class ComparativeWordCloudContainer extends React.Component {
     const { queries, results, handleWordCloudClick, leftQuery, rightQuery } = this.props;
     // test the results before we pass to cowc, are there two valid sets of arrays
     // const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-    if (results && results.length === 1) {
+    if (results && (results.length === 1)) {
       return (
         <Grid>
-          <h2><FormattedMessage {...localMessages.title} /></h2>
           <Row>
-            <Col lg={12}>
+            <Col lg={8}>
               <DataCard>
+                <h2><FormattedMessage {...localMessages.title} /></h2>
                 <OrderedWordCloud
                   words={results[0]}
                   // alreadyNormalized
-                  width={390}
+                  width={700}
                 />
               </DataCard>
             </Col>
