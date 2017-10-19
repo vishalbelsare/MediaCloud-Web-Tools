@@ -114,25 +114,27 @@ class ComparativeWordCloudContainer extends React.Component {
         );
       }
       return (
-        <DataCard>
-          <Grid>
-            <Row>
-              <h2><FormattedMessage {...localMessages.title} /></h2>
-            </Row>
-            {wordSelectorContent}
-            <ComparativeOrderedWordCloud
-              leftWords={results[0]}
-              rightWords={results[1]}
-              leftTextColor={leftQuery.color}
-              rightTextColor={rightQuery.color}
-              textColor={getBrandDarkColor()}
-              onWordClick={handleWordCloudClick}
-              leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
-              centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
-              rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
-            />
-          </Grid>
-        </DataCard>
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <DataCard>
+                <h2><FormattedMessage {...localMessages.title} /></h2>
+                {wordSelectorContent}
+                <ComparativeOrderedWordCloud
+                  leftWords={results[0]}
+                  rightWords={results[1]}
+                  leftTextColor={leftQuery.color}
+                  rightTextColor={rightQuery.color}
+                  textColor={getBrandDarkColor()}
+                  onWordClick={handleWordCloudClick}
+                  leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
+                  centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
+                  rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
+                />
+              </DataCard>
+            </Col>
+          </Row>
+        </Grid>
       );
     }
     return <div>Error</div>;
