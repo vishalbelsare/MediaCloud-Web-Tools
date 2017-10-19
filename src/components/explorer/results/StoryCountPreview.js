@@ -17,7 +17,7 @@ import { downloadSvg } from '../../util/svg';
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
 const localMessages = {
-  title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Stories' },
+  title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Attention' },
   helpIntro: { id: 'explorer.storyCount.help.into',
     defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the cirlces to see the exact numbers, or click the menu in the top right to download the data.</p>',
   },
