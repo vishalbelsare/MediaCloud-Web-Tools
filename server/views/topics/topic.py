@@ -257,3 +257,14 @@ def topic_search():
     matching_topics = user_mc.topicList(name=search_str, limit=15)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
+
+
+@app.route('/api/topics/admin/list', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def topic_admin_list():
+    user_mc = user_admin_mediacloud_client()
+    # if a non-admin user calls this, using user_mc grantees this won't be a security hole
+    # but for admins this will return ALL topics
+    topics = user_mc.topicList(limit=500)
+    return jsonify(topics)

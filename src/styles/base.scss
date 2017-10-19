@@ -79,6 +79,7 @@ table tr.odd {
 table td {
   padding: 13px;
   font-size: 13px;
+  vertical-align: top;
 
   &.numeric {
     text-align: right;

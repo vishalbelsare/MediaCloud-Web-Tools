@@ -2,8 +2,6 @@ import logging
 import json
 from flask import jsonify, request
 import flask_login
-from operator import itemgetter
-from itertools import groupby
 
 from server import app, cliff, mc, TOOL_API_KEY
 from server.auth import is_user_logged_in
@@ -272,54 +270,3 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     except Exception as e:
         logger.exception(e)
         return json.dumps({'error': str(e)}, separators=(',', ':')), 400
-
-
-@app.route('/api/topics/<topics_id>/stories/<stories_id>/entities', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def story_entities(topics_id, stories_id):
-    # we don't care about money, number, duration, date, misc, ordinal
-    entities = cached_entities_from_cliff(user_mediacloud_key(), stories_id)
-    return jsonify({'list': entities})
-
-
-@app.route('/api/topics/<topics_id>/stories/<stories_id>/entities.csv', methods=['GET'])
-@flask_login.login_required
-@api_error_handler
-def story_entities_csv(topics_id, stories_id):
-    # in the download include all entity types
-    entities = cached_entities_from_cliff(user_mediacloud_key(), stories_id)
-    props = ['type', 'name', 'frequency']
-    return csv.stream_response(entities, props, 'story-'+str(stories_id)+'-entities')
-
-
-def cached_entities_from_cliff(user_mediacloud_key, stories_id):
-    entities = []
-    # grab story text
-    story = mc.story(stories_id, text=True)
-    # get entities
-    cliff_results = cliff.parseText(story['story_text'])
-    # clean up for reporting
-    for org in cliff_results ['results']['organizations']:
-        entities.append({
-            'type': 'ORGANIZATION',
-            'name': org['name'],
-            'frequency': org['count']
-        })
-    for person in cliff_results ['results']['people']:
-        entities.append({
-            'type': 'PERSON',
-            'name': person['name'],
-            'frequency': person['count']
-        })
-    # places don't have frequency set correctly, so we need to sum them
-    place_names = [place['name'] for place in cliff_results ['results']['places']['mentions']]
-    locations = [{
-        'type': 'LOCATION',
-        'name': key,
-        'frequency': len(list(group))
-    } for key, group in groupby(place_names)]
-    entities += locations
-    # sort smartly
-    unique_entities = sorted(entities, key=itemgetter('frequency'), reverse=True)
-    return unique_entities

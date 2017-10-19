@@ -1,0 +1,21 @@
+@import '../_constants';
+
+.topic-table {
+
+  tr.topic-state-error {
+    background-color: $material-red500;
+  }
+
+  code {
+    padding: 0px;
+    background-color: inherit;
+  }
+
+  a {
+    color: $material-grey900;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+}
