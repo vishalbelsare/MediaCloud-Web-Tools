@@ -15,8 +15,8 @@ import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 
 const localMessages = {
-  title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Attention' },
-  intro: { id: 'explorer.geo.info',
+  title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Coverage' },
+  help: { id: 'explorer.geo.help',
     defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
@@ -176,7 +176,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeDescribedDataCard(localMessages.descriptionIntro, [messages.storyCountHelpText])(
+      composeDescribedDataCard(localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
           GeoPreview
         )
