@@ -10,7 +10,8 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
-import StoryEntitiesContainer from './StoryEntitiesContainer';
+import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
+import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import messages from '../../../resources/messages';
 import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
@@ -22,7 +23,6 @@ import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import StoryDetails from './StoryDetails';
 import StoryPlaces from './StoryPlaces';
-import StoryThemes from './StoryThemes';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -126,10 +126,16 @@ class StoryContainer extends React.Component {
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
             <Col lg={6}>
-              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)} geocoderVersion={story.geocoderVersion} />
+              <StoryPlaces
+                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)}
+                geocoderVersion={story.geocoderVersion}
+              />
             </Col>
             <Col lg={6}>
-              <StoryThemes tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)} nytThemesVersion={story.nytThemesVersion} />
+              <StoryNytThemesContainer
+                storyId={storiesId}
+                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)}
+              />
             </Col>
             <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
@@ -137,7 +143,7 @@ class StoryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12} >
-              <StoryEntitiesContainer topicId={topicId} storiesId={storiesId} />
+              <StoryEntitiesContainer storyId={storiesId} />
             </Col>
           </Row>
         </Grid>

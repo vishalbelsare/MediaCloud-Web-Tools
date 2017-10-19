@@ -8,6 +8,10 @@ export function topicsPublicList() {
   return createApiPromise('/api/topics/list');
 }
 
+export function topicsAdminList() {
+  return createApiPromise('/api/topics/admin/list');
+}
+
 export function topicSummary(topicId) {
   return createApiPromise(`/api/topics/${topicId}/summary`);
 }
@@ -259,10 +263,6 @@ export function topicSpider(topicId) {
 
 export function userQueuedAndRunningTopics() {
   return createApiPromise('/api/topics/queued-and-running');
-}
-
-export function topicStoryEntities(topicId, storyId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
 }
 
 export function topicPreviewRetweetPartisanshipStoryCounts(topicId) {

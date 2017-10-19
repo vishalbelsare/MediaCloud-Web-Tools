@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import { fetchStoryEntities } from '../../../actions/topicActions';
+import { fetchStoryEntities } from '../../../actions/storyActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
@@ -23,14 +23,14 @@ const localMessages = {
 
 class StoryEntitiesContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { fetchData, filters } = this.props;
-    if (nextProps.filters !== filters) {
-      fetchData(nextProps.filters);
+    const { fetchData, storyId } = this.props;
+    if (nextProps.storyId !== storyId) {
+      fetchData(nextProps.storyId);
     }
   }
   downloadCsv = () => {
-    const { storiesId, topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/stories/${storiesId}/entities.csv?timespanId=${filters.timespanId}&q=${filters.q}`;
+    const { storyId } = this.props;
+    const url = `/api/stories/${storyId}/entities.csv`;
     window.location = url;
   }
   render() {
@@ -81,42 +81,33 @@ StoryEntitiesContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   helpButton: PropTypes.node.isRequired,
   // from parent
-  storiesId: PropTypes.number.isRequired,
-  topicId: PropTypes.number.isRequired,
+  storyId: PropTypes.number.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   // from state
-  filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   entities: PropTypes.array,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.story.entities.fetchStatus,
-  entities: state.topics.selected.story.entities.list,
-  timespanId: state.topics.selected.filters.timespanId,
-  filters: state.topics.selected.filters,
+  fetchStatus: state.story.entities.fetchStatus,
+  entities: state.story.entities.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: () => {
-    dispatch(fetchStoryEntities(ownProps.topicId, ownProps.storiesId));
+  fetchData: (storyId) => {
+    dispatch(fetchStoryEntities(storyId));
+  },
+  asyncFetch: () => {
+    dispatch(fetchStoryEntities(ownProps.storyId));
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData();
-    },
-  });
-}
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, localMessages.helpIntro)(
         composeAsyncContainer(
           StoryEntitiesContainer

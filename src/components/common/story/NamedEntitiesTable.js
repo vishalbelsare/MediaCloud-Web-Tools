@@ -13,12 +13,12 @@ const NamedEntitiesTable = props => (
       <tbody>
         <tr>
           <th><FormattedMessage {...localMessages.entityName} /></th>
-          <th><FormattedMessage {...localMessages.entityFrequency} /></th>
+          <th className="numeric"><FormattedMessage {...localMessages.entityFrequency} /></th>
         </tr>
         {props.entities.map((entity, idx) => (
           <tr key={`entity-${idx}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
             <td>{entity.name}</td>
-            <td><FormattedNumber value={entity.frequency} /></td>
+            <td className="numeric"><FormattedNumber value={entity.frequency} /></td>
           </tr>
         ))}
       </tbody>
