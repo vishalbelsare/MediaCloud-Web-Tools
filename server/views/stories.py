@@ -45,7 +45,7 @@ def entities_from_mc_or_cliff(user_mediacloud_key, stories_id):
     entities = []
     # get entities from MediaCloud, or from CLIFF if not in MC
     cliff_results = cached_story_raw_cliff_results(stories_id)[0]['cliff']
-    if (cliff_results == u'"story is not annotated"') or (cliff_results['cliff'] == u"story does not exist"):
+    if (cliff_results == u'"story is not annotated"') or (cliff_results == u"story does not exist"):
         story = mc.story(stories_id, text=True)
         cliff_results = cliff.parseText(story['story_text'])
     # clean up for reporting
@@ -104,7 +104,7 @@ def nyt_themes_from_mc_or_labeller(stories_id):
         story = mc.story(stories_id, text=True)
         results = predict_news_labels(story['story_text'])
     else:
-        results = results[['nytlabels']]
+        results = results['nytlabels']
     return results
 
 

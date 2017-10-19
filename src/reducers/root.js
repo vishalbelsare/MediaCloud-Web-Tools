@@ -8,6 +8,7 @@ import sources from './sources/sources';
 import system from './system/system';
 import notebook from './notebook/notebook';
 import explorer from './explorer/explorer';
+import story from './story/story';
 
 const rootReducer = combineReducers({
   app,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   routing,
   notebook,
   explorer,
+  story,
 });
 
 export default rootReducer;

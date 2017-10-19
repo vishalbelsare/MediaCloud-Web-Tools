@@ -265,10 +265,6 @@ export function userQueuedAndRunningTopics() {
   return createApiPromise('/api/topics/queued-and-running');
 }
 
-export function topicStoryEntities(topicId, storyId) {
-  return createApiPromise(`/api/topics/${topicId}/stories/${storyId}/entities`);
-}
-
 export function topicPreviewRetweetPartisanshipStoryCounts(topicId) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/preview/story-counts`);
 }
