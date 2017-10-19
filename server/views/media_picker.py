@@ -43,6 +43,7 @@ def source_details_worker(info):
 @arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_source_search():
+    use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
     results = _matching_sources_by_set(search_str, public_only)  # from pool
@@ -50,9 +51,12 @@ def api_mediapicker_source_search():
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []
     if len(flat_list_of_sources) > 0:
-        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
-        pool.close()
+        if use_pool:
+            pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+            set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
+            pool.close()
+        else:
+            set_of_queried_sources = [source_details_worker(s) for s in flat_list_of_sources]
     set_of_queried_sources = sorted(set_of_queried_sources, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_sources})
 
@@ -77,6 +81,7 @@ def collection_details_worker(info):
 @arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_collection_search():
+    use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
     results = _matching_collections_by_set(search_str, public_only)  # from pool
@@ -84,10 +89,12 @@ def api_mediapicker_collection_search():
     flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
     set_of_queried_collections = []
     if len(flat_list_of_collections) > 0:
-        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
-        pool.close()
-
+        if use_pool:
+            pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+            set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
+            pool.close()
+        else:
+            set_of_queried_collections = [collection_details_worker(c) for c in flat_list_of_collections]
     return jsonify({'list': set_of_queried_collections})
 
 

@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../AsyncContainer';
 import { fetchMediaPickerFeaturedCollections } from '../../../actions/systemActions';
-import MediaPickerWrapper from './MediaPickerWrapper';
+import MediaPickerSearchResults from './MediaPickerSearchResults';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import TAG_SET_MC_ID from '../../../lib/tagUtil';
 import LoadingSpinner from '../LoadingSpinner';
@@ -11,6 +11,7 @@ import LoadingSpinner from '../LoadingSpinner';
 const localMessages = {
   title: { id: 'system.mediaPicker.select.featured.title', defaultMessage: 'Featured Collections' },
 };
+
 const SelectMediaFeaturedAsyncContainer = (props) => {
   const { fetchStatus, featured, handleToggleAndSelectMedia } = props;
   const { formatMessage } = props.intl;
@@ -23,7 +24,7 @@ const SelectMediaFeaturedAsyncContainer = (props) => {
   whichMedia.fetchStatus = featured.fetchStatus;
   whichMedia.type = 'collections';
 
-  return <MediaPickerWrapper title={formatMessage(localMessages.title)} whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+  return <MediaPickerSearchResults title={formatMessage(localMessages.title)} whichMedia={whichMedia} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
 };
 
 SelectMediaFeaturedAsyncContainer.propTypes = {

@@ -12,7 +12,7 @@ import composeUrlBasedQueryContainer from '../UrlBasedQueryContainer';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Your URL query is incomplete. Check the URL and make sure the keyword(s), start and end dates, and collection(s) are properly specified.' },
-  register: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Register for a free Media Cloud account to get access to all the Dashboard features! <a href="http://tools.mediacloud.org/#/user/signup">Register Now</a>' },
+  register: { id: 'explorer.queryBuilder.urlParams', defaultMessage: 'Register for a free Media Cloud account to get access to all the Explorer features! <a href="http://tools.mediacloud.org/#/user/signup">Register Now</a>' },
 };
 
 class DemoQueryBuilderContainer extends React.Component {

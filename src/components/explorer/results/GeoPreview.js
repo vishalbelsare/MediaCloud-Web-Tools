@@ -17,7 +17,7 @@ import QueryResultsSelector from './QueryResultsSelector';
 const localMessages = {
   title: { id: 'explorer.geo.title', defaultMessage: 'Geographic Coverage' },
   help: { id: 'explorer.geo.help',
-    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load a Dashboard search showing you how the sources in this collection cover it.</p>' },
+    defaultMessage: '<p>Here is a heatmap of countries mentioned in this collection (based on a sample of sentences). Darker countried are mentioned more. Click a country to load an Explorer search showing you how the sources in this collection cover it.</p>' },
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 

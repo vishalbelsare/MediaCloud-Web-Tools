@@ -37,8 +37,9 @@ class MediaSelectionContainer extends React.Component {
     return (
       <div>
         <div className="select-media-menu">
-          {options.map(option => (
+          {options.map((option, idx) => (
             <div
+              key={idx}
               className={`select-media-option ${(selectedMediaQueryType === option.value) ? 'selected' : ''}`}
               onTouchTap={() => this.updateMediaType(option.value)}
             >

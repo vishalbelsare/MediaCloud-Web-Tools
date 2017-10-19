@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
-import MediaPickerWrapper from './MediaPickerWrapper';
+import MediaPickerSearchResults from './MediaPickerSearchResults';
 import SelectMediaForm from './SelectMediaForm';
 import SelectMediaFeaturedAsyncContainer from './SelectMediaFeaturedAsyncContainer';
 
@@ -31,7 +31,7 @@ class SelectMediaCollectionResultsContainer extends React.Component {
       whichMedia.storedKeyword = collectionResults.args;
       whichMedia.fetchStatus = collectionResults.fetchStatus;
       content = (
-        <MediaPickerWrapper
+        <MediaPickerSearchResults
           title={formatMessage(localMessages.title, { name: whichMedia.storedKeyword.mediaKeyword })}
           whichMedia={whichMedia}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
