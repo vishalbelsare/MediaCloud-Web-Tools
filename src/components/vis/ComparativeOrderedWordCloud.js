@@ -6,6 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import OrderedWordCloud from './OrderedWordCloud';
 
 const WORDS_TO_SHOW = 100;
+const WORD_CLOUD_WIDTH = 375;
 
 const ComparativeOrderedWordCloud = (props) => {
   const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg, leftTextColor, rightTextColor, onWordClick } = props;
@@ -38,33 +39,33 @@ const ComparativeOrderedWordCloud = (props) => {
     <div className="comparative-ordered-word-cloud">
       <Row>
         <Col lg={4}>
-          <h2>{leftTitleMsg}</h2>
+          <h3>{leftTitleMsg}</h3>
           <OrderedWordCloud
             words={left}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
             textColor={leftTextColor}
             onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
-          <h2>{centerTitleMsg}</h2>
+          <h3>{centerTitleMsg}</h3>
           <OrderedWordCloud
             words={center}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
             onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
-          <h2>{rightTitleMsg}</h2>
+          <h3>{rightTitleMsg}</h3>
           <OrderedWordCloud
             words={right}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
             textColor={rightTextColor}
             onWordClick={onWordClick}
           />

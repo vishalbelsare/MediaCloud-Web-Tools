@@ -4,12 +4,6 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 
-/**
- * Simple wrapper so we can style all the button the same.  Use this instead of
- * material-ui's RaisedButton.
- * @see http://stackoverflow.com/questions/39458150/is-it-possible-to-add-a-custom-hover-color-to-raised-buttons
- */
-
 const LEFT = 0;
 const RIGHT = 1;
 
@@ -44,11 +38,12 @@ class WordSelectWrapper extends React.Component {
     if (leftQuery !== null) {
       content = (
         <Row>
-          <Col>
+          <Col lg={3}>
             <SelectField
               floatingLabelText="Left Column"
               value={leftQuery.index || queries[0].index}
               onChange={(...args) => this.selectThisQuery(LEFT, args[2])}
+              fullWidth
             >
               {menuItems}
             </SelectField>
@@ -72,7 +67,6 @@ class WordSelectWrapper extends React.Component {
 
 WordSelectWrapper.propTypes = {
   // from parent
-  title: PropTypes.string,
   queries: PropTypes.array,
   selectComparativeWords: PropTypes.func,
   leftQuery: PropTypes.object,

@@ -16,9 +16,8 @@ import WordSelectWrapper from './WordSelectWrapper';
 const localMessages = {
   title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Language Used' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
-  leftTitleMsg: { id: 'explorer.comparativeWords.left', defaultMessage: 'Words Matching {name}' },
-  centerTitleMsg: { id: 'explorer.comparativeWords.center', defaultMessage: 'Comparison between {leftName} and {rightName}' },
-  rightTitleMsg: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words Matching {name}' },
+  centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
+  sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
 
 };
 const LEFT = 0;
@@ -84,7 +83,7 @@ class ComparativeWordCloudContainer extends React.Component {
     const { queries, results, handleWordCloudClick, leftQuery, rightQuery } = this.props;
     // test the results before we pass to cowc, are there two valid sets of arrays
     // const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-    if (results && (results.length === 1)) {
+    if (results && (queries.length === 1)) {
       return (
         <Grid>
           <Row>
@@ -102,28 +101,36 @@ class ComparativeWordCloudContainer extends React.Component {
         </Grid>
       );
     } else if (results && results.length > 0 && leftQuery !== null) {
+      let wordSelectorContent;
+      if (queries.length > 2) {
+        // only show selector if more than two queries
+        wordSelectorContent = (
+          <WordSelectWrapper
+            queries={queries}
+            selectComparativeWords={this.selectAndFetchComparedQueries}
+            leftQuery={leftQuery}
+            rightQuery={rightQuery}
+          />
+        );
+      }
       return (
         <DataCard>
           <Grid>
             <Row>
               <h2><FormattedMessage {...localMessages.title} /></h2>
             </Row>
-            <Row>
-              <WordSelectWrapper queries={queries} selectComparativeWords={this.selectAndFetchComparedQueries} leftQuery={leftQuery} rightQuery={rightQuery} />
-            </Row>
-            <Row>
-              <ComparativeOrderedWordCloud
-                leftWords={results[0]}
-                rightWords={results[1]}
-                leftTextColor={leftQuery.color}
-                rightTextColor={rightQuery.color}
-                textColor={getBrandDarkColor()}
-                onWordClick={handleWordCloudClick}
-                leftTitleMsg={<FormattedHTMLMessage {...localMessages.leftTitleMsg} values={{ name: leftQuery.label }} />}
-                centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitleMsg} values={{ leftName: leftQuery.label, rightName: rightQuery.label }} />}
-                rightTitleMsg={<FormattedHTMLMessage {...localMessages.rightTitleMsg} values={{ name: rightQuery.label }} />}
-              />
-            </Row>
+            {wordSelectorContent}
+            <ComparativeOrderedWordCloud
+              leftWords={results[0]}
+              rightWords={results[1]}
+              leftTextColor={leftQuery.color}
+              rightTextColor={rightQuery.color}
+              textColor={getBrandDarkColor()}
+              onWordClick={handleWordCloudClick}
+              leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
+              centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
+              rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
+            />
           </Grid>
         </DataCard>
       );
