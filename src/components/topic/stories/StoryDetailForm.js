@@ -6,7 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import { emptyString } from '../../../lib/formValidators';
-// import messages from '../../../resources/messages';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   mainTitle: { id: 'story.maintitle', defaultMessage: 'Update Story' },
@@ -16,6 +16,7 @@ const localMessages = {
 
 const StoryDetailForm = (props) => {
   const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField } = props;
+  const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
   if (cleanedInitialValues.disabled === undefined) {
@@ -29,6 +30,7 @@ const StoryDetailForm = (props) => {
             name="title"
             component={renderTextField}
             fullWidth
+            floatingLabelText={formatMessage(messages.storyTitle)}
           />
         </Col>
       </Row>
@@ -38,6 +40,7 @@ const StoryDetailForm = (props) => {
             name="description"
             component={renderTextField}
             fullWidth
+            floatingLabelText={formatMessage(messages.storyDescription)}
           />
         </Col>
       </Row>
@@ -48,6 +51,29 @@ const StoryDetailForm = (props) => {
             component={renderTextField}
             type="inline"
             fullWidth
+            floatingLabelText={formatMessage(messages.storyUrl)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6}>
+          <Field
+            name="publish_date"
+            component={renderTextField}
+            type="inline"
+            fullWidth
+            floatingLabelText={formatMessage(messages.storyDate)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6}>
+          <Field
+            name="custom_date"
+            component={renderTextField}
+            type="inline"
+            fullWidth
+            floatingLabelText={formatMessage(messages.storyCustomDate)}
           />
         </Col>
       </Row>
