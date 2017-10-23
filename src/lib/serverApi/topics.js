@@ -45,6 +45,10 @@ export function story(topicId, storiesId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
 }
 
+export function storyUpdate(storiesId) {
+  return createApiPromise(`/api/stories/${storiesId}/storyUpdate`);
+}
+
 export function storyWords(topicId, storiesId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
 }

@@ -10,7 +10,7 @@ from server.auth import is_user_logged_in
 from server.cache import cache
 import server.util.csv as csv
 import server.util.tags as tag_util
-from server.util.request import api_error_handler
+from server.util.request import api_error_handler, form_fields_required
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
     WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
@@ -70,6 +70,22 @@ def story(topics_id, stories_id):
                 tag['geoname'] = {}
     return jsonify(story_topic_info)
 
+
+@app.route('/api/stories/<stories_id>/storyUpdate', methods=['GET'])
+@api_error_handler
+@form_fields_required('title', 'description', 'url')
+def topic_story_update(stories_id):
+    #['title', 'url', 'guid', 'language', 'description', 'publish_date', 'confirm_date', 'undateable']
+    optional_args = {
+        'title': request.form['title'] if 'title' in request.form else None,
+        'description': request.form['description'] if 'description' in request.form else None,
+        'url': request.form['url'] if 'url' in request.form else None,
+        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else None,
+        'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else None,
+    }
+    stories = mc.storyUpdate(stories_id, **optional_args)
+
+    return jsonify(stories)
 
 @cache
 def _cached_geoname(geonames_id):
