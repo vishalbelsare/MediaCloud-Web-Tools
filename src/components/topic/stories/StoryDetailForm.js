@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { reduxForm, Field } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import { emptyString } from '../../../lib/formValidators';
-import messages from '../../../resources/messages';
+// import messages from '../../../resources/messages';
 
 const localMessages = {
-  mainTitle: { id: 'source.maintitle', defaultMessage: 'Create New Source' },
-  addButton: { id: 'source.add.saveAll', defaultMessage: 'Save New Source' },
-  feedback: { id: 'source.add.feedback', defaultMessage: 'We saved your new source' },
+  mainTitle: { id: 'story.maintitle', defaultMessage: 'Update Story' },
+  nameError: { id: 'story.nameError', defaultMessage: 'Save New Source' },
+  urlError: { id: 'story.urlError', defaultMessage: 'We saved your new source' },
 };
 
 const StoryDetailForm = (props) => {
@@ -24,16 +24,10 @@ const StoryDetailForm = (props) => {
   return (
     <form className="app-form source-form" name="storyDetailForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <Row>
-        <Col lg={12}>
-          <h2><FormattedMessage {...localMessages.basics} /></h2>
-        </Col>
-      </Row>
-      <Row>
         <Col lg={6}>
           <Field
             name="title"
             component={renderTextField}
-            floatingLabelText={messages.title}
             fullWidth
           />
         </Col>
@@ -44,7 +38,6 @@ const StoryDetailForm = (props) => {
             name="description"
             component={renderTextField}
             fullWidth
-            floatingLabelText={messages.description}
           />
         </Col>
       </Row>
@@ -55,9 +48,6 @@ const StoryDetailForm = (props) => {
             component={renderTextField}
             type="inline"
             fullWidth
-            floatingLabelText={messages.url}
-            label={messages.url}
-            hintText={messages.url}
           />
         </Col>
       </Row>

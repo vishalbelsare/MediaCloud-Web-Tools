@@ -4,7 +4,7 @@ import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { selectStory, updateStory } from '../../../actions/topicActions';
+import { selectStory, fetchStory, updateStory } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryDetailForm from './StoryDetailForm';
 import messages from '../../../resources/messages';
@@ -56,7 +56,7 @@ class StoryUpdateContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={6} xs={12} >
-              <StoryDetailForm story={story} storiesId={storiesId} onSave={onSave} />
+              <StoryDetailForm story={story} initialValues={story} storiesId={storiesId} onSave={onSave} buttonLabel="save" />
             </Col>
           </Row>
         </Grid>
@@ -91,12 +91,12 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    // dispatch(selectStory(ownProps.params.storiesId));
-    // dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
+    dispatch(selectStory(ownProps.params.storiesId));
+    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
   },
   fetchData: (storiesId) => {
     dispatch(selectStory(storiesId));
-    dispatch(updateStory(ownProps.params.topicId, storiesId));
+    dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
   },
   onSave: (storyInfo) => {
     dispatch(updateStory(ownProps.storiesId, storyInfo));
