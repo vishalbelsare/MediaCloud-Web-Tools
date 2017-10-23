@@ -6,6 +6,10 @@ function selected(state = INITIAL_STATE, action) {
   let updatedState = {};
   switch (action.type) {
     case SELECT_QUERY:
+      updatedState = state;
+      if (updatedState == null) {
+        return action.payload;
+      }
       return action.payload ? { ...action.payload } : null;
     case UPDATE_QUERY:
       updatedState = state; // could be null

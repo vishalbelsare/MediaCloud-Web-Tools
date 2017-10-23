@@ -30,8 +30,8 @@ function composeUrlBasedQueryContainer() {
         queryInStore: false,
       };
       componentWillMount() {
+        this.setState({ queryInStore: false }); // necc?
         this.setQueryFromUrl(this.props.location.pathname);
-        // console.log('parse from url');
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
