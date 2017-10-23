@@ -29,7 +29,7 @@ def topic_geo_tag_coverage(topics_id):
 def topic_geo_tag_counts_csv(topics_id):
     timespans_id = request.args["timespanId"]
     tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
-    return stream_response(tags, ['tag', 'count', 'pct'], "topic-{}-nyt-label-counts".format(topics_id))
+    return stream_response(tags, ['tags_id', 'tag', 'label', 'count', 'pct'], "topic-{}-geo-tag-counts".format(topics_id))
 
 
 @app.route('/api/topics/<topics_id>/geo-tags/counts', methods=['GET'])

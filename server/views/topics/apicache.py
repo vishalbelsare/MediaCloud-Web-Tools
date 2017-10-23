@@ -255,6 +255,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     return _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query)
 
 
+@cache
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
     # we don't need ot use topics_id here because the timespans_id is in the query argument
