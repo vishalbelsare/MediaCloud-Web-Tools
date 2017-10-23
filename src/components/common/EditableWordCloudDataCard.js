@@ -29,6 +29,7 @@ const localMessages = {
   modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'View Ordered Layout (default)' },
   modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'View Cloud Layout' },
   modeTopicW2V: { id: 'wordcloud.editable.mode.topicW2V', defaultMessage: 'View Topic Specific Word2Vec 2D Layout' },
+  noTopicW2VData: { id: 'wordcloud.editable.mode.topicW2V.noData', defaultMessage: 'We haven\'t built a model for this topic yet.  If you want to see this chart please email us at support@mediacloud.org an ask us to generate a model for this topic.' },
   modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
   downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
@@ -167,6 +168,7 @@ class EditableWordCloudDataCard extends React.Component {
             height={height}
             xProperty="w2v_x"
             yProperty="w2v_y"
+            noDataMsg={localMessages.noTopicW2VData}
           />
         );
         break;
