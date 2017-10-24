@@ -71,17 +71,17 @@ def story(topics_id, stories_id):
     return jsonify(story_topic_info)
 
 
-@app.route('/api/stories/<stories_id>/storyUpdate', methods=['GET'])
+@app.route('/api/stories/<stories_id>/storyUpdate', methods=['POST'])
+@flask_login.login_required
 @api_error_handler
-@form_fields_required('title', 'description', 'url')
 def topic_story_update(stories_id):
-    #['title', 'url', 'guid', 'language', 'description', 'publish_date', 'confirm_date', 'undateable']
+    test = stories_id
     optional_args = {
         'title': request.form['title'] if 'title' in request.form else None,
         'description': request.form['description'] if 'description' in request.form else None,
         'url': request.form['url'] if 'url' in request.form else None,
-        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else None,
-        'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else None,
+        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else False,
+        'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else False,
     }
     stories = mc.storyUpdate(stories_id, **optional_args)
 

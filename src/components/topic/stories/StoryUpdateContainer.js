@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Title from 'react-title-component';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -8,12 +7,11 @@ import { selectStory, fetchStory, updateStory } from '../../../actions/topicActi
 import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryDetailForm from './StoryDetailForm';
 import messages from '../../../resources/messages';
+import { updateFeedback } from '../../../actions/appActions';
 
-/*
 const localMessages = {
-  mainTitle: { id: 'story.details.mainTitle', defaultMessage: 'Story Details: {title}' },
+  feedback: { id: 'story.details.feedback', defaultMessage: 'Story Updates saved' },
 };
-*/
 class StoryUpdateContainer extends React.Component {
 
   state = {
@@ -49,11 +47,13 @@ class StoryUpdateContainer extends React.Component {
   render() {
     const { story, storiesId, onSave } = this.props;
     const { formatMessage } = this.props.intl;
-    const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
+    const titleHandler = `${formatMessage(messages.storyTitle)}: ${story.title}`;
     return (
       <div>
-        <Title render={titleHandler} />
         <Grid>
+          <Row>
+            <h2>{titleHandler}</h2>
+          </Row>
           <Row>
             <Col lg={6} xs={12} >
               <StoryDetailForm story={story} initialValues={story} storiesId={storiesId} onSave={onSave} buttonLabel="save" />
@@ -99,7 +99,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
   },
   onSave: (storyInfo) => {
-    dispatch(updateStory(ownProps.storiesId, storyInfo));
+    dispatch(updateStory(storyInfo.stories_id, storyInfo))
+      .then((result) => {
+        if (result.success === 1) {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+        }
+      });
   },
 });
 

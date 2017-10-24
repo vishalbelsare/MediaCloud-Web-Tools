@@ -15,7 +15,7 @@ const localMessages = {
 };
 
 const StoryDetailForm = (props) => {
-  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField } = props;
+  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField, renderCheckbox } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
@@ -23,14 +23,16 @@ const StoryDetailForm = (props) => {
     cleanedInitialValues.disabled = false;
   }
   return (
-    <form className="app-form source-form" name="storyDetailForm" onSubmit={handleSubmit(onSave.bind(this))}>
+    <form className="app-form story-form" name="storyDetailForm" onSubmit={handleSubmit(onSave.bind(this))}>
       <Row>
-        <Col lg={6}>
+        <Col lg={12}>
           <Field
             name="title"
             component={renderTextField}
             fullWidth
             floatingLabelText={formatMessage(messages.storyTitle)}
+            label={formatMessage(messages.storyTitle)}
+            hintText={formatMessage(messages.storyTitle)}
           />
         </Col>
       </Row>
@@ -41,17 +43,21 @@ const StoryDetailForm = (props) => {
             component={renderTextField}
             fullWidth
             floatingLabelText={formatMessage(messages.storyDescription)}
+            label={formatMessage(messages.storyDescription)}
+            hintText={formatMessage(messages.storyDescription)}
           />
         </Col>
       </Row>
       <Row>
-        <Col lg={6}>
+        <Col lg={12}>
           <Field
             name="url"
             component={renderTextField}
             type="inline"
             fullWidth
             floatingLabelText={formatMessage(messages.storyUrl)}
+            label={formatMessage(messages.storyUrl)}
+            hintText={formatMessage(messages.storyUrl)}
           />
         </Col>
       </Row>
@@ -63,6 +69,8 @@ const StoryDetailForm = (props) => {
             type="inline"
             fullWidth
             floatingLabelText={formatMessage(messages.storyDate)}
+            label={formatMessage(messages.storyDate)}
+            hintText={formatMessage(messages.storyDate)}
           />
         </Col>
       </Row>
@@ -70,10 +78,25 @@ const StoryDetailForm = (props) => {
         <Col lg={6}>
           <Field
             name="custom_date"
-            component={renderTextField}
+            component={renderCheckbox}
             type="inline"
             fullWidth
             floatingLabelText={formatMessage(messages.storyCustomDate)}
+            label={formatMessage(messages.storyCustomDate)}
+            hintText={formatMessage(messages.storyCustomDate)}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6}>
+          <Field
+            name="undateable"
+            component={renderCheckbox}
+            type="inline"
+            fullWidth
+            floatingLabelText={formatMessage(messages.storyUndateable)}
+            label={formatMessage(messages.storyUndateable)}
+            hintText={formatMessage(messages.storyUndateable)}
           />
         </Col>
       </Row>
@@ -100,6 +123,7 @@ StoryDetailForm.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
+  renderCheckbox: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   collections: PropTypes.array,
   // from form healper
