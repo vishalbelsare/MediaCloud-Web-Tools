@@ -140,14 +140,15 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
     for i in range(len(google_word2vec_data)):
         word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
-    topic_word2vec_data = _cached_word2vec_topic_2d_results(topics_id, words)
+    topic_word2vec_data = _word2vec_topic_2d_results(topics_id, words)
     for i in range(len(topic_word2vec_data)):
         word_data[i]['w2v_x'] = topic_word2vec_data[i]['x']
         word_data[i]['w2v_y'] = topic_word2vec_data[i]['y']
     return word_data
 
 
-def _cached_word2vec_topic_2d_results(topics_id, words):
+def _word2vec_topic_2d_results(topics_id, words):
+    # can't cache this because the first time it is called we usually don't have results
     word2vec_results = wordembeddings.topic_2d(topics_id, words)
     return word2vec_results
 
