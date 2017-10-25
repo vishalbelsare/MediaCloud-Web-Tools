@@ -20,10 +20,7 @@ class TopicStatusDashboardContainer extends React.Component {
     selectedTopicState: 'error',
   };
 
-  handleTopicStateSelected = (event, index, value) => {
-    console.log(value);
-    this.setState({ selectedTopicState: value });
-  }
+  handleTopicStateSelected = (event, index, value) => this.setState({ selectedTopicState: value });
 
   render() {
     const { topics } = this.props;
