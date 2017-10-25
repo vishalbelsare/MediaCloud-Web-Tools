@@ -4,7 +4,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import { schemeCategory10 } from 'd3';
-import { fetchTopicNytLabelCounts } from '../../../actions/topicActions';
+import { push } from 'react-router-redux';
+import { fetchTopicNytLabelCounts, filterByQuery } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -15,7 +16,7 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import messages from '../../../resources/messages';
 import ActionMenu from '../../common/ActionMenu';
 import { DownloadButton } from '../../common/IconButton';
-import { filtersAsUrlParams } from '../../util/location';
+import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { WarningNotice } from '../../common/Notice';
 
 const BUBBLE_CHART_DOM_ID = 'nyt-tag-representation-bubble-chart';
@@ -53,6 +54,15 @@ class NytLabelSummaryContainer extends React.Component {
     const url = `/api/topics/${topicId}/nyt-tags/counts.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
   }
+  handleBubbleClick = (data) => {
+    const { filters, updateQueryFilter } = this.props;
+    const queryFragment = `tags_id_stories: ${data.tagsId}`;
+    if (filters.q && filters.q.length > 0) {
+      updateQueryFilter(`(${filters.q}) AND (${queryFragment})`);
+    } else {
+      updateQueryFilter(queryFragment);
+    }
+  }
   render() {
     const { data, coverage } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -63,6 +73,7 @@ class NytLabelSummaryContainer extends React.Component {
       const bubbleData = [
         ...dataOverMinTheshold.map((s, idx) => ({
           value: s.pct,
+          tagsId: s.tags_id,
           fill: COLORS[idx + 1],
           aboveText: (idx % 2 === 0) ? s.tag : null,
           belowText: (idx % 2 !== 0) ? s.tag : null,
@@ -112,6 +123,7 @@ class NytLabelSummaryContainer extends React.Component {
             height={220}
             domId={BUBBLE_CHART_DOM_ID}
             maxBubbleRadius={80}
+            onBubbleClick={this.handleBubbleClick}
           />
         </div>
       );
@@ -144,6 +156,8 @@ class NytLabelSummaryContainer extends React.Component {
 }
 
 NytLabelSummaryContainer.propTypes = {
+  // from parent
+  location: PropTypes.object.isRequired,
   // from composition chain
   intl: PropTypes.object.isRequired,
   // from state
@@ -154,6 +168,7 @@ NytLabelSummaryContainer.propTypes = {
   data: PropTypes.array,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
+  updateQueryFilter: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -164,9 +179,14 @@ const mapStateToProps = state => ({
   topicId: state.topics.selected.id,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (props) => {
     dispatch(fetchTopicNytLabelCounts(props.topicId, props.filters));
+  },
+  updateQueryFilter: (newQueryFilter) => {
+    const newLocation = filteredLocation(ownProps.location, { q: newQueryFilter });
+    dispatch(push(newLocation));
+    dispatch(filterByQuery(newQueryFilter));
   },
 });
 

@@ -78,7 +78,7 @@ class TopicSummaryContainer extends React.Component {
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
             <Row>
               <Col lg={12}>
-                <NytLabelSummaryContainer topicId={topicId} filters={filters} />
+                <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
               </Col>
             </Row>
           </Permissioned>
