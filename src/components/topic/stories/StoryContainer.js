@@ -17,7 +17,7 @@ import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButt
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
 import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
@@ -84,14 +84,14 @@ class StoryContainer extends React.Component {
             <Col lg={12}>
               <h1>
                 <span className="actions">
-                  <ReadItNowButton onClick={this.handleReadItClick} />
-                  <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                    <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
-                  </Permissioned>
-                  <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                  <Permissioned onlyRole={PERMISSION_STORY_EDIT}>
                     <Link to={`/topics/${topicId}/stories/${storiesId}/update`}>
                       <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
+                  </Permissioned>
+                  <ReadItNowButton onClick={this.handleReadItClick} />
+                  <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                    <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
                   </Permissioned>
                 </span>
                 <StoryIcon height={32} />
