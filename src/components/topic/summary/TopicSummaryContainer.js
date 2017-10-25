@@ -30,7 +30,7 @@ class TopicSummaryContainer extends React.Component {
     return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
-    const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus } = this.props;
+    const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus, location } = this.props;
     let content = <div />;
     let intro = null;
     if (!user.isLoggedIn) {
@@ -125,10 +125,10 @@ TopicSummaryContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   params: PropTypes.object,
+  location: PropTypes.object.isRequired,
   // from state
   selectedTimespan: PropTypes.object,
   seletecFocus: PropTypes.object,
-  location: PropTypes.object,
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,

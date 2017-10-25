@@ -184,7 +184,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicNytLabelCounts(props.topicId, props.filters));
   },
   updateQueryFilter: (newQueryFilter) => {
-    const newLocation = filteredLocation(ownProps.location, { q: newQueryFilter });
+    const newFilters = {
+      ...ownProps.filters,
+      q: newQueryFilter,
+    };
+    const newLocation = filteredLocation(ownProps.location, newFilters);
     dispatch(push(newLocation));
     dispatch(filterByQuery(newQueryFilter));
   },
