@@ -3,11 +3,15 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
+import { fetchMetadataValuesForPrimaryLanguage } from '../../../actions/sourceActions'; // TODO relocate metadata actions into system if we use more often...
 import { selectStory, fetchStory, updateStory } from '../../../actions/topicActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryDetailForm from './StoryDetailForm';
 import messages from '../../../resources/messages';
 import { updateFeedback } from '../../../actions/appActions';
+import { TAG_SET_PRIMARY_LANGUAGE } from '../../../lib/tagUtil';
+
 
 const localMessages = {
   feedback: { id: 'story.details.feedback', defaultMessage: 'Story Updates saved' },
@@ -45,9 +49,16 @@ class StoryUpdateContainer extends React.Component {
   }
 
   render() {
-    const { story, storiesId, onSave } = this.props;
+    const { story, storiesId, onSave, tags } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = `${formatMessage(messages.storyTitle)}: ${story.title}`;
+    const lang = tags.map(c => c.tag).sort((f1, f2) => { // alphabetical
+      // const f1Name = f1.toUpperCase();
+      // const f2Name = f2.toUpperCase();
+      if (f1 < f2) return -1;
+      if (f1 > f2) return 1;
+      return 0;
+    });
     return (
       <div>
         <Grid>
@@ -56,7 +67,7 @@ class StoryUpdateContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} xs={12} >
-              <StoryDetailForm story={story} initialValues={story} storiesId={storiesId} onSave={onSave} buttonLabel="save" />
+              <StoryDetailForm story={story} initialValues={story} language={lang} storiesId={storiesId} onSave={onSave} buttonLabel="save" />
             </Col>
           </Row>
         </Grid>
@@ -80,6 +91,7 @@ StoryUpdateContainer.propTypes = {
   storiesId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
   fetchStatus: PropTypes.string.isRequired,
+  tags: PropTypes.array,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -87,12 +99,14 @@ const mapStateToProps = (state, ownProps) => ({
   storiesId: parseInt(ownProps.params.storiesId, 10),
   topicId: parseInt(ownProps.params.topicId, 10),
   story: state.topics.selected.story.info,
+  tags: state.system.metadata.primaryLanguage.tags,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(selectStory(ownProps.params.storiesId));
     dispatch(fetchStory(ownProps.params.topicId, ownProps.params.storiesId));
+    dispatch(fetchMetadataValuesForPrimaryLanguage(TAG_SET_PRIMARY_LANGUAGE));
   },
   fetchData: (storiesId) => {
     dispatch(selectStory(storiesId));
@@ -103,6 +117,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((result) => {
         if (result.success === 1) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+          dispatch(push(`/topics/${ownProps.params.topicId}/stories/${storyInfo.stories_id}`));
         }
       });
   },

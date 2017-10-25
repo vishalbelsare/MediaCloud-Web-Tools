@@ -61,12 +61,6 @@ class StoryContainer extends React.Component {
     window.open(story.url, '_blank');
   }
 
-  handleEditClick = () => {
-    const { story } = this.props;
-    window.open(story.url, '_blank');
-    // dispatch update story link
-  }
-
   render() {
     const { story, topicId, storiesId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
@@ -96,7 +90,7 @@ class StoryContainer extends React.Component {
                   </Permissioned>
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <Link to={`/topics/${topicId}/stories/${storiesId}/update`}>
-                      <EditButton tooltip={formatMessage(localMessages.editStory)} onClick={this.handleEditClick} />
+                      <EditButton tooltip={formatMessage(localMessages.editStory)} />
                     </Link>
                   </Permissioned>
                 </span>

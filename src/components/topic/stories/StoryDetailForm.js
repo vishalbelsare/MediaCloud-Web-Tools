@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm, Field } from 'redux-form';
+import MenuItem from 'material-ui/MenuItem';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
@@ -15,7 +16,7 @@ const localMessages = {
 };
 
 const StoryDetailForm = (props) => {
-  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField, renderCheckbox } = props;
+  const { initialValues, buttonLabel, pristine, submitting, handleSubmit, onSave, renderTextField, renderCheckbox, renderSelectField, language } = props;
   const { formatMessage } = props.intl;
   // need to init initialValues a bit on the way in to make lower-level logic work right
   const cleanedInitialValues = initialValues ? { ...initialValues } : {};
@@ -59,6 +60,21 @@ const StoryDetailForm = (props) => {
             label={formatMessage(messages.storyUrl)}
             hintText={formatMessage(messages.storyUrl)}
           />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6}>
+          <Field
+            name="language"
+            component={renderSelectField}
+            type="inline"
+            fullWidth
+            floatingLabelText={formatMessage(messages.language)}
+            label={formatMessage(messages.language)}
+            hintText={formatMessage(messages.language)}
+          >
+            {language.map(t => <MenuItem key={t} value={t} primaryText={t} />)}
+          </Field>
         </Col>
       </Row>
       <Row>
@@ -120,6 +136,7 @@ StoryDetailForm.propTypes = {
   onSave: PropTypes.func.isRequired,
   buttonLabel: PropTypes.string.isRequired,
   initialValues: PropTypes.object,
+  language: PropTypes.array,
   // from context
   intl: PropTypes.object.isRequired,
   renderTextField: PropTypes.func.isRequired,
