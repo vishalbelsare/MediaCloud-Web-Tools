@@ -74,7 +74,6 @@ def story(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def topic_story_update(stories_id):
-    idInt = int(stories_id)
     user_mc = user_admin_mediacloud_client()
     optional_args = {
         'title': request.form['title'] if 'title' in request.form else None,
@@ -86,7 +85,7 @@ def topic_story_update(stories_id):
         'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else False,
         'undateable': request.form['undateable'] if 'undateable' in request.form else False,
     }
-    stories = user_mc.storyUpdate(idInt, **optional_args)
+    stories = user_mc.storyUpdate(stories_id, **optional_args)
 
     return jsonify(stories)
 
