@@ -153,7 +153,6 @@ def _word2vec_topic_2d_results(topics_id, words):
     return word2vec_results
 
 
-@cache
 def _cached_word2vec_google_2d_results(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results

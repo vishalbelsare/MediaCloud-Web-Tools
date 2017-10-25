@@ -2,7 +2,7 @@ import requests
 
 from server import settings
 
-GOOGLE_NEWS_MODEL_NAME = 'GoogleNews-vectors-negative300.bin'
+GOOGLE_NEWS_MODEL_NAME = 'GoogleNews-vectors-negative300'
 TOPIC_MODEL_NAME_FORMAT = 'w2v-topic-model-{}'
 
 
