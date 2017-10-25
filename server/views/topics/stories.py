@@ -57,8 +57,7 @@ def story(topics_id, stories_id):
     
     story_info = local_mc.story(stories_id)  # add in other fields from regular call
     for k in story_info.keys():
-        if k not in story_topic_info.keys():
-            story_topic_info[k] = story_info[k]
+        story_topic_info[k] = story_info[k]
     for tag in story_info['story_tags']:
         if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
             geonames_id = int(tag['tag'][9:])
@@ -75,15 +74,19 @@ def story(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def topic_story_update(stories_id):
-    test = stories_id
+    idInt = int(stories_id)
+    user_mc = user_admin_mediacloud_client()
     optional_args = {
         'title': request.form['title'] if 'title' in request.form else None,
-        'description': request.form['description'] if 'description' in request.form else None,
-        'url': request.form['url'] if 'url' in request.form else None,
-        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else False,
+        'description': request.form['description'] if 'description' in request.form else '',
+        'guid': request.form['guid'] if 'guid' in request.form else 'guid',
+        'url': request.form['url'] if 'url' in request.form else 'url',
+        'language': request.form['language'] if 'language' in request.form else 'en',
+        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else None,
         'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else False,
+        'undateable': request.form['undateable'] if 'undateable' in request.form else False,
     }
-    stories = mc.storyUpdate(stories_id, **optional_args)
+    stories = user_mc.storyUpdate(idInt, **optional_args)
 
     return jsonify(stories)
 
