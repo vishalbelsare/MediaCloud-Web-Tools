@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -55,11 +56,11 @@ const SampleSearchContainer = (props) => {
 };
 
 SampleSearchContainer.propTypes = {
-  samples: React.PropTypes.array,
-  intl: React.PropTypes.object.isRequired,
-  fetchData: React.PropTypes.func.isRequired,
-  user: React.PropTypes.object.isRequired,
-  asyncFetch: React.PropTypes.func.isRequired,
+  samples: PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

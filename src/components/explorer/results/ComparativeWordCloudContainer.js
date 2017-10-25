@@ -143,21 +143,21 @@ class ComparativeWordCloudContainer extends React.Component {
 }
 
 ComparativeWordCloudContainer.propTypes = {
-  lastSearchTime: React.PropTypes.number.isRequired,
-  queries: React.PropTypes.array.isRequired,
+  lastSearchTime: PropTypes.number.isRequired,
+  queries: PropTypes.array.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  results: React.PropTypes.array.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
   handleWordCloudClick: PropTypes.func.isRequired,
   selectComparativeWords: PropTypes.func.isRequired,
-  leftQuery: React.PropTypes.object,
-  rightQuery: React.PropTypes.object,
+  leftQuery: PropTypes.object,
+  rightQuery: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

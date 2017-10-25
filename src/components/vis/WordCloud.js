@@ -152,8 +152,8 @@ WordCloud.propTypes = {
   domId: PropTypes.string,
   // from compositon chain
   intl: PropTypes.object.isRequired,
-//  alreadyNormalized: React.PropTypes.bool,
-//  fullExtent: React.PropTypes.array,
+//  alreadyNormalized: PropTypes.bool,
+//  fullExtent: PropTypes.array,
 };
 
 export default injectIntl(WordCloud);

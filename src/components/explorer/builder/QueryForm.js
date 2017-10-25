@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
@@ -192,30 +193,30 @@ class QueryForm extends React.Component {
 
 QueryForm.propTypes = {
   // from parent
-  selected: React.PropTypes.object.isRequired,
-  onSave: React.PropTypes.func.isRequired,
-  onColorChange: React.PropTypes.func,
-  onMediaChange: React.PropTypes.func,
-  buttonLabel: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
-  onWillSearch: React.PropTypes.func,
+  selected: PropTypes.object.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onColorChange: PropTypes.func,
+  onMediaChange: PropTypes.func,
+  buttonLabel: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  onWillSearch: PropTypes.func,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  renderTextFieldWithFocus: React.PropTypes.func.isRequired,
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
-  handleLoadSearch: React.PropTypes.func.isRequired,
-  handleSaveSearch: React.PropTypes.func.isRequired,
-  onMediaDelete: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderTextFieldWithFocus: PropTypes.func.isRequired,
+  fields: PropTypes.object,
+  meta: PropTypes.object,
+  handleLoadSearch: PropTypes.func.isRequired,
+  handleSaveSearch: PropTypes.func.isRequired,
+  onMediaDelete: PropTypes.func.isRequired,
   // from form healper
-  updateQuery: React.PropTypes.func,
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
-  isEditable: React.PropTypes.bool.isRequired,
-  focusRequested: React.PropTypes.func.isRequired,
+  updateQuery: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  isEditable: PropTypes.bool.isRequired,
+  focusRequested: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {

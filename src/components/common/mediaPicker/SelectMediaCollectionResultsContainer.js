@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -54,13 +55,13 @@ class SelectMediaCollectionResultsContainer extends React.Component {
 }
 
 SelectMediaCollectionResultsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
-  updateMediaQuerySelection: React.PropTypes.func.isRequired,
-  selectedMediaQueryKeyword: React.PropTypes.string,
-  selectedMediaQueryType: React.PropTypes.number,
-  featured: React.PropTypes.object,
-  collectionResults: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  handleToggleAndSelectMedia: PropTypes.func.isRequired,
+  updateMediaQuerySelection: PropTypes.func.isRequired,
+  selectedMediaQueryKeyword: PropTypes.string,
+  selectedMediaQueryType: PropTypes.number,
+  featured: PropTypes.object,
+  collectionResults: PropTypes.object,
 };
 
 const mapStateToProps = state => ({

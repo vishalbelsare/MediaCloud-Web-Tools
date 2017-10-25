@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
@@ -38,15 +39,15 @@ const SearchForm = (props) => {
 
 SearchForm.propTypes = {
   // from parent
-  onSearch: React.PropTypes.func.isRequired,
-  initialValues: React.PropTypes.object,
+  onSearch: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
   // from form healper
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
 };
 
 function validate(values) {

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -110,15 +111,15 @@ class SelectMediaDialog extends React.Component {
 
 SelectMediaDialog.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent/implementer
-  initMedia: React.PropTypes.array,
-  selectedMedia: React.PropTypes.array,
-  lookupTimestamp: React.PropTypes.string,
-  handleSelection: React.PropTypes.func.isRequired,
-  handleInitialSelectionOfMedia: React.PropTypes.func.isRequired,
-  onConfirmSelection: React.PropTypes.func.isRequired,
-  reset: React.PropTypes.func.isRequired,
+  initMedia: PropTypes.array,
+  selectedMedia: PropTypes.array,
+  lookupTimestamp: PropTypes.string,
+  handleSelection: PropTypes.func.isRequired,
+  handleInitialSelectionOfMedia: PropTypes.func.isRequired,
+  onConfirmSelection: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

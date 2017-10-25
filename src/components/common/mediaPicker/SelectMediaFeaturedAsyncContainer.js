@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -28,10 +29,10 @@ const SelectMediaFeaturedAsyncContainer = (props) => {
 };
 
 SelectMediaFeaturedAsyncContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  fetchStatus: React.PropTypes.string,
-  featured: React.PropTypes.array,
-  handleToggleAndSelectMedia: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string,
+  featured: PropTypes.array,
+  handleToggleAndSelectMedia: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
@@ -95,16 +96,16 @@ class QueryPickerDemoHeader extends React.Component {
 }
 QueryPickerDemoHeader.propTypes = {
   // from parent
-  query: React.PropTypes.object.isRequired,
-  isLabelEditable: React.PropTypes.bool.isRequired,
-  isDeletable: React.PropTypes.func.isRequired,
-  onColorChange: React.PropTypes.func.isRequired,
-  updateDemoQueryLabel: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  handleMenuItemKeyDown: React.PropTypes.func.isRequired,
-  focusUsernameInputField: React.PropTypes.func.isRequired,
+  query: PropTypes.object.isRequired,
+  isLabelEditable: PropTypes.bool.isRequired,
+  isDeletable: PropTypes.func.isRequired,
+  onColorChange: PropTypes.func.isRequired,
+  updateDemoQueryLabel: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  handleMenuItemKeyDown: PropTypes.func.isRequired,
+  focusUsernameInputField: PropTypes.func.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

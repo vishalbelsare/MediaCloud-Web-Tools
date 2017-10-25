@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -28,10 +29,10 @@ const RetweetPartisanshipSummary = (props) => {
 
 RetweetPartisanshipSummary.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  formValues: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  formValues: PropTypes.object.isRequired,
   // form context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

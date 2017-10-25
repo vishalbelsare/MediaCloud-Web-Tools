@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -114,18 +115,18 @@ class StoryCountPreview extends React.Component {
 }
 
 StoryCountPreview.propTypes = {
-  lastSearchTime: React.PropTypes.number.isRequired,
-  queries: React.PropTypes.array.isRequired,
-  user: React.PropTypes.object.isRequired,
+  lastSearchTime: PropTypes.number.isRequired,
+  queries: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  results: React.PropTypes.array.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

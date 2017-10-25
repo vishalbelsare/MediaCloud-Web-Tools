@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
@@ -185,20 +186,20 @@ class QueryPickerItem extends React.Component {
 
 QueryPickerItem.propTypes = {
   // from parent
-  query: React.PropTypes.object,
-  isSelected: React.PropTypes.bool.isRequired,
-  isLabelEditable: React.PropTypes.bool.isRequired,
-  isDeletable: React.PropTypes.func.isRequired,
-  displayLabel: React.PropTypes.bool.isRequired,
-  onQuerySelected: React.PropTypes.func,
-  updateQueryProperty: React.PropTypes.func.isRequired,
-  updateDemoQueryLabel: React.PropTypes.func.isRequired,
-  onSearch: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func.isRequired,
-  loadEditLabelDialog: React.PropTypes.func,
-  isLoggedIn: React.PropTypes.bool.isRequired,
+  query: PropTypes.object,
+  isSelected: PropTypes.bool.isRequired,
+  isLabelEditable: PropTypes.bool.isRequired,
+  isDeletable: PropTypes.func.isRequired,
+  displayLabel: PropTypes.bool.isRequired,
+  onQuerySelected: PropTypes.func,
+  updateQueryProperty: PropTypes.func.isRequired,
+  updateDemoQueryLabel: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  loadEditLabelDialog: PropTypes.func,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

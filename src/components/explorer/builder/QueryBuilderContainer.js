@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -13,10 +14,10 @@ const QueryBuilderContainer = (props) => {
 };
 
 QueryBuilderContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
-  onSearch: React.PropTypes.func.isRequired,
-  isEditable: React.PropTypes.bool.isRequired,
-  queries: React.PropTypes.array,
+  intl: PropTypes.object.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  isEditable: PropTypes.bool.isRequired,
+  queries: PropTypes.array,
 };
 
 

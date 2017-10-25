@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 // import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -123,17 +124,17 @@ class AttentionComparisonContainer extends React.Component {
 
 AttentionComparisonContainer.propTypes = {
   // from parent
-  lastSearchTime: React.PropTypes.number.isRequired,
-  queries: React.PropTypes.array.isRequired,
+  lastSearchTime: PropTypes.number.isRequired,
+  queries: PropTypes.array.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  results: React.PropTypes.array.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

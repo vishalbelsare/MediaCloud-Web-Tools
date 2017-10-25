@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -35,14 +36,14 @@ const QueryResultsContainer = (props) => {
 };
 
 QueryResultsContainer.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  params: React.PropTypes.object,       // params from router
+  params: PropTypes.object,       // params from router
   // from state
-  user: React.PropTypes.object,
-  queries: React.PropTypes.array,
-  lastSearchTime: React.PropTypes.number,
-  onSearch: React.PropTypes.func,
+  user: PropTypes.object,
+  queries: PropTypes.array,
+  lastSearchTime: PropTypes.number,
+  onSearch: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
