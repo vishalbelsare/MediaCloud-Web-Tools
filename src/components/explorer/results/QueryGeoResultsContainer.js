@@ -67,7 +67,7 @@ class QueryGeoResultsContainer extends React.Component {
   } */
 
   render() {
-    const { results, intl, queries } = this.props;
+    const { results, intl, queries, handleCountryClick } = this.props;
     const { formatMessage } = intl;
     return (
       <DataCard>
@@ -95,6 +95,7 @@ class QueryGeoResultsContainer extends React.Component {
           data={results[this.state.selectedQueryIndex]}
           countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
           hideLegend
+          onCountryClick={handleCountryClick}
         />
       </DataCard>
     );
@@ -103,14 +104,17 @@ class QueryGeoResultsContainer extends React.Component {
 }
 
 QueryGeoResultsContainer.propTypes = {
+  // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
+  onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
+  handleCountryClick: PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -124,6 +128,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  handleCountryClick: (evt, data) => {
+    const countryQueryClause = `tags_id_stories:${data.tags_id}`;
+    ownProps.onQueryModificationRequested(countryQueryClause);
+  },
   fetchData: (queries) => {
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query

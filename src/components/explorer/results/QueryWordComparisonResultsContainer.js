@@ -143,8 +143,11 @@ class QueryWordComparisonResultsContainer extends React.Component {
 }
 
 QueryWordComparisonResultsContainer.propTypes = {
+  // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -202,20 +205,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }));
     return dispatch(fetchDemoQueryTopWords(comparedQueries[0], comparedQueries[1]));
   },
+  handleWordCloudClick: (word) => {
+    ownProps.onQueryModificationRequested(word.term);
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleWordCloudClick: (word) => {
-      ownProps.queries.map((qry) => {
-        const updatedQry = {
-          ...qry,
-          q: `${qry.q} AND ${word.term}`,
-        };
-        return dispatchProps.updateCurrentQuery(updatedQry, 'q');
-      });
-      ownProps.onSearch();
-    },
     asyncFetch: () => {
       if (ownProps.queries && ownProps.queries.length > 0) {
         if (ownProps.queries.length > 1) {

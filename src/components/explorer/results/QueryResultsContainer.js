@@ -8,9 +8,10 @@ import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsCon
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
+import { updateQuery } from '../../../actions/explorerActions';
 
 const QueryResultsContainer = (props) => {
-  const { queries, isLoggedIn, lastSearchTime, onSearch } = props;
+  const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = props;
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
@@ -27,7 +28,7 @@ const QueryResultsContainer = (props) => {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
-            onSearch={() => onSearch()}
+            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>
@@ -49,6 +50,7 @@ const QueryResultsContainer = (props) => {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
       </Row>
@@ -59,21 +61,36 @@ const QueryResultsContainer = (props) => {
 QueryResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
-  // from state
-  isLoggedIn: PropTypes.bool.isRequired,
+  // from parent
   queries: PropTypes.array,
   lastSearchTime: PropTypes.number,
-  onSearch: PropTypes.func,
+  // from state
+  isLoggedIn: PropTypes.bool.isRequired,
+  // from dipatch
+  handleQueryModificationRequested: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
-  queries: state.explorer.queries.queries,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  // call this to add a clause to every query when something is clicked on
+  handleQueryModificationRequested: (queryClauseToAdd) => {
+    ownProps.queries.map((qry) => {
+      const updatedQry = {
+        ...qry,
+        q: `(${qry.q}) AND (${queryClauseToAdd})`,
+      };
+      return dispatch(updateQuery({ query: updatedQry, fieldName: 'q' }));
+    });
+    ownProps.onSearch();
+  },
 });
 
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       QueryResultsContainer
     )
   );
