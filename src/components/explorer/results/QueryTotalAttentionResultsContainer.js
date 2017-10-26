@@ -28,7 +28,7 @@ const localMessages = {
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
 
-class StoryCountPreview extends React.Component {
+class QueryTotalAttentionResultsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
@@ -114,7 +114,7 @@ class StoryCountPreview extends React.Component {
   }
 }
 
-StoryCountPreview.propTypes = {
+QueryTotalAttentionResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
@@ -183,7 +183,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
        composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
         composeAsyncContainer(
-          StoryCountPreview
+          QueryTotalAttentionResultsContainer
         )
       )
     )

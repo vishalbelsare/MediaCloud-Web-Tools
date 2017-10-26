@@ -3,32 +3,53 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import AttentionComparisonContainer from './AttentionComparisonContainer';
-import ComparativeWordCloudContainer from './ComparativeWordCloudContainer';
-import StorySamplePreview from './StorySamplePreview';
-import StoryCountPreview from './StoryCountPreview';
-import GeoPreview from './GeoPreview';
+import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
+import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
+import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
+import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
+import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, params, lastSearchTime, onSearch } = props;
+  const { queries, user, lastSearchTime, onSearch } = props;
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
       <Row>
         <Col lg={12} xs={12}>
-          <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryAttentionOverTimeResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            user={user}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} onSearch={() => onSearch()} />
+          <QueryWordComparisonResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            user={user}
+            onSearch={() => onSearch()}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QuerySampleStoriesResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            user={user}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <StoryCountPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryTotalAttentionResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            user={user}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <GeoPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryGeoResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            user={user}
+          />
         </Col>
       </Row>
     </Grid>
@@ -38,7 +59,6 @@ const QueryResultsContainer = (props) => {
 QueryResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
-  params: PropTypes.object,       // params from router
   // from state
   user: PropTypes.object,
   queries: PropTypes.array,

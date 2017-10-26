@@ -22,7 +22,7 @@ const localMessages = {
   descriptionIntro: { id: 'explorer.geo.help.title', defaultMessage: 'About Geographic Attention' },
 };
 
-class GeoPreview extends React.Component {
+class QueryGeoResultsContainer extends React.Component {
   state = {
     selectedQueryIndex: 0,
   }
@@ -103,7 +103,7 @@ class GeoPreview extends React.Component {
 
 }
 
-GeoPreview.propTypes = {
+QueryGeoResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
@@ -173,7 +173,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
-          GeoPreview
+          QueryGeoResultsContainer
         )
       )
     )

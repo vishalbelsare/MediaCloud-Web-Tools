@@ -23,7 +23,7 @@ const localMessages = {
 const LEFT = 0;
 const RIGHT = 1;
 
-class ComparativeWordCloudContainer extends React.Component {
+class QueryWordComparisonResultsContainer extends React.Component {
   componentWillMount() {
     const { queries, leftQuery, selectComparativeWords } = this.props;
     if (leftQuery === null) { // selections haven't been set yet so do init
@@ -142,7 +142,7 @@ class ComparativeWordCloudContainer extends React.Component {
 
 }
 
-ComparativeWordCloudContainer.propTypes = {
+QueryWordComparisonResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   // from composition
@@ -233,7 +233,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        ComparativeWordCloudContainer
+        QueryWordComparisonResultsContainer
       )
     )
   );

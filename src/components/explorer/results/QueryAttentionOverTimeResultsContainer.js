@@ -36,7 +36,7 @@ function dataAsSeries(data) {
   return { values, intervalMs, start: dates[0] };
 }
 
-class AttentionComparisonContainer extends React.Component {
+class QueryAttentionOverTimeResultsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
@@ -122,7 +122,7 @@ class AttentionComparisonContainer extends React.Component {
   }
 }
 
-AttentionComparisonContainer.propTypes = {
+QueryAttentionOverTimeResultsContainer.propTypes = {
   // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
@@ -191,7 +191,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.descriptionIntro, [localMessages.descriptionDetail])(
         composeAsyncContainer(
-          AttentionComparisonContainer
+          QueryAttentionOverTimeResultsContainer
         )
       )
     )

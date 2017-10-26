@@ -25,7 +25,7 @@ const localMessages = {
   },
 };
 
-class StorySamplePreview extends React.Component {
+class QuerySampleStoriesResultsContainer extends React.Component {
   state = {
     selectedQueryIndex: 0,
   }
@@ -94,7 +94,7 @@ class StorySamplePreview extends React.Component {
   }
 }
 
-StorySamplePreview.propTypes = {
+QuerySampleStoriesResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   // from composition
@@ -164,7 +164,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
         composeAsyncContainer(
-          StorySamplePreview
+          QuerySampleStoriesResultsContainer
         )
       )
     )
