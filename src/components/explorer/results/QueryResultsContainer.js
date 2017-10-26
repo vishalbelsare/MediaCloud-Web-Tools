@@ -10,7 +10,7 @@ import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsCon
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, lastSearchTime, onSearch } = props;
+  const { queries, isLoggedIn, lastSearchTime, onSearch } = props;
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
@@ -19,14 +19,14 @@ const QueryResultsContainer = (props) => {
           <QueryAttentionOverTimeResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
-            user={user}
+            isLoggedIn={isLoggedIn}
           />
         </Col>
         <Col lg={12} xs={12}>
           <QueryWordComparisonResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
-            user={user}
+            isLoggedIn={isLoggedIn}
             onSearch={() => onSearch()}
           />
         </Col>
@@ -34,21 +34,21 @@ const QueryResultsContainer = (props) => {
           <QuerySampleStoriesResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
-            user={user}
+            isLoggedIn={isLoggedIn}
           />
         </Col>
         <Col lg={12} xs={12}>
           <QueryTotalAttentionResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
-            user={user}
+            isLoggedIn={isLoggedIn}
           />
         </Col>
         <Col lg={12} xs={12}>
           <QueryGeoResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
-            user={user}
+            isLoggedIn={isLoggedIn}
           />
         </Col>
       </Row>
@@ -60,14 +60,14 @@ QueryResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
   // from state
-  user: PropTypes.object,
+  isLoggedIn: PropTypes.bool.isRequired,
   queries: PropTypes.array,
   lastSearchTime: PropTypes.number,
   onSearch: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
-  user: state.user,
+  isLoggedIn: state.user.isLoggedIn,
   queries: state.explorer.queries.queries,
 });
 

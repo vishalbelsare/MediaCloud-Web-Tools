@@ -11,7 +11,6 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { hasPermissions, getUserRoles, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import QueryResultsSelector from './QueryResultsSelector';
 
@@ -106,7 +105,7 @@ class QueryGeoResultsContainer extends React.Component {
 QueryGeoResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -120,20 +119,18 @@ QueryGeoResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
   fetchStatus: state.explorer.geo.fetchStatus,
   results: state.explorer.geo.results,
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     /* this should trigger when the user clicks the Search button or changes the URL
      for n queries, run the dispatch with each parsed query
     */
-    const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetGeo());
-    if (isLoggedInUser) {
-      const runTheseQueries = queries || state.queries;
+    if (ownProps.isLoggedIn) {
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
@@ -145,8 +142,8 @@ const mapDispatchToProps = (dispatch, state) => ({
         };
         return dispatch(fetchQueryGeo(infoToQuery));
       });
-    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = queries || state.queries;
+    } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw

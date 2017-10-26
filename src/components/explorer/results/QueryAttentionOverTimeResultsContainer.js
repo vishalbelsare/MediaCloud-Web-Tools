@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-// import * as d3 from 'd3';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
@@ -12,7 +11,6 @@ import DataCard from '../../common/DataCard';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
-import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
@@ -126,6 +124,7 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -139,19 +138,17 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
     dispatch(resetSentenceCounts()); // necessary if a query deletion has occurred
-    if (isLoggedInUser) {
-      const runTheseQueries = queries || state.queries;
+    if (ownProps.isLoggedIn) {
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
@@ -163,8 +160,8 @@ const mapDispatchToProps = (dispatch, state) => ({
         };
         return dispatch(fetchQuerySentenceCounts(infoToQuery));
       });
-    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = queries || state.queries;
+    } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw

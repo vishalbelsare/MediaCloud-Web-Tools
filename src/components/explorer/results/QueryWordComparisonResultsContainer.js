@@ -162,14 +162,13 @@ QueryWordComparisonResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
   fetchStatus: state.explorer.topWords.fetchStatus,
   results: state.explorer.topWords.list,
   leftQuery: state.explorer.topWords.left,
   rightQuery: state.explorer.topWords.right,
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   selectComparativeWords: (query, target) => {
     dispatch(selectComparativeWordField({ query, target }));
   },
@@ -182,8 +181,8 @@ const mapDispatchToProps = (dispatch, state) => ({
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
     // dispatch(resetTopWords()); // necessary if a query deletion has occurred
-    if (state.user.isLoggedIn) {
-      const runTheseQueries = queries || state.queries;
+    if (ownProps.isLoggedIn) {
+      const runTheseQueries = queries || ownProps.queries;
       const comparedQueries = runTheseQueries.map(q => ({
         start_date: q.startDate || q.start_date,
         end_date: q.endDate || q.start_date,
@@ -194,7 +193,7 @@ const mapDispatchToProps = (dispatch, state) => ({
       }));
       return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
     }
-    const runTheseQueries = queries || state.queries;
+    const runTheseQueries = queries || ownProps.queries;
     const comparedQueries = runTheseQueries.map(q => ({
       index: q.index, // should be same as q.index btw
       search_id: q.searchId, // may or may not have these
