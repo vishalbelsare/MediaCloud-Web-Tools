@@ -13,7 +13,7 @@ const localMessages = {
 
 // const formSelector = formValueSelector('queryForm');
 
-class SelectMediaForm extends React.Component {
+class MediaPickerSearchForm extends React.Component {
   shouldComponentUpdate = () => false;
 
   focusUsernameInputField = (input) => {
@@ -65,7 +65,7 @@ class SelectMediaForm extends React.Component {
   }
 }
 
-SelectMediaForm.propTypes = {
+MediaPickerSearchForm.propTypes = {
   intl: PropTypes.object.isRequired,
   onSearch: PropTypes.func,
   isEditable: PropTypes.bool,
@@ -76,6 +76,6 @@ SelectMediaForm.propTypes = {
 
 export default
   injectIntl(
-    SelectMediaForm
+    MediaPickerSearchForm
   );
 
