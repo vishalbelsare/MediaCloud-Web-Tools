@@ -25,3 +25,4 @@ env
 .idea
 sketches/*
 config/test.config.js
+react-codemod

@@ -35,8 +35,8 @@ const KeywordSearchSummary = (props) => {
 
 KeywordSearchSummary.propTypes = {
   // from parent
-  topicId: React.PropTypes.number.isRequired,
-  formValues: React.PropTypes.object.isRequired,
+  topicId: PropTypes.number.isRequired,
+  formValues: PropTypes.object.isRequired,
   // form context
   intl: PropTypes.object.isRequired,
 };

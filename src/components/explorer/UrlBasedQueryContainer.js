@@ -134,7 +134,7 @@ function composeUrlBasedQueryContainer() {
       fetchStatus: PropTypes.string.isRequired,
       samples: PropTypes.array,
       queries: PropTypes.array,
-      lastSearchTime: React.PropTypes.number,
+      lastSearchTime: PropTypes.number,
       // from dispatch
       saveQueriesFromParsedUrl: PropTypes.func.isRequired,
       addAppNotice: PropTypes.func.isRequired,

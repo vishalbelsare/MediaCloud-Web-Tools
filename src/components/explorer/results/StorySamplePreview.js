@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -94,18 +95,18 @@ class StorySamplePreview extends React.Component {
 }
 
 StorySamplePreview.propTypes = {
-  lastSearchTime: React.PropTypes.number.isRequired,
-  queries: React.PropTypes.array.isRequired,
+  lastSearchTime: PropTypes.number.isRequired,
+  queries: PropTypes.array.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  fetchData: React.PropTypes.func.isRequired,
-  results: React.PropTypes.array.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
   // from mergeProps
-  asyncFetch: React.PropTypes.func.isRequired,
+  asyncFetch: PropTypes.func.isRequired,
   // from state
-  fetchStatus: React.PropTypes.string.isRequired,
-  handleStorySelection: React.PropTypes.func.isRequired,
+  fetchStatus: PropTypes.string.isRequired,
+  handleStorySelection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

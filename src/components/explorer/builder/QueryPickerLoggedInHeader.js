@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
@@ -63,13 +64,13 @@ class QueryPickerLoggedInHeader extends React.Component {
 
 QueryPickerLoggedInHeader.propTypes = {
   // from parent
-  query: React.PropTypes.object,
-  isDeletable: React.PropTypes.func.isRequired,
-  onColorChange: React.PropTypes.func.isRequired,
-  onDelete: React.PropTypes.func,
-  onLabelEditRequest: React.PropTypes.func,
+  query: PropTypes.object,
+  isDeletable: PropTypes.func.isRequired,
+  onColorChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onLabelEditRequest: PropTypes.func,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

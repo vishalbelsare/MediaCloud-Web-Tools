@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
@@ -33,10 +34,10 @@ const SampleSearchItem = (props) => {
 
 SampleSearchItem.propTypes = {
   // from parent
-  search: React.PropTypes.object,
+  search: PropTypes.object,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 

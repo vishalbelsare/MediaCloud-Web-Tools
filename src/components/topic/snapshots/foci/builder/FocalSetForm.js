@@ -74,10 +74,10 @@ FocalSetForm.propTypes = {
   renderTextField: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   // from parent
-  initialValues: React.PropTypes.object,
-  introContent: React.PropTypes.object,
-  fullWidth: React.PropTypes.bool,
-  focalTechnique: React.PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  introContent: PropTypes.object,
+  fullWidth: PropTypes.bool,
+  focalTechnique: PropTypes.string.isRequired,
 };
 
 function validate(values) {

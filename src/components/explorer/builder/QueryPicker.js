@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -275,25 +276,25 @@ class QueryPicker extends React.Component {
 
 QueryPicker.propTypes = {
   // from state
-  selected: React.PropTypes.object,
-  queries: React.PropTypes.array,
-  isLoggedIn: React.PropTypes.bool.isRequired,
-  formQuery: React.PropTypes.object,
+  selected: PropTypes.object,
+  queries: PropTypes.array,
+  isLoggedIn: PropTypes.bool.isRequired,
+  formQuery: PropTypes.object,
   // from composition
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from dispatch
-  handleQuerySelected: React.PropTypes.func.isRequired,
-  updateCurrentQuery: React.PropTypes.func.isRequired,
-  updateCurrentQueryThenReselect: React.PropTypes.func.isRequired,
-  addAQuery: React.PropTypes.func.isRequired,
-  loadUserSearch: React.PropTypes.func,
-  saveUserSearch: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
-  updateOneQuery: React.PropTypes.func.isRequired,
+  handleQuerySelected: PropTypes.func.isRequired,
+  updateCurrentQuery: PropTypes.func.isRequired,
+  updateCurrentQueryThenReselect: PropTypes.func.isRequired,
+  addAQuery: PropTypes.func.isRequired,
+  loadUserSearch: PropTypes.func,
+  saveUserSearch: PropTypes.func.isRequired,
+  handleDeleteQuery: PropTypes.func.isRequired,
+  updateOneQuery: PropTypes.func.isRequired,
   // from parent
-  isEditable: React.PropTypes.bool.isRequired,
-  isDeletable: React.PropTypes.func,
-  onSearch: React.PropTypes.func.isRequired,
+  isEditable: PropTypes.bool.isRequired,
+  isDeletable: PropTypes.func,
+  onSearch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

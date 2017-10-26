@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -58,12 +59,12 @@ class MediaSelectionContainer extends React.Component {
 
 MediaSelectionContainer.propTypes = {
   // from context
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from parent
-  selectedMedia: React.PropTypes.array,
-  selectedMediaQueryType: React.PropTypes.number,
-  updateMediaSelection: React.PropTypes.func.isRequired,
-  handleUnselectMedia: React.PropTypes.func.isRequired,
+  selectedMedia: PropTypes.array,
+  selectedMediaQueryType: PropTypes.number,
+  updateMediaSelection: PropTypes.func.isRequired,
+  handleUnselectMedia: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -20,7 +20,7 @@ const localMessages = {
 class BubbleRowChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, minBubbleRadius, padding, domId } = this.props;
+    const { data, width, height, maxBubbleRadius, minBubbleRadius, padding, domId, onBubbleClick } = this.props;
 
     // bail if no data
     if (data.length === 0) {
@@ -101,23 +101,31 @@ class BubbleRowChart extends React.Component {
           .data(circles)
           .enter();
 
+      const cursor = onBubbleClick ? 'pointer' : '';
       bubbles.append('circle')
         .attr('r', d => d.r)
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .style('fill', d => d.fill || '');
+        .style('fill', d => d.fill || '')
+        .style('cursor', () => cursor);
 
       // add tooltip to bubbles
-      bubbles.selectAll('circle').on('mouseover', (d) => {
-        const pixel = 'px';
-        rollover.transition().duration(200).style('opacity', 0.9);
-        rollover.html(d.rolloverText ? d.rolloverText : '')
-        .style('left', d3.event.pageX + pixel)
-        .style('top', d3.event.pageY + pixel);
-      })
-      .on('mouseout', () => {
-        rollover.transition().duration(500).style('opacity', 0);
-      });
+      bubbles.selectAll('circle')
+        .on('mouseover', (d) => {
+          const pixel = 'px';
+          rollover.html(d.rolloverText ? d.rolloverText : '')
+          .style('left', d3.event.pageX + pixel)
+          .style('top', d3.event.pageY + pixel);
+          rollover.transition().duration(200).style('opacity', 0.9);
+        })
+        .on('mouseout', () => {
+          rollover.transition().duration(500).style('opacity', 0);
+        })
+        .on('click', (d) => {
+          if (onBubbleClick) {
+            onBubbleClick(d);
+          }
+        });
 
       // add center labels
       bubbles.append('text')
@@ -170,6 +178,7 @@ BubbleRowChart.propTypes = {
     'rolloverText': string(optional),
   }]
   */
+  onBubbleClick: PropTypes.func,
   data: PropTypes.array.isRequired,
   domId: PropTypes.string.isRequired,  // to make download work
   width: PropTypes.number,

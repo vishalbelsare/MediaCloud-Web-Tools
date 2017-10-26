@@ -27,7 +27,6 @@ def topic_geo_tag_coverage(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_geo_tag_counts_csv(topics_id):
-    timespans_id = request.args["timespanId"]
     tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
     return stream_response(tags, ['tags_id', 'tag', 'label', 'count', 'pct'], "topic-{}-geo-tag-counts".format(topics_id))
 
@@ -37,7 +36,6 @@ def topic_geo_tag_counts_csv(topics_id):
 @flask_login.login_required
 @api_error_handler
 def topic_geo_tag_counts(topics_id):
-    timespans_id = request.args["timespanId"]
     tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
     coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filters
     return jsonify({'results': tags, 'coverage': coverage['counts']})

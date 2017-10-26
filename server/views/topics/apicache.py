@@ -4,7 +4,7 @@ from flask import request
 from server import mc, TOOL_API_KEY
 from server.cache import cache
 from server.util.tags import STORY_UNDATEABLE_TAG
-from server.util.wordembeddings import google_news_2d
+import server.util.wordembeddings as wordembeddings
 from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
@@ -135,16 +135,26 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
     words = [w['term'] for w in word_data]
-    word2vec_data = _cached_word2vec_google_2d_results(words)
-    for i in range(len(word2vec_data)):
-        word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
-        word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
+    # and now add in word2vec model position data
+    google_word2vec_data = _cached_word2vec_google_2d_results(words)
+    for i in range(len(google_word2vec_data)):
+        word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
+        word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
+    topic_word2vec_data = _word2vec_topic_2d_results(topics_id, words)
+    for i in range(len(topic_word2vec_data)):
+        word_data[i]['w2v_x'] = topic_word2vec_data[i]['x']
+        word_data[i]['w2v_y'] = topic_word2vec_data[i]['y']
     return word_data
 
 
-@cache
+def _word2vec_topic_2d_results(topics_id, words):
+    # can't cache this because the first time it is called we usually don't have results
+    word2vec_results = wordembeddings.topic_2d(topics_id, words)
+    return word2vec_results
+
+
 def _cached_word2vec_google_2d_results(words):
-    word2vec_results = google_news_2d(words)
+    word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
 
 

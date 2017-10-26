@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
@@ -28,11 +29,11 @@ const renderCollectionSelector = ({ allowRemoval, fields, onDelete }) => (
   </div>
 );
 renderCollectionSelector.propTypes = {
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
-  allowRemoval: React.PropTypes.bool,
-  validate: React.PropTypes.func,
-  onDelete: React.PropTypes.func,
+  fields: PropTypes.object,
+  meta: PropTypes.object,
+  allowRemoval: PropTypes.bool,
+  validate: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 const SourceCollectionsForm = (props) => {
@@ -54,11 +55,11 @@ const SourceCollectionsForm = (props) => {
 
 SourceCollectionsForm.propTypes = {
   // from parent
-  intl: React.PropTypes.object.isRequired,
-  initialValues: React.PropTypes.object,
-  selected: React.PropTypes.object,
-  allowRemoval: React.PropTypes.bool,
-  onDelete: React.PropTypes.func,
+  intl: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
+  selected: PropTypes.object,
+  allowRemoval: PropTypes.bool,
+  onDelete: PropTypes.func,
 };
 
 export default

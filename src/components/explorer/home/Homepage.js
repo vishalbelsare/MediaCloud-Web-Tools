@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -64,13 +65,13 @@ const Homepage = (props) => {
 };
 
 Homepage.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  onKeywordSearch: React.PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  onKeywordSearch: PropTypes.func.isRequired,
   // from state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

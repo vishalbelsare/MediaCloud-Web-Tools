@@ -4,6 +4,7 @@ import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Link from 'react-router/lib/Link';
+import Divider from 'material-ui/Divider';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
@@ -20,13 +21,17 @@ import { WarningNotice } from '../common/Notice';
 const VIEW_CLOUD = 'VIEW_CLOUD';
 const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
+const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
 
 const localMessages = {
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
-  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
-  modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
-  modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'Use Word2Vec 2D Layout' },
+  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'View Ordered Layout (default)' },
+  modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'View Cloud Layout' },
+  modeTopicW2V: { id: 'wordcloud.editable.mode.topicW2V', defaultMessage: 'View Topic Specific Word2Vec 2D Layout' },
+  noTopicW2VData: { id: 'wordcloud.editable.mode.topicW2V.noData', defaultMessage: 'We haven\'t built a model for this topic yet.  If you want to see this chart please email us at support@mediacloud.org an ask us to generate a model for this topic.' },
+  modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
+  noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
   downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
   downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
@@ -83,7 +88,8 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   render() {
-    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId, subtitleContent } = this.props;
+    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId,
+      subtitleContent, includeTopicWord2Vec } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
@@ -151,6 +157,20 @@ class EditableWordCloudDataCard extends React.Component {
             height={height}
             xProperty="google_w2v_x"
             yProperty="google_w2v_y"
+            noDataMsg={localMessages.noGoogleW2VData}
+          />
+        );
+        break;
+      case VIEW_TOPIC_W2V:
+        cloudContent = (
+          <Word2VecChart
+            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+            domId={uniqueDomId}
+            width={width}
+            height={height}
+            xProperty="w2v_x"
+            yProperty="w2v_y"
+            noDataMsg={localMessages.noTopicW2VData}
           />
         );
         break;
@@ -159,19 +179,23 @@ class EditableWordCloudDataCard extends React.Component {
         break;
     }
     const exploreButton = explore ? (<ExploreButton linkTo={explore} />) : null;
+    let topicWord2VecMenuItem;
+    if (includeTopicWord2Vec) {
+      topicWord2VecMenuItem = (
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.modeTopicW2V)}
+          disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
+          onTouchTap={() => this.setView(VIEW_TOPIC_W2V)}
+        />
+      );
+    }
     return (
       <DataCard className={className}>
         <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
           <div className="actions">
             {exploreButton}
             <ActionMenu>
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
-                rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
-                disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
-                onTouchTap={this.toggleEditing}
-              />
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.modeOrdered)}
@@ -184,12 +208,22 @@ class EditableWordCloudDataCard extends React.Component {
                 disabled={this.state.editing || this.state.view === VIEW_CLOUD}
                 onTouchTap={() => this.setView(VIEW_CLOUD)}
               />
+              {topicWord2VecMenuItem}
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.modeGoogleW2V)}
                 disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
                 onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
               />
+              <Divider />
+              <MenuItem
+                className="action-icon-menu-item"
+                primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+                rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
+                disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
+                onTouchTap={this.toggleEditing}
+              />
+              <Divider />
               <MenuItem
                 className="action-icon-menu-item"
                 primaryText={formatMessage(localMessages.downloadWordCSV)}
@@ -256,6 +290,7 @@ EditableWordCloudDataCard.propTypes = {
   helpButton: PropTypes.node,
   targetURL: PropTypes.string,
   subtitleContent: PropTypes.object,
+  includeTopicWord2Vec: PropTypes.bool,
     // from dispatch
   onViewModeClick: PropTypes.func.isRequired,
   domId: PropTypes.string.isRequired,

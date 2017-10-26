@@ -38,6 +38,7 @@ class WordsSummaryContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
         width={720}
+        includeTopicWord2Vec
       />
     );
   }

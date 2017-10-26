@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { GithubPicker } from 'react-color';
@@ -37,9 +38,9 @@ class ColorPicker extends React.Component {
   }
 }
 ColorPicker.propTypes = {
-  onClick: React.PropTypes.func,
-  onChange: React.PropTypes.func.isRequired,
-  color: React.PropTypes.string,
+  onClick: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
+  color: PropTypes.string,
 };
 
 export default injectIntl(ColorPicker);
