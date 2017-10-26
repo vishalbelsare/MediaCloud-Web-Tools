@@ -3,6 +3,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
+import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
@@ -13,7 +14,7 @@ import StoryOutlinksContainer from './StoryOutlinksContainer';
 import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
 import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import messages from '../../../resources/messages';
-import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
+import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
@@ -31,6 +32,7 @@ const localMessages = {
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
+  editStory: { id: 'story.details.edit', defaultMessage: 'Edit This Story' },
 };
 
 class StoryContainer extends React.Component {
@@ -85,6 +87,11 @@ class StoryContainer extends React.Component {
                   <ReadItNowButton onClick={this.handleReadItClick} />
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
+                  </Permissioned>
+                  <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                    <Link to={`/topics/${topicId}/stories/${storiesId}/update`}>
+                      <EditButton tooltip={formatMessage(localMessages.editStory)} />
+                    </Link>
                   </Permissioned>
                 </span>
                 <StoryIcon height={32} />

@@ -49,6 +49,11 @@ export function story(topicId, storiesId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}`);
 }
 
+export function storyUpdate(storiesId, params) {
+  const acceptedParams = acceptParams(params, ['id', 'title', 'url', 'guid', 'language', 'description', 'publish_date', 'confirm_date', 'undateable']);
+  return createPostingApiPromise(`/api/stories/${storiesId}/storyUpdate`, acceptedParams);
+}
+
 export function storyWords(topicId, storiesId) {
   return createApiPromise(`/api/topics/${topicId}/stories/${storiesId}/words`);
 }

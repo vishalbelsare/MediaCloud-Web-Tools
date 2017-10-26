@@ -8,7 +8,7 @@ from server.auth import is_user_logged_in
 from server.cache import cache
 import server.util.csv as csv
 import server.util.tags as tag_util
-from server.util.request import api_error_handler
+from server.util.request import api_error_handler, form_fields_required
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
     WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
@@ -55,8 +55,7 @@ def story(topics_id, stories_id):
     
     story_info = local_mc.story(stories_id)  # add in other fields from regular call
     for k in story_info.keys():
-        if k not in story_topic_info.keys():
-            story_topic_info[k] = story_info[k]
+        story_topic_info[k] = story_info[k]
     for tag in story_info['story_tags']:
         if tag['tag_sets_id'] == tag_util.GEO_TAG_SET:
             geonames_id = int(tag['tag'][9:])
@@ -68,6 +67,26 @@ def story(topics_id, stories_id):
                 tag['geoname'] = {}
     return jsonify(story_topic_info)
 
+
+@app.route('/api/stories/<stories_id>/storyUpdate', methods=['POST'])
+@flask_login.login_required
+@api_error_handler
+def topic_story_update(stories_id):
+    idInt = int(stories_id)
+    user_mc = user_admin_mediacloud_client()
+    optional_args = {
+        'title': request.form['title'] if 'title' in request.form else None,
+        'description': request.form['description'] if 'description' in request.form else '',
+        'guid': request.form['guid'] if 'guid' in request.form else 'guid',
+        'url': request.form['url'] if 'url' in request.form else 'url',
+        'language': request.form['language'] if 'language' in request.form else 'en',
+        'publish_date': request.form['publish_date'] if 'publish_date' in request.form else None,
+        'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else False,
+        'undateable': request.form['undateable'] if 'undateable' in request.form else False,
+    }
+    stories = user_mc.storyUpdate(idInt, **optional_args)
+
+    return jsonify(stories)
 
 @cache
 def _cached_geoname(geonames_id):

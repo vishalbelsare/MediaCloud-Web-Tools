@@ -11,6 +11,7 @@ import InfluentialMediaContainer from '../components/topic/media/InfluentialMedi
 import InfluentialStoriesContainer from '../components/topic/stories/InfluentialStoriesContainer';
 import InfluentialStoryExplorerContainer from '../components/topic/stories/InfluentialStoryExplorerContainer';
 import StoryContainer from '../components/topic/stories/StoryContainer';
+import StoryUpdateContainer from '../components/topic/stories/StoryUpdateContainer';
 import MediaContainer from '../components/topic/media/MediaContainer';
 import LinkMapContainer from '../components/topic/maps/LinkMapContainer';
 import CreateFocusContainer from '../components/topic/snapshots/foci/CreateFocusContainer';
@@ -58,6 +59,7 @@ const topicRoutes = (
         <Route path="/topics/:topicId/media/:mediaId" component={MediaContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories" component={InfluentialStoriesContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/explore" component={InfluentialStoryExplorerContainer} onEnter={requireAuth} />
+        <Route path="/topics/:topicId/stories/:storiesId/update" component={StoryUpdateContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/stories/:storiesId" component={StoryContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/attention" component={AttentionContainer} onEnter={requireAuth} />
         <Route path="/topics/:topicId/words" component={InfluentialWordsContainer} onEnter={requireAuth} />
