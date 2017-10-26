@@ -26,7 +26,7 @@ export function fetchDemoQueryTopWords(queryA, queryB) {
   if (queryB) {
     acceptedParams['compared_queries[]'] = acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
   }
-  return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
+  return createApiPromise('/api/explorer/demo/words/compare/count', acceptedParams);
 }
 
 export function fetchQueryTopWords(queryA, queryB) {
@@ -37,7 +37,7 @@ export function fetchQueryTopWords(queryA, queryB) {
   if (queryB) {
     acceptedParams['compared_queries[]'] = acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
   }
-  return createApiPromise('/api/explorer/words/count', acceptedParams);
+  return createApiPromise('/api/explorer/words/compare/count', acceptedParams);
 }
 
 // the following 12 functions depend on having a corresponding index to properly route the results to the right query
