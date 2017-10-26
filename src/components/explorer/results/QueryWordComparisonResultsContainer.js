@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
+import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
 // import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -165,10 +165,10 @@ QueryWordComparisonResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  fetchStatus: state.explorer.topWords.fetchStatus,
-  results: state.explorer.topWords.list,
-  leftQuery: state.explorer.topWords.left,
-  rightQuery: state.explorer.topWords.right,
+  fetchStatus: state.explorer.topWordsComparison.fetchStatus,
+  results: state.explorer.topWordsComparison.list,
+  leftQuery: state.explorer.topWordsComparison.left,
+  rightQuery: state.explorer.topWordsComparison.right,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -183,7 +183,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // dispatch(resetTopWords()); // necessary if a query deletion has occurred
+    // dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
       const comparedQueries = runTheseQueries.map(q => ({
@@ -194,7 +194,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         sources: q.sources.map(s => s.id || s.media_id),
         collections: q.collections.map(c => c.id || c.tags_id),
       }));
-      return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
+      return dispatch(fetchQueryTopWordsComparison(comparedQueries[0], comparedQueries[1]));
     }
     const runTheseQueries = queries || ownProps.queries;
     const comparedQueries = runTheseQueries.map(q => ({
@@ -203,7 +203,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       query_id: q.id, // could be undefined
       q: q.q, // only if no query id, means demo user added a keyword
     }));
-    return dispatch(fetchDemoQueryTopWords(comparedQueries[0], comparedQueries[1]));
+    return dispatch(fetchDemoQueryTopWordsComparison(comparedQueries[0], comparedQueries[1]));
   },
   handleWordCloudClick: (word) => {
     ownProps.onQueryModificationRequested(word.term);

@@ -53,6 +53,10 @@ export const FETCH_QUERY_TOP_WORDS = 'FETCH_QUERY_TOP_WORDS';
 export const fetchQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchQueryTopWords, params => params);
 export const fetchDemoQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchDemoQueryTopWords, params => params);
 
+export const FETCH_QUERY_TOP_WORDS_COMPARISON = 'FETCH_QUERY_TOP_WORDS_COMPARISON';
+export const fetchQueryTopWordsComparison = createAsyncAction(FETCH_QUERY_TOP_WORDS_COMPARISON, api.fetchQueryTopWordsComparison, params => params);
+export const fetchDemoQueryTopWordsComparison = createAsyncAction(FETCH_QUERY_TOP_WORDS_COMPARISON, api.fetchDemoQueryTopWordsComparison, params => params);
+
 export const SELECT_COMPARATIVE_WORD_FIELD = 'SELECT_COMPARATIVE_WORD_FIELD';
 export const selectComparativeWordField = createAction(SELECT_COMPARATIVE_WORD_FIELD, params => params);
 
@@ -87,8 +91,8 @@ export const resetSelected = createAction(RESET_SELECTED);
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
-export const RESET_QUERY_TOP_WORDS = 'RESET_QUERY_TOP_WORDS';
-export const resetTopWords = createAction(RESET_QUERY_TOP_WORDS);
+export const RESET_QUERY_TOP_WORDS_COMPARISON = 'RESET_QUERY_TOP_WORDS_COMPARISON';
+export const resetTopWordsComparison = createAction(RESET_QUERY_TOP_WORDS_COMPARISON);
 
 export const RESET_SAMPLE_STORIES = 'RESET_SAMPLE_STORIES';
 export const resetSampleStories = createAction(RESET_SAMPLE_STORIES);
