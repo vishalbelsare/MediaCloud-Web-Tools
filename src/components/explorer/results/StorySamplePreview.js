@@ -78,11 +78,11 @@ class StorySamplePreview extends React.Component {
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          <QueryResultsSelector
-            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-          />
         </h2>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
         <StoryTable
           className="story-table"
           stories={results[this.state.selectedQueryIndex]}

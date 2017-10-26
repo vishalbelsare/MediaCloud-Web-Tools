@@ -87,11 +87,11 @@ class GeoPreview extends React.Component {
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
-          <QueryResultsSelector
-            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-          />
         </h2>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
         <GeoChart
           data={results[this.state.selectedQueryIndex]}
           countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
