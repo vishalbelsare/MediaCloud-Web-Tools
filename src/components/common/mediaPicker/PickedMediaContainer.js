@@ -15,7 +15,7 @@ const localMessages = {
   // pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
 
-class MediaSelectionContainer extends React.Component {
+class PickedMediaContainer extends React.Component {
 
   updateMediaType = (type) => {
     const { updateMediaSelection } = this.props;
@@ -57,7 +57,7 @@ class MediaSelectionContainer extends React.Component {
   }
 }
 
-MediaSelectionContainer.propTypes = {
+PickedMediaContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   // from parent
@@ -91,6 +91,6 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      MediaSelectionContainer
+      PickedMediaContainer
     )
   );

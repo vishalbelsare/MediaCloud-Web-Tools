@@ -2,48 +2,53 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../actions/systemActions';
-import MediaPickerSearchResults from './MediaPickerSearchResults';
-import SelectMediaForm from './SelectMediaForm';
-import SelectMediaFeaturedAsyncContainer from './SelectMediaFeaturedAsyncContainer';
+import { selectMediaPickerQueryArgs, fetchMediaPickerSources } from '../../../../actions/systemActions';
+import * as fetchConstants from '../../../../lib/fetchConstants';
+import SearchResultsTable from './SearchResultsTable';
+import MediaPickerSearchForm from '../MediaPickerSearchForm';
+import LoadingSpinner from '../../LoadingSpinner';
 
 const localMessages = {
-  title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
-  hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search collections by name' },
+  title: { id: 'system.mediaPicker.sources.title', defaultMessage: 'Sources matching "{name}"' },
+  hintText: { id: 'system.mediaPicker.sources.hint', defaultMessage: 'Search sources by name or url' },
 };
 
 
-class SelectMediaCollectionResultsContainer extends React.Component {
+class SourceSearchResultsContainer extends React.Component {
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
     updateMediaQuerySelection(updatedQueryObj);
   }
+
   render() {
-    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia } = this.props;
+    const { fetchStatus, selectedMediaQueryKeyword, sourceResults, handleToggleAndSelectMedia } = this.props;
     const { formatMessage } = this.props.intl;
     let whichMedia = [];
-    let content = null;
     whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
     whichMedia.fetchStatus = null;
-    whichMedia.type = 'collections';
-    if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
-      whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
-      whichMedia.storedKeyword = collectionResults.args;
-      whichMedia.fetchStatus = collectionResults.fetchStatus;
+    let content = null;
+    if (selectedMediaQueryKeyword === null || selectedMediaQueryKeyword === undefined) {
+      content = 'no results';
+    } else if (fetchStatus !== fetchConstants.FETCH_SUCCEEDED) {
+      content = <LoadingSpinner />;
+    } else if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
+      whichMedia = sourceResults.list;
+      whichMedia.storedKeyword = sourceResults.args;
+      whichMedia.fetchStatus = sourceResults.fetchStatus;
+      whichMedia.type = 'sources';
       content = (
-        <MediaPickerSearchResults
+        <SearchResultsTable
           title={formatMessage(localMessages.title, { name: whichMedia.storedKeyword.mediaKeyword })}
           whichMedia={whichMedia}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
-    } else {
-      content = <SelectMediaFeaturedAsyncContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     }
+
     return (
       <div>
-        <SelectMediaForm
+        <MediaPickerSearchForm
           initValues={whichMedia}
           onSearch={val => this.updateMediaQuery(val)}
           hintText={formatMessage(localMessages.hintText)}
@@ -54,28 +59,28 @@ class SelectMediaCollectionResultsContainer extends React.Component {
   }
 }
 
-SelectMediaCollectionResultsContainer.propTypes = {
+SourceSearchResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
+  fetchStatus: PropTypes.string,
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   updateMediaQuerySelection: PropTypes.func.isRequired,
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
-  featured: PropTypes.object,
-  collectionResults: PropTypes.object,
+  sourceResults: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.collectionQueryResults.fetchStatus,
+  fetchStatus: state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
-  collectionResults: state.system.mediaPicker.collectionQueryResults,
+  sourceResults: state.system.mediaPicker.sourceQueryResults,
 });
 
 const mapDispatchToProps = dispatch => ({
   updateMediaQuerySelection: (values) => {
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerCollections(values));
+      dispatch(fetchMediaPickerSources(values));
     }
   },
 });
@@ -83,7 +88,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SelectMediaCollectionResultsContainer
+      SourceSearchResultsContainer
     )
   );
 

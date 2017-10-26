@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import messages from '../../../resources/messages';
-import MediaSelectionContainer from './MediaSelectionContainer';
-import SelectMediaResultsContainer from './SelectMediaResultsContainer';
+import PickedMediaContainer from './PickedMediaContainer';
+import MediaPickerResultsContainer from './MediaPickerResultsContainer';
 import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { AddQueryButton } from '../IconButton';
@@ -19,7 +19,7 @@ const localMessages = {
   addMedia: { id: 'system.mediaPicker.select.addMedia', defaultMessage: 'Add Media' },
 };
 
-class SelectMediaDialog extends React.Component {
+class MediaPickerDialog extends React.Component {
 
   state = {
     open: false,
@@ -76,7 +76,7 @@ class SelectMediaDialog extends React.Component {
           >
             <div className="select-media-dialog-inner">
               <div className="select-media-sidebar">
-                <MediaSelectionContainer selectedMedia={selectedMedia} />
+                <PickedMediaContainer selectedMedia={selectedMedia} />
                 <AppButton
                   className="select-media-ok-button"
                   label={formatMessage(messages.ok)}
@@ -86,7 +86,7 @@ class SelectMediaDialog extends React.Component {
                 />
               </div>
               <div className="select-media-content">
-                <SelectMediaResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
+                <MediaPickerResultsContainer timestamp={lookupTimestamp} selectedMediaQueryType={0} selectedMedia={selectedMedia} handleSelection={handleSelection} />
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@ class SelectMediaDialog extends React.Component {
 
 }
 
-SelectMediaDialog.propTypes = {
+MediaPickerDialog.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   // from parent/implementer
@@ -147,7 +147,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      SelectMediaDialog
+      MediaPickerDialog
     )
   );
 

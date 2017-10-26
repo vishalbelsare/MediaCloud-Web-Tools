@@ -7,8 +7,8 @@ import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, ADVANCED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import SelectMediaCollectionResultsContainer from './SelectMediaCollectionResultsContainer';
-import SelectMediaSourceResultsContainer from './SelectMediaSourceResultsContainer';
+import CollectionSearchResultsContainer from './results/CollectionSearchResultsContainer';
+import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -18,7 +18,7 @@ const localMessages = {
 };
 
 
-class SelectMediaResultsContainer extends React.Component {
+class MediaPickerResultsContainer extends React.Component {
   componentWillMount() {
     this.correlateSelection(this.props);
   }
@@ -91,14 +91,14 @@ class SelectMediaResultsContainer extends React.Component {
     switch (selectedMediaQueryType) {
       case PICK_COLLECTION:
         content = (
-          <SelectMediaCollectionResultsContainer
+          <CollectionSearchResultsContainer
             handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
         );
         break;
       case PICK_SOURCE:
-        content = <SelectMediaSourceResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+        content = <SourceSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
       case ADVANCED:
         break;
@@ -113,7 +113,7 @@ class SelectMediaResultsContainer extends React.Component {
   }
 }
 
-SelectMediaResultsContainer.propTypes = {
+MediaPickerResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   toggleConcurrency: PropTypes.func.isRequired,
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
@@ -164,7 +164,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
       composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
-        SelectMediaResultsContainer
+        MediaPickerResultsContainer
       )
     )
   );

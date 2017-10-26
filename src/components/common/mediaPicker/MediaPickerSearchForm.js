@@ -13,7 +13,8 @@ const localMessages = {
 
 // const formSelector = formValueSelector('queryForm');
 
-class SelectMediaForm extends React.Component {
+class MediaPickerSearchForm extends React.Component {
+
   shouldComponentUpdate = () => false;
 
   focusUsernameInputField = (input) => {
@@ -21,16 +22,24 @@ class SelectMediaForm extends React.Component {
       setTimeout(() => { input.focus(); }, 100);
     }
   }
+
   handleMenuItemKeyDown = (evt) => {
     const { onSearch } = this.props;
     switch (evt.key) {
       case 'Enter':
+        evt.preventDefault(); // don't type the enter into the field
         onSearch({ mediaKeyword: evt.target.value });
-        evt.preventDefault();
         break;
       default: break;
     }
   };
+
+  handleSearchButtonClick = (evt) => {
+    const { onSearch } = this.props;
+    evt.preventDefault();
+    const searchStr = document.getElementsByTagName('input')[0].value;  // note: this is a brittle hack
+    onSearch({ mediaKeyword: searchStr });
+  }
 
   render() {
     const { initValues, hintText } = this.props;
@@ -56,7 +65,7 @@ class SelectMediaForm extends React.Component {
           <AppButton
             style={{ marginTop: 10 }}
             label={formatMessage(localMessages.search)}
-            onClick={evt => console.log(evt.target)}
+            onClick={this.handleSearchButtonClick}
             primary
           />
         </Col>
@@ -65,7 +74,7 @@ class SelectMediaForm extends React.Component {
   }
 }
 
-SelectMediaForm.propTypes = {
+MediaPickerSearchForm.propTypes = {
   intl: PropTypes.object.isRequired,
   onSearch: PropTypes.func,
   isEditable: PropTypes.bool,
@@ -76,6 +85,6 @@ SelectMediaForm.propTypes = {
 
 export default
   injectIntl(
-    SelectMediaForm
+    MediaPickerSearchForm
   );
 
