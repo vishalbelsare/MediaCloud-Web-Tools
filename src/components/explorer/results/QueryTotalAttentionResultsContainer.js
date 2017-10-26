@@ -75,7 +75,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
           value: query.count,
           aboveText: (idx % 2 === 0) ? query.label : null,
           belowText: (idx % 2 !== 0) ? query.label : null,
-          rolloverText: `${query.q}: ${formatNumber(query.count)}`,
+          rolloverText: `${query.label}: ${formatNumber(query.count)}`,
           fill: query.color,
         })),
       ];
