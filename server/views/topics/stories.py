@@ -27,10 +27,7 @@ PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
 def story(topics_id, stories_id):
 
     local_mc = None
-    if access_public_topic(topics_id):
-        local_mc = mc
-        story_topic_info = topic_story_list(TOOL_API_KEY, topics_id, stories_id=stories_id)['stories'][0]
-    elif is_user_logged_in():
+    if is_user_logged_in():
         local_mc = user_mediacloud_client()
         story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
         '''
