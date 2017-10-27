@@ -26,35 +26,14 @@ class WordCloud extends React.Component {
     const { words, width, height, maxFontSize, minFontSize, textColor, showTooltips, onWordClick, linkColor, domId } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const options = {
-      width,
-      height,
-      maxFontSize,
-      minFontSize,
-      textColor,
-      linkColor,
-      showTooltips,
+      width: width || DEFAULT_WIDTH,
+      height: height || DEFAULT_HEIGHT,
+      maxFontSize: maxFontSize || DEFAULT_MAX_FONT_SIZE,
+      minFontSize: minFontSize || DEFAULT_MIN_FONT_SIZE,
+      textColor: textColor || DEFAULT_TEXT_COLOR,
+      linkColor: linkColor || DEFAULT_LINK_COLOR,
+      showTooltips: showTooltips || false,
     };
-    if (width !== null) {
-      options.width = DEFAULT_WIDTH;
-    }
-    if (height !== null) {
-      options.height = DEFAULT_HEIGHT;
-    }
-    if (minFontSize === undefined) {
-      options.minFontSize = DEFAULT_MIN_FONT_SIZE;
-    }
-    if (maxFontSize !== null) {
-      options.maxFontSize = DEFAULT_MAX_FONT_SIZE;
-    }
-    if (textColor !== null) {
-      options.textColor = DEFAULT_TEXT_COLOR;
-    }
-    if (linkColor !== null) {
-      options.linkColor = DEFAULT_LINK_COLOR;
-    }
-    if (showTooltips === undefined) {
-      options.showTooltips = false;
-    }
     // create a rollover tooltip helper
     const tooltipDiv = d3.select('body').append('div')
       .attr('class', 'viz-tooltip word-cloud-tooltip')

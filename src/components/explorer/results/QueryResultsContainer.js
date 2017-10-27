@@ -8,6 +8,7 @@ import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsCon
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
+import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 
 const QueryResultsContainer = (props) => {
@@ -21,6 +22,14 @@ const QueryResultsContainer = (props) => {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryWordsResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>

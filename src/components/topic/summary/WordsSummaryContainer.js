@@ -92,7 +92,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeDescribedDataCard(localMessages.descriptionIntro,
+        [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           WordsSummaryContainer
         )

@@ -14,7 +14,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import WordSelectWrapper from './WordSelectWrapper';
 
 const localMessages = {
-  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Language Used' },
+  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Compare Top Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
   sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
