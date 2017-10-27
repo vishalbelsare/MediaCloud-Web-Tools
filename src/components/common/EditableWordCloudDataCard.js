@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Link from 'react-router/lib/Link';
 import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
@@ -87,7 +88,7 @@ class EditableWordCloudDataCard extends React.Component {
 
   render() {
     const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId,
-      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor } = this.props;
+      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor, actionMenuHeaderText } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
@@ -191,11 +192,13 @@ class EditableWordCloudDataCard extends React.Component {
         />
       );
     }
+    const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
     return (
       <DataCard className={className}>
         <div className="actions">
           {exploreButton}
           <ActionMenu>
+            {actionMenuSubHeaderContent}
             <MenuItem
               className="action-icon-menu-item"
               primaryText={formatMessage(localMessages.modeOrdered)}
@@ -281,20 +284,18 @@ EditableWordCloudDataCard.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
-  textAndLinkColor: PropTypes.string,
-  title: PropTypes.string.isRequired,
+  textAndLinkColor: PropTypes.string,     // render the words in this color (instead of the brand dark color)
+  title: PropTypes.string.isRequired,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
-  itemId: PropTypes.string,
-  downloadUrl: PropTypes.string,
-  explore: PropTypes.object,
-  download: PropTypes.func,
-  helpButton: PropTypes.node,
-  targetURL: PropTypes.string,
-  subtitleContent: PropTypes.object,
-  subHeaderContent: PropTypes.object,
-  includeTopicWord2Vec: PropTypes.bool,
+  downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
+  explore: PropTypes.object,              // show an exlore button and link it to this URL
+  helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
+  subtitleContent: PropTypes.object,      // shows up to the right of the H2 title
+  subHeaderContent: PropTypes.object,     // shows up under the H2 title, above the word cloud
+  actionMenuHeaderText: PropTypes.string, // text to put as a subheader in the action menu popup
+  includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y
   onViewModeClick: PropTypes.func.isRequired,
-  domId: PropTypes.string.isRequired,
+  domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

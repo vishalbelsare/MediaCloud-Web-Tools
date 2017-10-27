@@ -81,6 +81,7 @@ class QueryWordsResultsContainer extends React.Component {
     */
     return (
       <EditableWordCloudDataCard
+        actionMenuHeaderText={selectedQuery.label}
         subHeaderContent={subHeaderContent}
         words={results[this.state.selectedQueryIndex].list}
         onViewModeClick={handleWordCloudClick}
