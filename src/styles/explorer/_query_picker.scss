@@ -1,74 +1,79 @@
 @import '../constants';
 
-.query-picker {
-  border-bottom: 1px solid $material-grey200;
+.query-picker-wrapper {
 
-  .slick-slider {
-    margin-bottom: 0px;
+  .query-help-info {
+    margin-top: 15px;
+    margin-left: 20px;
   }
 
-  .query-picker-item {
-    
-    border-left: 1px solid $material-grey200;
-    border-right: 1px solid $material-grey200;
-    margin: 0 !important;
-    padding: 5px 20px !important;
-    height: 110px;
-    text-align: left;
+  .query-picker {
+    border-bottom: 1px solid $material-grey200;
 
-    &:first-child {
-      border-left: 0px;
+    .slick-slider {
+      margin-bottom: 0px;
     }
 
-    .query-picker-icon-button {
-        opacity: 0;
-    }
+    .query-picker-item {
+      
+      border-left: 1px solid $material-grey200;
+      border-right: 1px solid $material-grey200;
+      margin: 0 !important;
+      padding: 5px 20px !important;
+      height: 110px;
+      text-align: left;
 
-    &.selected {
-      background-color: $material-grey200 !important;
+      &:first-child {
+        border-left: 0px;
+      }
 
       .query-picker-icon-button {
-        opacity: 1;
+          opacity: 0;
       }
-    }
+
+      &.selected {
+        background-color: $material-grey200 !important;
+
+        .query-picker-icon-button {
+          opacity: 1;
+        }
+      }
 
 
-    .query-info {
-      margin-left: 23px;
-      display: block;
-      color: $material-grey600;
-    }
-
-    .query-help-info {
-      margin-left: 23px;
-    }
-
-    .add-query-item {
-      margin-top: 40px;
-      font-size: 20px;
-      color: $material-grey600;
-      a {
+      .query-info {
+        margin-left: 23px;
+        display: block;
         color: $material-grey600;
       }
-    }
 
-    .query-picker-editable-name {
-      width: 210px !important;
-    }
+      .add-query-item {
+        margin-top: 40px;
+        font-size: 20px;
+        color: $material-grey600;
+        a {
+          color: $material-grey600;
+        }
+      }
 
-    .query-picker-icon-button {
-      width: 20px !important;
-      float: right !important;
-    }
+      .query-picker-editable-name {
+        width: 210px !important;
+      }
 
-    .query-picker-name {
-      font-size: 16px;
-      padding-top: 20px;
-      padding-bottom: 10px;
-      display: inline-block;
-      font-weight: bold;
-    }
+      .query-picker-icon-button {
+        width: 20px !important;
+        float: right !important;
+      }
 
+      .query-picker-name {
+        font-size: 16px;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        display: inline-block;
+        font-weight: bold;
+      }
+
+    }
+    
   }
-  
+
 }

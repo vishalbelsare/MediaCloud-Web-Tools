@@ -10,6 +10,7 @@ import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
+import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
@@ -211,7 +212,11 @@ class QueryPicker extends React.Component {
         demoSearchButtonContent = (
           <Grid>
             <Row>
-              <Col lg={10} />
+              <Col lg={10}>
+                <div className="query-help-info">
+                  <QueryHelpDialog />
+                </div>
+              </Col>
               <Col lg={1}>
                 <AppButton
                   style={{ marginTop: 30 }}
