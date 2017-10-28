@@ -6,7 +6,7 @@ from server import app, mc, db
 from server.auth import user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.views.explorer import solr_query_from_request, read_sample_searches
+from server.views.explorer import read_sample_searches
 from operator import itemgetter
 
 logger = logging.getLogger(__name__)
@@ -124,25 +124,13 @@ def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
         'collections': collection_list
     }
 
+
 def _tag_set_with_private_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, False)
 
 
 def _tag_set_with_public_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, True)
-
-
-@app.route('/api/explorer/words/count', methods=['POST'])
-@flask_login.login_required
-@form_fields_required('q')
-@api_error_handler
-def api_explorer_word_count():
-    user_mc = user_admin_mediacloud_client()
-
-    solr_query = solr_query_from_request(request.form)    
-    word_count_result = user_mc.wordCount(solr_query=solr_query)
-
-    return jsonify(word_count_result)  # give them back new data, so they can update the client
 
 
 @app.route('/api/explorer/themes', methods=['POST'])

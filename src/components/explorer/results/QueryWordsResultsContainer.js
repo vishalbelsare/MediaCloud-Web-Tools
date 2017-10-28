@@ -66,19 +66,6 @@ class QueryWordsResultsContainer extends React.Component {
     );
     const selectedQuery = queries[this.state.selectedQueryIndex];
     const downloadUrl = this.getDownloadCsvUrl(selectedQuery);
-    /*
-    const extraMenuAction = (
-      {queries.map((q, idx) =>
-        <MenuItem
-          key={idx}
-          className="action-icon-menu-item"
-          primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-          rightIcon={<DownloadButton />}
-          onTouchTap={() => this.downloadCsv(q)}
-        />
-      )}
-    );
-    */
     return (
       <EditableWordCloudDataCard
         actionMenuHeaderText={selectedQuery.label}
