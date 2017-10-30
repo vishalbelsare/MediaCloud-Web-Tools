@@ -9,6 +9,11 @@ export const DELETE_FOCAL_SET_DEFINITION = 'DELETE_FOCAL_SET_DEFINITION';
 export const SET_ATTENTION_FOCAL_SET_ID = 'SET_ATTENTION_FOCAL_SET_ID';
 export const FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS = 'FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS';
 export const FETCH_CREATE_FOCUS_RETWEET_COVERAGE = 'FETCH_CREATE_FOCUS_RETWEET_COVERAGE';
+export const FETCH_CREATE_FOCUS_TOP_COUNTRIES_STORY_COUNTS = 'FETCH_CREATE_FOCUS_TOP_COUNTRIES_STORY_COUNTS';
+export const FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE = 'FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE';
+export const FETCH_CREATE_FOCUS_THEME_STORY_COUNTS = 'FETCH_CREATE_FOCUS_THEME_STORY_COUNTS';
+export const FETCH_CREATE_FOCUS_THEME_COVERAGE = 'FETCH_CREATE_FOCUS_THEME_COVERAGE';
+
 
 // pass in topicId and snapshotId
 export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
@@ -26,4 +31,12 @@ export const setAttentionFocalSetId = createAction(SET_ATTENTION_FOCAL_SET_ID, i
 
 export const fetchCreateFocusRetweetStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_RETWEET_STORY_COUNTS, api.topicPreviewRetweetPartisanshipStoryCounts);
 
+export const fetchCreateFocusTopCountriesStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_TOP_COUNTRIES_STORY_COUNTS, api.topicPreviewTopCountriesStoryCounts);
+
+export const fetchCreateFocusThemeStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_THEME_STORY_COUNTS, api.topicPreviewThemeStoryCounts);
+
 export const fetchCreateFocusRetweetCoverage = createAsyncAction(FETCH_CREATE_FOCUS_RETWEET_COVERAGE, api.topicPreviewRetweetPartisanshipCoverage);
+
+export const fetchCreateFocusTopCountriesCoverage = createAsyncAction(FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE, api.topicPreviewTopCountriesCoverage);
+
+export const fetchCreateFocusThemeCoverage = createAsyncAction(FETCH_CREATE_FOCUS_THEME_COVERAGE, api.topicPreviewThemeCoverage);
