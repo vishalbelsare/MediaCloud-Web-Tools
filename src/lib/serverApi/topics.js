@@ -291,12 +291,12 @@ export function topicPreviewTopCountriesCoverage(topicId) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/coverage`);
 }
 
-export function topicPreviewThemeStoryCounts(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/theme/preview/story-counts`);
+export function topicPreviewNytThemeStoryCounts(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/story-counts`);
 }
 
-export function topicPreviewThemeCoverage(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/theme/preview/coverage`);
+export function topicPreviewNytThemeCoverage(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`);
 }
 
 export function createTopCountriesFocalSet(topicId, params) {
@@ -304,9 +304,9 @@ export function createTopCountriesFocalSet(topicId, params) {
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/create`, acceptedParams);
 }
 
-export function createThemeFocalSet(topicId, params) {
+export function createNytThemeFocalSet(topicId, params) {
   const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
-  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/theme/create`, acceptedParams);
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/create`, acceptedParams);
 }
 
 export function topicWord2Vec(topicId) {

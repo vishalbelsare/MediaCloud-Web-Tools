@@ -7,15 +7,15 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
 import messages from '../../../../../../resources/messages';
-import TopCountriesCoveragePreviewContainer from './RetweetCoveragePreviewContainer';
-import TopCountriesStoryCountsPreviewContainer from './RetweetStoryCountsPreviewContainer';
+import TopCountriesCoveragePreviewContainer from './TopCountriesCoveragePreviewContainer';
+import TopCountriesStoryCountsPreviewContainer from './TopCountriesStoryCountsPreviewContainer';
 
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Retweet Partisanship' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Top Countries' },
   about: { id: 'focus.create.edit.about',
-    defaultMessage: 'This will create a set of subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.  For instance, if their stories are almost completely retweeted by Trump followers on Twitter, then that media source will be assigned to the "right" subtopic.  This covers the 1000 most tweeted media sources, so it is likely it will not cover all the media sources in your Topic.' },
+    defaultMessage: 'This will create a set of subtopics as filtered by the set of top countries you have selected.' },
 };
 
 const EditTopCountriesContainer = (props) => {

@@ -13,8 +13,8 @@ const PARTISANSHIP_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca002
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewRetweetPartisanshipCounts';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.retweet.storyCount.title', defaultMessage: 'Stories By Partisanship' },
-  intro: { id: 'topic.snapshot.retweet.storyCount.intro', defaultMessage: 'This is based on the 1000 media sources with the most retweets during the US 2016 election season. That means each of the quintiles below is NOT evenly distribted.  For instance, while the "center" has just 91 sources, the "right" has 496. Each bubble below shows the percentage of stories that fall into each of the quintiles.' },
+  title: { id: 'topic.snapshot.topCountries.storyCount.title', defaultMessage: 'Stories By Top Countries' },
+  intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Stories about however many most-talked-about-countries' },
 };
 
 const TopCountriesStoryCountsPreviewContainer = (props) => {

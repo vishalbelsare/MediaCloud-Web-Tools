@@ -9,10 +9,10 @@ import PieChart from '../../../../../vis/PieChart';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.retweet.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.retweet.coverage.intro', defaultMessage: 'Our categorization of media sources by how much Trump and Clinton followers retweeted them in 2016 only covers the top 1000 sources from our 2016 US election topic.  This pie chart shows you how many stories form those media appear in this topic, versus how many don\'t.  If the coverage in this topic isn\'t high, you might not want to use this subtopic creation technique.' },
-  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories with partisanship info' },
-  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'Stories without partisanship info' },
+  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Story Coverage' },
+  intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'By Top Stories' },
+  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories about these top countries' },
+  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'All Stories' },
 };
 
 const TopCountriesCoveragePreviewContainer = (props) => {
