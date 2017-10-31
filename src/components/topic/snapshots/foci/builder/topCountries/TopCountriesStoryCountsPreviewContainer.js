@@ -52,6 +52,7 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -60,13 +61,14 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  filters: state.topics.selected.filters,
   fetchStatus: state.topics.selected.focalSets.create.retweetStoryCounts.fetchStatus,
   counts: state.topics.selected.focalSets.create.retweetStoryCounts.story_counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCreateFocusTopCountriesStoryCounts(ownProps.topicId));
+    dispatch(fetchCreateFocusTopCountriesStoryCounts(ownProps.topicId, { snapshotId: 1749, timespanId: '*' }));
   },
 });
 

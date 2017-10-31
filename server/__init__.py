@@ -194,6 +194,8 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.foci.focalsets
     import server.views.topics.foci.focaldefs
     import server.views.topics.foci.retweetpartisanship
+    import server.views.topics.foci.topcountries
+    import server.views.topics.foci.nyttheme
     import server.views.topics.permissions
     import server.views.topics.maps
     import server.views.topics.nyttags
