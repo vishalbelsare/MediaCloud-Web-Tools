@@ -47,9 +47,11 @@ def top_countries_story_counts(topics_id):
 @flask_login.login_required
 @api_error_handler
 def top_countries_coverage(topics_id):
-    # TODO: add in overall timespan id here so it works in different snapshots
+    coverage = topic_tag_coverage(topics_id, tag_util.CLIFF_CLAVIN_2_3_0_TAG_ID)   # this will respect filters
+    if coverage is None:
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
+    return jsonify(coverage)
 
-    return jsonify({})
 
 
 
