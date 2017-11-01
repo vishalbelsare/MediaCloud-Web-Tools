@@ -9,7 +9,7 @@ from server.cache import cache
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
-from server.views.topics.apicache import cached_topic_timespan_list
+from server.views.topics.apicache import cached_topic_timespan_list, topic_word_counts
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -221,7 +221,7 @@ def topic_update(topics_id):
         'is_public': request.form['is_public'] if 'is_public' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
-        'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None, 
+        'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None,
     }
 
     # parse out any sources and collections to add
@@ -256,3 +256,49 @@ def topic_search():
     matching_topics = user_mc.topicList(name=search_str)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
+
+@app.route('/api/topics/<topics_id>/word2vec-timespans', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def topic_w2v_timespan_embeddings(topics_id):
+    args = {
+        'snapshots_id': request.args.get('snapshotId'),
+        'foci_id': request.args.get('focusId'),
+        'q': request.args.get('q'),
+    }
+
+    # Retrieve embeddings for overall topic
+    overall_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=50, **args)
+    overall_words = [ x['term'] for x in overall_word_counts ]
+    overall_embeddings = {x['term']: (x['google_w2v_x'], x['google_w2v_y']) for x in overall_word_counts}
+
+    # Retrieve top words for each timespan
+    ts_embeddings = []
+    timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, args['snapshots_id'], args['foci_id'])
+    for ts in timespans:
+        ts_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=250, timespans_id=int(ts['timespans_id']), **args)
+
+        # Remove any words not in top words overall
+        ts_word_counts = filter(lambda x: x['term'] in overall_words, ts_word_counts)
+
+        # Replace specific timespan embeddings with overall so coordinates are consistent
+        for word in ts_word_counts:
+            word['google_w2v_x'] = overall_embeddings[word['term']][0]
+            word['google_w2v_y'] = overall_embeddings[word['term']][1]
+
+        # Fill in missing data for words in overall timespan but not in this timespan
+        timespan_words = [ x['term'] for x in ts_word_counts ]
+        word_diff = list(set(overall_words) - set(timespan_words))
+        for word in word_diff:
+            empty_entry = {}
+            empty_entry['term'] = word
+            empty_entry['stem'] = word  # dummy placeholder
+            empty_entry['count'] = 0
+            empty_entry['google_w2v_x'] = overall_embeddings[word][0]
+            empty_entry['google_w2v_y'] = overall_embeddings[word][1]
+            ts_word_counts.append(empty_entry)
+
+        results = { 'timespan': ts, 'words': ts_word_counts }
+        ts_embeddings.append(results)
+
+    return jsonify({'list': ts_embeddings})

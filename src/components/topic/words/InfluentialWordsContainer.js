@@ -12,6 +12,7 @@ import { generateParamStr } from '../../../lib/apiUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import TimespanDateRange from '../TimespanDateRange';
+import Word2VecTimespanContainer from './Word2VecTimespanContainer';
 
 const localMessages = {
   title: { id: 'topic.influentialWords.title', defaultMessage: 'Influential Words' },
@@ -81,6 +82,16 @@ class InfluentialWordsContainer extends React.Component {
           </Col>
           <Col lg={6}>
             {comparisonContent}
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6}>
+            <DataCard>
+              <h2>
+                Word2Vec
+              </h2>
+              <Word2VecTimespanContainer />
+            </DataCard>
           </Col>
         </Row>
       </Grid>

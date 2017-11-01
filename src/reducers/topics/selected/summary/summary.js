@@ -10,6 +10,7 @@ import undateableStoryTotals from './undateableStoryTotals';
 import themedStoryTotals from './themedStoryTotals';
 import mapFiles from './mapFiles';
 import word2vec from './word2vec';
+import word2vecTimespans from './word2vecTimespans';
 
 const summaryReducer = combineReducers({
   topStories,
@@ -23,6 +24,7 @@ const summaryReducer = combineReducers({
   themedStoryTotals,
   mapFiles,
   word2vec,
+  word2vecTimespans,
 });
 
 export default summaryReducer;

@@ -103,15 +103,16 @@ function Word2VecChart(props) {
     .domain([d3.min(words, d => d[options.yProperty]), d3.max(words, d => d[options.yProperty])])
     .range([options.height - margin.top, margin.bottom]);
 
-  const colorScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.tfnorm), d3.max(words, d => d.tfnorm)])
-    .range([options.minColor, options.maxColor]);
-
   // Add Text Labels
   const sizeRange = { min: options.minFontSize, max: options.maxFontSize };
   if (fullExtent === undefined) {
     options.fullExtent = d3.extent(words, d => d.tfnorm);
   }
+
+  const colorScale = d3.scaleLinear()
+    .domain(options.fullExtent)
+    .range([options.minColor, options.maxColor]);
+
   const sortedWords = words.sort((a, b) => a.tfnorm - b.tfnorm); // important to sort so z order is right
   const text = d3.select(node).selectAll('text')
     .data(sortedWords)
@@ -121,9 +122,22 @@ function Word2VecChart(props) {
         .text(d => d.term)
         .attr('x', d => xScale(d[options.xProperty]))
         .attr('y', d => yScale(d[options.yProperty]))
-        .attr('fill', d => colorScale(d.tfnorm))
+        .attr('fill', (d) => {
+          let color;
+          if (d.tfnorm !== 0) {
+            color = colorScale(d.tfnorm);
+          } else {
+            color = '#ffffff';
+          }
+          return color;
+        })
         .attr('font-size', (d) => {
-          const fs = fontSizeComputer(d, options.fullExtent, sizeRange);
+          let fs;
+          if (d.tfnorm !== 0) {
+            fs = fontSizeComputer(d, options.fullExtent, sizeRange);
+          } else {
+            fs = options.fullExtent[0];
+          }
           return `${fs}px`;
         });
 

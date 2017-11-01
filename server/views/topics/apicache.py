@@ -116,7 +116,8 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': 1000
+        'sample_size': 1000,
+        'num_words': 500,
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
@@ -287,9 +288,9 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
 def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
     '''
     No timespan/single end point, so we need a helper to do it
-    :param snapshots_id: 
-    :param timespans_id: 
-    :param foci_id: 
+    :param snapshots_id:
+    :param timespans_id:
+    :param foci_id:
     :return: info about one timespan as specified
     '''
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=foci_id)

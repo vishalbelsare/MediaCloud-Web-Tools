@@ -279,3 +279,8 @@ export function createRetweetFocalSet(topicId, params) {
 export function topicWord2Vec(topicId) {
   return createApiPromise(`/api/topics/${topicId}/word2vec`);
 }
+
+export function topicWord2VecTimespans(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/word2vec-timespans`, acceptedParams);
+}

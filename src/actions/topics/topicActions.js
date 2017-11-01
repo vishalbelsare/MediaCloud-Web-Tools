@@ -25,6 +25,7 @@ export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
 export const FETCH_USER_QUEUED_RUNNING_TOPICS = 'FETCH_USER_QUEUED_RUNNING_TOPICS';
 export const FETCH_TOPIC_WORD2VEC = 'FETCH_TOPIC_WORD2VEC';
+export const FETCH_TOPIC_WORD2VEC_TIMESPANS = 'FETCH_TOPIC_WORD2VEC_TIMESPANS';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
@@ -84,3 +85,6 @@ export const fetchUserQueuedAndRunningTopics = createAsyncAction(FETCH_USER_QUEU
 
 // pass in topic id
 export const fetchTopicWord2Vec = createAsyncAction(FETCH_TOPIC_WORD2VEC, api.topicWord2Vec, id => id);
+
+// pass in topicId, snapshotId, focusId, q
+export const fetchTopicWord2VecTimespans = createAsyncAction(FETCH_TOPIC_WORD2VEC_TIMESPANS, api.topicWord2VecTimespans);
