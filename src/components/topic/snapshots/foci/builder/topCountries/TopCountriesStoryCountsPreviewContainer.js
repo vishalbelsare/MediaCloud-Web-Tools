@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import composeAsyncContainer from '../../../../../common/AsyncContainer';
+// import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import { fetchCreateFocusTopCountriesStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import BubbleRowChart from '../../../../../vis/BubbleRowChart';
@@ -17,35 +17,42 @@ const localMessages = {
   intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Stories about however many most-talked-about-countries' },
 };
 
-const TopCountriesStoryCountsPreviewContainer = (props) => {
-  const { counts } = props;
-  const { formatNumber } = props.intl;
-  let content = null;
-  if (counts !== null) {
-    const data = counts.map((info, idx) => ({
-      value: info.count,
-      fill: PARTISANSHIP_COLORS[idx],
-      aboveText: info.label,
-      aboveTextColor: 'rgb(0,0,0)',
-      rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
-    }));
-    content = (<BubbleRowChart
-      data={data}
-      domId={BUBBLE_CHART_DOM_ID}
-      width={700}
-      padding={30}
-    />);
+class TopCountriesStoryCountsPreviewContainer extends React.Component {
+  componentDidMount() {
+    const { fetchData } = this.props;
+    fetchData();
   }
-  return (
-    <DataCard>
-      <h2>
-        <FormattedMessage {...localMessages.title} />
-      </h2>
-      <p><FormattedMessage {...localMessages.intro} /></p>
-      {content}
-    </DataCard>
-  );
-};
+  render() {
+    const { counts } = this.props;
+    const { formatNumber } = this.props.intl;
+    let content = null;
+    if (counts !== null && counts !== undefined) {
+      const data = counts.map((info, idx) => ({
+        value: info.count,
+        fill: PARTISANSHIP_COLORS[idx],
+        aboveText: info.label,
+        aboveTextColor: 'rgb(0,0,0)',
+        rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
+      }));
+      content = (<BubbleRowChart
+        data={data}
+        domId={BUBBLE_CHART_DOM_ID}
+        width={700}
+        padding={30}
+      />);
+    }
+
+    return (
+      <DataCard>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+        </h2>
+        <p><FormattedMessage {...localMessages.intro} /></p>
+        {content}
+      </DataCard>
+    );
+  }
+}
 
 TopCountriesStoryCountsPreviewContainer.propTypes = {
   // from compositional chain
@@ -55,6 +62,7 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
   counts: PropTypes.array,
   fetchStatus: PropTypes.string.isRequired,
@@ -67,16 +75,20 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchCreateFocusTopCountriesStoryCounts(ownProps.topicId, { snapshotId: 1749, timespanId: '*' }));
+  asyncFetch: (stateProps) => {
+    dispatch(fetchCreateFocusTopCountriesStoryCounts({ id: ownProps.topicId, ...stateProps.filters }));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    fetchData: () => dispatchProps.asyncFetch(stateProps),
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        TopCountriesStoryCountsPreviewContainer
-      )
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      TopCountriesStoryCountsPreviewContainer
     )
   );

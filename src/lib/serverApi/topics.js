@@ -283,9 +283,9 @@ export function createRetweetFocalSet(topicId, params) {
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/create`, acceptedParams);
 }
 
-export function topicPreviewTopCountriesStoryCounts(topicId, params) {
-  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'q']);
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/story-counts`, acceptedParams);
+export function topicPreviewTopCountriesStoryCounts(params) {
+  const acceptedParams = acceptParams(params, ['id', 'snapshotId', 'timespanId', 'q']);
+  return createApiPromise(`/api/topics/${acceptedParams.id}/focal-sets/top-countries/preview/story-counts`, acceptedParams);
 }
 
 export function topicPreviewTopCountriesCoverage(topicId) {
