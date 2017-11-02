@@ -7,7 +7,6 @@ import UserMenuContainer from './UserMenuContainer';
 
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
-export const DASHBOARD_URL = 'https://dashboard.mediacloud.org/';
 export const SOURCES_URL = 'https://sources.mediacloud.org/';
 export const BLOG_URL = 'http://mediacloud.org/';
 export const TOOLS_URL = 'https://tools.mediacloud.org/';
@@ -30,24 +29,12 @@ const AppToolbar = (props) => {
                   <FormattedMessage {...messages.toolsAppName} />
                 </a>
               </li>
-              {
-              /*
               <li className="explorer">
                 <a
                   href={EXPLORER_URL}
                   title={formatMessage(messages.explorerToolDescription)}
                 >
                   <FormattedMessage {...messages.explorerToolName} />
-                </a>
-              </li>
-              */
-              }
-              <li className="dashboard">
-                <a
-                  href={DASHBOARD_URL}
-                  title={formatMessage(messages.dashboardToolDescription)}
-                >
-                  <FormattedMessage {...messages.dashboardToolName} />
                 </a>
               </li>
               <li className="topics">
