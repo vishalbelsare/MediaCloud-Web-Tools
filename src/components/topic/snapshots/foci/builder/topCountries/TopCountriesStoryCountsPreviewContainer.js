@@ -8,7 +8,7 @@ import DataCard from '../../../../../common/DataCard';
 import BubbleRowChart from '../../../../../vis/BubbleRowChart';
 
 // @see http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5
-const PARTISANSHIP_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
+const TOP_COUNTRIES_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
 
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewRetweetPartisanshipCounts';
 
@@ -24,7 +24,7 @@ const TopCountriesStoryCountsPreviewContainer = (props) => {
   if (counts !== null) {
     const data = counts.map((info, idx) => ({
       value: info.count,
-      fill: PARTISANSHIP_COLORS[idx],
+      fill: TOP_COUNTRIES_COLORS[idx],
       aboveText: info.label,
       aboveTextColor: 'rgb(0,0,0)',
       rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
@@ -62,8 +62,8 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
-  fetchStatus: state.topics.selected.focalSets.create.retweetStoryCounts.fetchStatus,
-  counts: state.topics.selected.focalSets.create.retweetStoryCounts.story_counts,
+  fetchStatus: state.topics.selected.focalSets.create.topCountriesStoryCounts.fetchStatus,
+  counts: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

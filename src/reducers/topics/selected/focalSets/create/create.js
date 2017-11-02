@@ -4,6 +4,8 @@ import matchingAttention from './matchingAttention';
 import matchingStoryCounts from './matchingStoryCounts';
 import retweetCoverage from './retweetCoverage';
 import retweetStoryCounts from './retweetStoryCounts';
+import topCountriesCoverage from './topCountriesCoverage';
+import topCountriesStoryCounts from './topCountriesStoryCounts';
 import workflow from './workflow';
 
 const createFocusReducer = combineReducers({
@@ -12,6 +14,8 @@ const createFocusReducer = combineReducers({
   matchingStoryCounts,
   retweetCoverage,
   retweetStoryCounts,
+  topCountriesCoverage,
+  topCountriesStoryCounts,
   workflow,
 });
 
