@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
-import { fetchQueryTopWords, fetchDemoQueryTopWords, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
+import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
 // import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
@@ -14,7 +14,7 @@ import OrderedWordCloud from '../../vis/OrderedWordCloud';
 import WordSelectWrapper from './WordSelectWrapper';
 
 const localMessages = {
-  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Language Used' },
+  title: { id: 'explorer.comparativeWords.title', defaultMessage: 'Compare Top Words' },
   intro: { id: 'explorer.comparativeWords.intro', defaultMessage: ' These words are the most used in each query. They are sized according to total count across all words in ...' },
   centerTitle: { id: 'explorer.comparativeWords.center', defaultMessage: 'Word used in both' },
   sideTitle: { id: 'explorer.comparativeWords.right', defaultMessage: 'Words unique to {name}' },
@@ -23,7 +23,7 @@ const localMessages = {
 const LEFT = 0;
 const RIGHT = 1;
 
-class ComparativeWordCloudContainer extends React.Component {
+class QueryWordComparisonResultsContainer extends React.Component {
   componentWillMount() {
     const { queries, leftQuery, selectComparativeWords } = this.props;
     if (leftQuery === null) { // selections haven't been set yet so do init
@@ -142,9 +142,12 @@ class ComparativeWordCloudContainer extends React.Component {
 
 }
 
-ComparativeWordCloudContainer.propTypes = {
+QueryWordComparisonResultsContainer.propTypes = {
+  // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -162,14 +165,13 @@ ComparativeWordCloudContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
-  fetchStatus: state.explorer.topWords.fetchStatus,
-  results: state.explorer.topWords.list,
-  leftQuery: state.explorer.topWords.left,
-  rightQuery: state.explorer.topWords.right,
+  fetchStatus: state.explorer.topWordsComparison.fetchStatus,
+  results: state.explorer.topWordsComparison.list,
+  leftQuery: state.explorer.topWordsComparison.left,
+  rightQuery: state.explorer.topWordsComparison.right,
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   selectComparativeWords: (query, target) => {
     dispatch(selectComparativeWordField({ query, target }));
   },
@@ -181,9 +183,9 @@ const mapDispatchToProps = (dispatch, state) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // dispatch(resetTopWords()); // necessary if a query deletion has occurred
-    if (state.user.isLoggedIn) {
-      const runTheseQueries = queries || state.queries;
+    // dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
+    if (ownProps.isLoggedIn) {
+      const runTheseQueries = queries || ownProps.queries;
       const comparedQueries = runTheseQueries.map(q => ({
         start_date: q.startDate || q.start_date,
         end_date: q.endDate || q.start_date,
@@ -192,31 +194,24 @@ const mapDispatchToProps = (dispatch, state) => ({
         sources: q.sources.map(s => s.id || s.media_id),
         collections: q.collections.map(c => c.id || c.tags_id),
       }));
-      return dispatch(fetchQueryTopWords(comparedQueries[0], comparedQueries[1]));
+      return dispatch(fetchQueryTopWordsComparison(comparedQueries[0], comparedQueries[1]));
     }
-    const runTheseQueries = queries || state.queries;
+    const runTheseQueries = queries || ownProps.queries;
     const comparedQueries = runTheseQueries.map(q => ({
       index: q.index, // should be same as q.index btw
       search_id: q.searchId, // may or may not have these
       query_id: q.id, // could be undefined
       q: q.q, // only if no query id, means demo user added a keyword
     }));
-    return dispatch(fetchDemoQueryTopWords(comparedQueries[0], comparedQueries[1]));
+    return dispatch(fetchDemoQueryTopWordsComparison(comparedQueries[0], comparedQueries[1]));
+  },
+  handleWordCloudClick: (word) => {
+    ownProps.onQueryModificationRequested(word.term);
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleWordCloudClick: (word) => {
-      ownProps.queries.map((qry) => {
-        const updatedQry = {
-          ...qry,
-          q: `${qry.q} AND ${word.term}`,
-        };
-        return dispatchProps.updateCurrentQuery(updatedQry, 'q');
-      });
-      ownProps.onSearch();
-    },
     asyncFetch: () => {
       if (ownProps.queries && ownProps.queries.length > 0) {
         if (ownProps.queries.length > 1) {
@@ -233,7 +228,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        ComparativeWordCloudContainer
+        QueryWordComparisonResultsContainer
       )
     )
   );

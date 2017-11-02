@@ -18,6 +18,7 @@ def _media_ids_from_sources_param(input):
         media_ids_to_add = [int(cid) for cid in request.form['sources[]'].split(",") if len(cid) > 0]
     return media_ids_to_add
 
+
 def _media_tag_ids_from_collections_param(input):
     media_tag_ids_to_add = []
     if len(input) > 0:

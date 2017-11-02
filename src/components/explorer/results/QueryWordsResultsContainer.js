@@ -1,31 +1,28 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import MenuItem from 'material-ui/MenuItem';
+// import MenuItem from 'material-ui/MenuItem';
 import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { DownloadButton } from '../../common/IconButton';
-import ActionMenu from '../../common/ActionMenu';
-import StoryTable from '../../common/StoryTable';
-import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+// import { DownloadButton } from '../../common/IconButton';
+// import ActionMenu from '../../common/ActionMenu';
+import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
+import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 
 // const NUM_TO_SHOW = 20;
 
 const localMessages = {
-  title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
-  helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a small sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the top right to download a CSV of stories with their urls.</p>' },
-  helpDetails: { id: 'explorer.stories.help.text',
-    defaultMessage: '<p>Due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',
-  },
+  title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
+  descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Here are the top words used with each query. Looking at the language used can help you identify how this issue is talked about in the media online.</p>' },
 };
 
-class StorySamplePreview extends React.Component {
+const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
+
+class QueryWordsResultsContainer extends React.Component {
   state = {
     selectedQueryIndex: 0,
   }
@@ -49,81 +46,72 @@ class StorySamplePreview extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
-  downloadCsv = (query) => {
+  getDownloadCsvUrl = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/samples.csv/${query.searchId}/${query.index}`;
+      url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
     } else {
-      url = `/api/explorer/stories/samples.csv/[{"q":"${query.q}"}]/${query.index}`;
+      url = `/api/explorer/words/wordcount.csv/[{"q":"${query.q}"}]/${query.index}?`;
     }
-    window.location = url;
+    return url;
   }
   render() {
-    const { results, queries, handleStorySelection } = this.props;
+    const { results, queries, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
+    const subHeaderContent = (
+      <QueryResultsSelector
+        options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+        onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+      />
+    );
+    const selectedQuery = queries[this.state.selectedQueryIndex];
+    const downloadUrl = this.getDownloadCsvUrl(selectedQuery);
     return (
-      <DataCard>
-        <div className="actions">
-          <ActionMenu>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
-            )}
-          </ActionMenu>
-        </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-          <QueryResultsSelector
-            options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-            onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-          />
-        </h2>
-        <StoryTable
-          className="story-table"
-          stories={results[this.state.selectedQueryIndex]}
-          onChangeFocusSelection={handleStorySelection}
-          maxTitleLength={50}
-        />
-      </DataCard>
+      <EditableWordCloudDataCard
+        actionMenuHeaderText={selectedQuery.label}
+        subHeaderContent={subHeaderContent}
+        words={results[this.state.selectedQueryIndex].list}
+        onViewModeClick={handleWordCloudClick}
+        title={formatMessage(localMessages.title)}
+        domId={WORD_CLOUD_DOM_ID}
+        width={720}
+        downloadUrl={downloadUrl}
+        textAndLinkColor={selectedQuery.color}
+      />
     );
   }
 }
 
-StorySamplePreview.propTypes = {
+QueryWordsResultsContainer.propTypes = {
+  // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  onQueryModificationRequested: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
+  handleWordCloudClick: PropTypes.func.isRequired,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  handleStorySelection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  user: state.user,
-  fetchStatus: state.explorer.stories.fetchStatus,
-  results: state.explorer.stories.results,
+  fetchStatus: state.explorer.topWords.fetchStatus,
+  results: state.explorer.topWords.results,
 });
 
-const mapDispatchToProps = (dispatch, state) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    const isLoggedInUser = hasPermissions(getUserRoles(state.user), PERMISSION_LOGGED_IN);
-    dispatch(resetSampleStories());
-    if (isLoggedInUser) {
-      const runTheseQueries = queries || state.queries;
+    if (ownProps.isLoggedIn) {
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q) => {
         const infoToQuery = {
           start_date: q.startDate,
@@ -133,10 +121,10 @@ const mapDispatchToProps = (dispatch, state) => ({
           sources: q.sources.map(s => s.id),
           collections: q.collections.map(c => c.id),
         };
-        return dispatch(fetchQuerySampleStories(infoToQuery));
+        return dispatch(fetchQueryTopWords(infoToQuery));
       });
-    } else if (queries || state.queries) { // else assume DEMO mode, but assume the queries have been loaded
-      const runTheseQueries = queries || state.queries;
+    } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
+      const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q, index) => {
         const demoInfo = {
           index, // should be same as q.index btw
@@ -144,11 +132,13 @@ const mapDispatchToProps = (dispatch, state) => ({
           query_id: q.id, // TODO if undefined, what to do?
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchDemoQuerySampleStories(demoInfo)); // id
+        return dispatch(fetchDemoQueryTopWords(demoInfo)); // id
       });
     }
   },
-  handleStorySelection: () => 'true',
+  handleWordCloudClick: (word) => {
+    ownProps.onQueryModificationRequested(word.term);
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -162,9 +152,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
+      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
         composeAsyncContainer(
-          StorySamplePreview
+          QueryWordsResultsContainer
         )
       )
     )

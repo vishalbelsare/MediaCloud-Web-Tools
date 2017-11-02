@@ -24,7 +24,13 @@ class LoggedInQueryContainer extends React.Component {
     return (
       <div className="query-container query-container-logged-in">
         <QueryBuilderContainer isEditable={isEditable} onSearch={() => handleSearch()} />
-        <QueryResultsContainer lastSearchTime={lastSearchTime} queries={queries} params={location} samples={samples} onSearch={() => handleSearch()} />
+        <QueryResultsContainer
+          lastSearchTime={lastSearchTime}
+          queries={queries}
+          params={location}
+          samples={samples}
+          onSearch={() => handleSearch()}
+        />
       </div>
     );
   }

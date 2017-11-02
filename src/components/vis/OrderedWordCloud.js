@@ -59,41 +59,17 @@ class OrderedWordCloud extends React.Component {
     const maxWordFreq = words.length > 0 ? words[0].count : 0;
     const enoughDataToRender = (words.length > 10) && (maxWordFreq > 10);
     const options = {
-      width,
-      height,
-      textColor,
-      linkColor,
+      width: width || DEFAULT_WIDTH,
+      height: height || DEFAULT_HEIGHT,
+      maxFontSize: maxFontSize || DEFAULT_MAX_FONT_SIZE,
+      minFontSize: minFontSize || DEFAULT_MIN_FONT_SIZE,
+      textColor: textColor || DEFAULT_TEXT_COLOR,
+      linkColor: linkColor || DEFAULT_LINK_COLOR,
+      showTooltips: showTooltips || false,
       padding: 0,
-      minFontSize,
-      maxFontSize,
-      showTooltips,
-      alreadyNormalized,
+      alreadyNormalized: alreadyNormalized || false,
       fullExtent,
     };
-    if (width === undefined) {
-      options.width = DEFAULT_WIDTH;
-    }
-    if (height === undefined) {
-      options.height = DEFAULT_HEIGHT;
-    }
-    if (minFontSize === undefined) {
-      options.minFontSize = DEFAULT_MIN_FONT_SIZE;
-    }
-    if (maxFontSize === undefined) {
-      options.maxFontSize = DEFAULT_MAX_FONT_SIZE;
-    }
-    if (textColor === undefined) {
-      options.textColor = DEFAULT_TEXT_COLOR;
-    }
-    if (linkColor === undefined) {
-      options.linkColor = DEFAULT_LINK_COLOR;
-    }
-    if (showTooltips === undefined) {
-      options.showTooltips = false;
-    }
-    if (alreadyNormalized === undefined) {
-      options.alreadyNormalized = false;
-    }
     // add in tf normalization
     const allSum = d3.sum(words, term => parseInt(term.count, 10));
     if (!options.alreadyNormalized) {

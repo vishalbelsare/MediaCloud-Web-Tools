@@ -5,15 +5,14 @@ import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Link from 'react-router/lib/Link';
 import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
 import Word2VecChart from '../vis/Word2VecChart';
-import Permissioned from './Permissioned';
 import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
-import { PERMISSION_LOGGED_IN } from '../../lib/auth';
 import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
@@ -89,10 +88,11 @@ class EditableWordCloudDataCard extends React.Component {
 
   render() {
     const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId,
-      subtitleContent, includeTopicWord2Vec } = this.props;
+      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor, actionMenuHeaderText } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
+    const textColor = textAndLinkColor || getBrandDarkColor();
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
     const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
@@ -124,7 +124,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <OrderedWordCloud
             words={wordsArray}
-            textColor={getBrandDarkColor()}
+            textColor={textColor}
+            linkColor={textColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -138,7 +139,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <WordCloud
             words={wordsArray}
-            textColor={getBrandDarkColor()}
+            textColor={textColor}
+            linkColor={textColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -190,84 +192,85 @@ class EditableWordCloudDataCard extends React.Component {
         />
       );
     }
+    const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
     return (
       <DataCard className={className}>
-        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-          <div className="actions">
-            {exploreButton}
-            <ActionMenu>
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeOrdered)}
-                disabled={this.state.editing || this.state.view === VIEW_ORDERED}
-                onTouchTap={() => this.setView(VIEW_ORDERED)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeCloud)}
-                disabled={this.state.editing || this.state.view === VIEW_CLOUD}
-                onTouchTap={() => this.setView(VIEW_CLOUD)}
-              />
-              {topicWord2VecMenuItem}
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeGoogleW2V)}
-                disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
-                onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
-              />
-              <Divider />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
-                rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
-                disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
-                onTouchTap={this.toggleEditing}
-              />
-              <Divider />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadWordCSV)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={() => this.downloadCsv(1)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadBigramCSV)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={() => this.downloadCsv(2)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.downloadTrigramCSV)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={() => this.downloadCsv(3)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadSVG)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={() => {
-                  if (this.state.ordered) { // tricky to get the correct element to serialize
-                    downloadSvg(uniqueDomId);
-                  } else {
-                    const svgChild = document.getElementById(uniqueDomId);
-                    downloadSvg(svgChild.firstChild);
-                  }
-                }}
-              />
-            </ActionMenu>
-          </div>
-        </Permissioned>
+        <div className="actions">
+          {exploreButton}
+          <ActionMenu>
+            {actionMenuSubHeaderContent}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeOrdered)}
+              disabled={this.state.editing || this.state.view === VIEW_ORDERED}
+              onTouchTap={() => this.setView(VIEW_ORDERED)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeCloud)}
+              disabled={this.state.editing || this.state.view === VIEW_CLOUD}
+              onTouchTap={() => this.setView(VIEW_CLOUD)}
+            />
+            {topicWord2VecMenuItem}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeGoogleW2V)}
+              disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
+              onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
+            />
+            <Divider />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+              rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
+              disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
+              onTouchTap={this.toggleEditing}
+            />
+            <Divider />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadWordCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(1)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadBigramCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(2)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadTrigramCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(3)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => {
+                if (this.state.ordered) { // tricky to get the correct element to serialize
+                  downloadSvg(uniqueDomId);
+                } else {
+                  const svgChild = document.getElementById(uniqueDomId);
+                  downloadSvg(svgChild.firstChild);
+                }
+              }}
+            />
+          </ActionMenu>
+        </div>
 
         <h2>
           {titleContent}
           {helpButton}
           {subtitleContent}
         </h2>
+        {subHeaderContent}
         {editingWarning}
         {cloudContent}
       </DataCard>
@@ -281,19 +284,18 @@ EditableWordCloudDataCard.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
-  title: PropTypes.string.isRequired,
+  textAndLinkColor: PropTypes.string,     // render the words in this color (instead of the brand dark color)
+  title: PropTypes.string.isRequired,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
-  itemId: PropTypes.string,
-  downloadUrl: PropTypes.string,
-  explore: PropTypes.object,
-  download: PropTypes.func,
-  helpButton: PropTypes.node,
-  targetURL: PropTypes.string,
-  subtitleContent: PropTypes.object,
-  includeTopicWord2Vec: PropTypes.bool,
-    // from dispatch
+  downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
+  explore: PropTypes.object,              // show an exlore button and link it to this URL
+  helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
+  subtitleContent: PropTypes.object,      // shows up to the right of the H2 title
+  subHeaderContent: PropTypes.object,     // shows up under the H2 title, above the word cloud
+  actionMenuHeaderText: PropTypes.string, // text to put as a subheader in the action menu popup
+  includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y
   onViewModeClick: PropTypes.func.isRequired,
-  domId: PropTypes.string.isRequired,
+  domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

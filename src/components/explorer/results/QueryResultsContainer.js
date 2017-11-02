@@ -3,32 +3,64 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import AttentionComparisonContainer from './AttentionComparisonContainer';
-import ComparativeWordCloudContainer from './ComparativeWordCloudContainer';
-import StorySamplePreview from './StorySamplePreview';
-import StoryCountPreview from './StoryCountPreview';
-import GeoPreview from './GeoPreview';
+import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
+import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
+import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
+import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
+import QueryGeoResultsContainer from './QueryGeoResultsContainer';
+import QueryWordsResultsContainer from './QueryWordsResultsContainer';
+import { updateQuery } from '../../../actions/explorerActions';
 
 const QueryResultsContainer = (props) => {
-  const { queries, user, params, lastSearchTime, onSearch } = props;
+  const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = props;
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
   return (
     <Grid>
       <Row>
         <Col lg={12} xs={12}>
-          <AttentionComparisonContainer lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryAttentionOverTimeResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <ComparativeWordCloudContainer lastSearchTime={lastSearchTime} queries={queries} user={user} onSearch={() => onSearch()} />
+          <QueryWordsResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <StorySamplePreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryWordComparisonResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <StoryCountPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QuerySampleStoriesResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
         </Col>
         <Col lg={12} xs={12}>
-          <GeoPreview lastSearchTime={lastSearchTime} queries={queries} user={user} params={params} />
+          <QueryTotalAttentionResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryGeoResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
         </Col>
       </Row>
     </Grid>
@@ -38,22 +70,36 @@ const QueryResultsContainer = (props) => {
 QueryResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
-  params: PropTypes.object,       // params from router
-  // from state
-  user: PropTypes.object,
+  // from parent
   queries: PropTypes.array,
   lastSearchTime: PropTypes.number,
-  onSearch: PropTypes.func,
+  // from state
+  isLoggedIn: PropTypes.bool.isRequired,
+  // from dipatch
+  handleQueryModificationRequested: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  user: state.user,
-  queries: state.explorer.queries.queries,
+  isLoggedIn: state.user.isLoggedIn,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  // call this to add a clause to every query when something is clicked on
+  handleQueryModificationRequested: (queryClauseToAdd) => {
+    ownProps.queries.map((qry) => {
+      const updatedQry = {
+        ...qry,
+        q: `(${qry.q}) AND (${queryClauseToAdd})`,
+      };
+      return dispatch(updateQuery({ query: updatedQry, fieldName: 'q' }));
+    });
+    ownProps.onSearch();
+  },
 });
 
 export default
   injectIntl(
-    connect(mapStateToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       QueryResultsContainer
     )
   );

@@ -33,7 +33,7 @@ const localMessages = {
   feedLink: { id: 'source.basicInfo.feedLink', defaultMessage: 'See all feeds' },
   dateInfo: { id: 'source.basicInfo.dates', defaultMessage: 'We have collected sentences between {startDate} and {endDate}.' },
   contentInfo: { id: 'source.basicInfo.content', defaultMessage: 'Averaging {storyCount} stories per day and {sentenceCount} sentences in the last week.' },
-  gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in orange</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected too, which means we might be missing some content for those dates.' },
+  gapInfo: { id: 'source.basicInfo.gaps', defaultMessage: 'We\'d guess there are {gapCount} "gaps" in our coverage (highlighted in <b><span class="health-gap">in orange</span></b> on the chart).  Gaps are when we were unable to collect as much content as we expected to, which means we might be missing some content for those dates.' },
   metadataLabel: { id: 'source.basicInfo.metadata', defaultMessage: 'Metadata' },
   metadataDescription: { id: 'source.basicInfo.metadataDescription', defaultMessage: '{label}' },
   metadataEmpty: { id: 'source.basicInfo.metadata.empty', defaultMessage: 'No metadata available at this time' },
