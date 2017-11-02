@@ -25,9 +25,9 @@ const TopCountriesStoryCountsPreviewContainer = (props) => {
     const data = counts.map((info, idx) => ({
       value: info.count,
       fill: TOP_COUNTRIES_COLORS[idx],
-      aboveText: info.label,
-      aboveTextColor: 'rgb(0,0,0)',
-      rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
+      aboveText: (idx % 2 === 0) ? info.label : null,
+      belowText: (idx % 2 !== 0) ? info.label : null,
+      rolloverText: `${info.label}: ${formatNumber(info.count)}`,
     }));
     content = (<BubbleRowChart
       data={data}
