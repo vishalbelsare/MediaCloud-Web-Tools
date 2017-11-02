@@ -33,9 +33,7 @@ def top_countries_story_counts(topics_id):
     country_tag_counts = [r for r in top_geo_tags if
                                        int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for tag in country_tag_counts:
-        geonamesId = int(r['tag'].split('_')[1])
-        if geonamesId not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():  # only include countries
-            continue
+        geonamesId = int(tag['tag'].split('_')[1])
         tag['geonamesId'] = geonamesId
         #total_stories =
         tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id)
