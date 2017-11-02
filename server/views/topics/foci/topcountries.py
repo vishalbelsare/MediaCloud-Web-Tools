@@ -28,7 +28,7 @@ def top_countries_story_counts(topics_id):
     timespan_query = "timespans_id:{}".format(overall_timespan['timespans_id'])
 
     top_geo_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, GEO_TAG_SET, GEO_SAMPLE_SIZE, timespan_query)
-    #top_countries_tags = filter_tag_counts_for_country_tags(top_geo_tags)
+
     # make sure this tag is in geo_tags whitelist
     country_tag_counts = [r for r in top_geo_tags if
                                        int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
@@ -37,10 +37,13 @@ def top_countries_story_counts(topics_id):
         tag['geonamesId'] = geonamesId
         #total_stories =
         tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id)
+        total_stories = tagged_story_count['count']
         tag_story_counts.append({
             'label': tag['label'],
             'tags_id': tag['tags_id'],
-            'count': tagged_story_count,
+            'count': tag['count'],
+            'pct': float(tag['count']) / float(total_stories),
+            'overallcount': total_stories,
             # 'pct': float(tagged_story_count)/float(total_stories)
         })
 
