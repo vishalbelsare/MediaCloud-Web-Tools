@@ -16,16 +16,16 @@ const localMessages = {
 };
 
 const TopCountriesCoveragePreviewContainer = (props) => {
-  const { counts } = props;
+  const { count, total } = props;
   const { formatMessage } = props.intl;
   let content = null;
-  if (counts !== null) {
+  if (count !== null) {
     content = (
       <PieChart
         title={formatMessage(localMessages.title)}
         data={[
-          { name: formatMessage(localMessages.included), y: counts.count, color: getBrandDarkColor() },
-          { name: formatMessage(localMessages.notIncluded), y: counts.total - counts.count, color: '#cccccc' },
+          { name: formatMessage(localMessages.included), y: count, color: getBrandDarkColor() },
+          { name: formatMessage(localMessages.notIncluded), y: total, color: '#cccccc' },
         ]}
         height={250}
         showDataLabels={false}
@@ -51,13 +51,15 @@ TopCountriesCoveragePreviewContainer.propTypes = {
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   // from state
-  counts: PropTypes.object,
+  count: PropTypes.object,
+  total: PropTypes.object,
   fetchStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.topCountriesCoverage.fetchStatus,
-  counts: state.topics.selected.focalSets.create.topCountriesCoverage.counts,
+  count: state.topics.selected.focalSets.create.topCountriesCoverage.counts.count,
+  total: state.topics.selected.focalSets.create.topCountriesCoverage.counts.total,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

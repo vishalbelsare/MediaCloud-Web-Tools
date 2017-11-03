@@ -30,21 +30,16 @@ def get_top_countries_by_sentence_field_counts(topics_id):
     # make sure the geo tag is in the geo_tags whitelist (is a country)
     country_tag_counts = [r for r in top_geo_tags if
                                        int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
-    top_countries_story_count = 0 
     # for each country, set up the requisite info for UI                                  
     for tag in country_tag_counts:
-        geonamesId = int(tag['tag'].split('_')[1])
-        #tag['geonamesId'] = geonamesId
-
         tag_country_counts.append({
             'label': tag['label'],
+            'geo_tag': tag['tag'],
             'tags_id': tag['tags_id'],
             'count': tag['count'],
             'pct': float(tag['count']) / float(total_stories), #sentence_field_count / total story per topic count
         })
 
-    # stories overall for topic
-    tag_country_counts['total'] = total_stories
     return tag_country_counts
 
 
@@ -53,7 +48,7 @@ def get_top_countries_by_sentence_field_counts(topics_id):
 @flask_login.login_required
 @api_error_handler
 def top_countries_story_counts(topics_id):
-    
+    #using sentence field count to approximate story mentions by top country
     return jsonify({'story_counts': get_top_countries_by_sentence_field_counts(topics_id)})
 
 
@@ -62,16 +57,16 @@ def top_countries_story_counts(topics_id):
 @api_error_handler
 def top_countries_coverage(topics_id):
 
-    tag_country_counts = get_top_countries_by_sentence_field_counts(topics_id) 
+    tag_top_country_counts = get_top_countries_by_sentence_field_counts(topics_id)
 
-# get all stories according to the top country tags
-# query_with_tag = format ...[tag: id for tag in tag_country_counts]
-#tagged = topic_story_count(TOOL_API_KEY, topics_id, q=query_with_tag )
+    # get the count for all stories tagged with these top country tags
+    tag_list = [i['tags_id'] for i in tag_top_country_counts]
+    query_country_tags = " ".join(map(str, tag_list))
+    coverage = topic_tag_coverage(topics_id, query_country_tags)   # gets count and total
 
-    #coverage = topic_tag_coverage(topics_id, tag['id'])   # all stories
-    #if coverage is None:
-    #    return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-    return jsonify(country_story_counts)
+    if coverage is None:
+       return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
+    return jsonify(coverage)
 
 
 
