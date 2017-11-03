@@ -75,7 +75,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (topicId, numCountries) => {
-    dispatch(fetchCreateFocusTopCountriesCoverage(topicId, numCountries));
+    dispatch(fetchCreateFocusTopCountriesCoverage(topicId, { numCountries }));
   },
   asyncFetch: () => {
     dispatch(fetchCreateFocusTopCountriesCoverage(ownProps.topicId, ownProps.numCountries));

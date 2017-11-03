@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.util.request import api_error_handler, json_error_response, form_fields_required
+from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_tag_coverage, _cached_topic_tag_counts, cached_topic_timespan_list
@@ -13,7 +13,7 @@ from server.util.tags import GEO_TAG_SET, GEO_SAMPLE_SIZE, CLIFF_CLAVIN_2_3_0_TA
 logger = logging.getLogger(__name__)
 
 
-def get_top_countries_by_sentence_field_counts(topics_id):
+def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
     user_mc_key = user_mediacloud_key()
     tag_country_counts = []
 
@@ -30,7 +30,9 @@ def get_top_countries_by_sentence_field_counts(topics_id):
     # make sure the geo tag is in the geo_tags whitelist (is a country)
     country_tag_counts = [r for r in top_geo_tags if
                                        int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
-    # for each country, set up the requisite info for UI                                  
+
+    country_tag_counts = country_tag_counts[:num_countries]
+    # for each country, set up the requisite info for UI
     for tag in country_tag_counts:
         tag_country_counts.append({
             'label': tag['label'],
@@ -46,18 +48,20 @@ def get_top_countries_by_sentence_field_counts(topics_id):
 
 @app.route('/api/topics/<topics_id>/focal-sets/top-countries/preview/story-counts', methods=['GET'])
 @flask_login.login_required
+@arguments_required('numCountries')
 @api_error_handler
 def top_countries_story_counts(topics_id):
     #using sentence field count to approximate story mentions by top country
-    return jsonify({'story_counts': get_top_countries_by_sentence_field_counts(topics_id)})
+    num_countries = int(request.args['numCountries'])
+    return jsonify({'story_counts': get_top_countries_by_sentence_field_counts(topics_id, num_countries)})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/top-countries/preview/coverage', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def top_countries_coverage(topics_id):
-
-    tag_top_country_counts = get_top_countries_by_sentence_field_counts(topics_id)
+    num_countries = int(request.args['numCountries'])
+    tag_top_country_counts = get_top_countries_by_sentence_field_counts(topics_id, num_countries)
 
     # get the count for all stories tagged with these top country tags
     tag_list = [i['tags_id'] for i in tag_top_country_counts]

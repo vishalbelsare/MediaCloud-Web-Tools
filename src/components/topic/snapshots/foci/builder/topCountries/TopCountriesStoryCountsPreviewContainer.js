@@ -78,14 +78,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (topicId, numCountries) => {
-    dispatch(fetchCreateFocusTopCountriesStoryCounts(topicId, numCountries));
+    dispatch(fetchCreateFocusTopCountriesStoryCounts(topicId, { numCountries }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(stateProps.topicId, ownProps.numCountries);
+      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
     },
 
   });
