@@ -67,7 +67,11 @@ def source_stats(media_id):
     results['is_healthy'] = media_health['is_healthy'] if 'is_healthy' in media_health else None
     results['start_date'] = media_health['start_date'] if 'start_date' in media_health else None
     info = _media_source_details(media_id)
-    results['collections'] = len(info['media_source_tags'])
+    user_can_see_private_collections = user_has_auth_role(ROLE_MEDIA_EDIT)
+    visible_collections = [c for c in info['media_source_tags']
+                           if ((c['tag_sets_id'] in VALID_COLLECTION_TAG_SETS_IDS) and
+                               ((c['show_on_media'] == 1) or user_can_see_private_collections))]
+    results['collection_count'] = len(visible_collections)
     # geography tags
     geoRes = user_mc.sentenceFieldCount(media_query, '', field='tags_id_stories', tag_sets_id=TAG_SET_GEOCODER_VERSION, sample_size=GEO_SAMPLE_SIZE)
     ratio_geo_tagged_count = float(geoRes[0]['count']) / float(total_story_count) if len(geoRes) > 0 else 0

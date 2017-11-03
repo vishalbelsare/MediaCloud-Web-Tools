@@ -28,7 +28,9 @@ TAG_SETS_ID_COLLECTIONS = 5  # holds all the Media Cloud collections
 TAG_SET_ID_GV = 556  # holds country collections made from scraping GlobalVoices outlinks
 TAG_SET_ID_EMM = 597  # holds country collections made from scraping European Media Monitor source list
 TAG_SET_ID_PARTISAN_RETWEETS = 1959  # holds the partisan retweet quintiles
-VALID_COLLECTION_TAG_SETS_IDS = [TAG_SET_ID_EMM, TAG_SET_ID_GV, TAG_SETS_ID_COLLECTIONS, TAG_SET_ID_PARTISAN_RETWEETS];
+TAG_SET_ABYZ_GEO_COLLECTIONS = 15765102  # for geographic collections we are importing from ABYZ
+VALID_COLLECTION_TAG_SETS_IDS = [TAG_SET_ID_EMM, TAG_SET_ID_GV, TAG_SETS_ID_COLLECTIONS, TAG_SET_ID_PARTISAN_RETWEETS,
+                                 TAG_SET_ABYZ_GEO_COLLECTIONS]
 
 # Source metadata tag sets
 TAG_SETS_ID_PUBLICATION_COUNTRY = 1935  # holds the country of publication of a source
