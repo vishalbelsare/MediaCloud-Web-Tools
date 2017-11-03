@@ -11,48 +11,58 @@ import { getBrandDarkColor } from '../../../../../../styles/colors';
 const localMessages = {
   title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Story Coverage' },
   intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'By Top Stories' },
-  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories about these top countries' },
-  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'All Stories' },
+  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories about these top countries for this topic' },
+  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'All Stories about this topic' },
 };
 
-const TopCountriesCoveragePreviewContainer = (props) => {
-  const { count, total } = props;
-  const { formatMessage } = props.intl;
-  let content = null;
-  if (count !== null) {
-    content = (
-      <PieChart
-        title={formatMessage(localMessages.title)}
-        data={[
-          { name: formatMessage(localMessages.included), y: count, color: getBrandDarkColor() },
-          { name: formatMessage(localMessages.notIncluded), y: total, color: '#cccccc' },
-        ]}
-        height={250}
-        showDataLabels={false}
-      />
+class TopCountriesCoveragePreviewContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { topicId, numCountries, fetchData } = this.props;
+    if (nextProps.numCountries !== numCountries) {
+      fetchData(topicId, nextProps.numCountries);
+    }
+  }
+  render() {
+    const { count, total } = this.props;
+    const { formatMessage } = this.props.intl;
+    let content = null;
+    if (count !== null) {
+      content = (
+        <PieChart
+          title={formatMessage(localMessages.title)}
+          data={[
+            { name: formatMessage(localMessages.included), y: count, color: getBrandDarkColor() },
+            { name: formatMessage(localMessages.notIncluded), y: total, color: '#cccccc' },
+          ]}
+          height={250}
+          showDataLabels={false}
+        />
+      );
+    }
+    return (
+      <DataCard>
+        <h2>
+          <FormattedMessage {...localMessages.title} />
+        </h2>
+        <p><FormattedMessage {...localMessages.intro} /></p>
+        {content}
+      </DataCard>
     );
   }
-  return (
-    <DataCard>
-      <h2>
-        <FormattedMessage {...localMessages.title} />
-      </h2>
-      <p><FormattedMessage {...localMessages.intro} /></p>
-      {content}
-    </DataCard>
-  );
-};
+}
 
 TopCountriesCoveragePreviewContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  numCountries: PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
-  count: PropTypes.object,
-  total: PropTypes.object,
+  count: PropTypes.number,
+  total: PropTypes.number,
   fetchStatus: PropTypes.string.isRequired,
 };
 
@@ -60,11 +70,15 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.topCountriesCoverage.fetchStatus,
   count: state.topics.selected.focalSets.create.topCountriesCoverage.counts.count,
   total: state.topics.selected.focalSets.create.topCountriesCoverage.counts.total,
+  numCountries: state.form.snapshotFocus.values.numberSelected,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  fetchData: (topicId, numCountries) => {
+    dispatch(fetchCreateFocusTopCountriesCoverage(topicId, numCountries));
+  },
   asyncFetch: () => {
-    dispatch(fetchCreateFocusTopCountriesCoverage(ownProps.topicId));
+    dispatch(fetchCreateFocusTopCountriesCoverage(ownProps.topicId, ownProps.numCountries));
   },
 });
 

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { reduxForm, formValueSelector } from 'redux-form';
+import MenuItem from 'material-ui/MenuItem';
+import { reduxForm, formValueSelector, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
@@ -18,40 +19,63 @@ const localMessages = {
     defaultMessage: 'This will create a set of subtopics as filtered by the set of top countries you have selected.' },
 };
 
-const EditTopCountriesContainer = (props) => {
-  const { topicId, onPreviousStep, handleSubmit, finishStep } = props;
-  const { formatMessage } = props.intl;
-  return (
-    <Grid>
-      <form className="focus-create-edit-retweet" name="focusCreateEditRetweetForm" onSubmit={handleSubmit(finishStep.bind(this))}>
-        <Row>
-          <Col lg={8} md={12}>
-            <h1><FormattedMessage {...localMessages.title} /></h1>
-            <p><FormattedMessage {...localMessages.about} /></p>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} md={12}>
-            <TopCountriesCoveragePreviewContainer topicId={topicId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} md={12}>
-            <TopCountriesStoryCountsPreviewContainer topicId={topicId} />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={8} xs={12}>
-            <br />
-            <AppButton flat onClick={onPreviousStep} label={formatMessage(messages.previous)} />
-            &nbsp; &nbsp;
-            <AppButton type="submit" label={formatMessage(messages.next)} primary />
-          </Col>
-        </Row>
-      </form>
-    </Grid>
-  );
-};
+class EditTopCountriesContainer extends React.Component {
+  state = {
+    test: 0,
+  }
+  render() {
+    const { topicId, onPreviousStep, handleSubmit, finishStep, renderSelectField, formData } = this.props;
+    const { formatMessage } = this.props.intl;
+    let numCountries = 5;
+    if (formData && formData.values.numberSelected) {
+      numCountries = formData.values.numberSelected;
+    }
+    return (
+      <Grid>
+        <form className="focus-create-edit-retweet" name="focusCreateEditTopCountriesForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+          <Row>
+            <Col lg={8} md={12}>
+              <h1><FormattedMessage {...localMessages.title} /></h1>
+              <p><FormattedMessage {...localMessages.about} /></p>
+            </Col>
+          </Row>
+          <Row>
+            <Field
+              name="numberSelected"
+              component={renderSelectField}
+              floatingLabelText="Number of Countries"
+              value={5}
+            >
+              <MenuItem value={5} primaryText="Top 5" />
+              <MenuItem value={10} primaryText="Top 10" />
+              <MenuItem value={15} primaryText="Top 15" />
+              <MenuItem value={20} primaryText="Top 20" />
+              <MenuItem value={25} primaryText="Top 25" />
+            </Field>
+          </Row>
+          <Row>
+            <Col lg={8} md={12}>
+              <TopCountriesCoveragePreviewContainer topicId={topicId} numCountries={numCountries} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={8} md={12}>
+              <TopCountriesStoryCountsPreviewContainer topicId={topicId} numCountries={numCountries} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={8} xs={12}>
+              <br />
+              <AppButton flat onClick={onPreviousStep} label={formatMessage(messages.previous)} />
+              &nbsp; &nbsp;
+              <AppButton type="submit" label={formatMessage(messages.next)} primary />
+            </Col>
+          </Row>
+        </form>
+      </Grid>
+    );
+  }
+}
 
 EditTopCountriesContainer.propTypes = {
   // from parent
@@ -69,6 +93,7 @@ EditTopCountriesContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
