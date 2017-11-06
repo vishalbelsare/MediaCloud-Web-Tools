@@ -68,7 +68,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
-    dispatch(fetchCreateFocusNytThemeStoryCounts(ownProps.topicId, { snapshotId: 1749, timespanId: '*' }));
+    dispatch(fetchCreateFocusNytThemeStoryCounts(ownProps.topicId));
   },
 });
 

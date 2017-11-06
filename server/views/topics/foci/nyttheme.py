@@ -36,6 +36,13 @@ def nyt_theme_coverage(topics_id):
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
 
+    query_country_tags = " ".join(map(str, tag_list))
+    coverage = topic_tag_coverage(topics_id, query_country_tags)   # gets count and total
+
+    if coverage is None:
+       return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
+    return jsonify(coverage)
+
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/create', methods=['POST'])

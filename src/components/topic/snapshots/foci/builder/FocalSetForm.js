@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeIntlForm from '../../../../common/IntlForm';
-import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../../lib/focalTechniques';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
@@ -18,6 +18,8 @@ const localMessages = {
   defaultSetDescriptionRetweet: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
   defaultSetNameTopCountries: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Top Countries' },
   defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by selection of top most tagged countries .' },
+  defaultSetNameNytTheme: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Nyt Theme' },
+  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Selection driven by Nyt-theme related tags .' },
 
 };
 
@@ -36,6 +38,10 @@ class FocalSetForm extends React.Component {
         setDescription = formatMessage(localMessages.defaultSetDescriptionRetweet);
         break;
       case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+        setName = formatMessage(localMessages.defaultSetNameTopCountries);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
+        break;
+      case FOCAL_TECHNIQUE_NYT_THEME:
         setName = formatMessage(localMessages.defaultSetNameTopCountries);
         setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
         break;

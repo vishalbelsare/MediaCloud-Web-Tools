@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import EditKeywordSearchContainer from './keywordSearch/EditKeywordSearchContainer';
 import EditRetweetPartisanshipContainer from './retweetPartisanship/EditRetweetPartisanshipContainer';
 import EditTopCountriesContainer from './topCountries/EditTopCountriesContainer';
+import EditNytThemeContainer from './nyttheme/EditNytThemeContainer';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../../lib/focalTechniques';
 import messages from '../../../../../resources/messages';
 
 const formSelector = formValueSelector('snapshotFocus');
@@ -40,6 +41,14 @@ const FocusForm2ConfigureContainer = (props) => {
         onNextStep={handleNextStep}
       />);
       break;
+    case FOCAL_TECHNIQUE_NYT_THEME:
+      content = (<EditNytThemeContainer
+        topicId={topicId}
+        initialValues={initialValues}
+        onPreviousStep={handlePreviousStep}
+        onNextStep={handleNextStep}
+      />);
+      break;
     default:
       content = <FormattedMessage {...messages.unimplemented} />;
   }
@@ -63,8 +72,9 @@ FocusForm2ConfigureContainer.propTypes = {
   currentFocalTechnique: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   currentFocalTechnique: formSelector(state, 'focalTechnique'),
+  params: ownProps.params,
 });
 
 const mapDispatchToProps = dispatch => ({
