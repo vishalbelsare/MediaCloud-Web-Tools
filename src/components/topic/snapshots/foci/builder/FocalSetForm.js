@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeIntlForm from '../../../../common/IntlForm';
-import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
@@ -16,6 +16,9 @@ const localMessages = {
   defaultSetDescription: { id: 'focalSet.default.setDescription', defaultMessage: 'A set of difference conversations within this topic.' },
   defaultSetNameRetweet: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Retweet Partisanship' },
   defaultSetDescriptionRetweet: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
+  defaultSetNameTopCountries: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Top Countries' },
+  defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by selection of top most tagged countries .' },
+
 };
 
 
@@ -31,6 +34,10 @@ class FocalSetForm extends React.Component {
       case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
         setName = formatMessage(localMessages.defaultSetNameRetweet);
         setDescription = formatMessage(localMessages.defaultSetDescriptionRetweet);
+        break;
+      case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+        setName = formatMessage(localMessages.defaultSetNameTopCountries);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
         break;
       default:
         setName = formatMessage(localMessages.defaultSetName);

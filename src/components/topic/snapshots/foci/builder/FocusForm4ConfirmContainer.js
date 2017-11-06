@@ -7,7 +7,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import RetweetPartisanshipSummary from './retweetPartisanship/RetweetPartisanshipSummary';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
+import TopCountriesSummary from './topCountries/TopCountriesSummary';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
@@ -35,6 +36,11 @@ const FocusForm4ConfirmContainer = (props) => {
     case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
       content = (
         <RetweetPartisanshipSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
+      );
+      break;
+    case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+      content = (
+        <TopCountriesSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
       );
       break;
     default:

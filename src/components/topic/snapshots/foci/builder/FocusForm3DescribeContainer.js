@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../../../common/IntlForm';
 import AppButton from '../../../../common/AppButton';
 import FocusDescriptionForm, { NEW_FOCAL_SET_PLACEHOLDER_ID } from './FocusDescriptionForm';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
 import messages from '../../../../../resources/messages';
 import FocalSetForm from './FocalSetForm';
@@ -17,11 +17,13 @@ const formSelector = formValueSelector('snapshotFocus');
 const localMessages = {
   title: { id: 'focus.create.setup3.title', defaultMessage: 'Step 3: Describe Your Subtopic' },
   retweetIntro: { id: 'focus.create.setup3.retweetIntro', defaultMessage: 'This will create a set with one subtopic for each of the partisan quintiles.  For example, any story from a media source in the "center left" group will be put into the "center left" subtopic in this set.  Name thet set and we will create the 5 subtopics within it.  Give it a name that makes these subtopics easy to identify later.' },
+  topCountriesIntro: { id: 'focus.create.setup3.title', defaultMessage: 'This will create a subtopic containing the stories mentioning the top most tagged countries' },
 };
 
 const FocusForm3DescribeContainer = (props) => {
   const { topicId, handleSubmit, finishStep, goToStep, initialValues, focalSetDefinitions, formData } = props;
   const { formatMessage } = props.intl;
+  let introContent;
   // figure out a which focal set to default to
   if (focalSetDefinitions.length === 0) {
     initialValues.focalSetId = NEW_FOCAL_SET_PLACEHOLDER_ID;
@@ -41,8 +43,25 @@ const FocusForm3DescribeContainer = (props) => {
       />);
       break;
     case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
-      const introContent = (
+      introContent = (
         <p><FormattedMessage {...localMessages.retweetIntro} /></p>
+      );
+      content = (
+        <Row>
+          <Col lg={10}>
+            <FocalSetForm
+              initialValues={initialValues}
+              introContent={introContent}
+              focalTechnique={formData.focalTechnique}
+              fullWidth
+            />
+          </Col>
+        </Row>
+      );
+      break;
+    case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+      introContent = (
+        <p><FormattedMessage {...localMessages.topCountriesIntro} /></p>
       );
       content = (
         <Row>
