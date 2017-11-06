@@ -13,8 +13,8 @@ const PARTISANSHIP_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca002
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewRetweetPartisanshipCounts';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.nytTheme.storyCount.title', defaultMessage: 'Stories By Top Countries' },
-  intro: { id: 'topic.snapshot.nytTheme.storyCount.intro', defaultMessage: 'Stories about however many most-talked-about-countries' },
+  title: { id: 'topic.snapshot.nytTheme.storyCount.title', defaultMessage: 'Stories By NYT Themes' },
+  intro: { id: 'topic.snapshot.nytTheme.storyCount.intro', defaultMessage: 'Stories catalogued by NYT Themes' },
 };
 
 const NytThemeStoryCountsPreviewContainer = (props) => {
@@ -62,8 +62,8 @@ NytThemeStoryCountsPreviewContainer.propTypes = {
 
 const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
-  fetchStatus: state.topics.selected.focalSets.create.retweetStoryCounts.fetchStatus,
-  counts: state.topics.selected.focalSets.create.retweetStoryCounts.story_counts,
+  fetchStatus: state.topics.selected.focalSets.create.nytThemeStoryCounts.fetchStatus,
+  counts: state.topics.selected.focalSets.create.nytThemeStoryCounts.story_counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

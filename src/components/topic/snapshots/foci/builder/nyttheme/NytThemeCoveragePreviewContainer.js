@@ -56,8 +56,8 @@ NytThemeCoveragePreviewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.focalSets.create.retweetCoverage.fetchStatus,
-  counts: state.topics.selected.focalSets.create.retweetCoverage.counts,
+  fetchStatus: state.topics.selected.focalSets.create.nytThemeCoverage.fetchStatus,
+  counts: state.topics.selected.focalSets.create.nytThemeCoverage.counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

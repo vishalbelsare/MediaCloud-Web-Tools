@@ -23,7 +23,7 @@ def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
     overall_timespan = next(iter(overall_timespan))
     timespan_query = "timespans_id:{}".format(overall_timespan['timespans_id'])
 
-    # get the top countries by the sentence field counts
+    # get the top countries by the sentence field counts iwth overall timespan
     top_geo_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, GEO_TAG_SET, GEO_SAMPLE_SIZE, timespan_query)
     # get the total stories for a topic
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']

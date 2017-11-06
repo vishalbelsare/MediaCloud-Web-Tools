@@ -8,7 +8,7 @@ from server.util.request import api_error_handler, json_error_response, form_fie
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.util.tags import cached_tags_in_tag_set, media_with_tag, TAG_SET_GEOCODER_VERSION
-from server.views.topics.apicache import topic_tag_coverage, topic_tag_counts
+from server.views.topics.apicache import topic_tag_coverage, _cached_topic_tag_counts, cached_topic_timespan_list
 from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 from server.util.tags import NYT_LABELS_TAG_SET_ID
 import server.util.tags as tag_util
@@ -22,10 +22,20 @@ logger = logging.getLogger(__name__)
 def nyt_theme_story_counts(topics_id):
     user_mc = user_mediacloud_client()
     tag_story_counts = []
-    tag_counts = topic_tag_counts(user_mc, topics_id, tag_util.NYT_LABELS_TAG_SET_ID,
-                                  tag_util.GEO_SAMPLE_SIZE)
+    DONT_KNOW = 1000
+    timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id)
 
-    return jsonify({'story_counts': tag_story_counts})
+    overall_timespan = [t for t in timespans if t['period'] == "overall"]
+    overall_timespan = next(iter(overall_timespan))
+    timespan_query = "timespans_id:{}".format(overall_timespan['timespans_id'])
+
+     # get the top countries by the sentence field counts with overal timespan
+    top_nyt_tags = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, NYT_LABELS_TAG_SET_ID, DONT_KNOW, timespan_query)
+    # get the total stories for a topic
+    total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
+
+
+    return jsonify({'story_counts': top_nyt_tags})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/preview/coverage', methods=['GET'])
@@ -36,8 +46,7 @@ def nyt_theme_coverage(topics_id):
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
 
-    query_country_tags = " ".join(map(str, tag_list))
-    coverage = topic_tag_coverage(topics_id, query_country_tags)   # gets count and total
+    coverage = topic_tag_coverage(topics_id, NYT_LABELS_TAG_SET_ID)   # gets count and total
 
     if coverage is None:
        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
