@@ -18,8 +18,8 @@ const localMessages = {
   defaultSetDescriptionRetweet: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
   defaultSetNameTopCountries: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Top Countries' },
   defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by selection of top most tagged countries .' },
-  defaultSetNameNytTheme: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Nyt Theme' },
-  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Selection driven by Nyt-theme related tags .' },
+  defaultSetNameNytTheme: { id: 'focalSet.default.setName.nyt', defaultMessage: 'Nyt Theme' },
+  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Selection driven by Nyt-theme related tags .' },
 
 };
 
@@ -42,8 +42,8 @@ class FocalSetForm extends React.Component {
         setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
         break;
       case FOCAL_TECHNIQUE_NYT_THEME:
-        setName = formatMessage(localMessages.defaultSetNameTopCountries);
-        setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
+        setName = formatMessage(localMessages.defaultSetNameNytTheme);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionNytTheme);
         break;
       default:
         setName = formatMessage(localMessages.defaultSetName);

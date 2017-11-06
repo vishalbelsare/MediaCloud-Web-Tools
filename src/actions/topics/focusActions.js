@@ -12,7 +12,7 @@ export const FETCH_CREATE_FOCUS_KEYWORD_ATTENTION = 'FETCH_CREATE_FOCUS_KEYWORD_
 export const FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS = 'FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS';
 export const CREATE_RETWEET_FOCUS_SET = 'CREATE_RETWEET_FOCUS_SET';
 export const CREATE_TOP_COUNTRIES_FOCUS_SET = 'CREATE_TOP_COUNTRIES_FOCUS_SET';
-export const CREATE_THEME_FOCUS_SET = 'CREATE_THEME_FOCUS_SET';
+export const CREATE_NYT_THEME_FOCUS_SET = 'CREATE_NYT_THEME_FOCUS_SET';
 
 export const submitFocusUpdateOrCreate = createAsyncAction(UPDATE_OR_CREATE_FOCUS_DEFINITION, api.updateOrCreateFocusDefinition);
 
@@ -35,4 +35,4 @@ export const createRetweetFocalSet = createAsyncAction(CREATE_RETWEET_FOCUS_SET,
 
 export const createTopCountriesFocalSet = createAsyncAction(CREATE_TOP_COUNTRIES_FOCUS_SET, api.createTopCountriesFocalSet);
 
-export const createThemeFocalSet = createAsyncAction(CREATE_THEME_FOCUS_SET, api.createThemeFocalSet);
+export const createNytThemeFocalSet = createAsyncAction(CREATE_NYT_THEME_FOCUS_SET, api.createNytThemeFocalSet);
