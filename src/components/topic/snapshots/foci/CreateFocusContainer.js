@@ -5,8 +5,8 @@ import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../lib/focalTechniques';
-import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet } from '../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../lib/focalTechniques';
+import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet, createTopCountriesFocalSet } from '../../../../actions/topicActions';
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
@@ -15,6 +15,7 @@ const localMessages = {
   retweetFocusSaved: { id: 'focus.create.retweetSaved', defaultMessage: 'We created a new set of Subtopics based on our parisan retweet measure.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
   invalid: { id: 'focus.create.invalid', defaultMessage: 'Sorry - the data has an unknown subtopic technique. It failed!' },
+  topCountriesFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics by top countries.' },
 };
 
 const CreateFocusContainer = (props) => {
@@ -77,6 +78,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         return dispatch(createRetweetFocalSet(topicId, formValues))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.retweetFocusSaved);
+            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+            dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
+            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+          });
+      case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+        return dispatch(createTopCountriesFocalSet(topicId, formValues))
+          .then(() => {
+            const focusSavedMessage = ownProps.intl.formatMessage(localMessages.topCountriesFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
             dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
             dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
