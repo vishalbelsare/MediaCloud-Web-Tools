@@ -288,8 +288,9 @@ export function topicPreviewTopCountriesStoryCounts(topicId, numCountries) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/story-counts`, acceptedParams);
 }
 
-export function topicPreviewTopCountriesCoverage(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/coverage`);
+export function topicPreviewTopCountriesCoverage(topicId, numCountries) {
+  const acceptedParams = acceptParams(numCountries, ['numCountries']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/coverage`, acceptedParams);
 }
 
 export function topicPreviewNytThemeStoryCounts(topicId) {

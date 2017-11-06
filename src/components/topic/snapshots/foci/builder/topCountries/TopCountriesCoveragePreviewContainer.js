@@ -70,21 +70,26 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.topCountriesCoverage.fetchStatus,
   count: state.topics.selected.focalSets.create.topCountriesCoverage.counts.count,
   total: state.topics.selected.focalSets.create.topCountriesCoverage.counts.total,
-  numCountries: state.form.snapshotFocus.values.numberSelected,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchData: (topicId, numCountries) => {
     dispatch(fetchCreateFocusTopCountriesCoverage(topicId, { numCountries }));
   },
-  asyncFetch: () => {
-    dispatch(fetchCreateFocusTopCountriesCoverage(ownProps.topicId, ownProps.numCountries));
-  },
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
+    },
+
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         TopCountriesCoveragePreviewContainer
       )

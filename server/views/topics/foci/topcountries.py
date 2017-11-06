@@ -58,6 +58,7 @@ def top_countries_story_counts(topics_id):
 
 @app.route('/api/topics/<topics_id>/focal-sets/top-countries/preview/coverage', methods=['GET'])
 @flask_login.login_required
+@arguments_required('numCountries')
 @api_error_handler
 def top_countries_coverage(topics_id):
     num_countries = int(request.args['numCountries'])
