@@ -10,7 +10,7 @@ import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.snapshot.nytTheme.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.nytTheme.coverage.intro', defaultMessage: 'By Nyt Themes' },
+  intro: { id: 'topic.snapshot.nytTheme.coverage.intro', defaultMessage: 'By NYT Top Themes' },
   included: { id: 'topic.snapshot.nytTheme.coverage.matching', defaultMessage: 'Stories about these top themes' },
   notIncluded: { id: 'topic.snapshot.nytTheme.coverage.total', defaultMessage: 'All Stories' },
 };
@@ -71,15 +71,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (topicId, numCountries) => {
-    dispatch(fetchCreateFocusNytThemeCoverage(topicId, { numCountries }));
+  fetchData: (topicId, numThemes) => {
+    dispatch(fetchCreateFocusNytThemeCoverage(topicId, { numThemes }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
+      dispatchProps.fetchData(ownProps.topicId, ownProps.numThemes);
     },
 
   });

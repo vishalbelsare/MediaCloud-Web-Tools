@@ -14,7 +14,7 @@ import NytThemeStoryCountsPreviewContainer from './NytThemeStoryCountsPreviewCon
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Nyt Themes' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by NYT Themes' },
   about: { id: 'focus.create.edit.about',
     defaultMessage: 'This will create a set of subtopics as filtered by the NYT Themes you have selected.' },
   numberLabel: { id: 'focus.create.edit.number', defaultMessage: '# Top Themes' },
@@ -24,8 +24,8 @@ const EditNytThemeContainer = (props) => {
   const { topicId, onPreviousStep, handleSubmit, finishStep, formData, initialValues, renderSelectField } = props;
   const { formatMessage } = props.intl;
   let numThemes = initialValues.numberSelected;
-  if (formData && formData.values.numberThemes) {
-    numThemes = formData.values.numberThemes;
+  if (formData && formData.values.numberSelected) {
+    numThemes = formData.values.numberSelected;
   }
   return (
     <Grid>
@@ -38,7 +38,7 @@ const EditNytThemeContainer = (props) => {
         </Row>
         <Row>
           <Field
-            name="numberThemes"
+            name="numberSelected"
             component={renderSelectField}
             floatingLabelText={formatMessage(localMessages.numberLabel)}
             value={5}

@@ -9,7 +9,7 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchFocalSetDefinitions, submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
 import { updateFeedback } from '../../../../actions/appActions';
 
-const DEFAULT_TOP_NUM_COUNTRIES = 5;
+const DEFAULT_SELECTED_NUMBER = 5;
 
 const localMessages = {
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
@@ -28,7 +28,7 @@ class EditFocusContainer extends React.Component {
       focusDefinitionId: focusDefinition.focus_definitions_id,
       focalTechnique: focusDefinition.focalTechnique,
       keywords: focusDefinition.query,
-      numberSelected: DEFAULT_TOP_NUM_COUNTRIES,
+      numberSelected: DEFAULT_SELECTED_NUMBER,
     };
   }
 

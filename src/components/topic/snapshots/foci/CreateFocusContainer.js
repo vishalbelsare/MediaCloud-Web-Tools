@@ -10,7 +10,7 @@ import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocal
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
-const DEFAULT_TOP_NUM_COUNTRIES = 5;
+const DEFAULT_SELECTED_NUMBER = 5;
 
 const localMessages = {
   booleanFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We saved your new Subtopic.' },
@@ -24,7 +24,7 @@ const localMessages = {
 const CreateFocusContainer = (props) => {
   const { topicId, location, handleDone } = props;
   const { focalSetDefId, focalTechnique } = props.location.query;
-  const initialValues = { numberSelected: DEFAULT_TOP_NUM_COUNTRIES };
+  const initialValues = { numberSelected: DEFAULT_SELECTED_NUMBER };
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
   } else {

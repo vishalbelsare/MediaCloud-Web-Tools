@@ -24,7 +24,7 @@ const localMessages = {
   topCountriesName: { id: 'focus.technique.topCountries.name', defaultMessage: 'Top Countries' },
   topCountriesDescription: { id: 'focus.technique.topCountries.description', defaultMessage: 'Select by Top Countries' },
   themeName: { id: 'focus.technique.theme.name', defaultMessage: 'Nyt Themes' },
-  themeDescription: { id: 'focus.technique.theme.description', defaultMessage: 'Select by Nyt Themes' },
+  themeDescription: { id: 'focus.technique.theme.description', defaultMessage: 'Select by NYT Top Themes' },
   referenceName: { id: 'focus.technique.reference.name', defaultMessage: 'Upload Representative Articles' },
   referenceDescription: { id: 'focus.technique.reference.description',
     defaultMessage: 'When you have a list of stories that you think define a Subtopic, you can upload that list and we\'ll use it to identify similar articles within this Subtopic.' },
