@@ -293,12 +293,14 @@ export function topicPreviewTopCountriesCoverage(topicId, numCountries) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/coverage`, acceptedParams);
 }
 
-export function topicPreviewNytThemeStoryCounts(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/story-counts`);
+export function topicPreviewNytThemeStoryCounts(topicId, numThemes) {
+  const acceptedParams = acceptParams(numThemes, ['numThemes']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/story-counts`, acceptedParams);
 }
 
-export function topicPreviewNytThemeCoverage(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`);
+export function topicPreviewNytThemeCoverage(topicId, numThemes) {
+  const acceptedParams = acceptParams(numThemes, ['numThemes']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`, acceptedParams);
 }
 
 export function createTopCountriesFocalSet(topicId, params) {

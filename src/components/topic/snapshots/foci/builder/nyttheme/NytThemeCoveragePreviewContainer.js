@@ -15,41 +15,51 @@ const localMessages = {
   notIncluded: { id: 'topic.snapshot.nytTheme.coverage.total', defaultMessage: 'All Stories' },
 };
 
-const NytThemeCoveragePreviewContainer = (props) => {
-  const { counts } = props;
-  const { formatMessage } = props.intl;
-  let content = null;
-  if (counts !== null) {
-    content = (
-      <PieChart
-        title={formatMessage(localMessages.title)}
-        data={[
-          { name: formatMessage(localMessages.included), y: counts.count, color: getBrandDarkColor() },
-          { name: formatMessage(localMessages.notIncluded), y: counts.total - counts.count, color: '#cccccc' },
-        ]}
-        height={250}
-        showDataLabels={false}
-      />
+class NytThemeCoveragePreviewContainer extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    const { topicId, numThemes, fetchData } = this.props;
+    if (nextProps.numThemes !== numThemes) {
+      fetchData(topicId, nextProps.numThemes);
+    }
+  }
+  render() {
+    const { counts, numThemes } = this.props;
+    const { formatMessage } = this.props.intl;
+    let content = null;
+    if (counts !== null) {
+      content = (
+        <PieChart
+          title={formatMessage(localMessages.title)}
+          data={[
+            { name: formatMessage(localMessages.included), y: counts.count, color: getBrandDarkColor() },
+            { name: formatMessage(localMessages.notIncluded), y: counts.total - counts.count, color: '#cccccc' },
+          ]}
+          height={250}
+          showDataLabels={false}
+        />
+      );
+    }
+    return (
+      <DataCard>
+        <h2>
+          <FormattedMessage {...localMessages.title} numThemes={numThemes} />
+        </h2>
+        <p><FormattedMessage {...localMessages.intro} numThemes={numThemes} /></p>
+        {content}
+      </DataCard>
     );
   }
-  return (
-    <DataCard>
-      <h2>
-        <FormattedMessage {...localMessages.title} />
-      </h2>
-      <p><FormattedMessage {...localMessages.intro} /></p>
-      {content}
-    </DataCard>
-  );
-};
+}
 
 NytThemeCoveragePreviewContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  numThemes: PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
   // from state
   counts: PropTypes.object,
   fetchStatus: PropTypes.string.isRequired,
@@ -60,15 +70,23 @@ const mapStateToProps = state => ({
   counts: state.topics.selected.focalSets.create.nytThemeCoverage.counts,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
-    dispatch(fetchCreateFocusNytThemeCoverage(ownProps.topicId));
+const mapDispatchToProps = dispatch => ({
+  fetchData: (topicId, numCountries) => {
+    dispatch(fetchCreateFocusNytThemeCoverage(topicId, { numCountries }));
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
+    },
+
+  });
+}
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
         NytThemeCoveragePreviewContainer
       )
