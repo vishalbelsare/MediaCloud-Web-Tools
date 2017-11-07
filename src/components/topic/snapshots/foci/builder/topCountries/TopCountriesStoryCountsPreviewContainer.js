@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import { fetchCreateFocusTopCountriesStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
-import BubbleRowChart from '../../../../../vis/BubbleRowChart';
+import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
 
 // @see http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5
 const TOP_COUNTRIES_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
@@ -36,7 +36,7 @@ class TopCountriesStoryCountsPreviewContainer extends React.Component {
         belowText: (idx % 2 !== 0) ? info.label : null,
         rolloverText: `${info.label}: ${formatNumber(info.count)}`,
       }));
-      content = (<BubbleRowChart
+      content = (<PackedBubbleChart
         data={data}
         domId={BUBBLE_CHART_DOM_ID}
         width={700}
@@ -60,7 +60,6 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
   numCountries: PropTypes.number.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
@@ -71,7 +70,6 @@ TopCountriesStoryCountsPreviewContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  filters: state.topics.selected.filters,
   fetchStatus: state.topics.selected.focalSets.create.topCountriesStoryCounts.fetchStatus,
   counts: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
 });

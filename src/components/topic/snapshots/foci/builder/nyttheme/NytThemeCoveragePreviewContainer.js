@@ -10,8 +10,8 @@ import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.snapshot.nytTheme.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.nytTheme.coverage.intro', defaultMessage: 'By Top Stories' },
-  included: { id: 'topic.snapshot.nytTheme.coverage.matching', defaultMessage: 'Stories about these top countries' },
+  intro: { id: 'topic.snapshot.nytTheme.coverage.intro', defaultMessage: 'By Nyt Themes' },
+  included: { id: 'topic.snapshot.nytTheme.coverage.matching', defaultMessage: 'Stories about these top themes' },
   notIncluded: { id: 'topic.snapshot.nytTheme.coverage.total', defaultMessage: 'All Stories' },
 };
 
