@@ -10,7 +10,7 @@ import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
 // @see http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5
 const TOP_COUNTRIES_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
 
-const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewRetweetPartisanshipCounts';
+const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewTopCountriesStoriesCounts';
 
 const localMessages = {
   title: { id: 'topic.snapshot.topCountries.storyCount.title', defaultMessage: 'Stories By Top Countries' },
