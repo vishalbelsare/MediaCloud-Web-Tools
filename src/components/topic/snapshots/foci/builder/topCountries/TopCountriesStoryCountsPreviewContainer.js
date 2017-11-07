@@ -32,8 +32,6 @@ class TopCountriesStoryCountsPreviewContainer extends React.Component {
       const data = counts.map((info, idx) => ({
         value: info.count,
         fill: TOP_COUNTRIES_COLORS[idx],
-        aboveText: (idx % 2 === 0) ? info.label : null,
-        belowText: (idx % 2 !== 0) ? info.label : null,
         rolloverText: `${info.label}: ${formatNumber(info.count)}`,
       }));
       content = (<PackedBubbleChart

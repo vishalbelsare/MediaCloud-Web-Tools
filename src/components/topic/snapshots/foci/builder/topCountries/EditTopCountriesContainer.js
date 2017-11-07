@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import MenuItem from 'material-ui/MenuItem';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
@@ -23,9 +24,9 @@ class EditTopCountriesContainer extends React.Component {
     test: 0,
   }
   render() {
-    const { topicId, onPreviousStep, handleSubmit, finishStep, formData } = this.props;
+    const { topicId, onPreviousStep, handleSubmit, finishStep, formData, renderSelectField, initialValues } = this.props;
     const { formatMessage } = this.props.intl;
-    let numCountries = 5;
+    let numCountries = initialValues.numberSelected;
     if (formData && formData.values.numberSelected) {
       numCountries = formData.values.numberSelected;
     }
@@ -37,6 +38,20 @@ class EditTopCountriesContainer extends React.Component {
               <h1><FormattedMessage {...localMessages.title} /></h1>
               <p><FormattedMessage {...localMessages.about} /></p>
             </Col>
+          </Row>
+          <Row>
+            <Field
+              name="numberSelected"
+              component={renderSelectField}
+              floatingLabelText="Number of Countries"
+              value={5}
+            >
+              <MenuItem value={5} primaryText="Top 5" />
+              <MenuItem value={10} primaryText="Top 10" />
+              <MenuItem value={15} primaryText="Top 15" />
+              <MenuItem value={20} primaryText="Top 20" />
+              <MenuItem value={25} primaryText="Top 25" />
+            </Field>
           </Row>
           <Row>
             <Col lg={8} md={12}>

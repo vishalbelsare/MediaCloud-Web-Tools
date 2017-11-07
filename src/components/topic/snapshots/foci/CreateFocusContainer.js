@@ -10,19 +10,21 @@ import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocal
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
+const DEFAULT_TOP_NUM_COUNTRIES = 5;
+
 const localMessages = {
   booleanFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We saved your new Subtopic.' },
   retweetFocusSaved: { id: 'focus.create.retweetSaved', defaultMessage: 'We created a new set of Subtopics based on our parisan retweet measure.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
   invalid: { id: 'focus.create.invalid', defaultMessage: 'Sorry - the data has an unknown subtopic technique. It failed!' },
   topCountriesFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics by top countries.' },
-  nytFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics with NYT Theme tags.' },
+  nytFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics with NYT Themes tags.' },
 };
 
 const CreateFocusContainer = (props) => {
   const { topicId, location, handleDone } = props;
   const { focalSetDefId, focalTechnique } = props.location.query;
-  const initialValues = {};
+  const initialValues = { numberSelected: DEFAULT_TOP_NUM_COUNTRIES };
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
   } else {
