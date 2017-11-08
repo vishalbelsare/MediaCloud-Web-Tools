@@ -66,7 +66,7 @@ def nyt_theme_coverage(topics_id):
 
     nyt_top_themes = get_top_themes_by_sentence_field_counts(topics_id, num_themes)
     tag_list = [i['tags_id'] for i in nyt_top_themes]
-    query_nyt_tags = " ".join(map(str, tag_list))
+    query_nyt_tags = "({})".format(" ".join(map(str, tag_list)))
     coverage = topic_tag_coverage(topics_id, query_nyt_tags)   # gets count and total
 
     if coverage is None:
