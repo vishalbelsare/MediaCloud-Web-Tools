@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME,
-  FOCAL_TECHNIQUE_REFERENCE_SET, FOCAL_TECHNIQUE_AUTO_MAGIC }
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME }
   from '../../../../../lib/focalTechniques';
-import { assetUrl } from '../../../../../lib/assetUtil';
+// import { assetUrl } from '../../../../../lib/assetUtil';
 
 const localMessages = {
   about: { id: 'focus.techniquePicker.about',
@@ -22,9 +21,9 @@ const localMessages = {
     defaultMessage: 'When you want to slice your topic by U.S. audience partisanship, as determined by each media source\'s ratio of twitter shares by liberal vs. conservative tweeters.' },
 
   topCountriesName: { id: 'focus.technique.topCountries.name', defaultMessage: 'Top Countries' },
-  topCountriesDescription: { id: 'focus.technique.topCountries.description', defaultMessage: 'Select by Top Countries' },
-  themeName: { id: 'focus.technique.theme.name', defaultMessage: 'Nyt Themes' },
-  themeDescription: { id: 'focus.technique.theme.description', defaultMessage: 'Select by NYT Top Themes' },
+  topCountriesDescription: { id: 'focus.technique.topCountries.description', defaultMessage: 'When you want to compare coverage of different countries within your Topic.' },
+  themeName: { id: 'focus.technique.theme.name', defaultMessage: 'Top Themes' },
+  themeDescription: { id: 'focus.technique.theme.description', defaultMessage: 'When you want to compare coverage of different themes within your Topic, as labelled by our theme detector.' },
   referenceName: { id: 'focus.technique.reference.name', defaultMessage: 'Upload Representative Articles' },
   referenceDescription: { id: 'focus.technique.reference.description',
     defaultMessage: 'When you have a list of stories that you think define a Subtopic, you can upload that list and we\'ll use it to identify similar articles within this Subtopic.' },
@@ -87,6 +86,8 @@ class FocalTechniqueSelector extends React.Component {
               descriptionMsg={localMessages.themeDescription}
             />
           </Col>
+          {
+          /*
           <Col lg={2} md={2} sm={3} xs={6}>
             <FocalTechniqueDescription
               onClick={() => this.handleSelection(FOCAL_TECHNIQUE_REFERENCE_SET)}
@@ -111,6 +112,7 @@ class FocalTechniqueSelector extends React.Component {
               comingSoon
             />
           </Col>
+          */ }
           <Col lg={2} md={2} sm={0} />
           <Col lg={2} md={2} sm={12}>
             <p className="light"><i><FormattedMessage {...localMessages.about} /></i></p>

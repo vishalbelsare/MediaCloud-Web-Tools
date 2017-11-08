@@ -17,7 +17,7 @@ const localMessages = {
   title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Top Countries' },
   about: { id: 'focus.create.edit.about',
     defaultMessage: 'This will create a set of subtopics as filtered by the set of top countries you have selected.' },
-  numberLabel: { id: 'focus.create.edit.number', defaultMessage: '# Top Themes' },
+  numberLabel: { id: 'focus.create.edit.number', defaultMessage: '# Top Countries' },
 };
 
 const EditTopCountriesContainer = (props) => {
