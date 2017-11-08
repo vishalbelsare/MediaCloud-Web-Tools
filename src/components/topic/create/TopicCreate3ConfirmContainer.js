@@ -119,7 +119,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
         is_public: values.is_public ? 1 : 0,
         is_logogram: values.is_logogram ? 1 : 0,
-        twitter_topics_id: values.twitter_topics_id,
       };
       queryInfo.is_public = queryInfo.is_public ? 1 : 0;
       if ('sourcesAndCollections' in values) {

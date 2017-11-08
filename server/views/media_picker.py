@@ -95,6 +95,7 @@ def api_mediapicker_collection_search():
             pool.close()
         else:
             set_of_queried_collections = [collection_details_worker(c) for c in flat_list_of_collections]
+    set_of_queried_collections = sorted(set_of_queried_collections, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_collections})
 
 
