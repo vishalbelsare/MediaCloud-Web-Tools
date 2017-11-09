@@ -102,7 +102,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           });
       case FOCAL_TECHNIQUE_NYT_THEME:
         saveData = { ...formValues, data: queryData.topThemes.map(c => ({ tags_id: c.tags_id, label: c.label })) };
-        return dispatch(createNytThemeFocalSet(topicId, queryData.topThemes))
+        return dispatch(createNytThemeFocalSet(topicId, saveData))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.nytFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
