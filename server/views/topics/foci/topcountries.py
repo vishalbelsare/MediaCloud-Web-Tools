@@ -2,7 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app, mc
+from server import app
 from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -10,6 +10,7 @@ from server.views.topics.apicache import topic_tag_coverage, _cached_topic_tag_c
 from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3
 from server.util.tags import GEO_TAG_SET, GEO_SAMPLE_SIZE, CLIFF_CLAVIN_2_3_0_TAG_ID
+import json
 logger = logging.getLogger(__name__)
 
 
@@ -77,21 +78,27 @@ def top_countries_coverage(topics_id):
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/top-countries/create', methods=['POST'])
-@form_fields_required('focalSetName', 'focalSetDescription')
+@form_fields_required('focalSetName', 'focalSetDescription', 'data[]')
 @flask_login.login_required
 def create_top_countries_focal_set(topics_id):
     user_mc = user_mediacloud_client()
     # grab the focalSetName and focalSetDescription and then make one
     focal_set_name = request.form['focalSetName']
     focal_set_description = request.form['focalSetDescription']
-    country_data= dict(request.form['data[]'])
+    country_data= json.loads(request.form['data[]'])
     focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY # is this right?
     new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description, focal_technique)
     if 'focal_set_definitions_id' not in new_focal_set:
         return json_error_response('Unable to create the subtopic set')
     # now make the foci in it - one for each country
     for tag in country_data:
-        mc.topicFocusDefinitionCreate(tag['label'], "Stories about {}".format(tag['label']),
-            "tags_id_stories:{}".format(tag['tags_id']), new_focal_set['focal_set_definitions_id'])
+        params = {
+            'name': tag['label'],
+            'description': "Stories about {}".format(tag['label']),
+            'query': "tags_id_stories:{}".format(tag['tags_id']) ,
+            'focal_set_definitions_id' : new_focal_set['focal_set_definitions_id'],
+        }
+        user_mc = user_mediacloud_client()
+        user_mc.topicFocusDefinitionCreate(topics_id, **params)
 
     return {'success': True}
