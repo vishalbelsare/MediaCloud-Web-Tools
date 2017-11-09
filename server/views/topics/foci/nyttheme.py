@@ -10,6 +10,7 @@ from server.auth import user_mediacloud_key, user_mediacloud_client
 from server.views.topics.apicache import topic_tag_coverage, _cached_topic_tag_counts, cached_topic_timespan_list
 from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 from server.util.tags import NYT_LABELS_TAG_SET_ID
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ def nyt_theme_coverage(topics_id):
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/create', methods=['POST'])
-@form_fields_required('focalSetName', 'focalSetDescription')
+@form_fields_required('focalSetName', 'focalSetDescription', 'data[]')
 @flask_login.login_required
 def create_nyt_theme_focal_set(topics_id):
     user_mc = user_mediacloud_client()
