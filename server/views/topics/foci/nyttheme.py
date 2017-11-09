@@ -13,7 +13,7 @@ from server.util.tags import NYT_LABELS_TAG_SET_ID
 
 logger = logging.getLogger(__name__)
 
-DONT_KNOW = 1000
+DONT_KNOW = 5000
 
 def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
     user_mc_key = user_mediacloud_key()
@@ -59,7 +59,6 @@ def nyt_theme_story_counts(topics_id):
 @arguments_required('numThemes')
 @api_error_handler
 def nyt_theme_coverage(topics_id):
-    # TODO: add in overall timespan id here so it works in different snapshots
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
     num_themes = int(request.args['numThemes'])

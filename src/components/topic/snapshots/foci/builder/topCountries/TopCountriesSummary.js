@@ -1,27 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 const localMessages = {
-  intro: { id: 'focus.create.confirm.retweet.intro', defaultMessage: 'We will create 5 subtopics:' },
-  left: { id: 'focus.create.confirm.retweet.center', defaultMessage: 'Left' },
-  centerLeft: { id: 'focus.create.confirm.retweet.centerLeft', defaultMessage: 'Center Left' },
-  center: { id: 'focus.create.confirm.retweet.center', defaultMessage: 'Center' },
-  centerRight: { id: 'focus.create.confirm.retweet.centerRight', defaultMessage: 'Center Right' },
-  right: { id: 'focus.create.confirm.retweet.right', defaultMessage: 'Right' },
+  intro: { id: 'focus.create.confirm.retweet.intro', defaultMessage: 'We will create n subtopics:' },
 };
 
 const TopCountriesSummary = (props) => {
-  const { formValues } = props;
+  const { counts } = props;
   return (
     <div className="focus-create-cofirm-retweet-partisanship">
       <p><FormattedMessage {...localMessages.intro} /></p>
       <ul>
-        <li>{formValues.focalSetName}: <FormattedMessage {...localMessages.left} /></li>
-        <li>{formValues.focalSetName}: <FormattedMessage {...localMessages.centerLeft} /></li>
-        <li>{formValues.focalSetName}: <FormattedMessage {...localMessages.center} /></li>
-        <li>{formValues.focalSetName}: <FormattedMessage {...localMessages.centerRight} /></li>
-        <li>{formValues.focalSetName}: <FormattedMessage {...localMessages.right} /></li>
+        {counts.map(ctry => <li>{ctry.label}</li>
+        )}
       </ul>
     </div>
   );
@@ -31,11 +24,19 @@ TopCountriesSummary.propTypes = {
   // from parent
   topicId: PropTypes.number.isRequired,
   formValues: PropTypes.object.isRequired,
+  counts: PropTypes.object.isRequired,
   // form context
   intl: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = state => ({
+  fetchStatus: state.topics.selected.focalSets.create.topCountriesStoryCounts.fetchStatus,
+  counts: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
+});
+
 export default
   injectIntl(
-    TopCountriesSummary
+    connect(mapStateToProps)(
+      TopCountriesSummary
+    )
   );

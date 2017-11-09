@@ -2,7 +2,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, mc
 from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -41,7 +41,6 @@ def get_top_countries_by_sentence_field_counts(topics_id, num_countries):
             'count': tag['count'],
             'pct': float(tag['count']) / float(total_stories), #sentence_field_count / total story per topic count
         })
-
     return tag_country_counts
 
 
@@ -85,10 +84,14 @@ def create_top_countries_focal_set(topics_id):
     # grab the focalSetName and focalSetDescription and then make one
     focal_set_name = request.form['focalSetName']
     focal_set_description = request.form['focalSetDescription']
-    focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY
+    country_data= dict(request.form['data[]'])
+    focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY # is this right?
     new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description, focal_technique)
     if 'focal_set_definitions_id' not in new_focal_set:
         return json_error_response('Unable to create the subtopic set')
-    # now make the foci in it - one for each partisanship quintile
+    # now make the foci in it - one for each country
+    for tag in country_data:
+        mc.topicFocusDefinitionCreate(tag['label'], "Stories about {}".format(tag['label']),
+            "tags_id_stories:{}".format(tag['tags_id']), new_focal_set['focal_set_definitions_id'])
 
     return {'success': True}

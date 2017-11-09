@@ -8,7 +8,8 @@ import composeIntlForm from '../../../../common/IntlForm';
 import KeywordSearchSummary from './keywordSearch/KeywordSearchSummary';
 import RetweetPartisanshipSummary from './retweetPartisanship/RetweetPartisanshipSummary';
 import TopCountriesSummary from './topCountries/TopCountriesSummary';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES } from '../../../../../lib/focalTechniques';
+import NytThemeSummary from './nyttheme/NytThemeSummary';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../../lib/focalTechniques';
 import AppButton from '../../../../common/AppButton';
 import messages from '../../../../../resources/messages';
 import { goToCreateFocusStep } from '../../../../../actions/topicActions';
@@ -41,6 +42,11 @@ const FocusForm4ConfirmContainer = (props) => {
     case FOCAL_TECHNIQUE_TOP_COUNTRIES:
       content = (
         <TopCountriesSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
+      );
+      break;
+    case FOCAL_TECHNIQUE_NYT_THEME:
+      content = (
+        <NytThemeSummary topicId={topicId} formValues={formValues} initialValues={initialValues} />
       );
       break;
     default:

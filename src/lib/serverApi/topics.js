@@ -304,12 +304,12 @@ export function topicPreviewNytThemeCoverage(topicId, numThemes) {
 }
 
 export function createTopCountriesFocalSet(topicId, params) {
-  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data[]']);
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/create`, acceptedParams);
 }
 
 export function createNytThemeFocalSet(topicId, params) {
-  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/create`, acceptedParams);
 }
 

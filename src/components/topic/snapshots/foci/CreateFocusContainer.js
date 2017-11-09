@@ -47,6 +47,7 @@ const CreateFocusContainer = (props) => {
 
 CreateFocusContainer.propTypes = {
   // from dispatch
+  submitDone: PropTypes.func.isRequired,
   handleDone: PropTypes.func.isRequired,
   // from state
   formData: PropTypes.object,
@@ -58,10 +59,12 @@ CreateFocusContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
+  topCountries: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
+  topThemes: state.topics.selected.focalSets.create.nytThemeStoryCounts.story_counts,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleDone: (topicId, formValues) => {
+  submitDone: (topicId, formValues, queryData) => {
     switch (formValues.focalTechnique) {
       case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
         return dispatch(submitFocusUpdateOrCreate(topicId, formValues))
@@ -87,7 +90,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
       case FOCAL_TECHNIQUE_TOP_COUNTRIES:
-        return dispatch(createTopCountriesFocalSet(topicId, formValues))
+        const saveData = { ...formValues, 'data[]': queryData.topCountries.map(c => `{"tags_id":${c.tags_id},"label":${c.label}}`) };
+
+        return dispatch(createTopCountriesFocalSet(topicId, saveData))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.topCountriesFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
@@ -96,7 +101,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
       case FOCAL_TECHNIQUE_NYT_THEME:
-        return dispatch(createNytThemeFocalSet(topicId, formValues))
+        return dispatch(createNytThemeFocalSet(topicId, formValues, queryData.topThemes))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.nytFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
@@ -110,9 +115,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleDone: (topicId, formValues) => {
+      dispatchProps.submitDone(topicId, formValues, stateProps);
+    },
+  });
+}
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       CreateFocusContainer
     )
   );
