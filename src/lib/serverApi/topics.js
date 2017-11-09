@@ -311,6 +311,7 @@ export function createTopCountriesFocalSet(topicId, params) {
 
 export function createNytThemeFocalSet(topicId, params) {
   const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
+  acceptedParams['data[]'] = JSON.stringify(acceptedParams.data);
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/create`, acceptedParams);
 }
 

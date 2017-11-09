@@ -79,13 +79,24 @@ def nyt_theme_coverage(topics_id):
 @flask_login.login_required
 def create_nyt_theme_focal_set(topics_id):
     user_mc = user_mediacloud_client()
+
     # grab the focalSetName and focalSetDescription and then make one
     focal_set_name = request.form['focalSetName']
     focal_set_description = request.form['focalSetDescription']
-    focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY
+    theme_data= json.loads(request.form['data[]'])
+    focal_technique = FOCAL_TECHNIQUE_BOOLEAN_QUERY # is this right?
     new_focal_set = user_mc.topicFocalSetDefinitionCreate(topics_id, focal_set_name, focal_set_description, focal_technique)
     if 'focal_set_definitions_id' not in new_focal_set:
         return json_error_response('Unable to create the subtopic set')
-    # now make the foci in it - one for each partisanship quintile
+    # now make the foci in it - one for each country
+    for tag in theme_data:
+        params = {
+            'name': tag['label'],
+            'description': "Stories about {}".format(tag['label']),
+            'query': "tags_id_stories:{}".format(tag['tags_id']) ,
+            'focal_set_definitions_id' : new_focal_set['focal_set_definitions_id'],
+        }
+        user_mc = user_mediacloud_client()
+        user_mc.topicFocusDefinitionCreate(topics_id, **params)
 
     return {'success': True}

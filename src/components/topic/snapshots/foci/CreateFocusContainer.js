@@ -65,6 +65,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   submitDone: (topicId, formValues, queryData) => {
+    let saveData = null;
     switch (formValues.focalTechnique) {
       case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
         return dispatch(submitFocusUpdateOrCreate(topicId, formValues))
@@ -90,7 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
       case FOCAL_TECHNIQUE_TOP_COUNTRIES:
-        const saveData = { ...formValues, data: queryData.topCountries.map(c => ({ tags_id: c.tags_id, label: c.label })) };
+        saveData = { ...formValues, data: queryData.topCountries.map(c => ({ tags_id: c.tags_id, label: c.label })) };
         return dispatch(createTopCountriesFocalSet(topicId, saveData))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.topCountriesFocusSaved);
@@ -100,6 +101,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
       case FOCAL_TECHNIQUE_NYT_THEME:
+        saveData = { ...formValues, data: queryData.topThemes.map(c => ({ tags_id: c.tags_id, label: c.label })) };
         return dispatch(createNytThemeFocalSet(topicId, formValues, queryData.topThemes))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.nytFocusSaved);
