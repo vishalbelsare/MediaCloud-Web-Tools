@@ -36,13 +36,13 @@ class FocusSelector extends React.Component {
       return 0;
     });
     let detailsContent;
-    if (selectedId !== REMOVE_FOCUS) {
+    /* if ((selectedId) && (selectedId !== REMOVE_FOCUS)) {
       detailsContent = (
         <div className="selected-focus-details">
           details
         </div>
       );
-    }
+    }*/
     // default to none
     return (
       <div className="focus-selector-wrapper">
