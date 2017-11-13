@@ -6,9 +6,7 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import { fetchCreateFocusTopCountriesStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
-
-// @see http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5
-const TOP_COUNTRIES_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
+import mapD3Top10Colors from '../../../../../../lib/colorUtil';
 
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewTopCountriesStoriesCounts';
 
@@ -31,7 +29,7 @@ class TopCountriesStoryCountsPreviewContainer extends React.Component {
     if (counts !== null) {
       const data = counts.map((info, idx) => ({
         value: info.count,
-        fill: TOP_COUNTRIES_COLORS[idx],
+        fill: mapD3Top10Colors(idx),
         rolloverText: `${info.label}: ${formatNumber(info.count)}`,
       }));
       content = (<PackedBubbleChart

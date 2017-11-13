@@ -6,8 +6,8 @@ import composeAsyncContainer from '../../../../../common/AsyncContainer';
 import { fetchCreateFocusNytThemeStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
+import mapD3Top10Colors from '../../../../../../lib/colorUtil';
 
-const NYT_COLORS = ['#0571b0', '#92c5de', '#666666', '#f4a582', '#ca0020'];
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewNytThemesCounts';
 
 const localMessages = {
@@ -29,7 +29,7 @@ class NytThemeStoryCountsPreviewContainer extends React.Component {
     if (counts !== null) {
       const data = counts.map((info, idx) => ({
         value: info.count,
-        fill: NYT_COLORS[idx],
+        fill: mapD3Top10Colors(idx),
         rolloverText: `${info.label}: ${formatNumber(info.pct, { style: 'percent', maximumFractionDigits: 2 })}`,
       }));
       content = (<PackedBubbleChart
