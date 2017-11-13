@@ -7,6 +7,7 @@ import { fetchSourceStats } from '../../../actions/sourceActions';
 import StatBar from '../../common/statbar/StatBar';
 import HealthBadge from '../HealthBadge';
 import messages from '../../../resources/messages';
+import { healthStartDateToMoment } from '../../../lib/dateUtil';
 
 const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
@@ -24,13 +25,19 @@ const SourceStatInfo = (props) => {
   if ((sourceId === null) || (sourceId === undefined)) {
     return null;
   }
-  const startDate = (sourceInfo.start_date) ? formatDate(sourceInfo.start_date) : formatMessage(messages.unknown);
+  let formattedDateStr;
+  if (sourceInfo.start_date) {
+    const startDate = healthStartDateToMoment(sourceInfo.start_date);
+    formattedDateStr = formatDate(startDate, { month: 'numeric', year: 'numeric' });
+  } else {
+    formattedDateStr = formatMessage(messages.unknown);
+  }
   return (
     <StatBar
       columnWidth={2}
       stats={[
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
-        { message: localMessages.coveredSince, data: startDate },
+        { message: localMessages.coveredSince, data: formattedDateStr },
         { message: localMessages.health, data: <HealthBadge isHealthy={sourceInfo.is_healthy} /> },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collection_count) },
         { message: localMessages.geoPct,

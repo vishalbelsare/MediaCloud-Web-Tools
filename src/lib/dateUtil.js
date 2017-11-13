@@ -6,9 +6,7 @@ const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
-const STORY_PUBLISH_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-
-const SOURCE_SUGGESTION_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+const DB_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const JOB_STATUS_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -55,9 +53,12 @@ export function jobStatusDateToMoment(statusDate, strict = true) {
   return moment(statusDate, JOB_STATUS_DATE_FORMAT, strict);
 }
 
+export function healthStartDateToMoment(healthStartDate, strict = true) {
+  return moment(healthStartDate.substring(0, DB_DATE_FORMAT.length), DB_DATE_FORMAT, strict);
+}
+
 export function sourceSuggestionDateToMoment(suggestionDate, strict = true) {
-  return moment(suggestionDate.substring(0, SOURCE_SUGGESTION_DATE_FORMAT.length),
-    SOURCE_SUGGESTION_DATE_FORMAT, strict);
+  return moment(suggestionDate.substring(0, DB_DATE_FORMAT.length), DB_DATE_FORMAT, strict);
 }
 
 function solrDateToMoment(solrDateString, strict = true) {
@@ -65,7 +66,7 @@ function solrDateToMoment(solrDateString, strict = true) {
 }
 
 export function storyPubDateToMoment(solrDateString, strict = true) {
-  return moment(solrDateString, STORY_PUBLISH_DATE_FORMAT, strict);
+  return moment(solrDateString, DB_DATE_FORMAT, strict);
 }
 
 export function storyPubDateToTimestamp(solrDateString, strict = true) {
