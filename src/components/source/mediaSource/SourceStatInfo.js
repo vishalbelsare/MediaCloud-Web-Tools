@@ -42,7 +42,7 @@ const SourceStatInfo = (props) => {
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
         { message: localMessages.coveredSince, data: startDate },
         { message: localMessages.health, data: isHealthyContent },
-        { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
+        { message: localMessages.collections, data: formatNumber(sourceInfo.collection_count) },
         { message: localMessages.geoPct,
           data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }),
           helpTitleMsg: messages.geoHelpTitle,

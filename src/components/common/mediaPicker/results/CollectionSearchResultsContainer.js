@@ -3,9 +3,11 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../../actions/systemActions';
-import SearchResultsTable from './SearchResultsTable';
+import CollectionResultsTable from './CollectionResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
+import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
+import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
@@ -20,21 +22,17 @@ class CollectionSearchRresultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia } = this.props;
+    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
-    let whichMedia = [];
     let content = null;
-    whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
-    whichMedia.fetchStatus = null;
-    whichMedia.type = 'collections';
-    if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
-      whichMedia = collectionResults.list; // since this is the default, check keyword, otherwise it'll be empty
-      whichMedia.storedKeyword = collectionResults.args;
-      whichMedia.fetchStatus = collectionResults.fetchStatus;
+    if (fetchStatus === FETCH_ONGOING) {
+      // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
+      content = <LoadingSpinner />;
+    } else if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
       content = (
-        <SearchResultsTable
-          title={formatMessage(localMessages.title, { name: whichMedia.storedKeyword.mediaKeyword })}
-          whichMedia={whichMedia}
+        <CollectionResultsTable
+          title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
+          collections={collectionResults.list}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
@@ -44,7 +42,7 @@ class CollectionSearchRresultsContainer extends React.Component {
     return (
       <div>
         <MediaPickerSearchForm
-          initValues={whichMedia}
+          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
           onSearch={val => this.updateMediaQuery(val)}
           hintText={formatMessage(localMessages.hintText)}
         />
@@ -62,6 +60,7 @@ CollectionSearchRresultsContainer.propTypes = {
   selectedMediaQueryType: PropTypes.number,
   featured: PropTypes.object,
   collectionResults: PropTypes.object,
+  fetchStatus: PropTypes.string,
 };
 
 const mapStateToProps = state => ({

@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerSources } from '../../../../actions/systemActions';
-import * as fetchConstants from '../../../../lib/fetchConstants';
-import SearchResultsTable from './SearchResultsTable';
+import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
+import SourceResultsTable from './SourceResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import LoadingSpinner from '../../LoadingSpinner';
 
@@ -24,23 +24,14 @@ class SourceSearchResultsContainer extends React.Component {
   render() {
     const { fetchStatus, selectedMediaQueryKeyword, sourceResults, handleToggleAndSelectMedia } = this.props;
     const { formatMessage } = this.props.intl;
-    let whichMedia = [];
-    whichMedia.storedKeyword = { mediaKeyword: selectedMediaQueryKeyword };
-    whichMedia.fetchStatus = null;
     let content = null;
-    if (selectedMediaQueryKeyword === null || selectedMediaQueryKeyword === undefined) {
-      content = 'no results';
-    } else if (fetchStatus !== fetchConstants.FETCH_SUCCEEDED) {
+    if (fetchStatus === FETCH_ONGOING) {
       content = <LoadingSpinner />;
     } else if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
-      whichMedia = sourceResults.list;
-      whichMedia.storedKeyword = sourceResults.args;
-      whichMedia.fetchStatus = sourceResults.fetchStatus;
-      whichMedia.type = 'sources';
       content = (
-        <SearchResultsTable
-          title={formatMessage(localMessages.title, { name: whichMedia.storedKeyword.mediaKeyword })}
-          whichMedia={whichMedia}
+        <SourceResultsTable
+          title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
+          sources={sourceResults.list}
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
@@ -49,7 +40,7 @@ class SourceSearchResultsContainer extends React.Component {
     return (
       <div>
         <MediaPickerSearchForm
-          initValues={whichMedia}
+          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
           onSearch={val => this.updateMediaQuery(val)}
           hintText={formatMessage(localMessages.hintText)}
         />
@@ -70,7 +61,7 @@ SourceSearchResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.sourceQueryResults.fetchStatus === fetchConstants.FETCH_SUCCEEDED ? fetchConstants.FETCH_SUCCEEDED : fetchConstants.FETCH_INVALID,
+  fetchStatus: state.system.mediaPicker.sourceQueryResults.fetchStatus,
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
