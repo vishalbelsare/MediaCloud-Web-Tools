@@ -8,10 +8,8 @@ import DataCard from '../../common/DataCard';
 // import EntityTable from '../../EntityTable';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'By Top Stories' },
-  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories about these top countries for this topic' },
-  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'All Stories about this topic' },
+  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Entity Coverage' },
+  intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'By Top People' },
 };
 
 class TopPeopleContainer extends React.Component {
@@ -56,7 +54,7 @@ TopPeopleContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.focalSets.create.topCountriesCoverage.fetchStatus,
+  fetchStatus: state.topics.selected.summary.topEntitiesPeople.fetchStatus,
   count: state.topics.selected.summary.topEntitiesPeople.counts.count,
   total: state.topics.selected.summary.topEntitiesPeople.counts.total,
 });

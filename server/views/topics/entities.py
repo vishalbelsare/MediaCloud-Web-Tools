@@ -25,8 +25,7 @@ def topTagsInSet(topics_id, tag_sets_id, sample_size):
     top_tag_counts = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, tag_sets_id, sample_size,
                                               timespan_query)
 
-    descriptor_tag_counts = [t for t in top_tag_counts if "Top/" not in t['tag']]
-    return descriptor_tag_counts
+    return top_tag_counts
 
 @app.route('/api/topics/<topics_id>/entities/people', methods=['GET'])
 @flask_login.login_required
