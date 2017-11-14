@@ -25,14 +25,13 @@ def topTagsInSet(topics_id, tag_sets_id, sample_size):
     top_tag_counts = _cached_topic_tag_counts(user_mediacloud_key(), topics_id, tag_sets_id, sample_size,
                                               timespan_query)
 
-    # remove the old labels from my first pass at using Taxonomic classifiers
     descriptor_tag_counts = [t for t in top_tag_counts if "Top/" not in t['tag']]
     return descriptor_tag_counts
 
 @app.route('/api/topics/<topics_id>/entities/people', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def topicsPeople(topics_id):
+def topicsEntitiesPeople(topics_id):
 
     top_tag_counts = topTagsInSet(topics_id, CLIFF_PEOPLE, DEFAULT_SAMPLE_SIZE)
     tag_list = [i['tags_id'] for i in top_tag_counts]
@@ -46,6 +45,6 @@ def topicsPeople(topics_id):
 @app.route('/api/topics/<topics_id>/entities/organizations', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def topicsOrganizations(topics_id):
+def topicsEntitiesOrganizations(topics_id):
     return topTagsInSet(topics_id, CLIFF_ORGS, DEFAULT_SAMPLE_SIZE)
 

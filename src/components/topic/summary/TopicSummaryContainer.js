@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
+import TopPeopleContainer from './TopPeopleContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
@@ -53,6 +54,11 @@ class TopicSummaryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               {intro}
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              <TopPeopleContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row>
