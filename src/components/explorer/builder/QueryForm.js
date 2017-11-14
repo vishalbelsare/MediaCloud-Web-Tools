@@ -31,8 +31,7 @@ const localMessages = {
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
   startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Searching for data more than a year old may yield unreliable results.' },
-  invalidStartDateWarning: { id: 'explorer.queryBuilder.warning.invalidStartDate', defaultMessage: 'Invalid Start Date Format' },
-  invalidEndDateWarning: { id: 'explorer.queryBuilder.warning.invalidEndDate', defaultMessage: 'Invalid End Date Format' },
+  invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
 };
 
 const focusQueryInputField = (input) => {
@@ -54,7 +53,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, errors, /* handleLoadSearch, handleSaveSearch, */
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -152,6 +151,7 @@ class QueryForm extends React.Component {
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
+                  {errors && <div className="error">{errors}</div>}
                 </div>
               </Col>
             </Row>
@@ -212,7 +212,7 @@ QueryForm.propTypes = {
   renderSelectField: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
   fields: PropTypes.object,
-  meta: PropTypes.object,
+  errors: PropTypes.object,
   handleLoadSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
   onMediaDelete: PropTypes.func.isRequired,
@@ -237,10 +237,10 @@ function validate(values, props) {
     errors.collections = { _error: 'At least one collection must be chosen' };
   }
   if (!validDate(values.startDate)) {
-    errors.startDate = { _error: formatMessage(localMessages.invalidStartDateWarning) };
+    errors.startDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
   if (!validDate(values.endDate)) {
-    errors.endDate = { _error: formatMessage(localMessages.invalidEndDateWarning) };
+    errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
   if (validDate(values.startDate) && isMoreThanAYearInPast(values.startDate)) {
     errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
