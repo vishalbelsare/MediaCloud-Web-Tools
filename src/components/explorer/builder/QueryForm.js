@@ -53,7 +53,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, errors, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -151,7 +151,6 @@ class QueryForm extends React.Component {
                     disabled={!isEditable}
                     onChange={onDateChange}
                   />
-                  {errors && <div className="error">{errors}</div>}
                 </div>
               </Col>
             </Row>
@@ -211,8 +210,7 @@ QueryForm.propTypes = {
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
-  fields: PropTypes.object,
-  errors: PropTypes.object,
+
   handleLoadSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
   onMediaDelete: PropTypes.func.isRequired,
