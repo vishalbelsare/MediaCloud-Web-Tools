@@ -22,6 +22,8 @@ TAG_SET_NYT_LABELS_VERSION = 1964
 CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691  # the tag that indicates a story was tagged by the CLIFF version 2.3.0
 GEO_TAG_SET = 1011  # the tag set all the geo tags are in
 GEO_SAMPLE_SIZE = 10000  # the sample size to use for looking at geo tags
+CLIFF_ORGS =  2388
+CLIFF_PEOPLE = 2389
 
 # Source collection tags sets
 TAG_SETS_ID_COLLECTIONS = 5  # holds all the Media Cloud collections

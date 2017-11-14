@@ -318,3 +318,14 @@ export function createNytThemeFocalSet(topicId, params) {
 export function topicWord2Vec(topicId) {
   return createApiPromise(`/api/topics/${topicId}/word2vec`);
 }
+
+export function topicTopEntitiesPeople(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/entities/people`, acceptedParams);
+}
+
+export function topicTopEntitiesOrganizations(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
+}
+
