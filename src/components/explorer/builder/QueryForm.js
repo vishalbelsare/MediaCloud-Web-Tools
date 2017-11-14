@@ -9,9 +9,10 @@ import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
-import { emptyString } from '../../../lib/formValidators';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+import { emptyString, validDate } from '../../../lib/formValidators';
+import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -29,6 +30,9 @@ const localMessages = {
   loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Searching for data more than a year old may yield unreliable results.' },
+  invalidStartDateWarning: { id: 'explorer.queryBuilder.warning.invalidStartDate', defaultMessage: 'Invalid Start Date Format' },
+  invalidEndDateWarning: { id: 'explorer.queryBuilder.warning.invalidEndDate', defaultMessage: 'Invalid End Date Format' },
 };
 
 const focusQueryInputField = (input) => {
@@ -50,7 +54,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -135,6 +139,7 @@ class QueryForm extends React.Component {
                     component={renderTextField}
                     underlineShow={false}
                     disabled={!isEditable}
+                    onChange={onDateChange}
                   />
                   <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
                   <Field
@@ -145,6 +150,7 @@ class QueryForm extends React.Component {
                     component={renderTextField}
                     underlineShow={false}
                     disabled={!isEditable}
+                    onChange={onDateChange}
                   />
                 </div>
               </Col>
@@ -210,6 +216,7 @@ QueryForm.propTypes = {
   handleLoadSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
   onMediaDelete: PropTypes.func.isRequired,
+  onDateChange: PropTypes.func.isRequired,
   // from form healper
   updateQuery: PropTypes.func,
   handleSubmit: PropTypes.func,
@@ -228,6 +235,15 @@ function validate(values, props) {
   }
   if (!values.collections || !values.collections.length) {
     errors.collections = { _error: 'At least one collection must be chosen' };
+  }
+  if (!validDate(values.startDate)) {
+    errors.startDate = { _error: formatMessage(localMessages.invalidStartDateWarning) };
+  }
+  if (!validDate(values.endDate)) {
+    errors.endDate = { _error: formatMessage(localMessages.invalidEndDateWarning) };
+  }
+  if (validDate(values.startDate) && isMoreThanAYearInPast(values.startDate)) {
+    errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
   return errors;
 }
