@@ -27,11 +27,11 @@ class TopPeopleContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { count, entities } = this.props;
+    const { topicId, count, entities } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     if (count !== null) {
-      content = <EntitiesTable entities={entities} />;
+      content = <EntitiesTable entities={entities} topicId={topicId} />;
     }
     return (
       <DataCard>
@@ -81,7 +81,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     asyncFetch: () => {
       dispatchProps.fetchData(ownProps.topicId);
     },
-
   });
 }
 
