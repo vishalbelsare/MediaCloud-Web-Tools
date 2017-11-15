@@ -25,10 +25,7 @@ PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
 def story(topics_id, stories_id):
 
     local_mc = None
-    if access_public_topic(topics_id):
-        local_mc = mc
-        story_topic_info = topic_story_list(TOOL_API_KEY, topics_id, stories_id=stories_id)['stories'][0]
-    elif is_user_logged_in():
+    if is_user_logged_in():
         local_mc = user_mediacloud_client()
         story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
         '''
@@ -72,7 +69,6 @@ def story(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def topic_story_update(stories_id):
-    idInt = int(stories_id)
     user_mc = user_admin_mediacloud_client()
     optional_args = {
         'title': request.form['title'] if 'title' in request.form else None,
@@ -84,7 +80,7 @@ def topic_story_update(stories_id):
         'confirm_date': request.form['confirm_date'] if 'confirm_date' in request.form else False,
         'undateable': request.form['undateable'] if 'undateable' in request.form else False,
     }
-    stories = user_mc.storyUpdate(idInt, **optional_args)
+    stories = user_mc.storyUpdate(stories_id, **optional_args)
 
     return jsonify(stories)
 
