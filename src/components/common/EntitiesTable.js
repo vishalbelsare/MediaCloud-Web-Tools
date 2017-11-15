@@ -6,16 +6,17 @@ import messages from '../../resources/messages';
 
 const EntitiesTable = (props) => {
   const { entities } = props;
+  const { formatNumber } = props.intl;
   const content = null;
   if (entities === undefined) {
     return (
-      <div>
+      <div className="entity-table">
         { content }
       </div>
     );
   }
   return (
-    <div className="source-table">
+    <div className="entity-table">
       <table width="100%">
         <tbody>
           <tr>
@@ -27,8 +28,8 @@ const EntitiesTable = (props) => {
               <td>
                 <Link to={`/sources/${entity.tags_id}`}>{entity.label}</Link>
               </td>
-              <td>
-                <p>{entity.pct}</p>
+              <td className="numeric">
+                { formatNumber(entity.pct, { style: 'percent', maximumFractionDigits: 2 }) }
               </td>
             </tr>
             )

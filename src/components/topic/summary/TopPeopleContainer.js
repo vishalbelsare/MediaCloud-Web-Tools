@@ -6,32 +6,41 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchTopicEntitiesPeople } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import EntitiesTable from '../../common/EntitiesTable';
+import { filtersAsUrlParams } from '../../util/location';
+import { DownloadButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top Trending People' },
-  intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'Mentions by percentage' },
+  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top People' },
 };
 
 class TopPeopleContainer extends React.Component {
-  componentWillReceiveProps() { // nextprops
-    // const { topicId, numCountries, fetchData } = this.props;
-    /* if (nextProps.numCountries !== numCountries) {
-      fetchData(topicId, nextProps.numCountries);
-    } */
+  componentWillReceiveProps(nextProps) {
+    const { filters, fetchData } = this.props;
+    if (nextProps.filters !== filters) {
+      fetchData(nextProps);
+    }
+  }
+  downloadCsv = () => {
+    const { topicId, filters } = this.props;
+    const url = `/api/topics/${topicId}/entities/people/entities.csv?${filtersAsUrlParams(filters)}`;
+    window.location = url;
   }
   render() {
     const { count, entities } = this.props;
-    // const { formatMessage } = this.props.intl;
+    const { formatMessage } = this.props.intl;
     let content = null;
     if (count !== null) {
       content = <EntitiesTable entities={entities} />;
     }
     return (
       <DataCard>
+        <div className="actions">
+          <DownloadButton tooltip={formatMessage(messages.download)} onClick={this.downloadCsv} />
+        </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
         </h2>
-        <p><FormattedMessage {...localMessages.intro} /></p>
         {content}
       </DataCard>
     );
@@ -43,6 +52,7 @@ TopPeopleContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
