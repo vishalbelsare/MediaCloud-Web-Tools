@@ -3,16 +3,16 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicEntitiesPeople } from '../../../actions/topicActions';
+import { fetchTopicEntitiesOrgs } from '../../../actions/topicActions';
 import DataCard from '../../common/DataCard';
 import EntitiesTable from '../../common/EntitiesTable';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top Trending People' },
+  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top Trending Organizations' },
   intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'Mentions by percentage' },
 };
 
-class TopPeopleContainer extends React.Component {
+class TopOrgsContainer extends React.Component {
   componentWillReceiveProps() { // nextprops
     // const { topicId, numCountries, fetchData } = this.props;
     /* if (nextProps.numCountries !== numCountries) {
@@ -38,7 +38,7 @@ class TopPeopleContainer extends React.Component {
   }
 }
 
-TopPeopleContainer.propTypes = {
+TopOrgsContainer.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   // from parent
@@ -54,15 +54,15 @@ TopPeopleContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.topEntitiesPeople.fetchStatus,
-  count: state.topics.selected.summary.topEntitiesPeople.counts.count,
-  total: state.topics.selected.summary.topEntitiesPeople.counts.total,
-  entities: state.topics.selected.summary.topEntitiesPeople.entities,
+  fetchStatus: state.topics.selected.summary.topEntitiesOrgs.fetchStatus,
+  count: state.topics.selected.summary.topEntitiesOrgs.counts.count,
+  total: state.topics.selected.summary.topEntitiesOrgs.counts.total,
+  entities: state.topics.selected.summary.topEntitiesOrgs.entities,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchData: (topicId) => {
-    dispatch(fetchTopicEntitiesPeople(topicId));
+    dispatch(fetchTopicEntitiesOrgs(topicId));
   },
 });
 
@@ -79,7 +79,7 @@ export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        TopPeopleContainer
+        TopOrgsContainer
       )
     )
   );

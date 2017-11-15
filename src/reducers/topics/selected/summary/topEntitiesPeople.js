@@ -5,6 +5,7 @@ const topPeopleCoverage = createAsyncReducer({
   initialState: {
     total: null,
     counts: [],
+    entities: [],
   },
   action: FETCH_TOP_ENTITIES_PEOPLE_COVERAGE,
 });

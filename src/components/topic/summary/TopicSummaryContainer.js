@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
 import TopPeopleContainer from './TopPeopleContainer';
+import TopOrgsContainer from './TopOrgsContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
@@ -57,8 +58,11 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col lg={6}>
               <TopPeopleContainer topicId={topicId} filters={filters} />
+            </Col>
+            <Col lg={6}>
+              <TopOrgsContainer topicId={topicId} filters={filters} />
             </Col>
           </Row>
           <Row>
