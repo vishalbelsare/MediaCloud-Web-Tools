@@ -21,7 +21,7 @@ const EntitiesTable = (props) => {
         <tbody>
           <tr>
             <th><FormattedMessage {...messages.entityName} /></th>
-            <th><FormattedMessage {...messages.entityPercentage} /></th>
+            <th className="numeric"><FormattedMessage {...messages.entityPercentage} /></th>
           </tr>
           {entities.map((entity, idx) =>
             (<tr key={entity.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
