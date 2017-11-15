@@ -257,6 +257,7 @@ class QueryPicker extends React.Component {
             onColorChange={this.handleColorChange}
             onMediaChange={this.handleMediaChange}
             onMediaDelete={this.handleMediaDelete}
+            onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
             handleLoadSearch={loadUserSearch}
             handleSaveSearch={q => saveUserSearch(q)}
             isEditable={canSelectMedia}
