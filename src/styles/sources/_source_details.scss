@@ -4,21 +4,14 @@
 
   background-color: #ff0000;
 
-	input:focus {
-		background-color: $material-orange500 !important;
-	}
+  input:focus {
+    background-color: $material-orange500 !important;
+  }
 
   &:focus {
     background-color: #fff000;
   }
 
-}
-
-.source-stat-health-gap {
-	color: $warning-color;
-	font-weight: bold;
-	font-size: 20px;
-	line-height: 32px;
 }
 
 .search-section {
