@@ -11,7 +11,7 @@ import server.util.csv as csv
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SAMPLE_SIZE= 5000
+DEFAULT_SAMPLE_SIZE= 1000
 DEFAULT_DISPLAY_AMOUNT= 10
 
 ENTITY_DOWNLOAD_COLUMNS = ['label', 'count', 'pct', 'sample_size','tags_id']
