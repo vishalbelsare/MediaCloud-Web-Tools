@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import LinkWithFilters from '../topic/LinkWithFilters';
 import messages from '../../resources/messages';
 
 const EntitiesTable = (props) => {
-  const { topicId, entities } = props;
+  const { entities, onClick } = props;
   const { formatNumber } = props.intl;
   const content = null;
   if (entities === undefined) {
@@ -26,9 +25,13 @@ const EntitiesTable = (props) => {
           {entities.map((entity, idx) =>
             (<tr key={entity.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
               <td>
-                <LinkWithFilters to={`/topics/${topicId}/summary?q=${encodeURIComponent(entity.label)}`} >
-                  {entity.label}
-                </LinkWithFilters>
+                <a
+                  tabIndex="0"
+                  role="button"
+                  onClick={() => onClick(entity.tags_id)}
+                  onKeyPress={evt => evt.preventDefault()}
+                >{entity.label}
+                </a>
               </td>
               <td className="numeric">
                 { formatNumber(entity.pct, { style: 'percent', maximumFractionDigits: 2 }) }
@@ -44,8 +47,8 @@ const EntitiesTable = (props) => {
 
 EntitiesTable.propTypes = {
   entities: PropTypes.array,
-  topicId: PropTypes.string,
   intl: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default injectIntl(EntitiesTable);

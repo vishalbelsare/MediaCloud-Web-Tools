@@ -59,10 +59,10 @@ class TopicSummaryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6}>
-              <TopPeopleContainer topicId={topicId} filters={filters} />
+              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
             </Col>
             <Col lg={6}>
-              <TopOrgsContainer topicId={topicId} filters={filters} />
+              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
             </Col>
           </Row>
           <Row>
