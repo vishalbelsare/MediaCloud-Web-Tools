@@ -50,6 +50,16 @@ export function fetchQueryTopWordsComparison(queryA, queryB) {
   return createApiPromise('/api/explorer/words/compare/count', acceptedParams);
 }
 
+export function fetchDemoQueryTopEntitiesPeople(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/entities/people', acceptedParams);
+}
+
+export function fetchDemoQueryTopEntitiesOrgs(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/entities/organizations', acceptedParams);
+}
+
 // the following 12 functions depend on having a corresponding index to properly route the results to the right query
 export function fetchDemoQuerySentenceCounts(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
@@ -81,6 +91,16 @@ export function demoQueryCollectionsByIds(params) {
   const acceptedParams = acceptParams(params, ['index', 'collections']);
   acceptedParams['collections[]'] = params.collections;
   return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
+}
+
+export function fetchQueryTopEntitiesPeople(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/entities/people', acceptedParams);
+}
+
+export function fetchQueryTopEntitiesOrgs(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/entities/organizations', acceptedParams);
 }
 
 export function fetchQuerySentenceCounts(params) {
