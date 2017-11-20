@@ -12,3 +12,4 @@ export * from './topics/storyActions.js';
 export * from './topics/topicActions.js';
 export * from './topics/createActions.js';
 export * from './topics/wordActions.js';
+export * from './topics/entityActions.js';

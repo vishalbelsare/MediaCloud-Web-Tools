@@ -9,6 +9,8 @@ import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchFocalSetDefinitions, submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot } from '../../../../actions/topicActions';
 import { updateFeedback } from '../../../../actions/appActions';
 
+const DEFAULT_SELECTED_NUMBER = 5;
+
 const localMessages = {
   focusSaved: { id: 'focus.create.saved', defaultMessage: 'We saved your new Subtopic.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
@@ -26,6 +28,7 @@ class EditFocusContainer extends React.Component {
       focusDefinitionId: focusDefinition.focus_definitions_id,
       focalTechnique: focusDefinition.focalTechnique,
       keywords: focusDefinition.query,
+      numberSelected: DEFAULT_SELECTED_NUMBER,
     };
   }
 

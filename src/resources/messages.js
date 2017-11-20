@@ -39,6 +39,11 @@ const messages = {
   toicSkipSolrQueryProp: { id: 'topic.prop.public', defaultMessage: 'Skip SOLR Query' },
   topicPublicProp: { id: 'topic.prop.public', defaultMessage: 'Public' },
 
+  entityName: { id: 'entity.title.default', defaultMessage: 'Entity' },
+  entityPerson: { id: 'entity.title.person', defaultMessage: 'Person' },
+  entityOrg: { id: 'entity.title.org', defaultMessage: 'Organization' },
+  entityPercentage: { id: 'entity.title.default', defaultMessage: 'Percentage' },
+
   snapshotAge: { id: 'topic.snapshot.age', defaultMessage: 'Snapshot taken {age}' },
   snapshotChange: { id: 'topic.snapshot.change', defaultMessage: 'pick a different Snapshot' },
   snapshotGenerate: { id: 'needSnapshot.generate', defaultMessage: 'Generate Snapshot' },

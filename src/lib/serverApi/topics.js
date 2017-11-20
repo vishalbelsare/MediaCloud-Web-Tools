@@ -283,6 +283,49 @@ export function createRetweetFocalSet(topicId, params) {
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/retweet-partisanship/create`, acceptedParams);
 }
 
+export function topicPreviewTopCountriesStoryCounts(topicId, numCountries) {
+  const acceptedParams = acceptParams(numCountries, ['numCountries']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/story-counts`, acceptedParams);
+}
+
+export function topicPreviewTopCountriesCoverage(topicId, numCountries) {
+  const acceptedParams = acceptParams(numCountries, ['numCountries']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/preview/coverage`, acceptedParams);
+}
+
+export function topicPreviewNytThemeStoryCounts(topicId, numThemes) {
+  const acceptedParams = acceptParams(numThemes, ['numThemes']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/story-counts`, acceptedParams);
+}
+
+export function topicPreviewNytThemeCoverage(topicId, numThemes) {
+  const acceptedParams = acceptParams(numThemes, ['numThemes']);
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`, acceptedParams);
+}
+
+export function createTopCountriesFocalSet(topicId, params) {
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
+  acceptedParams['data[]'] = JSON.stringify(acceptedParams.data);
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/top-countries/create`, acceptedParams);
+}
+
+export function createNytThemeFocalSet(topicId, params) {
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
+  acceptedParams['data[]'] = JSON.stringify(acceptedParams.data);
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/create`, acceptedParams);
+}
+
 export function topicWord2Vec(topicId) {
   return createApiPromise(`/api/topics/${topicId}/word2vec`);
 }
+
+export function topicTopPeople(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/entities/people`, acceptedParams);
+}
+
+export function topicTopOrgs(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
+  return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
+}
+
