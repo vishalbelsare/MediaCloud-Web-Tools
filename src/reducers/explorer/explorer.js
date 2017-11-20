@@ -4,6 +4,8 @@ import queries from './queries/queriesHandler';
 import lastSearchTime from './lastSearchTime';
 import sentenceCount from './sentenceCount';
 import topWordsComparison from './topWordsComparison';
+import topEntitiesPeople from './topEntitiesPeople';
+import topEntitiesOrgs from './topEntitiesOrgs';
 import topWords from './topWords';
 import samples from './samples';
 import stories from './stories';
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   stories,
   storyCount,
   geo,
+  topEntitiesPeople,
+  topEntitiesOrgs,
 });
 
 export default rootReducer;

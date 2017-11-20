@@ -208,3 +208,4 @@ if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.words
     import server.views.explorer.stories
     import server.views.explorer.geo
+    import server.views.explorer.entities

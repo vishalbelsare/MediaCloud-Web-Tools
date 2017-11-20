@@ -92,7 +92,6 @@ export function demoQueryCollectionsByIds(params) {
   acceptedParams['collections[]'] = params.collections;
   return createApiPromise('api/explorer/demo/collections/list', acceptedParams);
 }
-
 export function fetchQueryTopEntitiesPeople(params) {
   const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
   return createApiPromise('/api/explorer/entities/people', acceptedParams);

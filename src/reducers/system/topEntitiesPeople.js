@@ -1,4 +1,4 @@
-import { FETCH_TOP_ENTITIES_PEOPLE_COVERAGE } from '../../actions/systemActions';
+import { FETCH_TOP_ENTITIES_PEOPLE } from '../../actions/systemActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
 
 const topPeopleCoverage = createAsyncReducer({
@@ -7,7 +7,7 @@ const topPeopleCoverage = createAsyncReducer({
     counts: [],
     entities: [],
   },
-  action: FETCH_TOP_ENTITIES_PEOPLE_COVERAGE,
+  action: FETCH_TOP_ENTITIES_PEOPLE,
 });
 
 export default topPeopleCoverage;

@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchTopEntitiesPeople, filterByQuery } from '../../actions/systemActions';
+import { fetchTopEntitiesPeople } from '../../actions/systemActions';
 import DataCard from './DataCard';
 import EntitiesTable from './EntitiesTable';
-import { filtersAsUrlParams, filteredLocation } from '../util/location';
 import { DownloadButton } from './IconButton';
 import messages from '../../resources/messages';
 
@@ -17,21 +15,16 @@ const localMessages = {
 
 class TopPeopleContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { filters, fetchData } = this.props;
-    if (nextProps.filters !== filters) {
-      fetchData(nextProps.topicId, nextProps.filters);
+    const { queries, fetchData } = this.props;
+    if (nextProps.queries !== queries) {
+      fetchData(nextProps.queries);
     }
   }
-  downloadCsv = () => {
-    const { topicId, filters } = this.props;
-    const url = `/api/topics/${topicId}/entities/people/entities.csv?${filtersAsUrlParams(filters)}`;
-    window.location = url;
-  }
   handleEntityClick = (tagId) => {
-    const { filters, updateQueryFilter } = this.props;
+    const { queries, updateQueryFilter } = this.props;
     const queryFragment = `tags_id_stories: ${tagId}`;
-    if (filters.q && filters.q.length > 0) {
-      updateQueryFilter(`(${filters.q}) AND (${queryFragment})`);
+    if (queries.q && queries.q.length > 0) {
+      updateQueryFilter(`(${queries.q}) AND (${queryFragment})`);
     } else {
       updateQueryFilter(queryFragment);
     }
@@ -61,32 +54,31 @@ TopPeopleContainer.propTypes = {
   // from compositional chain
   location: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
-  // from parent
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
   // from state
   count: PropTypes.number,
+  queries: PropTypes.array.isRequired,
   entities: PropTypes.array.isRequired,
   total: PropTypes.number,
   fetchStatus: PropTypes.string.isRequired,
   updateQueryFilter: PropTypes.func.isRequired,
+  downloadCsv: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.topEntitiesPeople.fetchStatus,
-  count: state.topics.selected.summary.topEntitiesPeople.counts.count,
-  total: state.topics.selected.summary.topEntitiesPeople.counts.total,
-  entities: state.topics.selected.summary.topEntitiesPeople.entities,
+  fetchStatus: state.system.topEntitiesPeople.fetchStatus,
+  count: state.system.topEntitiesPeople.counts.count,
+  total: state.system.topEntitiesPeople.counts.total,
+  entities: state.system.topEntitiesPeople.entities,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (topicId, filters) => {
-    dispatch(fetchTopEntitiesPeople(topicId, filters));
+const mapDispatchToProps = dispatch => ({
+  fetchData: (queryParams) => { // queries or filters from parent
+    dispatch(fetchTopEntitiesPeople(queryParams));
   },
-  updateQueryFilter: (newQueryFilter) => {
+  /* updateQueryFilter: (newQueryFilter) => {
     const newFilters = {
       ...ownProps.filters,
       q: newQueryFilter,
@@ -94,13 +86,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const newLocation = filteredLocation(ownProps.location, newFilters);
     dispatch(push(newLocation));
     dispatch(filterByQuery(newQueryFilter));
-  },
+    */
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, ownProps.filters);
+      dispatchProps.fetchData(ownProps.queries);
     },
   });
 }
