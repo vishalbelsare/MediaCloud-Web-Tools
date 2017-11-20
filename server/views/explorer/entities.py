@@ -2,14 +2,15 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client
-from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS
+from server import app, mc
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
+from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, CLIFF_CLAVIN_2_3_0_TAG_ID
 from server.util.request import api_error_handler
 from server.views.topics.apicache import topic_tag_coverage
 import server.util.csv as csv
-from server.views.explorer import parse_query_with_keywords
-
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+import datetime
+import json
 logger = logging.getLogger(__name__)
 
 DEFAULT_SAMPLE_SIZE= 1000
@@ -18,29 +19,42 @@ DEFAULT_DISPLAY_AMOUNT= 10
 ENTITY_DOWNLOAD_COLUMNS = ['label', 'count', 'pct', 'sample_size','tags_id']
 
 
+# @cache
+def _cached_entities_people(user_mc_key, query):
+    if is_user_logged_in():   # no user session
+        api_client = user_admin_mediacloud_client()
+    else:
+        api_client = mc
+    return api_client.sentenceFieldCount('*', query, field='tags_id_stories', tag_sets_id=CLIFF_PEOPLE, sample_size=DEFAULT_SAMPLE_SIZE)
+
+
 def top_tags_in_set(solr_query, tag_sets_id, sample_size):
     user_mc_key = user_mediacloud_key()
     user_mc = user_admin_mediacloud_client()
-    sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.args['start_date'], split_end_date=request.args['end_date'], split=True)
+    
     # make sure we return the query and the id passed in..
+    sentence_count_results = _cached_entities_people(user_mc_key, solr_query)
+    return sentence_count_results
 
-    #    for t in tag_counts:  # add in pct so user knows it was sampled
-    #    t['pct'] = float(t['count']) / float(sample_size)
-    return sentence_count_result
 
+def get_CLIFF_coverage_for_query(solr_query):
+    if is_user_logged_in():   # no user session
+        api_client = user_admin_mediacloud_client()
+    else:
+        api_client = mc
+    return api_client.storyCount(solr_query=solr_query, solr_filter='tags_id_stories:{}'.format(CLIFF_CLAVIN_2_3_0_TAG_ID))
 
 def process_tags_for_coverage(solr_query, tag_counts):
-
-    tag_list = [i['tags_id'] for i in tag_counts]
-    # if logged in.. or
     user_mc = user_admin_mediacloud_client()
-    query_tags = " ".join(map(str, tag_list))
-    # coverage = topic_tag_coverage(q, query_tags)  # gets count and total
-    coverage = user_mc.storyCount(solr_query, tag_list)
-    top_tag_counts = tag_counts[:DEFAULT_DISPLAY_AMOUNT]
-    if coverage is None:
-        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-    coverage['entities'] = top_tag_counts
+    story_count_total = user_mc.storyCount(solr_query=solr_query)
+    story_count_cliff = get_CLIFF_coverage_for_query(solr_query)
+    #top_tag_counts = tag_counts[:DEFAULT_DISPLAY_AMOUNT]
+    coverage={}
+    coverage['total'] = story_count_total
+    coverage['counts'] = story_count_cliff
+    for t in tag_counts:  # add in pct of what's been run through CLIFF to total results??  CLAVIN vs GEO?? confused
+        t['pct'] = float(t['count']) / float(story_count_total)
+    coverage['entities'] = tag_counts
     return jsonify(coverage)
 
 
@@ -56,10 +70,27 @@ def top_entities_people():
 @app.route('/api/explorer/entities/organizations', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def top_entities_organizations():
-    solr_query = parse_query_with_keywords(request.args)
-    top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_SAMPLE_SIZE)
-    return process_tags_for_coverage(solr_query, top_tag_counts)
+def top_entities_organizations(q):
+
+    top_tag_counts = top_tags_in_set(q, CLIFF_ORGS, DEFAULT_SAMPLE_SIZE)
+    return process_tags_for_coverage(q, top_tag_counts)
+
+
+@app.route('/api/explorer/demo/entities/people', methods=['GET'])
+@api_error_handler
+def api_explorer_demo_top_entities_people():
+    search_id = int(request.args['search_id']) if 'search_id' in request.args else None
+    
+    if search_id not in [None, -1]:
+        SAMPLE_SEARCHES = load_sample_searches()
+        current_search = SAMPLE_SEARCHES[search_id]['queries']
+        solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
+    else:
+        solr_query = parse_query_with_keywords(request.args)
+ 
+    top_tag_counts = top_tags_in_set(solr_query, CLIFF_PEOPLE, DEFAULT_SAMPLE_SIZE)
+    return process_tags_for_coverage(top_tag_counts) 
+
 
 @app.route('/api/explorer/entities/<type_entity>/entities.csv', methods=['GET'])
 @flask_login.login_required
