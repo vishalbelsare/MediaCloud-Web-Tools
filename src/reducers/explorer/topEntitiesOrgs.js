@@ -1,5 +1,5 @@
 import { createIndexedAsyncReducer } from '../../lib/reduxHelpers';
-import { FETCH_TOP_ENTITIES_ORGS, RESET_ENTITIES_ORGS } from '../../actions/explorerActions';
+import { FETCH_TOP_ENTITIES_ORGS, RESET_ENTITIES_ORGS } from '../../actions/systemActions';
 // import { cleanDateCounts } from '../../lib/dateUtil';
 // import * as fetchConstants from '../../lib/fetchConstants';
 

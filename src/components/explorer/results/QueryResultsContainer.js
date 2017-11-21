@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import QueryTopEntitiesPeopleResultsContainer from './QueryTopEntitiesPeopleResultsContainer';
+import QueryTopEntitiesOrgsResultsContainer from './QueryTopEntitiesOrgsResultsContainer';
 import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
@@ -20,6 +21,13 @@ const QueryResultsContainer = (props) => {
       <Row>
         <Col lg={12} xs={12}>
           <QueryTopEntitiesPeopleResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryTopEntitiesOrgsResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}

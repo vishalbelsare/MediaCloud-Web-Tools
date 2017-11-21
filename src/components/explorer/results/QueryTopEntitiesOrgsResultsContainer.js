@@ -9,7 +9,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
-import { resetEntitiesPeople, fetchTopEntitiesPeople } from '../../../actions/systemActions';
+import { resetEntitiesOrgs, fetchTopEntitiesOrgs } from '../../../actions/systemActions';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
@@ -17,14 +17,14 @@ import QueryResultsSelector from './QueryResultsSelector';
 // const NUM_TO_SHOW = 20;
 
 const localMessages = {
-  title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
-  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>These are the top people matching your queries.  Click on the entity to add this to all your queries. Click the menu on the top right to download a CSV of entities.</p>' },
+  title: { id: 'explorer.entities.title', defaultMessage: 'Top Organizations' },
+  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>These are the top organizations matching your queries.  Click on the entity to add this to all your queries. Click the menu on the top right to download a CSV of entities.</p>' },
   helpDetails: { id: 'explorer.entities.help.text',
     defaultMessage: '<p>help text about entities</p>',
   },
 };
 
-class QueryTopEntitiesPeopleResultsContainer extends React.Component {
+class QueryTopEntitiesOrgsResultsContainer extends React.Component {
   state = {
     selectedQueryIndex: 0,
   }
@@ -51,9 +51,9 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/entities/people.csv/${query.searchId}/${query.index}`;
+      url = `/api/explorer/entities/organizations.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/entities/people.csv/[{"q":"${query.q}"}]/${query.index}`;
+      url = `/api/explorer/entities/organizations.csv/[{"q":"${query.q}"}]/${query.index}`;
     }
     window.location = url;
   }
@@ -93,7 +93,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
   }
 }
 
-QueryTopEntitiesPeopleResultsContainer.propTypes = {
+QueryTopEntitiesOrgsResultsContainer.propTypes = {
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
@@ -111,15 +111,15 @@ QueryTopEntitiesPeopleResultsContainer.propTypes = {
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
-  fetchStatus: state.explorer.topEntitiesPeople.fetchStatus,
-  results: state.explorer.topEntitiesPeople.results,
+  fetchStatus: state.explorer.topEntitiesOrgs.fetchStatus,
+  results: state.explorer.topEntitiesOrgs.results,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    dispatch(resetEntitiesPeople());
+    dispatch(resetEntitiesOrgs());
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q) => {
@@ -131,7 +131,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           sources: q.sources.map(s => s.id),
           collections: q.collections.map(c => c.id),
         };
-        return dispatch(fetchTopEntitiesPeople(infoToQuery));
+        return dispatch(fetchTopEntitiesOrgs(infoToQuery));
       });
     } else if (queries || ownProps.queries) { // else assume DEMO mode, but assume the queries have been loaded
       const runTheseQueries = queries || ownProps.queries;
@@ -142,7 +142,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchTopEntitiesPeople(demoInfo)); // id
+        return dispatch(fetchTopEntitiesOrgs(demoInfo)); // id
       });
     }
   },
@@ -162,7 +162,7 @@ export default
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
         composeAsyncContainer(
-          QueryTopEntitiesPeopleResultsContainer
+          QueryTopEntitiesOrgsResultsContainer
         )
       )
     )

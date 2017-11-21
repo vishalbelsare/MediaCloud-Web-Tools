@@ -12,7 +12,7 @@ export const fetchTopEntitiesPeople = createAsyncAction(FETCH_TOP_ENTITIES_PEOPL
 export const fetchDemoTopEntitiesPeople = createAsyncAction(FETCH_TOP_ENTITIES_PEOPLE, explorerApi.fetchDemoQueryTopEntitiesPeople, params => params);
 
 // pass in id, filters or q
-export const fetchTopEntitiesOrgs = createAsyncAction(FETCH_TOP_ENTITIES_ORGS, explorerApi.fetchTopEntitiesOrgs, params => params);
+export const fetchTopEntitiesOrgs = createAsyncAction(FETCH_TOP_ENTITIES_ORGS, explorerApi.fetchQueryTopEntitiesOrgs, params => params);
 export const fetchDemoTopEntitiesOrgs = createAsyncAction(FETCH_TOP_ENTITIES_ORGS, explorerApi.fetchDemoQueryTopEntitiesOrgs, params => params);
 
 export const resetEntitiesPeople = createAction(RESET_ENTITIES_PEOPLE);
