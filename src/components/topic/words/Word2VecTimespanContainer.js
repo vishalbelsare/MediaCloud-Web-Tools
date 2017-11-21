@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
-import * as d3 from 'd3';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -16,6 +15,8 @@ import TimespanPeriodSelector from '../controlbar/timespans/TimespanPeriodSelect
 const SLIDESHOW_SPEED = 2000;
 const ENTER_TIMEOUT = 1000;
 const LEAVE_TIMEOUT = 300;
+const DEFAULT_WIDTH = 730;
+const DEFAULT_HEIGHT = 520;
 
 class Word2VecTimespanContainer extends React.Component {
 
@@ -32,6 +33,23 @@ class Word2VecTimespanContainer extends React.Component {
       this.state = { currentTimespanIndex: 0, currentPeriodList, selectedPeriod, isPlaying };
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { fetchData, timespanEmbeddings } = this.props;
+    console.log('this.props:');
+    console.log(timespanEmbeddings);
+    console.log('next props:');
+    console.log(timespanEmbeddings);
+    if ((nextProps.timespanEmbeddings !== timespanEmbeddings)) {
+      fetchData(nextProps);
+    }
+  }
+
+  // shouldComponentUpdate(nextProps) {
+  //   const { timespanEmbeddings, filters } = this.props;
+  //   return (nextProps.timespanEmbeddings !== timespanEmbeddings) ||
+  //          (nextProps.filters !== filters);
+  // }
 
   // Slideshow functions
   tick = () => {
@@ -76,31 +94,39 @@ class Word2VecTimespanContainer extends React.Component {
   };
 
   render() {
-    const { timespanEmbeddings } = this.props;
+    const { timespanEmbeddings, width, height, xProperty, yProperty } = this.props;
     const { currentTimespanIndex, currentPeriodList } = this.state;
+
+    const options = {
+      width,
+      height,
+      xProperty,
+      yProperty,
+    };
+
+    if (width === undefined) {
+      options.width = DEFAULT_WIDTH;
+    }
+    if (height === undefined) {
+      options.height = DEFAULT_HEIGHT;
+    }
+
+    options.xProperty = xProperty || 'x';
+    options.yProperty = yProperty || 'y';
+
+    if ((timespanEmbeddings === undefined) || (timespanEmbeddings === null) || (timespanEmbeddings.length === 0)) {
+      return (<div />);
+    }
 
     const currentTimespan = currentPeriodList[currentTimespanIndex].timespan;
     const currentWords = currentPeriodList[currentTimespanIndex].words;
 
-    const getExtent = () => {
-      // calculate tfnorms
-      const allSum = d3.sum(currentWords, term => parseInt(term.count, 10));
-      currentWords.forEach((term, idx) => {
-        currentWords[idx].tfnorm = term.count / allSum;
-      });
-
-      // determine extent, ignoring zero-valued tfnorms
-      const nonZeroNorms = currentWords.filter(d => d.tfnorm !== 0);
-      if (nonZeroNorms.length === 0) {
-        return [0.001, 0.002]; // doesn't really matter what these values are
-      }
-      return d3.extent(nonZeroNorms, d => d.tfnorm);
-    };
-
-    if ((timespanEmbeddings === undefined) || (timespanEmbeddings === null) ||
-        (currentWords === undefined) || (currentWords.length === 0)) {
-      return (<div />);
-    }
+    // need scale to be constant across all plots...
+    // based on the min and the max of the overall embeddings
+    const overallTimespan = timespanEmbeddings.filter(x => x.timespan.period === 'overall')[0];
+    const overallWords = overallTimespan.words;
+    const w2vChartWidth = 530;
+    const w2vChartHeight = 320;
 
     let avButtons;
     if (this.state.selectedPeriod === 'overall') {
@@ -133,11 +159,12 @@ class Word2VecTimespanContainer extends React.Component {
           <div className="w2v-chart-container" key={currentTimespan.timespans_id}>
             <Word2VecChart
               words={currentWords}
+              scaleWords={overallWords}
               domId={'w2v-timespan'}
-              xProperty={'google_w2v_x'}
-              yProperty={'google_w2v_y'}
-              fullExtent={getExtent()}
-              alreadyNormalized
+              width={w2vChartWidth}
+              height={w2vChartHeight}
+              xProperty={options.xProperty}
+              yProperty={options.yProperty}
             />
           </div>
         </ReactCSSTransitionReplace>
@@ -163,6 +190,11 @@ class Word2VecTimespanContainer extends React.Component {
 }
 
 Word2VecTimespanContainer.propTypes = {
+  // from parent
+  width: PropTypes.number,
+  height: PropTypes.number,
+  xProperty: PropTypes.string,
+  yProperty: PropTypes.string,
   // from compositional chain
   intl: PropTypes.object.isRequired,
   // from state

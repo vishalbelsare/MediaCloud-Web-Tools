@@ -286,18 +286,6 @@ def topic_w2v_timespan_embeddings(topics_id):
             word['google_w2v_x'] = overall_embeddings[word['term']][0]
             word['google_w2v_y'] = overall_embeddings[word['term']][1]
 
-        # Fill in missing data for words in overall timespan but not in this timespan
-        timespan_words = [ x['term'] for x in ts_word_counts ]
-        word_diff = list(set(overall_words) - set(timespan_words))
-        for word in word_diff:
-            empty_entry = {}
-            empty_entry['term'] = word
-            empty_entry['stem'] = word  # dummy placeholder
-            empty_entry['count'] = 0
-            empty_entry['google_w2v_x'] = overall_embeddings[word][0]
-            empty_entry['google_w2v_y'] = overall_embeddings[word][1]
-            ts_word_counts.append(empty_entry)
-
         results = { 'timespan': ts, 'words': ts_word_counts }
         ts_embeddings.append(results)
 

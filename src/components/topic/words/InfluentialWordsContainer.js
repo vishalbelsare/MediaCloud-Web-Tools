@@ -90,7 +90,10 @@ class InfluentialWordsContainer extends React.Component {
               <h2>
                 Word2Vec
               </h2>
-              <Word2VecTimespanContainer />
+              <Word2VecTimespanContainer
+                xProperty={'google_w2v_x'}
+                yProperty={'google_w2v_y'}
+              />
             </DataCard>
           </Col>
         </Row>
