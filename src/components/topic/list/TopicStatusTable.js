@@ -10,6 +10,7 @@ const localMessages = {
   queue: { id: 'topic.adminList.table.queue', defaultMessage: 'Queue' },
   message: { id: 'topic.adminList.table.seedQuery', defaultMessage: 'Message' },
   maxStories: { id: 'topic.adminList.table.maxStories', defaultMessage: 'Max Stories' },
+  owners: { id: 'topic.adminList.table.owners', defaultMessage: 'Owners' },
 };
 
 const classNameForState = (state) => {
@@ -38,6 +39,7 @@ const TopicStatusTable = props => (
           <th><FormattedMessage {...localMessages.queue} /></th>
           <th className="numeric"><FormattedMessage {...localMessages.maxStories} /></th>
           <th><FormattedMessage {...localMessages.message} /></th>
+          <th><FormattedMessage {...localMessages.owners} /></th>
         </tr>
         {props.topics.map((t, idx) =>
           (<tr key={t.topics_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} ${classNameForState(t.state)}`}>
@@ -47,6 +49,7 @@ const TopicStatusTable = props => (
             <td>{t.job_queue}</td>
             <td className="numeric">{t.max_stories}</td>
             <td>{t.message}</td>
+            <td>{t.owners.map(u => <a key={u.auth_users_id} href="mailto:{u.email}">{u.full_name}</a>)}</td>
           </tr>)
         )}
       </tbody>

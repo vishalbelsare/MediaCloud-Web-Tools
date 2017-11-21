@@ -9,12 +9,14 @@ import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
   media: { id: 'topitopic.list.mediaCount', defaultMessage: 'Media Sources' },
   links: { id: 'topitopic.list.links', defaultMessage: 'Story Links' },
   range: { id: 'topitopic.list.range', defaultMessage: '{start} - {end}' },
+  createdBy: { id: 'topitopic.list.createdBy', defaultMessage: 'Created by: ' },
 };
 
 const TopicPreviewList = (props) => {
@@ -48,6 +50,12 @@ const TopicPreviewList = (props) => {
             </GridList>
           );
         }
+        let ownerListContent;
+        if (topic.owners.length > 0) {
+          ownerListContent = topic.owners.map(u => u.full_name).join(', ');
+        } else {
+          ownerListContent = <FormattedMessage {...messages.unknown} />;
+        }
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
             <DataCard className="topic-preview-list-item">
@@ -68,6 +76,7 @@ const TopicPreviewList = (props) => {
                     }}
                   />
                   <p>{topic.description}</p>
+                  <p><FormattedMessage {...localMessages.createdBy} /><i>{ownerListContent}</i></p>
                 </div>
               </div>
               {subContent}
