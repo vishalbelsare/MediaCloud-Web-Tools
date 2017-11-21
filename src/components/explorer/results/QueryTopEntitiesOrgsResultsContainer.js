@@ -9,7 +9,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
-import { resetEntitiesOrgs, fetchTopEntitiesOrgs } from '../../../actions/systemActions';
+import { resetEntitiesOrgs, fetchTopEntitiesOrgs, fetchDemoTopEntitiesOrgs } from '../../../actions/explorerActions';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
@@ -51,14 +51,14 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/entities/organizations/entities.csv?${query.searchId}/${query.index}`;
+      url = `/api/explorer/entities/organizations/entities.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/entities/organizations/entities.csv?q=${query.q}&index=${query.index}`;
+      url = `/api/explorer/entities/organizations/entities.csv?[{"q":"${query.q}"}]/${query.index}`;
     }
     window.location = url;
   }
   render() {
-    const { results, queries, handleEntitySelection } = this.props;
+    const { results, queries, handleEntitySelection, isLoggedIn } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -83,9 +83,9 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
         <EntitiesTable
-          className="story-table"
+          className="explorer-entity"
           entities={results[this.state.selectedQueryIndex].results}
-          onClick={handleEntitySelection}
+          onClick={isLoggedIn ? handleEntitySelection : 'false'}
           maxTitleLength={50}
         />
       </DataCard>
@@ -142,7 +142,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           query_id: q.id,
           q: q.q, // only if no query id, means demo user added a keyword
         };
-        return dispatch(fetchTopEntitiesOrgs(demoInfo)); // id
+        return dispatch(fetchDemoTopEntitiesOrgs(demoInfo)); // id
       });
     }
   },

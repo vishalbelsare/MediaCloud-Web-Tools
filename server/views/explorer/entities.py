@@ -29,7 +29,6 @@ def _cached_entities(query, type):
 
 
 def top_tags_in_set(solr_query, tag_type, display_size):
-    user_mc_key = user_mediacloud_key()
 
     sentence_count_results = _cached_entities(solr_query, tag_type)
     top_count_results = sentence_count_results[:display_size]
@@ -45,8 +44,11 @@ def get_CLIFF_coverage_for_query(solr_query):
     return api_client.storyCount(solr_query=solr_query)
 
 def process_tags_for_coverage(solr_query, tag_counts):
-    user_mc = user_admin_mediacloud_client()
-    story_count_total = user_mc.storyCount(solr_query=solr_query)
+    if is_user_logged_in():   # no user session
+        api_client = user_admin_mediacloud_client()
+    else:
+        api_client = mc
+    story_count_total = api_client.storyCount(solr_query=solr_query)
     story_count_cliff = get_CLIFF_coverage_for_query(solr_query)
 
     coverage={}
@@ -75,7 +77,6 @@ def top_entities_organizations():
     top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_DISPLAY_AMOUNT)
     return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
-
 @app.route('/api/explorer/demo/entities/people', methods=['GET'])
 @api_error_handler
 def api_explorer_demo_top_entities_people():
@@ -88,8 +89,8 @@ def api_explorer_demo_top_entities_people():
     else:
         solr_query = parse_query_with_keywords(request.args)
  
-    top_tag_counts = top_tags_in_set(solr_query, CLIFF_PEOPLE, DEFAULT_SAMPLE_SIZE)
-    return jsonify(process_tags_for_coverage(top_tag_counts))
+    top_tag_counts = top_tags_in_set(solr_query, CLIFF_PEOPLE, DEFAULT_DISPLAY_AMOUNT)
+    return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
 
 @app.route('/api/explorer/demo/entities/organizations', methods=['GET'])
@@ -104,17 +105,30 @@ def api_explorer_demo_top_entities_organizations():
     else:
         solr_query = parse_query_with_keywords(request.args)
 
-    top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_SAMPLE_SIZE)
-    return process_tags_for_coverage(top_tag_counts)
+    top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_DISPLAY_AMOUNT)
+    return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
-@app.route('/api/explorer/entities/<type_entity>/entities.csv', methods=['GET'])
-@flask_login.login_required
-def explorer_entities_csv(type_entity):
-    tag_type = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
-    solr_query = parse_query_with_keywords(request.args)
+@app.route('/api/explorer/entities/<type_entity>/entities.csv/<search_id_or_query>/<index>', methods=['GET'])
+@api_error_handler
+def explorer_entities_csv(type_entity, search_id_or_query, index):
+
+    try:
+        search_id = int(search_id_or_query) # ie. the search_id_or_query is sample search id
+        if search_id >= 0:
+            sample_searches = load_sample_searches()
+            current_search = sample_searches[search_id]['queries']
+            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+    except ValueError:  # ie. the search_id_or_query is a query
+        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
+        query = json.loads(search_id_or_query)
+        current_query = query[0]
+        tag_type = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
+        solr_query = parse_query_with_keywords(current_query)
+
     top_tag_counts = top_tags_in_set(solr_query, tag_type, DEFAULT_SAMPLE_SIZE)
     top_tag_counts = process_tags_for_coverage(solr_query, top_tag_counts)['results']
     for tag in top_tag_counts:
         tag['sample_size'] = DEFAULT_SAMPLE_SIZE
+
     return csv.stream_response(top_tag_counts, ENTITY_DOWNLOAD_COLUMNS,
                                'explorer-entities-{}'.format(type_entity))
