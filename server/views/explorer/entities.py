@@ -55,7 +55,7 @@ def process_tags_for_coverage(solr_query, tag_counts):
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
         t['pct'] = float(story_count_cliff['count']) / float(story_count_total['count'])
     coverage['results'] = tag_counts
-    return jsonify(coverage)
+    return coverage
 
 
 @app.route('/api/explorer/entities/people', methods=['GET'])
@@ -64,7 +64,7 @@ def process_tags_for_coverage(solr_query, tag_counts):
 def top_entities_people():
     solr_query = parse_query_with_keywords(request.args)
     top_tag_counts = top_tags_in_set(solr_query, CLIFF_PEOPLE, DEFAULT_DISPLAY_AMOUNT)
-    return process_tags_for_coverage(solr_query, top_tag_counts)
+    return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
 
 @app.route('/api/explorer/entities/organizations', methods=['GET'])
@@ -73,7 +73,7 @@ def top_entities_people():
 def top_entities_organizations():
     solr_query = parse_query_with_keywords(request.args)
     top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_DISPLAY_AMOUNT)
-    return process_tags_for_coverage(solr_query, top_tag_counts)
+    return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
 
 @app.route('/api/explorer/demo/entities/people', methods=['GET'])
@@ -89,7 +89,7 @@ def api_explorer_demo_top_entities_people():
         solr_query = parse_query_with_keywords(request.args)
  
     top_tag_counts = top_tags_in_set(solr_query, CLIFF_PEOPLE, DEFAULT_SAMPLE_SIZE)
-    return process_tags_for_coverage(top_tag_counts)
+    return jsonify(process_tags_for_coverage(top_tag_counts))
 
 
 @app.route('/api/explorer/demo/entities/organizations', methods=['GET'])
@@ -113,7 +113,8 @@ def explorer_entities_csv(type_entity):
     tag_type = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
     solr_query = parse_query_with_keywords(request.args)
     top_tag_counts = top_tags_in_set(solr_query, tag_type, DEFAULT_SAMPLE_SIZE)
+    top_tag_counts = process_tags_for_coverage(solr_query, top_tag_counts)['results']
     for tag in top_tag_counts:
         tag['sample_size'] = DEFAULT_SAMPLE_SIZE
     return csv.stream_response(top_tag_counts, ENTITY_DOWNLOAD_COLUMNS,
-                               'explorer-entities-{}'.format(type))
+                               'explorer-entities-{}'.format(type_entity))

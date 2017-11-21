@@ -51,9 +51,9 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/entities/people.csv/${query.searchId}/${query.index}`;
+      url = `/api/explorer/entities/people/entities.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/entities/people.csv/[{"q":"${query.q}"}]/${query.index}`;
+      url = `/api/explorer/entities/people/entities.csv?q=${query.q}&index=${query.index}`;
     }
     window.location = url;
   }
