@@ -24,6 +24,7 @@ const QueryResultsContainer = (props) => {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>
@@ -31,6 +32,7 @@ const QueryResultsContainer = (props) => {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>

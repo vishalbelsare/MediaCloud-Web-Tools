@@ -85,7 +85,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
         <EntitiesTable
           className="story-table"
           entities={results[this.state.selectedQueryIndex].results}
-          onChangeFocusSelection={handleEntitySelection}
+          onClick={handleEntitySelection}
           maxTitleLength={50}
         />
       </DataCard>
@@ -146,7 +146,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
-  handleEntitySelection: () => 'true',
+  handleEntitySelection: (entity) => {
+    const queryClauseToAdd = ` tags_id_stories:${entity}`;
+    ownProps.onQueryModificationRequested(queryClauseToAdd);
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
