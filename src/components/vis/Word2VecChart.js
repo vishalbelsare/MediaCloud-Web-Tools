@@ -19,7 +19,6 @@ const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
 function Word2VecChart(props) {
-
   const { words, scaleWords, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
           fullExtent, domId, xProperty, yProperty, noDataMsg } = props;
 
@@ -165,23 +164,8 @@ function Word2VecChart(props) {
 
 Word2VecChart.propTypes = {
   // from parent
-<<<<<<< HEAD
-  words: React.PropTypes.array.isRequired,
-  scaleWords: React.PropTypes.array,
-  width: React.PropTypes.number,
-  height: React.PropTypes.number,
-  minFontSize: React.PropTypes.number,
-  maxFontSize: React.PropTypes.number,
-  minColor: React.PropTypes.string,
-  maxColor: React.PropTypes.string,
-  fullExtent: React.PropTypes.array,
-  showTooltips: React.PropTypes.bool,
-  alreadyNormalized: React.PropTypes.bool,
-  domId: React.PropTypes.string.isRequired,
-  xProperty: React.PropTypes.string,
-  yProperty: React.PropTypes.string,
-=======
   words: PropTypes.array.isRequired,
+  scaleWords: React.PropTypes.array,
   width: PropTypes.number,
   height: PropTypes.number,
   minFontSize: PropTypes.number,
@@ -195,7 +179,6 @@ Word2VecChart.propTypes = {
   xProperty: PropTypes.string,
   yProperty: PropTypes.string,
   noDataMsg: PropTypes.object,
->>>>>>> master
   // from composition chain
   intl: PropTypes.object.isRequired,
 };

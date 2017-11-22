@@ -222,10 +222,7 @@ def topic_update(topics_id):
         'is_logogram': request.form['is_logogram'] if 'is_logogram' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
-<<<<<<< HEAD
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None,
-=======
->>>>>>> master
     }
 
     # parse out any sources and collections to add
@@ -274,7 +271,7 @@ def topic_w2v_timespan_embeddings(topics_id):
     # Retrieve embeddings for overall topic
     overall_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=50, **args)
     overall_words = [ x['term'] for x in overall_word_counts ]
-    overall_embeddings = {x['term']: (x['google_w2v_x'], x['google_w2v_y']) for x in overall_word_counts}
+    overall_embeddings = {x['term']: (x['w2v_x'], x['w2v_y']) for x in overall_word_counts}
 
     # Retrieve top words for each timespan
     ts_embeddings = []
@@ -287,8 +284,8 @@ def topic_w2v_timespan_embeddings(topics_id):
 
         # Replace specific timespan embeddings with overall so coordinates are consistent
         for word in ts_word_counts:
-            word['google_w2v_x'] = overall_embeddings[word['term']][0]
-            word['google_w2v_y'] = overall_embeddings[word['term']][1]
+            word['w2v_x'] = overall_embeddings[word['term']][0]
+            word['w2v_y'] = overall_embeddings[word['term']][1]
 
         results = { 'timespan': ts, 'words': ts_word_counts }
         ts_embeddings.append(results)

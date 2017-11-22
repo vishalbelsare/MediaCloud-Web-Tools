@@ -3,30 +3,32 @@ import React from 'react';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import Word2VecChart from '../../vis/Word2VecChart';
-import { fetchTopicWord2VecTimespans } from '../../../actions/topicActions';
-import { PlayButton, PauseButton, NextButton, PreviousButton } from '../../common/IconButton';
-import { getBrandDarkColor } from '../../../styles/colors';
-import TimespanDateRange from '../TimespanDateRange';
-import TimespanPeriodSelector from '../controlbar/timespans/TimespanPeriodSelector';
+import Word2VecChart from './Word2VecChart';
+import { PlayButton, PauseButton, NextButton, PreviousButton } from '../common/IconButton';
+import { getBrandDarkColor } from '../../styles/colors';
+import TimespanDateRange from '../topic/TimespanDateRange';
+import TimespanPeriodSelector from '../topic/controlbar/timespans/TimespanPeriodSelector';
 
-const SLIDESHOW_SPEED = 2000;
-const ENTER_TIMEOUT = 1000;
-const LEAVE_TIMEOUT = 300;
+const DEFAULT_SLIDESHOW_SPEED = 2000;
+const DEFAULT_ENTER_TIMEOUT = 1000;
+const DEFAULT_LEAVE_TIMEOUT = 300;
 const DEFAULT_WIDTH = 730;
 const DEFAULT_HEIGHT = 520;
 
-class Word2VecTimespanContainer extends React.Component {
+class Word2VecTimespanPlayer extends React.Component {
 
   constructor(props) {
     super(props);
-    const selectedPeriod = props.selectedGlobalPeriod;
+    const initialTimespan = props.initialTimespan;
+    const selectedPeriod = initialTimespan.period;
+    const initialTimespanId = initialTimespan.timespans_id;
+
     const currentPeriodList = props.timespanEmbeddings.filter(x => x.timespan.period === selectedPeriod);
-    const filterByTimespanId = element => (element.timespan.timespans_id === props.selectedTimespan.timespans_id);
+    const filterByTimespanId = element => (element.timespan.timespans_id === initialTimespanId);
     const initialIndex = currentPeriodList.findIndex(filterByTimespanId);
+
     const isPlaying = false;
+
     if (initialIndex !== -1) {
       this.state = { currentTimespanIndex: initialIndex, currentPeriodList, selectedPeriod, isPlaying };
     } else {
@@ -34,22 +36,9 @@ class Word2VecTimespanContainer extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { fetchData, timespanEmbeddings } = this.props;
-    console.log('this.props:');
-    console.log(timespanEmbeddings);
-    console.log('next props:');
-    console.log(timespanEmbeddings);
-    if ((nextProps.timespanEmbeddings !== timespanEmbeddings)) {
-      fetchData(nextProps);
-    }
+  componentWillReceiveProps() {
+    this.pauseSlideShow(); // prevent calling set state on unmounted component
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   const { timespanEmbeddings, filters } = this.props;
-  //   return (nextProps.timespanEmbeddings !== timespanEmbeddings) ||
-  //          (nextProps.filters !== filters);
-  // }
 
   // Slideshow functions
   tick = () => {
@@ -58,10 +47,10 @@ class Word2VecTimespanContainer extends React.Component {
     }
   }
 
-  playSlideShow = () => {
+  playSlideShow = (speed) => {
     if (!this.state.isPlaying) {
       this.setState(() => ({ isPlaying: true }));
-      this.interval = setInterval(this.tick, SLIDESHOW_SPEED);
+      this.interval = setInterval(this.tick, speed);
     }
   }
 
@@ -94,7 +83,8 @@ class Word2VecTimespanContainer extends React.Component {
   };
 
   render() {
-    const { timespanEmbeddings, width, height, xProperty, yProperty } = this.props;
+    const { timespanEmbeddings, width, height, xProperty, yProperty, enterTimeout,
+            leaveTimeout, slideshowSpeed } = this.props;
     const { currentTimespanIndex, currentPeriodList } = this.state;
 
     const options = {
@@ -102,6 +92,9 @@ class Word2VecTimespanContainer extends React.Component {
       height,
       xProperty,
       yProperty,
+      enterTimeout,
+      leaveTimeout,
+      slideshowSpeed,
     };
 
     if (width === undefined) {
@@ -110,7 +103,15 @@ class Word2VecTimespanContainer extends React.Component {
     if (height === undefined) {
       options.height = DEFAULT_HEIGHT;
     }
-
+    if (enterTimeout === undefined) {
+      options.enterTimeout = DEFAULT_ENTER_TIMEOUT;
+    }
+    if (leaveTimeout === undefined) {
+      options.leaveTimeout = DEFAULT_LEAVE_TIMEOUT;
+    }
+    if (slideshowSpeed === undefined) {
+      options.slideshowSpeed = DEFAULT_SLIDESHOW_SPEED;
+    }
     options.xProperty = xProperty || 'x';
     options.yProperty = yProperty || 'y';
 
@@ -121,12 +122,9 @@ class Word2VecTimespanContainer extends React.Component {
     const currentTimespan = currentPeriodList[currentTimespanIndex].timespan;
     const currentWords = currentPeriodList[currentTimespanIndex].words;
 
-    // need scale to be constant across all plots...
-    // based on the min and the max of the overall embeddings
+    // overall words used for w2vchart scale
     const overallTimespan = timespanEmbeddings.filter(x => x.timespan.period === 'overall')[0];
     const overallWords = overallTimespan.words;
-    const w2vChartWidth = 530;
-    const w2vChartHeight = 320;
 
     let avButtons;
     if (this.state.selectedPeriod === 'overall') {
@@ -135,7 +133,7 @@ class Word2VecTimespanContainer extends React.Component {
       avButtons = (
         <Col lg={12}>
           <PreviousButton onClick={this.skipPrevious} color={getBrandDarkColor()} />
-          <PlayButton onClick={this.playSlideShow} color={getBrandDarkColor()} />
+          <PlayButton onClick={() => this.playSlideShow(options.slideshowSpeed)} color={getBrandDarkColor()} />
           <PauseButton onClick={this.pauseSlideShow} color={getBrandDarkColor()} />
           <NextButton onClick={this.skipNext} color={getBrandDarkColor()} />
         </Col>
@@ -153,16 +151,14 @@ class Word2VecTimespanContainer extends React.Component {
         </Col>
         <ReactCSSTransitionReplace
           transitionName="fade"
-          transitionEnterTimeout={ENTER_TIMEOUT}
-          transitionLeaveTimeout={LEAVE_TIMEOUT}
+          transitionEnterTimeout={options.enterTimeout}
+          transitionLeaveTimeout={options.leaveTimeout}
         >
           <div className="w2v-chart-container" key={currentTimespan.timespans_id}>
             <Word2VecChart
               words={currentWords}
               scaleWords={overallWords}
-              domId={'w2v-timespan'}
-              width={w2vChartWidth}
-              height={w2vChartHeight}
+              domId={'w2v-timespan-slide'}
               xProperty={options.xProperty}
               yProperty={options.yProperty}
             />
@@ -173,8 +169,8 @@ class Word2VecTimespanContainer extends React.Component {
             <Col lg={12}>
               <ReactCSSTransitionReplace
                 transitionName="fade"
-                transitionEnterTimeout={ENTER_TIMEOUT}
-                transitionLeaveTimeout={LEAVE_TIMEOUT}
+                transitionEnterTimeout={options.enterTimeout}
+                transitionLeaveTimeout={options.leaveTimeout}
               >
                 <TimespanDateRange key={currentTimespan.timespans_id} timespan={currentTimespan} />
               </ReactCSSTransitionReplace>
@@ -189,56 +185,22 @@ class Word2VecTimespanContainer extends React.Component {
   }
 }
 
-Word2VecTimespanContainer.propTypes = {
+Word2VecTimespanPlayer.propTypes = {
   // from parent
   width: PropTypes.number,
   height: PropTypes.number,
   xProperty: PropTypes.string,
   yProperty: PropTypes.string,
+  enterTimeout: PropTypes.number,
+  leaveTimeout: PropTypes.number,
+  slideshowSpeed: PropTypes.number,
+  initialTimespan: PropTypes.object.isRequired,
+  timespanEmbeddings: PropTypes.array.isRequired,
   // from compositional chain
   intl: PropTypes.object.isRequired,
-  // from state
-  topicId: PropTypes.number.isRequired,
-  filters: PropTypes.object.isRequired,
-  selectedTimespan: PropTypes.object.isRequired,
-  selectedGlobalPeriod: PropTypes.string.isRequired,
-  fetchStatus: PropTypes.string.isRequired,
-  timespanEmbeddings: PropTypes.array.isRequired,
-  // from dispatch
-  fetchData: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = state => ({
-  selectedTimespan: state.topics.selected.timespans.selected,
-  selectedGlobalPeriod: state.topics.selected.timespans.selectedPeriod,
-  filters: state.topics.selected.filters,
-  topicId: state.topics.selected.id,
-  fetchStatus: state.topics.selected.summary.word2vecTimespans.fetchStatus,
-  timespanEmbeddings: state.topics.selected.summary.word2vecTimespans.list,
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchData: (props) => {
-    dispatch(fetchTopicWord2VecTimespans(props.topicId, props.filters));
-  },
-});
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    asyncFetch: () => {
-      dispatchProps.fetchData({
-        topicId: stateProps.topicId,
-        filters: stateProps.filters,
-      });
-    },
-  });
-}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        Word2VecTimespanContainer
-      )
-    )
+    Word2VecTimespanPlayer
   );
