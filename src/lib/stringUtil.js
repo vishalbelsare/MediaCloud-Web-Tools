@@ -9,4 +9,24 @@ export function trimToMaxLength(string, maxLength) {
   return `${string.substring(0, maxLength)}...`;
 }
 
-export const TEMP = 'TEMP';
+export function humanReadableNumber(number, numSigFigs, formatNumber) {
+  const pow = Math.round(number).toString().length;
+
+  if (pow > 12) {
+    return '>1 trillion';
+  }
+  if (pow >= 10 && pow <= 12) {
+    const abbrev = formatNumber(number / 1000000000, { maximumSignificantDigits: numSigFigs });
+    return abbrev.concat(' billion');
+  }
+  if (pow >= 7 && pow <= 9) {
+    const abbrev = formatNumber(number / 1000000, { maximumSignificantDigits: numSigFigs });
+    return abbrev.concat(' million');
+  }
+  if (pow >= 4 && pow <= 6) {
+    const abbrev = formatNumber(number / 1000, { maximumSignificantDigits: numSigFigs });
+    return abbrev.concat('k');
+  }
+
+  return formatNumber(number);
+}

@@ -1,11 +1,14 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
 import ReactFauxDOM from 'react-faux-dom';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import fontSizeComputer from '../../lib/visUtil';
+import { WarningNotice } from '../common/Notice';
 
 const localMessages = {
   word2vecTerm: { id: 'word2vec.rollover.term', defaultMessage: '{term}' },
+  noData: { id: 'word2vec.noData', defaultMessage: 'Not enough data to show.' },
 };
 
 const DEFAULT_WIDTH = 530;
@@ -16,9 +19,22 @@ const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
 function Word2VecChart(props) {
+
   const { words, scaleWords, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
-          fullExtent, domId, xProperty, yProperty } = props;
+          fullExtent, domId, xProperty, yProperty, noDataMsg } = props;
+
   const { formatMessage } = props.intl;
+
+  // bail if the properties aren't there
+  const wordsWithXYCount = words.filter(w => (w[xProperty] !== undefined) && (w[yProperty] !== undefined)).length;
+  const missingDataMsg = noDataMsg || localMessages.noData;
+  if (wordsWithXYCount === 0) {
+    return (
+      <WarningNotice>
+        <FormattedHTMLMessage {...missingDataMsg} />
+      </WarningNotice>
+    );
+  }
 
   const options = {
     scaleWords,
@@ -149,6 +165,7 @@ function Word2VecChart(props) {
 
 Word2VecChart.propTypes = {
   // from parent
+<<<<<<< HEAD
   words: React.PropTypes.array.isRequired,
   scaleWords: React.PropTypes.array,
   width: React.PropTypes.number,
@@ -163,8 +180,24 @@ Word2VecChart.propTypes = {
   domId: React.PropTypes.string.isRequired,
   xProperty: React.PropTypes.string,
   yProperty: React.PropTypes.string,
+=======
+  words: PropTypes.array.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  minFontSize: PropTypes.number,
+  maxFontSize: PropTypes.number,
+  minColor: PropTypes.string,
+  maxColor: PropTypes.string,
+  fullExtent: PropTypes.array,
+  showTooltips: PropTypes.bool,
+  alreadyNormalized: PropTypes.bool,
+  domId: PropTypes.string.isRequired,
+  xProperty: PropTypes.string,
+  yProperty: PropTypes.string,
+  noDataMsg: PropTypes.object,
+>>>>>>> master
   // from composition chain
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default

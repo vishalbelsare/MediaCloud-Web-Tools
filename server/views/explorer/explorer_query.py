@@ -3,14 +3,10 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, mc, db
-from server.cache import cache
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
+from server.auth import user_admin_mediacloud_client, user_name, user_has_auth_role, \
     is_user_logged_in, ROLE_MEDIA_EDIT
-from server.views.sources import FEATURED_COLLECTION_LIST, _cached_source_story_count
 from server.util.request import form_fields_required, api_error_handler, arguments_required
-from server.util.tags import _cached_media_with_tag_page
-from server.views.explorer import solr_query_from_request, read_sample_searches
-import datetime
+from server.views.explorer import read_sample_searches
 from operator import itemgetter
 
 logger = logging.getLogger(__name__)
@@ -28,9 +24,9 @@ def api_explorer_sources_by_ids():
     user_mc = user_admin_mediacloud_client()
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
-    for mediaId in source_id_array:
-        info = user_mc.media(mediaId)
-        info['id'] = mediaId
+    for media_id in source_id_array:
+        info = user_mc.media(media_id)
+        info['id'] = int(media_id)
         source_list.append(info)
     return jsonify(source_list)
 
@@ -38,16 +34,15 @@ def api_explorer_sources_by_ids():
 @flask_login.login_required
 @arguments_required('collections[]')
 @api_error_handler
-def api_explorer_demo_collections_by_ids():
-    user_mc = user_admin_mediacloud_client()
-    collIdArray = request.args['collections[]'].split(',')
-    coll_list = []
-    for tagsId in collIdArray:
-        info = user_mc.tag(tagsId)
-        info['id'] = int(tagsId)
-        # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
-        coll_list.append(info);
-    return jsonify(coll_list)
+def api_explorer_collections_by_ids():
+    client_mc = user_admin_mediacloud_client()
+    collection_ids = request.args['collections[]'].split(',')
+    collection_list = []
+    for tags_id in collection_ids:
+        info = client_mc.tag(tags_id)
+        info['id'] = int(tags_id)
+        collection_list.append(info)
+    return jsonify(collection_list)
 
 
 @app.route('/api/explorer/demo/sources/list', methods=['GET'])
@@ -56,62 +51,28 @@ def api_explorer_demo_collections_by_ids():
 def api_explorer_demo_sources_by_ids():
     source_list = []
     source_id_array = request.args['sources[]'].split(',')
-    for mediaId in source_id_array:
-        info = mc.media(mediaId)
-        info['id'] = int(mediaId)
+    for media_id in source_id_array:
+        info = mc.media(media_id)
+        info['id'] = int(media_id)
         source_list.append(info)
     return jsonify(source_list)
+
 
 @app.route('/api/explorer/demo/collections/list', methods=['GET'])
 @arguments_required('collections[]')
 @api_error_handler
-def api_explorer_collections_by_ids():
-    collIdArray = request.args['collections[]'].split(',')
+def api_explorer_demo_collections_by_ids():
+    collection_ids = request.args['collections[]'].split(',')
     coll_list = []
-    for tagsId in collIdArray:
-        info = mc.tag(tagsId)
-        info['id'] = tagsId
+    for tags_id in collection_ids:
+        tags_id = tags_id.encode('ascii', 'ignore') # if empty, the unicode char will cause an error
+        if len (tags_id) > 0:
+            info = mc.tag(tags_id)
+            info['id'] = tags_id
         # info['tag_set'] = _tag_set_info(mc, info['tag_sets_id'])
-        coll_list.append(info);
+            coll_list.append(info)
     return jsonify(coll_list)
 
-@app.route('/api/mediapicker/collections/featured', methods=['GET'])
-@api_error_handler
-def api_explorer_featured_collections():
-    featured_collections = _cached_featured_collections()
-    return jsonify({'results': featured_collections})
-
-
-# @cache
-# TODO should be in media_picker I think
-# if details is true, add story count, source count also
-def _cached_featured_collections():
-    featured_collections = []
-    for tags_id in FEATURED_COLLECTION_LIST:
-        coll = mc.tag(tags_id)
-        coll['id'] = tags_id
-        source_count_estimate = _cached_media_with_tag_page(tags_id, 0)
-        coll['media_count'] = len(source_count_estimate)
-
-        how_lively_is_this_collection = 0
-        # story count
-        for media in source_count_estimate:
-            one_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=7)
-            start_date = one_weeks_before_now
-            end_date = datetime.datetime.now()
-            publish_date = mc.publish_date_query(start_date,
-                                              end_date,
-                                              True, True)
-            media_query = "(media_id:{})".format(media['media_id']) + " AND (+" + publish_date + ")"
-
-            how_lively_is_this_collection += _cached_source_story_count(user_mediacloud_key(), media_query)
-            # approximate liveliness - if there are more stories than 100, we know this is a reasonably active source/collection
-            if how_lively_is_this_collection > 100:
-                break
-        coll['story_count'] = how_lively_is_this_collection
-        featured_collections.append(coll)
-
-    return featured_collections
 
 @app.route('/api/explorer/saveQuery', methods=['GET'])
 @flask_login.login_required
@@ -121,6 +82,7 @@ def save_user_query():
     # TODO any checking here?
     db.add_item_to_users_list(username, 'queries', request.args)
     return jsonify({'savedQuery': request.args['query_string']})
+
 
 # TODO use this or the other collection list retrieval?
 @app.route('/api/explorer/set/<tag_sets_id>', methods=['GET'])
@@ -162,25 +124,13 @@ def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
         'collections': collection_list
     }
 
+
 def _tag_set_with_private_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, False)
 
 
 def _tag_set_with_public_collections(tag_sets_id):
     return _tag_set_with_collections(tag_sets_id, True)
-
-
-@app.route('/api/explorer/words/count', methods=['POST'])
-@flask_login.login_required
-@form_fields_required('q')
-@api_error_handler
-def api_explorer_word_count():
-    user_mc = user_admin_mediacloud_client()
-
-    solr_query = solr_query_from_request(request.form)    
-    word_count_result = user_mc.wordCount(solr_query=solr_query)
-
-    return jsonify(word_count_result)  # give them back new data, so they can update the client
 
 
 @app.route('/api/explorer/themes', methods=['POST'])

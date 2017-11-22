@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeIntlForm from '../../../../common/IntlForm';
-import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../../lib/focalTechniques';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
@@ -16,6 +16,11 @@ const localMessages = {
   defaultSetDescription: { id: 'focalSet.default.setDescription', defaultMessage: 'A set of difference conversations within this topic.' },
   defaultSetNameRetweet: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Retweet Partisanship' },
   defaultSetDescriptionRetweet: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
+  defaultSetNameTopCountries: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Top Countries' },
+  defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by selection of top most tagged countries.' },
+  defaultSetNameNytTheme: { id: 'focalSet.default.setName.nyt', defaultMessage: 'Nyt Theme' },
+  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Selection driven by top NYT-theme related tags.' },
+
 };
 
 
@@ -31,6 +36,14 @@ class FocalSetForm extends React.Component {
       case FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP:
         setName = formatMessage(localMessages.defaultSetNameRetweet);
         setDescription = formatMessage(localMessages.defaultSetDescriptionRetweet);
+        break;
+      case FOCAL_TECHNIQUE_TOP_COUNTRIES:
+        setName = formatMessage(localMessages.defaultSetNameTopCountries);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionTopCountries);
+        break;
+      case FOCAL_TECHNIQUE_NYT_THEME:
+        setName = formatMessage(localMessages.defaultSetNameNytTheme);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionNytTheme);
         break;
       default:
         setName = formatMessage(localMessages.defaultSetName);
@@ -74,10 +87,10 @@ FocalSetForm.propTypes = {
   renderTextField: PropTypes.func.isRequired,
   change: PropTypes.func.isRequired,
   // from parent
-  initialValues: React.PropTypes.object,
-  introContent: React.PropTypes.object,
-  fullWidth: React.PropTypes.bool,
-  focalTechnique: React.PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  introContent: PropTypes.object,
+  fullWidth: PropTypes.bool,
+  focalTechnique: PropTypes.string.isRequired,
 };
 
 function validate(values) {

@@ -3,7 +3,6 @@ import logging
 import flask_login
 import os
 from server import app, base_dir, mc
-from flask import jsonify
 from server.auth import is_user_logged_in, user_admin_mediacloud_client
 import datetime
 
@@ -18,7 +17,6 @@ TOPICS_TEMPLATE_PROPS = ['media_id', 'name', 'url', 'story_count',
                          'media_inlink_count', 'sum_media_inlink_count', 'inlink_count',
                          'outlink_count', 'bitly_click_count', 'facebook_share_count',
                          'pub_country', 'pub_state', 'primary_language', 'subject_country']
-
 
 def validated_sort(desired_sort, default_sort=SORT_FACEBOOK):
     valid_sorts = [SORT_FACEBOOK, SORT_BITLY, SORT_TWITTER, SORT_INLINK]

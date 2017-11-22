@@ -24,7 +24,7 @@ def topic_list():
     else:
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
-        topics = user_mc.topicList(link_id=link_id)
+        topics = user_mc.topicList(link_id=link_id, limit=50)
         _add_user_favorite_flag_to_topics(topics['topics'])
         return jsonify({'topics': {'personal': topics}})
 
@@ -37,7 +37,7 @@ def does_user_have_a_running_topic():
     more_topics = True
     link_id = None
     while more_topics:
-        results = user_mc.topicList(link_id=link_id)
+        results = user_mc.topicList(link_id=link_id, limit=100)
         topics = results['topics']
         queued_and_running_topics += [t for t in topics if t['state'] in ['running', 'queued']
                                       and t['user_permission'] in ['admin']]
@@ -64,7 +64,7 @@ def topic_filter_cascade_list():
     if is_user_logged_in():
         user_mc = user_admin_mediacloud_client()
         link_id = request.args.get('linkId')
-        results = user_mc.topicList(link_id=link_id)
+        results = user_mc.topicList(link_id=link_id, limit=105)
         user_topics = results['topics']
         favorite_topic_ids = db.get_users_lists(user_name(), 'favorite'
                                                              'Topics')
@@ -87,7 +87,7 @@ def sorted_public_topic_list():
         local_mc = user_mediacloud_client()
     else:
         local_mc = mc
-    public_topics_list = local_mc.topicList(public=True)['topics']
+    public_topics_list = local_mc.topicList(public=True, limit=50)['topics']
     return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
@@ -219,9 +219,13 @@ def topic_update(topics_id):
         'start_date': request.form['start_date'],
         'end_date': request.form['end_date'],
         'is_public': request.form['is_public'] if 'is_public' in request.form else None,
+        'is_logogram': request.form['is_logogram'] if 'is_logogram' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
+<<<<<<< HEAD
         'twitter_topics_id': request.form['twitter_topics_id'] if 'twitter_topics_id' in request.form else None,
+=======
+>>>>>>> master
     }
 
     # parse out any sources and collections to add
@@ -253,7 +257,7 @@ def topic_spider(topics_id):
 def topic_search():
     search_str = request.args['searchStr']
     user_mc = user_admin_mediacloud_client()
-    matching_topics = user_mc.topicList(name=search_str)
+    matching_topics = user_mc.topicList(name=search_str, limit=15)
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
 
@@ -290,3 +294,13 @@ def topic_w2v_timespan_embeddings(topics_id):
         ts_embeddings.append(results)
 
     return jsonify({'list': ts_embeddings})
+
+@app.route('/api/topics/admin/list', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def topic_admin_list():
+    user_mc = user_admin_mediacloud_client()
+    # if a non-admin user calls this, using user_mc grantees this won't be a security hole
+    # but for admins this will return ALL topics
+    topics = user_mc.topicList(limit=500)
+    return jsonify(topics)

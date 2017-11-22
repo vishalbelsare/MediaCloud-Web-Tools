@@ -8,6 +8,8 @@ import geocodedStoryTotals from './geocodedStoryTotals';
 import englishStoryTotals from './englishStoryTotals';
 import undateableStoryTotals from './undateableStoryTotals';
 import themedStoryTotals from './themedStoryTotals';
+import topEntitiesPeople from './topEntitiesPeople';
+import topEntitiesOrgs from './topEntitiesOrgs';
 import mapFiles from './mapFiles';
 import word2vec from './word2vec';
 import word2vecTimespans from './word2vecTimespans';
@@ -22,6 +24,8 @@ const summaryReducer = combineReducers({
   englishStoryTotals,
   undateableStoryTotals,
   themedStoryTotals,
+  topEntitiesPeople,
+  topEntitiesOrgs,
   mapFiles,
   word2vec,
   word2vecTimespans,

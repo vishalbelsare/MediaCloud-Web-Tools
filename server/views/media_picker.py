@@ -2,17 +2,16 @@ import logging
 from flask import jsonify, request
 import flask_login
 from multiprocessing import Pool
-from media_search import _matching_collections_by_set, _matching_sources_by_set
-from server import app, mc, db
-from server.util.request import arguments_required, api_error_handler
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
-from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
-from server.views.sources import _cached_source_story_count
-from server.views.sources.favorites import add_user_favorite_flag_to_sources
+from operator import itemgetter
 
-from server.util.request import form_fields_required, api_error_handler, arguments_required
+from server.cache import cache
+from media_search import _matching_collections_by_set, _matching_sources_by_set
+from server import app, mc
+from server.auth import user_admin_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
+from server.views.sources import FEATURED_COLLECTION_LIST
+from server.util.request import api_error_handler, arguments_required
 from server.util.tags import _cached_media_with_tag_page
-import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -44,17 +43,21 @@ def source_details_worker(info):
 @arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_source_search():
+    use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
-    results = _matching_sources_by_set(search_str, public_only) # from pool
+    results = _matching_sources_by_set(search_str, public_only)  # from pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []
     if len(flat_list_of_sources) > 0:
-        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
-        pool.terminate()  # extra s
-
+        if use_pool:
+            pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+            set_of_queried_sources = pool.map(source_details_worker, flat_list_of_sources)
+            pool.close()
+        else:
+            set_of_queried_sources = [source_details_worker(s) for s in flat_list_of_sources]
+    set_of_queried_sources = sorted(set_of_queried_sources, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_sources})
 
 
@@ -64,14 +67,13 @@ def collection_details_worker(info):
     total_story_count = user_mc.storyCount(collection_story_query)['count']
     total_sources = len(_cached_media_with_tag_page(info['tags_id'], 0))
     coll_data = {
-        'tags_id': info['tags_id'],
         'type': info['tag_set_label'],
         'label': info['label'] or info['tag'],
-        'description': info['tag_set_description'],
         'story_count': total_story_count,
         'media_count': total_sources,
     }
-    return coll_data
+    info.update(coll_data)
+    return info
 
 
 @app.route('/api/mediapicker/collections/search', methods=['GET'])
@@ -79,17 +81,40 @@ def collection_details_worker(info):
 @arguments_required('mediaKeyword')
 @api_error_handler
 def api_mediapicker_collection_search():
+    use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['mediaKeyword']
-    results = _matching_collections_by_set(search_str, public_only) # from pool
+    results = _matching_collections_by_set(search_str, public_only)  # from pool
     trimmed_collections = [r[:MAX_COLLECTIONS] for r in results]
     flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
     set_of_queried_collections = []
     if len(flat_list_of_collections) > 0:
-        pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-        set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
-        pool.terminate()  # extra s
-
+        if use_pool:
+            pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+            set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
+            pool.close()
+        else:
+            set_of_queried_collections = [collection_details_worker(c) for c in flat_list_of_collections]
+    set_of_queried_collections = sorted(set_of_queried_collections, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_collections})
 
 
+@app.route('/api/mediapicker/collections/featured', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_explorer_featured_collections():
+    featured_collections = _cached_featured_collection_list()
+    return jsonify({'results': featured_collections})
+
+
+@cache
+def _cached_featured_collection_list():
+    featured_collections = []
+    for tags_id in FEATURED_COLLECTION_LIST:
+        coll = mc.tag(tags_id)
+        coll['id'] = tags_id
+        featured_collections.append(coll)
+    pool = Pool(processes=STORY_COUNT_POOL_SIZE)
+    set_of_queried_collections = pool.map(collection_details_worker, featured_collections)
+    pool.close()
+    return set_of_queried_collections

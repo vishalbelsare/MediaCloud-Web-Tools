@@ -7,10 +7,11 @@ import StatBar from '../common/statbar/StatBar';
 const localMessages = {
   pubCountry: { id: 'source.pubCountry', defaultMessage: 'Publication Country' },
   pubState: { id: 'source.pubState', defaultMessage: 'Publication State' },
+  mediaType: { id: 'source.pubState', defaultMessage: 'Media Type' },
   primaryLanguage: { id: 'source.primaryLanguage', defaultMessage: 'Primary Language' },
   countryOfFocus: { id: 'source.countryOfFocus', defaultMessage: 'Country of Focus' },
   languageHelpContent: { id: 'source.details.language.help.content', defaultMessage: '<p>We automatically guess the langauge of stories in our system. This language is the one most used by this source based on the automatic detection.</p>' },
-  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.  We automatically detect the countries and states talked about in our content.</p>' },
+  geoHelpDetailedContent: { id: 'source.details.geo.title', defaultMessage: '<p>This is the country this source writes about most.</p>' },
 };
 
 /**
@@ -35,6 +36,11 @@ const SourceMetadataStatBar = (props) => {
             data: source.countryOfFocusTag ? source.countryOfFocusTag.label : '?',
             helpTitleMsg: messages.geoHelpTitle,
             helpContentMsg: [localMessages.geoHelpDetailedContent, messages.geoHelpContent],
+          },
+          { message: localMessages.mediaType,
+            data: source.mediaTypeTag ? source.mediaTypeTag.label : '?',
+            helpTitleMsg: messages.mediaTypeHelpTitle,
+            helpContentMsg: messages.mediaTypeHelpContent,
           },
         ]}
       />

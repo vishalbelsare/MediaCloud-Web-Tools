@@ -1,7 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { schemeCategory10 } from 'd3';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
@@ -9,13 +11,14 @@ import SearchForm from './SearchForm';
 import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
+import MarketingFeatureList from './MarketingFeatureList';
+import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
-  subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Welcome to the Media Cloud Explorer' },
-  summary: { id: 'explorer.intro.summary', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media.' },
-  description: { id: 'explorer.intro.description', defaultMessage: 'Dashboard is an open-source, web-based interface that allows you to run a search on any topic of your interest over one or more news sources, and over acustom time range. It allows you to retrieve stories matching your query, along with a series of outputs such as attention graphs, word clouds, and sentence and story examples.' },
+  subtitle: { id: 'explorer.intro.subtitle', defaultMessage: 'Explore Online News with Media Cloud' },
+  description: { id: 'explorer.intro.description', defaultMessage: 'Use the Media Cloud Explorer to search half a billion stories from more than 50,000 sources. We pull in stories from online news media, blogs, and other sources to let you research media attention to issues you are interested in. Track shifts in media attention, identify competing media narratives, compare coverage in different media sectors - these are all tasks Media Cloud can help you with.' },
   loginTitle: { id: 'explorer.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
@@ -26,12 +29,13 @@ const Homepage = (props) => {
     sideBarContent = (
       <Grid>
         <Row>
-          <Col md={7}>
+          <Col lg={1} />
+          <Col lg={5}>
             <h1><FormattedMessage {...localMessages.subtitle} /></h1>
-            <h2><FormattedMessage {...localMessages.summary} /></h2>
             <p><FormattedMessage {...localMessages.description} /></p>
           </Col>
-          <Col md={5}>
+          <Col lg={1} />
+          <Col lg={4}>
             <DataCard>
               <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
               <LoginForm />
@@ -42,7 +46,7 @@ const Homepage = (props) => {
     );
   }
   return (
-    <div>
+    <div className="homepage">
       <Grid>
         <Row>
           <Col lg={12}>
@@ -52,18 +56,22 @@ const Homepage = (props) => {
       </Grid>
       <SampleSearchContainer />
       {sideBarContent}
+      <MarketingFeatureList />
+      <Grid>
+        <SystemStatsContainer />
+      </Grid>
     </div>
   );
 };
 
 Homepage.propTypes = {
-  intl: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
   // from context
-  location: React.PropTypes.object.isRequired,
-  params: React.PropTypes.object.isRequired,       // params from router
-  onKeywordSearch: React.PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,       // params from router
+  onKeywordSearch: PropTypes.func.isRequired,
   // from state
-  user: React.PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -72,18 +80,23 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onKeywordSearch: (values, user) => {
-    let urlParamString = null;
-    // TODO two week range for logged in too?
-    const dateObj = getPastTwoWeeksDateRange();
-    const collection = JSON.stringify(DEFAULT_COLLECTION_OBJECT_ARRAY);
-    // why bother sending this? const sources = '[]';
-    const defParams = `[{"q":"${values.keyword}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection}}]`;
-    const demoParams = `[{"q":"${values.keyword}"}]`;
-
+    let urlParamString;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
-      urlParamString = `search/${defParams}`;
+      const defaultDates = getPastTwoWeeksDateRange();
+      const queries = [{
+        q: values.keyword,
+        startDate: defaultDates.start,
+        endDate: defaultDates.end,
+        color: schemeCategory10[0],
+        collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
+        sources: [],
+      }];
+      queries[0].label = autoMagicQueryLabel(queries[0]);
+      const queryStr = generateQueryParamString(queries);
+      urlParamString = `search/${queryStr}`;
     } else {
-      urlParamString = `demo/search/${demoParams}`;
+      const queryStr = `[{"q":"${encodeURIComponent(values.keyword)}"}]`;
+      urlParamString = `demo/search/${queryStr}`;
     }
     dispatch(push(`/queries/${urlParamString}`));
   },

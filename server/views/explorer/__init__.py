@@ -1,18 +1,20 @@
-import json
 import logging
-import flask_login
+from server.cache import cache
 import os
 import json
-from server import app, base_dir, mc
+from server import mc
 from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param
-from flask import jsonify, send_from_directory
-from server.auth import is_user_logged_in, user_admin_mediacloud_client
+from flask import send_from_directory
+from server.auth import is_user_logged_in
 import datetime
 
 logger = logging.getLogger(__name__)
 
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
+
+DEFAULT_COLLECTION_IDS = [ 9139487 ]
+
 
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
     valid_sorts = [SORT_SOCIAL, SORT_INLINK]
@@ -33,30 +35,14 @@ def access_public_topic(topics_id):
         return True
     return False
 
-def solr_query_from_request(request):
-    solr_seed_query=request['q']
-    start_date= request['start_date']
-    end_date=request['end_date']
-
-    media_ids=_media_ids_from_sources_param(request['sources[]']) if 'sources[]' in request else []
-    tags_ids=_tag_ids_from_collections_param(request['collections[]']) if 'collections[]' in request else []
-    return concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids)
 
 # note similarity above.  JSON versus python prepped fields
 def prep_simple_solr_query(query):
-    current_query = query['q']
-    start_date = query['startDate']
-    end_date = query['endDate']
-    media_ids = query['sources']
-    tags_ids = query['collections']
-
-    solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-        start_date= start_date,
-        end_date=end_date,
-        media_ids=media_ids,
-        tags_ids=tags_ids)
-
+    solr_query = concatenate_query_for_solr(solr_seed_query=query['q'],
+                                            start_date=query['startDate'], end_date=query['endDate'],
+                                            media_ids=query['sources'], tags_ids=query['collections'])
     return solr_query
+
 
 # helper for preview queries
 def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids, tags_ids):
@@ -104,47 +90,50 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
     
     return query
 
-def concatenate_query_and_dates(start_date, end_date):
 
+def concatenate_query_and_dates(start_date, end_date):
     testa = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
     testb = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
     publish_date = mc.publish_date_query(testa,
                                               testb,
                                               True, True)
-
     return publish_date
 
-def parse_query_with_keywords(args) :
 
+def parse_query_with_keywords(args):
     solr_query = ''
-
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
     start_date = two_weeks_before_now.strftime("%Y-%m-%d")
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
     current_query = ''
     # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
-
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
         current_query = args['q']
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = args['sources[]'] if 'sources[]' in args else []
-        tags_ids = args['collections[]'] if 'collections[]' in args else [9139487]
+        media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
+        if 'collections' in args:
+            if len(args['collections']) == 1:
+                tags_ids = args['collections']
+            else:
+                tags_ids = args['collections'].split(',')
+        else:
+            tags_ids = DEFAULT_COLLECTION_IDS
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-            start_date= start_date,
-            end_date=end_date,
-            media_ids=media_ids,
-            tags_ids=tags_ids)
-
+                                                start_date=start_date,
+                                                end_date=end_date,
+                                                media_ids=media_ids,
+                                                tags_ids=tags_ids)
 
     # otherwise, default
     except Exception as e:
+        tags_ids = args['collections']
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
+
 
 def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
@@ -175,7 +164,6 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
             media_ids=media_ids,
             tags_ids=tags_ids)
 
-
     # we dont have a query_id. Do we have a q param?
     except Exception as e:
         logger.warn("Demo user is querying for a keyword: " + str(e))
@@ -192,12 +180,15 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     return solr_query
 
+
+@cache
 def load_sample_searches():
     json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
     # load the sample searches file
     with open(json_file) as json_data:
         d = json.load(json_data)
         return d
+
 
 def read_sample_searches():
     json_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'static/data'))

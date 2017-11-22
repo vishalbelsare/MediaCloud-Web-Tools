@@ -8,7 +8,7 @@ import messages from '../../resources/messages';
 import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppToolbar';
 import ToolDescription from './ToolDescription';
 import Faq from './faq/ToolsFaq';
-import SystemStatsContainer from './SystemStatsContainer';
+import SystemStatsContainer from '../common/statbar/SystemStatsContainer';
 import LoginForm from '../user/LoginForm';
 import DataCard from '../common/DataCard';
 import { assetUrl } from '../../lib/assetUtil';

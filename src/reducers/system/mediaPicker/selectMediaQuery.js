@@ -1,17 +1,19 @@
-import { SELECT_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
+import { SELECT_MEDIAPICKER_QUERY_ARGS, RESET_MEDIAPICKER_QUERY_ARGS } from '../../../actions/systemActions';
 // import { PICK_COLLECTION, PICK_SOURCE, ADVANCED  } from '../../../../lib/explorerUtil';
 
-const INITIAL_STATE = null;
+const INITIAL_STATE = { args: { type: 0, mediaKeyword: null } };
 
 function selectMediaQuery(state = INITIAL_STATE, action) {
   const updatedState = null;
   switch (action.type) {
     case SELECT_MEDIAPICKER_QUERY_ARGS:
-      if (action.payload) { // searchId will not be present as this was a keyword search... index should be set on front end when parsing JSON keywords
+      if (action.payload) { // format should be args: { type:, mediaKeyword}
         const args = action.payload;
         return { args };
       }
       return updatedState;
+    case RESET_MEDIAPICKER_QUERY_ARGS:
+      return INITIAL_STATE;
     default:
       return state;
   }

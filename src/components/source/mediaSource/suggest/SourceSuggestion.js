@@ -70,6 +70,7 @@ class SourceSuggestion extends React.Component {
         <div className="source-suggestion-confirmation">
           <Dialog
             title={formatMessage(localMessages.approveTitle)}
+            className="app-dialog"
             actions={[
               <AppButton
                 label={formatMessage(messages.cancel)}
@@ -97,6 +98,7 @@ class SourceSuggestion extends React.Component {
           </Dialog>
           <Dialog
             title={formatMessage(localMessages.rejectTitle)}
+            className="app-dialog"
             actions={[
               <AppButton
                 label={formatMessage(messages.cancel)}

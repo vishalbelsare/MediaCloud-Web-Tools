@@ -26,12 +26,15 @@ export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
 export const FETCH_USER_QUEUED_RUNNING_TOPICS = 'FETCH_USER_QUEUED_RUNNING_TOPICS';
 export const FETCH_TOPIC_WORD2VEC = 'FETCH_TOPIC_WORD2VEC';
 export const FETCH_TOPIC_WORD2VEC_TIMESPANS = 'FETCH_TOPIC_WORD2VEC_TIMESPANS';
+export const FETCH_ADMIN_TOPIC_LIST = 'FETCH_ADMIN_TOPIC_LIST';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
 
 export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
 
 export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsPublicList);
+
+export const fetchAdminTopicList = createAsyncAction(FETCH_ADMIN_TOPIC_LIST, api.topicsAdminList);
 
 // pass in topicId
 export const selectTopic = createAction(SELECT_TOPIC, id => parseInt(id, 10));

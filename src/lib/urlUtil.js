@@ -19,3 +19,11 @@ export function storyDomainName(story) {
   const domain = tempATag.hostname.split('.').slice(-2).join('.');
   return domain;
 }
+
+export function urlToCollection(collectionId) {
+  return `https://sources.mediacloud.org/#/collections/${collectionId}`;
+}
+
+export function urlToSource(mediaId) {
+  return `https://sources.mediacloud.org/#/sources/${mediaId}`;
+}

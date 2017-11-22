@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import * as d3 from 'd3';
-import { FormattedHtml, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import OrderedWordCloud from './OrderedWordCloud';
 
 const WORDS_TO_SHOW = 100;
+const WORD_CLOUD_WIDTH = 375;
 
 const ComparativeOrderedWordCloud = (props) => {
-  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg } = props;
+  const { leftWords, rightWords, leftTitleMsg, centerTitleMsg, rightTitleMsg, leftTextColor, rightTextColor, onWordClick } = props;
   const leftSum = d3.sum(leftWords, d => d.count);
   const rightSum = d3.sum(rightWords, d => d.count);
   let topLeft = leftWords.slice(0, WORDS_TO_SHOW);
@@ -38,30 +39,35 @@ const ComparativeOrderedWordCloud = (props) => {
     <div className="comparative-ordered-word-cloud">
       <Row>
         <Col lg={4}>
-          <h2><FormattedHtml {...leftTitleMsg} /></h2>
+          <h3>{leftTitleMsg}</h3>
           <OrderedWordCloud
             words={left}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
+            textColor={leftTextColor}
+            onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHtml {...centerTitleMsg} /></h2>
+          <h3>{centerTitleMsg}</h3>
           <OrderedWordCloud
             words={center}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
+            onWordClick={onWordClick}
           />
         </Col>
         <Col lg={4}>
-          <h2><FormattedHtml {...rightTitleMsg} /></h2>
+          <h3>{rightTitleMsg}</h3>
           <OrderedWordCloud
             words={right}
             alreadyNormalized
             fullExtent={fullExtent}
-            width={390}
+            width={WORD_CLOUD_WIDTH}
+            textColor={rightTextColor}
+            onWordClick={onWordClick}
           />
         </Col>
       </Row>
@@ -79,7 +85,8 @@ ComparativeOrderedWordCloud.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
-  textColor: PropTypes.string,
+  leftTextColor: PropTypes.string,
+  rightTextColor: PropTypes.string,
   onWordClick: PropTypes.func,
   linkColor: PropTypes.string,
   showTooltips: PropTypes.bool,

@@ -17,6 +17,10 @@
     background-color: $dashboard-primary;
   }
 
+  &.tool-explorer {
+    background-color: $explorer-primary;
+  }
+
   &.tool-topics {
     background-color: $topics-primary;
   }

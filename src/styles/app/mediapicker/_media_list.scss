@@ -1,0 +1,48 @@
+@import '../../_constants';
+
+.media-list {
+
+  .media-item {
+    border: 1px solid $material-grey300;
+    margin-bottom: 15px;
+
+    .media-info {
+      padding: 15px;
+      h2 {
+        margin-top: 8px;
+      }
+      p {
+        font-size: 12px !important;
+      }
+      min-height: 100px !important;
+      .app-icon.app-icon-large {
+        height:25px;
+      }
+    }
+
+    .media-stats {
+      border-top: 1px solid $material-grey300;
+      .stat-wrapper {
+        border-left: 1px solid $material-grey300;
+        &.first {
+          border-left: 0px; 
+        }
+      }
+      .stat {
+        padding: 15px;
+        text-align: center;
+        margin: 0px;
+        border: 0px;    
+        em {
+          font-size: 18px;
+        }    
+      }
+      .media-action {
+        small {
+          font-weight: normal;
+        }
+      }
+    }
+
+  }
+}

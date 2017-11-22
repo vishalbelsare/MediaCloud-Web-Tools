@@ -38,6 +38,7 @@ class WordsSummaryContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
         width={720}
+        includeTopicWord2Vec
       />
     );
   }
@@ -91,7 +92,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeDescribedDataCard(localMessages.descriptionIntro,
+        [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp, messages.wordCloudTopicWord2VecLayoutHelp])(
         composeAsyncContainer(
           WordsSummaryContainer
         )

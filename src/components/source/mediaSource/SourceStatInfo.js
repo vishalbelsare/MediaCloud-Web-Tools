@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceStats } from '../../../actions/sourceActions';
 import StatBar from '../../common/statbar/StatBar';
+import HealthBadge from '../HealthBadge';
 import messages from '../../../resources/messages';
+import { healthStartDateToMoment } from '../../../lib/dateUtil';
 
 const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
@@ -23,26 +25,21 @@ const SourceStatInfo = (props) => {
   if ((sourceId === null) || (sourceId === undefined)) {
     return null;
   }
-  // check some health data to see if it is missing
-  let isHealthyContent;
-  if (sourceInfo.is_healthy === null) {
-    isHealthyContent = <FormattedMessage {...messages.unknown} />;
+  let formattedDateStr;
+  if (sourceInfo.start_date) {
+    const startDate = healthStartDateToMoment(sourceInfo.start_date);
+    formattedDateStr = formatDate(startDate, { month: 'numeric', year: 'numeric' });
   } else {
-    isHealthyContent = (
-      <div className={`${!sourceInfo.is_healthy ? 'source-stat-health-gap' : ''}`}>
-        <FormattedMessage {...localMessages.isHealthy} values={{ value: sourceInfo.is_healthy }} />
-      </div>
-    );
+    formattedDateStr = formatMessage(messages.unknown);
   }
-  const startDate = (sourceInfo.start_date) ? formatDate(sourceInfo.start_date) : formatMessage(messages.unknown);
   return (
     <StatBar
       columnWidth={2}
       stats={[
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
-        { message: localMessages.coveredSince, data: startDate },
-        { message: localMessages.health, data: isHealthyContent },
-        { message: localMessages.collections, data: formatNumber(sourceInfo.collections) },
+        { message: localMessages.coveredSince, data: formattedDateStr },
+        { message: localMessages.health, data: <HealthBadge isHealthy={sourceInfo.is_healthy} /> },
+        { message: localMessages.collections, data: formatNumber(sourceInfo.collection_count) },
         { message: localMessages.geoPct,
           data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 2 }),
           helpTitleMsg: messages.geoHelpTitle,

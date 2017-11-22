@@ -1,3 +1,5 @@
+import { trimToMaxLength } from './stringUtil';
+
 export const DEFAULT_SOURCES = '';
 
 export const DEFAULT_COLLECTION = 9139487;
@@ -9,26 +11,18 @@ export const PICK_SOURCE = 1;
 export const ADVANCED = 2;
 export const STARRED = 3;
 
-
+// we use the media bucket to grab updated and deleted media from two different operations. hence, we need to check that value first
 export function generateQueryParamString(queries) {
-  const collection = queries.map(query => query.collections.map(c => `{"id":${c.id}, "label":"${c.label}"}`));
-  const sources = queries.map(query => query.sources.map(c => `{"id":${c.id}}`));
-  let urlParamString = queries.map((query, idx) => `{"index":${idx},"label":"${query.label}","q":"${query.q}","color":"${escape(query.color)}","startDate":"${query.startDate}","endDate":"${query.endDate}","sources":[${sources[idx]}],"collections":[${collection[idx]}]}`);
-  urlParamString = `${urlParamString}`;
-
-  return urlParamString;
-}
-
-const MAX_QUERY_LABEL_LENGTH = 60;
-
-// come from home page versus within QueryBuilder..
-export function smartLabelForQuery(query) {
-  let smartLabel = query.q;
-  // const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
-  if (query.q.length > MAX_QUERY_LABEL_LENGTH) {
-    smartLabel = `${smartLabel.substr(0, MAX_QUERY_LABEL_LENGTH)}...`;
-  }
-  return smartLabel;
+  const queriesForUrl = queries.map(query => ({
+    label: encodeURIComponent(query.label),
+    q: encodeURIComponent(query.q),
+    color: encodeURIComponent(query.color),
+    startDate: query.startDate,
+    endDate: query.endDate,
+    sources: query.media ? query.media.filter(m => m.type === 'source' || m.media_id).map(s => s.id) : query.sources.map(s => s.id), // de-aggregate media bucket into sources and collections
+    collections: query.media ? query.media.filter(m => m.type === 'collection' || m.tags_id).map(s => s.id) : query.collections.map(s => s.id),
+  }));
+  return JSON.stringify(queriesForUrl);
 }
 
 export function queryPropertyHasChanged(queries, nextQueries, propName) {
@@ -38,3 +32,6 @@ export function queryPropertyHasChanged(queries, nextQueries, propName) {
   return propHasChanged;
 }
 
+// TODO: implement this logic from Dashboard
+const MAX_QUERY_LABEL_LENGTH = 60;
+export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, MAX_QUERY_LABEL_LENGTH));

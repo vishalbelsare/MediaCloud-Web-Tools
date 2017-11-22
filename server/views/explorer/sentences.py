@@ -8,7 +8,7 @@ from server.auth import user_admin_mediacloud_client
 from server.cache import cache
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.views.explorer import solr_query_from_request, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
 import json
 # load the shared settings file
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def api_explorer_sentences_count():
     user_mc = user_admin_mediacloud_client()
     # dates are required as is one collection, how do we handle default for logged in users?
-    solr_query = solr_query_from_request(request.args) 
+    solr_query = parse_query_with_keywords(request.args)
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.args['start_date'], split_end_date=request.args['end_date'], split=True)
     # make sure we return the query and the id passed in..
     return jsonify(sentence_count_result)

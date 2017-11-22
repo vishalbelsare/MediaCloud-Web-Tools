@@ -10,7 +10,7 @@ const localMessages = {
   notParsed: { id: 'story.places.notParsed', defaultMessage: 'We have not parsed this story for geographic focus.' },
   noPlaces: { id: 'story.places.noPlaces', defaultMessage: 'We did not identify any geographic places this story was about.' },
   helpTitle: { id: 'story.places.help.title', defaultMessage: 'About Geographic Focus' },
-  helpText: { id: 'story.places.help.text', defaultMessage: 'This story has been processed with the CLIFF-CLAVIN geocoder.  This finds any geographic places mentioned in the text of the story and tries to determine where they are.  This is based on a set of heuristics we have tested and validated to work at industry-standard levels.  We have listed the most frequently mentioned places in the story here, as the places the story is "about".' },
+  helpText: { id: 'story.places.help.text', defaultMessage: 'This story has been processed with the <a href="https://cliff.mediacloud.org">CLIFF-CLAVIN</a> geocoder.  This finds any geographic places mentioned in the text of the story and tries to determine where they are.  This is based on a set of heuristics we have tested and validated to work at industry-standard levels.  We have listed the most frequently mentioned places in the story here, as the places the story is "about".' },
   unknownPlace: { id: 'story.places.unknownPlace', defaultMessage: 'Unknown place' },
 };
 

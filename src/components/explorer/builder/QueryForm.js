@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { reduxForm, Field, propTypes } from 'redux-form';
@@ -8,8 +9,10 @@ import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
-import { emptyString } from '../../../lib/formValidators';
-import SelectMediaDialog from '../../common/mediaPicker/SelectMediaDialog';
+import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
+import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+import { emptyString, validDate } from '../../../lib/formValidators';
+import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -21,13 +24,14 @@ const localMessages = {
   color: { id: 'explorer.queryBuilder.color', defaultMessage: 'Choose a color' },
   sentenceHeadline: { id: 'explorer.queryBuilder.sentenceHeadline', defaultMessage: 'Choose a sentence or headline' },
   dates: { id: 'explorer.queryBuilder.dates', defaultMessage: 'For dates' },
-  learnHowTo: { id: 'explorer.queryBuilder.learnHowTo', defaultMessage: 'Learn how to build query strings' },
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
   queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
   loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Searching for data more than a year old may yield unreliable results.' },
+  invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
 };
 
 const focusQueryInputField = (input) => {
@@ -49,14 +53,16 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, isEditable, selected, buttonLabel, handleLoadSearch, handleSaveSearch, handleOpenHelp, submitting, handleSubmit, onSave, onChange, renderTextField, renderTextFieldWithFocus } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
+      submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
-
     if (cleanedInitialValues.disabled === undefined) {
       cleanedInitialValues.disabled = false;
     }
-
+    cleanedInitialValues.media = [  // merge sources and collections into one list for display with `renderFields`
+      ...initialValues.sources,
+      ...initialValues.collections,
+    ];
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
       if (selected.q === undefined || selected.q === '*') {
@@ -68,14 +74,14 @@ class QueryForm extends React.Component {
     let mediaPicker = null;
     let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
     if (isEditable) {
-      mediaPicker = <SelectMediaDialog initMedia={selected.media} onConfirmSelection={selections => onChange(selections)} />;
+      mediaPicker = <MediaPickerDialog initMedia={selected.media ? selected.media : cleanedInitialValues.media} onConfirmSelection={selections => onMediaChange(selections)} />;
       mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
     }
     if (!selected) { return null; }
     // if we have a ref field, we have intend to set the focus to a particular field - the query field
     // essentially an autofocus for the form
     return (
-      <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave.bind(this))} onChange={onChange}>
+      <form className="app-form query-form" name="queryForm" onSubmit={handleSubmit(onSave)}>
         <div className="query-form-wrapper">
           <Grid>
             <Row>
@@ -96,14 +102,14 @@ class QueryForm extends React.Component {
                     saveRef={(input) => { this.preserveRef(input); }}
                     component={renderTextFieldWithFocus}
                   />
-                  <a href="#query-help" onClick={handleOpenHelp}><FormattedMessage {...localMessages.learnHowTo} /></a>
+                  <QueryHelpDialog />
                 </div>
                 <div className="color-field-wrapper">
                   <label className="inline" htmlFor="color"><FormattedMessage {...localMessages.color} /></label>
                   <ColorPicker
                     name="color"
                     color={currentColor}
-                    onChange={onChange}
+                    onChange={onColorChange}
                   />
                 </div>
               </Col>
@@ -116,10 +122,9 @@ class QueryForm extends React.Component {
                     form="queryForm"
                     destroyOnUnmount={false}
                     enableReinitialize
+                    onDelete={onMediaDelete}
                     initialValues={cleanedInitialValues}
-                    selected={cleanedInitialValues}
                     allowRemoval={isEditable}
-                    onChange={onChange}
                   />
                   {mediaPicker}
                 </div>
@@ -133,6 +138,7 @@ class QueryForm extends React.Component {
                     component={renderTextField}
                     underlineShow={false}
                     disabled={!isEditable}
+                    onChange={onDateChange}
                   />
                   <div className="date-for-wrapper"><FormattedMessage {...localMessages.dateTo} /></div>
                   <Field
@@ -143,6 +149,7 @@ class QueryForm extends React.Component {
                     component={renderTextField}
                     underlineShow={false}
                     disabled={!isEditable}
+                    onChange={onDateChange}
                   />
                 </div>
               </Col>
@@ -151,7 +158,8 @@ class QueryForm extends React.Component {
         </div>
         <Grid>
           <Row>
-            <Col lg={6} />
+            <Col lg={11} />
+            {/*
             <Col lg={2}>
               <AppButton
                 style={{ marginTop: 30 }}
@@ -170,12 +178,14 @@ class QueryForm extends React.Component {
                 secondary
               />
             </Col>
+            */}
             <Col lg={1}>
               <AppButton
                 style={{ marginTop: 30 }}
                 type="submit"
                 label={buttonLabel}
                 disabled={submitting}
+                onClick={onWillSearch}
                 primary
               />
             </Col>
@@ -188,28 +198,30 @@ class QueryForm extends React.Component {
 
 QueryForm.propTypes = {
   // from parent
-  selected: React.PropTypes.object.isRequired,
-  onSave: React.PropTypes.func.isRequired,
-  onChange: React.PropTypes.func,
-  buttonLabel: React.PropTypes.string.isRequired,
-  initialValues: React.PropTypes.object,
+  selected: PropTypes.object.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onColorChange: PropTypes.func,
+  onMediaChange: PropTypes.func,
+  buttonLabel: PropTypes.string.isRequired,
+  initialValues: PropTypes.object,
+  onWillSearch: PropTypes.func,
   // from context
-  intl: React.PropTypes.object.isRequired,
-  renderTextField: React.PropTypes.func.isRequired,
-  renderSelectField: React.PropTypes.func.isRequired,
-  renderTextFieldWithFocus: React.PropTypes.func.isRequired,
-  fields: React.PropTypes.object,
-  meta: React.PropTypes.object,
-  handleLoadSearch: React.PropTypes.func.isRequired,
-  handleSaveSearch: React.PropTypes.func.isRequired,
-  handleOpenHelp: React.PropTypes.func.isRequired,
+  intl: PropTypes.object.isRequired,
+  renderTextField: PropTypes.func.isRequired,
+  renderSelectField: PropTypes.func.isRequired,
+  renderTextFieldWithFocus: PropTypes.func.isRequired,
+
+  handleLoadSearch: PropTypes.func.isRequired,
+  handleSaveSearch: PropTypes.func.isRequired,
+  onMediaDelete: PropTypes.func.isRequired,
+  onDateChange: PropTypes.func.isRequired,
   // from form healper
-  updateQuery: React.PropTypes.func,
-  handleSubmit: React.PropTypes.func,
-  pristine: React.PropTypes.bool.isRequired,
-  submitting: React.PropTypes.bool.isRequired,
-  isEditable: React.PropTypes.bool.isRequired,
-  focusRequested: React.PropTypes.func.isRequired,
+  updateQuery: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  isEditable: PropTypes.bool.isRequired,
+  focusRequested: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {
@@ -221,6 +233,15 @@ function validate(values, props) {
   }
   if (!values.collections || !values.collections.length) {
     errors.collections = { _error: 'At least one collection must be chosen' };
+  }
+  if (!validDate(values.startDate)) {
+    errors.startDate = { _error: formatMessage(localMessages.invalidDateWarning) };
+  }
+  if (!validDate(values.endDate)) {
+    errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
+  }
+  if (validDate(values.startDate) && isMoreThanAYearInPast(values.startDate)) {
+    errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
   return errors;
 }

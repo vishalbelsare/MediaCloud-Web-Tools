@@ -3,6 +3,7 @@ import React from 'react';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Dialog from 'material-ui/Dialog';
+import Link from 'react-router/lib/Link';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { selectStory, fetchStory } from '../../../actions/topicActions';
@@ -10,19 +11,19 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import StoryWordsContainer from './StoryWordsContainer';
 import StoryInlinksContainer from './StoryInlinksContainer';
 import StoryOutlinksContainer from './StoryOutlinksContainer';
-import StoryEntitiesContainer from './StoryEntitiesContainer';
+import StoryEntitiesContainer from '../../common/story/StoryEntitiesContainer';
+import StoryNytThemesContainer from '../../common/story/StoryNytThemesContainer';
 import messages from '../../../resources/messages';
-import { RemoveButton, ReadItNowButton } from '../../common/IconButton';
+import { EditButton, RemoveButton, ReadItNowButton } from '../../common/IconButton';
 import ComingSoon from '../../common/ComingSoon';
 import StoryIcon from '../../common/icons/StoryIcon';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
+import { PERMISSION_TOPIC_WRITE, PERMISSION_STORY_EDIT } from '../../../lib/auth';
 import { TAG_SET_GEOGRAPHIC_PLACES, TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
 import StatBar from '../../common/statbar/StatBar';
 import AppButton from '../../common/AppButton';
 import StoryDetails from './StoryDetails';
 import StoryPlaces from './StoryPlaces';
-import StoryThemes from './StoryThemes';
 
 const MAX_STORY_TITLE_LENGTH = 70;  // story titles longer than this will be trimmed and ellipses added
 
@@ -31,6 +32,7 @@ const localMessages = {
   removeTitle: { id: 'story.details.remove', defaultMessage: 'Remove from Next Snapshot' },
   removeAbout: { id: 'story.details.remove.about', defaultMessage: 'If story is clearly not related to the Topic, or is messing up your analysis, you can remove it from the next Snapshot.  Be careful, because this means it won\'t show up anywhere on the new Snapshot you generate.' },
   unknownLanguage: { id: 'story.details.language.unknown', defaultMessage: 'Unknown' },
+  editStory: { id: 'story.details.edit', defaultMessage: 'Edit This Story' },
 };
 
 class StoryContainer extends React.Component {
@@ -82,6 +84,11 @@ class StoryContainer extends React.Component {
             <Col lg={12}>
               <h1>
                 <span className="actions">
+                  <Permissioned onlyRole={PERMISSION_STORY_EDIT}>
+                    <Link to={`/topics/${topicId}/stories/${storiesId}/update`}>
+                      <EditButton tooltip={formatMessage(localMessages.editStory)} />
+                    </Link>
+                  </Permissioned>
                   <ReadItNowButton onClick={this.handleReadItClick} />
                   <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
                     <RemoveButton tooltip={formatMessage(localMessages.removeTitle)} onClick={this.handleRemoveClick} />
@@ -92,6 +99,7 @@ class StoryContainer extends React.Component {
               </h1>
               <Dialog
                 title={formatMessage(localMessages.removeTitle)}
+                className="app-dialog"
                 actions={dialogActions}
                 modal={false}
                 open={this.state.open}
@@ -125,10 +133,16 @@ class StoryContainer extends React.Component {
               <StoryOutlinksContainer topicId={topicId} storiesId={storiesId} />
             </Col>
             <Col lg={6}>
-              <StoryPlaces tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)} geocoderVersion={story.geocoderVersion} />
+              <StoryPlaces
+                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_GEOGRAPHIC_PLACES)}
+                geocoderVersion={story.geocoderVersion}
+              />
             </Col>
             <Col lg={6}>
-              <StoryThemes tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)} nytThemesVersion={story.nytThemesVersion} />
+              <StoryNytThemesContainer
+                storyId={storiesId}
+                tags={story.story_tags.filter(t => t.tag_sets_id === TAG_SET_NYT_THEMES)}
+              />
             </Col>
             <Col lg={6}>
               <StoryDetails topicId={topicId} story={story} />
@@ -136,7 +150,7 @@ class StoryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12} >
-              <StoryEntitiesContainer topicId={topicId} storiesId={storiesId} />
+              <StoryEntitiesContainer storyId={storiesId} />
             </Col>
           </Row>
         </Grid>

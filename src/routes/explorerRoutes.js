@@ -13,11 +13,15 @@ const explorerRoutes = (
   <Route path="/" component={ExplorerApp}>
 
     <IndexRedirect to="/home" />
+
     <Route path="/about" component={About} />
     <Route path="/home" component={Homepage} />
+
     <Route path="/queries">
-      <Route path="demo/search/:keyword" component={DemoQueryContainer} />
-      <Route path="demo/:id" component={DemoQueryContainer} />
+      <Route path="demo">
+        <Route path="search/:keyword" component={DemoQueryContainer} />
+        <Route path=":id" component={DemoQueryContainer} />
+      </Route>
       <Route path="search/:queryParams" component={LoggedInQueryContainer} onEnter={requireAuth} />
     </Route>
 

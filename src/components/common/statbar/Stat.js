@@ -44,6 +44,7 @@ Stat.propTypes = {
   data: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
+    PropTypes.number,
   ]),
   content: PropTypes.object,
   helpTitleMsg: PropTypes.object,

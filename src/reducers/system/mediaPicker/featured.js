@@ -7,23 +7,19 @@ const featured = createAsyncReducer({
     args: Object.assign({}, meta.args[0], { selected: false }), // for adding/removing from selected list
     list: payload.results.map(c => ({
       ...c,
-      name: `${c.tag_set_label}: ${c.label || c.tag}`,
+      name: `${c.label || c.tag}`,
       id: c.tags_id,
       type: 'collection',
       selected: false, // for adding/removing from selected list
     })),
   }),
-  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => ({
-    list: state.list ? state.list.map((c) => {
-      if (c.id === payload.id) {
-        return ({
-          ...c,
-          selected: !c.selected,
-        });
-      }
-      return c;
-    }) : null,
-    timestamp: Date.now().toString(),
-  }),
+  [MEDIA_PICKER_TOGGLE_MEDIA_IN_LIST]: (payload, state) => {
+    const updatedState = [...state.list];
+    const mediaIndex = updatedState.findIndex(q => q.id !== null && q.id === payload.selectedMedia.id);
+    if (mediaIndex >= 0) {
+      updatedState[mediaIndex].selected = payload.setSelected;
+    }
+    return { list: updatedState };
+  },
 });
 export default featured;

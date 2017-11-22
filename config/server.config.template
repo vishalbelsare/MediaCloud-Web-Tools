@@ -30,3 +30,4 @@ port = 8080
 
 [services]
 word_embeddings_server_url = http://word-embeddings-server-url
+nyt_theme_labeller_url = http://predict-news-labels-server-url

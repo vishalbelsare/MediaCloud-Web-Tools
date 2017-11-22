@@ -2,13 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Title from 'react-title-component';
 import { replace } from 'react-router-redux';
-import { injectIntl } from 'react-intl';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { filteredLocation, urlWithFilters } from '../util/location';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery } from '../../actions/topicActions';
+import AppButton from '../common/AppButton';
+import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery,
+  topicStartSpider } from '../../actions/topicActions';
 import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
-import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING, TOPIC_SNAPSHOT_STATE_ERROR } from '../../reducers/topics/selected/snapshots';
+import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING,
+  TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
 
@@ -16,6 +20,7 @@ const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
   hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!' },
+  spiderQueued: { id: 'topic.spiderQueued', defaultMessage: 'This topic is in the queue for spidering stories.  Please reload after a bit to see if it has started spidering.' },
   snapshotQueued: { id: 'snapshotGenerating.warning.queued', defaultMessage: 'We will start creating the new snapshot soon. Please reload this page in a minute to automatically see the freshest data.' },
   snapshotRunning: { id: 'snapshotGenerating.warning.running', defaultMessage: 'We are creating a new snapshot right now. Please reload this page in a minute to automatically see the freshest data.' },
   snapshotImporting: { id: 'snapshotGenerating.warning.importing', defaultMessage: 'We are importing the new snapshot now. Please reload this page in a minute to automatically see the freshest data.' },
@@ -23,6 +28,7 @@ const localMessages = {
   topicRunning: { id: 'topic.topicRunning', defaultMessage: 'We are scraping the web for all the stories in include in your topic.' },
   notUsingLatestSnapshot: { id: 'topic.notUsingLatestSnapshot', defaultMessage: 'You are not using the latest snapshot!  If you are not doing this on purpose, <a href="{url}">switch to the latest snapshot</a> to get the best data.' },
   otherError: { id: 'topic.state.otherError', defaultMessage: 'Sorry, this topic has an error.  It says it is "{state}".' },
+  trySpidering: { id: 'topic.state.trySpidering', defaultMessage: 'Manually run this topic' },
 };
 
 class TopicContainer extends React.Component {
@@ -61,13 +67,32 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo, snapshotCount } = this.props;
+    const { children, topicInfo, snapshotCount, handleSpiderRequest } = this.props;
+    const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
     let contentToShow = children;
-    if ((topicInfo.state === 'running') && (snapshotCount === 0)) {
+    if ((topicInfo.state === TOPIC_SNAPSHOT_STATE_RUNNING) && (snapshotCount === 0)) {
       // if the topic is running the initial spider and then show under construction message
       contentToShow = (<TopicUnderConstruction />);
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) {
+      contentToShow = (
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <div className="topic-created-not-queued-error">
+                <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
+                <AppButton
+                  label={formatMessage(localMessages.trySpidering)}
+                  onTouchTap={() => handleSpiderRequest(topicInfo.topics_id)}
+                  type="submit"
+                  primary
+                />
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      );
     }
     return (
       <div className="topic-container">
@@ -90,6 +115,7 @@ TopicContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   addAppNotice: PropTypes.func.isRequired,
   removeTopicId: PropTypes.func.isRequired,
+  handleSpiderRequest: PropTypes.func.isRequired,
   // from state
   filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
@@ -139,21 +165,27 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(setSubHeaderVisible(true));
         // show any warnings based on the topic state
         switch (response.state) {
-          case 'running':
+          case TOPIC_SNAPSHOT_STATE_QUEUED:
+            dispatch(addNotice({
+              level: LEVEL_INFO,
+              message: ownProps.intl.formatMessage(localMessages.spiderQueued),
+            }));
+            break;
+          case TOPIC_SNAPSHOT_STATE_RUNNING:
             dispatch(addNotice({
               level: LEVEL_INFO,
               message: ownProps.intl.formatMessage(localMessages.topicRunning),
               details: response.message,
             }));
             break;
-          case 'error':
+          case TOPIC_SNAPSHOT_STATE_ERROR:
             dispatch(addNotice({
               level: LEVEL_ERROR,
               message: ownProps.intl.formatMessage(localMessages.hasAnError),
               details: response.message,
             }));
             break;
-          case 'completed':
+          case TOPIC_SNAPSHOT_STATE_COMPLETED:
             // everything is ok
             break;
           default:
@@ -239,8 +271,21 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             default:
               // don't alert user about anything
           }
+        } else if (snapshots.length > 1) {
+          // for some reason the second snapshot isn't showing up in the jobs list
+          const latestSnapshot = snapshots[0];
+          if (!snapshotIsUsable(latestSnapshot)) {
+            dispatch(addNotice({
+              level: LEVEL_INFO,
+              message: ownProps.intl.formatMessage(localMessages.snapshotImporting),
+            }));
+          }
         }
       });
+  },
+  handleSpiderRequest: (topicId) => {
+    dispatch(topicStartSpider(topicId))
+      .then(() => window.location.reload());
   },
 });
 

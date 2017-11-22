@@ -8,7 +8,7 @@ import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
 import * as fetchConstants from '../../lib/fetchConstants';
 
 const localMessages = {
-  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your topic has collected more than the 100,000 story limit! You\'ll need to make a new topic with fewer seed stories if you want to investigate this.' },
+  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your topic has collected more than the 100,000 story limit! You\'ll need to make a new topic with fewer seed stories if you want to investigate this.  Email us at support@mediacloud.org if you need help narrowing down your query.' },
   noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
 };
 

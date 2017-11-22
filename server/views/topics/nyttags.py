@@ -27,7 +27,7 @@ def topic_nyt_tag_coverage(topics_id):
 @api_error_handler
 def topic_nyt_tag_counts_csv(topics_id):
     tags = _nyt_tag_counts(user_mediacloud_key(), topics_id)
-    return stream_response(tags, ['tag', 'count', 'pct'], "topic-{}-nyt-label-counts".format(topics_id))
+    return stream_response(tags, ['tags_id', 'tag', 'label', 'count', 'pct'], "topic-{}-nyt-label-counts".format(topics_id))
 
 
 @app.route('/api/topics/<topics_id>/nyt-tags/counts', methods=['GET'])

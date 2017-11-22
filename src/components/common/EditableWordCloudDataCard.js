@@ -4,15 +4,15 @@ import { injectIntl, FormattedHTMLMessage, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import Link from 'react-router/lib/Link';
+import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 import DataCard from './DataCard';
 import messages from '../../resources/messages';
 import OrderedWordCloud from '../vis/OrderedWordCloud';
 import WordCloud from '../vis/WordCloud';
 import Word2VecChart from '../vis/Word2VecChart';
-import Permissioned from './Permissioned';
 import { DownloadButton, ExploreButton, EditButton } from './IconButton';
 import { getBrandDarkColor } from '../../styles/colors';
-import { PERMISSION_LOGGED_IN } from '../../lib/auth';
 import { downloadSvg } from '../util/svg';
 import ActionMenu from './ActionMenu';
 import { WarningNotice } from '../common/Notice';
@@ -20,14 +20,21 @@ import { WarningNotice } from '../common/Notice';
 const VIEW_CLOUD = 'VIEW_CLOUD';
 const VIEW_ORDERED = 'VIEW_ORDERED';
 const VIEW_GOOGLE_W2V = 'VIEW_GOOGLE_W2V';
+const VIEW_TOPIC_W2V = 'VIEW_TOPIC_W2V';
 
 const localMessages = {
   editing: { id: 'wordcloud.editable.editingNotice', defaultMessage: 'You are temporarily editing this word cloud. Click words you want to hide, then use the menu to flip back into view mode and export it to SVG.' },
   edited: { id: 'wordcloud.editable.edited', defaultMessage: 'You have temporarily edited this word cloud to remove some of the words. Your changes will be lost when you leave this page.' },
-  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'Use Ordered Layout' },
-  modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'Use Cloud Layout' },
-  modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'Use Word2Vec 2D Layout' },
+  modeOrdered: { id: 'wordcloud.editable.mode.ordered', defaultMessage: 'View Ordered Layout (default)' },
+  modeCloud: { id: 'wordcloud.editable.mode.unordered', defaultMessage: 'View Cloud Layout' },
+  modeTopicW2V: { id: 'wordcloud.editable.mode.topicW2V', defaultMessage: 'View Topic Specific Word2Vec 2D Layout' },
+  noTopicW2VData: { id: 'wordcloud.editable.mode.topicW2V.noData', defaultMessage: 'We haven\'t built a model for this topic yet.  If you want to see this chart please email us at support@mediacloud.org an ask us to generate a model for this topic.' },
+  modeGoogleW2V: { id: 'wordcloud.editable.mode.googleW2V', defaultMessage: 'View GoogleNews Word2Vec 2D Layout' },
+  noGoogleW2VData: { id: 'wordcloud.editable.mode.googleW2V.noData', defaultMessage: 'Sorry, but the Google News word2vec data is missing.' },
   invalidView: { id: 'wordcloud.editable.mode.invalid', defaultMessage: 'Sorry, but an invalid view is selected' },
+  downloadWordCSV: { id: 'wordcount.editable.download.wordCsv', defaultMessage: 'Download Word Frequency CSV' },
+  downloadBigramCSV: { id: 'wordcount.editable.download.brigramCsv', defaultMessage: 'Download Bigram Frequency CSV' },
+  downloadTrigramCSV: { id: 'wordcount.editable.download.trigramCsv', defaultMessage: 'Download Trigram Frequency CSV' },
 };
 
 class EditableWordCloudDataCard extends React.Component {
@@ -70,16 +77,22 @@ class EditableWordCloudDataCard extends React.Component {
     this.setState({ editing: !this.state.editing });
   };
 
-  downloadCsv = () => {
+  downloadCsv = (ngramSize) => {
     const { downloadUrl } = this.props;
-    window.location = downloadUrl;
+    let url = downloadUrl;
+    if (ngramSize) {
+      url = `${url}&ngram_size=${ngramSize}`;
+    }
+    window.location = url;
   };
 
   render() {
-    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId, subtitleContent } = this.props;
+    const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId,
+      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor, actionMenuHeaderText } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
+    const textColor = textAndLinkColor || getBrandDarkColor();
     let wordsArray = words.map(w => ({ ...w, display: true }));
     let editingWarning;
     const uniqueDomId = `${domId}-${(this.state.ordered ? 'ordered' : 'unordered')}`; // add mode to it so ordered or not works
@@ -111,7 +124,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <OrderedWordCloud
             words={wordsArray}
-            textColor={getBrandDarkColor()}
+            textColor={textColor}
+            linkColor={textColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -125,7 +139,8 @@ class EditableWordCloudDataCard extends React.Component {
         cloudContent = (
           <WordCloud
             words={wordsArray}
-            textColor={getBrandDarkColor()}
+            textColor={textColor}
+            linkColor={textColor}
             width={width}
             height={height}
             maxFontSize={maxFontSize}
@@ -144,6 +159,20 @@ class EditableWordCloudDataCard extends React.Component {
             height={height}
             xProperty="google_w2v_x"
             yProperty="google_w2v_y"
+            noDataMsg={localMessages.noGoogleW2VData}
+          />
+        );
+        break;
+      case VIEW_TOPIC_W2V:
+        cloudContent = (
+          <Word2VecChart
+            words={wordsArray.slice(0, 100)}  // can't draw too many as it gets unreadable
+            domId={uniqueDomId}
+            width={width}
+            height={height}
+            xProperty="w2v_x"
+            yProperty="w2v_y"
+            noDataMsg={localMessages.noTopicW2VData}
           />
         );
         break;
@@ -152,67 +181,96 @@ class EditableWordCloudDataCard extends React.Component {
         break;
     }
     const exploreButton = explore ? (<ExploreButton linkTo={explore} />) : null;
+    let topicWord2VecMenuItem;
+    if (includeTopicWord2Vec) {
+      topicWord2VecMenuItem = (
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.modeTopicW2V)}
+          disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
+          onTouchTap={() => this.setView(VIEW_TOPIC_W2V)}
+        />
+      );
+    }
+    const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
     return (
       <DataCard className={className}>
-        <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-          <div className="actions">
-            {exploreButton}
-            <ActionMenu>
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
-                rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
-                disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
-                onTouchTap={this.toggleEditing}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeOrdered)}
-                disabled={this.state.editing || this.state.view === VIEW_ORDERED}
-                onTouchTap={() => this.setView(VIEW_ORDERED)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeCloud)}
-                disabled={this.state.editing || this.state.view === VIEW_CLOUD}
-                onTouchTap={() => this.setView(VIEW_CLOUD)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(localMessages.modeGoogleW2V)}
-                disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
-                onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadCSV)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={this.downloadCsv}
-              />
-              <MenuItem
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadSVG)}
-                rightIcon={<DownloadButton />}
-                disabled={this.state.editing} // can't download until done editing
-                onTouchTap={() => {
-                  if (this.state.ordered) { // tricky to get the correct element to serialize
-                    downloadSvg(uniqueDomId);
-                  } else {
-                    const svgChild = document.getElementById(uniqueDomId);
-                    downloadSvg(svgChild.firstChild);
-                  }
-                }}
-              />
-            </ActionMenu>
-          </div>
-        </Permissioned>
+        <div className="actions">
+          {exploreButton}
+          <ActionMenu>
+            {actionMenuSubHeaderContent}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeOrdered)}
+              disabled={this.state.editing || this.state.view === VIEW_ORDERED}
+              onTouchTap={() => this.setView(VIEW_ORDERED)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeCloud)}
+              disabled={this.state.editing || this.state.view === VIEW_CLOUD}
+              onTouchTap={() => this.setView(VIEW_CLOUD)}
+            />
+            {topicWord2VecMenuItem}
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.modeGoogleW2V)}
+              disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
+              onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
+            />
+            <Divider />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(this.state.editing ? messages.viewWordCloud : messages.editWordCloud)}
+              rightIcon={(this.state.view === VIEW_ORDERED) ? <EditButton /> : undefined}
+              disabled={this.state.view !== VIEW_ORDERED} // can only edit in ordered mode
+              onTouchTap={this.toggleEditing}
+            />
+            <Divider />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadWordCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(1)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadBigramCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(2)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(localMessages.downloadTrigramCSV)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => this.downloadCsv(3)}
+            />
+            <MenuItem
+              className="action-icon-menu-item"
+              primaryText={formatMessage(messages.downloadSVG)}
+              rightIcon={<DownloadButton />}
+              disabled={this.state.editing} // can't download until done editing
+              onTouchTap={() => {
+                if (this.state.ordered) { // tricky to get the correct element to serialize
+                  downloadSvg(uniqueDomId);
+                } else {
+                  const svgChild = document.getElementById(uniqueDomId);
+                  downloadSvg(svgChild.firstChild);
+                }
+              }}
+            />
+          </ActionMenu>
+        </div>
 
         <h2>
           {titleContent}
           {helpButton}
           {subtitleContent}
         </h2>
+        {subHeaderContent}
         {editingWarning}
         {cloudContent}
       </DataCard>
@@ -226,18 +284,18 @@ EditableWordCloudDataCard.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
-  title: PropTypes.string.isRequired,
+  textAndLinkColor: PropTypes.string,     // render the words in this color (instead of the brand dark color)
+  title: PropTypes.string.isRequired,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
-  itemId: PropTypes.string,
-  downloadUrl: PropTypes.string,
-  explore: PropTypes.object,
-  download: PropTypes.func,
-  helpButton: PropTypes.node,
-  targetURL: PropTypes.string,
-  subtitleContent: PropTypes.object,
-    // from dispatch
+  downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
+  explore: PropTypes.object,              // show an exlore button and link it to this URL
+  helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
+  subtitleContent: PropTypes.object,      // shows up to the right of the H2 title
+  subHeaderContent: PropTypes.object,     // shows up under the H2 title, above the word cloud
+  actionMenuHeaderText: PropTypes.string, // text to put as a subheader in the action menu popup
+  includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y
   onViewModeClick: PropTypes.func.isRequired,
-  domId: PropTypes.string.isRequired,
+  domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import IconButton from 'material-ui/IconButton';
@@ -102,16 +103,16 @@ function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = tru
     }
   }
   AppIconButton.propTypes = {
-    onClick: React.PropTypes.func,
-    linkTo: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object,
+    onClick: PropTypes.func,
+    linkTo: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
     ]),
-    iconStyle: React.PropTypes.object,
-    tooltip: React.PropTypes.string,
-    intl: React.PropTypes.object.isRequired,
-    color: React.PropTypes.string,
-    backgroundColor: React.PropTypes.string,  // overrides everything else
+    iconStyle: PropTypes.object,
+    tooltip: PropTypes.string,
+    intl: PropTypes.object.isRequired,
+    color: PropTypes.string,
+    backgroundColor: PropTypes.string,  // overrides everything else
   };
   return injectIntl(AppIconButton);
 }

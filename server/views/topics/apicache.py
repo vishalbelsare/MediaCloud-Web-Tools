@@ -4,12 +4,15 @@ from flask import request
 from server import mc, TOOL_API_KEY
 from server.cache import cache
 from server.util.tags import STORY_UNDATEABLE_TAG
-from server.util.wordembeddings import google_news_2d
+import server.util.wordembeddings as wordembeddings
 from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.request import filters_from_args
 from server.views.topics import validated_sort, access_public_topic
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_WORD_COUNT_SAMPLE_SIZE = 2000
+WORD_COUNT_DOWNLOAD_COLUMNS = ['term', 'stem', 'count', 'sample_size', 'ratio']
 
 
 def topic_media_list(user_mc_key, topics_id, **kwargs):
@@ -106,6 +109,17 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     return local_mc.topicStoryList(topics_id, **kwargs)
 
 
+def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q):
+    sample_size = DEFAULT_WORD_COUNT_SAMPLE_SIZE
+    word_counts = topic_word_counts(user_mediacloud_key(), topics_id,
+                                    q=q, ngram_size=ngram_size)
+    # add in normalization
+    for w in word_counts:
+        w['sample_size'] = sample_size
+        w['ratio'] = float(w['count']) / float(DEFAULT_WORD_COUNT_SAMPLE_SIZE)
+    return word_counts
+
+
 def topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''
     Return sampled word counts based on filters.
@@ -116,21 +130,32 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': 1000,
-        'num_words': 500,
+        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE,
+        'num_words': 500
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
     words = [w['term'] for w in word_data]
-    word2vec_data = _cached_word2vec_google_2d_results(words)
-    for i in range(len(word2vec_data)):
-        word_data[i]['google_w2v_x'] = word2vec_data[i]['x']
-        word_data[i]['google_w2v_y'] = word2vec_data[i]['y']
+    # and now add in word2vec model position data
+    google_word2vec_data = _cached_word2vec_google_2d_results(words)
+    for i in range(len(google_word2vec_data)):
+        word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
+        word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
+    topic_word2vec_data = _word2vec_topic_2d_results(topics_id, words)
+    for i in range(len(topic_word2vec_data)):
+        word_data[i]['w2v_x'] = topic_word2vec_data[i]['x']
+        word_data[i]['w2v_y'] = topic_word2vec_data[i]['y']
     return word_data
 
-@cache
+
+def _word2vec_topic_2d_results(topics_id, words):
+    # can't cache this because the first time it is called we usually don't have results
+    word2vec_results = wordembeddings.topic_2d(topics_id, words)
+    return word2vec_results
+
+
 def _cached_word2vec_google_2d_results(words):
-    word2vec_results = google_news_2d(words)
+    word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
 
 
@@ -162,8 +187,8 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     # and make sure to ignore undateable stories
     undateable_query_part = "NOT tags_id_stories:{}".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
-    if merged_args['q'] is not None:
-        merged_args['q'] += " AND {}".format(undateable_query_part)
+    if (merged_args['q'] is not None) and (len(merged_args['q']) > 0):
+        merged_args['q'] = "(({}) AND ({}))".format(merged_args['q'], undateable_query_part)
     else:
         merged_args['q'] = "* AND {}".format(undateable_query_part)
     return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)
@@ -200,7 +225,7 @@ def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
 
 
 @cache
-def cached_topic_timespan_list(user_mc_key, topics_id, snapshots_id, foci_id=None):
+def cached_topic_timespan_list(user_mc_key, topics_id, snapshots_id=None, foci_id=None):
     # this includes the user_mc_key as a first param so the cache works right
     user_mc = user_admin_mediacloud_client()
     timespans = user_mc.topicTimespanList(topics_id, snapshots_id=snapshots_id, foci_id=foci_id)
@@ -234,7 +259,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     timespan_query = "timespans_id:{}".format(timespans_id)
-    if q is None:
+    if (q is None) or (len(q) == 0):
         query = timespan_query
     else:
         query = "({}) AND ({})".format(q, timespan_query)
@@ -244,6 +269,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
 @cache
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
+    # we don't need ot use topics_id here because the timespans_id is in the query argument
     tag_counts = user_mc.sentenceFieldCount('*', query, field='tags_id_stories',
                                             tag_sets_id=tag_sets_id, sample_size=sample_size)
     # add in the pct so we can show relative values within the sample

@@ -1,8 +1,10 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
+import { assetUrl } from '../../../lib/assetUtil';
 
 const SampleSearchItem = (props) => {
   const { search, user } = props;
@@ -15,7 +17,7 @@ const SampleSearchItem = (props) => {
   } else {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = search.queries.map(query => query.collections.map(c => `[{"id":${c.id}}]`));
+    const collection = search.queries.map(query => query.collections.map(c => `[${c}]`));
     // const sources = '[]'; we default to empty sources for searches from this page so we don't need to do any prep like we do in the query builder
 
     urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection[idx].join()}}`);
@@ -25,17 +27,17 @@ const SampleSearchItem = (props) => {
   return (
     <div className="sample-search-item">
       <h2><Link to={link}>{search.name}</Link></h2>
-      <Link to={link}><img src={`/static/img/sample-searches/${search.imageName}`} alt={search.name} /></Link>
+      <Link to={link}><img src={assetUrl(`/static/img/sample-searches/${search.imageName}`)} alt={search.name} /></Link>
     </div>
   );
 };
 
 SampleSearchItem.propTypes = {
   // from parent
-  search: React.PropTypes.object,
+  search: PropTypes.object,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object,
+  intl: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 

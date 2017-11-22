@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import TopicInfo from './TopicInfo';
+import TopPeopleContainer from './TopPeopleContainer';
+import TopOrgsContainer from './TopOrgsContainer';
 import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
@@ -30,7 +32,7 @@ class TopicSummaryContainer extends React.Component {
     return (topicId && filters.snapshotId && filters.timespanId);
   }
   render() {
-    const { filters, topicId, topicInfo, timespan, user } = this.props;
+    const { filters, topicId, topicInfo, selectedTimespan, user, seletecFocus, location } = this.props;
     let content = <div />;
     let intro = null;
     if (!user.isLoggedIn) {
@@ -38,7 +40,7 @@ class TopicSummaryContainer extends React.Component {
     }
     // only show filtered story counts if you have a filter in place
     let filteredStoryCountContent = null;
-    if ((timespan && (timespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
+    if ((selectedTimespan && (selectedTimespan.period !== 'overall')) || (filters.focusId) || (filters.q)) {
       filteredStoryCountContent = (
         <Row>
           <Col lg={12}>
@@ -56,8 +58,16 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
+            <Col lg={6}>
+              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
+            </Col>
+            <Col lg={6}>
+              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
+            </Col>
+          </Row>
+          <Row>
             <Col lg={12}>
-              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
+              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
             </Col>
           </Row>
           <Row>
@@ -78,7 +88,7 @@ class TopicSummaryContainer extends React.Component {
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
             <Row>
               <Col lg={12}>
-                <NytLabelSummaryContainer topicId={topicId} filters={filters} />
+                <NytLabelSummaryContainer topicId={topicId} filters={filters} location={location} />
               </Col>
             </Row>
           </Permissioned>
@@ -101,10 +111,10 @@ class TopicSummaryContainer extends React.Component {
             </Row>
             <Row>
               <Col lg={6}>
-                <TopicInfo topic={topicInfo} />
+                <TopicInfo topic={topicInfo} timespan={selectedTimespan} focus={seletecFocus} />
               </Col>
               <Col lg={6}>
-                <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={timespan} />
+                <TopicStoryMetadataStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
               </Col>
             </Row>
           </Permissioned>
@@ -125,9 +135,10 @@ TopicSummaryContainer.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   params: PropTypes.object,
+  location: PropTypes.object.isRequired,
   // from state
-  timespan: PropTypes.object,
-  location: PropTypes.object,
+  selectedTimespan: PropTypes.object,
+  seletecFocus: PropTypes.object,
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
@@ -138,7 +149,8 @@ const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
   topicId: state.topics.selected.id,
   topicInfo: state.topics.selected.info,
-  timespan: state.topics.selected.timespans.selected,
+  selectedTimespan: state.topics.selected.timespans.selected,
+  seletecFocus: state.topics.selected.focalSets.foci.selected,
   user: state.user,
 });
 

@@ -69,6 +69,8 @@ try:
 except Exception:
     logger.warn("no CLIFF connection")
 
+NYT_THEME_LABELLER_URL = settings.get('services', 'nyt_theme_labeller_url')
+
 # Connect to the app's mongo DB
 db_host = settings.get('database', 'host')
 db_name = settings.get('database', 'name')
@@ -167,6 +169,7 @@ def index():
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
 import server.views.stat
+import server.views.stories
 import server.views.media_search
 import server.views.media_picker
 import server.views.sources.search
@@ -191,13 +194,17 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.foci.focalsets
     import server.views.topics.foci.focaldefs
     import server.views.topics.foci.retweetpartisanship
+    import server.views.topics.foci.topcountries
+    import server.views.topics.foci.nyttheme
     import server.views.topics.permissions
     import server.views.topics.maps
     import server.views.topics.nyttags
+    import server.views.topics.entities
     import server.views.topics.geotags
     import server.views.topics.topiccreate
 if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.explorer_query
     import server.views.explorer.sentences
+    import server.views.explorer.words
     import server.views.explorer.stories
     import server.views.explorer.geo

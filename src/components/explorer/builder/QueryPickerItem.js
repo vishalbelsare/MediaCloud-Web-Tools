@@ -1,21 +1,18 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import AppButton from '../../common/AppButton';
-import ColorPicker from '../../common/ColorPicker';
+import QueryPickerLoggedInHeader from './QueryPickerLoggedInHeader';
+import QueryPickerDemoHeader from './QueryPickerDemoHeader';
 import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
     defaultMessage: 'no media sources or collections' },
-  sourceStatus: { id: 'explorer.querypicker.sources', defaultMessage: '{srcCount, plural, \n =1 {# source} \n other {# sources }\n}' },
-  collOneStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{label}' },
-  collStatus: { id: 'explorer.querypicker.coll', defaultMessage: '{collCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
+  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{sourceCount, plural, \n =1 {# source} \n other {# sources }\n}' },
+  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
@@ -25,53 +22,61 @@ const focusUsernameInputField = (input) => {
     setTimeout(() => { input.focus(); }, 100);
   }
 };
+
 class QueryPickerItem extends React.Component {
   state = {
     labelChangeDialogOpen: false,
-    tempLabel: '',
+    labelInDialog: '',  // the actual label they type into the change-label popup dialog
   };
 
   handleBlurAndSelection = () => {
-    const { onQuerySelected } = this.props;
-    onQuerySelected();
-  };
-  updateTempLabel = (val) => {
-    this.setState({ tempLabel: val });
-  };
-  handleOpen = () => {
-    const { query } = this.props;
-    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, tempLabel: query.label });
+    const { onQuerySelected, query } = this.props;
+    // don't allow selection in demo sample mode
+    if (query.searchId === undefined) {
+      onQuerySelected();
+    }
   };
 
-  handleClose = () => {
+  updateLabelInDialog = (val) => {
+    this.setState({ labelInDialog: val });
+  };
+
+  handleLabelEditRequest = () => {
+    const { query } = this.props;
+    this.setState({ showIconMenu: false, labelChangeDialogOpen: true, labelInDialog: query.label });
+  };
+
+  handleLabelClose = () => {
     this.setState({ labelChangeDialogOpen: false });
   };
-  handleChangeAndClose = () => {
+
+  handleLabelChangeAndClose = () => {
     const { updateQueryProperty } = this.props;
     this.setState({ labelChangeDialogOpen: false });
-    const updatedLabel = this.state.tempLabel;
+    const updatedLabel = this.state.labelInDialog;
     updateQueryProperty('label', updatedLabel);
   };
 
-  handleColorClick = (color) => {
-    this.setState({ showColor: color });
-  };
   handleMenuItemKeyDown = (evt) => {
-    const { handleSearch } = this.props;
+    const { onSearch } = this.props;
     switch (evt.key) {
       case 'Enter':
-        handleSearch();
+        onSearch();
         break;
       default: break;
     }
   };
 
+  handleColorChange = (newColor) => {
+    const { updateQueryProperty } = this.props;
+    updateQueryProperty('color', newColor);
+  }
+
   render() {
-    const { user, query, isLabelEditable, isSelected, isDeletable, displayLabel, updateQueryProperty, updateDemoQueryLabel, handleDeleteQuery } = this.props;
+    const { isLoggedIn, query, isSelected, isDeletable, displayLabel, isLabelEditable, updateDemoQueryLabel, onDelete } = this.props;
     const { formatMessage } = this.props.intl;
-    let nameInfo = null;
     let subT = null;
-    const isThisAProtectedQuery = !user.isLoggedIn && query.searchId !== null && query.searchId !== undefined;
+    let headerInfo = null;
     /* query fields are only editable in place for Demo mode. the user can delete a query
       in Logged-In mode, the user can click the icon button, and edit the label of the query or delete the query
     */
@@ -79,105 +84,55 @@ class QueryPickerItem extends React.Component {
       <AppButton
         label="Cancel"
         primary
-        onClick={this.handleClose}
+        onClick={this.handleLabelClose}
       />,
       <AppButton
         label="Save"
         primary
         keyboardFocused
-        onClick={() => this.handleChangeAndClose(query)}
+        onClick={() => this.handleLabelChangeAndClose(query)}
       />,
     ];
-    let iconOptions = null;
-    /* should we show the icon menu? we do if Item is selected and
-    - if demo, if custon and not only
-    - if logged in, either custom or sample and not only
-    */
-    let menuChildren = null;
-    if (isSelected) {
-      if (user.isLoggedIn && isDeletable()) { // if logged in and this is not the only QueryPickerItem
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
-            <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-          </div>
-        );
-      } else if (user.isLoggedIn) {
-        menuChildren = (
-          <div>
-            <MenuItem primaryText="Edit Query Label" onTouchTap={() => this.handleOpen()} />
-          </div>
-        );
-      } else if (!user.isLoggedIn && !isThisAProtectedQuery && isDeletable()) { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
-        menuChildren = (
-          <MenuItem primaryText="Delete" onTouchTap={() => handleDeleteQuery(query)} />
-        );
-      }
-      if (menuChildren !== null) {
-        iconOptions = (
-          <IconMenu
-            className="query-picker-icon-button"
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          >
-            {menuChildren}
-          </IconMenu>
-        );
-      }
-    }
     if (query) {
-      if (isLabelEditable) { // determine whether the label is editable or not (demo or logged in)
-        nameInfo = (
-          <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />
-            <TextField
-              className="query-picker-editable-name"
-              id="q"
-              name="q"
-              value={query.q}
-              hintText={query.q || formatMessage(localMessages.searchHint)}
-              onChange={(e, val) => {
-                updateDemoQueryLabel(val); // both are connected
-              }}
-              onKeyPress={this.handleMenuItemKeyDown}
-              ref={focusUsernameInputField}
-            />
-            {iconOptions}
-          </div>
+      if (isLoggedIn) {
+        headerInfo = (
+          <QueryPickerLoggedInHeader
+            query={query}
+            onLabelEditRequest={this.handleLabelEditRequest}
+            isDeletable={isDeletable}
+            displayLabel={displayLabel}
+            onDelete={onDelete}
+            onColorChange={this.handleColorChange}
+            handleMenuItemKeyDown={this.handleMenuItemKeyDown}
+          />
         );
-      } else {
-        nameInfo = (
-          <div>
-            <ColorPicker
-              color={query.color}
-              onChange={e => updateQueryProperty(e.name, e.value)}
-            />&nbsp;
-            <span
-              className="query-picker-name"
-            >
-              {query.label}
-            </span>
-            {iconOptions}
-          </div>
+      } else { // can delete only if this is a custom query (vs sample query) for demo users and this is not the only QueryPickerItem
+        headerInfo = (
+          <QueryPickerDemoHeader
+            query={query}
+            isDeletable={isDeletable}
+            onDelete={onDelete}
+            onColorChange={this.handleColorChange}
+            updateDemoQueryLabel={updateDemoQueryLabel}
+            isLabelEditable={isLabelEditable}
+            handleMenuItemKeyDown={this.handleMenuItemKeyDown}
+            focusUsernameInputField={focusUsernameInputField}
+          />
         );
       }
 
-      const collCount = query.collections ? query.collections.length : 0;
-      const srcCount = query.sources ? query.sources.length : 0;
+      const collectionCount = query.collections ? query.collections.length : 0;
+      const sourceCount = query.sources ? query.sources.length : 0;
       // const srcDesc = query.media;
-      const totalCount = collCount + srcCount;
+      const totalMediaCount = collectionCount + sourceCount;
       const queryLabel = query.label;
       const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
-      const oneCollLabel = collCount === 1 ? oneCollLabelOrNumber : '';
+      const oneCollLabel = collectionCount === 1 ? oneCollLabelOrNumber : '';
 
-      const oneCollStatus = <FormattedMessage {...localMessages.collOneStatus} values={{ label: oneCollLabel }} />;
-      subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalCount }} />;
+      const oneCollStatus = oneCollLabel;
+      subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalMediaCount }} />;
 
-      if (srcCount === 0 && collCount === 1) {
+      if (sourceCount === 0 && collectionCount === 1) {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
@@ -185,12 +140,12 @@ class QueryPickerItem extends React.Component {
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
-      } else if (totalCount > 0) {
+      } else if (totalMediaCount > 0) {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            <FormattedMessage {...localMessages.collStatus} values={{ collCount, label: queryLabel }} /><br />
-            <FormattedMessage {...localMessages.sourceStatus} values={{ srcCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.collectionsSummary} values={{ collectionCount, label: queryLabel }} /><br />
+            <FormattedMessage {...localMessages.sourcesSummary} values={{ sourceCount, label: queryLabel }} /><br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -203,21 +158,21 @@ class QueryPickerItem extends React.Component {
         className={`query-picker-item ${extraClassNames}`}
         onTouchTap={() => this.handleBlurAndSelection()}
       >
-        {nameInfo}
+        {headerInfo}
         <Dialog
           title="Change Query Label"
           actions={actions}
           modal={false}
           open={this.state.labelChangeDialogOpen}
-          onRequestClose={this.handleClose}
+          onRequestClose={this.handleLabelClose}
         >
-          <h2><FormattedMessage {...localMessages.queryDialog} /></h2>
+          <p><FormattedMessage {...localMessages.queryDialog} /></p>
           <TextField
             className="query-picker-editable-name"
-            id="tempLabel"
-            name="tempLabel"
+            id="labelInDialog"
+            name="labelInDialog"
             onChange={(e, val) => {
-              this.updateTempLabel(val);
+              this.updateLabelInDialog(val);
             }}
             ref={focusUsernameInputField}
             hintText={query.label || formatMessage(localMessages.searchHint)}
@@ -231,20 +186,20 @@ class QueryPickerItem extends React.Component {
 
 QueryPickerItem.propTypes = {
   // from parent
-  query: React.PropTypes.object,
-  isSelected: React.PropTypes.bool.isRequired,
-  isLabelEditable: React.PropTypes.bool.isRequired,
-  isDeletable: React.PropTypes.func.isRequired,
-  displayLabel: React.PropTypes.bool.isRequired,
-  onQuerySelected: React.PropTypes.func,
-  updateQueryProperty: React.PropTypes.func.isRequired,
-  updateDemoQueryLabel: React.PropTypes.func.isRequired,
-  handleSearch: React.PropTypes.func.isRequired,
-  handleDeleteQuery: React.PropTypes.func.isRequired,
-  loadEditLabelDialog: React.PropTypes.func,
+  query: PropTypes.object,
+  isSelected: PropTypes.bool.isRequired,
+  isLabelEditable: PropTypes.bool.isRequired,
+  isDeletable: PropTypes.func.isRequired,
+  displayLabel: PropTypes.bool.isRequired,
+  onQuerySelected: PropTypes.func,
+  updateQueryProperty: PropTypes.func.isRequired,
+  updateDemoQueryLabel: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  loadEditLabelDialog: PropTypes.func,
+  isLoggedIn: PropTypes.bool.isRequired,
   // from composition
-  intl: React.PropTypes.object.isRequired,
-  user: React.PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 

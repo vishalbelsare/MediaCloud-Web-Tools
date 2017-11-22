@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -27,6 +28,7 @@ class AppButton extends React.Component {
 
   render() {
     const { flat, className } = this.props;
+    const { formatMessage } = this.props.intl;
     const customClassName = className || '';
     const buttonProps = {
       onMouseEnter: this.handleMouseEnter,
@@ -34,6 +36,11 @@ class AppButton extends React.Component {
       ...this.props,
       className: `app-button ${this.state.hoverClass} ${customClassName}`,
     };
+    delete buttonProps.intl;
+    // automatically localize the label if it is a message object
+    if ((buttonProps.label) && (typeof buttonProps.label === 'object')) {
+      buttonProps.label = formatMessage(buttonProps.label);
+    }
     let content = null;
     if (flat) {
       delete buttonProps.flat;
@@ -51,6 +58,11 @@ AppButton.propTypes = {
   disabled: PropTypes.bool,
   flat: PropTypes.bool,
   className: PropTypes.string,
+  // from composition chain
+  intl: PropTypes.object.isRequired,
 };
 
-export default AppButton;
+export default
+  injectIntl(
+    AppButton
+  );

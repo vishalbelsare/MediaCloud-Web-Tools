@@ -77,8 +77,7 @@ class PackedBubbleChart extends React.Component {
         .attr('height', options.height)
         .attr('class', 'bubble-chart');
       // rollover tooltip
-      const rollover = d3.select('body').append('div')
-        .attr('class', 'bubble-chart-tooltip')
+      const rollover = d3.select('#bubble-chart-tooltip')
         .style('opacity', 0);
 
       // only center align if auto layout

@@ -1,4 +1,4 @@
-import { createApiPromise, acceptParams } from '../apiUtil';
+import { createApiPromise, acceptParams, generateParamStr } from '../apiUtil';
 
 export function fetchSampleSearches() {
   return createApiPromise('/api/explorer/sample-searches');
@@ -8,6 +8,49 @@ export function fetchSavedSearches() {
   return createApiPromise('/api/explorer/saved-searches');
 }
 
+export function fetchQueryTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/words/count', acceptedParams);
+}
+
+export function fetchDemoQueryTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
+}
+
+// top words is not like the other widgets. Will either have a search id, or will have comparedQueries
+export function fetchDemoQueryTopWordsComparison(queryA, queryB) {
+  let acceptedParamsA = null;
+  let acceptedParamsB = null;
+  const acceptedParams = [];
+
+  const testParams = acceptParams(queryA, ['search_id']);
+  if (testParams.search_id !== undefined) { // by demo search id
+    acceptedParamsA = acceptParams(queryA, ['index', 'search_id', 'query_id', 'q']);
+    acceptedParamsB = acceptParams(queryB, ['index', 'search_id', 'query_id', 'q']);
+  } else {  // by demo keyword
+    acceptedParamsA = acceptParams(queryA, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+    acceptedParamsB = acceptParams(queryB, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  }
+  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA)];
+  if (queryB) {
+    acceptedParams['compared_queries[]'] = acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
+  }
+  return createApiPromise('/api/explorer/demo/words/compare/count', acceptedParams);
+}
+
+export function fetchQueryTopWordsComparison(queryA, queryB) {
+  const acceptedParams = [];
+  const acceptedParamsA = acceptParams(queryA, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  const acceptedParamsB = acceptParams(queryB, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  acceptedParams['compared_queries[]'] = [generateParamStr(acceptedParamsA)];
+  if (queryB) {
+    acceptedParams['compared_queries[]'] = acceptedParams['compared_queries[]'].concat(generateParamStr(acceptedParamsB));
+  }
+  return createApiPromise('/api/explorer/words/compare/count', acceptedParams);
+}
+
+// the following 12 functions depend on having a corresponding index to properly route the results to the right query
 export function fetchDemoQuerySentenceCounts(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/sentences/count', acceptedParams);

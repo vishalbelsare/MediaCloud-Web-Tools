@@ -117,8 +117,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         solr_seed_query: values.solr_seed_query,
         max_iterations: values.max_iterations,
         ch_monitor_id: values.ch_monitor_id === undefined ? '' : values.ch_monitor_id,
-        is_public: values.is_public === undefined ? false : values.is_public,
-        twitter_topics_id: values.twitter_topics_id,
+        is_public: values.is_public ? 1 : 0,
+        is_logogram: values.is_logogram ? 1 : 0,
       };
       queryInfo.is_public = queryInfo.is_public ? 1 : 0;
       if ('sourcesAndCollections' in values) {
