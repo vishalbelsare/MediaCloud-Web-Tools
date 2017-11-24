@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../lib/tagUtil';
 
 const MODE_SELECT = 'MODE_SELECT';
 const MODE_AUTOCOMPLETE = 'MODE_AUTOCOMPLETE';
@@ -30,7 +30,7 @@ const MetadataPickerContainer = (props) => {
           floatingLabelText={floatingLabelText || label}
         >
           <MenuItem value={null} primaryText={''} />
-          {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
+          {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} secondaryText={'\nshowDescription'} />)}
         </Field>
       );
       break;
@@ -73,6 +73,7 @@ MetadataPickerContainer.propTypes = {
   initialValues: PropTypes.object,
   disabled: PropTypes.bool,
   autocomplete: PropTypes.bool,
+  showDescription: PropTypes.bool,
   floatingLabelText: PropTypes.string,
   // from compositional chain
   intl: PropTypes.object.isRequired,
@@ -106,6 +107,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         break;
       case TAG_SET_COUNTRY_OF_FOCUS:
         dispatch(fetchMetadataValuesForCountryOfFocus(ownProps.id));
+        break;
+      case TAG_SET_MEDIA_TYPE:
+        dispatch(fetchMetadataValuesForMediaType(ownProps.id));
         break;
       default:
         break;

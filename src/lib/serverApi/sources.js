@@ -127,6 +127,10 @@ export function metadataValuesForCountryOfFocus(id) {
   return createApiPromise(`api/metadata/${id}/values`);
 }
 
+export function metadataValuesForMediaType(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
+
 export function createSource(params) {
   const acceptedParams = acceptParams(params, ['name', 'url', 'editor_notes', 'public_notes', 'monitored', 'publicationCountry', 'publicationState', 'collections[]']);
   return createPostingApiPromise('/api/sources/create', acceptedParams);
