@@ -8,7 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
 import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
-import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
+import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../../lib/tagUtil';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import { nullOrUndefined } from '../../../lib/formValidators';
@@ -27,6 +27,7 @@ const EditSourceContainer = (props) => {
   const pubState = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PUBLICATION_STATE);
   const pLanguage = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_PRIMARY_LANGUAGE);
   const pCountryFocus = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_COUNTRY_OF_FOCUS);
+  const pMediaType = source.media_source_tags.find(t => t.tag_sets_id === TAG_SET_MEDIA_TYPE);
   const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
   const intialValues = {
     ...source,
@@ -38,6 +39,7 @@ const EditSourceContainer = (props) => {
     publicationState: pubState ? pubState.tags_id : undefined,
     primaryLanguage: pLanguage ? pLanguage.tags_id : undefined,
     countryOfFocus: pCountryFocus ? pCountryFocus.tags_id : undefined,
+    mediaType: pMediaType ? pMediaType.tags_id : undefined,
   };
   return (
     <div className="edit-source">
@@ -81,7 +83,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSave: (values) => {
-    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage', 'countryOfFocus'];
+    const metadataTagFormKeys = ['publicationCountry', 'publicationState', 'primaryLanguage', 'countryOfFocus', 'mediaType'];
     const infoToSave = {
       id: ownProps.params.sourceId,
       url: values.url,
