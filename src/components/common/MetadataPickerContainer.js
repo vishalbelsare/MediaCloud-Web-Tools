@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
+import ListItem from 'material-ui/List';
 import composeAsyncContainer from './AsyncContainer';
 import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
@@ -16,23 +17,47 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues, floatingLabelText, disabled } = props;
+  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues, floatingLabelText, disabled, showDescription } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
   switch (mode) {
     case MODE_SELECT:
-      content = (
-        <Field
-          fullWidth name={name}
-          component={renderSelectField}
-          disabled={disabled}
-          floatingLabelText={floatingLabelText || label}
-        >
-          <MenuItem value={null} primaryText={''} />
-          {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} secondaryText={'\nshowDescription'} />)}
-        </Field>
-      );
+      if (showDescription) {
+        content = (
+          <Field
+            fullWidth name={name}
+            component={renderSelectField}
+            disabled={disabled}
+            floatingLabelText={floatingLabelText || label}
+          >
+            {tags.map(t =>
+              <ListItem
+                key={t.tags_id}
+                value={t.tags_id}
+                primaryText={t.label}
+                secondaryTextLines={2}
+                secondaryText={
+                  <p>test
+                  </p>
+                }
+              />
+            )};
+          </Field>
+        );
+      } else {
+        content = (
+          <Field
+            fullWidth name={name}
+            component={renderSelectField}
+            disabled={disabled}
+            floatingLabelText={floatingLabelText || label}
+          >
+            <MenuItem value={null} primaryText={''} />
+            {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
+          </Field>
+        );
+      }
       break;
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
