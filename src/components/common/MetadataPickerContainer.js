@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
-import ListItem from 'material-ui/List';
 import composeAsyncContainer from './AsyncContainer';
 import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
@@ -32,17 +31,16 @@ const MetadataPickerContainer = (props) => {
             floatingLabelText={floatingLabelText || label}
           >
             {tags.map(t =>
-              <ListItem
+              <MenuItem
                 key={t.tags_id}
                 value={t.tags_id}
-                primaryText={t.label}
-                secondaryTextLines={2}
-                secondaryText={
-                  <p>test
-                  </p>
+                primaryText={
+                  <div>{t.label}
+                    <br />{t.description}
+                  </div>
                 }
               />
-            )};
+            )}
           </Field>
         );
       } else {
