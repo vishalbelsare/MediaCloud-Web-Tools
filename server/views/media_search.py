@@ -27,17 +27,8 @@ def _collection_search_worker(job):
 
 
 def _matching_collections_by_set(search_str, public_only):
-    use_pool = False    # this is causing "daemonic processes are not allowed to have children" errors :-(
-    search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str, 'public_only': public_only}
-                   for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]
-    if use_pool:
-        pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
-        matching_collections_by_tagset = pool.map(_collection_search_worker, search_jobs)
-        pool.close()
-    else:
-        matching_collections_by_tagset = [_collection_search_worker(job) for job in search_jobs]
-    return matching_collections_by_tagset
-
+    user_mc = user_mediacloud_client()
+    return user_mc.tagList(VALID_COLLECTION_TAG_SETS_IDS, name_like=search_str)
 
 def _matching_sources_by_set(search_str, public_only):
     use_pool = False    # this is causing a system exit :-(
