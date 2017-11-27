@@ -29,15 +29,19 @@ class Word2VecTimespanPlayer extends React.Component {
 
     const isPlaying = false;
 
-    if (initialIndex !== -1) {
-      this.state = { currentTimespanIndex: initialIndex, currentPeriodList, selectedPeriod, isPlaying };
-    } else {
-      this.state = { currentTimespanIndex: 0, currentPeriodList, selectedPeriod, isPlaying };
-    }
+    this.state = { currentTimespanIndex: (initialIndex !== -1) ? initialIndex : 0, currentPeriodList, selectedPeriod, isPlaying };
   }
 
-  componentWillReceiveProps() {
-    this.pauseSlideShow(); // prevent calling set state on unmounted component
+  componentWillReceiveProps(nextProps) {
+    const { timespanEmbeddings, initialTimespan } = this.props;
+    // prevent calling set state on unmounted component
+    this.pauseSlideShow();
+    // Reset timespan to selected timespan of parent component
+    const selectedPeriod = nextProps.initialTimespan.period;
+    const currentPeriodList = timespanEmbeddings.filter(x => x.timespan.period === selectedPeriod);
+    const filterByTimespanId = element => (element.timespan.timespans_id === initialTimespan.timespans_id);
+    const initialIndex = currentPeriodList.findIndex(filterByTimespanId);
+    this.setState(() => ({ selectedPeriod, currentPeriodList, currentTimespanIndex: (initialIndex !== -1) ? initialIndex : 0 }));
   }
 
   // Slideshow functions

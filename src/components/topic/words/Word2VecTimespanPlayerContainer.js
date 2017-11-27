@@ -17,8 +17,10 @@ const localMessages = {
 class Word2VecTimespanPlayerContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    const { fetchData, filters, selectedTimespan } = this.props;
-    if ((nextProps.filters !== filters) || (nextProps.selectedTimespan !== selectedTimespan)) {
+    const { fetchData, filters } = this.props;
+    if ((nextProps.filters.snapshotId !== filters.snapshotId) ||
+        (nextProps.filters.focusId !== filters.focusId) ||
+        (nextProps.filters.q !== filters.q)) {
       fetchData(nextProps);
     }
   }
