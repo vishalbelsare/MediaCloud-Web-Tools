@@ -47,7 +47,7 @@ class CollectionSourceRepresentation extends React.Component {
   }
 
   render() {
-    const { helpButton, sources, collectionId } = this.props;
+    const { helpButton, sources, collectionId, navToSource } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
 
     let content = null;
@@ -70,6 +70,7 @@ class CollectionSourceRepresentation extends React.Component {
 
       const bubbleData = [
         ...contributingSources.sort((a, b) => b.sentence_pct - a.sentence_pct).map((s, idx) => ({
+          id: s.media_id,
           value: s.sentence_pct,
           centerText: (idx < TOP_N_LABELS_TO_SHOW) ? s.name : null,
           rolloverText: `${s.name}: ${formatNumber(s.sentence_pct, { style: 'percent', maximumFractionDigits: 2 })}`,
@@ -86,6 +87,7 @@ class CollectionSourceRepresentation extends React.Component {
           data={bubbleData}
           height={400}
           domId={BUBBLE_CHART_DOM_ID}
+          onClick={navToSource}
         />
       );
     }
@@ -142,8 +144,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   asyncFetch: () => {
     dispatch(fetchCollectionSourceSentenceCounts(ownProps.collectionId));
   },
-  navToSource: (mediaId) => {
-    dispatch(push(`/sources/${mediaId}`));
+  navToSource: (element) => {
+    dispatch(push(`/sources/${element.data.id}`));
   },
 });
 
