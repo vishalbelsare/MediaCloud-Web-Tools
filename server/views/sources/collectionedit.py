@@ -15,8 +15,7 @@ from server.util.request import json_error_response, form_fields_required, api_e
 from server.views.sources.collection import allowed_file
 from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
 from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, \
-    format_name_from_label, cached_tags_in_tag_set, media_with_tag
-
+    format_name_from_label, cached_tags_in_tag_set, media_with_tag, is_metadata_tag_set
 logger = logging.getLogger(__name__)
 
 MEDIA_UPDATE_POOL_SIZE = 15  # number of parallel processes to use while batch updating media sources
@@ -278,7 +277,7 @@ def update_metadata_for_sources(source_list):
                     matching = []
                     if mkey == METADATA_PUB_COUNTRY_NAME:  # template pub_###
                         matching = [t for t in tag_codes if t['tag'] == 'pub_' + metadata_tag_name]
-                    elif mkey == METADATA_PUB_STATE_NAME:  # template ###_##
+                    else:
                         matching = [t for t in tag_codes if t['tag'] == metadata_tag_name]
 
                     if matching and matching not in ['', None]:
