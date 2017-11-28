@@ -87,6 +87,8 @@ def download_media_csv(all_media, file_prefix, what_type_download):
             src['primary_language'] = ''
         if 'subject_country' not in src:
             src['subject_country'] = ''
+        if 'media_type' not in src:
+            src['media_type'] = ''
 
     return stream_response(all_media, what_type_download, file_prefix, what_type_download)
 
