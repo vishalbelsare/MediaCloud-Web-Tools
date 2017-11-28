@@ -193,8 +193,13 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             results.append(src)
     # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
-        update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
+        use_pool = False #causing a system exit 
+        if use_pool:
+            pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
+            update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
+        else:
+            update_responses = [_update_source_worker(job) for job in sources_to_update]  # blocks until they are all done
+
         for idx, response in enumerate(update_responses):
             src = sources_to_update[idx]
             src['status'] = 'existing' if response['success'] == 1 else 'error'
@@ -205,7 +210,8 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             else:
                 errors.append(src)
             results.append(src)
-        pool.terminate()  # extra safe garbage collection
+        if use_pool:
+            pool.terminate()  # extra safe garbage collection
 
     time_info = time.time()
     # logger.debug("successful :  %s", successful)
@@ -282,6 +288,11 @@ def update_metadata_for_sources(source_list):
     # now do all the tags in parallel batches so it happens quickly
     if len(tags) > 0:
         chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
-        pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
-        pool.map(_tag_media_worker, chunks)  # blocks until they are all done
-        pool.terminate()  # extra safe garbage collection
+        use_pool = False
+        if use_pool:
+            pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
+            pool.map(_tag_media_worker, chunks)  # blocks until they are all done
+            pool.terminate()  # extra safe garbage collection
+        else:
+            [_tag_media_worker(job) for job in chunks]
+
