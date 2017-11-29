@@ -97,7 +97,7 @@ function composeIntlForm(Component) {
             if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
               onNewRequestFunc(currentValue, index);
             }
-            // return input.onChange(9361761);
+            return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
           }}
           {...intlCustom}
           filter={AutoComplete.fuzzyFilter}

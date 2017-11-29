@@ -50,7 +50,6 @@ class AdvancedSearchContainer extends React.Component {
           <AdvancedSearchForm
             initialValues={{ advancedSearchQueryString: this.state.queryStr }}
             buttonLabel={formatMessage(localMessages.addButton)}
-            enableReinitialize
             onSearch={(values) => {
               const info = {
                 queryStr: values.advancedSearchQueryString,
