@@ -30,6 +30,7 @@ const MetadataPickerContainer = (props) => {
             disabled={disabled}
             floatingLabelText={floatingLabelText || label}
           >
+            <MenuItem value={null} primaryText={''} />
             {tags.map(t =>
               <MenuItem
                 key={t.tags_id}
@@ -59,6 +60,7 @@ const MetadataPickerContainer = (props) => {
       break;
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
+      // commented out because the initialvalues are interfering with the display of the selected values
       /* let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
         const matchingItem = tags.find(t => t.tags_id === initialValues[name]);

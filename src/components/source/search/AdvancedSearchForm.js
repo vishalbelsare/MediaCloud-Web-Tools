@@ -24,7 +24,7 @@ const AdvancedSearchForm = (props) => {
       <Row>
         <Col lg={10}>
           <Field
-            name="advancedSearchQueryString"
+            name={'advancedSearchQueryString'}
             value={initialValues}
             component={renderTextField}
             floatingLabelText={formatMessage(localMessages.searchSuggestion)}
@@ -36,7 +36,7 @@ const AdvancedSearchForm = (props) => {
         <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_COUNTRY}
-            name="publicationCountry"
+            name={'publicationCountry'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
             autocomplete
@@ -45,7 +45,7 @@ const AdvancedSearchForm = (props) => {
         <Col lg={6}>
           <MetadataPickerContainer
             id={TAG_SET_PUBLICATION_STATE}
-            name="publicationState"
+            name={'publicationState'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
             autocomplete
@@ -55,7 +55,7 @@ const AdvancedSearchForm = (props) => {
           <MetadataPickerContainer
             value={initialValues}
             id={TAG_SET_PRIMARY_LANGUAGE}
-            name="primaryLanguage"
+            name={'primaryLanguage'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
             autocomplete
