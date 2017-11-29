@@ -21,11 +21,6 @@ def _source_search_worker(job):
     return mc.mediaList(name_like=job['search_str'], rows=100)
 
 
-def _collection_search_worker(job):
-    user_mc = user_mediacloud_client()
-    return user_mc.tagList(tag_sets_id=job['tag_sets_id'], public_only=job['public_only'], name_like=job['search_str'])
-
-
 def _matching_collections_by_set(search_str, public_only):
     user_mc = user_mediacloud_client()
     return user_mc.tagList(VALID_COLLECTION_TAG_SETS_IDS, name_like=search_str)
