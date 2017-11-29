@@ -50,6 +50,7 @@ class AdvancedSearchContainer extends React.Component {
           <AdvancedSearchForm
             initialValues={{ advancedSearchQueryString: this.state.queryStr }}
             buttonLabel={formatMessage(localMessages.addButton)}
+            enableReinitialize
             onSearch={(values) => {
               const info = {
                 queryStr: values.advancedSearchQueryString,
@@ -66,6 +67,9 @@ class AdvancedSearchContainer extends React.Component {
               }
               if ('countryOfFocus' in values) {
                 info.tags.push(values.countryOfFocus);
+              }
+              if ('mediaType' in values) {
+                info.tags.push(values.mediaType);
               }
               this.setState(info);
             }}

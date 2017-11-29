@@ -16,7 +16,7 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues, floatingLabelText, disabled, showDescription } = props;
+  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, floatingLabelText, disabled, showDescription } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
@@ -59,17 +59,17 @@ const MetadataPickerContainer = (props) => {
       break;
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
-      let initialText = '';
+      /* let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
         const matchingItem = tags.find(t => t.tags_id === initialValues[name]);
         if (matchingItem) {
           initialText = matchingItem.label;
         }
-      }
+      }*/
       content = (
         <Field
           className="metadata-picker"
-          searchText={initialText}
+          // searchText={initialText}
           name={name}
           component={renderAutoComplete}
           hintText={formatMessage(localMessages.hintText, { label })}
