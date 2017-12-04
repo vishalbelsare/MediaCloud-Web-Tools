@@ -36,7 +36,8 @@ def api_media_search(search_str):
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     results = _matching_collections_by_set(search_str, public_only)
-    trimmed = [r[:MAX_COLLECTIONS] for r in results]
-    flat_list = [item for sublist in trimmed for item in sublist]
+    trim_count = MAX_COLLECTIONS if len(results) > 20 else len(results)
+    trimmed = results[:trim_count]
+    flat_list = [{'tags_id':t['tags_id']} for t in trimmed]
     add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})

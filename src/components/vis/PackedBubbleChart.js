@@ -19,7 +19,7 @@ const localMessages = {
 class PackedBubbleChart extends React.Component {
 
   render() {
-    const { data, width, height, maxBubbleRadius, minBubbleRadius, domId } = this.props;
+    const { data, width, height, maxBubbleRadius, minBubbleRadius, domId, onClick } = this.props;
 
     // bail if no data
     if (data.length === 0) {
@@ -93,13 +93,22 @@ class PackedBubbleChart extends React.Component {
       const midH = options.height / 2;
 
       bubbles.append('circle')
+        .attr('className', 'bubble-chart-wrapper')
         .style('fill', d => (d.data && d.data.fill ? d.data.fill : ''))
         .style('fill-opacity', d => (d.parent !== null ? 1 : 0))
         .style('display', d => (d.parent !== null ? 'inline' : 'none'))
         .attr('transform', d => `translate(${d.x - midW},${d.y - midH})`)
         .attr('r', d => d.r);
             // add tooltip to bubbles
-      bubbles.selectAll('circle').on('mouseover', (d) => {
+      bubbles.selectAll('circle')
+      .on('click', (d) => {
+        const event = d3.event;
+        if ((onClick !== null) && (onClick !== undefined)) {
+          onClick(d, d3.select(event.target));
+        }
+        return null;
+      })
+      .on('mouseover', (d) => {
         const pixel = 'px';
         rollover.transition().duration(200).style('opacity', 0.9);
         rollover.html(d.data && d.data.rolloverText ? d.data.rolloverText : '')
@@ -168,6 +177,7 @@ PackedBubbleChart.propTypes = {
   placement: PropTypes.string,
   maxBubbleRadius: PropTypes.number,
   minBubbleRadius: PropTypes.number,
+  onClick: PropTypes.func,
 };
 
 export default injectIntl(PackedBubbleChart);
