@@ -33,11 +33,12 @@ const MetadataPickerContainer = (props) => {
             <MenuItem value={null} primaryText={''} />
             {tags.map(t =>
               <MenuItem
+                className="header-primary-menu"
                 key={t.tags_id}
                 value={t.tags_id}
                 primaryText={
-                  <div>{t.label}
-                    <br />{t.description}
+                  <div className="header-primary-label">{t.label}
+                    <br /><span className="header-primary-description">{t.description}</span>
                   </div>
                 }
               />
