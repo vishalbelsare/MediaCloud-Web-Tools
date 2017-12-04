@@ -67,6 +67,9 @@ class AdvancedSearchContainer extends React.Component {
               if ('countryOfFocus' in values) {
                 info.tags.push(values.countryOfFocus);
               }
+              if ('mediaType' in values) {
+                info.tags.push(values.mediaType);
+              }
               this.setState(info);
             }}
           />

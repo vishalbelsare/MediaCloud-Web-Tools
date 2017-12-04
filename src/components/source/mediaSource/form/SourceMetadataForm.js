@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import MetadataPickerContainer from '../../../common/MetadataPickerContainer';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'source.add.metadata.title', defaultMessage: 'Source Metadata' },
@@ -48,6 +48,17 @@ const SourceMetadataForm = props => (
           name={'countryOfFocus'}
           form="sourceForm"
           disabled
+          initialValues={props.initialValues}
+        />
+      </Col>
+    </Row>
+    <Row>
+      <Col lg={3} xs={12}>
+        <MetadataPickerContainer
+          id={TAG_SET_MEDIA_TYPE}
+          name={'mediaType'}
+          form="sourceForm"
+          showDescription
           initialValues={props.initialValues}
         />
       </Col>

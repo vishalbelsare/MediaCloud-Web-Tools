@@ -6,7 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
 import AppButton from '../../common/AppButton';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../../lib/tagUtil';
 
 const localMessages = {
   searchSuggestion: { id: 'search.advanced.searchTip', defaultMessage: 'match these words' },
@@ -14,6 +14,7 @@ const localMessages = {
   pubStateSuggestion: { id: 'search.advanced.pubStateTip', defaultMessage: 'state published in' },
   pLanguageSuggestion: { id: 'search.advanced.pLanguageTip', defaultMessage: 'primary language' },
   pCountryOfFocusSuggestion: { id: 'search.advanced.pCountryOfFocusTip', defaultMessage: 'country of focus' },
+  pMediaType: { id: 'search.advanced.pMediaType', defaultMessage: 'media type' },
 };
 const AdvancedSearchForm = (props) => {
   const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
@@ -23,7 +24,7 @@ const AdvancedSearchForm = (props) => {
       <Row>
         <Col lg={10}>
           <Field
-            name="advancedSearchQueryString"
+            name={'advancedSearchQueryString'}
             value={initialValues}
             component={renderTextField}
             floatingLabelText={formatMessage(localMessages.searchSuggestion)}
@@ -52,6 +53,7 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            value={initialValues}
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
             form="advancedQueryForm"
@@ -61,11 +63,21 @@ const AdvancedSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
+            value={initialValues}
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
             form="advancedQueryForm"
             floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
             autocomplete
+          />
+        </Col>
+        <Col lg={6}>
+          <MetadataPickerContainer
+            id={TAG_SET_MEDIA_TYPE}
+            showDescription
+            name="mediaType"
+            form="advancedQueryForm"
+            floatingLabelText={formatMessage(localMessages.pMediaType)}
           />
         </Col>
       </Row>

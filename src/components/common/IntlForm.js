@@ -93,11 +93,11 @@ function composeIntlForm(Component) {
           className="form-field-autocomplete"
           {...input}
           errorText={touched && (error ? this.intlIfObject(error) : null)}
-          onNewRequest={(currentValue) => {
-            input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
+          onNewRequest={(currentValue, index) => {
             if (onNewRequestFunc && typeof onNewRequestFunc === 'function') {
-              onNewRequestFunc(currentValue);
+              onNewRequestFunc(currentValue, index);
             }
+            return input.onChange(intlCustom.dataSourceConfig ? currentValue[intlCustom.dataSourceConfig.value] : currentValue);
           }}
           {...intlCustom}
           filter={AutoComplete.fuzzyFilter}

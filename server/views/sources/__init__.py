@@ -2,12 +2,12 @@ from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_admin_mediaclo
 from server.cache import cache
 from server.util.csv import download_media_csv
 
-SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored']
-SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored', 'editor_notes']
+SOURCES_TEMPLATE_PROPS_VIEW = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'media_type', 'public_notes', 'is_monitored']
+SOURCES_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'media_type', 'public_notes', 'is_monitored', 'editor_notes']
 
-COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'public_notes', 'is_monitored', 'editor_notes']
+COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub_state', 'primary_language', 'subject_country', 'media_type', 'public_notes', 'is_monitored', 'editor_notes']
 
-COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_country', 'primary_language']
+COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_country', 'primary_language', 'media_type',]
 
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage
 FEATURED_COLLECTION_LIST = [9139487, 9139458, 2453107, 8878332, 9201395]

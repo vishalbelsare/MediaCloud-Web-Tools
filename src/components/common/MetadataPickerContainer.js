@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from './AsyncContainer';
-import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus } from '../../actions/sourceActions';
+import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
-import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS } from '../../lib/tagUtil';
+import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../lib/tagUtil';
 
 const MODE_SELECT = 'MODE_SELECT';
 const MODE_AUTOCOMPLETE = 'MODE_AUTOCOMPLETE';
@@ -16,37 +16,62 @@ const localMessages = {
 };
 
 const MetadataPickerContainer = (props) => {
-  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, initialValues, floatingLabelText, disabled } = props;
+  const { label, name, tags, renderSelectField, renderAutoComplete, autocomplete, floatingLabelText, disabled, showDescription } = props;
   const { formatMessage } = props.intl;
   const mode = autocomplete ? MODE_AUTOCOMPLETE : MODE_SELECT;
   let content = null;
   switch (mode) {
     case MODE_SELECT:
-      content = (
-        <Field
-          fullWidth name={name}
-          component={renderSelectField}
-          disabled={disabled}
-          floatingLabelText={floatingLabelText || label}
-        >
-          <MenuItem value={null} primaryText={''} />
-          {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
-        </Field>
-      );
+      if (showDescription) {
+        content = (
+          <Field
+            fullWidth name={name}
+            component={renderSelectField}
+            disabled={disabled}
+            floatingLabelText={floatingLabelText || label}
+          >
+            <MenuItem value={null} primaryText={''} />
+            {tags.map(t =>
+              <MenuItem
+                key={t.tags_id}
+                value={t.tags_id}
+                primaryText={
+                  <div>{t.label}
+                    <br />{t.description}
+                  </div>
+                }
+              />
+            )}
+          </Field>
+        );
+      } else {
+        content = (
+          <Field
+            fullWidth name={name}
+            component={renderSelectField}
+            disabled={disabled}
+            floatingLabelText={floatingLabelText || label}
+          >
+            <MenuItem value={null} primaryText={''} />
+            {tags.map(t => <MenuItem key={t.tags_id} value={t.tags_id} primaryText={t.label} />)}
+          </Field>
+        );
+      }
       break;
     case MODE_AUTOCOMPLETE:
       // need to figure out autocomplete text to prepopulate here
-      let initialText = '';
+      // commented out because the initialvalues are interfering with the display of the selected values
+      /* let initialText = '';
       if ((initialValues) && (initialValues[name]) && (tags.length > 0)) {
         const matchingItem = tags.find(t => t.tags_id === initialValues[name]);
         if (matchingItem) {
           initialText = matchingItem.label;
         }
-      }
+      }*/
       content = (
         <Field
           className="metadata-picker"
-          searchText={initialText}
+          // searchText={initialText}
           name={name}
           component={renderAutoComplete}
           hintText={formatMessage(localMessages.hintText, { label })}
@@ -73,6 +98,7 @@ MetadataPickerContainer.propTypes = {
   initialValues: PropTypes.object,
   disabled: PropTypes.bool,
   autocomplete: PropTypes.bool,
+  showDescription: PropTypes.bool,
   floatingLabelText: PropTypes.string,
   // from compositional chain
   intl: PropTypes.object.isRequired,
@@ -106,6 +132,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         break;
       case TAG_SET_COUNTRY_OF_FOCUS:
         dispatch(fetchMetadataValuesForCountryOfFocus(ownProps.id));
+        break;
+      case TAG_SET_MEDIA_TYPE:
+        dispatch(fetchMetadataValuesForMediaType(ownProps.id));
         break;
       default:
         break;
