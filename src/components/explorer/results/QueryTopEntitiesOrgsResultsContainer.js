@@ -85,7 +85,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
         <EntitiesTable
           className="explorer-entity"
           entities={results[this.state.selectedQueryIndex].results}
-          onClick={isLoggedIn ? handleEntitySelection : 'false'}
+          onClick={e => handleEntitySelection(e, queries[0].searchId)}
           maxTitleLength={50}
         />
       </DataCard>
@@ -146,10 +146,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
-  handleEntitySelection: (entity) => {
+  handleEntitySelection: (entity, isCannedSearch) => {
     const queryClauseToAdd = ` tags_id_stories:${entity}`;
-    ownProps.onQueryModificationRequested(queryClauseToAdd);
-  },
+    if (isCannedSearch === undefined) {
+      ownProps.onQueryModificationRequested(queryClauseToAdd);
+    }
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
