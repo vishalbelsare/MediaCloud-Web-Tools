@@ -9,7 +9,9 @@ import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { TOPIC_PUBLIC } from '../../../lib/topicFilterUtil';
 import messages from '../../../resources/messages';
+import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
@@ -20,7 +22,7 @@ const localMessages = {
 };
 
 const TopicPreviewList = (props) => {
-  const { topics, linkGenerator, onSetFavorited } = props;
+  const { topics, linkGenerator, onSetFavorited, currentFilter } = props;
   let content = null;
   let subContent = null;
   if (topics && topics.length > 0) {
@@ -55,6 +57,10 @@ const TopicPreviewList = (props) => {
           ownerListContent = topic.owners.map(u => u.full_name).join(', ');
         } else {
           ownerListContent = <FormattedMessage {...messages.unknown} />;
+        }
+
+        if (currentFilter === TOPIC_PUBLIC && topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
+          return '';
         }
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
@@ -100,6 +106,7 @@ TopicPreviewList.propTypes = {
   linkGenerator: PropTypes.func,
   topics: PropTypes.array.isRequired,
   onSetFavorited: PropTypes.func,
+  currentFilter: PropTypes.string,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };
