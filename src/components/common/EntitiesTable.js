@@ -26,7 +26,7 @@ const EntitiesTable = (props) => {
             (<tr key={entity.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
               <td>
                 <a
-                  className="summary-entity"
+                  className="entity-table"
                   tabIndex="0"
                   role="button"
                   onClick={() => onClick(entity.tags_id)}
