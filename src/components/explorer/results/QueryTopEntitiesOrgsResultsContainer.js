@@ -58,7 +58,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { results, queries, handleEntitySelection, isLoggedIn } = this.props;
+    const { results, queries, handleEntitySelection } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -151,6 +151,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     if (isCannedSearch === undefined) {
       ownProps.onQueryModificationRequested(queryClauseToAdd);
     }
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
