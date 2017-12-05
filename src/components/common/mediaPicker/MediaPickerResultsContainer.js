@@ -4,11 +4,12 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
 import messages from '../../../resources/messages';
-import { PICK_COLLECTION, PICK_SOURCE, ADVANCED } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import CollectionSearchResultsContainer from './results/CollectionSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
+import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -45,6 +46,7 @@ class MediaPickerResultsContainer extends React.Component {
 
     switch (whichProps.selectedMediaQueryType) {
       case PICK_COLLECTION:
+      case PICK_COUNTRY:
         if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
           whichList = whichProps.collectionResults;
         } else {
@@ -89,9 +91,19 @@ class MediaPickerResultsContainer extends React.Component {
     const whichMedia = {};
     whichMedia.fetchStatus = null;
     switch (selectedMediaQueryType) {
+      case PICK_COUNTRY:
+        content = (
+          <CollectionSearchResultsContainer
+            whichTagSet={TAG_SET_ABYZ_GEO_COLLECTIONS}
+            handleMediaConcurrency={toggleConcurrency}
+            handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+          />
+        );
+        break;
       case PICK_COLLECTION:
         content = (
           <CollectionSearchResultsContainer
+            whichTagSet={VALID_COLLECTION_IDS}
             handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
           />
@@ -99,8 +111,6 @@ class MediaPickerResultsContainer extends React.Component {
         break;
       case PICK_SOURCE:
         content = <SourceSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
-        break;
-      case ADVANCED:
         break;
       default:
         break;

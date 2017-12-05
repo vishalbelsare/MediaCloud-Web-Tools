@@ -7,6 +7,7 @@ import CollectionResultsTable from './CollectionResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
+
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
@@ -15,7 +16,7 @@ const localMessages = {
 };
 
 
-class CollectionSearchRresultsContainer extends React.Component {
+class CollectionSearchResultsContainer extends React.Component {
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
@@ -52,7 +53,7 @@ class CollectionSearchRresultsContainer extends React.Component {
   }
 }
 
-CollectionSearchRresultsContainer.propTypes = {
+CollectionSearchResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   updateMediaQuerySelection: PropTypes.func.isRequired,
@@ -61,6 +62,7 @@ CollectionSearchRresultsContainer.propTypes = {
   featured: PropTypes.object,
   collectionResults: PropTypes.object,
   fetchStatus: PropTypes.string,
+  whichTagSet: PropTypes.number,
 };
 
 const mapStateToProps = state => ({
@@ -70,11 +72,11 @@ const mapStateToProps = state => ({
   collectionResults: state.system.mediaPicker.collectionQueryResults,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   updateMediaQuerySelection: (values) => {
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerCollections(values));
+      dispatch(fetchMediaPickerCollections({ media_keyword: values.mediaKeyword, which_set: ownProps.whichTagSet }));
     }
   },
 });
@@ -82,7 +84,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      CollectionSearchRresultsContainer
+      CollectionSearchResultsContainer
     )
   );
 

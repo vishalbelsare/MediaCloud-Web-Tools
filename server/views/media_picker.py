@@ -40,12 +40,12 @@ def source_details_worker(info):
 
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
 @flask_login.login_required
-@arguments_required('mediaKeyword')
+@arguments_required('media_keyword')
 @api_error_handler
 def api_mediapicker_source_search():
     use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    search_str = request.args['mediaKeyword']
+    search_str = request.args['media_keyword']
     results = _matching_sources_by_set(search_str, public_only)  # from pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
@@ -78,23 +78,25 @@ def collection_details_worker(info):
 
 @app.route('/api/mediapicker/collections/search', methods=['GET'])
 @flask_login.login_required
-@arguments_required('mediaKeyword')
+@arguments_required('media_keyword', 'which_set')
 @api_error_handler
 def api_mediapicker_collection_search():
     use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    search_str = request.args['mediaKeyword']
-    results = _matching_collections_by_set(search_str, public_only)  # from pool
-    trimmed_collections = [r[:MAX_COLLECTIONS] for r in results]
-    flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
+    search_str = request.args['media_keyword']
+    which_set = request.args['which_set']
+    results = _matching_collections_by_set(search_str, public_only, which_set)
+    trimmedSet = MAX_COLLECTIONS
+    trimmed_collections = results[:trimmedSet]
+    # flat_list_of_collections = [item for sublist in trimmed_collections for item in sublist]
     set_of_queried_collections = []
-    if len(flat_list_of_collections) > 0:
+    if len(trimmed_collections) > 0:
         if use_pool:
             pool = Pool(processes=STORY_COUNT_POOL_SIZE)
-            set_of_queried_collections = pool.map(collection_details_worker, flat_list_of_collections)
+            set_of_queried_collections = pool.map(collection_details_worker, trimmed_collections)
             pool.close()
         else:
-            set_of_queried_collections = [collection_details_worker(c) for c in flat_list_of_collections]
+            set_of_queried_collections = [collection_details_worker(c) for c in trimmed_collections]
     set_of_queried_collections = sorted(set_of_queried_collections, key=itemgetter('story_count'), reverse=True)
     return jsonify({'list': set_of_queried_collections})
 
