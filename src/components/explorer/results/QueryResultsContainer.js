@@ -11,13 +11,35 @@ import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsConta
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
+import QueryViewSelector from './QueryViewSelector';
 import { updateQuery } from '../../../actions/explorerActions';
 
-const QueryResultsContainer = (props) => {
-  const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = props;
-  // const unDeletedQueries = queries.filter(q => q.deleted !== true);
-  return (
-    <Grid>
+class QueryResultsContainer extends React.Component {
+  state = {
+    selectedViewIndex: 0,
+  };
+
+  render() {
+    const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = this.props;
+    const attentionSection = (
+      <Row>
+        <Col lg={12} xs={12}>
+          <QueryAttentionOverTimeResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryTotalAttentionResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+      </Row>
+    );
+    const peopleSection = (
       <Row>
         <Col lg={12} xs={12}>
           <QueryTopEntitiesPeopleResultsContainer
@@ -35,13 +57,10 @@ const QueryResultsContainer = (props) => {
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <QueryAttentionOverTimeResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-          />
-        </Col>
+      </Row>
+    );
+    const languageSection = (
+      <Row>
         <Col lg={12} xs={12}>
           <QueryWordsResultsContainer
             lastSearchTime={lastSearchTime}
@@ -58,32 +77,51 @@ const QueryResultsContainer = (props) => {
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
-        <Col lg={12} xs={12}>
-          <QuerySampleStoriesResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-          />
-        </Col>
-        <Col lg={12} xs={12}>
-          <QueryTotalAttentionResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-          />
-        </Col>
-        <Col lg={12} xs={12}>
-          <QueryGeoResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
       </Row>
-    </Grid>
-  );
-};
+    );
+    let viewContent = attentionSection;
+    switch (this.state.selectedViewIndex) {
+      case 0:
+        viewContent = attentionSection;
+        break;
+      case 1:
+        viewContent = languageSection;
+        break;
+      case 2:
+        viewContent = peopleSection;
+        break;
+      default:
+        break;
+    }
+
+  // const unDeletedQueries = queries.filter(q => q.deleted !== true);
+    return (
+      <Grid>
+        <Row>
+          <QueryViewSelector
+            onViewSelected={index => this.setState({ selectedViewIndex: index })}
+          />
+          {viewContent}
+          <Col lg={12} xs={12}>
+            <QuerySampleStoriesResultsContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+            />
+          </Col>
+          <Col lg={12} xs={12}>
+            <QueryGeoResultsContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+              onQueryModificationRequested={handleQueryModificationRequested}
+            />
+          </Col>
+        </Row>
+      </Grid>
+    );
+  }
+}
 
 QueryResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,

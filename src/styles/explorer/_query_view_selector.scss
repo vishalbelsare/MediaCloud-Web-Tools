@@ -1,0 +1,36 @@
+@import '../_constants';
+
+ul.query-view-selector {
+
+  margin: 0px;
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid $material-grey300;
+
+  li {
+    font-weight: normal;    
+    display: inline-block;
+    border-top: 1px solid $material-grey300;
+    border-right: 1px solid $material-grey300;
+    font-size: 1.1em;
+    padding: 10px 15px;
+
+    &:first-child {
+      border-left: 1px solid $material-grey300;
+    }
+
+    &.selected {
+      font-weight: bold;
+      opacity: 1;
+      background-color: $material-grey300;
+    }
+
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+  }
+
+}
