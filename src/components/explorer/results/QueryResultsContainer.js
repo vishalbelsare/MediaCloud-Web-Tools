@@ -101,7 +101,9 @@ class QueryResultsContainer extends React.Component {
           <QueryViewSelector
             onViewSelected={index => this.setState({ selectedViewIndex: index })}
           />
-          {viewContent}
+          <div className="query-view-display">
+            {viewContent}
+          </div>
           <Col lg={12} xs={12}>
             <QuerySampleStoriesResultsContainer
               lastSearchTime={lastSearchTime}
@@ -119,6 +121,7 @@ class QueryResultsContainer extends React.Component {
           </Col>
         </Row>
       </Grid>
+
     );
   }
 }
