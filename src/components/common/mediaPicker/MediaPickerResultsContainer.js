@@ -45,13 +45,15 @@ class MediaPickerResultsContainer extends React.Component {
     let whichList = [];
 
     switch (whichProps.selectedMediaQueryType) {
-      case PICK_COLLECTION:
       case PICK_COUNTRY:
         if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
           whichList = whichProps.collectionResults;
         } else {
           whichList = whichProps.featured;
         }
+        break;
+      case PICK_COLLECTION:
+        whichList = whichProps.collectionResults;
         break;
       case PICK_SOURCE:
         whichList = whichProps.sourceResults;

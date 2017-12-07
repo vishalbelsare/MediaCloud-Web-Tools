@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../../actions/systemActions';
 import CollectionResultsTable from './CollectionResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
-
+import { PICK_COUNTRY } from '../../../../lib/explorerUtil';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
   hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search collections by name' },
+  noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
 };
 
 
@@ -23,7 +24,7 @@ class CollectionSearchResultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     if (fetchStatus === FETCH_ONGOING) {
@@ -37,8 +38,10 @@ class CollectionSearchResultsContainer extends React.Component {
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
-    } else {
+    } else if (selectedMediaQueryType === PICK_COUNTRY) {
       content = <FeaturedCollectionsContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+    } else {
+      content = <FormattedMessage {...localMessages.noResults} />;
     }
     return (
       <div>
