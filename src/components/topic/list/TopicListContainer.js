@@ -13,6 +13,7 @@ import composePagedContainer from '../../common/PagedContainer';
 import TopicPreviewList from './TopicPreviewList';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
+import { TOPIC_PUBLIC, TOPIC_PERSONAL, TOPIC_STARRED } from '../../../lib/topicFilterUtil';
 
 const PAGED_LENGTH = 19;
 
@@ -31,11 +32,11 @@ class TopicListContainer extends React.Component {
     // if user hasn't set filter, set it smartly
     if (currentFilter === null) {
       if (topics.favorite.length > 0) {
-        this.handleSetFilter('favorites');
+        this.handleSetFilter(TOPIC_STARRED);
       } else if (topics.personal.length > 0) {
-        this.handleSetFilter('personal');
+        this.handleSetFilter(TOPIC_PERSONAL);
       } else {
-        this.handleSetFilter('public');
+        this.handleSetFilter(TOPIC_PUBLIC);
       }
     }
   }
@@ -58,13 +59,13 @@ class TopicListContainer extends React.Component {
     );
 
     // if the user has favorites => is logged_in => isn't logged in, show topics by filter
-    if (currentFilter === 'favorites' && topics !== undefined) {
+    if (currentFilter === TOPIC_STARRED && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListFavorites} /></h2>;
       whichTopics = topics.favorite;
-    } else if (currentFilter === 'personal' && topics !== undefined) {
+    } else if (currentFilter === TOPIC_PERSONAL && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPersonal} /></h2>;
       whichTopics = topics.personal;
-    } else if (currentFilter === 'public' && topics !== undefined) {
+    } else if (currentFilter === TOPIC_PUBLIC && topics !== undefined) {
       titleContent = <h2><FormattedMessage {...localMessages.topicsListPublic} /></h2>;
       whichTopics = topics.public;
     } else { // when user is not logged in and clicks the other options
@@ -90,19 +91,19 @@ class TopicListContainer extends React.Component {
           <Col lg={7} md={7} sm={12}>
             <SelectField name="currentFilter" style={{ fontSize: 13 }} value={currentFilter}>
               <MenuItem
-                value="favorites"
+                value={TOPIC_STARRED}
                 onClick={() => this.handleSetFilter('favorites')}
                 primaryText={formatMessage(localMessages.topicsListFavorites)}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
-                value="personal"
+                value={TOPIC_PERSONAL}
                 primaryText={formatMessage(localMessages.topicsListPersonal)}
                 onClick={() => this.handleSetFilter('personal')}
                 style={{ fontSize: 13 }}
               />
               <MenuItem
-                value="public"
+                value={TOPIC_PUBLIC}
                 onClick={() => this.handleSetFilter('public')}
                 primaryText={formatMessage(localMessages.topicsListPublic)}
                 style={{ fontSize: 13 }}
@@ -113,6 +114,7 @@ class TopicListContainer extends React.Component {
 
         <TopicPreviewList
           topics={whichTopics}
+          currentFilter={currentFilter}
           linkGenerator={t => `topics/${t.topics_id}/summary`}
           onSetFavorited={handleSetFavorited}
         />

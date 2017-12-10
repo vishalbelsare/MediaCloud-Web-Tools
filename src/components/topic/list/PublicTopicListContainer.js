@@ -6,6 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPublicTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
+import { TOPIC_PUBLIC } from '../../../lib/topicFilterUtil';
 
 const PublicTopicListContainer = (props) => {
   const { topics } = props;
@@ -14,6 +15,7 @@ const PublicTopicListContainer = (props) => {
       <Col lg={12}>
         <TopicPreviewList
           topics={topics}
+          currentFilter={TOPIC_PUBLIC}
           linkGenerator={c => `/topics/public/${c.topics_id}/summary`}
         />
       </Col>
