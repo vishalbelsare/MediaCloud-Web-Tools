@@ -37,24 +37,11 @@ class QueryResultsContainer extends React.Component {
             isLoggedIn={isLoggedIn}
           />
         </Col>
-      </Row>
-    );
-    const peopleSection = (
-      <Row>
         <Col lg={12} xs={12}>
-          <QueryTopEntitiesPeopleResultsContainer
+          <QuerySampleStoriesResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
-        <Col lg={12} xs={12}>
-          <QueryTopEntitiesOrgsResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
       </Row>
@@ -79,6 +66,39 @@ class QueryResultsContainer extends React.Component {
         </Col>
       </Row>
     );
+    const peopleSection = (
+      <Row>
+        <Col lg={12} xs={12}>
+          <QueryTopEntitiesPeopleResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryTopEntitiesOrgsResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+      </Row>
+    );
+    const reachSection = (
+      <Row>
+        <Col lg={12} xs={12}>
+          <QueryGeoResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+      </Row>
+    );
+
     let viewContent = attentionSection;
     switch (this.state.selectedViewIndex) {
       case 0:
@@ -90,38 +110,31 @@ class QueryResultsContainer extends React.Component {
       case 2:
         viewContent = peopleSection;
         break;
+      case 3:
+        viewContent = reachSection;
+        break;
       default:
         break;
     }
 
   // const unDeletedQueries = queries.filter(q => q.deleted !== true);
     return (
-      <Grid>
-        <Row>
-          <QueryViewSelector
-            onViewSelected={index => this.setState({ selectedViewIndex: index })}
-          />
-          <div className="query-view-display">
-            {viewContent}
-          </div>
-          <Col lg={12} xs={12}>
-            <QuerySampleStoriesResultsContainer
-              lastSearchTime={lastSearchTime}
-              queries={queries}
-              isLoggedIn={isLoggedIn}
+      <div className="query-results-container">
+        <Grid>
+          <Row>
+            <QueryViewSelector
+              onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
-          </Col>
-          <Col lg={12} xs={12}>
-            <QueryGeoResultsContainer
-              lastSearchTime={lastSearchTime}
-              queries={queries}
-              isLoggedIn={isLoggedIn}
-              onQueryModificationRequested={handleQueryModificationRequested}
-            />
-          </Col>
-        </Row>
-      </Grid>
-
+          </Row>
+        </Grid>
+        <div className="query-results-content">
+          <Grid>
+            <Row>
+              {viewContent}
+            </Row>
+          </Grid>
+        </div>
+      </div>
     );
   }
 }
