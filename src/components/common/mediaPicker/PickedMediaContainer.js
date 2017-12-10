@@ -3,11 +3,12 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
+  pickCountry: { id: 'system.mediaPicker.select.pickCountry', defaultMessage: 'Search By Country' },
   pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search Collections' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
   selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
@@ -32,6 +33,7 @@ class PickedMediaContainer extends React.Component {
         />
       ));
     const options = [
+      { label: localMessages.pickCountry, value: PICK_COUNTRY },
       { label: localMessages.pickCollections, value: PICK_COLLECTION },
       { label: localMessages.pickSources, value: PICK_SOURCE },
     ];
@@ -68,7 +70,7 @@ PickedMediaContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
+  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : PICK_COUNTRY,
   sourcesResults: state.system.mediaPicker.media ? state.system.mediaPicker.media.results : null, // resutl of query?
   collectionsResults: state.system.mediaPicker.collections ? state.system.mediaPicker.collections.results : null,
 });

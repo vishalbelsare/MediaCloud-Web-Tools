@@ -5,6 +5,7 @@ from server.views.media_search import media_search, _matching_collections_by_set
 
 from server import app
 from server.util.request import api_error_handler
+from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
@@ -35,7 +36,7 @@ def api_media_search(search_str):
 @api_error_handler
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    results = _matching_collections_by_set(search_str, public_only)
+    results = _matching_collections_by_set(search_str, public_only, VALID_COLLECTION_TAG_SETS_IDS)
     trim_count = MAX_COLLECTIONS if len(results) > 20 else len(results)
     trimmed = results[:trim_count]
     flat_list = [{'tags_id':t['tags_id']} for t in trimmed]

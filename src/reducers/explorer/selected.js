@@ -22,9 +22,6 @@ function selected(state = INITIAL_STATE, action) {
         updatedState[action.payload.fieldName] = action.payload.query[action.payload.fieldName];
         updatedState.autoNaming = action.payload.query.autoNaming;
       }
-      if (action.payload.query.collections && action.payload.query.sources) { // aggregate media for selected media tray/picker TODO maybe retire now that we ensure we have the media
-        updatedState.media = [].concat(action.payload.query.collections).concat(action.payload.query.sources);
-      }
       return updatedState;
     case RESET_SELECTED:
       return INITIAL_STATE;
