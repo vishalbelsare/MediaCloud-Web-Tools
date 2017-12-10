@@ -5,25 +5,20 @@ ul.query-view-selector {
   margin: 0px;
   padding: 0px;
   margin-top: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid $material-orange500;
 
   li {
-    font-weight: normal;    
+    font-weight: bold;
     display: inline-block;
-    border-bottom: 1px solid $material-orange500;
     font-size: 1.1em;
     padding: 10px 15px;
-
+    text-transform: uppercase;
 
     &.selected {
-      font-weight: bold;
-      opacity: 1;
       color: $material-orange500;
+      border-bottom: 2px solid $material-orange500;
     }
 
     &:hover {
-      opacity: 1;
       cursor: pointer;
     }
 
