@@ -1,28 +1,30 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../../actions/systemActions';
 import CollectionResultsTable from './CollectionResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
+import { PICK_COUNTRY } from '../../../../lib/explorerUtil';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
   hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search collections by name' },
+  noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
 };
 
 
-class CollectionSearchRresultsContainer extends React.Component {
+class CollectionSearchResultsContainer extends React.Component {
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     if (fetchStatus === FETCH_ONGOING) {
@@ -36,8 +38,10 @@ class CollectionSearchRresultsContainer extends React.Component {
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
-    } else {
+    } else if (selectedMediaQueryType === PICK_COUNTRY) {
       content = <FeaturedCollectionsContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+    } else {
+      content = <FormattedMessage {...localMessages.noResults} />;
     }
     return (
       <div>
@@ -52,7 +56,7 @@ class CollectionSearchRresultsContainer extends React.Component {
   }
 }
 
-CollectionSearchRresultsContainer.propTypes = {
+CollectionSearchResultsContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   updateMediaQuerySelection: PropTypes.func.isRequired,
@@ -61,6 +65,7 @@ CollectionSearchRresultsContainer.propTypes = {
   featured: PropTypes.object,
   collectionResults: PropTypes.object,
   fetchStatus: PropTypes.string,
+  whichTagSet: PropTypes.number,
 };
 
 const mapStateToProps = state => ({
@@ -70,11 +75,11 @@ const mapStateToProps = state => ({
   collectionResults: state.system.mediaPicker.collectionQueryResults,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   updateMediaQuerySelection: (values) => {
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerCollections(values));
+      dispatch(fetchMediaPickerCollections({ media_keyword: values.mediaKeyword, which_set: ownProps.whichTagSet }));
     }
   },
 });
@@ -82,7 +87,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      CollectionSearchRresultsContainer
+      CollectionSearchResultsContainer
     )
   );
 

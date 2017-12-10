@@ -75,9 +75,10 @@ class QueryPicker extends React.Component {
   handleMediaDelete = (toBeDeletedObj) => {
     // the user has removed media from the Query Form SourceCollectionsForm
     const { formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
-    const updatedMedia = formQuery.media.filter(m => m.id !== toBeDeletedObj.id);
-    const updatedSources = updatedMedia.filter(m => m.type === 'source' || m.media_id);
-    const updatedCollections = updatedMedia.filter(m => m.type === 'collection' || m.tags_id);
+    // filter out removed ids...
+    const updatedMedia = formQuery;
+    const updatedSources = formQuery.sources.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'source' || m.media_id));
+    const updatedCollections = formQuery.collections.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'collection' || m.tags_id));
     updatedMedia.collections = updatedCollections;
     updatedMedia.sources = updatedSources;
     updateCurrentQuery(updatedMedia, null);

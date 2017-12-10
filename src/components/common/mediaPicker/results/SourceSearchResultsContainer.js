@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerSources } from '../../../../actions/systemActions';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
@@ -11,6 +11,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 const localMessages = {
   title: { id: 'system.mediaPicker.sources.title', defaultMessage: 'Sources matching "{name}"' },
   hintText: { id: 'system.mediaPicker.sources.hint', defaultMessage: 'Search sources by name or url' },
+  noResults: { id: 'system.mediaPicker.sources.noResults', defaultMessage: 'No results. Try searching for the name or URL of a specific source to see if we cover it, like Washington Post, Hindustan, or guardian.co.uk.' },
 };
 
 
@@ -35,6 +36,8 @@ class SourceSearchResultsContainer extends React.Component {
           handleToggleAndSelectMedia={handleToggleAndSelectMedia}
         />
       );
+    } else {
+      content = <FormattedMessage {...localMessages.noResults} />;
     }
 
     return (

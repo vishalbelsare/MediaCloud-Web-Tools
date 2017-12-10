@@ -2,7 +2,7 @@ import logging
 from multiprocessing import Pool
 
 from server.auth import user_mediacloud_client
-from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
+from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS, TAG_SET_ABYZ_GEO_COLLECTIONS
 
 logger = logging.getLogger(__name__)
 
@@ -21,9 +21,9 @@ def _source_search_worker(job):
     return mc.mediaList(name_like=job['search_str'], rows=100)
 
 
-def _matching_collections_by_set(search_str, public_only):
+def _matching_collections_by_set(search_str, public_only, which_set):
     user_mc = user_mediacloud_client()
-    return user_mc.tagList(VALID_COLLECTION_TAG_SETS_IDS, name_like=search_str)
+    return user_mc.tagList(which_set, name_like=search_str)
 
 def _matching_sources_by_set(search_str, public_only):
     use_pool = False    # this is causing a system exit :-(

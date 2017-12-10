@@ -8,6 +8,7 @@ import MediaPickerResultsContainer from './MediaPickerResultsContainer';
 import { fetchMediaPickerFeaturedCollections, initializePreviouslySelectedMedia, clearSelectedMedia } from '../../../actions/systemActions';
 import AppButton from '../AppButton';
 import { AddQueryButton } from '../IconButton';
+import { TAG_SET_MC_ID } from '../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
@@ -131,7 +132,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   handleSelection: (values) => {
     if (values) {
-      dispatch(fetchMediaPickerFeaturedCollections(5));
+      dispatch(fetchMediaPickerFeaturedCollections(TAG_SET_MC_ID));
     }
   },
   reset: () => {
