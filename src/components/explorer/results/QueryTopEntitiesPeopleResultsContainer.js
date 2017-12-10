@@ -18,10 +18,7 @@ import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
-  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>These are the top people matching your queries.  Click on the entity to add this to all your queries. Click the menu on the top right to download a CSV of entities.</p>' },
-  helpDetails: { id: 'explorer.entities.help.text',
-    defaultMessage: '<p>help text about entities</p>',
-  },
+  helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at <i>who</i> is being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the people menntioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the top right to download a CSV of all the people mentioned in a sample of stories.</p>' },
 };
 
 class QueryTopEntitiesPeopleResultsContainer extends React.Component {
@@ -163,7 +160,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
+      composeDescribedDataCard(localMessages.helpIntro, [messages.entityHelpDetails])(
         composeAsyncContainer(
           QueryTopEntitiesPeopleResultsContainer
         )

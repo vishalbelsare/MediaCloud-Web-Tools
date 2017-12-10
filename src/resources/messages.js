@@ -226,6 +226,11 @@ const messages = {
     `,
   },
 
+  entityHelpDetails: { id: 'explorer.entities.help.text',
+    defaultMessage: '<p>We identify people using <a href="https://nlp.stanford.edu/software/CRF-NER.shtml">Stanford\'s Named Entity Recognizer</a>. Every story is passed through out <a href="http://cliff.mediacloud.org">CLIFF engine</a> to extract all the entities.  Each story is then tagged with the people it mentions, the organizations it mentions, and the countries and states it is about.</p>',
+  },
+
+
 };
 
 export default messages;

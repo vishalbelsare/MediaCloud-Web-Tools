@@ -20,22 +20,6 @@ const QueryResultsContainer = (props) => {
     <Grid>
       <Row>
         <Col lg={12} xs={12}>
-          <QueryTopEntitiesPeopleResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
-        <Col lg={12} xs={12}>
-          <QueryTopEntitiesOrgsResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
-          />
-        </Col>
-        <Col lg={12} xs={12}>
           <QueryAttentionOverTimeResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
@@ -74,6 +58,22 @@ const QueryResultsContainer = (props) => {
         </Col>
         <Col lg={12} xs={12}>
           <QueryGeoResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryTopEntitiesPeopleResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+            onQueryModificationRequested={handleQueryModificationRequested}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryTopEntitiesOrgsResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
