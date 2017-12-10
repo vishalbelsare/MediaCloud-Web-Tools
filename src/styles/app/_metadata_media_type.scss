@@ -1,0 +1,21 @@
+@import '../_constants';
+
+
+.header-primary-menu {
+  word-wrap: normal;
+  line-height: 20px !important;
+}
+
+.header-primary-label {
+  font-weight: bold !important;
+  word-wrap: normal;
+
+    .header-primary-description {
+      line-height: 20px !important;
+      font-weight: normal !important;
+      word-wrap: normal;
+      white-space: normal;
+    }
+}
+
+
