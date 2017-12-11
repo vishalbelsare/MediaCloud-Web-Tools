@@ -55,7 +55,8 @@ def process_tags_for_coverage(solr_query, tag_counts):
     coverage['total'] = story_count_total['count']
     coverage['counts'] = story_count_cliff['count']
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
-        t['pct'] = float(story_count_cliff['count']) / float(story_count_total['count'])
+        t['pct'] = float(t['count']) / DEFAULT_SAMPLE_SIZE #indivi count over sampe sie
+    coverage['coverage_percentage'] = float(story_count_cliff['count']) / float(story_count_total['count'])  # indivi count over sampe sie
     coverage['results'] = tag_counts
     return coverage
 
