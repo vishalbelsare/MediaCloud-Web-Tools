@@ -18,6 +18,7 @@ const localMessages = {
   mc: { id: 'sources.menu.items.mc', defaultMessage: 'Collections: Media Cloud' },
   gv: { id: 'sources.menu.items.gv', defaultMessage: 'Collections: Global Voices' },
   emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
+  country: { id: 'sources.menu.items.country', defaultMessage: 'Collections: Country & State' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
   favoritedItems: { id: 'sources.menu.items.favoritedItems', defaultMessage: 'My Starred Sources And Collections' },
@@ -61,14 +62,17 @@ class SourcesDrawer extends React.Component {
             <FormattedMessage {...messages.search} />
           </MenuItem>
           <Divider />
+          <MenuItem id="country-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/country-and-state'); }}>
+            <FormattedMessage {...localMessages.country} />
+          </MenuItem>
           <MenuItem id="media-cloud-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
             <FormattedMessage {...localMessages.mc} />
           </MenuItem>
-          <MenuItem id="global-voices-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
-            <FormattedMessage {...localMessages.gv} />
-          </MenuItem>
           <MenuItem id="european-media-monitor-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/european-media-monitor'); }}>
             <FormattedMessage {...localMessages.emm} />
+          </MenuItem>
+          <MenuItem id="global-voices-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
+            <FormattedMessage {...localMessages.gv} />
           </MenuItem>
           <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/favorites'); }}>

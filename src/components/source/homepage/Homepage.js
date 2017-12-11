@@ -17,12 +17,12 @@ const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
   about: { id: 'sources.intro.about', defaultMessage: 'We add sources and create collections from media ecosystems around the world. In order to identify the right sources, we use a combination of automated search and discovery, identified lists of influential sources, and expert input from journalists and media practitioners. You can also ' },
   suggestLink: { id: 'sources.intro.suggestLink', defaultMessage: 'suggest a source.' },
-  browseMC: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Media Cloud Collections' },
+  browseCountry: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Country Collections' },
+  browseCountryAbout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the global country and state-level collections we\'ve imported from <a href="http://www.abyznewslinks.com/">ABYZ</a>.' },
+  browseMC: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Custom Collections' },
   browseMCabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the collections our team has put together to support our various investigations.' },
-  browseGV: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Global Voices Collections' },
-  browseGVabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See country-focused collections we created based on media sources cited by Global Voices.' },
   browseEMM: { id: 'sources.into.browse.emm', defaultMessage: 'Browse EMM Collections' },
-  browseEMMabout: { id: 'sources.into.browse.emm.about', defaultMessage: 'See country-focused collections we created based on source in the European Media Monitor project.' },
+  browseEMMabout: { id: 'sources.into.browse.emm.about', defaultMessage: 'See country-focused collections we created based on source in the <a href="http://emm.newsbrief.eu/">European Media Monitor</a> project.' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
@@ -66,24 +66,24 @@ const Homepage = (props) => {
         <Col lg={4} xs={12}>
           <DescriptiveButton
             imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
-            label={formatMessage(localMessages.browseMC)}
-            description={formatMessage(localMessages.browseMCabout)}
-            onClick={() => { goToUrl('/collections/media-cloud'); }}
+            label={formatMessage(localMessages.browseCountry)}
+            description={<FormattedHTMLMessage {...localMessages.browseCountryAbout} />}
+            onClick={() => { goToUrl('/collections/country-and-state'); }}
           />
         </Col>
         <Col lg={4} xs={12}>
           <DescriptiveButton
-            imageUrl={assetUrl('/static/img/logo-global-voices.png')}
-            label={formatMessage(localMessages.browseGV)}
-            description={formatMessage(localMessages.browseGVabout)}
-            onClick={() => { goToUrl('/collections/global-voices'); }}
+            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
+            label={formatMessage(localMessages.browseMC)}
+            description={<FormattedHTMLMessage {...localMessages.browseMCabout} />}
+            onClick={() => { goToUrl('/collections/media-cloud'); }}
           />
         </Col>
         <Col lg={4} xs={12}>
           <DescriptiveButton
             imageUrl={assetUrl('/static/img/logo-emm.png')}
             label={formatMessage(localMessages.browseEMM)}
-            description={formatMessage(localMessages.browseEMMabout)}
+            description={<FormattedHTMLMessage {...localMessages.browseEMMabout} />}
             onClick={() => { goToUrl('/collections/european-media-monitor'); }}
           />
         </Col>

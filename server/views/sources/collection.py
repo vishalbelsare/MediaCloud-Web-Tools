@@ -10,7 +10,7 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD
 
 import server.util.csv as csv
 from server import app, mc, db
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, \
+from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
 from server.cache import cache
 
@@ -71,10 +71,7 @@ def api_collection_set(tag_sets_id):
     :param tag_sets_id: the tag set to query for public collections
     :return: dict of info and list of collections in
     '''
-    info = []
-    user_mc = user_admin_mediacloud_client()
-
-    if user_has_auth_role(ROLE_MEDIA_EDIT) == True:
+    if user_has_auth_role(ROLE_MEDIA_EDIT):
         info = _tag_set_with_private_collections(tag_sets_id)
     else:
         info = _tag_set_with_public_collections(tag_sets_id)
@@ -82,17 +79,23 @@ def api_collection_set(tag_sets_id):
     add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
+@cache
+def _cached_tag_list(tag_sets_id, last_tags_id, rows, public_only):
+    user_mc = user_mediacloud_client()
+    # user agnostic cache here, because it isn't user-dependent
+    tag_list = user_mc.tagList(tag_sets_id=tag_sets_id, last_tags_id=last_tags_id, rows=rows, public_only=public_only)
+    return tag_list
+
 
 def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     tag_set = user_mc.tagSet(tag_sets_id)
     # page through tags
     more_tags = True
     all_tags = []
     last_tags_id = 0
     while more_tags:
-        tags = user_mc.tagList(tag_sets_id=tag_set['tag_sets_id'], last_tags_id=last_tags_id, rows=100,
-                               public_only=show_only_public_collections)
+        tags = _cached_tag_list(tag_set['tag_sets_id'], last_tags_id, 100, show_only_public_collections)
         all_tags = all_tags + tags
         if len(tags) > 0:
             last_tags_id = tags[-1]['tags_id']
@@ -121,14 +124,14 @@ def _tag_set_with_public_collections(tag_sets_id):
 @flask_login.login_required
 @api_error_handler
 def api_collections_by_ids():
-    collIdArray = request.args['coll[]'].split(',')
+    collection_ids = request.args['coll[]'].split(',')
     sources_list = []
-    for tagsId in collIdArray:
-        all_media = media_with_tag(user_mediacloud_key(), tagsId)
+    for tags_id in collection_ids:
+        all_media = media_with_tag(user_mediacloud_key(), tags_id)
         info = [{'media_id': m['media_id'], 'name': m['name'], 'url': m['url'], 'public_notes': m['public_notes']} for m
                 in all_media]
         add_user_favorite_flag_to_sources(info)
-        sources_list += info;
+        sources_list += info
     return jsonify({'results': sources_list})
 
 
@@ -142,11 +145,11 @@ def api_featured_collections():
 @cache
 def _cached_featured_collections():
     featured_collections = []
-    for tagsId in FEATURED_COLLECTION_LIST:
-        info = mc.tag(tagsId)
-        info['id'] = tagsId
+    for tags_id in FEATURED_COLLECTION_LIST:
+        info = mc.tag(tags_id)
+        info['id'] = tags_id
         # use None here to use app-level mc object
-        info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tagsId))
+        info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tags_id))
         featured_collections += [info]
     return featured_collections
 
@@ -163,9 +166,9 @@ def api_popular_collections():
 @cache
 def _cached_popular_collections():
     popular_collections = []
-    for tagsId in POPULAR_COLLECTION_LIST:
-        info = mc.tag(tagsId)
-        info['id'] = tagsId
+    for tags_id in POPULAR_COLLECTION_LIST:
+        info = mc.tag(tags_id)
+        info['id'] = tags_id
         popular_collections += [info]
     return popular_collections
 
@@ -188,7 +191,7 @@ def collection_set_favorited(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_details(collection_id):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
     add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
@@ -215,8 +218,6 @@ def api_download_sources_template():
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
-    user_mc = user_admin_mediacloud_client()
-    # info = user_mc.tag(int(collection_id))
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
     for src in all_media:
         for tag in src['media_source_tags']:
@@ -232,7 +233,6 @@ def api_collection_sources_csv(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_historical_counts(collection_id):
-    user_mc = user_admin_mediacloud_client()
     start_date_str = request.args['start']
     end_date_str = request.args['end']
     results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
@@ -244,10 +244,8 @@ def collection_source_sentence_historical_counts(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_historical_counts_csv(collection_id):
-    # user_mc = user_mediacloud_client()
     start_date_str = request.args['start']
     end_date_str = request.args['end']
-    # collection = user_mc.tag(collection_id)
     results = _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str)
     date_cols = None
     for source in results:
@@ -283,7 +281,7 @@ def _source_sentence_counts_worker(info):
 
 
 def _collection_source_sentence_historical_counts(collection_id, start_date_str, end_date_str):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
     q = " AND ({})".format(user_mc.publish_date_query(start_date, end_date))
@@ -298,13 +296,13 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
 
 @cache
 def _cached_source_sentence_count(user_mc_key, query):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     return user_mc.sentenceCount(query)['count']
 
 
 @cache
 def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
 
 
@@ -320,7 +318,7 @@ def collection_source_sentence_counts(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_source_sentence_counts_csv(collection_id):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
     results = _cached_media_with_sentence_counts(user_mediacloud_key(), collection_id)
     props = ['media_id', 'name', 'url', 'sentence_count', 'sentence_pct']
@@ -348,7 +346,7 @@ def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
 
 
 def _tag_set_info(user_mc_key, tag_sets_id):
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     return user_mc.tagSet(tag_sets_id)
 
 
@@ -426,7 +424,7 @@ def similar_collections(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_create():
-    user_mc = user_admin_mediacloud_client()
+    user_mc = user_mediacloud_client()
     label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None
