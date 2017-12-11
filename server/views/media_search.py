@@ -21,9 +21,10 @@ def _source_search_worker(job):
     return mc.mediaList(name_like=job['search_str'], rows=100)
 
 
-def _matching_collections_by_set(search_str, public_only, which_set):
+def _matching_collections_by_set(search_str, public_only, tag_sets_id_list):
     user_mc = user_mediacloud_client()
-    return user_mc.tagList(which_set, name_like=search_str)
+    return user_mc.tagList(tag_sets_id_list, public_only=public_only, name_like=search_str)
+
 
 def _matching_sources_by_set(search_str, public_only):
     use_pool = False    # this is causing a system exit :-(
