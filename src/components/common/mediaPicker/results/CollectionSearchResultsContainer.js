@@ -24,7 +24,7 @@ class CollectionSearchResultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
     if (fetchStatus === FETCH_ONGOING) {
@@ -48,7 +48,7 @@ class CollectionSearchResultsContainer extends React.Component {
         <MediaPickerSearchForm
           initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
           onSearch={val => this.updateMediaQuery(val)}
-          hintText={formatMessage(localMessages.hintText)}
+          hintText={formatMessage(hintTextMsg || localMessages.hintText)}
         />
         {content}
       </div>
@@ -57,15 +57,19 @@ class CollectionSearchResultsContainer extends React.Component {
 }
 
 CollectionSearchResultsContainer.propTypes = {
+  // form compositional chain
   intl: PropTypes.object.isRequired,
+  // from parent
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
+  whichTagSet: PropTypes.number,
+  hintTextMsg: PropTypes.string,
+  // from dispatch
   updateMediaQuerySelection: PropTypes.func.isRequired,
+  // from state
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
-  featured: PropTypes.object,
   collectionResults: PropTypes.object,
   fetchStatus: PropTypes.string,
-  whichTagSet: PropTypes.number,
 };
 
 const mapStateToProps = state => ({

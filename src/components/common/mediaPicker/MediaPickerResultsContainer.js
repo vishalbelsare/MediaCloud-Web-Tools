@@ -16,6 +16,7 @@ const localMessages = {
   intro: { id: 'system.mediaPicker.select.info',
     defaultMessage: '<p>This is an intro</p>' },
   helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
+  countrySearchHintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search by Country or State name' },
 };
 
 
@@ -99,6 +100,7 @@ class MediaPickerResultsContainer extends React.Component {
             whichTagSet={TAG_SET_ABYZ_GEO_COLLECTIONS}
             handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+            hintTextMsg={localMessages.countrySearchHintText}
           />
         );
         break;
