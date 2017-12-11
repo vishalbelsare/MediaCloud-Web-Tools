@@ -22,5 +22,8 @@
     fill: $explorer-primary;
   }
 
-}
+  #content { 
+    padding-bottom: 0px; /* so the results background color connects all the way to the footer */
+  }
 
+}
