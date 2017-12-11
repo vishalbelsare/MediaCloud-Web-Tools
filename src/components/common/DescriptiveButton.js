@@ -35,7 +35,10 @@ DescriptiveButton.propTypes = {
   imageUrl: PropTypes.string,
   svgIcon: PropTypes.node,
   label: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]).isRequired,
   onClick: PropTypes.func.isRequired,
   className: PropTypes.string,
   id: PropTypes.string,
