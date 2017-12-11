@@ -38,6 +38,6 @@ def collection_search(search_str):
     results = _matching_collections_by_set(search_str, public_only)
     trim_count = MAX_COLLECTIONS if len(results) > 20 else len(results)
     trimmed = results[:trim_count]
-    flat_list = [{'tags_id':t['tags_id']} for t in trimmed]
+    flat_list = [{'tags_id':t['tags_id'], 'tag_set_label':t['tag_set_label'],'label':t['label'], 'tag':t['tag']} for t in trimmed]
     add_user_favorite_flag_to_collections(flat_list)
     return jsonify({'list': flat_list})
