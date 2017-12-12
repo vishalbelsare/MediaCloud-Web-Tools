@@ -4,7 +4,7 @@ import flask_login
 
 from server import app, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
-from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, CLIFF_CLAVIN_2_3_0_TAG_ID
+from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, processed_by_cliff_query_clause
 from server.util.request import api_error_handler
 from server.views.topics.apicache import topic_tag_coverage
 import server.util.csv as csv
@@ -40,8 +40,9 @@ def get_CLIFF_coverage_for_query(solr_query):
         api_client = user_admin_mediacloud_client()
     else:
         api_client = mc
-    solr_query += ' AND tags_id_stories:{}'.format(CLIFF_CLAVIN_2_3_0_TAG_ID)
+    solr_query += ' AND {}'.format(processed_by_cliff_query_clause())
     return api_client.storyCount(solr_query=solr_query)
+
 
 def process_tags_for_coverage(solr_query, tag_counts):
     if is_user_logged_in():   # no user session

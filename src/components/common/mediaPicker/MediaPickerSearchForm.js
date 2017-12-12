@@ -78,7 +78,7 @@ MediaPickerSearchForm.propTypes = {
   intl: PropTypes.object.isRequired,
   onSearch: PropTypes.func,
   isEditable: PropTypes.bool,
-  initValues: PropTypes.array,
+  initValues: PropTypes.object,
   submitting: PropTypes.bool,
   hintText: PropTypes.string,
 };

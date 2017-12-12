@@ -2,12 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { selectMediaPickerQueryArgs, fetchMediaPickerCollections } from '../../../../actions/systemActions';
 import CollectionResultsTable from './CollectionResultsTable';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
-import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
-import { PICK_COUNTRY } from '../../../../lib/explorerUtil';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
@@ -17,44 +14,38 @@ const localMessages = {
 };
 
 
-class CollectionSearchResultsContainer extends React.Component {
-  updateMediaQuery(values) {
-    const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
-    const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
-    updateMediaQuerySelection(updatedQueryObj);
-  }
-  render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = this.props;
-    const { formatMessage } = this.props.intl;
-    let content = null;
-    if (fetchStatus === FETCH_ONGOING) {
-      // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
-      content = <LoadingSpinner />;
-    } else if (collectionResults && (collectionResults.list && (collectionResults.list.length > 0 || (collectionResults.args && collectionResults.args.keyword)))) {
-      content = (
-        <CollectionResultsTable
-          title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
-          collections={collectionResults.list}
-          handleToggleAndSelectMedia={handleToggleAndSelectMedia}
-        />
-      );
-    } else if (selectedMediaQueryType === PICK_COUNTRY) {
-      content = <FeaturedCollectionsContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
-    } else {
-      content = <FormattedMessage {...localMessages.noResults} />;
-    }
-    return (
-      <div>
-        <MediaPickerSearchForm
-          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
-          onSearch={val => this.updateMediaQuery(val)}
-          hintText={formatMessage(hintTextMsg || localMessages.hintText)}
-        />
-        {content}
-      </div>
+const CollectionSearchResultsContainer = (props) => {
+  const { selectedMediaQueryKeyword, initCollections, collectionResults, onSearch, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = props;
+  const { formatMessage } = props.intl;
+  let content = null;
+  if (fetchStatus === FETCH_ONGOING) {
+    // we have to do this here to show a loading spinner when first searching (and featured collections are showing)
+    content = <LoadingSpinner />;
+  } else if (collectionResults && (collectionResults.list && selectedMediaQueryKeyword)) {
+    content = (
+      <CollectionResultsTable
+        title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
+        collections={collectionResults.list}
+        handleToggleAndSelectMedia={handleToggleAndSelectMedia}
+      />
     );
+  } else if (initCollections) {
+    content = initCollections;
+  } else {
+    content = <FormattedMessage {...localMessages.noResults} />;
   }
-}
+  return (
+    <div>
+      <MediaPickerSearchForm
+        initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
+        onSearch={val => onSearch(val)}
+        hintText={formatMessage(hintTextMsg || localMessages.hintText)}
+      />
+      {content}
+    </div>
+  );
+};
+
 
 CollectionSearchResultsContainer.propTypes = {
   // form compositional chain
@@ -63,34 +54,20 @@ CollectionSearchResultsContainer.propTypes = {
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   whichTagSet: PropTypes.number,
   hintTextMsg: PropTypes.string,
+  onSearch: PropTypes.func.isRequired,
   // from dispatch
   updateMediaQuerySelection: PropTypes.func.isRequired,
   // from state
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
   collectionResults: PropTypes.object,
+  initCollections: PropTypes.object,
   fetchStatus: PropTypes.string,
 };
 
-const mapStateToProps = state => ({
-  fetchStatus: state.system.mediaPicker.collectionQueryResults.fetchStatus,
-  selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
-  selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
-  collectionResults: state.system.mediaPicker.collectionQueryResults,
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  updateMediaQuerySelection: (values) => {
-    if (values) {
-      dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerCollections({ media_keyword: values.mediaKeyword, which_set: ownProps.whichTagSet }));
-    }
-  },
-});
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect()(
       CollectionSearchResultsContainer
     )
   );
