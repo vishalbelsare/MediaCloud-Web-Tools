@@ -20,6 +20,7 @@ TAG_SET_NYT_LABELS_VERSION = 1964
 
 # constants related to the CLIFF-based geotagging (ie. tags on stories indicating places they are about)
 CLIFF_CLAVIN_2_3_0_TAG_ID = 9353691  # the tag that indicates a story was tagged by the CLIFF version 2.3.0
+CLIFF_CLAVIN_2_4_1_TAG_ID = 9696677  # the tag that indicates a story was tagged by the CLIFF version 2.4.1
 GEO_TAG_SET = 1011  # the tag set all the geo tags are in
 GEO_SAMPLE_SIZE = 10000  # the sample size to use for looking at geo tags
 CLIFF_ORGS =  2388
@@ -58,6 +59,13 @@ VALID_METADATA_IDS = [
     {METADATA_MEDIA_TYPE: TAG_SETS_ID_MEDIA_TYPE},
 ]
 
+
+def processed_by_cliff_query_clause():
+    '''
+    :return: A solr query clause you can use to filter for stories that have been tagged by any version
+     of our CLIFF geotagging engine
+    '''
+    return "(tags_id_stories:{} {})".format(CLIFF_CLAVIN_2_4_1_TAG_ID, CLIFF_CLAVIN_2_3_0_TAG_ID)
 
 
 def is_metadata_tag_set(tag_sets_id):
