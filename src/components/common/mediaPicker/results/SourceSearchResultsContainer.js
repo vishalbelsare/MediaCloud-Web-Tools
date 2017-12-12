@@ -74,7 +74,7 @@ const mapDispatchToProps = dispatch => ({
   updateMediaQuerySelection: (values) => {
     if (values) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerSources(values));
+      dispatch(fetchMediaPickerSources({ media_keyword: values.mediaKeyword }));
     }
   },
 });

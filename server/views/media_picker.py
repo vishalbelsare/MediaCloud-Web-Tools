@@ -20,9 +20,6 @@ MAX_COLLECTIONS = 20
 MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
 
-# TODO there are two very similar calls in sources/search.py - overall _ vs camelcase, and then args vs vs
-
-
 def source_details_worker(info):
     user_mc = user_mediacloud_client()
     source_story_query = "media_id:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(info['media_id'])
@@ -64,7 +61,7 @@ def api_mediapicker_source_search():
 def _cached_collection_recent_story_count(tags_id):
     # user-agnostic cache here becasue it is not user-epcific data
     user_mc = user_mediacloud_client()
-    collection_story_query = "tags_id_media:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(info['tags_id'])
+    collection_story_query = "tags_id_media:({}) AND (+publish_date: [NOW-7DAY TO NOW])".format(tags_id)
     recent_story_count= user_mc.storyCount(collection_story_query)['count']
     return recent_story_count
 
@@ -87,10 +84,10 @@ def collection_details_worker(info):
 @arguments_required('media_keyword', 'which_set')
 @api_error_handler
 def api_mediapicker_collection_search():
-    use_pool = True
+    use_pool = False
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['media_keyword']
-    which_set = request.args['which_set']
+    which_set = request.args['which_set'].split(',')
     results = _matching_collections_by_set(search_str, public_only, which_set)
     trimmedSet = MAX_COLLECTIONS
     trimmed_collections = results[:trimmedSet]
