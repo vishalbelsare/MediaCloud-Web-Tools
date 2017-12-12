@@ -63,9 +63,17 @@ VALID_METADATA_IDS = [
 def processed_by_cliff_query_clause():
     '''
     :return: A solr query clause you can use to filter for stories that have been tagged by any version
-     of our CLIFF geotagging engine
+     of our CLIFF geotagging engine (ie. tagged with people, places, and organizations)
     '''
     return "(tags_id_stories:{} {})".format(CLIFF_CLAVIN_2_4_1_TAG_ID, CLIFF_CLAVIN_2_3_0_TAG_ID)
+
+
+def processed_by_cliff_tag_ids():
+    '''
+    :return: A list of the tags that mean a story has been processed by some version of CLIFF (ie. the story
+     has been tagged with people, places, and organizations)
+    '''
+    return [CLIFF_CLAVIN_2_3_0_TAG_ID, CLIFF_CLAVIN_2_4_1_TAG_ID]
 
 
 def is_metadata_tag_set(tag_sets_id):

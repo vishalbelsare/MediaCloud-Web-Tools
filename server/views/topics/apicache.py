@@ -236,15 +236,14 @@ def topic_tag_coverage(topics_id, tags_id):
     Useful for seeing how many stories in the topic are tagged with a specific tag
     '''
     # respect any query filter the user has set
-    snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     query_with_tag = add_to_user_query("tags_id_stories:{}".format(tags_id))
     # now get the counts
     if access_public_topic(topics_id):
         total = topic_story_count(TOOL_API_KEY, topics_id)
-        tagged = topic_story_count(TOOL_API_KEY, topics_id, q=query_with_tag )  # force a count with just the query
+        tagged = topic_story_count(TOOL_API_KEY, topics_id, q=query_with_tag)  # force a count with just the query
     elif is_user_logged_in():
         total = topic_story_count(user_mediacloud_key(), topics_id)
-        tagged = topic_story_count(user_mediacloud_key(), topics_id, q=query_with_tag )   # force a count with just the query
+        tagged = topic_story_count(user_mediacloud_key(), topics_id, q=query_with_tag)   # force a count with just the query
     else:
         return None
     return {'counts': {'count': tagged['count'], 'total': total['count']}}
