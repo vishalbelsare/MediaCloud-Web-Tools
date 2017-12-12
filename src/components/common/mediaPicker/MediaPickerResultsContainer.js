@@ -7,7 +7,8 @@ import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import CollectionSearchResultsContainer from './results/CollectionSearchResultsContainer';
+import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
+import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
 
@@ -16,7 +17,6 @@ const localMessages = {
   intro: { id: 'system.mediaPicker.select.info',
     defaultMessage: '<p>This is an intro</p>' },
   helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
-  countrySearchHintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search by Country or State name' },
 };
 
 
@@ -96,17 +96,16 @@ class MediaPickerResultsContainer extends React.Component {
     switch (selectedMediaQueryType) {
       case PICK_COUNTRY:
         content = (
-          <CollectionSearchResultsContainer
+          <CountryCollectionSearchResultsContainer
             whichTagSet={TAG_SET_ABYZ_GEO_COLLECTIONS}
             handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
-            hintTextMsg={localMessages.countrySearchHintText}
           />
         );
         break;
       case PICK_COLLECTION:
         content = (
-          <CollectionSearchResultsContainer
+          <AllCollectionSearchResultsContainer
             whichTagSet={VALID_COLLECTION_IDS}
             handleMediaConcurrency={toggleConcurrency}
             handleToggleAndSelectMedia={handleToggleAndSelectMedia}
