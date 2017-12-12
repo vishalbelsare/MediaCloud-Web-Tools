@@ -55,8 +55,6 @@ CollectionSearchResultsContainer.propTypes = {
   whichTagSet: PropTypes.number,
   hintTextMsg: PropTypes.string,
   onSearch: PropTypes.func.isRequired,
-  // from dispatch
-  updateMediaQuerySelection: PropTypes.func.isRequired,
   // from state
   selectedMediaQueryKeyword: PropTypes.string,
   selectedMediaQueryType: PropTypes.number,
