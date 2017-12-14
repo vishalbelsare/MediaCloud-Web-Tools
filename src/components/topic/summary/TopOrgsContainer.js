@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -10,10 +10,12 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
-// import { generateParamStr } from '../../../lib/apiUtil';
+
+const VALID_THRESHOLD = 0.7;
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top Organizations' },
+  title: { id: 'topic.snapshot.topOrgs.coverage.title', defaultMessage: 'Top Organizations' },
+  notEnoughData: { id: 'topic.snapshot.topOrgs.notEnoughData', defaultMessage: '<i>Sorry, but we only have {pct} of these stories processed to identify organizations mentioned.  We don\'t want to lead you astray with incomplete data, so we\'ve hidden this list.  You an still downlload the data we have, but don\'t rely on it because it doesn\'t represent the full dataset.</i>' },
 };
 
 class TopOrgsContainer extends React.Component {
@@ -38,11 +40,21 @@ class TopOrgsContainer extends React.Component {
     }
   }
   render() {
-    const { count, entities } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { coverage, entities } = this.props;
+    const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
-    if (count !== null) {
+    const coverageRatio = coverage.count / coverage.total;
+    if (coverageRatio > VALID_THRESHOLD) {
       content = <EntitiesTable entities={entities} onClick={(...args) => this.handleEntityClick(args)} />;
+    } else {
+      content = (
+        <FormattedHTMLMessage
+          {...localMessages.notEnoughData}
+          values={{
+            pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }),
+          }}
+        />
+      );
     }
     return (
       <DataCard>
@@ -69,17 +81,15 @@ TopOrgsContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
   // from state
-  count: PropTypes.number,
+  coverage: PropTypes.object.isRequired,
   entities: PropTypes.array.isRequired,
-  total: PropTypes.number,
   fetchStatus: PropTypes.string.isRequired,
   updateQueryFilter: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topEntitiesOrgs.fetchStatus,
-  count: state.topics.selected.summary.topEntitiesOrgs.counts.count,
-  total: state.topics.selected.summary.topEntitiesOrgs.counts.total,
+  coverage: state.topics.selected.summary.topEntitiesOrgs.coverage,
   entities: state.topics.selected.summary.topEntitiesOrgs.entities,
 });
 
