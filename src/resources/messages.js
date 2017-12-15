@@ -230,6 +230,11 @@ const messages = {
     defaultMessage: '<p>We identify people using <a href="https://nlp.stanford.edu/software/CRF-NER.shtml">Stanford\'s Named Entity Recognizer</a>. Every story is passed through out <a href="http://cliff.mediacloud.org">CLIFF engine</a> to extract all the entities.  Each story is then tagged with the people it mentions, the organizations it mentions, and the countries and states it is about.</p>',
   },
 
+  top5: { id: 'top5', defaultMessage: 'Top 5' },
+  top10: { id: 'top10', defaultMessage: 'Top 10' },
+  top15: { id: 'top15', defaultMessage: 'Top 15' },
+  top20: { id: 'top20', defaultMessage: 'Top 20' },
+  top25: { id: 'top25', defaultMessage: 'Top 25' },
 
 };
 

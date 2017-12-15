@@ -29,7 +29,7 @@ const EditTopCountriesContainer = (props) => {
   }
   return (
     <Grid>
-      <form className="focus-create-edit-retweet" name="focusCreateEditTopCountriesForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+      <form className="focus-create-top-countries" name="focusCreateEditTopCountriesForm" onSubmit={handleSubmit(finishStep.bind(this))}>
         <Row>
           <Col lg={8} md={12}>
             <h1><FormattedMessage {...localMessages.title} /></h1>
@@ -37,18 +37,20 @@ const EditTopCountriesContainer = (props) => {
           </Col>
         </Row>
         <Row>
-          <Field
-            name="numberSelected"
-            component={renderSelectField}
-            floatingLabelText={formatMessage(localMessages.numberLabel)}
-            value={5}
-          >
-            <MenuItem value={5} primaryText="Top 5" />
-            <MenuItem value={10} primaryText="Top 10" />
-            <MenuItem value={15} primaryText="Top 15" />
-            <MenuItem value={20} primaryText="Top 20" />
-            <MenuItem value={25} primaryText="Top 25" />
-          </Field>
+          <Col md={12}>
+            <Field
+              name="numberSelected"
+              component={renderSelectField}
+              floatingLabelText={formatMessage(localMessages.numberLabel)}
+              value={5}
+            >
+              <MenuItem value={5} primaryText={formatMessage(messages.top5)} />
+              <MenuItem value={10} primaryText={formatMessage(messages.top10)} />
+              <MenuItem value={15} primaryText={formatMessage(messages.top15)} />
+              <MenuItem value={20} primaryText={formatMessage(messages.top20)} />
+              <MenuItem value={25} primaryText={formatMessage(messages.top25)} />
+            </Field>
+          </Col>
         </Row>
         <Row>
           <Col lg={8} md={12}>
