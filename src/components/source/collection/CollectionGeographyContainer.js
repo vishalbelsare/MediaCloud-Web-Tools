@@ -6,7 +6,6 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
 import DataCard from '../../common/DataCard';
 import { fetchCollectionGeo } from '../../../actions/sourceActions';
-
 import messages from '../../../resources/messages';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { DownloadButton } from '../../common/IconButton';

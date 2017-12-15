@@ -10,6 +10,7 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
 
 const COVERAGE_REQUIRED = 0.7;
 
@@ -42,7 +43,7 @@ class TopPeopleContainer extends React.Component {
     }
   }
   render() {
-    const { coverage, entities } = this.props;
+    const { coverage, entities, helpButton } = this.props;
     const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
     const coverageRatio = coverage.count / coverage.total;
@@ -67,6 +68,7 @@ class TopPeopleContainer extends React.Component {
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
+          {helpButton}
         </h2>
         {content}
       </DataCard>
@@ -78,6 +80,7 @@ TopPeopleContainer.propTypes = {
   // from compositional chain
   location: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
@@ -123,8 +126,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        TopPeopleContainer
+      composeHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
+        composeAsyncContainer(
+          TopPeopleContainer
+        )
       )
     )
   );
