@@ -11,11 +11,13 @@ import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
 
-const VALID_THRESHOLD = 0.7;
+const COVERAGE_REQUIRED = 0.7;
 
 const localMessages = {
   title: { id: 'topic.snapshot.topOrgs.coverage.title', defaultMessage: 'Top Organizations' },
-  notEnoughData: { id: 'topic.snapshot.topOrgs.notEnoughData', defaultMessage: '<i>Sorry, but we only have {pct} of these stories processed to identify organizations mentioned.  We don\'t want to lead you astray with incomplete data, so we\'ve hidden this list.  You an still downlload the data we have, but don\'t rely on it because it doesn\'t represent the full dataset.</i>' },
+  notEnoughData: { id: 'topic.snapshot.topOrgs.notEnoughData',
+    defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed to add the organizations they mention.  We can\'t gaurantee the accuracy of partial results, so we don\'t show a table of results here.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add the organizations mentioned.</i>',
+  },
 };
 
 class TopOrgsContainer extends React.Component {
@@ -44,16 +46,18 @@ class TopOrgsContainer extends React.Component {
     const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
     const coverageRatio = coverage.count / coverage.total;
-    if (coverageRatio > VALID_THRESHOLD) {
+    if (coverageRatio > COVERAGE_REQUIRED) {
       content = <EntitiesTable entities={entities} onClick={(...args) => this.handleEntityClick(args)} />;
     } else {
       content = (
-        <FormattedHTMLMessage
-          {...localMessages.notEnoughData}
-          values={{
-            pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }),
-          }}
-        />
+        <p>
+          <FormattedHTMLMessage
+            {...localMessages.notEnoughData}
+            values={{
+              pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }),
+            }}
+          />
+        </p>
       );
     }
     return (

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import GeoChart from '../../vis/GeoChart';
@@ -17,11 +17,11 @@ const localMessages = {
   helpIntro: { id: 'topic.summary.geo.info',
     defaultMessage: 'This is a map of the countries stories within this Topic are about. We\'ve extracted the places mentioned in each story and the ones mentioned most make a story "about" that place. Darker countries have more stories about them.' },
   notEnoughData: { id: 'topic.summary.geo.notEnoughData',
-    defaultMessage: 'Sorry, but only {pct} of the stories have been processed to add the places they are about.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the geographic attention right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add geographic attention.',
+    defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed to add the places they are about.  We can\'t gaurantee the accuracy of partial results, so we can\'t show a report of the geographic attention right now.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add geographic attention.</i>',
   },
 };
 
-const COVERAGE_REQUIRED = 0.8;  // need > this many of the stories tagged to show the results
+const COVERAGE_REQUIRED = 0.7;  // need > this many of the stories tagged to show the results
 
 class GeoTagSummaryContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -45,7 +45,7 @@ class GeoTagSummaryContainer extends React.Component {
     } else {
       content = (
         <p>
-          <FormattedMessage
+          <FormattedHTMLMessage
             {...localMessages.notEnoughData}
             values={{ pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }) }}
           />
