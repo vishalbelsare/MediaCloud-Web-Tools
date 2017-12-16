@@ -15,6 +15,8 @@ import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_
   TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_ADMIN } from '../../lib/auth';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
@@ -89,6 +91,26 @@ class TopicContainer extends React.Component {
                   type="submit"
                   primary
                 />
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      );
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_QUEUED) {
+      contentToShow = (
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <div className="topic-created-not-queued-error">
+                <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
+                <Permissioned onlyRole={PERMISSION_ADMIN}>
+                  <AppButton
+                    label={formatMessage(localMessages.trySpidering)}
+                    onTouchTap={() => handleSpiderRequest(topicInfo.topics_id)}
+                    type="submit"
+                    primary
+                  />
+                </Permissioned>
               </div>
             </Col>
           </Row>
