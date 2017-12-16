@@ -111,6 +111,8 @@ def _topic_summary(topics_id):
         'list': local_mc.topicSnapshotList(topics_id),
         'jobStatus': mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
     }
+    # add in spider job status
+    topic['spiderJobs'] = local_mc.topicSpiderStatus(topics_id)['job_states']
     if is_user_logged_in():
         _add_user_favorite_flag_to_topics([topic])
     return topic
