@@ -3,7 +3,6 @@ from flask import jsonify, request
 import flask_login
 
 from server import app
-from server.cache import cache
 from server.util.request import api_error_handler, json_error_response, form_fields_required, arguments_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -15,6 +14,7 @@ import json
 logger = logging.getLogger(__name__)
 
 DEFAULT_SAMPLE_SIZE = 5000
+
 
 def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
     user_mc_key = user_mediacloud_key()
@@ -45,7 +45,6 @@ def get_top_themes_by_sentence_field_counts(topics_id, num_themes):
     return nyt_counts
 
 
-
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/preview/story-counts', methods=['GET'])
 @flask_login.login_required
 @arguments_required('numThemes')
@@ -74,7 +73,6 @@ def nyt_theme_coverage(topics_id):
     return jsonify(coverage)
 
 
-
 @app.route('/api/topics/<topics_id>/focal-sets/nyt-theme/create', methods=['POST'])
 @form_fields_required('focalSetName', 'focalSetDescription', 'data[]')
 @flask_login.login_required
@@ -93,7 +91,7 @@ def create_nyt_theme_focal_set(topics_id):
     for tag in theme_data:
         params = {
             'name': tag['label'],
-            'description': "Stories about {}".format(tag['label']),
+            'description': u"Stories about {}".format(tag['label']),
             'query': "tags_id_stories:{}".format(tag['tags_id']) ,
             'focal_set_definitions_id' : new_focal_set['focal_set_definitions_id'],
         }

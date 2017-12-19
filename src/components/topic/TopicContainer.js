@@ -15,12 +15,15 @@ import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_
   TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
+import Permissioned from '../common/Permissioned';
+import { PERMISSION_ADMIN } from '../../lib/auth';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
   hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!' },
   spiderQueued: { id: 'topic.spiderQueued', defaultMessage: 'This topic is in the queue for spidering stories.  Please reload after a bit to see if it has started spidering.' },
+  queueAge: { id: 'topic.spiderQueuedAge', defaultMessage: 'In the {queueName} queue since {lastUpdated}' },
   snapshotQueued: { id: 'snapshotGenerating.warning.queued', defaultMessage: 'We will start creating the new snapshot soon. Please reload this page in a minute to automatically see the freshest data.' },
   snapshotRunning: { id: 'snapshotGenerating.warning.running', defaultMessage: 'We are creating a new snapshot right now. Please reload this page in a minute to automatically see the freshest data.' },
   snapshotImporting: { id: 'snapshotGenerating.warning.importing', defaultMessage: 'We are importing the new snapshot now. Please reload this page in a minute to automatically see the freshest data.' },
@@ -88,6 +91,26 @@ class TopicContainer extends React.Component {
                   type="submit"
                   primary
                 />
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      );
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_QUEUED) {
+      contentToShow = (
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <div className="topic-created-not-queued-error">
+                <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
+                <Permissioned onlyRole={PERMISSION_ADMIN}>
+                  <AppButton
+                    label={formatMessage(localMessages.trySpidering)}
+                    onTouchTap={() => handleSpiderRequest(topicInfo.topics_id)}
+                    type="submit"
+                    primary
+                  />
+                </Permissioned>
               </div>
             </Col>
           </Row>
@@ -169,6 +192,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(addNotice({
               level: LEVEL_INFO,
               message: ownProps.intl.formatMessage(localMessages.spiderQueued),
+              details: ownProps.intl.formatMessage(localMessages.queueAge, {
+                queueName: response.job_queue,
+                lastUpdated: response.spiderJobs[0].last_updated,
+              }),
             }));
             break;
           case TOPIC_SNAPSHOT_STATE_RUNNING:

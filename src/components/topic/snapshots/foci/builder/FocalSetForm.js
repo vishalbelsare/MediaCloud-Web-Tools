@@ -17,9 +17,9 @@ const localMessages = {
   defaultSetNameRetweet: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Retweet Partisanship' },
   defaultSetDescriptionRetweet: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by our analysis of Twitter followers of Trump and Clinton during the 2016 election season.  Each media soure is scored based on the ratio of retweets of their stories in those two groups.' },
   defaultSetNameTopCountries: { id: 'focalSet.default.setName.retweet', defaultMessage: 'Top Countries' },
-  defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics driven by selection of top most tagged countries.' },
+  defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics for the countries stories are most often about.' },
   defaultSetNameNytTheme: { id: 'focalSet.default.setName.nyt', defaultMessage: 'Nyt Theme' },
-  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Selection driven by top NYT-theme related tags.' },
+  defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Subtopics for the themes stories are most often related to.' },
 
 };
 

@@ -7,15 +7,15 @@
 }
 
 .header-primary-label {
-  font-weight: bold !important;
   word-wrap: normal;
+  padding-bottom: 25px;
 
-    .header-primary-description {
-      line-height: 20px !important;
-      font-weight: normal !important;
-      word-wrap: normal;
-      white-space: normal;
-    }
+  .header-primary-description {
+    line-height: 15px !important;
+    font-weight: normal !important;
+    word-wrap: normal;
+    white-space: normal;
+    font-size: 12px;
+  }
+
 }
-
-

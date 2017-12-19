@@ -235,8 +235,12 @@ def topic_tag_coverage(topics_id, tags_id):
     '''
     Useful for seeing how many stories in the topic are tagged with a specific tag
     '''
+    if isinstance(tags_id, list):   # doesn't repect duck-typing, but quick fix
+        tags_id_str = "({})".format(" ".join([str(tid) for tid in tags_id]))
+    else:
+        tags_id_str = str(tags_id)
     # respect any query filter the user has set
-    query_with_tag = add_to_user_query("tags_id_stories:{}".format(tags_id))
+    query_with_tag = add_to_user_query("tags_id_stories:{}".format(tags_id_str))
     # now get the counts
     if access_public_topic(topics_id):
         total = topic_story_count(TOOL_API_KEY, topics_id)
