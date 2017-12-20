@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerCountryCollections } from '../../../../actions/systemActions';
 import CollectionSearchResultsContainer from './CollectionSearchResultsContainer';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
+import { notEmptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
@@ -66,7 +67,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   updateMediaQuerySelection: (values) => {
-    if (values) {
+    if (values && notEmptyString(values.mediaKeyword)) {
       dispatch(selectMediaPickerQueryArgs(values));
       dispatch(fetchMediaPickerCountryCollections({ media_keyword: values.mediaKeyword, which_set: ownProps.whichTagSet }));
     }

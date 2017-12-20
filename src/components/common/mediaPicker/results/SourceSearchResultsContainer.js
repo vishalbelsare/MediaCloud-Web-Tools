@@ -5,17 +5,28 @@ import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, fetchMediaPickerSources } from '../../../../actions/systemActions';
 import { FETCH_ONGOING } from '../../../../lib/fetchConstants';
 import SourceResultsTable from './SourceResultsTable';
+import AdvancedMediaPickerSearchForm from '../AdvancedMediaPickerSearchForm';
 import MediaPickerSearchForm from '../MediaPickerSearchForm';
 import LoadingSpinner from '../../LoadingSpinner';
+import { notEmptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.sources.title', defaultMessage: 'Sources matching "{name}"' },
   hintText: { id: 'system.mediaPicker.sources.hint', defaultMessage: 'Search sources by name or url' },
   noResults: { id: 'system.mediaPicker.sources.noResults', defaultMessage: 'No results. Try searching for the name or URL of a specific source to see if we cover it, like Washington Post, Hindustan, or guardian.co.uk.' },
+  showAdvancedOptions: { id: 'system.mediaPicker.sources.showAdvancedOptions', defaultMessage: 'Show Advanced Options' },
+  hideAdvancedOptions: { id: 'system.mediaPicker.sources.hideAdvancedOptions', defaultMessage: 'Hide Advanced Options' },
 };
 
 
 class SourceSearchResultsContainer extends React.Component {
+  state = {
+    showAdvancedOptions: false,
+  }
+  toggleAdvancedOptions = () => {
+    this.setState({ showAdvancedOptions: !this.state.showAdvancedOptions });
+  }
+
   updateMediaQuery(values) {
     const { updateMediaQuerySelection, selectedMediaQueryType } = this.props;
     const updatedQueryObj = Object.assign({}, values, { type: selectedMediaQueryType });
@@ -26,10 +37,34 @@ class SourceSearchResultsContainer extends React.Component {
     const { fetchStatus, selectedMediaQueryKeyword, sourceResults, handleToggleAndSelectMedia } = this.props;
     const { formatMessage } = this.props.intl;
     let content = null;
-    if (fetchStatus === FETCH_ONGOING) {
-      content = <LoadingSpinner />;
-    } else if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.keyword)))) {
+    let resultContent = null;
+    if (this.state.showAdvancedOptions) {
       content = (
+        <div>
+          <a onTouchTap={this.toggleAdvancedOptions} ><FormattedMessage {...localMessages.hideAdvancedOptions} /></a>
+          <AdvancedMediaPickerSearchForm
+            initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
+            onSearch={val => this.updateMediaQuery(val)}
+            hintText={formatMessage(localMessages.hintText)}
+          />
+        </div>
+      );
+    } else {
+      content = (
+        <div>
+          <a onTouchTap={this.toggleAdvancedOptions} ><FormattedMessage {...localMessages.showAdvancedOptions} /></a>
+          <MediaPickerSearchForm
+            initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
+            onSearch={val => this.updateMediaQuery(val)}
+            hintText={formatMessage(localMessages.hintText)}
+          />
+        </div>
+      );
+    }
+    if (fetchStatus === FETCH_ONGOING) {
+      resultContent = <LoadingSpinner />;
+    } else if (sourceResults && (sourceResults.list && (sourceResults.list.length > 0 || (sourceResults.args && sourceResults.args.media_keyword)))) {
+      resultContent = (
         <SourceResultsTable
           title={formatMessage(localMessages.title, { name: selectedMediaQueryKeyword })}
           sources={sourceResults.list}
@@ -37,17 +72,12 @@ class SourceSearchResultsContainer extends React.Component {
         />
       );
     } else {
-      content = <FormattedMessage {...localMessages.noResults} />;
+      resultContent = <FormattedMessage {...localMessages.noResults} />;
     }
-
     return (
       <div>
-        <MediaPickerSearchForm
-          initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
-          onSearch={val => this.updateMediaQuery(val)}
-          hintText={formatMessage(localMessages.hintText)}
-        />
         {content}
+        {resultContent}
       </div>
     );
   }
@@ -72,7 +102,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateMediaQuerySelection: (values) => {
-    if (values) {
+    if (values && notEmptyString(values.mediaKeyword)) {
       dispatch(selectMediaPickerQueryArgs(values));
       dispatch(fetchMediaPickerSources({ media_keyword: values.mediaKeyword }));
     }
