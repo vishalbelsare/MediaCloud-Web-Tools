@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, FormSection } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
 import MetadataPickerContainer from '../../common/MetadataPickerContainer';
+import MediaPickerSearchForm from './MediaPickerSearchForm';
 import AppButton from '../../common/AppButton';
 import { TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../../lib/tagUtil';
 
@@ -15,17 +16,18 @@ const localMessages = {
   pLanguageSuggestion: { id: 'search.advanced.pLanguageTip', defaultMessage: 'primary language' },
   pCountryOfFocusSuggestion: { id: 'search.advanced.pCountryOfFocusTip', defaultMessage: 'country of focus' },
   pMediaType: { id: 'search.advanced.pMediaType', defaultMessage: 'media type' },
+  search: { id: 'system.mediaPicker.select.search', defaultMessage: 'Search' },
 };
 const AdvancedMediaPickerSearchForm = (props) => {
-  const { initialValues, renderTextField, handleSubmit, buttonLabel, pristine, submitting, onSearch } = props;
+  const { initValues, renderTextField, pristine, onSearch, hintText } = props;
   const { formatMessage } = props.intl;
-  return (
-    <form className="advanced-search-form" onSubmit={handleSubmit(onSearch.bind(this))}>
+  const content = (
+    <FormSection name="advanced-media-picker-search">
       <Row>
         <Col lg={10}>
           <Field
             name={'advancedSearchQueryString'}
-            value={initialValues}
+            value={initValues}
             component={renderTextField}
             floatingLabelText={formatMessage(localMessages.searchSuggestion)}
             fullWidth
@@ -53,7 +55,7 @@ const AdvancedMediaPickerSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
-            value={initialValues}
+            value={initValues}
             id={TAG_SET_PRIMARY_LANGUAGE}
             name={'primaryLanguage'}
             form="advancedQueryForm"
@@ -63,7 +65,7 @@ const AdvancedMediaPickerSearchForm = (props) => {
         </Col>
         <Col lg={6}>
           <MetadataPickerContainer
-            value={initialValues}
+            value={initValues}
             id={TAG_SET_COUNTRY_OF_FOCUS}
             name={'countryOfFocus'}
             form="advancedQueryForm"
@@ -85,14 +87,23 @@ const AdvancedMediaPickerSearchForm = (props) => {
         <Col lg={12}>
           <AppButton
             style={{ marginTop: 30 }}
-            type="submit"
-            label={buttonLabel}
-            disabled={pristine || submitting}
+            label={formatMessage(localMessages.search)}
+            onClick={onSearch}
+            disabled={pristine}
             primary
           />
         </Col>
       </Row>
-    </form>
+    </FormSection>
+  );
+  return (
+    <MediaPickerSearchForm
+      initValues={{ storedKeyword: { mediaKeyword: initValues.mediaKeyword } }}
+      onSearch={val => this.updateMediaQuery(val)}
+      hintText={hintText}
+    >
+      {content}
+    </MediaPickerSearchForm>
   );
 };
 
@@ -100,19 +111,19 @@ AdvancedMediaPickerSearchForm.propTypes = {
   // from compositional chain
   intl: PropTypes.object.isRequired,
   // from form healper
-  initialValues: PropTypes.object,
-  buttonLabel: PropTypes.string.isRequired,
+  initValues: PropTypes.object,
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   renderTextField: PropTypes.func.isRequired,
+  hintText: PropTypes.string,
   // from parent
   onSearch: PropTypes.func.isRequired,
   searchString: PropTypes.string,
 };
 
 const reduxFormConfig = {
-  form: 'advancedMediaPickerSearchForm',
+  form: 'advanced-media-picker-search',
 };
 
 export default
