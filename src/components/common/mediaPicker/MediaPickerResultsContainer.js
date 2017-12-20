@@ -4,12 +4,11 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
 import messages from '../../../resources/messages';
-import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_ADVANCED } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
 import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
-import AdvancedSearchResultsContainer from './results/AdvancedSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
 
@@ -47,7 +46,6 @@ class MediaPickerResultsContainer extends React.Component {
     let whichList = [];
 
     switch (whichProps.selectedMediaQueryType) {
-      case PICK_ADVANCED:
       case PICK_COUNTRY:
         if (whichProps.selectedMediaQueryKeyword !== null && whichProps.selectedMediaQueryKeyword !== undefined) {
           whichList = whichProps.collectionResults;
@@ -96,15 +94,6 @@ class MediaPickerResultsContainer extends React.Component {
     const whichMedia = {};
     whichMedia.fetchStatus = null;
     switch (selectedMediaQueryType) {
-      case PICK_ADVANCED:
-        content = (
-          <AdvancedSearchResultsContainer
-            whichTagSet={VALID_COLLECTION_IDS}
-            handleMediaConcurrency={toggleConcurrency}
-            handleToggleAndSelectMedia={handleToggleAndSelectMedia}
-          />
-        );
-        break;
       case PICK_COUNTRY:
         content = (
           <CountryCollectionSearchResultsContainer
