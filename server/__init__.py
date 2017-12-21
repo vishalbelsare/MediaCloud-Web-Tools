@@ -104,9 +104,8 @@ def create_app():
     try:
         sentry_dsn = config.get('SENTRY_DSN')
         Sentry(my_app, dsn=sentry_dsn)
-    except Exception as e:
-        logger.info("no sentry logging")
-        logger.error(e)
+    except ConfigException as e:
+        logger.warn(e)
     # set up webpack
     if is_dev_mode():
         manifest_path = '../build/manifest.json'
