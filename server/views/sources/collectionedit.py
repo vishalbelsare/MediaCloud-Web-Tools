@@ -9,13 +9,14 @@ from werkzeug.utils import secure_filename
 import csv as pycsv
 from multiprocessing import Pool
 
-from server import app, settings
+from server import app, config
+from server.util.config import ConfigException
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, user_name
 from server.util.request import json_error_response, form_fields_required, api_error_handler
 from server.views.sources.collection import allowed_file
 from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
-from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_STATE_NAME, METADATA_PUB_COUNTRY_NAME, \
-    format_name_from_label, cached_tags_in_tag_set, media_with_tag, is_metadata_tag_set
+from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_COUNTRY_NAME, \
+    format_name_from_label, cached_tags_in_tag_set, media_with_tag
 logger = logging.getLogger(__name__)
 
 MEDIA_UPDATE_POOL_SIZE = 15  # number of parallel processes to use while batch updating media sources
@@ -94,10 +95,12 @@ def upload_file():
             all_results += successful
             audit += audit_results
             all_errors += errors
-        if settings.has_option('smtp', 'enabled'):
-            mail_enabled = settings.get('smtp', 'enabled')
+        try:
+            mail_enabled = config.get('SMTP_ENABLED')
             if mail_enabled is '1':
                 _email_batch_source_update_results(audit)
+        except ConfigException:
+            logger.debug("Skipping collection file upload confirmation email")
         for media in all_results:
             if 'media_id' in media:
                 media['media_id'] = int(

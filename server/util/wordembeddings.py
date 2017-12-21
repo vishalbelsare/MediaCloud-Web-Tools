@@ -1,13 +1,13 @@
 import requests
 
-from server import settings
+from server import config
 
 GOOGLE_NEWS_MODEL_NAME = 'GoogleNews-vectors-negative300'
 TOPIC_MODEL_NAME_FORMAT = 'w2v-topic-model-{}'
 
 
 def _server_url():
-    return settings.get('services', 'word_embeddings_server_url')
+    return config.get('WORD_EMBEDDINGS_SERVER_URL')
 
 
 def google_news_2d(words):
