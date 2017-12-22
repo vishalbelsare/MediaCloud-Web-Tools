@@ -19,6 +19,7 @@ const localMessages = {
   retweetIntro: { id: 'focus.create.setup3.retweetIntro', defaultMessage: 'This will create a set with one subtopic for each of the partisan quintiles.  For example, any story from a media source in the "center left" group will be put into the "center left" subtopic in this set.  Name thet set and we will create the subtopics within it.  Give it a name that makes these subtopics easy to identify later.' },
   topCountriesIntro: { id: 'focus.create.setup3.title', defaultMessage: 'This will create a subtopic containing the stories mentioning the top most tagged countries' },
   nytThemeIntro: { id: 'focus.create.setup3.title', defaultMessage: 'This will create a subtopic containing the stories tagged by New York Times Themes' },
+  duplicateName: { id: 'focus.create.setup3.duplicateName', defaultMessage: 'Duplicate Name' },
 };
 
 const FocusForm3DescribeContainer = (props) => {
@@ -31,6 +32,8 @@ const FocusForm3DescribeContainer = (props) => {
   } else {
     initialValues.focalSetId = focalSetDefinitions[0].focal_set_definitions_id;
   }
+  const includeDefsInitialValues = initialValues;
+  includeDefsInitialValues.focalSetDefinitions = focalSetDefinitions;
   let content;
   switch (formData.focalTechnique) {
     case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
@@ -51,7 +54,7 @@ const FocusForm3DescribeContainer = (props) => {
         <Row>
           <Col lg={10}>
             <FocalSetForm
-              initialValues={initialValues}
+              initialValues={includeDefsInitialValues}
               introContent={introContent}
               focalTechnique={formData.focalTechnique}
               fullWidth
@@ -68,7 +71,7 @@ const FocusForm3DescribeContainer = (props) => {
         <Row>
           <Col lg={10}>
             <FocalSetForm
-              initialValues={initialValues}
+              initialValues={includeDefsInitialValues}
               introContent={introContent}
               focalTechnique={formData.focalTechnique}
               fullWidth
@@ -85,7 +88,7 @@ const FocusForm3DescribeContainer = (props) => {
         <Row>
           <Col lg={10}>
             <FocalSetForm
-              initialValues={initialValues}
+              initialValues={includeDefsInitialValues}
               introContent={introContent}
               focalTechnique={formData.focalTechnique}
               fullWidth
@@ -156,10 +159,19 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
-function validate() {
+function validate(values, props) {
   const errors = {};
   // TODO: figure out if we need to do more validation here, because in theory the
   // subforms components have already done it
+  if (props.initialValues.focalSetDefinitions) {
+    const nameAlreadyExists = props.initialValues.focalSetDefinitions.filter(fc => fc.name === values.focalSetName);
+    if (nameAlreadyExists.length > 0) {
+      // return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateName) }));
+      errors.focalSetName = localMessages.duplicateName;
+      errors.focalSetName = { _error: localMessages.duplicateName };
+      errors.focusName = localMessages.duplicateName;
+    }
+  }
   return errors;
 }
 
