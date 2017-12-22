@@ -40,7 +40,7 @@ config = get_default_config()
 
 server_mode = config.get('SERVER_MODE').lower()
 if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
-    logger.error(u"Unknown server mode '{}', set a mode in the `config/server.config` file".format(server_mode))
+    logger.error(u"Unknown server mode '{}', set a mode in the `config/app.config` file".format(server_mode))
     sys.exit(1)
 else:
     logger.info(u"Started server in %s mode", server_mode)
