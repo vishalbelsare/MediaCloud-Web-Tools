@@ -88,7 +88,7 @@ class EditableWordCloudDataCard extends React.Component {
 
   render() {
     const { title, words, onViewModeClick, width, height, maxFontSize, minFontSize, explore, helpButton, domId,
-      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor, actionMenuHeaderText } = this.props;
+      subtitleContent, includeTopicWord2Vec, subHeaderContent, textAndLinkColor, actionMenuHeaderText, border } = this.props;
     const { formatMessage } = this.props.intl;
     let className = 'editable-word-cloud-datacard';
     let editingClickHandler = onViewModeClick;
@@ -115,6 +115,16 @@ class EditableWordCloudDataCard extends React.Component {
         <Link to={explore}>
           {title}
         </Link>
+      );
+    }
+    let headerContent;
+    if (title) {
+      headerContent = (
+        <h2>
+          {titleContent}
+          {helpButton}
+          {subtitleContent}
+        </h2>
       );
     }
     // set up rendered cloud as appropriate
@@ -194,7 +204,7 @@ class EditableWordCloudDataCard extends React.Component {
     }
     const actionMenuSubHeaderContent = actionMenuHeaderText ? <Subheader>{actionMenuHeaderText}</Subheader> : null;
     return (
-      <DataCard className={className}>
+      <DataCard className={className} border={(border === true) || (border === undefined)}>
         <div className="actions">
           {exploreButton}
           <ActionMenu>
@@ -265,11 +275,7 @@ class EditableWordCloudDataCard extends React.Component {
           </ActionMenu>
         </div>
 
-        <h2>
-          {titleContent}
-          {helpButton}
-          {subtitleContent}
-        </h2>
+        {headerContent}
         {subHeaderContent}
         {editingWarning}
         {cloudContent}
@@ -284,8 +290,9 @@ EditableWordCloudDataCard.propTypes = {
   height: PropTypes.number,
   maxFontSize: PropTypes.number,
   minFontSize: PropTypes.number,
+  border: PropTypes.bool,
   textAndLinkColor: PropTypes.string,     // render the words in this color (instead of the brand dark color)
-  title: PropTypes.string.isRequired,     // rendered as an H2 inside the DataCard
+  title: PropTypes.string,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
   explore: PropTypes.object,              // show an exlore button and link it to this URL

@@ -91,7 +91,8 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       ];
     }
     return (
-      <div className="attention-over-time">
+      <div>
+        <AttentionOverTimeChart series={series} height={300} backgroundColor="#f5f5f5" />
         <div className="actions">
           <ActionMenu>
             {mergedResultsWithQueryInfo.map((q, idx) =>
@@ -105,7 +106,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <AttentionOverTimeChart series={series} height={300} />
       </div>
     );
   }

@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -58,7 +57,17 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
     const { results, queries, handleEntitySelection } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <DataCard>
+      <div>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
+        <EntitiesTable
+          className="explorer-entity"
+          entities={results[this.state.selectedQueryIndex].results}
+          onClick={e => handleEntitySelection(e, queries[0].searchId)}
+          maxTitleLength={50}
+        />
         <div className="actions">
           <ActionMenu>
             {queries.map((q, idx) =>
@@ -72,20 +81,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <EntitiesTable
-          className="explorer-entity"
-          entities={results[this.state.selectedQueryIndex].results}
-          onClick={e => handleEntitySelection(e, queries[0].searchId)}
-          maxTitleLength={50}
-        />
-      </DataCard>
+      </div>
     );
   }
 }
@@ -162,7 +158,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.helpIntro, [messages.entityHelpDetails])(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         composeAsyncContainer(
           QueryTopEntitiesPeopleResultsContainer
         )

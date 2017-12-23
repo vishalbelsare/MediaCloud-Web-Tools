@@ -4,7 +4,7 @@ import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessage = {
-  showDetails: { id: 'describedDataCard.description.show', defaultMessage: '... learn more' },
+  showDetails: { id: 'describedDataCard.description.show', defaultMessage: '...learn more' },
   hideDescription: { id: 'describedDataCard.description.hide', defaultMessage: 'hide details' },
 };
 
@@ -50,7 +50,7 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
         return (
           <div className="summarized-viz">
             <Row>
-              <Col lg={3}>
+              <Col lg={4}>
                 <div className="summary">
                   <h2><FormattedHTMLMessage {...titleMesage} /></h2>
                   <div className="summary-intro">
@@ -60,9 +60,11 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
                   {detailsContent}
                 </div>
               </Col>
-              <Col lg={2} />
+              <Col lg={1} />
               <Col lg={7}>
-                <ChildComponent {...this.props} showingDetails={this.state.showingDetails} />
+                <div className="content">
+                  <ChildComponent {...this.props} showingDetails={this.state.showingDetails} />
+                </div>
               </Col>
             </Row>
           </div>

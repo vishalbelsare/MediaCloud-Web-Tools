@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchDemoQueryStoryCount, fetchQueryStoryCount, resetStoryCounts } from '../../../actions/explorerActions';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
@@ -19,10 +18,10 @@ const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 const localMessages = {
   title: { id: 'explorer.storyCount.title', defaultMessage: 'Total Attention' },
   helpIntro: { id: 'explorer.storyCount.help.into',
-    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the cirlces to see the exact numbers, or click the menu in the top right to download the data.</p>',
+    defaultMessage: '<p>Compare the total number of stories where at least one sentence matched each of your queries.  Rollover the circles to see the exact numbers, or click the menu in the top right to download the data.</p>',
   },
   helpDetails: { id: 'explorer.storyCount.help.details',
-    defaultMessage: '<p></p>',
+    defaultMessage: '<p>It is harder to determine how much of the media\'s attention your search got. If you want to dig into that, a good place to start is comparing your query to a search for everything from the sources and collections you are searching.  You can do this by searching for * in the same date range and media; that matches every story.</p>',
   },
   downloadCSV: { id: 'explorer.attention.downloadcsv', defaultMessage: 'Download {name}' },
 };
@@ -87,7 +86,8 @@ class QueryTotalAttentionResultsContainer extends React.Component {
       />);
     }
     return (
-      <DataCard>
+      <div>
+        {content}
         <div className="actions">
           <ActionMenu>
             <MenuItem
@@ -104,11 +104,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
             />
           </ActionMenu>
         </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        {content}
-      </DataCard>
+      </div>
     );
   }
 }
@@ -179,7 +175,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-       composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
+       composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         composeAsyncContainer(
           QueryTotalAttentionResultsContainer
         )
