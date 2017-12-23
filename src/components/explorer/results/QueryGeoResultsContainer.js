@@ -82,6 +82,7 @@ class QueryGeoResultsContainer extends React.Component {
           countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
           hideLegend
           onCountryClick={handleCountryClick}
+          backgroundColor="#f5f5f5"
         />
       </div>
     );
