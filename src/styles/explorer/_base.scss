@@ -4,6 +4,9 @@
 
   a {
     color: $explorer-primary;
+    :hover {
+      cursor: pointer;
+    }
   }
 
   .app-button {

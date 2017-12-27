@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -18,6 +17,7 @@ import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
+  person: { id: 'explorer.entities.person', defaultMessage: 'Person' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at <i>who</i> is being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the people menntioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the top right to download a CSV of all the people mentioned in a sample of stories.</p>' },
 };
 
@@ -58,9 +58,20 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
     const { results, queries, handleEntitySelection } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <DataCard>
+      <div>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
+        <EntitiesTable
+          className="explorer-entity"
+          entityColNameMsg={localMessages.person}
+          entities={results[this.state.selectedQueryIndex].results}
+          onClick={e => handleEntitySelection(e, queries[0].searchId)}
+          maxTitleLength={50}
+        />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}
@@ -72,20 +83,7 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <EntitiesTable
-          className="explorer-entity"
-          entities={results[this.state.selectedQueryIndex].results}
-          onClick={e => handleEntitySelection(e, queries[0].searchId)}
-          maxTitleLength={50}
-        />
-      </DataCard>
+      </div>
     );
   }
 }
@@ -162,7 +160,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.helpIntro, [messages.entityHelpDetails])(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.entityHelpDetails])(
         composeAsyncContainer(
           QueryTopEntitiesPeopleResultsContainer
         )

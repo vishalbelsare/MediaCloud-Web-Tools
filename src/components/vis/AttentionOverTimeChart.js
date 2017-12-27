@@ -8,6 +8,8 @@ initHighcharts();
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
 
+const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
+
 // don't show dots on line if more than this many data points
 const SERIES_MARKER_THRESHOLD = 30;
 
@@ -27,12 +29,14 @@ const localMessages = {
 class AttentionOverTimeChart extends React.Component {
 
   getConfig() {
+    const { backgroundColor } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const config = {
       title: formatMessage(localMessages.chartTitle),
       chart: {
         type: 'spline',
         zoomType: 'x',
+        backgroundColor: backgroundColor || DEFAULT_BACKGROUND_COLOR,
       },
       plotOptions: {
         series: {
@@ -154,6 +158,7 @@ AttentionOverTimeChart.propTypes = {
   series: PropTypes.array,
   height: PropTypes.number.isRequired,
   lineColor: PropTypes.string,
+  backgroundColor: PropTypes.string,
   health: PropTypes.array,
   onDataPointClick: PropTypes.func, // (date0, date1, evt, chartObj)
   total: PropTypes.number,

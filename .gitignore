@@ -26,3 +26,4 @@ env
 sketches/*
 config/test.config.js
 react-codemod
+config/app.config

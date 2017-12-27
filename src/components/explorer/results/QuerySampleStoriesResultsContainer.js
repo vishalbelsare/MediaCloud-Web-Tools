@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -20,7 +19,7 @@ const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
   helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a small sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the top right to download a CSV of stories with their urls.</p>' },
   helpDetails: { id: 'explorer.stories.help.text',
-    defaultMessage: '<p>Due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',
+    defaultMessage: '<p>We can provide basic informatin about stories like it\'s source, date of publication, and URL.  However, due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',
   },
 };
 
@@ -61,9 +60,19 @@ class QuerySampleStoriesResultsContainer extends React.Component {
     const { results, queries, handleStorySelection } = this.props;
     const { formatMessage } = this.props.intl;
     return (
-      <DataCard>
+      <div>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
+        <StoryTable
+          className="story-table"
+          stories={results[this.state.selectedQueryIndex]}
+          onChangeFocusSelection={handleStorySelection}
+          maxTitleLength={50}
+        />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}
@@ -75,20 +84,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <StoryTable
-          className="story-table"
-          stories={results[this.state.selectedQueryIndex]}
-          onChangeFocusSelection={handleStorySelection}
-          maxTitleLength={50}
-        />
-      </DataCard>
+      </div>
     );
   }
 }
@@ -160,7 +156,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.helpIntro, [localMessages.helpDetails])(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, localMessages.helpDetails)(
         composeAsyncContainer(
           QuerySampleStoriesResultsContainer
         )

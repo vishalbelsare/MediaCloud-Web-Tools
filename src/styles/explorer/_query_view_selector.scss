@@ -14,8 +14,8 @@ ul.query-view-selector {
     text-transform: uppercase;
 
     &.selected {
-      color: $material-orange500;
-      border-bottom: 2px solid $material-orange500;
+      color: $explorer-primary;
+      border-bottom: 2px solid $explorer-primary;
     }
 
     &:hover {

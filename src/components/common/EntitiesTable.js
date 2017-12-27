@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
 
 const EntitiesTable = (props) => {
-  const { entities, onClick } = props;
+  const { entities, onClick, entityColNameMsg } = props;
   const { formatNumber } = props.intl;
   const content = null;
   if (entities === undefined) {
@@ -14,12 +14,13 @@ const EntitiesTable = (props) => {
       </div>
     );
   }
+  const columnHeaderMsg = entityColNameMsg || messages.entityName;
   return (
     <div className="entity-table">
       <table width="100%">
         <tbody>
           <tr>
-            <th><FormattedMessage {...messages.entityName} /></th>
+            <th><FormattedMessage {...columnHeaderMsg} /></th>
             <th className="numeric"><FormattedMessage {...messages.entityPercentage} /></th>
           </tr>
           {entities.map((entity, idx) =>
@@ -48,6 +49,7 @@ const EntitiesTable = (props) => {
 
 EntitiesTable.propTypes = {
   entities: PropTypes.array,
+  entityColNameMsg: PropTypes.object, // pass in a msg to use, or it will default to "entity"
   intl: PropTypes.object.isRequired,
   onClick: PropTypes.func,
 };

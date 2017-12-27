@@ -66,7 +66,7 @@ class QueryResultsContainer extends React.Component {
         </Col>
       </Row>
     );
-    const peopleSection = (
+    const peoplePlacesSection = (
       <Row>
         <Col lg={12} xs={12}>
           <QueryTopEntitiesPeopleResultsContainer
@@ -84,10 +84,6 @@ class QueryResultsContainer extends React.Component {
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
-      </Row>
-    );
-    const reachSection = (
-      <Row>
         <Col lg={12} xs={12}>
           <QueryGeoResultsContainer
             lastSearchTime={lastSearchTime}
@@ -98,7 +94,6 @@ class QueryResultsContainer extends React.Component {
         </Col>
       </Row>
     );
-
     let viewContent = attentionSection;
     switch (this.state.selectedViewIndex) {
       case 0:
@@ -108,10 +103,7 @@ class QueryResultsContainer extends React.Component {
         viewContent = languageSection;
         break;
       case 2:
-        viewContent = peopleSection;
-        break;
-      case 3:
-        viewContent = reachSection;
+        viewContent = peoplePlacesSection;
         break;
       default:
         break;
