@@ -72,7 +72,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
           maxTitleLength={50}
         />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}

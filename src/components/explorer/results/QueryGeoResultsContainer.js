@@ -60,19 +60,6 @@ class QueryGeoResultsContainer extends React.Component {
     const { formatMessage } = intl;
     return (
       <div>
-        <div className="actions">
-          <ActionMenu>
-            {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
-            )}
-          </ActionMenu>
-        </div>
         <QueryResultsSelector
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
@@ -84,6 +71,19 @@ class QueryGeoResultsContainer extends React.Component {
           onCountryClick={handleCountryClick}
           backgroundColor="#f5f5f5"
         />
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {queries.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
       </div>
     );
   }

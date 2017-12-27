@@ -156,6 +156,7 @@ const messages = {
   download: { id: 'download', defaultMessage: 'Download' },
   downloadSVG: { id: 'downloadsvg', defaultMessage: 'Download a SVG' },
   downloadCSV: { id: 'downloadcsv', defaultMessage: 'Download a CSV' },
+  downloadOptions: { id: 'downloadOptions', defaultMessage: 'Download Options...' },
   favorite: { id: 'favorite', defaultMessage: 'Star' },
   unfavorite: { id: 'unfavorite', defaultMessage: 'Un-star' },
   explore: { id: 'explore', defaultMessage: 'Explore' },

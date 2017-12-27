@@ -17,6 +17,7 @@ import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
+  person: { id: 'explorer.entities.person', defaultMessage: 'Person' },
   helpIntro: { id: 'explorer.entities.help.title', defaultMessage: '<p>Looking at <i>who</i> is being talked about can give you a sense of how the media is focusing on the issue you are investigating. This is a list of the people menntioned most often in a sampling of stories. Click on a name to add it to all your queries. Click the menu on the top right to download a CSV of all the people mentioned in a sample of stories.</p>' },
 };
 
@@ -64,12 +65,13 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
         />
         <EntitiesTable
           className="explorer-entity"
+          entityColNameMsg={localMessages.person}
           entities={results[this.state.selectedQueryIndex].results}
           onClick={e => handleEntitySelection(e, queries[0].searchId)}
           maxTitleLength={50}
         />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}

@@ -89,7 +89,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
       <div>
         {content}
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             <MenuItem
               className="action-icon-menu-item"
               primaryText={formatMessage(messages.downloadCSV)}

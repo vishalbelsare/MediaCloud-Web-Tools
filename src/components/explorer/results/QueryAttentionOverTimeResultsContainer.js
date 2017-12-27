@@ -94,7 +94,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       <div>
         <AttentionOverTimeChart series={series} height={300} backgroundColor="#f5f5f5" />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {mergedResultsWithQueryInfo.map((q, idx) =>
               <MenuItem
                 key={idx}
