@@ -76,6 +76,7 @@ class QueryWordsResultsContainer extends React.Component {
         width={585}
         downloadUrl={downloadUrl}
         textAndLinkColor={selectedQuery.color}
+        actionsAsLinksUnderneath
       />
     );
   }
