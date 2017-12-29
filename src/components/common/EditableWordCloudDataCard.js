@@ -87,7 +87,7 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
     if (includeTopicWord2Vec) {
@@ -97,6 +97,17 @@ class EditableWordCloudDataCard extends React.Component {
           primaryText={formatMessage(localMessages.modeTopicW2V)}
           disabled={this.state.editing || this.state.view === VIEW_TOPIC_W2V}
           onTouchTap={() => this.setView(VIEW_TOPIC_W2V)}
+        />
+      );
+    }
+    let googleWord2VecMenuItem;
+    if (hideGoogleWord2Vec === false) {
+      googleWord2VecMenuItem = (
+        <MenuItem
+          className="action-icon-menu-item"
+          primaryText={formatMessage(localMessages.modeGoogleW2V)}
+          disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
+          onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
         />
       );
     }
@@ -116,12 +127,7 @@ class EditableWordCloudDataCard extends React.Component {
           onTouchTap={() => this.setView(VIEW_CLOUD)}
         />
         {topicWord2VecMenuItem}
-        <MenuItem
-          className="action-icon-menu-item"
-          primaryText={formatMessage(localMessages.modeGoogleW2V)}
-          disabled={this.state.editing || this.state.view === VIEW_GOOGLE_W2V}
-          onTouchTap={() => this.setView(VIEW_GOOGLE_W2V)}
-        />
+        {googleWord2VecMenuItem}
         <Divider />
         <MenuItem
           className="action-icon-menu-item"
@@ -347,7 +353,8 @@ EditableWordCloudDataCard.propTypes = {
   subtitleContent: PropTypes.object,      // shows up to the right of the H2 title
   subHeaderContent: PropTypes.object,     // shows up under the H2 title, above the word cloud
   actionMenuHeaderText: PropTypes.string, // text to put as a subheader in the action menu popup
-  includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y
+  includeTopicWord2Vec: PropTypes.bool,   // show an option to draw a word2vec map basde on w2v_x / w2v_y from topic-specific model
+  hideGoogleWord2Vec: PropTypes.bool,        // show an option to draw a word2vec map basde on w2v_x / w2v_y from GoogleNews model
   onViewModeClick: PropTypes.func.isRequired,
   actionsAsLinksUnderneath: PropTypes.bool, // show the actions as links under the viz (ie. in a SummarizedVisualization card)
   domId: PropTypes.string.isRequired,     // unique dom id needed to support CSV downloading

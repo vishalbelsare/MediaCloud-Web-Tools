@@ -4,7 +4,6 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import DataCard from '../../common/DataCard';
 import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
 // import { generateParamStr } from '../../../lib/apiUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
@@ -88,14 +87,12 @@ class QueryWordComparisonResultsContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={8}>
-              <DataCard>
-                <h2><FormattedMessage {...localMessages.title} /></h2>
-                <OrderedWordCloud
-                  words={results[0]}
-                  // alreadyNormalized
-                  width={700}
-                />
-              </DataCard>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+              <OrderedWordCloud
+                words={results[0]}
+                // alreadyNormalized
+                width={700}
+              />
             </Col>
           </Row>
         </Grid>
@@ -117,21 +114,19 @@ class QueryWordComparisonResultsContainer extends React.Component {
         <Grid>
           <Row>
             <Col lg={12}>
-              <DataCard>
-                <h2><FormattedMessage {...localMessages.title} /></h2>
-                {wordSelectorContent}
-                <ComparativeOrderedWordCloud
-                  leftWords={results[0]}
-                  rightWords={results[1]}
-                  leftTextColor={leftQuery.color}
-                  rightTextColor={rightQuery.color}
-                  textColor={getBrandDarkColor()}
-                  onWordClick={handleWordCloudClick}
-                  leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
-                  centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
-                  rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
-                />
-              </DataCard>
+              <h2><FormattedMessage {...localMessages.title} /></h2>
+              {wordSelectorContent}
+              <ComparativeOrderedWordCloud
+                leftWords={results[0]}
+                rightWords={results[1]}
+                leftTextColor={leftQuery.color}
+                rightTextColor={rightQuery.color}
+                textColor={getBrandDarkColor()}
+                onWordClick={handleWordCloudClick}
+                leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
+                centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
+                rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
+              />
             </Col>
           </Row>
         </Grid>
