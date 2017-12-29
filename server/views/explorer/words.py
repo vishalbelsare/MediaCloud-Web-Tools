@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from flask import jsonify, request
 import flask_login
@@ -8,6 +7,7 @@ from server import app, mc
 from server.cache import cache
 from server.auth import is_user_logged_in, user_mediacloud_key, user_mediacloud_client
 from server.util.request import api_error_handler
+import server.util.wordembeddings as wordembeddings
 import server.util.csv as csv
 from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 
@@ -37,11 +37,18 @@ def get_word_count():
         sample_searches = load_sample_searches()
         current_search = sample_searches[search_id]['queries']
         solr_query = parse_query_with_args_and_sample_search(request.args, current_search)
-        word_count_result = query_wordcount(solr_query)
     else:
         solr_query = parse_query_with_keywords(request.args)
-        word_count_result = query_wordcount(solr_query)
-    return jsonify({"list": word_count_result})
+    word_data = query_wordcount(solr_query)
+    # add in word2vec results
+    words = [w['term'] for w in word_data]
+    # and now add in word2vec model position data
+    google_word2vec_data = _cached_word2vec_google_2d_results(words)
+    for i in range(len(google_word2vec_data)):
+        word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
+        word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
+    # return combined data
+    return jsonify({"list": word_data})
 
 
 @app.route('/api/explorer/words/wordcount.csv/<search_id_or_query>/<index>', methods=['GET'])
@@ -117,6 +124,12 @@ def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
         api_client = mc
     results = api_client.wordCount('*', query, ngram_size=ngram_size, num_words=num_words, sample_size=sample_size)
     return results
+
+
+@cache
+def _cached_word2vec_google_2d_results(words):
+    word2vec_results = wordembeddings.google_news_2d(words)
+    return word2vec_results
 
 
 def stream_wordcount_csv(filename, query, ngram_size=1):

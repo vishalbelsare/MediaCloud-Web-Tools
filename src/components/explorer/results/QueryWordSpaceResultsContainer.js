@@ -10,6 +10,7 @@ import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import Word2VecChart from '../../vis/Word2VecChart';
+import { downloadSvg } from '../../util/svg';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
@@ -67,13 +68,23 @@ class QueryWordSpaceResultsContainer extends React.Component {
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
+              <span key={`wordspace-actions-${idx}`}>
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => {
+                    const svgChild = document.getElementById(WORD_SPACE_DOM_ID);
+                    downloadSvg(svgChild.firstChild);
+                  }}
+                />
+              </span>
             )}
           </ActionMenu>
         </div>
