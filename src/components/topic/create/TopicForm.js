@@ -126,13 +126,18 @@ function validate(values, props) {
 }
 
 const asyncValidate = (values, dispatch) => (
+  // verify topic name is unique
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
-      if (results.topics && (results.topics.length !== 0) &&
-        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
-        const error = { name: localMessages.nameInUseError };
-        throw error;
+      if ((results.topics) && (results.topics.length !== 0)) {
+        results.topics.forEach((t) => {
+          if ((t.name.toLowerCase() === values.name.toLowerCase()) &&      // if name matches
+              ((values.topicId === undefined) || (t.topics_id !== values.topicId)) // and not same topic
+              ) {
+            const error = { name: localMessages.nameInUseError };
+            throw error;
+          }
+        });
       }
     })
 );
