@@ -2,7 +2,7 @@ import codecs
 import os
 import logging
 
-COMMENT_CHAR = "#"
+COMMENT_CHAR = u"#"
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ def _variables_from_file(filepath):
     for line in f:
         if len(line.strip()) is 0:
             continue
-        if line.strip()[0] is COMMENT_CHAR:
+        if line.strip()[0] == COMMENT_CHAR:
             continue
         parts = line.split(u"=")
         key = parts[0].strip().upper()
