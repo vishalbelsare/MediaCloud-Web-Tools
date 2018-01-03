@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @app.route('/api/topics/<topics_id>/geo-tags/coverage', methods=['GET'])
 @api_error_handler
 def topic_geo_tag_coverage(topics_id):
-    coverage = topic_tag_coverage(topics_id, " ".join(tag_util.processed_by_cliff_tag_ids()))   # this will respect filters
+    coverage = topic_tag_coverage(topics_id, tag_util.processed_by_cliff_tag_ids())   # this will respect filters
     if coverage is None:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
     return jsonify(coverage)
@@ -37,7 +37,7 @@ def topic_geo_tag_counts_csv(topics_id):
 @api_error_handler
 def topic_geo_tag_counts(topics_id):
     tags = _geo_tag_counts(user_mediacloud_key(), topics_id)
-    coverage = topic_tag_coverage(topics_id, " ".join(tag_util.processed_by_cliff_tag_ids()))   # this will respect filters
+    coverage = topic_tag_coverage(topics_id, tag_util.processed_by_cliff_tag_ids())   # this will respect filters
     return jsonify({'results': tags, 'coverage': coverage['counts']})
 
 

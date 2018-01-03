@@ -49,7 +49,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  handleGenerateSnapshotRequest: (values) => {
+  handleGenerateSnapshotRequest: values => (
     dispatch(generateSnapshot(ownProps.params.topicId, { note: values.note }))
       .then((results) => {
         if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
@@ -61,8 +61,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // was completed far too quickly, or was an error
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.snapshotFailed) }));
         }
-      });
-  },
+      })
+  ),
 });
 
 export default

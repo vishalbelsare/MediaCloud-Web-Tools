@@ -21,3 +21,13 @@
 	}
 
 }
+
+.action-menu-set {
+  display: inline-block;
+  float: right;
+  .action-icon-menu {
+    float: none;
+    display: inline-block;
+    margin-left: 15px;
+  }
+}

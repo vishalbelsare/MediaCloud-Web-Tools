@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 // import MenuItem from 'material-ui/MenuItem';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
 // import { DownloadButton } from '../../common/IconButton';
 // import ActionMenu from '../../common/ActionMenu';
@@ -57,7 +57,6 @@ class QueryWordsResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleWordCloudClick } = this.props;
-    const { formatMessage } = this.props.intl;
     const subHeaderContent = (
       <QueryResultsSelector
         options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
@@ -72,11 +71,12 @@ class QueryWordsResultsContainer extends React.Component {
         subHeaderContent={subHeaderContent}
         words={results[this.state.selectedQueryIndex].list}
         onViewModeClick={handleWordCloudClick}
-        title={formatMessage(localMessages.title)}
+        border={false}
         domId={WORD_CLOUD_DOM_ID}
-        width={720}
+        width={585}
         downloadUrl={downloadUrl}
         textAndLinkColor={selectedQuery.color}
+        actionsAsLinksUnderneath
       />
     );
   }
@@ -152,7 +152,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
         composeAsyncContainer(
           QueryWordsResultsContainer
         )

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -10,9 +10,15 @@ import EntitiesTable from '../../common/EntitiesTable';
 import { filtersAsUrlParams, filteredLocation } from '../../util/location';
 import { DownloadButton } from '../../common/IconButton';
 import messages from '../../../resources/messages';
+import composeHelpfulContainer from '../../common/HelpfulContainer';
+
+const COVERAGE_REQUIRED = 0.7;
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Top People' },
+  title: { id: 'topic.snapshot.topPeople.title', defaultMessage: 'Top People' },
+  notEnoughData: { id: 'topic.snapshot.topPeople.notEnoughData',
+    defaultMessage: '<i>Sorry, but only {pct} of the stories have been processed to add the people they mention.  We can\'t gaurantee the accuracy of partial results, so we don\'t show a table of results here.  If you are really curious, you can download the CSV using the link in the top-right of this box, but don\'t trust those numbers as fully accurate. Email us if you want us to process this topic to add the people mentioned.</i>',
+  },
 };
 
 class TopPeopleContainer extends React.Component {
@@ -37,11 +43,23 @@ class TopPeopleContainer extends React.Component {
     }
   }
   render() {
-    const { count, entities } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { coverage, entities, helpButton } = this.props;
+    const { formatNumber, formatMessage } = this.props.intl;
     let content = null;
-    if (count !== null) {
+    const coverageRatio = coverage.count / coverage.total;
+    if (coverageRatio > COVERAGE_REQUIRED) {
       content = <EntitiesTable entities={entities} onClick={(...args) => this.handleEntityClick(args)} />;
+    } else {
+      content = (
+        <p>
+          <FormattedHTMLMessage
+            {...localMessages.notEnoughData}
+            values={{
+              pct: formatNumber(coverageRatio, { style: 'percent', maximumFractionDigits: 2 }),
+            }}
+          />
+        </p>
+      );
     }
     return (
       <DataCard>
@@ -50,6 +68,7 @@ class TopPeopleContainer extends React.Component {
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} />
+          {helpButton}
         </h2>
         {content}
       </DataCard>
@@ -61,6 +80,7 @@ TopPeopleContainer.propTypes = {
   // from compositional chain
   location: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
+  helpButton: PropTypes.node.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
@@ -68,17 +88,15 @@ TopPeopleContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
   // from state
-  count: PropTypes.number,
+  coverage: PropTypes.object.isRequired,
   entities: PropTypes.array.isRequired,
-  total: PropTypes.number,
   fetchStatus: PropTypes.string.isRequired,
   updateQueryFilter: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.summary.topEntitiesPeople.fetchStatus,
-  count: state.topics.selected.summary.topEntitiesPeople.counts.count,
-  total: state.topics.selected.summary.topEntitiesPeople.counts.total,
+  coverage: state.topics.selected.summary.topEntitiesPeople.coverage,
   entities: state.topics.selected.summary.topEntitiesPeople.entities,
 });
 
@@ -108,8 +126,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeAsyncContainer(
-        TopPeopleContainer
+      composeHelpfulContainer(messages.entityHelpTitle, messages.entityHelpContent)(
+        composeAsyncContainer(
+          TopPeopleContainer
+        )
       )
     )
   );

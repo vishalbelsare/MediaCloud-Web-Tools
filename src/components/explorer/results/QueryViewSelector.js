@@ -6,8 +6,7 @@ import { injectIntl } from 'react-intl';
 const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
   language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
-  people: { id: 'explorer.results.people.title', defaultMessage: 'People' },
-  reach: { id: 'explorer.results.reach.title', defaultMessage: 'Reach' },
+  people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
 };
 
 class QueryViewSelector extends React.Component {
@@ -22,7 +21,6 @@ class QueryViewSelector extends React.Component {
       { label: formatMessage(localMessages.attention), index: 0 },
       { label: formatMessage(localMessages.language), index: 1 },
       { label: formatMessage(localMessages.people), index: 2 },
-      { label: formatMessage(localMessages.reach), index: 3 },
     ];
     return (
       <ul className="query-view-selector">

@@ -9,7 +9,7 @@ import messages from '../../../resources/messages';
 
 const localMessages = {
   themedCount: { id: 'topic.summary.storystats.themedCount', defaultMessage: 'Stories Checked for Themes' },
-  geocodedCount: { id: 'topic.summary.storystats.geocodedCount', defaultMessage: 'Geocoded Stories' },
+  geocodedCount: { id: 'topic.summary.storystats.geocodedCount', defaultMessage: 'Stories Checked for Entities' },
   englishCount: { id: 'topic.summary.storystats.englishCount', defaultMessage: 'English Stories' },
   undateableCount: { id: 'topic.summary.storystats.undateableCount', defaultMessage: 'Undateable Stories' },
 };
@@ -40,8 +40,8 @@ class TopicStoryMetadataStatsContainer extends React.Component {
             data: formatNumber(undateableCount.count / undateableCount.total, { style: 'percent' }) },
           { message: localMessages.geocodedCount,
             data: formatNumber(geocodedCounts.count / geocodedCounts.total, { style: 'percent' }),
-            helpTitleMsg: messages.geoHelpTitle,
-            helpContentMsg: messages.geoHelpContent,
+            helpTitleMsg: messages.entityHelpTitle,
+            helpContentMsg: messages.entityHelpContent,
           },
           { message: localMessages.themedCount,
             data: formatNumber(themeCounts.count / themeCounts.total, { style: 'percent' }),

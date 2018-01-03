@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import GeoChart from '../../vis/GeoChart';
 import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/explorerActions';
 import { DownloadButton } from '../../common/IconButton';
@@ -60,9 +59,20 @@ class QueryGeoResultsContainer extends React.Component {
     const { results, intl, queries, handleCountryClick } = this.props;
     const { formatMessage } = intl;
     return (
-      <DataCard>
+      <div>
+        <QueryResultsSelector
+          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
+          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
+        />
+        <GeoChart
+          data={results[this.state.selectedQueryIndex]}
+          countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
+          hideLegend
+          onCountryClick={handleCountryClick}
+          backgroundColor="#f5f5f5"
+        />
         <div className="actions">
-          <ActionMenu>
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
               <MenuItem
                 key={idx}
@@ -74,20 +84,7 @@ class QueryGeoResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        <h2>
-          <FormattedMessage {...localMessages.title} />
-        </h2>
-        <QueryResultsSelector
-          options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
-          onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
-        />
-        <GeoChart
-          data={results[this.state.selectedQueryIndex]}
-          countryMaxColorScale={queries[this.state.selectedQueryIndex].color}
-          hideLegend
-          onCountryClick={handleCountryClick}
-        />
-      </DataCard>
+      </div>
     );
   }
 
@@ -166,7 +163,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.help, [messages.heatMapHelpText])(
+      composeSummarizedVisualization(localMessages.title, localMessages.help, [messages.heatMapHelpText])(
         composeAsyncContainer(
           QueryGeoResultsContainer
         )

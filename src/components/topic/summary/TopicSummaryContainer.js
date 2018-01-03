@@ -58,14 +58,6 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={6}>
-              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-            <Col lg={6}>
-              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
-            </Col>
-          </Row>
-          <Row>
             <Col lg={12}>
               <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
             </Col>
@@ -95,6 +87,14 @@ class TopicSummaryContainer extends React.Component {
           <Row>
             <Col lg={12}>
               <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={6}>
+              <TopPeopleContainer topicId={topicId} filters={filters} location={location} />
+            </Col>
+            <Col lg={6}>
+              <TopOrgsContainer topicId={topicId} filters={filters} location={location} />
             </Col>
           </Row>
           <Permissioned onlyRole={PERMISSION_LOGGED_IN}>

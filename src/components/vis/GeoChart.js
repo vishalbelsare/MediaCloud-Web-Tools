@@ -9,6 +9,8 @@ initHighcharts();
 
 const maps = require('./world-eckert3-lowres');
 
+const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
+
 const localMessages = {
   title: { id: 'chart.geographyAttention.chart.title', defaultMessage: 'Mentions by Country' },
   seriesName: { id: 'chart.geographyAttention.series.name', defaultMessage: 'Geographic Attention' },
@@ -19,7 +21,7 @@ const localMessages = {
 class GeoChart extends React.Component {
 
   getConfig() {
-    const { data, countryMinColorScale, countryMaxColorScale, hoverColor, hideLegend } = this.props;
+    const { data, countryMinColorScale, countryMaxColorScale, hoverColor, hideLegend, backgroundColor } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const options = {
       countryMinColorScale,
@@ -40,6 +42,9 @@ class GeoChart extends React.Component {
     }
     const config = {
       // Initiate the chart
+      chart: {
+        backgroundColor: backgroundColor || DEFAULT_BACKGROUND_COLOR,
+      },
       title: {
         text: '',
       },
@@ -149,6 +154,7 @@ class GeoChart extends React.Component {
 
 GeoChart.propTypes = {
   data: PropTypes.array.isRequired,
+  backgroundColor: PropTypes.string,
   countryMinColorScale: PropTypes.string,
   countryMaxColorScale: PropTypes.string,
   hoverColor: PropTypes.string,

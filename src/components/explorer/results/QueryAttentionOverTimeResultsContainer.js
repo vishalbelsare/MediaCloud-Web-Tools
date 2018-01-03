@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import composeDescribedDataCard from '../../common/DescribedDataCard';
-import DataCard from '../../common/DataCard';
+import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
@@ -94,27 +92,20 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
     return (
       <div>
-        <Row>
-          <Col lg={12}>
-            <DataCard>
-              <div className="actions">
-                <ActionMenu>
-                  {mergedResultsWithQueryInfo.map((q, idx) =>
-                    <MenuItem
-                      key={idx}
-                      className="action-icon-menu-item"
-                      primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                      rightIcon={<DownloadButton />}
-                      onTouchTap={() => this.downloadCsv(q)}
-                    />
-                  )}
-                </ActionMenu>
-              </div>
-              <h2><FormattedMessage {...localMessages.lineChartTitle} /></h2>
-              <AttentionOverTimeChart series={series} height={300} />
-            </DataCard>
-          </Col>
-        </Row>
+        <AttentionOverTimeChart series={series} height={300} backgroundColor="#f5f5f5" />
+        <div className="actions">
+          <ActionMenu actionTextMsg={messages.downloadOptions}>
+            {mergedResultsWithQueryInfo.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
+          </ActionMenu>
+        </div>
       </div>
     );
   }
@@ -186,7 +177,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeDescribedDataCard(localMessages.descriptionIntro, [localMessages.descriptionDetail])(
+      composeSummarizedVisualization(localMessages.lineChartTitle, localMessages.descriptionIntro, localMessages.descriptionDetail)(
         composeAsyncContainer(
           QueryAttentionOverTimeResultsContainer
         )

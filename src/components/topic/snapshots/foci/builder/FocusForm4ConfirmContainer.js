@@ -121,10 +121,25 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
+function validate(values, ownProps) {
+  const errors = {};
+  // TODO: figure out if we need to do more validation here, because in theory the
+  // subforms components have already done it
+  if (ownProps.initialValues.focalSetDefinitions) {
+    const nameAlreadyExists = ownProps.initialValues.focalSetDefinitions.filter(fc => fc.name === values.focalSetName);
+    if (nameAlreadyExists.length > 0) {
+      // return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateName) }));
+      errors.focusSetName = 'duplicateName';
+    }
+  }
+  return errors;
+}
+
 const reduxFormConfig = {
   form: 'snapshotFocus', // make sure this matches the sub-components and other wizard steps
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  validate,
 };
 
 export default

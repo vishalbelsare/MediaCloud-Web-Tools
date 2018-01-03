@@ -65,7 +65,7 @@ def processed_by_cliff_query_clause():
     :return: A solr query clause you can use to filter for stories that have been tagged by any version
      of our CLIFF geotagging engine (ie. tagged with people, places, and organizations)
     '''
-    return "(tags_id_stories:{} {})".format(CLIFF_CLAVIN_2_4_1_TAG_ID, CLIFF_CLAVIN_2_3_0_TAG_ID)
+    return "(tags_id_stories:({} {}))".format(CLIFF_CLAVIN_2_4_1_TAG_ID, CLIFF_CLAVIN_2_3_0_TAG_ID)
 
 
 def processed_by_cliff_tag_ids():

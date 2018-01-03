@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import IconMenu from 'material-ui/IconMenu';
-// import MenuItem from 'material-ui/MenuItem';
+import Popover from 'material-ui/Popover';
 import IconButton from 'material-ui/IconButton';
 import MoreOptionsIcon from './icons/MoreOptionsIcon';
 import CloseIcon from './icons/CloseIcon';
 import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
+// import AppButton from './AppButton';
 
 class ActionMenu extends React.Component {
   state = {
@@ -16,16 +17,22 @@ class ActionMenu extends React.Component {
 
   handlePopupOpenClick = (event) => {
     if (event) {
-      event.preventDefault();
-      this.setState({
-        isPopupOpen: !this.state.isPopupOpen,
-        anchorEl: event.currentTarget,
-      });
+      this.handlePopupOpen(event);
     } else {
-      this.setState({
-        isPopupOpen: !this.state.isPopupOpen,
-      });
+      this.handlePopupClose(event);
     }
+  }
+  handlePopupOpen = (event) => {
+    event.preventDefault();
+    this.setState({
+      isPopupOpen: !this.state.isPopupOpen,
+      anchorEl: event.currentTarget,
+    });
+  }
+  handlePopupClose = () => {
+    this.setState({
+      isPopupOpen: !this.state.isPopupOpen,
+    });
   }
   handleMouseEnter = () => {
     this.setState({ backgroundColor: getBrandDarkerColor() });
@@ -35,8 +42,8 @@ class ActionMenu extends React.Component {
   }
 
   render() {
-    const { color, openButton, closeButton, children } = this.props;
-
+    const { color, openButton, closeButton, children, actionTextMsg } = this.props;
+    const { formatMessage } = this.props.intl;
     const otherProps = {};
     otherProps.backgroundColor = this.state.backgroundColor;
     let closeIconButton = (
@@ -59,8 +66,27 @@ class ActionMenu extends React.Component {
 
     const icon = (this.state.isPopupOpen) ? closeIconButton : openIconButton;
 
-    return (
-      <div className="action-icon-menu">
+    // support text or icon-driven menus
+    let menuContent;
+    if (actionTextMsg) {
+      menuContent = (
+        <span>
+          <a className="text-trigger" role="button" href={`#${formatMessage(actionTextMsg)}`} onClick={this.handlePopupOpen}>
+            <FormattedMessage {...actionTextMsg} />
+          </a>
+          <Popover
+            open={this.state.isPopupOpen}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            onRequestClose={this.handlePopupClose}
+          >
+            {children}
+          </Popover>
+        </span>
+      );
+    } else {
+      menuContent = (
         <IconMenu
           open={this.state.isPopupOpen}
           iconButtonElement={icon}
@@ -70,6 +96,12 @@ class ActionMenu extends React.Component {
         >
           {children}
         </IconMenu>
+      );
+    }
+
+    return (
+      <div className="action-icon-menu">
+        {menuContent}
       </div>
     );
   }
@@ -84,6 +116,7 @@ ActionMenu.propTypes = {
   intl: PropTypes.object.isRequired,
   color: PropTypes.string,
   iconStyle: PropTypes.object,
+  actionTextMsg: PropTypes.object,
 };
 
 export default injectIntl(ActionMenu);

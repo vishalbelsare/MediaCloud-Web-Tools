@@ -129,7 +129,8 @@ const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
       if (results.topics && (results.topics.length !== 0) &&
-        (values.topicId && (results.topics[0].topics_id !== values.topicId))) {
+        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
+        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }
