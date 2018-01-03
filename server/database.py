@@ -3,7 +3,10 @@ import logging
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
+DB_NAME = 'mediacloud-app'  # use one standard name everywhere for simplicity
+
 logger = logging.getLogger(__name__)
+
 
 class AppDatabase():
     '''
@@ -11,11 +14,10 @@ class AppDatabase():
     In theory this makes switching out storage backends easier, by gauranteeing _conn is private.
     '''
 
-    def __init__(self, db_host, db_name):
-        self.host = db_host
-        self.name = db_name
+    def __init__(self, db_uri):
+        self.uri = db_uri
         self.created = datetime.datetime.now()
-        self._conn = MongoClient(db_host)[db_name]
+        self._conn = MongoClient(db_uri)[DB_NAME]
 
     def check_connection(self):
         return self._conn.test.insert({'dummy': 'test'})
