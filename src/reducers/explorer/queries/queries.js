@@ -1,4 +1,4 @@
-import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, DELETE_QUERY, RESET_QUERIES } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES } from '../../../actions/explorerActions';
 
 const INITIAL_STATE = [];
 
@@ -50,7 +50,7 @@ function queries(state = INITIAL_STATE, action) {
     case SELECT_SEARCH_BY_PARAMS: // select this set of queries as passed in by URL
       updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: false }));
       return updatedState;
-    case DELETE_QUERY:
+    case MARK_AS_DELETED_QUERY:
       if (action.payload) {
         updatedState = [...state];
         if (updatedState.length === 1) return updatedState; // they can't delete all the queries
@@ -60,6 +60,8 @@ function queries(state = INITIAL_STATE, action) {
         return updatedState;
       }
       return state;
+    case REMOVE_DELETED_QUERIES:
+      return state.filter(q => !q.deleted);
     case RESET_QUERIES:
       return INITIAL_STATE;
     default:

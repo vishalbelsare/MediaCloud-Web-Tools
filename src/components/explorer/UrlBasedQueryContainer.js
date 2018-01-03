@@ -185,7 +185,8 @@ function composeUrlBasedQueryContainer() {
       asyncFetch: () => {
         dispatch(fetchSampleSearches());   // inefficient: we need the sample searches loaded just in case
       },
-      updateUrl: (queries, isLoggedIn) => {
+      updateUrl: () => 0,
+      updateUrl2: (queries, isLoggedIn) => {
         const unDeletedQueries = queries.filter(q => q.deleted !== true);
         const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
         if (!isLoggedIn) {

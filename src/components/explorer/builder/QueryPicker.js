@@ -11,7 +11,7 @@ import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
@@ -349,7 +349,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {
     if (query) {
-      dispatch(deleteQuery(query)); // will change queries, but not URL, this is the problem
+      dispatch(markAsDeletedQuery(query)); // will change queries, but not URL, this is the problem
       dispatch(selectQuery(replacementSelectionQuery));
     }
   },

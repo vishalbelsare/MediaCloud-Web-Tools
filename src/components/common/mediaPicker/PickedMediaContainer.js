@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMediaPickerQueryArgs, selectMedia } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_ADVANCED } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
@@ -36,7 +36,7 @@ class PickedMediaContainer extends React.Component {
       { label: localMessages.pickCountry, value: PICK_COUNTRY },
       { label: localMessages.pickCollections, value: PICK_COLLECTION },
       { label: localMessages.pickSources, value: PICK_SOURCE },
-      { label: localMessages.pickAdvanced, value: PICK_ADVANCED },
+      // { label: localMessages.pickAdvanced, value: PICK_ADVANCED },
     ];
     return (
       <div>

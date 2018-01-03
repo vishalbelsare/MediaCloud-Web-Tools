@@ -26,10 +26,10 @@ class MediaPickerDialog extends React.Component {
     open: false,
   };
 
-  componentWillMount() {
+  componentWillMount() { // only called on intial parent load -eg not when dialog pops up
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (initMedia && initMedia.length > 0) { // expects an array of media from caller
-      initMedia.map(v => handleInitialSelectionOfMedia(v));
+      initMedia.map(v => handleInitialSelectionOfMedia(v)); // go fill th store's selectedMedia list
     }
   }
   componentWillReceiveProps(nextProps) {

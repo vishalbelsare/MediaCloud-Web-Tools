@@ -18,94 +18,102 @@ const localMessages = {
   pMediaType: { id: 'search.advanced.pMediaType', defaultMessage: 'media type' },
   search: { id: 'system.mediaPicker.select.search', defaultMessage: 'Search' },
 };
-const AdvancedMediaPickerSearchForm = (props) => {
-  const { initValues, renderTextField, pristine, onSearch, hintText } = props;
-  const { formatMessage } = props.intl;
-  const content = (
-    <FormSection name="advanced-media-picker-search">
-      <Row>
-        <Col lg={10}>
-          <Field
-            name={'advancedSearchQueryString'}
-            value={initValues}
-            component={renderTextField}
-            floatingLabelText={formatMessage(localMessages.searchSuggestion)}
-            fullWidth
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={6}>
-          <MetadataPickerContainer
-            id={TAG_SET_PUBLICATION_COUNTRY}
-            name={'publicationCountry'}
-            form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
-            autocomplete
-          />
-        </Col>
-        <Col lg={6}>
-          <MetadataPickerContainer
-            id={TAG_SET_PUBLICATION_STATE}
-            name={'publicationState'}
-            form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
-            autocomplete
-          />
-        </Col>
-        <Col lg={6}>
-          <MetadataPickerContainer
-            value={initValues}
-            id={TAG_SET_PRIMARY_LANGUAGE}
-            name={'primaryLanguage'}
-            form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
-            autocomplete
-          />
-        </Col>
-        <Col lg={6}>
-          <MetadataPickerContainer
-            value={initValues}
-            id={TAG_SET_COUNTRY_OF_FOCUS}
-            name={'countryOfFocus'}
-            form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
-            autocomplete
-          />
-        </Col>
-        <Col lg={6}>
-          <MetadataPickerContainer
-            id={TAG_SET_MEDIA_TYPE}
-            showDescription
-            name="mediaType"
-            form="advancedQueryForm"
-            floatingLabelText={formatMessage(localMessages.pMediaType)}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <AppButton
-            style={{ marginTop: 30 }}
-            label={formatMessage(localMessages.search)}
-            onClick={onSearch}
-            disabled={pristine}
-            primary
-          />
-        </Col>
-      </Row>
-    </FormSection>
-  );
-  return (
-    <MediaPickerSearchForm
-      initValues={{ storedKeyword: { mediaKeyword: initValues.mediaKeyword } }}
-      onSearch={val => this.updateMediaQuery(val)}
-      hintText={hintText}
-    >
-      {content}
-    </MediaPickerSearchForm>
-  );
-};
+class AdvancedMediaPickerSearchForm extends React.Component {
+  handleSearchButtonClick = (evt) => {
+    const { onSearch } = this.props;
+    evt.preventDefault();
+    const searchStr = document.getElementsByTagName('input')[0].value;  // note: this is a brittle hack
+    onSearch({ mediaKeyword: searchStr });
+  }
+  render() {
+    const { initValues, renderTextField, hintText } = this.props;
+    const { formatMessage } = this.props.intl;
+
+    const content = (
+      <FormSection name="advanced-media-picker-search">
+        <Row>
+          <Col lg={10}>
+            <Field
+              name={'advancedSearchQueryString'}
+              value={initValues}
+              component={renderTextField}
+              floatingLabelText={formatMessage(localMessages.searchSuggestion)}
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={6}>
+            <MetadataPickerContainer
+              id={TAG_SET_PUBLICATION_COUNTRY}
+              name={'publicationCountry'}
+              form="advancedQueryForm"
+              floatingLabelText={formatMessage(localMessages.pubCountrySuggestion)}
+              autocomplete
+            />
+          </Col>
+          <Col lg={6}>
+            <MetadataPickerContainer
+              id={TAG_SET_PUBLICATION_STATE}
+              name={'publicationState'}
+              form="advancedQueryForm"
+              floatingLabelText={formatMessage(localMessages.pubStateSuggestion)}
+              autocomplete
+            />
+          </Col>
+          <Col lg={6}>
+            <MetadataPickerContainer
+              value={initValues}
+              id={TAG_SET_PRIMARY_LANGUAGE}
+              name={'primaryLanguage'}
+              form="advancedQueryForm"
+              floatingLabelText={formatMessage(localMessages.pLanguageSuggestion)}
+              autocomplete
+            />
+          </Col>
+          <Col lg={6}>
+            <MetadataPickerContainer
+              value={initValues}
+              id={TAG_SET_COUNTRY_OF_FOCUS}
+              name={'countryOfFocus'}
+              form="advancedQueryForm"
+              floatingLabelText={formatMessage(localMessages.pCountryOfFocusSuggestion)}
+              autocomplete
+            />
+          </Col>
+          <Col lg={6}>
+            <MetadataPickerContainer
+              id={TAG_SET_MEDIA_TYPE}
+              showDescription
+              name="mediaType"
+              form="advancedQueryForm"
+              floatingLabelText={formatMessage(localMessages.pMediaType)}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <AppButton
+              style={{ marginTop: 30 }}
+              label={formatMessage(localMessages.search)}
+              onClick={this.handleSearchButtonClick}
+              primary
+            />
+          </Col>
+        </Row>
+      </FormSection>
+    );
+    return (
+      <MediaPickerSearchForm
+        initValues={{ storedKeyword: { mediaKeyword: initValues.mediaKeyword } }}
+        onSearch={val => this.updateMediaQuery(val)}
+        hintText={hintText}
+      >
+        {content}
+      </MediaPickerSearchForm>
+    );
+  }
+}
 
 AdvancedMediaPickerSearchForm.propTypes = {
   // from compositional chain
