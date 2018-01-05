@@ -11,8 +11,9 @@ import { addNotice } from '../../actions/appActions';
 import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 // import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString, decodeQueryParamString } from '../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
+import { notEmptyString } from '../../lib/formValidators';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams',
@@ -67,7 +68,7 @@ function composeUrlBasedQueryContainer() {
           queriesFromUrl = samples[sampleSearchId].queries;
         } else {
           try {
-            queriesFromUrl = JSON.parse(queryAsJsonStr);
+            queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
           } catch (e) {
             addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
             return;
@@ -85,12 +86,12 @@ function composeUrlBasedQueryContainer() {
           }
           queriesFromUrl = queriesFromUrl.map((query, index) => ({
             ...query, // let anything on URL override label and color
-            label: query.label ? decodeURIComponent(query.label) : autoMagicQueryLabel(query),
+            label: notEmptyString(query.label) ? query.label : autoMagicQueryLabel(query),
             // remember demo queries won't have sources or collections on the URL
             sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
             collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
-            q: decodeURIComponent(query.q),
-            color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
+            q: query.q,
+            color: query.color ? query.color : schemeCategory10[index % 10],
             index,  // redo index to be zero-based on reload of query
             ...extraDefaults, // for demo mode
           }));
@@ -185,18 +186,24 @@ function composeUrlBasedQueryContainer() {
       asyncFetch: () => {
         dispatch(fetchSampleSearches());   // inefficient: we need the sample searches loaded just in case
       },
-      updateUrl: () => 0,
-      updateUrl2: (queries, isLoggedIn) => {
+      updateUrl: (queries, isLoggedIn) => {
         const unDeletedQueries = queries.filter(q => q.deleted !== true);
         const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
         if (!isLoggedIn) {
           const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
-          const newLocation = `/queries/demo/search/[${urlParamString}]`;
-          dispatch(push(newLocation));
+          // const newLocation = `/queries/demo/search/[${urlParamString}]`;
+          dispatch(push({ search: urlParamString }));
         } else {
-          const urlParamString = generateQueryParamString(unDeletedQueries);
-          const newLocation = `/queries/search/${urlParamString}`;
-          dispatch(push(newLocation));
+          const search = generateQueryParamString(queries.map(q => ({
+            label: q.label,
+            q: q.q,
+            color: q.color,
+            startDate: q.startDate,
+            endDate: q.endDate,
+            sources: q.sources, // de-aggregate media bucket into sources and collections
+            collections: q.collections,
+          })));
+          dispatch(push({ pathname: '/queries/search', search })); // query adds a '?query='
         }
       },
     });
