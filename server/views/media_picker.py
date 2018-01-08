@@ -34,24 +34,7 @@ def source_details_worker(info):
     }
     return coll_data
 
-@app.route('/api/mediapicker/sources/search2', methods=['GET'])
-@flask_login.login_required
-@arguments_required('media_keyword')
-@api_error_handler
-def api_mediapicker_source_search2():
-    tags = None
-    source_list = []
-    search_str = request.args['media_keyword']
-    # cleaned_search_str = None if search_str == '*' else search_str
-    if 'tags[]' in request.args:
-        tags = request.args['tags[]'].split(',')
-    if tags is None:
-        source_list = media_search(search_str)[:MAX_SOURCES]
-    else:
-        source_list = media_search(search_str, tags_id=tags[0])[:100]
-    return jsonify({'list':source_list})
 
-# keep or remove? we aren't using the pooling...
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
 @flask_login.login_required
 @arguments_required('media_keyword')
@@ -59,8 +42,10 @@ def api_mediapicker_source_search2():
 def api_mediapicker_source_search():
     use_pool = False
     search_str = request.args['media_keyword']
-
-    results = _matching_sources_by_set(search_str)  # from pool
+    tags = None
+    if 'tags[]' in request.args:
+        tags = request.args['tags[]'].split(',')
+    results = _matching_sources_by_set(search_str, tags)  # from a pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []
