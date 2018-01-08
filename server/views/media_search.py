@@ -26,7 +26,7 @@ def _matching_collections_by_set(search_str, public_only, tag_sets_id_list):
     return user_mc.tagList(tag_sets_id_list, public_only=public_only, name_like=search_str)
 
 
-def _matching_sources_by_set(search_str, public_only):
+def _matching_sources_by_set(search_str, tag_sets_id_list):
     use_pool = False    # this is causing a system exit :-(
     search_jobs = [{'tag_sets_id': tag_sets_id, 'search_str': search_str}
                    for tag_sets_id in VALID_COLLECTION_TAG_SETS_IDS]  # provide for tags_id?
@@ -36,4 +36,6 @@ def _matching_sources_by_set(search_str, public_only):
         pool.close()
     else:
         matching_sources = [_source_search_worker(job) for job in search_jobs]
+
+
     return matching_sources

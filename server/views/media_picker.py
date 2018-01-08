@@ -5,7 +5,7 @@ from multiprocessing import Pool
 from operator import itemgetter
 
 from server.cache import cache
-from media_search import _matching_collections_by_set, _matching_sources_by_set
+from media_search import _matching_collections_by_set, media_search, _matching_sources_by_set
 from server import app, mc
 from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
@@ -34,16 +34,33 @@ def source_details_worker(info):
     }
     return coll_data
 
+@app.route('/api/mediapicker/sources/search2', methods=['GET'])
+@flask_login.login_required
+@arguments_required('media_keyword')
+@api_error_handler
+def api_mediapicker_source_search2():
+    tags = None
+    source_list = []
+    search_str = request.args['media_keyword']
+    # cleaned_search_str = None if search_str == '*' else search_str
+    if 'tags[]' in request.args:
+        tags = request.args['tags[]'].split(',')
+    if tags is None:
+        source_list = media_search(search_str)[:MAX_SOURCES]
+    else:
+        source_list = media_search(search_str, tags_id=tags[0])[:100]
+    return jsonify({'list':source_list})
 
+# keep or remove? we aren't using the pooling...
 @app.route('/api/mediapicker/sources/search', methods=['GET'])
 @flask_login.login_required
 @arguments_required('media_keyword')
 @api_error_handler
 def api_mediapicker_source_search():
     use_pool = False
-    public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['media_keyword']
-    results = _matching_sources_by_set(search_str, public_only)  # from pool
+
+    results = _matching_sources_by_set(search_str)  # from pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []
