@@ -17,6 +17,16 @@ export function fetchMediaPickerCollections(params) {
 }
 
 export function fetchMediaPickerSources(params) {
-  const acceptedParams = acceptParams(params, ['media_keyword']);
-  return createApiPromise('/api/mediapicker/sources/search', acceptedParams);
+  const acceptedParams = acceptParams(params, ['media_keyword', 'tags']);
+  acceptedParams['tags[]'] = acceptedParams.tags;
+  return createApiPromise('/api/mediapicker/sources/search2', acceptedParams);
 }
+/*
+export function fetchMediaPickerSourcesByMetadata(params) {
+  const acceptedParams = acceptParams(params, ['searchString', 'tags']);
+  const paramStr = generateParamStr({ 'tags[]': acceptedParams.tags });
+  const searchStr = acceptedParams.searchString || '*';
+  return createApiPromise(`/api/sources/search/${searchStr}?${paramStr}`);
+}
+*/
+
