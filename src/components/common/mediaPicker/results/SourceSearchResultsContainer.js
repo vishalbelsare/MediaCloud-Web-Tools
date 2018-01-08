@@ -137,9 +137,9 @@ const mapDispatchToProps = dispatch => ({
     }
   },
   updateAdvancedMediaQuerySelection: (values) => {
-    if (values && notEmptyString(values.mediaKeyword)) {
+    if (values.tags && values.tags.length > 0) {
       dispatch(selectMediaPickerQueryArgs(values));
-      dispatch(fetchMediaPickerSources({ media_keyword: values.mediaKeyword, tags: values.tags }));
+      dispatch(fetchMediaPickerSources({ media_keyword: values.mediaKeyword || '*', tags: values.tags }));
     }
   },
 });

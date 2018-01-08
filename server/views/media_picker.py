@@ -42,10 +42,11 @@ def source_details_worker(info):
 def api_mediapicker_source_search():
     use_pool = False
     search_str = request.args['media_keyword']
+    cleaned_search_str = None if search_str == '*' else search_str
     tags = None
     if 'tags[]' in request.args:
         tags = request.args['tags[]'].split(',')
-    results = _matching_sources_by_set(search_str, tags)  # from a pool
+    results = _matching_sources_by_set(cleaned_search_str, tags)  # from a pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []
