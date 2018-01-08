@@ -11,7 +11,9 @@ from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
 import mediacloud
 from mediameter.cliff import Cliff
+import redis
 
+from server.sessions import RedisSessionInterface
 from server.util.config import get_default_config, ConfigException
 from server.database import AppDatabase
 
@@ -45,7 +47,6 @@ if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
 else:
     logger.info(u"Started server in %s mode", server_mode)
 
-
 # setup optional sentry logging service
 try:
     handler = config.get('SENTRY_DSN')
@@ -71,7 +72,6 @@ NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')
 
 # Connect to the app's mongo DB
 db = AppDatabase(config.get('MONGO_URL'))
-
 try:
     db.check_connection()
 except Exception as err:
@@ -142,6 +142,8 @@ def create_app():
             logger.info("Mail configured, but not enabled")
     except ConfigException:
         logger.info("No mail configured")
+    # connect to the shared session storage
+    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
     return my_app
 
 app = create_app()

@@ -36,3 +36,6 @@ NYT_THEME_LABELLER_URL = http://predict-news-labels-server-url
 
 # Service: The URL to a sentry app for collecting error logs
 #SENTRY_DSN = https://<key>:<secret>@app.getsentry.com/<project>
+
+# Service: URL to Redis store for the user sessions (shared across apps)
+REDIS_URL = redis://localhost/0
