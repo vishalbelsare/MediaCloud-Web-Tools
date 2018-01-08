@@ -50,7 +50,8 @@ class EnvOrFileBasedConfig(object):
             try:
                 return self.variables[variable_name]
             except KeyError:
-                logger.error(error_details)
+                error_details = u"Config variable '{}' not declared in env-var nor in {}".format(variable_name, self.file_path)
+                logger.warn(error_details)
                 raise ConfigException(error_details)
 
 
