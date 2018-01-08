@@ -59,9 +59,13 @@ class QueryForm extends React.Component {
     if (cleanedInitialValues.disabled === undefined) {
       cleanedInitialValues.disabled = false;
     }
-    cleanedInitialValues.media = [  // merge sources and collections into one list for display with `renderFields`
+    cleanedInitialValues.media = [  // merge intial sources and collections into one list for display with `renderFields`
       ...initialValues.sources,
       ...initialValues.collections,
+    ];
+    selected.media = [  // merge sources and collections into one list for display with `renderFields`
+      ...selected.sources,
+      ...selected.collections,
     ];
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
