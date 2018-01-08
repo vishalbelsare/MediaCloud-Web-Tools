@@ -66,10 +66,10 @@ div [data-reactroot] {
         .metadata-detail-search {
           position: relative;
           transform: translate(0, 0) !important;
-          z-index: 20009;
+          z-index: 10009;
         }
         div[type=data-reactroot] { 
-          z-index: 20009;
+          z-index: 10009;
         }
 
         .select-media-container {

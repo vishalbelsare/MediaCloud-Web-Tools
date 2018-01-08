@@ -40,6 +40,13 @@ export default function initializeApp(routes) {
 
   const muiTheme = getMuiTheme({
     fontFamily: 'Lato, sans',
+    zIndex: {
+      menu: 10001,
+      dialogOverlay: 9999,
+      dialog: 10000,
+      layer: 10001,
+      popover: 10001,
+    },
     palette: {
       primary1Color: getBrandColors().dark,
       accent1Color: getBrandColors().light,
