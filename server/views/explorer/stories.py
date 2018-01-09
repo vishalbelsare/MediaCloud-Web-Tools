@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def api_explorer_story_sample():
     solr_query = parse_query_with_keywords(request.args)
  
-    story_count_result = cached_story_samples(solr_query)
+    story_count_result = cached_random_stories(solr_query)
     return jsonify(story_count_result)  
 
 
@@ -34,12 +34,13 @@ def api_explorer_demo_story_sample():
     else:
         solr_query = parse_query_with_keywords(request.args)
  
-    story_count_result = cached_story_samples(solr_query)
+    story_count_result = cached_random_stories(solr_query)
     return jsonify(story_count_result)  
 
+
 @cache
-def cached_story_samples(query):
-    return mc.storyList(solr_query=query)
+def cached_random_stories(query):
+    return mc.storyList(solr_query=query, sort=mc.SORT_RANDOM)
 
 
 @app.route('/api/explorer/stories/samples.csv/<search_id_or_query>/<index>', methods=['GET'])
@@ -64,7 +65,7 @@ def explorer_stories_csv(search_id_or_query, index):
         solr_query = parse_query_with_keywords(current_query)
         filename = 'explorer-stories-' + current_query['q']
 
-    story_count_result = cached_story_samples(solr_query)
+    story_count_result = cached_random_stories(solr_query)
     
     return stream_story_samples_csv(filename, story_count_result)
 
@@ -107,6 +108,7 @@ def api_explorer_demo_story_count():
 def cached_story_count(query):
     return mc.storyCount(solr_query=query)
 
+
 def stream_story_count_csv(fn, search_id_or_query_list):
     '''
     Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
@@ -125,8 +127,8 @@ def stream_story_count_csv(fn, search_id_or_query_list):
 
             for query in sample_queries:
                 solr_query = prep_simple_solr_query(query)
-                storyList = cached_story_count(solr_query)
-                query_and_story_count = {'query' : query['label'], 'count' : storyList['count']}
+                storyCount = cached_story_count(solr_query)
+                query_and_story_count = {'query' : query['label'], 'count': storyCount['count']}
                 story_count_results.append(query_and_story_count)
 
     except Exception as e:
@@ -136,8 +138,8 @@ def stream_story_count_csv(fn, search_id_or_query_list):
             solr_query = parse_query_with_keywords(query)
             filename = fn + query['q']
 
-            storyList = cached_story_count(solr_query)
-            query_and_story_count = {'query' : query['label'], 'count' : storyList['count']}
+            storyCount = cached_story_count(solr_query)
+            query_and_story_count = {'query' : query['label'], 'count': storyCount['count']}
             story_count_results.append(query_and_story_count)
     
     props = ['query','count']
