@@ -13,7 +13,7 @@ const SampleSearchItem = (props) => {
   const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
   let urlParamString = null;
   if (isNotLoggedInUser) {
-    urlParamString = `demo/${search.id}`;
+    urlParamString = `demo?q=${search.id}`;
   } else {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
@@ -21,7 +21,7 @@ const SampleSearchItem = (props) => {
     // const sources = '[]'; we default to empty sources for searches from this page so we don't need to do any prep like we do in the query builder
 
     urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection[idx].join()}}`);
-    urlParamString = `search/[${urlParamString}]`;
+    urlParamString = `search?q=[${urlParamString}]`;
   }
   const link = `/queries/${urlParamString}`;
   return (
