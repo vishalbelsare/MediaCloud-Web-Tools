@@ -97,7 +97,7 @@ def source_suggest():
     reason = request.form['reason'] if 'reason' in request.form else None
     tag_ids_to_add = tag_ids_from_collections_param()
     new_suggestion = user_mc.mediaSuggest(url=url, name=name, feed_url=feed_url, reason=reason,
-                                          collections=tag_ids_to_add)
+                                          tags_ids=tag_ids_to_add)
     # send an email confirmation
     email_title = "Thanks for Suggesting " + url
     send_html_email(email_title,
