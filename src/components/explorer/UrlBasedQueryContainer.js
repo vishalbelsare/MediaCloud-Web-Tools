@@ -31,8 +31,10 @@ function composeUrlBasedQueryContainer() {
         queryInStore: false,
       };
       componentWillMount() {
+        const { location } = this.props;
         this.setState({ queryInStore: false }); // necc?
-        this.setQueryFromUrl(this.props.location.pathname);
+        // this.setQueryFromUrl(location.pathname);
+        this.setQueryFromSearch(location.search);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -41,7 +43,8 @@ function composeUrlBasedQueryContainer() {
         if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
-          this.setQueryFromUrl(nextProps.location.pathname);
+          // this.setQueryFromUrl(nextProps.location.pathname);
+          this.setQueryFromSearch(nextProps.location.search);
         // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
@@ -56,10 +59,18 @@ function composeUrlBasedQueryContainer() {
           // console.log('  other change');
         }
       }
+      setQueryFromSearch(search) {
+        const queryAsJsonStr = search.slice(3, search.length);
+        console.log(queryAsJsonStr);
+        this.setQueryFromString(queryAsJsonStr);
+      }
       setQueryFromUrl(url) {
+        const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
+        this.setQueryFromString(queryAsJsonStr);
+      }
+      setQueryFromString(queryAsJsonStr) {
         const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn, samples } = this.props;
         const { formatMessage } = this.props.intl;
-        const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
         // here we need to handle sample ids vs. url-encoded query
         const sampleSearchId = parseInt(queryAsJsonStr, 10);
         let queriesFromUrl;
@@ -191,8 +202,7 @@ function composeUrlBasedQueryContainer() {
         const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
         if (!isLoggedIn) {
           const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
-          // const newLocation = `/queries/demo/search/[${urlParamString}]`;
-          dispatch(push({ search: urlParamString }));
+          dispatch(push({ pathname: '/queries/demo/search', search: `?q=[${urlParamString}]` }));
         } else {
           const search = generateQueryParamString(queries.map(q => ({
             label: q.label,
@@ -203,7 +213,7 @@ function composeUrlBasedQueryContainer() {
             sources: q.sources, // de-aggregate media bucket into sources and collections
             collections: q.collections,
           })));
-          dispatch(push({ pathname: '/queries/search', search })); // query adds a '?query='
+          dispatch(push({ pathname: '/queries/search', search: `?q=${search}` })); // query adds a '?query='
         }
       },
     });
