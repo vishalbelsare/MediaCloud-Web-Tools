@@ -29,15 +29,18 @@ class MediaPickerDialog extends React.Component {
   componentWillMount() { // only called on intial parent load -eg not when dialog pops up
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (initMedia && initMedia.length > 0) { // expects an array of media from caller
-      initMedia.map(v => handleInitialSelectionOfMedia(v)); // go fill th store's selectedMedia list
+      handleInitialSelectionOfMedia(initMedia); // go fill th store's selectedMedia list
     }
   }
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia)) {
+      // (nextProps.initMedia != null && JSON.stringify(nextProps.initMedia) !== JSON.stringify(nextProps.selectedMedia))) {
       if (nextProps.initMedia) { // expects an array of media from caller
-        nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
+        // why don't we just update the entire list all at once?
+        // nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
+        handleInitialSelectionOfMedia(nextProps.initMedia);
       }
     }
   }
