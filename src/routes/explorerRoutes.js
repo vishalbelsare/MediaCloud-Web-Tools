@@ -19,10 +19,10 @@ const explorerRoutes = (
 
     <Route path="/queries">
       <Route path="demo">
-        <Route path="search/:keyword" component={DemoQueryContainer} />
+        <Route path="search" component={DemoQueryContainer} />
         <Route path=":id" component={DemoQueryContainer} />
       </Route>
-      <Route path="search/:queryParams" component={LoggedInQueryContainer} onEnter={requireAuth} />
+      <Route path="search" component={LoggedInQueryContainer} onEnter={requireAuth} />
     </Route>
 
     {userRoutes}

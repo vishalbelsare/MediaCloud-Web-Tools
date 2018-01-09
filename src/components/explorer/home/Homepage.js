@@ -93,10 +93,10 @@ const mapDispatchToProps = dispatch => ({
       }];
       queries[0].label = autoMagicQueryLabel(queries[0]);
       const queryStr = generateQueryParamString(queries);
-      urlParamString = `search/${queryStr}`;
+      urlParamString = `search?q=${queryStr}`;
     } else {
       const queryStr = `[{"q":"${encodeURIComponent(values.keyword)}"}]`;
-      urlParamString = `demo/search/${queryStr}`;
+      urlParamString = `demo/search?q=${queryStr}`;
     }
     dispatch(push(`/queries/${urlParamString}`));
   },
