@@ -21,6 +21,8 @@ function selected(state = INITIAL_STATE, action) {
       if (action.payload.fieldName) {
         updatedState[action.payload.fieldName] = action.payload.query[action.payload.fieldName];
         updatedState.autoNaming = action.payload.query.autoNaming;
+      } else {
+        updatedState = action.payload.query;
       }
       return updatedState;
     case RESET_SELECTED:
