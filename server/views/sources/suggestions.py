@@ -44,11 +44,15 @@ def source_suggestion_update(suggestion_id):
     results = None
     email_note = ""
     if status == "approved":
+        flattend_tags=[]
         # if approved, we have to create it
+        for t in suggestion['tags_ids']:
+            flattend_tags.append(t['tags_id'])
+
         media_source_to_create = { 'url': suggestion['url'],
               'name': suggestion['name'],
               'feeds': [suggestion['feed_url']],
-              'tags_ids': suggestion['tags_ids'] if 'tags_ids 'in suggestion else None,
+              'tags_ids': flattend_tags,
               'editor_notes': 'Suggested approved by {} on because {}.  Suggested by {} on {} because {} (id #{}).'.format(
                   user_name(),  datetime.now().strftime("%I:%M%p on %B %d, %Y"), reason,
                   suggestion['email'], suggestion['date_submitted'], suggestion['reason'], suggestion['media_suggestions_id']
