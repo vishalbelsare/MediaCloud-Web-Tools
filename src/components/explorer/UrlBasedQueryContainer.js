@@ -33,8 +33,7 @@ function composeUrlBasedQueryContainer() {
       componentWillMount() {
         const { location } = this.props;
         this.setState({ queryInStore: false }); // necc?
-        // this.setQueryFromUrl(location.pathname);
-        this.setQueryFromSearch(location.search);
+        this.setQueryFromLocation(location);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -43,8 +42,7 @@ function composeUrlBasedQueryContainer() {
         if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
-          // this.setQueryFromUrl(nextProps.location.pathname);
-          this.setQueryFromSearch(nextProps.location.search);
+          this.setQueryFromLocation(location);
         // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
@@ -59,54 +57,59 @@ function composeUrlBasedQueryContainer() {
           // console.log('  other change');
         }
       }
+      setQueryFromLocation(location) {
+        // regular searches are in a queryParam, but samples by id are part of the path
+        const url = location.pathname;
+        const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
+        const sampleNumber = parseInt(lastPathPart, 10);
+        if (!isNaN(sampleNumber)) {
+          this.setQueryFromSample(sampleNumber);
+        } else {
+          this.setQueryFromSearch(location.search);
+        }
+      }
       setQueryFromSearch(search) {
         const queryAsJsonStr = search.slice(3, search.length);
-        console.log(queryAsJsonStr);
         this.setQueryFromString(queryAsJsonStr);
       }
-      setQueryFromUrl(url) {
-        const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
-        this.setQueryFromString(queryAsJsonStr);
+      setQueryFromSample(sampleNumber) {
+        const { saveQueriesFromParsedUrl, samples, isLoggedIn } = this.props;
+        const queriesFromUrl = samples[sampleNumber].queries;
+        // push the queries in to the store
+        saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
       setQueryFromString(queryAsJsonStr) {
-        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn, samples } = this.props;
+        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
         const { formatMessage } = this.props.intl;
-        // here we need to handle sample ids vs. url-encoded query
-        const sampleSearchId = parseInt(queryAsJsonStr, 10);
         let queriesFromUrl;
-        if (!isNaN(sampleSearchId)) {
-          // need to add in the id of the search here - why isn't this in there already?
-          queriesFromUrl = samples[sampleSearchId].queries;
-        } else {
-          try {
-            queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
-          } catch (e) {
-            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-            return;
-          }
-          let extraDefaults = {};
-          // add in an index, label, and color if they are not there
-          if (!isLoggedIn) {  // and demo mode needs some extra stuff too
-            const defaultDates = getPastTwoWeeksDateRange();
-            extraDefaults = {
-              sources: [],
-              collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
-              startDate: defaultDates.start,
-              endDate: defaultDates.end,
-            };
-          }
-          queriesFromUrl = queriesFromUrl.map((query, index) => ({
-            ...query, // let anything on URL override label and color
-            label: notEmptyString(query.label) ? query.label : autoMagicQueryLabel(query),
-            // remember demo queries won't have sources or collections on the URL
-            sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
-            collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
-            q: query.q,
-            color: query.color ? query.color : schemeCategory10[index % 10],
-            index,  // redo index to be zero-based on reload of query
-            ...extraDefaults, // for demo mode
-          }));
+        try {
+          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
+        } catch (e) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
         }
+        let extraDefaults = {};
+        // add in an index, label, and color if they are not there
+        if (!isLoggedIn) {  // and demo mode needs some extra stuff too
+          const defaultDates = getPastTwoWeeksDateRange();
+          extraDefaults = {
+            sources: [],
+            collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
+            startDate: defaultDates.start,
+            endDate: defaultDates.end,
+          };
+        }
+        queriesFromUrl = queriesFromUrl.map((query, index) => ({
+          ...query, // let anything on URL override label and color
+          label: notEmptyString(query.label) ? query.label : autoMagicQueryLabel(query),
+          // remember demo queries won't have sources or collections on the URL
+          sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
+          collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
+          q: query.q,
+          color: query.color ? query.color : schemeCategory10[index % 10],
+          index,  // redo index to be zero-based on reload of query
+          ...extraDefaults, // for demo mode
+        }));
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }

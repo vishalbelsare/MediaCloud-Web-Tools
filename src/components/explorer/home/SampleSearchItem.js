@@ -13,7 +13,7 @@ const SampleSearchItem = (props) => {
   const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
   let urlParamString = null;
   if (isNotLoggedInUser) {
-    urlParamString = `demo?q=${search.id}`;
+    urlParamString = `demo/${search.id}`;
   } else {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
