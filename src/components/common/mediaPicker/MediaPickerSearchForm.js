@@ -51,7 +51,7 @@ class MediaPickerSearchForm extends React.Component {
     }
     const defaultFormChildren = (
       <Row>
-        <Col lg={6}>
+        <Col lg={8}>
           <TextField
             name="mediaKeyword"
             defaultValue={storedKeyword.mediaKeyword}

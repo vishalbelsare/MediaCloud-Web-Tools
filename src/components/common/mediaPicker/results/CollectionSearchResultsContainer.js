@@ -9,7 +9,7 @@ import LoadingSpinner from '../../../common/LoadingSpinner';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
-  hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search collections by name' },
+  hintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search for collections by name' },
   noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
 };
 
@@ -53,7 +53,7 @@ CollectionSearchResultsContainer.propTypes = {
   // from parent
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   whichTagSet: PropTypes.number,
-  hintTextMsg: PropTypes.string,
+  hintTextMsg: PropTypes.object,
   onSearch: PropTypes.func.isRequired,
   // from state
   selectedMediaQueryKeyword: PropTypes.string,

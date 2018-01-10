@@ -9,7 +9,7 @@ import { notEmptyString } from '../../../../lib/formValidators';
 
 const localMessages = {
   title: { id: 'system.mediaPicker.collections.title', defaultMessage: 'Collections matching "{name}"' },
-  countrySearchHintText: { id: 'system.mediaPicker.collections.hint', defaultMessage: 'Search by Country or State name' },
+  countrySearchHintText: { id: 'system.mediaPicker.collections.countryHint', defaultMessage: 'Search for media published in a country or state/province by name' },
   noResults: { id: 'system.mediaPicker.collections.noResults', defaultMessage: 'No results. Try searching for issues like online news, health, blogs, conservative to see if we have collections made up of those types of sources.' },
 };
 
@@ -22,7 +22,6 @@ class CountryCollectionSearchResultsContainer extends React.Component {
   }
   render() {
     const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchCountryStatus } = this.props;
-    const { formatMessage } = this.props.intl;
 
     const initCollections = <FeaturedCollectionsContainer handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
     return (
@@ -36,7 +35,7 @@ class CountryCollectionSearchResultsContainer extends React.Component {
           collectionResults={collectionResults}
           initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
           onSearch={val => this.updateMediaQuery(val)}
-          hintText={formatMessage(localMessages.countrySearchHintText)}
+          hintTextMsg={localMessages.countrySearchHintText}
         />
       </div>
     );

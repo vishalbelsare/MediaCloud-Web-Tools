@@ -67,23 +67,23 @@ class SourceSearchResultsContainer extends React.Component {
     if (this.state.showAdvancedOptions) {
       content = (
         <div>
-          <a onTouchTap={this.toggleAdvancedOptions} ><FormattedMessage {...localMessages.hideAdvancedOptions} /></a>
           <AdvancedMediaPickerSearchForm
             initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
             onSearch={val => this.updateMediaQuery(val)}
             hintText={formatMessage(localMessages.hintText)}
           />
+          <a onTouchTap={this.toggleAdvancedOptions} className="media-picker-search-advanced"><FormattedMessage {...localMessages.hideAdvancedOptions} /></a>
         </div>
       );
     } else {
       content = (
         <div>
-          <a onTouchTap={this.toggleAdvancedOptions} ><FormattedMessage {...localMessages.showAdvancedOptions} /></a>
           <MediaPickerSearchForm
             initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
             onSearch={val => this.updateMediaQuery(val)}
             hintText={formatMessage(localMessages.hintText)}
           />
+          <a onTouchTap={this.toggleAdvancedOptions} className="media-picker-search-advanced"><FormattedMessage {...localMessages.showAdvancedOptions} /></a>
         </div>
       );
     }

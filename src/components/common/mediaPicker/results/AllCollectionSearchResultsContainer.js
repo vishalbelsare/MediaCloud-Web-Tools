@@ -20,8 +20,7 @@ class AllCollectionSearchResultsContainer extends React.Component {
     updateMediaQuerySelection(updatedQueryObj);
   }
   render() {
-    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus, hintTextMsg } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { selectedMediaQueryType, selectedMediaQueryKeyword, collectionResults, handleToggleAndSelectMedia, fetchStatus } = this.props;
     return (
       <div>
         <CollectionSearchResultsContainer
@@ -32,7 +31,7 @@ class AllCollectionSearchResultsContainer extends React.Component {
           collectionResults={collectionResults}
           initValues={{ storedKeyword: { mediaKeyword: selectedMediaQueryKeyword } }}
           onSearch={val => this.updateMediaQuery(val)}
-          hintText={formatMessage(hintTextMsg || localMessages.hintText)}
+          hintTextMsg={localMessages.hintText}
         />
       </div>
     );
@@ -45,7 +44,6 @@ AllCollectionSearchResultsContainer.propTypes = {
   // from parent
   handleToggleAndSelectMedia: PropTypes.func.isRequired,
   whichTagSet: PropTypes.array,
-  hintTextMsg: PropTypes.string,
   // from dispatch
   updateMediaQuerySelection: PropTypes.func.isRequired,
   // from state

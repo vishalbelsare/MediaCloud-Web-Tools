@@ -18,6 +18,7 @@ const localMessages = {
   pMediaType: { id: 'search.advanced.pMediaType', defaultMessage: 'media type' },
   search: { id: 'system.mediaPicker.select.search', defaultMessage: 'Search' },
 };
+
 class AdvancedMediaPickerSearchForm extends React.Component {
   handleSearchButtonClick = (evt) => {
     const { onSearch } = this.props;
