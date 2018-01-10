@@ -11,7 +11,7 @@ import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
@@ -74,11 +74,14 @@ class QueryPicker extends React.Component {
   }
   handleMediaDelete = (toBeDeletedObj) => {
     // the user has removed media from the Query Form SourceCollectionsForm
-    const { formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
+    const { selected, formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
     // filter out removed ids...
-    const updatedMedia = formQuery;
-    const updatedSources = formQuery.sources.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'source' || m.media_id));
-    const updatedCollections = formQuery.collections.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'collection' || m.tags_id));
+    const updatedMedia = {
+      ...selected,
+      ...formQuery,
+    };
+    const updatedSources = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'source' || m.media_id));
+    const updatedCollections = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'collection' || m.tags_id));
     updatedMedia.collections = updatedCollections;
     updatedMedia.sources = updatedSources;
     updateCurrentQuery(updatedMedia, null);
@@ -349,7 +352,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {
     if (query) {
-      dispatch(deleteQuery(query)); // will change queries, but not URL, this is the problem
+      dispatch(markAsDeletedQuery(query)); // will change queries, but not URL, this is the problem
       dispatch(selectQuery(replacementSelectionQuery));
     }
   },

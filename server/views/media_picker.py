@@ -5,7 +5,7 @@ from multiprocessing import Pool
 from operator import itemgetter
 
 from server.cache import cache
-from media_search import _matching_collections_by_set, _matching_sources_by_set
+from media_search import _matching_collections_by_set, media_search, _matching_sources_by_set
 from server import app, mc
 from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
@@ -41,9 +41,12 @@ def source_details_worker(info):
 @api_error_handler
 def api_mediapicker_source_search():
     use_pool = False
-    public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     search_str = request.args['media_keyword']
-    results = _matching_sources_by_set(search_str, public_only)  # from pool
+    cleaned_search_str = None if search_str == '*' else search_str
+    tags = None
+    if 'tags[]' in request.args:
+        tags = request.args['tags[]'].split(',')
+    results = _matching_sources_by_set(cleaned_search_str, tags)  # from a pool
     trimmed_sources = [r[:MAX_SOURCES] for r in results]
     flat_list_of_sources = [item for sublist in trimmed_sources for item in sublist]
     set_of_queried_sources = []

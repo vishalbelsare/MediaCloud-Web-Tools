@@ -12,7 +12,7 @@ const localMessages = {
   pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search Collections' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
   selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
-  // pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
+  pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
   // pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
 
@@ -36,6 +36,7 @@ class PickedMediaContainer extends React.Component {
       { label: localMessages.pickCountry, value: PICK_COUNTRY },
       { label: localMessages.pickCollections, value: PICK_COLLECTION },
       { label: localMessages.pickSources, value: PICK_SOURCE },
+      // { label: localMessages.pickAdvanced, value: PICK_ADVANCED },
     ];
     return (
       <div>

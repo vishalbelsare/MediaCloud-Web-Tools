@@ -21,7 +21,7 @@ const SampleSearchItem = (props) => {
     // const sources = '[]'; we default to empty sources for searches from this page so we don't need to do any prep like we do in the query builder
 
     urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection[idx].join()}}`);
-    urlParamString = `search/[${urlParamString}]`;
+    urlParamString = `search?q=[${urlParamString}]`;
   }
   const link = `/queries/${urlParamString}`;
   return (

@@ -30,7 +30,7 @@ const MetadataPickerContainer = (props) => {
             disabled={disabled}
             floatingLabelText={floatingLabelText || label}
           >
-            <MenuItem value={null} primaryText={''} />
+            <MenuItem className="header-primary-menu" value={null} primaryText={''} />
             {tags.map(t =>
               <MenuItem
                 className="header-primary-menu"

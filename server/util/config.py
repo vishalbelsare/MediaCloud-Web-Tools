@@ -2,7 +2,7 @@ import codecs
 import os
 import logging
 
-COMMENT_CHAR = u"#"
+COMMENT_CHAR = u'#'
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +26,7 @@ def _variables_from_file(filepath):
             vars[key] = value
     except IOError:
         logger.info(u"No local app.config file found; relying on environment variables for configuration")
+
     return vars
 
 
@@ -53,7 +54,6 @@ class EnvOrFileBasedConfig(object):
                 error_details = u"Config variable '{}' not declared in env-var nor in {}".format(variable_name, self.file_path)
                 logger.warn(error_details)
                 raise ConfigException(error_details)
-
 
 def get_default_config():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname((os.path.abspath(__file__)))))
