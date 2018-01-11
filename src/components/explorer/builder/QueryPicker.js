@@ -14,7 +14,7 @@ import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -153,6 +153,25 @@ class QueryPicker extends React.Component {
     }
     onSearch();
   }
+  saveThisSearch = () => {
+    const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
+    // filter out removed ids...
+    const searchstr = generateQueryParamString(queries.map(q => ({
+      label: q.label,
+      q: q.q,
+      color: q.color,
+      startDate: q.startDate,
+      endDate: q.endDate,
+      sources: q.sources, // de-aggregate media bucket into sources and collections
+      collections: q.collections,
+    })));
+    const userSearch = {
+      label: 'cindyquery',
+      timestamp: Date.now(),
+      params: searchstr,
+    };
+    sendAndSaveUserSearch(userSearch);
+  }
 
   render() {
     const { isLoggedIn, selected, queries, isEditable, loadUserSearch } = this.props;
@@ -263,7 +282,7 @@ class QueryPicker extends React.Component {
             onMediaDelete={this.handleMediaDelete}
             onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
             handleLoadSearch={loadUserSearch}
-            handleSaveSearch={q => saveUserSearch(q)}
+            handleSaveSearch={this.saveThisSearch}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
           />
@@ -298,7 +317,7 @@ QueryPicker.propTypes = {
   updateCurrentQueryThenReselect: PropTypes.func.isRequired,
   addAQuery: PropTypes.func.isRequired,
   loadUserSearch: PropTypes.func,
-  saveUserSearch: PropTypes.func.isRequired,
+  sendAndSaveUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
   // from parent
@@ -345,9 +364,9 @@ const mapDispatchToProps = dispatch => ({
       dispatch(loadUserSearches());
     }
   },
-  saveUserSearch: (query) => {
-    if (query) { // TODO - save as JSON, and save full URL
-      dispatch(saveUserSearch({ label: query.label, query_string: query.q }));
+  sendAndSaveUserSearch: (savedSearch) => {
+    if (savedSearch) { // TODO - save name, timestamp and url as JSON,
+      dispatch(saveUserSearch(savedSearch));
     }
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {

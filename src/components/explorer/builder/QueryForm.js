@@ -11,6 +11,7 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+import QueryPickerCustomQueryHandler from './QueryPickerCustomQueryHandler';
 import { emptyString, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 
@@ -53,7 +54,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearch, handleSaveSearch,
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -162,27 +163,8 @@ class QueryForm extends React.Component {
         </div>
         <Grid>
           <Row>
-            <Col lg={11} />
-            {/*
-            <Col lg={2}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                onClick={handleLoadSearch}
-                label={formatMessage(localMessages.loadSavedSearches)}
-                disabled={submitting}
-                secondary
-              />
-            </Col>
-            <Col lg={2}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                onClick={handleSaveSearch}
-                label={formatMessage(localMessages.saveSearch)}
-                disabled={submitting}
-                secondary
-              />
-            </Col>
-            */}
+            <Col lg={6} />
+            <QueryPickerCustomQueryHandler handleLoadSearch={handleLoadSearch} handleSaveSearch={handleSaveSearch} submitting={submitting} />
             <Col lg={1}>
               <AppButton
                 style={{ marginTop: 30 }}
