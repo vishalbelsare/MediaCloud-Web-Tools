@@ -45,11 +45,11 @@ class QueryPickerCustomQueryHandler extends React.Component {
   };
 
   handleDialogClose = () => {
-    this.setState({ labelChangeDialogOpen: false });
+    this.setState({ saveSearchDialogOpen: false });
   };
 
   handleLabelChangeAndClose = () => {
-    this.setState({ labelChangeDialogOpen: false });
+    this.setState({ saveSearchDialogOpen: false });
   };
 
   updateTextInDialog = (val) => {
