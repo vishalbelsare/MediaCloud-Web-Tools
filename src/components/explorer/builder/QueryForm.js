@@ -163,8 +163,12 @@ class QueryForm extends React.Component {
         </div>
         <Grid>
           <Row>
-            <Col lg={6} />
-            <QueryPickerCustomQueryHandler handleLoadSearch={handleLoadSearch} handleSaveSearch={handleSaveSearch} submitting={submitting} />
+            <Col lg={5} />
+            <QueryPickerCustomQueryHandler
+              handleLoadSearch={handleLoadSearch}
+              handleSaveSearch={l => handleSaveSearch(l)}
+              submitting={submitting}
+            />
             <Col lg={1}>
               <AppButton
                 style={{ marginTop: 30 }}

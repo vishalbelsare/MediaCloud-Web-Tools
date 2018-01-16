@@ -139,7 +139,7 @@ export function loadUserSearches() {
 }
 
 export function saveUserSearch(params) {
-  const acceptedParams = acceptParams(params, ['label', 'query_string']);
+  const acceptedParams = acceptParams(params, ['queryName', 'timestamp', 'queryParams']);
   return createApiPromise('api/explorer/saveQuery', acceptedParams);
 }
 

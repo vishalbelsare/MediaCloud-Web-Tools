@@ -76,7 +76,7 @@ def api_explorer_demo_collections_by_ids():
 
 @app.route('/api/explorer/saveQuery', methods=['GET'])
 @flask_login.login_required
-@arguments_required('label', 'query_string')
+@arguments_required('queryName', 'timestamp', 'queryParams')
 def save_user_query():
     username = user_name()
     # TODO any checking here?

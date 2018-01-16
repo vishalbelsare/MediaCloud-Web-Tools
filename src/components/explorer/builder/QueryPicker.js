@@ -153,7 +153,7 @@ class QueryPicker extends React.Component {
     }
     onSearch();
   }
-  saveThisSearch = () => {
+  saveThisSearch = (queryName) => {
     const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
     // filter out removed ids...
     const searchstr = generateQueryParamString(queries.map(q => ({
@@ -166,9 +166,9 @@ class QueryPicker extends React.Component {
       collections: q.collections,
     })));
     const userSearch = {
-      label: 'cindyquery',
+      queryName,
       timestamp: Date.now(),
-      params: searchstr,
+      queryParams: searchstr,
     };
     sendAndSaveUserSearch(userSearch);
   }
@@ -282,7 +282,7 @@ class QueryPicker extends React.Component {
             onMediaDelete={this.handleMediaDelete}
             onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
             handleLoadSearch={loadUserSearch}
-            handleSaveSearch={this.saveThisSearch}
+            handleSaveSearch={l => this.saveThisSearch(l)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
           />

@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import { Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
-import { generateQueryParamString } from '../../../lib/explorerUtil';
 
 const localMessages = {
-  saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Save Search' },
-  loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Save Search' },
-  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
+  saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Save Your Current Search as...' },
+  loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Load Searches...' },
+  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'query names..' },
   saveSearch: { id: 'explorer.querypicker.saveSearch', defaultMessage: 'Save Search' },
 };
 
@@ -26,22 +26,8 @@ class QueryPickerCustomQueryHandler extends React.Component {
   }
 
   onSaveConfirm = () => {
-    const { queries, handleSaveSearch } = this.props;
-    const searchstr = generateQueryParamString(queries.map(q => ({
-      label: q.label,
-      q: q.q,
-      color: q.color,
-      startDate: q.startDate,
-      endDate: q.endDate,
-      sources: q.sources, // de-aggregate media bucket into sources and collections
-      collections: q.collections,
-    })));
-    const userSearch = {
-      label: 'cindyquery',
-      timestamp: Date.now(),
-      params: searchstr,
-    };
-    handleSaveSearch(userSearch);
+    const { handleSaveSearch } = this.props;
+    handleSaveSearch({ label: this.state.searchName });
   };
 
   handleDialogClose = () => {
@@ -50,6 +36,7 @@ class QueryPickerCustomQueryHandler extends React.Component {
 
   handleLabelChangeAndClose = () => {
     this.setState({ saveSearchDialogOpen: false });
+    this.onSaveConfirm();
   };
 
   updateTextInDialog = (val) => {
@@ -59,12 +46,25 @@ class QueryPickerCustomQueryHandler extends React.Component {
   render() {
     const { handleLoadSearch, submitting } = this.props;
     const { formatMessage } = this.props.intl;
-
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        secondary
+        onClick={this.handleDialogClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        keyboardFocused
+        onClick={this.handleLabelChangeAndClose}
+      />,
+    ];
     return (
-      <Col lg={12}>
+      <Col lg={5}>
         <Dialog
           title="Save Query"
           modal={false}
+          actions={actions}
           open={this.state.saveSearchDialogOpen}
           onRequestClose={this.handleDialogClose}
         >
@@ -106,7 +106,7 @@ QueryPickerCustomQueryHandler.propTypes = {
   pristine: PropTypes.bool,
   submitting: PropTypes.bool.isRequired,
 
-  queries: PropTypes.array,
+  queryParams: PropTypes.string.isRequired,
   onDelete: PropTypes.func,
   onLabelEditRequest: PropTypes.func,
   handleSaveSearch: PropTypes.func,
