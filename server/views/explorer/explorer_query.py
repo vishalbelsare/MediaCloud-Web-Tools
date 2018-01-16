@@ -74,14 +74,21 @@ def api_explorer_demo_collections_by_ids():
     return jsonify(coll_list)
 
 
-@app.route('/api/explorer/saveQuery', methods=['GET'])
+@app.route('/api/explorer/saveSearches', methods=['GET'])
 @flask_login.login_required
 @arguments_required('queryName', 'timestamp', 'queryParams')
-def save_user_query():
+def save_user_search():
     username = user_name()
-    # TODO any checking here?
-    db.add_item_to_users_list(username, 'queries', request.args)
-    return jsonify({'savedQuery': request.args['query_string']})
+    db.add_item_to_users_list(username, 'searches', request.args)
+    return jsonify({'savedQuery': request.args['queryName']})
+
+@app.route('/api/explorer/loadUserSearches', methods=['GET'])
+@flask_login.login_required
+def load_user_searches():
+    username = user_name()
+    search_list = db.get_users_lists(username, 'searches')
+    return jsonify(search_list)
+
 
 
 # TODO use this or the other collection list retrieval?

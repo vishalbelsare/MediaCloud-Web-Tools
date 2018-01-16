@@ -8,16 +8,17 @@ import { Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
-  saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Save Your Current Search as...' },
+  saveSearchTitle: { id: 'explorer.querypicker.saveSearchTitle', defaultMessage: 'Save Your Search' },
+  saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Name your search, so you can remember what it is later. Once you save it, you will be able to load this search again by clicking the "Load Saved Search" button.' },
   loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Load Searches...' },
-  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'query names..' },
+  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'query labels...' },
   saveSearch: { id: 'explorer.querypicker.saveSearch', defaultMessage: 'Save Search' },
 };
 
 class QueryPickerCustomQueryHandler extends React.Component {
   state = {
     saveSearchDialogOpen: false,
-    searchName: '',  // the actual label they type into the change-label popup dialog
+    searchName: this.props.searchNickName,  // the actual label they type into the change-label popup dialog
   };
 
   onSaveRequest = () => {
@@ -27,7 +28,7 @@ class QueryPickerCustomQueryHandler extends React.Component {
 
   onSaveConfirm = () => {
     const { handleSaveSearch } = this.props;
-    handleSaveSearch({ label: this.state.searchName });
+    handleSaveSearch({ queryName: this.state.searchName });
   };
 
   handleDialogClose = () => {
@@ -44,7 +45,7 @@ class QueryPickerCustomQueryHandler extends React.Component {
   };
 
   render() {
-    const { handleLoadSearch, submitting } = this.props;
+    const { searchNickName, handleLoadSearch, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
       <FlatButton
@@ -62,7 +63,7 @@ class QueryPickerCustomQueryHandler extends React.Component {
     return (
       <Col lg={5}>
         <Dialog
-          title="Save Query"
+          title={formatMessage(localMessages.saveSearchTitle)}
           modal={false}
           actions={actions}
           open={this.state.saveSearchDialogOpen}
@@ -76,7 +77,7 @@ class QueryPickerCustomQueryHandler extends React.Component {
             onChange={(e, val) => {
               this.updateTextInDialog(val);
             }}
-            hintText={formatMessage(localMessages.searchHint)}
+            hintText={searchNickName}
           />
         </Dialog>
         <AppButton
@@ -106,7 +107,7 @@ QueryPickerCustomQueryHandler.propTypes = {
   pristine: PropTypes.bool,
   submitting: PropTypes.bool.isRequired,
 
-  queryParams: PropTypes.string.isRequired,
+  searchNickName: PropTypes.string.isRequired,
   onDelete: PropTypes.func,
   onLabelEditRequest: PropTypes.func,
   handleSaveSearch: PropTypes.func,

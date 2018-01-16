@@ -140,7 +140,7 @@ export function loadUserSearches() {
 
 export function saveUserSearch(params) {
   const acceptedParams = acceptParams(params, ['queryName', 'timestamp', 'queryParams']);
-  return createApiPromise('api/explorer/saveQuery', acceptedParams);
+  return createApiPromise('api/explorer/saveSearches', acceptedParams);
 }
 
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

@@ -165,11 +165,7 @@ class QueryPicker extends React.Component {
       sources: q.sources, // de-aggregate media bucket into sources and collections
       collections: q.collections,
     })));
-    const userSearch = {
-      queryName,
-      timestamp: Date.now(),
-      queryParams: searchstr,
-    };
+    const userSearch = Object.assign({}, queryName, { timestamp: Date.now(), queryParams: searchstr });
     sendAndSaveUserSearch(userSearch);
   }
 
@@ -272,6 +268,7 @@ class QueryPicker extends React.Component {
           <QueryForm
             initialValues={selected}
             selected={selected}
+            searchNickName={queries.map(q => q.label).join(',')}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
