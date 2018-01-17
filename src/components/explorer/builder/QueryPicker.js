@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
@@ -170,7 +171,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, loadUserSearch, savedSearches } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, loadUserSearch, handleLoadSelectedSearch, savedSearches } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -280,6 +281,7 @@ class QueryPicker extends React.Component {
             onMediaDelete={this.handleMediaDelete}
             onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
             handleLoadSearch={loadUserSearch}
+            handleLoadSelectedSearch={handleLoadSelectedSearch}
             handleSaveSearch={l => this.saveThisSearch(l)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
@@ -314,8 +316,9 @@ QueryPicker.propTypes = {
   updateCurrentQuery: PropTypes.func.isRequired,
   updateCurrentQueryThenReselect: PropTypes.func.isRequired,
   addAQuery: PropTypes.func.isRequired,
-  loadUserSearch: PropTypes.func,
-  savedSearches: PropTypes.array,
+  loadUserSearch: PropTypes.func.isRequired,
+  handleLoadSelectedSearch: PropTypes.func.isRequired,
+  savedSearches: PropTypes.array.isRequired,
   sendAndSaveUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
@@ -359,9 +362,12 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectQuery(query));
     }
   },
-  loadUserSearch: (query) => {
-    if (query) { // TODO - pop up a dialog and fetch the data
-      dispatch(loadUserSearches());
+  loadUserSearch: () => {
+    dispatch(loadUserSearches());
+  },
+  handleLoadSelectedSearch: (selectedSearch) => {
+    if (selectedSearch && selectedSearch.queryParams) { // TODO - pop up a dialog and fetch the data
+      dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
     }
   },
   sendAndSaveUserSearch: (savedSearch) => {

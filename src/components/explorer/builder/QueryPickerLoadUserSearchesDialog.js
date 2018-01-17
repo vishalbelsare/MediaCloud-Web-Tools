@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import List from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
@@ -22,12 +22,15 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     this.setState({ loadSearchDialogOpen: true });
   }
   onLoadRequest = () => {
+    const { handleLoadSearch } = this.props;
     this.setState({ loadSearchDialogOpen: true });
+    handleLoadSearch();
   }
 
   onLoadConfirm = () => {
-    const { handleLoadSearch } = this.props;
-    handleLoadSearch({ selectedSearch: this.state.selectedSearch });
+    const { handleLoadSelectedSearch } = this.props;
+    handleLoadSelectedSearch(this.state.selectedSearch);
+    this.setState({ loadSearchDialogOpen: false });
   };
 
   handleDialogClose = () => {
@@ -39,11 +42,11 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     this.onSaveConfirm();
   };
 
-  updateTextInDialog = (val) => {
-    this.setState({ searchName: val });
+  updateSelectedSearch = (val) => {
+    this.setState({ selectedSearch: val });
   };
   render() {
-    const { searches, onDelete, onLoad, submitting } = this.props;
+    const { searches, onDelete, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
       <FlatButton
@@ -55,11 +58,20 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
         label="Load"
         primary
         keyboardFocused
-        onClick={onLoad}
+        onClick={this.onLoadConfirm}
       />,
     ];
-    if (searches !== null) {
-      return (
+    let children = (
+      <AppButton
+        style={{ marginTop: 30 }}
+        onClick={this.onLoadRequest}
+        label={formatMessage(localMessages.loadSavedSearches)}
+        disabled={submitting}
+        secondary
+      />
+    );
+    if (searches !== null && searches.length > 0) {
+      children = (
         <div className="search-handler">
           <Dialog
             title={formatMessage(localMessages.loadSearchTitle)}
@@ -72,10 +84,11 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
               className="query-picker-save-search-list"
               id="searchNameInDialog"
               name="searchNameInDialog"
-              onChange={(e, val) => {
-                this.updateTextInDialog(val);
-              }}
-            />
+            >
+              {searches.map((search, idx) => (
+                <ListItem key={idx} primaryText={search.queryName} onClick={() => this.updateSelectedSearch(search)} />
+              ))}
+            </List>
           </Dialog>
           <AppButton
             style={{ marginTop: 30 }}
@@ -87,7 +100,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
         </div>
       );
     }
-    return null;
+    return children;
   }
 }
 
@@ -97,6 +110,7 @@ QueryPickerLoadUserSearchesDialog.propTypes = {
   searches: PropTypes.array.isRequired,
   onDelete: PropTypes.func,
   handleLoadSearch: PropTypes.func,
+  handleLoadSelectedSearch: PropTypes.func,
   onLoad: PropTypes.func,
   // from composition
   intl: PropTypes.object.isRequired,

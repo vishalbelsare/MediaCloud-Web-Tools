@@ -6,10 +6,10 @@ import QueryPickerSaveUserSearchesDialog from './QueryPickerSaveUserSearchesDial
 
 
 const QueryPickerCustomQueryHandler = (props) => {
-  const { handleLoadSearch, handleSaveSearch, savedSearches, searchNickname, submitting } = props;
+  const { handleLoadSearch, handleLoadSelectedSearch, handleSaveSearch, savedSearches, searchNickname, submitting } = props;
   return (
     <div>
-      <QueryPickerLoadUserSearchesDialog handleLoadSearch={handleLoadSearch} searches={savedSearches} submitting={submitting} />
+      <QueryPickerLoadUserSearchesDialog handleLoadSearch={handleLoadSearch} handleLoadSelectedSearch={handleLoadSelectedSearch} searches={savedSearches} submitting={submitting} />
       <QueryPickerSaveUserSearchesDialog handleSaveSearch={handleSaveSearch} searchNickname={searchNickname} submitting={submitting} />
     </div>
 
@@ -26,8 +26,9 @@ QueryPickerCustomQueryHandler.propTypes = {
 
   searchNickname: PropTypes.string.isRequired,
   savedSearches: PropTypes.array,
-  handleSaveSearch: PropTypes.func,
-  handleLoadSearch: PropTypes.func,
+  handleSaveSearch: PropTypes.func.isRequired,
+  handleLoadSearch: PropTypes.func.isRequired,
+  handleLoadSelectedSearch: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
 };
