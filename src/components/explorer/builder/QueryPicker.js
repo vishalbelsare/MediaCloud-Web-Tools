@@ -170,7 +170,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, loadUserSearch } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, loadUserSearch, savedSearches } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -268,7 +268,8 @@ class QueryPicker extends React.Component {
           <QueryForm
             initialValues={selected}
             selected={selected}
-            searchNickName={queries.map(q => q.label).join(',')}
+            searchNickname={queries.map(q => q.label).join(',')}
+            savedSearches={savedSearches}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
@@ -314,6 +315,7 @@ QueryPicker.propTypes = {
   updateCurrentQueryThenReselect: PropTypes.func.isRequired,
   addAQuery: PropTypes.func.isRequired,
   loadUserSearch: PropTypes.func,
+  savedSearches: PropTypes.array,
   sendAndSaveUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
@@ -328,6 +330,7 @@ const mapStateToProps = state => ({
   queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   isLoggedIn: state.user.isLoggedIn,
   formQuery: formSelector(state, 'q', 'color', 'media', 'startDate', 'endDate'),
+  savedSearches: state.explorer.savedSearches.list,
 });
 
 

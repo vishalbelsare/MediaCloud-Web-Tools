@@ -1,115 +1,31 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
-import { Col } from 'react-flexbox-grid/lib';
-import AppButton from '../../common/AppButton';
+import { injectIntl } from 'react-intl';
+import QueryPickerLoadUserSearchesDialog from './QueryPickerLoadUserSearchesDialog';
+import QueryPickerSaveUserSearchesDialog from './QueryPickerSaveUserSearchesDialog';
 
-const localMessages = {
-  saveSearchTitle: { id: 'explorer.querypicker.saveSearchTitle', defaultMessage: 'Save Your Search' },
-  saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Name your search, so you can remember what it is later. Once you save it, you will be able to load this search again by clicking the "Load Saved Search" button.' },
-  loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Load Searches...' },
-  searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'query labels...' },
-  saveSearch: { id: 'explorer.querypicker.saveSearch', defaultMessage: 'Save Search' },
+
+const QueryPickerCustomQueryHandler = (props) => {
+  const { handleLoadSearch, handleSaveSearch, savedSearches, searchNickname, submitting } = props;
+  return (
+    <div>
+      <QueryPickerLoadUserSearchesDialog handleLoadSearch={handleLoadSearch} searches={savedSearches} submitting={submitting} />
+      <QueryPickerSaveUserSearchesDialog handleSaveSearch={handleSaveSearch} searchNickname={searchNickname} submitting={submitting} />
+    </div>
+
+  );
 };
 
-class QueryPickerCustomQueryHandler extends React.Component {
-  state = {
-    saveSearchDialogOpen: false,
-    searchName: this.props.searchNickName,  // the actual label they type into the change-label popup dialog
-  };
-
-  onSaveRequest = () => {
-    this.setState({ saveSearchDialogOpen: true });
-    // filter out removed ids...
-  }
-
-  onSaveConfirm = () => {
-    const { handleSaveSearch } = this.props;
-    handleSaveSearch({ queryName: this.state.searchName });
-  };
-
-  handleDialogClose = () => {
-    this.setState({ saveSearchDialogOpen: false });
-  };
-
-  handleLabelChangeAndClose = () => {
-    this.setState({ saveSearchDialogOpen: false });
-    this.onSaveConfirm();
-  };
-
-  updateTextInDialog = (val) => {
-    this.setState({ searchName: val });
-  };
-
-  render() {
-    const { searchNickName, handleLoadSearch, submitting } = this.props;
-    const { formatMessage } = this.props.intl;
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        secondary
-        onClick={this.handleDialogClose}
-      />,
-      <FlatButton
-        label="Submit"
-        primary
-        keyboardFocused
-        onClick={this.handleLabelChangeAndClose}
-      />,
-    ];
-    return (
-      <Col lg={5}>
-        <Dialog
-          title={formatMessage(localMessages.saveSearchTitle)}
-          modal={false}
-          actions={actions}
-          open={this.state.saveSearchDialogOpen}
-          onRequestClose={this.handleDialogClose}
-        >
-          <p><FormattedMessage {...localMessages.saveSearchDialog} /></p>
-          <TextField
-            className="query-picker-save-search-name"
-            id="searchNameInDialog"
-            name="searchNameInDialog"
-            onChange={(e, val) => {
-              this.updateTextInDialog(val);
-            }}
-            hintText={searchNickName}
-          />
-        </Dialog>
-        <AppButton
-          style={{ marginTop: 30 }}
-          onClick={handleLoadSearch}
-          label={formatMessage(localMessages.loadSavedSearches)}
-          disabled={submitting}
-          secondary
-        />
-        <AppButton
-          style={{ marginTop: 30 }}
-          onClick={this.onSaveRequest}
-          label={formatMessage(localMessages.saveSearch)}
-          disabled={submitting}
-          secondary
-        />
-      </Col>
-
-    );
-  }
-}
 
 QueryPickerCustomQueryHandler.propTypes = {
   // from parent
+  submitting: PropTypes.bool,
   updateQuery: PropTypes.func,
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool,
-  submitting: PropTypes.bool.isRequired,
 
-  searchNickName: PropTypes.string.isRequired,
-  onDelete: PropTypes.func,
-  onLabelEditRequest: PropTypes.func,
+  searchNickname: PropTypes.string.isRequired,
+  savedSearches: PropTypes.array,
   handleSaveSearch: PropTypes.func,
   handleLoadSearch: PropTypes.func,
   // from composition

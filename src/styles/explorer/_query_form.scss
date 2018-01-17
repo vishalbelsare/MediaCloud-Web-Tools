@@ -68,6 +68,10 @@
     }
   }
 
+  .search-handler {
+    float: left;
+  }
+
   .query-field {
     border: 1px solid $material-grey200 !important;
     textarea {

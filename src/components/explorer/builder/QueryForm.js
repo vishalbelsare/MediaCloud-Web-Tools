@@ -54,7 +54,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearch, searchNickName, handleSaveSearch,
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearch, savedSearches, searchNickname, handleSaveSearch,
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -163,13 +163,16 @@ class QueryForm extends React.Component {
         </div>
         <Grid>
           <Row>
-            <Col lg={5} />
-            <QueryPickerCustomQueryHandler
-              searchNickName={searchNickName}
-              handleLoadSearch={handleLoadSearch}
-              handleSaveSearch={l => handleSaveSearch(l)}
-              submitting={submitting}
-            />
+            <Col lg={4} />
+            <Col lg={7} >
+              <QueryPickerCustomQueryHandler
+                searchNickname={searchNickname}
+                savedSearches={savedSearches}
+                handleLoadSearch={handleLoadSearch}
+                handleSaveSearch={l => handleSaveSearch(l)}
+                submitting={submitting}
+              />
+            </Col>
             <Col lg={1}>
               <AppButton
                 style={{ marginTop: 30 }}
@@ -201,9 +204,10 @@ QueryForm.propTypes = {
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
-  searchNickName: PropTypes.string.isRequired,
+  searchNickname: PropTypes.string.isRequired,
   handleLoadSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
+  savedSearches: PropTypes.array,
   onMediaDelete: PropTypes.func.isRequired,
   onDateChange: PropTypes.func.isRequired,
   // from form healper
