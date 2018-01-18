@@ -4,6 +4,8 @@ import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
+import Link from 'react-router/lib/Link';
+import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
@@ -46,19 +48,14 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     this.setState({ selectedSearch: val });
   };
   render() {
-    const { searches, onDelete, submitting } = this.props;
+    const { searches, submitting } = this.props;
     const { formatMessage } = this.props.intl;
     const actions = [
       <FlatButton
-        label="Delete"
-        secondary
-        onClick={onDelete}
-      />,
-      <FlatButton
-        label="Load"
+        label="Cancel"
         primary
         keyboardFocused
-        onClick={this.onLoadConfirm}
+        onClick={this.handleDialogClose}
       />,
     ];
     let children = (
@@ -86,7 +83,10 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
               name="searchNameInDialog"
             >
               {searches.map((search, idx) => (
-                <ListItem key={idx} primaryText={search.queryName} onClick={() => this.updateSelectedSearch(search)} />
+                <ListItem>
+                  <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
+                  <DeleteButton />
+                </ListItem>
               ))}
             </List>
           </Dialog>
