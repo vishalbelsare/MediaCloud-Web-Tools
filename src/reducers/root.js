@@ -11,23 +11,29 @@ import system from './system/system';
 import notebook from './notebook/notebook';
 import story from './story/story';
 
+const LIMIT_REDUCERS = false; // change to true once Topics decoupled from Sources
+
 function getRootReducer(appName) {
-  // only load the reducer for the appropriate app
-  let appReducer;
-  switch (appName) {
-    case APP_TOPIC_MAPPER:
-      appReducer = topics;
-      break;
-    case APP_SOURCE_MANAGER:
-      appReducer = sources;
-      break;
-    case APP_EXPLORER:
-      appReducer = explorer;
-      break;
-    case APP_TOOLS:
-    default:
-      appReducer = null;
-      break;
+  let appReducers;
+  if (LIMIT_REDUCERS) {
+    // only load the reducer for the appropriate app
+    switch (appName) {
+      case APP_TOPIC_MAPPER:
+        appReducers = { topics };
+        break;
+      case APP_SOURCE_MANAGER:
+        appReducers = { sources };
+        break;
+      case APP_EXPLORER:
+        appReducers = { explorer };
+        break;
+      case APP_TOOLS:
+      default:
+        appReducers = {};
+        break;
+    }
+  } else {
+    appReducers = { topics, sources, explorer };
   }
 
   const defaultReducers = {
@@ -40,8 +46,7 @@ function getRootReducer(appName) {
     story,
   };
 
-  let reducers = {};
-  reducers[appName] = appReducer;
+  let reducers = { ...appReducers };
   reducers = Object.assign(reducers, defaultReducers);
 
   const rootReducer = combineReducers(reducers);
