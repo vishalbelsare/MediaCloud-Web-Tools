@@ -54,7 +54,6 @@ UserMenuContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  userTopicPermission: state.topics.selected.info.user_permission,
   user: state.user,
 });
 
