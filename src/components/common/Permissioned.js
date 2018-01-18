@@ -64,7 +64,7 @@ Permissioned.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  userTopicPermission: state.topics.selected.info.user_permission,
+  userTopicPermission: state.topics ? state.topics.selected.info.user_permission : null,  // do this to support other apps (ie. NOT topic mapper)
   user: state.user,
 });
 
