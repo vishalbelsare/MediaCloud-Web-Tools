@@ -11,11 +11,8 @@ import system from './system/system';
 import notebook from './notebook/notebook';
 import story from './story/story';
 
-console.log('reducer init');
-
 function getRootReducer(appName) {
   // only load the reducer for the appropriate app
-  console.log(appName);
   let appReducer;
   switch (appName) {
     case APP_TOPIC_MAPPER:
