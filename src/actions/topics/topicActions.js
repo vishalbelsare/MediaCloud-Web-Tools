@@ -23,6 +23,7 @@ export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
+export const FETCH_TOPIC_WITH_NAME_EXISTS = 'FETCH_TOPIC_WITH_NAME_EXISTS';
 export const FETCH_USER_QUEUED_RUNNING_TOPICS = 'FETCH_USER_QUEUED_RUNNING_TOPICS';
 export const FETCH_TOPIC_WORD2VEC = 'FETCH_TOPIC_WORD2VEC';
 export const FETCH_ADMIN_TOPIC_LIST = 'FETCH_ADMIN_TOPIC_LIST';
@@ -74,8 +75,10 @@ export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 
 export const topicStartSpider = createAsyncAction(TOPIC_START_SPIDER, api.topicSpider, id => id);
 
-// pass in topic id, filters
+// pass in search string
 export const fetchTopicSearchResults = createAsyncAction(FETCH_TOPIC_SEARCH_RESULTS, api.fetchTopicSearchResults, searchStr => searchStr);
+
+export const fetchTopicWithNameExists = createAsyncAction(FETCH_TOPIC_WITH_NAME_EXISTS, api.fetchTopicWithNameExists, searchStr => searchStr);
 
 // pass in a boolean
 export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHOT, needsNewSnapshot => needsNewSnapshot);

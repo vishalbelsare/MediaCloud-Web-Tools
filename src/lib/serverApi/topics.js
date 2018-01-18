@@ -242,6 +242,10 @@ export function fetchTopicSearchResults(searchStr) {
   return createApiPromise('/api/topics/search', { searchStr });
 }
 
+export function fetchTopicWithNameExists(searchStr) {
+  return createApiPromise('/api/topics/name-exists', { searchStr });
+}
+
 export function topicNytTaggedStoryCoverage(topicId, params) {
   const acceptedParams = acceptParams(params, ['timespanId', 'q']);
   return createApiPromise(`/api/topics/${topicId}/nyt-tags/coverage`, acceptedParams);

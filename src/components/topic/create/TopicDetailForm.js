@@ -135,6 +135,7 @@ const TopicDetailForm = (props) => {
       </Row>
       <Row>
         <Col lg={10}>
+          <br />
           <Card style={{ boxShadow: 'none' }} >
             <CardHeader
               style={{ fontWeight: 'bold' }}

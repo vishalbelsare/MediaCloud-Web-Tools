@@ -6,10 +6,10 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
-import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
+import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
-import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
@@ -126,11 +126,9 @@ function validate(values, props) {
 }
 
 const asyncValidate = (values, dispatch) => (
-  dispatch(fetchTopicSearchResults(values.name))
+  dispatch(fetchTopicWithNameExists(values.name))
     .then((results) => {
-      if (results.topics && (results.topics.length !== 0) &&
-        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
+      if (results.nameInUse === true) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }

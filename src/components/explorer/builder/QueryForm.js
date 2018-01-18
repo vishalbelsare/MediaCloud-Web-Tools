@@ -8,7 +8,7 @@ import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import SourceCollectionsForm from './SourceCollectionsForm';
+import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import { emptyString, validDate } from '../../../lib/formValidators';
@@ -121,7 +121,7 @@ class QueryForm extends React.Component {
               <Col lg={6}>
                 <div className="media-field-wrapper">
                   {mediaLabel}
-                  <SourceCollectionsForm
+                  <SourceCollectionsFieldList
                     className="query-field"
                     form="queryForm"
                     destroyOnUnmount={false}
