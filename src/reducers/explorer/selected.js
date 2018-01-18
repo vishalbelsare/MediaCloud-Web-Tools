@@ -6,23 +6,23 @@ function selected(state = INITIAL_STATE, action) {
   let updatedState = {};
   switch (action.type) {
     case SELECT_QUERY:
-      updatedState = state;
+      updatedState = state ? { ...state } : undefined; // could be null
       if (updatedState == null) {
-        return action.payload;
+        return { ...action.payload };
       }
       return action.payload ? { ...action.payload } : null;
     case UPDATE_QUERY:
-      updatedState = state; // could be null
+      updatedState = state ? { ...state } : undefined; // could be null
       if (updatedState == null) {
-        updatedState = action.payload;
+        updatedState = { ...action.payload };
       }
       // syncing-wise replacing the whole object is tricky esp w/r sources, collections and the async retrieval of those names, descriptions
       // so we dont' do a wholesale copy but rather per field
       if (action.payload.fieldName) {
         updatedState[action.payload.fieldName] = action.payload.query[action.payload.fieldName];
-        updatedState.autoNaming = action.payload.query.autoNaming;
+        updatedState.autoNaming = action.payload.query.autoNaming;  // WHY is this happening here?
       } else {
-        updatedState = action.payload.query;
+        updatedState = { ...action.payload.query };
       }
       return updatedState;
     case RESET_SELECTED:
