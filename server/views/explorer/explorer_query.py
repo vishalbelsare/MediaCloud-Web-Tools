@@ -89,6 +89,13 @@ def load_user_searches():
     search_list = db.get_users_lists(username, 'searches')
     return jsonify(search_list)
 
+@app.route('/api/explorer/deleteSearch', methods=['GET'])
+@flask_login.login_required
+@arguments_required('queryName', 'timestamp')
+def delete_user_search():
+    username = user_name()
+    result = db.remove_item_from_users_list(username, 'searches', request.args['queryName'])
+    return jsonify(result)
 
 
 # TODO use this or the other collection list retrieval?
