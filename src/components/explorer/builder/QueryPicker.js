@@ -177,7 +177,7 @@ class QueryPicker extends React.Component {
             isDeletable={() => this.isDeletable()}
             displayLabel={false}
             onQuerySelected={() => this.handleSelectedQueryChange(query, index)}
-            updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(selected, propertyName, newValue)}
+            updateQueryProperty={(propertyName, newValue) => this.updateQueryProperty(query, propertyName, newValue)}
             updateDemoQueryLabel={newValue => this.updateDemoQueryLabel(query, newValue)}
             onSearch={this.saveAndSearch}
             onDelete={() => this.handleDeleteAndSelectQuery(query)}
