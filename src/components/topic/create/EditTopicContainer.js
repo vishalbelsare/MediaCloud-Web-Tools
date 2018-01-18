@@ -24,7 +24,7 @@ const localMessages = {
 };
 
 const EditTopicContainer = (props) => {
-  const { handleSave, topicInfo, topicId } = props;
+  const { handleSave, handleMediaChange, topicInfo, topicId } = props;
   const { formatMessage } = props.intl;
   let initialValues = {};
 
@@ -58,6 +58,8 @@ const EditTopicContainer = (props) => {
             title={formatMessage(localMessages.editTopicCollectionsTitle)}
             intro={formatMessage(localMessages.editTopicCollectionsIntro)}
             mode={TOPIC_FORM_MODE_EDIT}
+            onMediaChange={handleMediaChange}
+            onMediaDelete={this.handleMediaDelete}
           />
         </Permissioned>
       </Grid>
@@ -77,6 +79,7 @@ EditTopicContainer.propTypes = {
   topicInfo: PropTypes.object,
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
+  handleMediaChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -117,6 +120,29 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
       }
     );
+  },
+  /* handleMediaDelete = (toBeDeletedObj) => {
+    // the user has removed media from the Query Form SourceCollectionsForm
+    const { selected, formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
+    // filter out removed ids...
+    const updatedMedia = {
+      ...selected,
+      ...formQuery,
+    };
+    const updatedSources = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'source' || m.media_id));
+    const updatedCollections = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'collection' || m.tags_id));
+    updatedMedia.collections = updatedCollections;
+    updatedMedia.sources = updatedSources;
+    updateCurrentQuery(updatedMedia, null);
+  },*/
+  handleMediaChange: (sourceAndCollections) => {
+    // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
+    const selectedMedia = {};
+    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    selectedMedia.collections = updatedCollections;
+    selectedMedia.sources = updatedSources;
+    // updateCurrentQueryThenReselect(updatedQuery);
   },
 });
 

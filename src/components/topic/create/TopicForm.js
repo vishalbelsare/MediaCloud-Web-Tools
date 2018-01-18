@@ -6,6 +6,7 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
+import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
@@ -25,11 +26,18 @@ const localMessages = {
   startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
   downloadUserGuide: { id: 'topic.create.downloadUserGuide', defaultMessage: 'Downlod the Topic Creation Guide' },
+  selectSandC: { id: 'topic.create.selectSAndC', defaultMessage: 'Select media' },
+  SandC: { id: 'topic.create.sAndC', defaultMessage: 'Media' },
 };
 
 const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange } = props;
   const { formatMessage } = props.intl;
+  let mediaPicker = null;
+  let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
+  mediaPicker = <MediaPickerDialog initMedia={initialValues} onConfirmSelection={selections => onMediaChange(selections)} />;
+  mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
       <input type="hidden" name="topicId" value={topicId} />
@@ -51,14 +59,21 @@ const TopicForm = (props) => {
         </Col>
       </Row>
       <Row><Col lg={12}><hr /></Col></Row>
-      <SourceCollectionsForm
-        title={title}
-        intro={intro}
-        initialValues={initialValues}
-        allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
-        maxSources={10}
-        maxCollections={10}
-      />
+      <div className="media-field-wrapper">
+        {mediaLabel}
+        <SourceCollectionsForm
+          title={title}
+          intro={intro}
+          className="query-field"
+          form="sourcesAndCollectionsForm"
+          destroyOnUnmount={false}
+          enableReinitialize
+          // onDelete={onMediaDelete}
+          initialValues={initialValues}
+          allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+        />
+        {mediaPicker}
+      </div>
       <Row><Col lg={12}><hr /></Col></Row>
       <Row>
         <Col lg={12}>
@@ -96,6 +111,7 @@ TopicForm.propTypes = {
   validate: PropTypes.func.isRequired,
   topicNameSearch: PropTypes.object,
   mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  onMediaChange: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {

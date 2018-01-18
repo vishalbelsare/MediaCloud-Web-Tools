@@ -24,7 +24,7 @@ const localMessages = {
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { finishStep } = props;
+  const { finishStep, handleMediaChange } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
@@ -44,6 +44,8 @@ const TopicCreate1ConfigureContainer = (props) => {
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
+        onMediaChange={handleMediaChange}
+        // onMediaDelete={this.handleMediaDelete}
       />
     </Grid>
   );
@@ -63,6 +65,7 @@ TopicCreate1ConfigureContainer.propTypes = {
   formData: PropTypes.object,
   // from dispatch
   finishStep: PropTypes.func.isRequired,
+  handleMediaChange: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -72,6 +75,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   finishStep: (step) => {
     dispatch(goToCreateTopicStep(step));
+  },
+  handleMediaChange: (sourceAndCollections) => {
+    // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
+    const selectedMedia = {};
+    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    selectedMedia.collections = updatedCollections;
+    selectedMedia.sources = updatedSources;
+    // updateCurrentQueryThenReselect(updatedQuery);
   },
 });
 
