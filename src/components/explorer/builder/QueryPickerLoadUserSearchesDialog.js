@@ -20,13 +20,16 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     loadSearchDialogOpen: false,
     selectedSearch: '',  // the actual label they type into the change-label popup dialog
   };
-  onSaveRequest = () => {
-    this.setState({ loadSearchDialogOpen: true });
-  }
+
   onLoadRequest = () => {
-    const { handleLoadSearch } = this.props;
+    const { handleLoadSearches } = this.props;
     this.setState({ loadSearchDialogOpen: true });
-    handleLoadSearch();
+    handleLoadSearches();
+  }
+
+  onDeleteRequest = (selectedSearch) => {
+    const { handleDeleteSearch } = this.props;
+    handleDeleteSearch(selectedSearch);
   }
 
   onLoadConfirm = () => {
@@ -83,9 +86,9 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
               name="searchNameInDialog"
             >
               {searches.map((search, idx) => (
-                <ListItem>
+                <ListItem key={idx}>
                   <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                  <DeleteButton />
+                  <DeleteButton onClick={() => this.onDeleteRequest(search)} />
                 </ListItem>
               ))}
             </List>
@@ -109,8 +112,9 @@ QueryPickerLoadUserSearchesDialog.propTypes = {
   submitting: PropTypes.bool.isRequired,
   searches: PropTypes.array.isRequired,
   onDelete: PropTypes.func,
-  handleLoadSearch: PropTypes.func,
-  handleLoadSelectedSearch: PropTypes.func,
+  handleLoadSearches: PropTypes.func.isRequired,
+  handleLoadSelectedSearch: PropTypes.func.isRequired,
+  handleDeleteSearch: PropTypes.func.isRequired,
   onLoad: PropTypes.func,
   // from composition
   intl: PropTypes.object.isRequired,

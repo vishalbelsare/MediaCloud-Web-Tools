@@ -143,4 +143,9 @@ export function saveUserSearch(params) {
   return createApiPromise('api/explorer/saveSearches', acceptedParams);
 }
 
+export function deleteUserSearch(params) {
+  const acceptedParams = acceptParams(params, ['queryName', 'timestamp']);
+  return createApiPromise('api/explorer/deleteSearch', acceptedParams);
+}
+
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error

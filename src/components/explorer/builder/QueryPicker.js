@@ -12,7 +12,7 @@ import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
@@ -171,7 +171,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, loadUserSearch, handleLoadSelectedSearch, savedSearches } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -204,7 +204,7 @@ class QueryPicker extends React.Component {
       if (isLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory10[idx % 10];
         const dateObj = getPastTwoWeeksDateRange();
-        const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
+        const newIndex = queries.length; // all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
         const defaultQueryField = isLoggedIn ? '*' : '';
@@ -280,9 +280,10 @@ class QueryPicker extends React.Component {
             onMediaChange={this.handleMediaChange}
             onMediaDelete={this.handleMediaDelete}
             onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
-            handleLoadSearch={loadUserSearch}
+            handleLoadSearches={handleLoadUserSearches}
             handleLoadSelectedSearch={handleLoadSelectedSearch}
             handleSaveSearch={l => this.saveThisSearch(l)}
+            handleDeleteSearch={handleDeleteUserSearch}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
           />
@@ -316,10 +317,11 @@ QueryPicker.propTypes = {
   updateCurrentQuery: PropTypes.func.isRequired,
   updateCurrentQueryThenReselect: PropTypes.func.isRequired,
   addAQuery: PropTypes.func.isRequired,
-  loadUserSearch: PropTypes.func.isRequired,
+  handleLoadUserSearches: PropTypes.func.isRequired,
   handleLoadSelectedSearch: PropTypes.func.isRequired,
   savedSearches: PropTypes.array.isRequired,
   sendAndSaveUserSearch: PropTypes.func.isRequired,
+  handleDeleteUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
   // from parent
@@ -362,22 +364,27 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectQuery(query));
     }
   },
-  loadUserSearch: () => {
+  handleLoadUserSearches: () => {
     dispatch(loadUserSearches());
   },
   handleLoadSelectedSearch: (selectedSearch) => {
-    if (selectedSearch && selectedSearch.queryParams) { // TODO - pop up a dialog and fetch the data
+    if (selectedSearch && selectedSearch.queryParams) {
       dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
     }
   },
+  handleDeleteUserSearch: (selectedSearch) => {
+    if (selectedSearch && selectedSearch.queryName) {
+      dispatch(deleteUserSearch(selectedSearch));
+    }
+  },
   sendAndSaveUserSearch: (savedSearch) => {
-    if (savedSearch) { // TODO - save name, timestamp and url as JSON,
+    if (savedSearch) {
       dispatch(saveUserSearch(savedSearch));
     }
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {
     if (query) {
-      dispatch(markAsDeletedQuery(query)); // will change queries, but not URL, this is the problem
+      dispatch(markAsDeletedQuery(query));
       dispatch(selectQuery(replacementSelectionQuery));
     }
   },

@@ -54,7 +54,7 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
@@ -168,9 +168,10 @@ class QueryForm extends React.Component {
               <QueryPickerCustomQueryHandler
                 searchNickname={searchNickname}
                 savedSearches={savedSearches}
-                handleLoadSearch={handleLoadSearch}
+                handleLoadSearches={handleLoadSearches}
                 handleLoadSelectedSearch={handleLoadSelectedSearch}
                 handleSaveSearch={l => handleSaveSearch(l)}
+                handleDeleteSearch={handleDeleteSearch}
                 submitting={submitting}
               />
             </Col>
@@ -206,9 +207,10 @@ QueryForm.propTypes = {
   renderSelectField: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
   searchNickname: PropTypes.string.isRequired,
-  handleLoadSearch: PropTypes.func.isRequired,
+  handleLoadSearches: PropTypes.func.isRequired,
   handleLoadSelectedSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
+  handleDeleteSearch: PropTypes.func.isRequired,
   savedSearches: PropTypes.array,
   onMediaDelete: PropTypes.func.isRequired,
   onDateChange: PropTypes.func.isRequired,
