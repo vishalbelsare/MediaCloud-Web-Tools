@@ -69,10 +69,10 @@ TopicCreate1ConfigureContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourceUrls', 'collectionUrls'),
+  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'media'),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   finishStep: (step) => {
     dispatch(goToCreateTopicStep(step));
   },
@@ -81,9 +81,9 @@ const mapDispatchToProps = dispatch => ({
     const selectedMedia = {};
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
-    selectedMedia.collections = updatedCollections;
-    selectedMedia.sources = updatedSources;
-    // updateCurrentQueryThenReselect(updatedQuery);
+    selectedMedia.media = updatedCollections.concat(updatedSources);
+
+    ownProps.change('media', selectedMedia.media); // redux-form change action
   },
 });
 

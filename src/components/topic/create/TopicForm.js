@@ -7,7 +7,7 @@ import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
-import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
+import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
@@ -33,9 +33,10 @@ const localMessages = {
 const TopicForm = (props) => {
   const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange } = props;
   const { formatMessage } = props.intl;
+  const emptyArray = [initialValues];
   let mediaPicker = null;
   let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
-  mediaPicker = <MediaPickerDialog initMedia={initialValues} onConfirmSelection={selections => onMediaChange(selections)} />;
+  mediaPicker = <MediaPickerDialog initMedia={emptyArray} onConfirmSelection={selections => onMediaChange(selections)} />;
   mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
 
   return (
@@ -59,21 +60,23 @@ const TopicForm = (props) => {
         </Col>
       </Row>
       <Row><Col lg={12}><hr /></Col></Row>
-      <div className="media-field-wrapper">
-        {mediaLabel}
-        <SourceCollectionsForm
-          title={title}
-          intro={intro}
-          className="query-field"
-          form="sourcesAndCollectionsForm"
-          destroyOnUnmount={false}
-          enableReinitialize
-          // onDelete={onMediaDelete}
-          initialValues={initialValues}
-          allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
-        />
-        {mediaPicker}
-      </div>
+      <Row><Col lg={6}>
+        <div className="media-field-wrapper">
+          {mediaLabel}
+          <SourceCollectionsMediaForm
+            title={title}
+            intro={intro}
+            className="query-field"
+            form="topicForm"
+            destroyOnUnmount={false}
+            enableReinitialize
+            // onDelete={onMediaDelete}
+            initialValues={initialValues}
+            allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+          />
+          {mediaPicker}
+        </div>
+      </Col></Row>
       <Row><Col lg={12}><hr /></Col></Row>
       <Row>
         <Col lg={12}>

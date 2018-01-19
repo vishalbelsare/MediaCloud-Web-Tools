@@ -9,6 +9,26 @@
   }
 }
 
+.media-field-wrapper {
+    .media-widget {
+      padding: 10px;
+      border: 1px solid $material-grey200;
+      border-bottom: 0px;
+      &:last-child {
+        border-bottom: 1px solid $material-grey200;
+      }
+      .icon-button {
+        float: right !important;
+        margin-top: -17px;
+      }
+    }
+    .add-media {
+      border: 1px solid $material-grey200;
+      border-top: 0px;
+      padding: 10px;
+    }
+}
+
 .error {
   font-size: 12px !important;
   line-height: 12px !important;
