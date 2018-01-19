@@ -37,12 +37,12 @@ renderCollectionSelector.propTypes = {
 };
 
 const SourceCollectionsMediaForm = (props) => {
-  const { initialValues, allowRemoval, onDelete } = props;
+  const { name, initialValues, allowRemoval, onDelete } = props;
   return (
     <div className="explorer-source-collection-form">
       <FieldArray
         form={propTypes.form}
-        name="media"
+        name={name}
         validate={propTypes.validate}
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}
@@ -59,6 +59,7 @@ SourceCollectionsMediaForm.propTypes = {
   initialValues: PropTypes.object,
   selected: PropTypes.object,
   allowRemoval: PropTypes.bool,
+  name: PropTypes.string,
   onDelete: PropTypes.func,
 };
 

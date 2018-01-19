@@ -33,11 +33,11 @@ const localMessages = {
 const TopicForm = (props) => {
   const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange } = props;
   const { formatMessage } = props.intl;
-  const emptyArray = [initialValues];
+  const emptyArray = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
   let mediaPicker = null;
-  let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
+  let mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.SandC} /></label>;
   mediaPicker = <MediaPickerDialog initMedia={emptyArray} onConfirmSelection={selections => onMediaChange(selections)} />;
-  mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+  mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.selectSandC} /></label>;
 
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
@@ -70,8 +70,9 @@ const TopicForm = (props) => {
             form="topicForm"
             destroyOnUnmount={false}
             enableReinitialize
+            name="sourcesAndCollections"
             // onDelete={onMediaDelete}
-            initialValues={initialValues}
+            initialValues={initialValues.sourcesAndCollections}
             allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
           />
           {mediaPicker}

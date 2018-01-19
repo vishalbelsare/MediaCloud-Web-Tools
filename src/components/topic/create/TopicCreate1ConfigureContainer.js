@@ -69,7 +69,7 @@ TopicCreate1ConfigureContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'media'),
+  formData: formSelector(state, 'solr_seed_query', 'start_date', 'end_date', 'sourcesAndCollections'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -77,13 +77,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(goToCreateTopicStep(step));
   },
   handleMediaChange: (sourceAndCollections) => {
-    // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
-    const selectedMedia = {};
+    // take selections from mediaPicker and push them back into topicForm
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
-    selectedMedia.media = updatedCollections.concat(updatedSources);
+    const selectedMedia = updatedCollections.concat(updatedSources);
 
-    ownProps.change('media', selectedMedia.media); // redux-form change action
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
   },
 });
 
