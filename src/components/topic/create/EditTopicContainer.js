@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
-import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
@@ -10,6 +11,7 @@ import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
+import composeIntlForm from '../../common/IntlForm';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
 import TopicForm, { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 
@@ -23,10 +25,12 @@ const localMessages = {
   failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
 };
 
+const formSelector = formValueSelector('topicForm');
+
 const EditTopicContainer = (props) => {
-  const { handleSave, handleMediaChange, topicInfo, topicId } = props;
+  const { handleSave, handleMediaChange, handleMediaDelete, topicInfo, topicId } = props;
   const { formatMessage } = props.intl;
-  let initialValues = {};
+  let initialValues = null;
 
   if (topicInfo) {
     // load sources and collections in a backwards compatible way
@@ -39,32 +43,39 @@ const EditTopicContainer = (props) => {
       sourcesAndCollections,
     };
   }
-  return (
-    <div className="topic-edit-form">
-      <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
-      <Grid>
-        <Title render={formatMessage(localMessages.editTopicTitle)} />
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
-            <p><FormattedMessage {...localMessages.editTopicText} /></p>
-          </Col>
-        </Row>
-        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-          <TopicForm
-            topicId={topicId}
-            initialValues={initialValues}
-            onSubmit={handleSave}
-            title={formatMessage(localMessages.editTopicCollectionsTitle)}
-            intro={formatMessage(localMessages.editTopicCollectionsIntro)}
-            mode={TOPIC_FORM_MODE_EDIT}
-            onMediaChange={handleMediaChange}
-            onMediaDelete={this.handleMediaDelete}
-          />
-        </Permissioned>
-      </Grid>
-    </div>
-  );
+
+  if (initialValues && initialValues.sourcesAndCollections !== undefined) {
+    // load sources and collections in a backwards compatible way
+    return (
+      <div className="topic-edit-form">
+        <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
+        <Grid>
+          <Title render={formatMessage(localMessages.editTopicTitle)} />
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
+              <p><FormattedMessage {...localMessages.editTopicText} /></p>
+            </Col>
+          </Row>
+          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+            <TopicForm
+              topicId={topicId}
+              initialValues={initialValues}
+              onSubmit={handleSave}
+              title={formatMessage(localMessages.editTopicCollectionsTitle)}
+              intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+              mode={TOPIC_FORM_MODE_EDIT}
+              enabledReinitialize
+              keepDirtyOnReinitialize
+              onMediaChange={handleMediaChange}
+              onMediaDelete={handleMediaDelete}
+            />
+          </Permissioned>
+        </Grid>
+      </div>
+    );
+  }
+  return '<div></div>';
 };
 
 EditTopicContainer.propTypes = {
@@ -80,6 +91,7 @@ EditTopicContainer.propTypes = {
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
+  handleMediaDelete: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -89,6 +101,7 @@ const mapStateToProps = (state, ownProps) => ({
   timespan: state.topics.selected.timespans.selected,
   snapshots: state.topics.selected.snapshots.list,
   user: state.user,
+  formData: formSelector(state, 'sourcesAndCollections'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -121,28 +134,21 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
     );
   },
-  /* handleMediaDelete = (toBeDeletedObj) => {
-    // the user has removed media from the Query Form SourceCollectionsForm
-    const { selected, formQuery, updateCurrentQuery } = this.props; // formQuery same as selected
-    // filter out removed ids...
-    const updatedMedia = {
-      ...selected,
-      ...formQuery,
-    };
-    const updatedSources = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'source' || m.media_id));
-    const updatedCollections = formQuery.media.filter(m => m.id !== toBeDeletedObj.id && (m.type === 'collection' || m.tags_id));
-    updatedMedia.collections = updatedCollections;
-    updatedMedia.sources = updatedSources;
-    updateCurrentQuery(updatedMedia, null);
-  },*/
+  handleMediaDelete: (toBeDeletedObj) => {
+    // the user has removed media from the form
+    const updatedSources = toBeDeletedObj.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = toBeDeletedObj.filter(m => m.type === 'collection' || m.tags_id);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
   handleMediaChange: (sourceAndCollections) => {
-    // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
-    const selectedMedia = {};
+    // take selections from mediaPicker and push them back into topicForm
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
-    selectedMedia.collections = updatedCollections;
-    selectedMedia.sources = updatedSources;
-    // updateCurrentQueryThenReselect(updatedQuery);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
   },
 });
 
@@ -153,9 +159,19 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
+const reduxFormConfig = {
+  form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+};
+
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      EditTopicContainer
+    composeIntlForm(
+      reduxForm(reduxFormConfig)(
+        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+          EditTopicContainer
+        )
+      )
     )
   );

@@ -56,7 +56,7 @@ const SourceCollectionsMediaForm = (props) => {
 SourceCollectionsMediaForm.propTypes = {
   // from parent
   intl: PropTypes.object.isRequired,
-  initialValues: PropTypes.object,
+  initialValues: PropTypes.array,
   selected: PropTypes.object,
   allowRemoval: PropTypes.bool,
   name: PropTypes.string,

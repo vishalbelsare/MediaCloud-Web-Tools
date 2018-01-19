@@ -31,7 +31,7 @@ const localMessages = {
 };
 
 const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange, onMediaDelete } = props;
   const { formatMessage } = props.intl;
   const emptyArray = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
   let mediaPicker = null;
@@ -69,9 +69,8 @@ const TopicForm = (props) => {
             className="query-field"
             form="topicForm"
             destroyOnUnmount={false}
-            enableReinitialize
             name="sourcesAndCollections"
-            // onDelete={onMediaDelete}
+            onDelete={onMediaDelete}
             initialValues={initialValues.sourcesAndCollections}
             allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
           />
@@ -116,6 +115,7 @@ TopicForm.propTypes = {
   topicNameSearch: PropTypes.object,
   mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
   onMediaChange: PropTypes.func.isRequired,
+  onMediaDelete: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {
