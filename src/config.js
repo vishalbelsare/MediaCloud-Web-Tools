@@ -25,3 +25,11 @@ export function setVersion(newVersion) {
 export function getVersion() {
   return version;
 }
+
+export function isProdMode() {
+  return (process.env.NODE_ENV === 'production');
+}
+
+export function isDevMode() {
+  return !isProdMode();
+}
