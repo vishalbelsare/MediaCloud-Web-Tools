@@ -74,6 +74,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
             onChange={(e, val) => {
               this.updateTextInDialog(val);
             }}
+            value={searchNickname}
             hintText={searchNickname}
           />
         </Dialog>
