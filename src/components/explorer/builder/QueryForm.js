@@ -13,7 +13,7 @@ import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import QueryPickerCustomQueryHandler from './QueryPickerCustomQueryHandler';
 import { emptyString, validDate } from '../../../lib/formValidators';
-import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -31,7 +31,7 @@ const localMessages = {
   loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
-  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Searching for data more than a year old may yield unreliable results.' },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
 };
 
@@ -239,7 +239,7 @@ function validate(values, props) {
   if (!validDate(values.endDate)) {
     errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
-  if (validDate(values.startDate) && isMoreThanAYearInPast(values.startDate)) {
+  if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
     errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
   return errors;

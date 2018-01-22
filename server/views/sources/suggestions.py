@@ -44,10 +44,8 @@ def source_suggestion_update(suggestion_id):
     results = None
     email_note = ""
     if status == "approved":
-        flattend_tags=[]
         # if approved, we have to create it
-        for t in suggestion['tags_ids']:
-            flattend_tags.append(t['tags_id'])
+        flattend_tags = [t['tags_id'] for t in suggestion['tags_ids']]
 
         media_source_to_create = { 'url': suggestion['url'],
               'name': suggestion['name'],
