@@ -12,6 +12,11 @@
   .app-button {
     &.hovering :hover {
       background-color: $explorer-darker !important;
+      button {
+        span {
+          color: $white !important;
+        }
+      }
     }
   }
 

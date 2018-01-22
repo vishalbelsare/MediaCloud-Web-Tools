@@ -28,7 +28,6 @@ const localMessages = {
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
   queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
-  loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
   startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
@@ -161,32 +160,33 @@ class QueryForm extends React.Component {
             </Row>
           </Grid>
         </div>
-        <Grid>
-          <Row>
-            <Col lg={4} />
-            <Col lg={7} >
-              <QueryPickerCustomQueryHandler
-                searchNickname={searchNickname}
-                savedSearches={savedSearches}
-                handleLoadSearches={handleLoadSearches}
-                handleLoadSelectedSearch={handleLoadSelectedSearch}
-                handleSaveSearch={l => handleSaveSearch(l)}
-                handleDeleteSearch={handleDeleteSearch}
-                submitting={submitting}
-              />
-            </Col>
-            <Col lg={1}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                type="submit"
-                label={buttonLabel}
-                disabled={submitting}
-                onClick={onWillSearch}
-                primary
-              />
-            </Col>
-          </Row>
-        </Grid>
+        <div className="query-form-actions-wrapper">
+          <Grid>
+            <Row>
+              <Col lg={6} />
+              <Col lg={6} >
+                <div className="query-form-actions">
+                  <QueryPickerCustomQueryHandler
+                    searchNickname={searchNickname}
+                    savedSearches={savedSearches}
+                    handleLoadSearches={handleLoadSearches}
+                    handleLoadSelectedSearch={handleLoadSelectedSearch}
+                    handleSaveSearch={l => handleSaveSearch(l)}
+                    handleDeleteSearch={handleDeleteSearch}
+                    submitting={submitting}
+                  />
+                  <AppButton
+                    type="submit"
+                    label={buttonLabel}
+                    disabled={submitting}
+                    onClick={onWillSearch}
+                    primary
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
       </form>
     );
   }

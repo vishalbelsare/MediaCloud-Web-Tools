@@ -8,9 +8,19 @@ import QueryPickerSaveUserSearchesDialog from './QueryPickerSaveUserSearchesDial
 const QueryPickerCustomQueryHandler = (props) => {
   const { handleLoadSearches, handleLoadSelectedSearch, handleSaveSearch, handleDeleteSearch, savedSearches, searchNickname, submitting } = props;
   return (
-    <div>
-      <QueryPickerLoadUserSearchesDialog handleLoadSearches={handleLoadSearches} handleDeleteSearch={handleDeleteSearch} handleLoadSelectedSearch={handleLoadSelectedSearch} searches={savedSearches} submitting={submitting} />
-      <QueryPickerSaveUserSearchesDialog handleSaveSearch={handleSaveSearch} searchNickname={searchNickname} submitting={submitting} />
+    <div className="saved-search-controls-wrapper">
+      <QueryPickerLoadUserSearchesDialog
+        handleLoadSearches={handleLoadSearches}
+        handleDeleteSearch={handleDeleteSearch}
+        handleLoadSelectedSearch={handleLoadSelectedSearch}
+        searches={savedSearches}
+        submitting={submitting}
+      />
+      <QueryPickerSaveUserSearchesDialog
+        handleSaveSearch={handleSaveSearch}
+        searchNickname={searchNickname}
+        submitting={submitting}
+      />
     </div>
 
   );

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedDate } from 'react-intl';
+import { injectIntl, FormattedDate, FormattedHTMLMessage } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
@@ -12,8 +12,9 @@ import { getDateFromTimestamp } from '../../../lib/dateUtil';
 const localMessages = {
   loadSearchTitle: { id: 'explorer.querypicker.loadSearchTitle', defaultMessage: 'Load One of Your Saved Searches' },
   loadSavedSearches: { id: 'explorer.querypicker.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
-  delete: { id: 'explorer.querypicker.delete', defaultMessage: 'Delete' },
-  load: { id: 'explorer.querypicker.load', defaultMessage: 'Load' },
+  delete: { id: 'explorer.querypicker.deleteSearch', defaultMessage: 'Delete' },
+  load: { id: 'explorer.querypicker.loadSearch', defaultMessage: 'Load' },
+  noSavedSearches: { id: 'explorer.querypicker.noSearches', defaultMessage: '<p>You have no saved searches.  You can save any searches you find useful and use this screen to reload it later.</p>' },
 };
 
 class QueryPickerLoadUserSearchesDialog extends React.Component {
@@ -62,50 +63,48 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
         onClick={this.handleDialogClose}
       />,
     ];
-    let children = (
-      <AppButton
-        style={{ marginTop: 30 }}
-        onClick={this.onLoadRequest}
-        label={formatMessage(localMessages.loadSavedSearches)}
-        disabled={submitting}
-        secondary
-      />
-    );
+    let searchList;
     if (searches !== null && searches.length > 0) {
-      children = (
-        <div className="search-handler">
-          <Dialog
-            title={formatMessage(localMessages.loadSearchTitle)}
-            modal={false}
-            actions={actions}
-            open={this.state.loadSearchDialogOpen}
-            onRequestClose={this.handleDialogClose}
-          >
-            <List
-              className="query-picker-save-search-list"
-              id="searchNameInDialog"
-              name="searchNameInDialog"
-            >
-              {searches.map((search, idx) => (
-                <ListItem key={idx}>
-                  <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                  <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-                  <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
-                </ListItem>
-              ))}
-            </List>
-          </Dialog>
-          <AppButton
-            style={{ marginTop: 30 }}
-            onClick={this.onLoadRequest}
-            label={formatMessage(localMessages.loadSavedSearches)}
-            disabled={submitting}
-            secondary
-          />
-        </div>
+      searchList = (
+        <List
+          className="query-picker-save-search-list"
+          id="searchNameInDialog"
+          name="searchNameInDialog"
+        >
+          {searches.map((search, idx) => (
+            <ListItem key={idx}>
+              <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
+              <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
+              <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
+            </ListItem>
+          ))}
+        </List>
+      );
+    } else {
+      // no searches so show a nice messages
+      searchList = (
+        <FormattedHTMLMessage {...localMessages.noSavedSearches} />
       );
     }
-    return children;
+    return (
+      <div className="load-saved-search-wrapper">
+        <Dialog
+          title={formatMessage(localMessages.loadSearchTitle)}
+          modal={false}
+          actions={actions}
+          open={this.state.loadSearchDialogOpen}
+          onRequestClose={this.handleDialogClose}
+        >
+          {searchList}
+        </Dialog>
+        <AppButton
+          style={{ marginTop: 30 }}
+          onClick={this.onLoadRequest}
+          label={formatMessage(localMessages.loadSavedSearches)}
+          disabled={submitting}
+        />
+      </div>
+    );
   }
 }
 
