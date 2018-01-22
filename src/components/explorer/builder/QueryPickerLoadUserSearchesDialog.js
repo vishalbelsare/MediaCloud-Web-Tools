@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedDate } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
 import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
 import AppButton from '../../common/AppButton';
+import { getDateFromTimestamp } from '../../../lib/dateUtil';
 
 const localMessages = {
   loadSearchTitle: { id: 'explorer.querypicker.loadSearchTitle', defaultMessage: 'Load One of Your Saved Searches' },
@@ -88,7 +89,8 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
               {searches.map((search, idx) => (
                 <ListItem key={idx}>
                   <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
-                  <DeleteButton onClick={() => this.onDeleteRequest(search)} />
+                  <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
+                  <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
                 </ListItem>
               ))}
             </List>

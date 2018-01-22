@@ -82,7 +82,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
           onClick={this.onSaveRequest}
           label={formatMessage(localMessages.saveSearch)}
           disabled={submitting}
-          secondary
+          primary
         />
       </div>
     );
