@@ -1,4 +1,5 @@
 import Cookies from 'universal-cookie';
+import { isProdMode } from '../config';
 
 // persmisisons used WITHIN a topic
 export const PERMISSION_TOPIC_NONE = 'none';
@@ -20,8 +21,10 @@ const COOKIE_USERNAME = 'mc_username';
 const cookiesContext = new Cookies();
 
 export function saveCookies(username) {
+  const properties = isProdMode() ? { path: '/', domain: '.mediacloud.org' } : {};
+  console.log(properties);
   // note: this is actually your email address, since username is email in our system
-  cookiesContext.set(COOKIE_USERNAME, username);
+  cookiesContext.set(COOKIE_USERNAME, username, properties);
 }
 
 export function deleteCookies() {
