@@ -5,6 +5,7 @@ import promiseMiddleware from 'redux-simple-promise';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { errorReportingMiddleware } from './lib/reduxHelpers';
 import getRootReducer from './reducers/root';
+import { isDevMode } from './config';
 
 const reduxRouterMiddleware = routerMiddleware(hashHistory);
 
@@ -33,7 +34,7 @@ let store;   // singleton store
 // acts as a singleton factory method
 function getStore(appName) {
   if (store === undefined) {
-    store = (process.env.NODE_ENV === 'production') ? configProductionStore(appName) : configDevelopmentStore(appName);
+    store = (isDevMode()) ? configProductionStore(appName) : configDevelopmentStore(appName);
   }
   return store;
 }
