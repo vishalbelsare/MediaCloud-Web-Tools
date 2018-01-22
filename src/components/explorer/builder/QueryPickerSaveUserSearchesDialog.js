@@ -10,7 +10,7 @@ const localMessages = {
   saveSearchTitle: { id: 'explorer.querypicker.saveSearchTitle', defaultMessage: 'Save Your Search' },
   saveSearchDialog: { id: 'explorer.querypicker.saveSearchDialog', defaultMessage: 'Name your search, so you can remember what it is later. Once you save it, you will be able to load this search again by clicking the "Load Saved Search" button.' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'query labels...' },
-  saveSearch: { id: 'explorer.querypicker.saveSearch', defaultMessage: 'Save Search' },
+  saveSearch: { id: 'explorer.querypicker.saveSearch', defaultMessage: 'Save Search...' },
 };
 
 class QueryPickerSaveUserSearchesDialog extends React.Component {
@@ -58,7 +58,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
       />,
     ];
     return (
-      <div className="search-handler">
+      <div className="save-search-wrapper">
         <Dialog
           title={formatMessage(localMessages.saveSearchTitle)}
           modal={false}
@@ -82,7 +82,6 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
           onClick={this.onSaveRequest}
           label={formatMessage(localMessages.saveSearch)}
           disabled={submitting}
-          secondary
         />
       </div>
     );

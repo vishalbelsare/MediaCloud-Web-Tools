@@ -1,0 +1,14 @@
+@import '../constants';
+
+.saved-search-controls-wrapper {
+  border-right: 1px solid $material-grey200;
+  margin-right: 15px;
+  display: inline-block;
+
+  .load-saved-search-wrapper,
+  .save-search-wrapper {
+    display: inline-block;
+    margin-right: 15px;
+  }
+
+}
