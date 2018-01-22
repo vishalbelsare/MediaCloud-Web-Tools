@@ -74,6 +74,8 @@ function Word2VecChart(props) {
   }
   options.xProperty = xProperty || 'x';
   options.yProperty = yProperty || 'y';
+
+  // alternative list of words used to set scales and margins
   options.scaleWords = scaleWords || words;
 
   // add in tf normalization

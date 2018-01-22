@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import jsonify, request
+from flask import jsonify, request, copy_current_request_context
 import flask_login
 import string
+from multiprocessing import Pool
+from functools import partial
+from pathos.multiprocessing import ProcessPool
 
 from server import app, db, mc
 from server.cache import cache
@@ -262,6 +265,7 @@ def topic_search():
 @flask_login.login_required
 @api_error_handler
 def topic_w2v_timespan_embeddings(topics_id):
+    NUM_PROCESSES = 4  # make param
     args = {
         'snapshots_id': request.args.get('snapshotId'),
         'foci_id': request.args.get('focusId'),
@@ -276,19 +280,48 @@ def topic_w2v_timespan_embeddings(topics_id):
     # Retrieve top words for each timespan
     ts_embeddings = []
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, args['snapshots_id'], args['foci_id'])
-    for ts in timespans:
-        ts_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=250, timespans_id=int(ts['timespans_id']), **args)
 
-        # Remove any words not in top words overall
-        ts_word_counts = filter(lambda x: x['term'] in overall_words, ts_word_counts)
+    @copy_current_request_context
+    def grab_timespan_embeddings(api_key, topics_id, args, overall_words, overall_embeddings, ts):
+        # print 'ts:', ts
+        # #print ts['timespans_id']
+        # print 'topic id:', topics_id
+        # #print args
+        print api_key
+        ts_word_counts = topic_word_counts(api_key, topics_id, num_words=250, timespans_id=int(ts['timespans_id']), **args)
+        print 'got ts word counts'
+        # # Remove any words not in top words overall
+        # ts_word_counts = filter(lambda x: x['term'] in overall_words, ts_word_counts)
+        # print 'filtered ts word counts'
+        # # Replace specific timespan embeddings with overall so coordinates are consistent
+        # for word in ts_word_counts:
+        #     word['w2v_x'] = overall_embeddings[word['term']][0]
+        #     word['w2v_y'] = overall_embeddings[word['term']][1]
+        # print 'updated ts word counts'
+        # # results = { 'timespan': ts, 'words': ts_word_counts }
+        # # ts_embeddings.append(results)
+        # print 'done'
+        return { 'timespan': ts, 'words': ts_word_counts }
 
-        # Replace specific timespan embeddings with overall so coordinates are consistent
-        for word in ts_word_counts:
-            word['w2v_x'] = overall_embeddings[word['term']][0]
-            word['w2v_y'] = overall_embeddings[word['term']][1]
-
-        results = { 'timespan': ts, 'words': ts_word_counts }
-        ts_embeddings.append(results)
+    # p = Pool(processes=NUM_PROCESSES)
+    # print type(grab_timespan_embeddings)
+    # func = partial(grab_timespan_embeddings, user_mediacloud_key(), topics_id, args, overall_words, overall_embeddings)
+    p = ProcessPool(nodes=NUM_PROCESSES)
+    ts_embeddings = p.map(grab_timespan_embeddings, user_mediacloud_key(), topics_id, args, overall_words, overall_embeddings, timespans)
+    print len(ts_embeddings)
+    # for ts in timespans:
+        # ts_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=250, timespans_id=int(ts['timespans_id']), **args)
+        #
+        # # Remove any words not in top words overall
+        # ts_word_counts = filter(lambda x: x['term'] in overall_words, ts_word_counts)
+        #
+        # # Replace specific timespan embeddings with overall so coordinates are consistent
+        # for word in ts_word_counts:
+        #     word['w2v_x'] = overall_embeddings[word['term']][0]
+        #     word['w2v_y'] = overall_embeddings[word['term']][1]
+        #
+        # results = { 'timespan': ts, 'words': ts_word_counts }
+        # ts_embeddings.append(results)
 
     return jsonify({'list': ts_embeddings})
 
