@@ -91,10 +91,10 @@ def load_user_searches():
 
 @app.route('/api/explorer/deleteSearch', methods=['GET'])
 @flask_login.login_required
-@arguments_required('queryName', 'timestamp')
+@arguments_required('queryName', 'timestamp', 'queryParams')
 def delete_user_search():
     username = user_name()
-    result = db.remove_item_from_users_list(username, 'searches', request.args['queryName'])
+    result = db.remove_item_from_users_list(username, 'searches', request.args)
     return jsonify(result)
 
 

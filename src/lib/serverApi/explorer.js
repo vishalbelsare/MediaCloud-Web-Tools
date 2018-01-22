@@ -144,7 +144,7 @@ export function saveUserSearch(params) {
 }
 
 export function deleteUserSearch(params) {
-  const acceptedParams = acceptParams(params, ['queryName', 'timestamp']);
+  const acceptedParams = acceptParams(params, ['queryName', 'timestamp', 'queryParams']);
   return createApiPromise('api/explorer/deleteSearch', acceptedParams);
 }
 

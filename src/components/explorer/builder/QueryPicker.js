@@ -285,7 +285,7 @@ class QueryPicker extends React.Component {
             handleLoadSearches={handleLoadUserSearches}
             handleLoadSelectedSearch={handleLoadSelectedSearch}
             handleSaveSearch={l => this.saveThisSearch(l)}
-            handleDeleteSearch={handleDeleteUserSearch}
+            handleDeleteSearch={l => handleDeleteUserSearch(l)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
           />
