@@ -57,7 +57,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     const { formatMessage } = this.props.intl;
     const actions = [
       <FlatButton
-        label="Cancel"
+        label="Done"
         primary
         keyboardFocused
         onClick={this.handleDialogClose}

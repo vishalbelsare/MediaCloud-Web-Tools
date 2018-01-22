@@ -95,7 +95,7 @@ def load_user_searches():
 def delete_user_search():
     username = user_name()
     result = db.remove_item_from_users_list(username, 'searches', request.args)
-    return jsonify(result)
+    return jsonify(result.raw_result)
 
 
 # TODO use this or the other collection list retrieval?

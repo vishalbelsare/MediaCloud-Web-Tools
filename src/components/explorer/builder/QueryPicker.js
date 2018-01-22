@@ -376,7 +376,10 @@ const mapDispatchToProps = dispatch => ({
   },
   handleDeleteUserSearch: (selectedSearch) => {
     if (selectedSearch && selectedSearch.queryName) {
-      dispatch(deleteUserSearch(selectedSearch));
+      dispatch(deleteUserSearch(selectedSearch))
+      .then((results) => {
+        if (results) dispatch(loadUserSearches());
+      });
     }
   },
   sendAndSaveUserSearch: (savedSearch) => {
