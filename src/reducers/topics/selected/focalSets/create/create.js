@@ -9,6 +9,7 @@ import topCountriesStoryCounts from './topCountriesStoryCounts';
 import nytThemeCoverage from './nytThemeCoverage';
 import nytThemeStoryCounts from './nytThemeStoryCounts';
 import workflow from './workflow';
+import matchingStoriesConfigWorkflow from './matchingStoriesConfigWorkflow';
 
 const createFocusReducer = combineReducers({
   matchingStories,
@@ -21,6 +22,7 @@ const createFocusReducer = combineReducers({
   nytThemeCoverage,
   nytThemeStoryCounts,
   workflow,
+  matchingStoriesConfigWorkflow,
 });
 
 export default createFocusReducer;

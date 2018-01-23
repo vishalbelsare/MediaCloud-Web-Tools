@@ -13,6 +13,7 @@ export const FETCH_CREATE_FOCUS_KEYWORD_STORY_COUNTS = 'FETCH_CREATE_FOCUS_KEYWO
 export const CREATE_RETWEET_FOCUS_SET = 'CREATE_RETWEET_FOCUS_SET';
 export const CREATE_TOP_COUNTRIES_FOCUS_SET = 'CREATE_TOP_COUNTRIES_FOCUS_SET';
 export const CREATE_NYT_THEME_FOCUS_SET = 'CREATE_NYT_THEME_FOCUS_SET';
+export const GO_TO_MATCHING_STORIES_CONFIG_STEP = 'GO_TO_MATCHING_STORIES_CONFIG_STEP';
 
 export const submitFocusUpdateOrCreate = createAsyncAction(UPDATE_OR_CREATE_FOCUS_DEFINITION, api.updateOrCreateFocusDefinition);
 
@@ -36,3 +37,6 @@ export const createRetweetFocalSet = createAsyncAction(CREATE_RETWEET_FOCUS_SET,
 export const createTopCountriesFocalSet = createAsyncAction(CREATE_TOP_COUNTRIES_FOCUS_SET, api.createTopCountriesFocalSet);
 
 export const createNytThemeFocalSet = createAsyncAction(CREATE_NYT_THEME_FOCUS_SET, api.createNytThemeFocalSet);
+
+// pass in the number of the step to go to
+export const goToMatchingStoriesConfigStep = createAction(GO_TO_MATCHING_STORIES_CONFIG_STEP, step => step);
