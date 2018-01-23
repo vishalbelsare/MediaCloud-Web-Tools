@@ -130,7 +130,7 @@ const asyncValidate = (values, dispatch) => (
     .then((results) => {
       if (results.topics && (results.topics.length !== 0) &&
         (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
+        (!values.topics_id || (values.topics_id && (results.topics[0].id !== values.topics_id)))) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }
