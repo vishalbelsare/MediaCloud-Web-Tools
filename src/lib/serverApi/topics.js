@@ -197,7 +197,7 @@ export function wordMedia(topicId, word, params) {
 */
 
 export function createTopic(params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations',
+  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_stories', 'max_iterations',
     'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]', 'is_logogram']);
   return createPostingApiPromise('/api/topics/create', acceptedParams, 'put');
 }
@@ -223,7 +223,7 @@ export function fetchWordsByQuery(params) {
 }
 
 export function updateTopic(topicId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations',
+  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_stories', 'max_iterations',
     'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]', 'is_logogram']);
   return createPostingApiPromise(`/api/topics/${topicId}/update`, acceptedParams, 'put');
 }

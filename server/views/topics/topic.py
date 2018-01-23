@@ -224,6 +224,7 @@ def topic_update(topics_id):
         'is_logogram': request.form['is_logogram'] if 'is_logogram' in request.form else None,
         'ch_monitor_id': request.form['ch_monitor_id'] if len(request.form['ch_monitor_id']) > 0 and request.form['ch_monitor_id'] != 'null' else None,
         'max_iterations': request.form['max_iterations'] if 'max_iterations' in request.form else None,
+        'max_stories': request.form['max_stories'] if 'max_stories' in request.form else None,
     }
 
     # parse out any sources and collections to add
