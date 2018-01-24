@@ -25,7 +25,7 @@ const localMessages = {
   queryEditWarning: { id: 'topic.form.detal.query.edit.warning', defaultMessage: '<b>Be careful!</b> If you plan to edit the query and make a new snapshot make sure you only increase the scope of the query.  If you reduce the scope there will be stories from previous snapshots included that don\'t match your new reduced query.' },
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
-  maxStories: { id: 'topic.form.detail.maxStories', defaultMessage: 'Max Stories' },
+  maxStories: { id: 'topic.form.detail.maxStories', defaultMessage: 'Maximum # of Seed Stories' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
   logogram: { id: 'topic.form.detail.logogram', defaultMessage: 'Content in a Logographic Language? (ie. Chinese or Japanese Kanji?)' },
   crimsonHexagon: { id: 'topic.form.detail.crimsonHexagon', defaultMessage: 'Crimson Hexagon Id' },
@@ -145,7 +145,7 @@ const TopicDetailForm = (props) => {
               value="1000000"
               floatingLabelText={formatMessage(localMessages.maxStories)}
               label={formatMessage(localMessages.maxStories)}
-              hintText={formatMessage(localMessages.maxStories)}
+              hintText={100000}
             />
           </Permissioned>
         </Col>

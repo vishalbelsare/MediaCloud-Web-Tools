@@ -128,9 +128,12 @@ function validate(values, props) {
 const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
+      const checkForNameMatches = results.topics.filter(t => t.name.toLowerCase() === values.name.toLowerCase());
+      const checkForIdMatches = results.topics.filter(t => t.id === values.topics_id);
+
       if (results.topics && (results.topics.length !== 0) &&
-        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topics_id || (values.topics_id && (results.topics[0].id !== values.topics_id)))) {
+        (checkForNameMatches.length > 0) &&
+        (!values.topics_id || (values.topics_id && (checkForIdMatches.length > 0)))) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }
