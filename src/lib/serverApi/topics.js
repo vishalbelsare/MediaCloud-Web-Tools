@@ -319,6 +319,11 @@ export function topicWord2Vec(topicId) {
   return createApiPromise(`/api/topics/${topicId}/word2vec`);
 }
 
+export function topicWord2VecTimespans(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/word2vec-timespans`, acceptedParams);
+}
+
 export function topicTopPeople(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
   return createApiPromise(`/api/topics/${topicId}/entities/people`, acceptedParams);
@@ -328,4 +333,3 @@ export function topicTopOrgs(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
   return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
 }
-
