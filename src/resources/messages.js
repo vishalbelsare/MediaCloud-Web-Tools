@@ -173,6 +173,10 @@ const messages = {
   required: { id: 'required', defaultMessage: 'Required' },
   unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
   downloadDataCsv: { id: 'downloadDataCsv', defaultMessage: 'Download {name} data CSV' },
+  play: { id: 'play', defaultMessage: 'Play' },
+  pause: { id: 'pause', defaultMessage: 'Pause' },
+  skipNext: { id: 'skipNext', defaultMessage: 'Next' },
+  skipPrevious: { id: 'skipPrevious', defaultMessage: 'Previous' },
 
   topicFavorited: { id: 'topics.favorited', defaultMessage: 'Starred this topic.' },
   topicUnfavorited: { id: 'topics.unfavorited', defaultMessage: 'Unstarred this topic.' },
