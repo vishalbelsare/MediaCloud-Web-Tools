@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from flask import jsonify, request, copy_current_request_context
+from flask import jsonify, request
 import flask_login
 import string
 from multiprocessing import Pool
