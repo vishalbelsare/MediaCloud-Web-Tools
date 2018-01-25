@@ -9,7 +9,7 @@ import composeIntlForm from '../../common/IntlForm';
 import { TOPIC_FORM_MODE_EDIT } from './TopicForm';
 import { WarningNotice } from '../../common/Notice';
 import Permissioned from '../../common/Permissioned';
-import { PERMISSION_MEDIA_EDIT, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
+import { PERMISSION_MEDIA_EDIT, PERMISSION_ADMIN } from '../../../lib/auth';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 
 const localMessages = {
@@ -136,7 +136,7 @@ const TopicDetailForm = (props) => {
       </Row>
       <Row>
         <Col lg={3}>
-          <Permissioned onlyRole={PERMISSION_TOPIC_ADMIN}>
+          <Permissioned onlyRole={PERMISSION_ADMIN}>
             <Field
               name="max_stories"
               component={renderTextField}
