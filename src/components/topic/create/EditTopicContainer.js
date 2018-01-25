@@ -5,9 +5,11 @@ import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
-import { updateFeedback } from '../../../actions/appActions';
+import Dialog from 'material-ui/Dialog';
+import AppButton from '../../common/AppButton';
 import messages from '../../../resources/messages';
+import { updateTopic, fetchTopicSummary, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateFeedback } from '../../../actions/appActions';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../../lib/auth';
@@ -21,49 +23,123 @@ const localMessages = {
   editTopicCollectionsIntro: { id: 'topic.edit.editTopicCollectionsIntro', defaultMessage: 'The following are the Sources and Collections associated with this topic.' },
   feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
   failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
+  editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
+  riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Narrowing these query parameters (date range, seed query and/or media) will cause a re-spider - continue at your own risk!' },
+  handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'If you proceed, you could potentially corrupt your topic!' },
+  // editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
 };
 
-const EditTopicContainer = (props) => {
-  const { handleSave, topicInfo, topicId } = props;
-  const { formatMessage } = props.intl;
-  let initialValues = {};
-
-  if (topicInfo) {
-    // load sources and collections in a backwards compatible way
-    const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
-    const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
-    const sourcesAndCollections = sources.concat(collections);
-    initialValues = {
-      buttonLabel: formatMessage(messages.save),
-      ...topicInfo,
-      sourcesAndCollections,
-    };
+class EditTopicContainer extends React.Component {
+  state = {
+    editConfirmationOpen: false,
   }
-  return (
-    <div className="topic-edit-form">
-      <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
-      <Grid>
-        <Title render={formatMessage(localMessages.editTopicTitle)} />
-        <Row>
-          <Col lg={12}>
-            <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
-            <p><FormattedMessage {...localMessages.editTopicText} /></p>
-          </Col>
-        </Row>
-        <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-          <TopicForm
-            topicId={topicId}
-            initialValues={initialValues}
-            onSubmit={handleSave}
-            title={formatMessage(localMessages.editTopicCollectionsTitle)}
-            intro={formatMessage(localMessages.editTopicCollectionsIntro)}
-            mode={TOPIC_FORM_MODE_EDIT}
-          />
-        </Permissioned>
-      </Grid>
-    </div>
-  );
-};
+  handleCancelSave = () => {
+    this.setState({ editConfirmationOpen: false });
+  };
+  handleConfirmSave = () => {
+    const { formData, topicInfo, reallyHandleSave } = this.props;
+    this.setState({ editConfirmationOpen: false });
+    reallyHandleSave(formData.values, topicInfo);
+  };
+  handleRequestSave = (values) => {
+    const { topicInfo, reallyHandleSave } = this.props;
+    if (this.riskModifiedTopicSpidering(values)) {
+      this.setState({ editConfirmationOpen: true });
+    } else {
+      reallyHandleSave(values, topicInfo);
+    }
+  };
+  riskModifiedTopicSpidering = (values) => {
+    const { formData } = this.props;
+    const modifiedFields = Object.keys(values).filter((f) => {
+      if (f === 'solr_seed_query') { // if modified seed query
+        return values[f] !== formData.initial[f];
+      } else if (f === 'start_date') {
+        return values[f] > formData.initial[f]; // if more restrictive dates
+      } else if (f === 'end_date') {
+        return values[f] < formData.initial[f];
+      } else if (f === 'sources') { // if more restrictive sources
+        return values[f].length < formData.initial[f].length;
+      } else if (f === 'collections') { // if more restrictive sources
+        return values[f].length < formData.initial[f].length;
+      }
+      return false;
+    // evalueate further here but for now return true for a dialog info
+    });
+    if (modifiedFields.length !== undefined && modifiedFields.length > 0) {
+      return true;
+    }
+    return false;
+  };
+  render() {
+    const { topicInfo, topicId } = this.props;
+    const { formatMessage } = this.props.intl;
+    let initialValues = {};
+    let dialogContent = null;
+    if (topicInfo) {
+      // load sources and collections in a backwards compatible way
+      const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
+      const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
+      const sourcesAndCollections = sources.concat(collections);
+      initialValues = {
+        buttonLabel: formatMessage(messages.save),
+        ...topicInfo,
+        sourcesAndCollections,
+      };
+    }
+    if (this.state.editConfirmationOpen) {
+      const dialogActions = [
+        <AppButton
+          label={formatMessage(messages.cancel)}
+          primary
+          onTouchTap={this.handleCancelSave}
+        />,
+        <AppButton
+          label={formatMessage(messages.confirm)}
+          primary
+          onTouchTap={this.handleConfirmSave}
+        />,
+      ];
+      dialogContent = (
+        <Dialog
+          title={formatMessage(localMessages.riskConfirmTitle)}
+          actions={dialogActions}
+          modal
+          open={this.state.editConfirmationOpen}
+          onRequestClose={this.handleConfirmCancel}
+          className="app-dialog"
+        >
+          <p><FormattedMessage {...localMessages.handleRiskDescription} /></p>
+        </Dialog>
+      );
+    }
+    return (
+      <div className="topic-edit-form">
+        <BackLinkingControlBar message={messages.backToTopic} linkTo={`/topics/${topicId}/summary`} />
+        <Grid>
+          <Title render={formatMessage(localMessages.editTopicTitle)} />
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.editTopicTitle} /></h1>
+              <p><FormattedMessage {...localMessages.editTopicText} /></p>
+            </Col>
+          </Row>
+          {dialogContent}
+          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+            <TopicForm
+              topicId={topicId}
+              initialValues={initialValues}
+              onSubmit={this.handleRequestSave}
+              title={formatMessage(localMessages.editTopicCollectionsTitle)}
+              intro={formatMessage(localMessages.editTopicCollectionsIntro)}
+              mode={TOPIC_FORM_MODE_EDIT}
+            />
+          </Permissioned>
+        </Grid>
+      </div>
+    );
+  }
+}
 
 EditTopicContainer.propTypes = {
   // from context
@@ -75,8 +151,9 @@ EditTopicContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
+  formData: PropTypes.object,
   // from dispatch/merge
-  handleSave: PropTypes.func.isRequired,
+  reallyHandleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -86,6 +163,7 @@ const mapStateToProps = (state, ownProps) => ({
   timespan: state.topics.selected.timespans.selected,
   snapshots: state.topics.selected.snapshots.list,
   user: state.user,
+  formData: state.form.topicForm,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -93,6 +171,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const infoToSave = { ...values };   // clone it so we can edit as needed
     infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     infoToSave.is_logogram = infoToSave.is_logogram ? 1 : 0;
+    infoToSave.ch_monitor_id = values.ch_monitor_id === undefined ? '' : values.ch_monitor_id;
     if ('sourcesAndCollections' in values) {
       infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
       infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
@@ -120,16 +199,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  return Object.assign({}, stateProps, dispatchProps, ownProps, {
-     // need topicInfo to do comparison to fire notices
-    handleSave: values => dispatchProps.reallyHandleSave(values, stateProps.topicInfo, stateProps.filters),
-  });
-}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+    connect(mapStateToProps, mapDispatchToProps)(
       EditTopicContainer
     )
   );

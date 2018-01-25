@@ -28,7 +28,7 @@ function id(state = null, action) {
 function needsNewSnapshot(state = false, action) {
   switch (action.type) {
     case SET_TOPIC_NEEDS_NEW_SNAPSHOT:
-      return action.payload;
+      return action.payload ? action.payload : {};
     default:
       return state;
   }

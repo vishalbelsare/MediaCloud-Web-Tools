@@ -55,7 +55,7 @@ const TopicForm = (props) => {
         title={title}
         intro={intro}
         initialValues={initialValues}
-        allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+        allowRemoval
         maxSources={10}
         maxCollections={10}
       />
@@ -128,9 +128,12 @@ function validate(values, props) {
 const asyncValidate = (values, dispatch) => (
   dispatch(fetchTopicSearchResults(values.name))
     .then((results) => {
+      const checkForNameMatches = results.topics.filter(t => t.name.toLowerCase() === values.name.toLowerCase());
+      const checkForIdMatches = results.topics.filter(t => t.id !== values.topics_id);
+
       if (results.topics && (results.topics.length !== 0) &&
-        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
+        (checkForNameMatches.length > 0) && // if the name matches
+        (!values.topics_id || (values.topics_id && (checkForIdMatches.length > 0)))) { // and its a new topic or a matched topic id is not the current topic being edited
         const error = { name: localMessages.nameInUseError };
         throw error;
       }
