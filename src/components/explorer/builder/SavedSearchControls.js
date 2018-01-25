@@ -5,7 +5,7 @@ import QueryPickerLoadUserSearchesDialog from './QueryPickerLoadUserSearchesDial
 import QueryPickerSaveUserSearchesDialog from './QueryPickerSaveUserSearchesDialog';
 
 
-const QueryPickerCustomQueryHandler = (props) => {
+const SavedSearchControls = (props) => {
   const { handleLoadSearches, handleLoadSelectedSearch, handleSaveSearch, handleDeleteSearch, savedSearches, searchNickname, submitting } = props;
   return (
     <div className="saved-search-controls-wrapper">
@@ -27,7 +27,7 @@ const QueryPickerCustomQueryHandler = (props) => {
 };
 
 
-QueryPickerCustomQueryHandler.propTypes = {
+SavedSearchControls.propTypes = {
   // from parent
   submitting: PropTypes.bool,
   updateQuery: PropTypes.func,
@@ -47,5 +47,5 @@ QueryPickerCustomQueryHandler.propTypes = {
 
 export default
   injectIntl(
-    QueryPickerCustomQueryHandler
+    SavedSearchControls
   );

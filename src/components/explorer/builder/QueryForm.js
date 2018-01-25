@@ -11,7 +11,7 @@ import composeHelpfulContainer from '../../common/HelpfulContainer';
 import SourceCollectionsForm from './SourceCollectionsForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import QueryPickerCustomQueryHandler from './QueryPickerCustomQueryHandler';
+import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
 import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
 
@@ -166,7 +166,7 @@ class QueryForm extends React.Component {
               <Col lg={6} />
               <Col lg={6} >
                 <div className="query-form-actions">
-                  <QueryPickerCustomQueryHandler
+                  <SavedSearchControls
                     searchNickname={searchNickname}
                     savedSearches={savedSearches}
                     handleLoadSearches={handleLoadSearches}
