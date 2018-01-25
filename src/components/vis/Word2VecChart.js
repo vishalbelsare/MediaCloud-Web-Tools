@@ -19,8 +19,9 @@ const DEFAULT_MIN_COLOR = '#d9d9d9';
 const DEFAULT_MAX_COLOR = '#000000';
 
 function Word2VecChart(props) {
-  const { words, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
+  const { words, scaleWords, width, height, minFontSize, maxFontSize, minColor, maxColor, showTooltips, alreadyNormalized,
           fullExtent, domId, xProperty, yProperty, noDataMsg } = props;
+
   const { formatMessage } = props.intl;
 
   // bail if the properties aren't there
@@ -35,6 +36,7 @@ function Word2VecChart(props) {
   }
 
   const options = {
+    scaleWords,
     width,
     height,
     minFontSize,
@@ -73,8 +75,10 @@ function Word2VecChart(props) {
   options.xProperty = xProperty || 'x';
   options.yProperty = yProperty || 'y';
 
-  // add in tf normalization
+  // alternative list of words used to set scales and margins
+  options.scaleWords = scaleWords || words;
 
+  // add in tf normalization
   const allSum = d3.sum(words, term => parseInt(term.count, 10));
   if (!options.alreadyNormalized) {
     words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
@@ -91,7 +95,7 @@ function Word2VecChart(props) {
     .style('opacity', 0);
 
   // determine appropriate margins
-  const maxLengthWord = words.sort((a, b) => b.term.length - a.term.length)[0].term;
+  const maxLengthWord = options.scaleWords.sort((a, b) => b.term.length - a.term.length)[0].term;
   const maxWordWidth = d3.select('body').append('span')
     .attr('class', 'word-width-span')
     .text(maxLengthWord)
@@ -110,22 +114,23 @@ function Word2VecChart(props) {
 
   // Define Scales
   const xScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d[options.xProperty]), d3.max(words, d => d[options.xProperty])])
+    .domain([d3.min(options.scaleWords, d => d[options.xProperty]), d3.max(options.scaleWords, d => d[options.xProperty])])
     .range([margin.left, options.width - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d[options.yProperty]), d3.max(words, d => d[options.yProperty])])
+    .domain([d3.min(options.scaleWords, d => d[options.yProperty]), d3.max(options.scaleWords, d => d[options.yProperty])])
     .range([options.height - margin.top, margin.bottom]);
-
-  const colorScale = d3.scaleLinear()
-    .domain([d3.min(words, d => d.tfnorm), d3.max(words, d => d.tfnorm)])
-    .range([options.minColor, options.maxColor]);
 
   // Add Text Labels
   const sizeRange = { min: options.minFontSize, max: options.maxFontSize };
   if (fullExtent === undefined) {
     options.fullExtent = d3.extent(words, d => d.tfnorm);
   }
+
+  const colorScale = d3.scaleLinear()
+    .domain(options.fullExtent)
+    .range([options.minColor, options.maxColor]);
+
   const sortedWords = words.sort((a, b) => a.tfnorm - b.tfnorm); // important to sort so z order is right
   const text = d3.select(node).selectAll('text')
     .data(sortedWords)
@@ -162,6 +167,7 @@ function Word2VecChart(props) {
 Word2VecChart.propTypes = {
   // from parent
   words: PropTypes.array.isRequired,
+  scaleWords: React.PropTypes.array,
   width: PropTypes.number,
   height: PropTypes.number,
   minFontSize: PropTypes.number,

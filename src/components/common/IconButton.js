@@ -10,6 +10,10 @@ import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 import SearchIcon from 'material-ui/svg-icons/action/search';
+import PlayIcon from 'material-ui/svg-icons/av/play-circle-filled';
+import PauseIcon from 'material-ui/svg-icons/av/pause-circle-filled';
+import NextIcon from 'material-ui/svg-icons/av/skip-next';
+import PreviousIcon from 'material-ui/svg-icons/av/skip-previous';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -160,3 +164,11 @@ export const SaveButton = composeIconButton(SaveIcon, messages.save);
 export const SearchButton = composeIconButton(SearchIcon, messages.search, false);
 
 export const HomeButton = composeIconButton(HomeIcon, messages.home);
+
+export const PlayButton = composeIconButton(PlayIcon, messages.play, false);
+
+export const PauseButton = composeIconButton(PauseIcon, messages.pause, false);
+
+export const NextButton = composeIconButton(NextIcon, messages.skipNext, false);
+
+export const PreviousButton = composeIconButton(PreviousIcon, messages.skipPrevious, false);

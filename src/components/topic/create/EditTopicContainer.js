@@ -8,7 +8,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
 import AppButton from '../../common/AppButton';
 import messages from '../../../resources/messages';
-import { updateTopic, fetchTopicSummary, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -190,8 +190,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(setTopicNeedsNewSnapshot());
           }
           // update topic info and redirect back to topic summary
-          dispatch(fetchTopicSummary(results.topics_id))
-            .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));
+          dispatch(push(`/topics/${results.topics_id}/summary`));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }

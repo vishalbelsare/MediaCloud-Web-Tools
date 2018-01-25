@@ -59,6 +59,9 @@ class QueryPicker extends React.Component {
     if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
       updatedQuery.autoNaming = false;
     }
+    if (propertyName === 'q' && updatedQuery.autoNaming) { // no longer auto-name query if the user has intentionally changed it
+      updatedQuery.label = newValue;
+    }
     // now update it in the store
     updateCurrentQuery(updatedQuery, propertyName);
   }
@@ -116,11 +119,10 @@ class QueryPicker extends React.Component {
 
   saveChangesToSelectedQuery() {
     const { selected, formQuery, updateCurrentQuery } = this.props;
-    const updatedQuery = {
-      ...selected,
-      ...formQuery,
-      label: selected.autoNaming === true ? autoMagicQueryLabel(formQuery) : selected.label,
-    };
+    const updatedQuery = Object.assign({}, selected, formQuery);
+    if (selected.autoNaming) {
+      updatedQuery.label = autoMagicQueryLabel(formQuery);
+    }
     updateCurrentQuery(updatedQuery, 'label');
   }
 
@@ -128,7 +130,7 @@ class QueryPicker extends React.Component {
     const { handleQuerySelected } = this.props;
     // first update the one we are unmounting
     this.saveChangesToSelectedQuery();
-    // now mark the new one we want to display (careful! unDeleted has different index)
+
     handleQuerySelected(nextSelectedQuery, nextSelectedQuery.index ? nextSelectedQuery.index : nextSelectedIndex);
   }
 
