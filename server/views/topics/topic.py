@@ -2,7 +2,6 @@
 import logging
 from flask import jsonify, request
 import flask_login
-import string
 from multiprocessing import Pool
 from functools import partial
 
@@ -16,7 +15,8 @@ from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
 
-WORD2VEC_TIMESPAN_POOL_PROCESSES = 5
+WORD2VEC_TIMESPAN_POOL_PROCESSES = 10
+
 
 @app.route('/api/topics/list', methods=['GET'])
 @api_error_handler
@@ -263,6 +263,7 @@ def topic_search():
     results = map(lambda x: {'name': x['name'], 'id': x['topics_id']}, matching_topics['topics'])
     return jsonify({'topics': results})
 
+
 # Helper function for pooling word2vec timespans process
 def grab_timespan_embeddings(api_key, topics_id, args, overall_words, overall_embeddings, ts):
     ts_word_counts = _cached_topic_word_counts(api_key, topics_id, num_words=250, timespans_id=int(ts['timespans_id']), **args)
@@ -275,7 +276,8 @@ def grab_timespan_embeddings(api_key, topics_id, args, overall_words, overall_em
         word['w2v_x'] = overall_embeddings[word['term']][0]
         word['w2v_y'] = overall_embeddings[word['term']][1]
 
-    return { 'timespan': ts, 'words': ts_word_counts }
+    return {'timespan': ts, 'words': ts_word_counts}
+
 
 @app.route('/api/topics/<topics_id>/word2vec-timespans', methods=['GET'])
 @flask_login.login_required
@@ -289,11 +291,10 @@ def topic_w2v_timespan_embeddings(topics_id):
 
     # Retrieve embeddings for overall topic
     overall_word_counts = topic_word_counts(user_mediacloud_key(), topics_id, num_words=50, **args)
-    overall_words = [ x['term'] for x in overall_word_counts ]
-    overall_embeddings = {x['term']: (x['w2v_x'], x['w2v_y']) for x in overall_word_counts}
+    overall_words = [x['term'] for x in overall_word_counts]
+    overall_embeddings = {x['term']: (x['google_w2v_x'], x['google_w2v_y']) for x in overall_word_counts}
 
     # Retrieve top words for each timespan
-    ts_embeddings = []
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, args['snapshots_id'], args['foci_id'])
 
     # Retrieve embeddings for each timespan
@@ -302,6 +303,7 @@ def topic_w2v_timespan_embeddings(topics_id):
     ts_embeddings = p.map(func, timespans)
 
     return jsonify({'list': ts_embeddings})
+
 
 @app.route('/api/topics/admin/list', methods=['GET'])
 @flask_login.login_required
