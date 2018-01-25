@@ -58,9 +58,7 @@ class EditTopicContainer extends React.Component {
         return values[f] > formData.initial[f]; // if more restrictive dates
       } else if (f === 'end_date') {
         return values[f] < formData.initial[f];
-      } else if (f === 'sources') { // if more restrictive sources
-        return values[f].length < formData.initial[f].length;
-      } else if (f === 'collections') { // if more restrictive sources
+      } else if (f === 'sourcesAndCollections') { // if more restrictive sources
         return values[f].length < formData.initial[f].length;
       }
       return false;
