@@ -133,6 +133,7 @@ class EditTopicContainer extends React.Component {
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
               mode={TOPIC_FORM_MODE_EDIT}
+              destroyOnUnmount
             />
           </Permissioned>
         </Grid>
