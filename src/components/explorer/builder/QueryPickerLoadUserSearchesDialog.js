@@ -64,7 +64,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
       />,
     ];
     let searchList;
-    if (searches !== null && searches.length > 0) {
+    if (searches !== null && searches !== undefined && searches.length > 0) {
       searchList = (
         <List
           className="query-picker-save-search-list"

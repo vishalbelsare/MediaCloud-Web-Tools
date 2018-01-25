@@ -74,7 +74,7 @@ def api_explorer_demo_collections_by_ids():
     return jsonify(coll_list)
 
 
-@app.route('/api/explorer/saveSearches', methods=['GET'])
+@app.route('/api/explorer/save-searches', methods=['GET'])
 @flask_login.login_required
 @arguments_required('queryName', 'timestamp', 'queryParams')
 def save_user_search():
@@ -82,20 +82,20 @@ def save_user_search():
     db.add_item_to_users_list(username, 'searches', request.args)
     return jsonify({'savedQuery': request.args['queryName']})
 
-@app.route('/api/explorer/loadUserSearches', methods=['GET'])
+@app.route('/api/explorer/load-user-searches', methods=['GET'])
 @flask_login.login_required
 def load_user_searches():
     username = user_name()
     search_list = db.get_users_lists(username, 'searches')
-    return jsonify(search_list)
+    return jsonify({'list': search_list})
 
-@app.route('/api/explorer/deleteSearch', methods=['GET'])
+@app.route('/api/explorer/delete-search', methods=['GET'])
 @flask_login.login_required
 @arguments_required('queryName', 'timestamp', 'queryParams')
 def delete_user_search():
     username = user_name()
     result = db.remove_item_from_users_list(username, 'searches', request.args)
-    return jsonify(result.raw_result)
+    return jsonify({'success': result.raw_result })
 
 
 # TODO use this or the other collection list retrieval?

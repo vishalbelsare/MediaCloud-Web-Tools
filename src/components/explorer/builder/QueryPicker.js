@@ -11,6 +11,7 @@ import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
+import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
@@ -23,6 +24,7 @@ const localMessages = {
   addQuery: { id: 'explorer.querypicker.addQuery', defaultMessage: 'Add query' },
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
+  deleteFailed: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Sorry, deleting your search failed for some reason.' },
 };
 
 const formSelector = formValueSelector('queryForm');
@@ -341,7 +343,7 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   handleQuerySelected: (query, index) => {
     const queryWithIndex = Object.assign({}, query, { index }); // if this doesn't exist...
     dispatch(selectQuery(queryWithIndex));
@@ -378,7 +380,14 @@ const mapDispatchToProps = dispatch => ({
     if (selectedSearch && selectedSearch.queryName) {
       dispatch(deleteUserSearch(selectedSearch))
       .then((results) => {
-        if (results) dispatch(loadUserSearches());
+        if (results.success) {
+          dispatch(loadUserSearches());
+        } else {
+          dispatch(updateFeedback({
+            open: true,
+            message: ownProps.intl.formatMessage(localMessages.deleteFailed),
+          }));
+        }
       });
     }
   },
