@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
-import messages from '../../../../../../resources/messages';
+// import messages from '../../../../../../resources/messages';
 import { notEmptyString } from '../../../../../../lib/formValidators';
 import { goToMatchingStoriesConfigStep } from '../../../../../../actions/topicActions';
 
@@ -30,8 +30,8 @@ class UnderstandMatchingStoriesContainer extends React.Component {
   }
 
   render() {
-    const { renderTextField, currentFocalTechnique, handleSubmit, handlePreviousStep, handleNextStep } = this.props;
-    const { formatMessage } = this.props.intl;
+    const { currentFocalTechnique, handleSubmit, handlePreviousStep, handleNextStep } = this.props;
+    // const { formatMessage } = this.props.intl;
     // const nextButtonDisabled = true;
     return (
       <Grid>
@@ -46,29 +46,24 @@ class UnderstandMatchingStoriesContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={8} xs={12}>
-              <Field
-                name="topicName"
-                component={renderTextField}
-                floatingLabelText={'Enter a name'}
-                fullWidth
-              />
+              <p> {'Stories including these words are likely to be classified as your topic: '} </p>
+              <code> {'freedom free speech Europen court'} </code>
             </Col>
           </Row>
           <Row>
             <Col lg={8} xs={12}>
-              <h2><FormattedMessage {...localMessages.directions} /></h2>
-              <p>
-                <FormattedMessage {...localMessages.directionsDetails} />
-              </p>
-              <AppButton onClick={this.onUploadCSV} label={formatMessage(messages.upload)} primary />
+              <p> {'Stories including these words are likely to NOT be classified as your topic: '} </p>
+              <code> {'cupcake iPhone holidays horror-thriller obliterated'} </code>
             </Col>
           </Row>
           <Row>
             <Col lg={8} xs={12}>
               <br />
-              <AppButton flat onClick={handlePreviousStep} label={formatMessage(messages.previous)} />
+              <p> {'Do these words seem correct?'} </p>
+              <p> {'If the words are correct, you can proceed to validating the model. If they are incorrect, you can upload a new set of training data.'} </p>
+              <AppButton flat onClick={handlePreviousStep} label={'No they are incorrect'} />
               &nbsp; &nbsp;
-              <AppButton type="submit" label={formatMessage(messages.next)} primary />
+              <AppButton type="submit" label={'Yes they are correct'} primary />
             </Col>
           </Row>
         </form>

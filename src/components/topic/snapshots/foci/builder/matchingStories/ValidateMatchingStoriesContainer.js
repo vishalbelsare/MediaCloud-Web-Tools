@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
 import messages from '../../../../../../resources/messages';
+import MatchingStoriesSummaryContainer from './MatchingStoriesSummaryContainer';
 import { notEmptyString } from '../../../../../../lib/formValidators';
 import { goToMatchingStoriesConfigStep } from '../../../../../../actions/topicActions';
 
@@ -30,7 +31,7 @@ class ValidateMatchingStoriesContainer extends React.Component {
   }
 
   render() {
-    const { renderTextField, currentFocalTechnique, handleSubmit, handlePreviousStep, handleNextStep } = this.props;
+    const { currentFocalTechnique, handleSubmit, handlePreviousStep, handleNextStep } = this.props;
     const { formatMessage } = this.props.intl;
     // const nextButtonDisabled = true;
     return (
@@ -46,21 +47,18 @@ class ValidateMatchingStoriesContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={8} xs={12}>
-              <Field
-                name="topicName"
-                component={renderTextField}
-                floatingLabelText={'Enter a name'}
-                fullWidth
-              />
+              <p>Recall: 100%</p>
+              <p>Precision: 100%</p>
             </Col>
           </Row>
           <Row>
             <Col lg={8} xs={12}>
-              <h2><FormattedMessage {...localMessages.directions} /></h2>
-              <p>
-                <FormattedMessage {...localMessages.directionsDetails} />
-              </p>
               <AppButton onClick={this.onUploadCSV} label={formatMessage(messages.upload)} primary />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={8} xs={12}>
+              <MatchingStoriesSummaryContainer />
             </Col>
           </Row>
           <Row>
