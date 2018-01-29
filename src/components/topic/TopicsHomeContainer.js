@@ -30,6 +30,11 @@ const TopicsHomeContainer = (props) => {
     content = (
       <div>
         <Title render={titleHandler} />
+        <div className="masthead">
+          <h2>Topics</h2>
+          <p>Investigate a media topic in-depth, see most influential sources, stories and how language is used</p>
+          <h5>Read User Guide</h5>
+        </div>
         <div className="controlbar">
           <div className="main">
             <Grid>

@@ -42,58 +42,65 @@ const Homepage = (props) => {
     );
   }
   return (
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <h1>
-            <FormattedMessage {...localMessages.title} />
-          </h1>
-          <p>
-            <FormattedHTMLMessage {...localMessages.about} />
-            <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
-          </p>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={7} xs={12}>
-          <FeaturedCollectionsContainer />
-        </Col>
-        <Col lg={5} xs={12}>
-          {sideBarContent}
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
-            label={formatMessage(localMessages.browseCountry)}
-            description={<FormattedHTMLMessage {...localMessages.browseCountryAbout} />}
-            onClick={() => { goToUrl('/collections/country-and-state'); }}
-          />
-        </Col>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
-            label={formatMessage(localMessages.browseMC)}
-            description={<FormattedHTMLMessage {...localMessages.browseMCabout} />}
-            onClick={() => { goToUrl('/collections/media-cloud'); }}
-          />
-        </Col>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/logo-emm.png')}
-            label={formatMessage(localMessages.browseEMM)}
-            description={<FormattedHTMLMessage {...localMessages.browseEMMabout} />}
-            onClick={() => { goToUrl('/collections/european-media-monitor'); }}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12} xs={12}>
-          <PopularCollectionsContainer />
-        </Col>
-      </Row>
-    </Grid>
+    <div>
+      <div className="masthead">
+        <h2>Topics</h2>
+        <p>Investigate a media topic in-depth, see most influential sources, stories and how language is used</p>
+        <h5>Read User Guide</h5>
+      </div>
+      <Grid>
+        <Row>
+          <Col lg={12}>
+            <h1>
+              <FormattedMessage {...localMessages.title} />
+            </h1>
+            <p>
+              <FormattedHTMLMessage {...localMessages.about} />
+              <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={7} xs={12}>
+            <FeaturedCollectionsContainer />
+          </Col>
+          <Col lg={5} xs={12}>
+            {sideBarContent}
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={4} xs={12}>
+            <DescriptiveButton
+              imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
+              label={formatMessage(localMessages.browseCountry)}
+              description={<FormattedHTMLMessage {...localMessages.browseCountryAbout} />}
+              onClick={() => { goToUrl('/collections/country-and-state'); }}
+            />
+          </Col>
+          <Col lg={4} xs={12}>
+            <DescriptiveButton
+              imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
+              label={formatMessage(localMessages.browseMC)}
+              description={<FormattedHTMLMessage {...localMessages.browseMCabout} />}
+              onClick={() => { goToUrl('/collections/media-cloud'); }}
+            />
+          </Col>
+          <Col lg={4} xs={12}>
+            <DescriptiveButton
+              imageUrl={assetUrl('/static/img/logo-emm.png')}
+              label={formatMessage(localMessages.browseEMM)}
+              description={<FormattedHTMLMessage {...localMessages.browseEMMabout} />}
+              onClick={() => { goToUrl('/collections/european-media-monitor'); }}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} xs={12}>
+            <PopularCollectionsContainer />
+          </Col>
+        </Row>
+      </Grid>
+    </div>
   );
 };
 
