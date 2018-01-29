@@ -7,11 +7,20 @@ import UserMenuContainer from './UserMenuContainer';
 import SourcesAppMenu from './SourcesAppMenu';
 import TopicsAppMenu from './TopicsAppMenu';
 import ExplorerAppMenu from './ExplorerAppMenu';
+import { assetUrl } from '../../../lib/assetUtil';
 
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
 export const BLOG_URL = 'https://mediacloud.org/news/';
 export const TOOLS_URL = 'https://mediacloud.org/tools/';
+
+const localMessages = {
+  goHome: { id: 'sources.menu.title', defaultMessage: 'Home' },
+};
+
+const goToHome = () => {
+  window.location = '/home';
+};
 
 const NavToolbar = (props) => {
   const { backgroundColor } = props;
@@ -22,6 +31,15 @@ const NavToolbar = (props) => {
       <Grid>
         <Row>
           <Col lg={11}>
+            <a href={`#${formatMessage(localMessages.goHome)}`} onClick={goToHome}>
+              <img
+                className="app-logo"
+                alt={formatMessage(messages.suiteName)}
+                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
+                width={25}
+                height={25}
+              />
+            </a>
             <ul>
               <li className="explorer">
                 <ExplorerAppMenu />

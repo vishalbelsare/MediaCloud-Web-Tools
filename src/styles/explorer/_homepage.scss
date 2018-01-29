@@ -1,3 +1,5 @@
+@import '../constants';
+
 .homepage {
 
   .search-form {
@@ -8,6 +10,7 @@
 
   .explorer-home-search-field {
     margin-top: 10px;
+    height: 200px !important;
     input {
       font-size: 24px !important;
       line-height: 30px !important;
@@ -17,6 +20,17 @@
   p {
     font-size: 20px;
     line-height: 30px;
+  }
+
+  .masthead {
+    height: 185px;
+    background-color: $explorer-primary;
+    color: $white;
+    h2 {
+      margin-top: 30px;
+      font-size: 36px;
+      font-family: Calluna;
+    }
   }
 
 }

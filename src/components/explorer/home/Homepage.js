@@ -47,6 +47,11 @@ const Homepage = (props) => {
   }
   return (
     <div className="homepage">
+      <div className="masthead">
+        <h2>Explorer</h2>
+        <p>See a quick overview of how topics are covered by digital news media, and compare coverage on topics.</p>
+        <h5>Read User Guide</h5>
+      </div>
       <Grid>
         <Row>
           <Col lg={12}>
