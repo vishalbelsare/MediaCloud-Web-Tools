@@ -14,6 +14,7 @@ import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
 import MarketingFeatureList from './MarketingFeatureList';
 import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -48,17 +49,21 @@ const Homepage = (props) => {
   return (
     <div className="homepage">
       <div className="masthead">
-        <h2>Explorer</h2>
-        <p>See a quick overview of how topics are covered by digital news media, and compare coverage on topics.</p>
-        <h5>Read User Guide</h5>
+        <Grid>
+          <h2><FormattedMessage {...messages.explorerToolName} /></h2>
+          <p><FormattedMessage {...messages.explorerToolDescription} /></p>
+          <h5><FormattedMessage {...messages.readGuide} /></h5>
+        </Grid>
       </div>
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
-          </Col>
-        </Row>
-      </Grid>
+      <div className="search-section">
+        <Grid>
+          <Row>
+            <Col lg={10}>
+              <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
+            </Col>
+          </Row>
+        </Grid>
+      </div>
       <SampleSearchContainer />
       {sideBarContent}
       <MarketingFeatureList />

@@ -12,6 +12,7 @@ import DescriptiveButton from '../../common/DescriptiveButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 import { assetUrl } from '../../../lib/assetUtil';
+import { messages } from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -44,9 +45,9 @@ const Homepage = (props) => {
   return (
     <div>
       <div className="masthead">
-        <h2>Topics</h2>
-        <p>Investigate a media topic in-depth, see most influential sources, stories and how language is used</p>
-        <h5>Read User Guide</h5>
+        <h2><FormattedMessage {...messages.sourcesToolName} /></h2>
+        <p><FormattedMessage {...messages.sourcesToolDescription} /></p>
+        <h5><FormattedMessage {...messages.readGuide} /></h5>
       </div>
       <Grid>
         <Row>

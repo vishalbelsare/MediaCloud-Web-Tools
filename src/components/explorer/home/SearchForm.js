@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
@@ -10,7 +10,8 @@ import { SearchButton } from '../../common/IconButton';
 const localMessages = {
   mainTitle: { id: 'explorer.search.title', defaultMessage: 'Enter Keyword' },
   addButton: { id: 'explorer.search', defaultMessage: 'Search' },
-  searchHint: { id: 'explorer.intro.searchHint', defaultMessage: 'Search for...' },
+  searchHint: { id: 'explorer.intro.searchHint', defaultMessage: 'Try searching for the names of people, places, events' },
+  search: { id: 'explorer.intro.search', defaultMessage: 'Search the Media Cloud database of over 547 million stories.' },
 };
 
 const SearchForm = (props) => {
@@ -20,7 +21,14 @@ const SearchForm = (props) => {
   return (
     <form className="app-form search-form" name="searchForm" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Row>
-        <Col md={10}>
+        <Col md={4} />
+        <Col md={8}>
+          <h2><FormattedMessage {...localMessages.search} /></h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={3} />
+        <Col md={6}>
           <Field
             name="keyword"
             className="explorer-home-search-field"
@@ -32,6 +40,7 @@ const SearchForm = (props) => {
         <Col md={2}>
           <SearchButton onClick={handleSubmit(onSearch.bind(this))} />
         </Col>
+        <Col md={1} />
       </Row>
     </form>
   );

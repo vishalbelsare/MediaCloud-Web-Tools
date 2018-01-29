@@ -31,9 +31,9 @@ const TopicsHomeContainer = (props) => {
       <div>
         <Title render={titleHandler} />
         <div className="masthead">
-          <h2>Topics</h2>
-          <p>Investigate a media topic in-depth, see most influential sources, stories and how language is used</p>
-          <h5>Read User Guide</h5>
+          <h2><FormattedMessage {...messages.topicsToolName} /></h2>
+          <p><FormattedMessage {...messages.topicsToolDescription} /></p>
+          <h5><FormattedMessage {...messages.readGuide} /></h5>
         </div>
         <div className="controlbar">
           <div className="main">

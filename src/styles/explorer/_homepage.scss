@@ -2,7 +2,12 @@
 
 .homepage {
 
+  .search-section {
+    margin: 1px auto;
+    padding: 40px;
+  }
   .search-form {
+    height: 200px !important;
     .icon-button {
       margin-top: 20px;
     }
@@ -10,7 +15,6 @@
 
   .explorer-home-search-field {
     margin-top: 10px;
-    height: 200px !important;
     input {
       font-size: 24px !important;
       line-height: 30px !important;
@@ -26,6 +30,10 @@
     height: 185px;
     background-color: $explorer-primary;
     color: $white;
+    div {
+      margin: 1px 120px;
+      padding: 20px;
+    }
     h2 {
       margin-top: 30px;
       font-size: 36px;
