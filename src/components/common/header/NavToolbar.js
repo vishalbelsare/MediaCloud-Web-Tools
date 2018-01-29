@@ -6,6 +6,7 @@ import messages from '../../../resources/messages';
 import UserMenuContainer from './UserMenuContainer';
 import SourcesAppMenu from './SourcesAppMenu';
 import TopicsAppMenu from './TopicsAppMenu';
+import ExplorerAppMenu from './ExplorerAppMenu';
 
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
@@ -23,12 +24,7 @@ const NavToolbar = (props) => {
           <Col lg={11}>
             <ul>
               <li className="explorer">
-                <a
-                  href={EXPLORER_URL}
-                  title={formatMessage(messages.explorerToolDescription)}
-                >
-                  {formatMessage(messages.explorerToolName).toUpperCase()}
-                </a>
+                <ExplorerAppMenu />
               </li>
               <li className="topics">
                 <TopicsAppMenu />

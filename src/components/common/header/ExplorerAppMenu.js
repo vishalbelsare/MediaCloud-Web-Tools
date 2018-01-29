@@ -9,18 +9,16 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import messages from '../../../resources/messages';
-import Permissioned from '../../common/Permissioned';
-import { PERMISSION_ADMIN } from '../../../lib/auth';
-import { urlToTopic } from '../../../lib/urlUtil';
+import { urlToExplorer } from '../../../lib/urlUtil';
 
 const localMessages = {
-  menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topics' },
-  home: { id: 'topics.menu.items.home', defaultMessage: 'Topics Home' },
-  listTopics: { id: 'topics.menu.items.listTopics', defaultMessage: 'Admin: Topic Status Dashboard' },
+  menuTitle: { id: 'explorer.menu.title', defaultMessage: 'Explorer' },
+  home: { id: 'explorer.menu.items.home', defaultMessage: 'Explorer Home' },
+  listTopics: { id: 'explorer.menu.items.listTopics', defaultMessage: 'Explorer' },
 };
 
 
-class TopicsAppMenu extends React.Component {
+class ExplorerAppMenu extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,37 +30,29 @@ class TopicsAppMenu extends React.Component {
   close = () => this.setState({ open: false });
 
   render() {
-    const { user, sendToTopics } = this.props;
+    const { user, sendToExplorer } = this.props;
     const { formatMessage } = this.props.intl;
     // only show app actions if they are logged in
     let appMenuItems = null;
     if (user.isLoggedIn) {
       appMenuItems = (
         <Menu>
-          <MenuItem onTouchTap={() => { this.close(); sendToTopics('home'); }}>
+          <MenuItem onTouchTap={() => { this.close(); sendToExplorer('home'); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { this.close(); sendToTopics('create'); }}>
-            <FormattedMessage {...messages.createNewTopic} />
-          </MenuItem>
-          <Permissioned onlyRole={PERMISSION_ADMIN}>
-            <MenuItem onTouchTap={() => { this.close(); sendToTopics('status'); }}>
-              <FormattedMessage {...localMessages.listTopics} />
-            </MenuItem>
-          </Permissioned>
           <Divider />
         </Menu>
       );
     }
     const aboutItem = (
-      <MenuItem onTouchTap={() => { this.close(); sendToTopics('about'); }}>
+      <MenuItem onTouchTap={() => { this.close(); sendToExplorer('about'); }}>
         <FormattedMessage {...messages.menuAbout} />
       </MenuItem>
     );
 
 
     return (
-      <div className="topics-app-menu">
+      <div className="explorer-app-menu">
         <FlatButton
           onClick={this.handleToggle}
           label={formatMessage(localMessages.menuTitle)}
@@ -82,12 +72,11 @@ class TopicsAppMenu extends React.Component {
   }
 }
 
-TopicsAppMenu.propTypes = {
+ExplorerAppMenu.propTypes = {
   // state
   user: PropTypes.object.isRequired,
   // from dispatch
-  sendToTopics: PropTypes.func.isRequired,
-  path: PropTypes.string.isRequired,
+  sendToExplorer: PropTypes.func.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
 };
@@ -97,14 +86,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = () => ({
-  sendToTopics: (path) => {
-    window.open(urlToTopic(path));
+  sendToExplorer: (path) => {
+    window.open(urlToExplorer(path));
   },
 });
 
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      TopicsAppMenu
+      ExplorerAppMenu
     )
   );

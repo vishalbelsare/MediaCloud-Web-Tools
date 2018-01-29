@@ -13,6 +13,7 @@
     li.tools, li.blog {
       float: right;
       color: $white;
+      margin-top: 6px;
     }
     li {
       display: block;
@@ -22,7 +23,7 @@
       padding-top: 6px;
       height: 34px;
 
-      a {
+      span, a {
         font-size: 14px;
         line-height: 2.1em;
         text-decoration: none;

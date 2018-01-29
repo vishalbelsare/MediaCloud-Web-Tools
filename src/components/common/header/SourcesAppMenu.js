@@ -42,7 +42,7 @@ class SourcesAppMenu extends React.Component {
 
   render() {
     const { user, sendToSources, sendToCollections } = this.props;
-
+    const { formatMessage } = this.props.intl;
     // only show app actions if they are logged in
     let appMenuItems = null;
     if (user.isLoggedIn) {
@@ -88,7 +88,7 @@ class SourcesAppMenu extends React.Component {
       <div className="sources-app-menu">
         <FlatButton
           onClick={this.handleToggle}
-          label="Sources"
+          label={formatMessage(localMessages.menuTitle)}
         />
         <Popover
           open={this.state.open}

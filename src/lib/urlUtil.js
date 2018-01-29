@@ -20,14 +20,18 @@ export function storyDomainName(story) {
   return domain;
 }
 
-export function urlToCollection(collectionId) {
-  return `https://sources.mediacloud.org/#/collections/${collectionId}`;
+export function urlToCollection(param) {
+  return `https://sources.mediacloud.org/#/collections/${param}`;
 }
 
-export function urlToSource(mediaId) {
-  return `https://sources.mediacloud.org/#/sources/${mediaId}`;
+export function urlToSource(param) {
+  return `https://sources.mediacloud.org/#/sources/${param}`;
 }
 
-export function urlToTopic(topicId) {
-  return `https://topics.mediacloud.org/#/topics/${topicId}`;
+export function urlToTopic(param) {
+  return `https://topics.mediacloud.org/#/topics/${param}`;
+}
+
+export function urlToExplorer(param) {
+  return `https://explorer.mediacloud.org/#/${param}`;
 }
