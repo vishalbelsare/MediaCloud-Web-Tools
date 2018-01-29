@@ -27,3 +27,7 @@ export function urlToCollection(collectionId) {
 export function urlToSource(mediaId) {
   return `https://sources.mediacloud.org/#/sources/${mediaId}`;
 }
+
+export function urlToTopic(topicId) {
+  return `https://topics.mediacloud.org/#/topics/${topicId}`;
+}

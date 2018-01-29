@@ -17,7 +17,7 @@ import messages from '../../../resources/messages';
 const UserMenuContainer = (props) => {
   const { user, routeToUrl } = props;
   // gotta show login or logout correctly based on the user state
-  let loginLogoutMenuItem = null;
+  let loginLogoutMenuItem = <a href={routeToUrl('/user/profile')}>LOGIN</a>;
   if (user.isLoggedIn) {
     loginLogoutMenuItem = (
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>

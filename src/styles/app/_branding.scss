@@ -12,6 +12,7 @@
 
     li.tools, li.blog {
       float: right;
+      color: $white;
     }
     li {
       display: block;
@@ -27,12 +28,6 @@
         text-decoration: none;
         color: $white;
       }
-    }
-    li.blog {
-      a {
-        color: $black;
-        opacity: 0.5;
-      }        
     }
   }
   .user-menu {
