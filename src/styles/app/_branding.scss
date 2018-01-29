@@ -1,6 +1,6 @@
 @import '../_constants';
 
-#branding-toolbar {
+#nav-toolbar {
   height: 40px;
   font-family: $font-families;
   color: $white;
@@ -9,6 +9,10 @@
     list-style: none;
     margin: 0;
     padding: 0;
+
+    li.tools, li.blog {
+      float: right;
+    }
     li {
       display: block;
       float: left;
@@ -16,27 +20,13 @@
       padding-right: 1em;
       padding-top: 6px;
       height: 34px;
+
       a {
         font-size: 14px;
         line-height: 2.1em;
         text-decoration: none;
         color: $white;
       }
-    }
-    li.tools {
-      background-color: $tools-primary;
-    }
-    li.dashboard {
-      background-color: $dashboard-primary;
-    }
-    li.explorer {
-      background-color: $explorer-primary;
-    }
-    li.sources {
-      background-color: $sources-primary;
-    }
-    li.topics {
-      background-color: $topics-primary;
     }
     li.blog {
       a {

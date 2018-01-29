@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
-import AppToolbar from './AppToolbar';
+import NavToolbar from './NavToolbar';
 import messages from '../../../resources/messages';
 import { getBrandColors } from '../../../styles/colors';
 import AppNoticesContainer from './AppNoticesContainer';
@@ -18,7 +18,7 @@ const AppHeader = (props) => {
   const { drawer, name, subHeader, showSubHeader, description, backgroundColor, navigateToHome } = props;
   const { formatMessage } = props.intl;
   const brandColors = getBrandColors();
-  const styles = {  // TODO: refactor this into CSS?
+  const styles = {
     root: {
       backgroundColor,
     },
@@ -77,8 +77,8 @@ const AppHeader = (props) => {
   return (
     <div className="app-header">
       <AppNoticesContainer />
-      <AppToolbar
-        backgroundColor={brandColors.light}
+      <NavToolbar
+        backgroundColor={brandColors.dark}
         drawer={drawer}
       />
       <div style={styles.root} >
