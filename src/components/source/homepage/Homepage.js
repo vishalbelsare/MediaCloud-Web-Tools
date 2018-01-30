@@ -12,7 +12,7 @@ import DescriptiveButton from '../../common/DescriptiveButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 import { assetUrl } from '../../../lib/assetUtil';
-import { messages } from '../../../resources/messages';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },

@@ -88,7 +88,6 @@ TopicsAppMenu.propTypes = {
   // from dispatch
   sendToTopics: PropTypes.func.isRequired,
   sendToTopicHomePage: PropTypes.func.isRequired,
-  path: PropTypes.string.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
 };
@@ -99,10 +98,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({
   sendToTopics: (path) => {
-    window.open(urlToTopic(path));
+    window.location.href = urlToTopic(path);
   },
   sendToTopicHomePage: () => {
-    window.open('https://topics.mediacloud.org/#/home');
+    window.location.href = 'https://topics.mediacloud.org/#/home';
   },
 });
 

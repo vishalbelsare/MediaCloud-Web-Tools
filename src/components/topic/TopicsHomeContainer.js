@@ -26,21 +26,25 @@ const TopicsHomeContainer = (props) => {
   const title = formatMessage(localMessages.homeTitle);
   const titleHandler = parentTitle => `${title} | ${parentTitle}`;
   let content = null;
+  const mastHead = (
+    <div className="masthead">
+      <Grid>
+        <Row>
+          <Col lg={11}>
+            <h2><FormattedMessage {...messages.topicsToolName} /></h2>
+            <p><FormattedMessage {...messages.topicsToolDescription} /></p>
+            <h5><FormattedMessage {...messages.readGuide} /></h5>
+          </Col>
+        </Row>
+      </Grid>
+    </div>
+  );
   if (user.isLoggedIn) {
     content = (
       <div>
+
         <Title render={titleHandler} />
-        <div className="masthead">
-          <Grid>
-            <Row>
-              <Col lg={11}>
-                <h2><FormattedMessage {...messages.topicsToolName} /></h2>
-                <p><FormattedMessage {...messages.topicsToolDescription} /></p>
-                <h5><FormattedMessage {...messages.readGuide} /></h5>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
+
         <div className="controlbar">
           <div className="main">
             <Grid>
@@ -88,7 +92,12 @@ const TopicsHomeContainer = (props) => {
       </div>
     );
   }
-  return content;
+  return (
+    <div>
+      {mastHead}
+      {content}
+    </div>
+  );
 };
 
 TopicsHomeContainer.propTypes = {

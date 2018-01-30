@@ -87,7 +87,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({
   sendToExplorer: (path) => {
-    window.open(urlToExplorer(path));
+    window.location.href = urlToExplorer(path);
   },
 });
 

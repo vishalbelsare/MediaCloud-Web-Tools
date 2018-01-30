@@ -111,7 +111,6 @@ SourcesAppMenu.propTypes = {
   // from dispatch
   sendToSources: PropTypes.func.isRequired,
   sendToCollections: PropTypes.func.isRequired,
-  path: PropTypes.string.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
 };
@@ -122,10 +121,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({
   sendToSources: (path) => {
-    window.open(urlToSource(path));
+    window.location.href = urlToSource(path);
   },
   sendToCollections: (path) => {
-    window.open(urlToCollection(path));
+    window.location.href = urlToCollection(path);
   },
 });
 

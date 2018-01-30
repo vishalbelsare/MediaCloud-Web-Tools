@@ -19,7 +19,7 @@ const localMessages = {
 };
 
 const goToHome = () => {
-  window.location = '/home';
+  window.location.href = '/home';
 };
 
 const NavToolbar = (props) => {
