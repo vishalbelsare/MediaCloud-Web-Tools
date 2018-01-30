@@ -22,12 +22,12 @@ const localMessages = {
   descriptionIntro: { id: 'topic.create.preview.storyCount.help.into',
     defaultMessage: "Your topic can include up to 100,000 stories. This includes the stories we already have, and the stories we will spider once you create the topic. Spidering can add anywhere from 0 to 4 times the total number of stories, so be careful that you don't include too many seed stories.",
   },
-  totalRolloverLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories' },
+  totalRolloverLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'All Stories: {limit} stories' },
   filteredLabel: { id: 'topic.create.preview.storyCount.matching', defaultMessage: 'Queried Seed Stories' },
-  totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max 100K Total Stories' },
-  adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Unlimited Stories' },
+  totalLabel: { id: 'topic.create.preview.storyCount.total', defaultMessage: 'Max {limit} Total Stories' },
+  adminTotalLabel: { id: 'topic.create.preview.storyCount.adminTotal', defaultMessage: 'Maximum Stories' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: 'You need to select a minimum of 500 seed stories.' },
-  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than 100,000 seed stories. Go back and make a more focused query, choose a shorter timespan, or fewer media sources.' },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: 'You need to select less than {limit} seed stories. Go back and make a more focused query, choose a shorter timespan, or fewer media sources.' },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'With this many seed stories, it is likely that the spidering will cause you to run into your 100,000 story limit. Try searching over a narrower time period, or for more specific keywords.' },
 };
 
@@ -39,9 +39,11 @@ class TopicStoryCountPreview extends React.Component {
     }
   }
   render() {
-    const { count, user } = this.props;
+    const { count, user, query } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const whichLabel = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel) : formatMessage(localMessages.totalLabel);
+    const maxStories = parseInt(query.max_stories, 10);
+    const whichLabel = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.adminTotalLabel, { limit: maxStories }) : formatMessage(localMessages.totalLabel, { limit: MAX_RECOMMENDED_STORIES });
+    const whichRolloverText = hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) ? formatMessage(localMessages.totalRolloverLabel, { limit: maxStories }) : formatNumber(localMessages.totalRolloverLabel, { limit: MAX_RECOMMENDED_STORIES });
     let content = null;
     let storySizeWarning = null;
     if (count !== null) {
@@ -54,14 +56,17 @@ class TopicStoryCountPreview extends React.Component {
           rolloverText: `${formatMessage(localMessages.filteredLabel)}: ${formatNumber(count)} stories`,
         },
         {
-          value: MAX_RECOMMENDED_STORIES,
+          value: maxStories,
           aboveText: whichLabel,
-          rolloverText: `${formatMessage(localMessages.totalRolloverLabel)}: ${formatNumber(MAX_RECOMMENDED_STORIES)} stories`,
+          rolloverText: whichRolloverText,
         },
       ];
+
       if (count > MAX_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
-        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} /></WarningNotice>);
-      } else if (count < MAX_RECOMMENDED_STORIES && count > WARNING_LIMIT_RECOMMENDED_STORIES && !hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} values={{ limit: MAX_RECOMMENDED_STORIES }} /></WarningNotice>);
+      } else if (count > maxStories && hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) { // ADMIN CHECK
+        storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.tooManyStories} values={{ limit: maxStories }} /></WarningNotice>);
+      } else if (count > 0.75 * MAX_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.warningLimitStories} /></WarningNotice>);
       } else if (count < MIN_RECOMMENDED_STORIES) {
         storySizeWarning = (<WarningNotice><FormattedHTMLMessage {...localMessages.notEnoughStories} /></WarningNotice>);
