@@ -32,14 +32,14 @@ class TopicsAppMenu extends React.Component {
   close = () => this.setState({ open: false });
 
   render() {
-    const { user, sendToTopics } = this.props;
+    const { user, sendToTopics, sendToTopicHomePage } = this.props;
     const { formatMessage } = this.props.intl;
     // only show app actions if they are logged in
     let appMenuItems = null;
     if (user.isLoggedIn) {
       appMenuItems = (
         <Menu>
-          <MenuItem onTouchTap={() => { this.close(); sendToTopics('home'); }}>
+          <MenuItem onTouchTap={() => { this.close(); sendToTopicHomePage(); }}>
             <FormattedMessage {...localMessages.home} />
           </MenuItem>
           <MenuItem onTouchTap={() => { this.close(); sendToTopics('create'); }}>
@@ -87,6 +87,7 @@ TopicsAppMenu.propTypes = {
   user: PropTypes.object.isRequired,
   // from dispatch
   sendToTopics: PropTypes.func.isRequired,
+  sendToTopicHomePage: PropTypes.func.isRequired,
   path: PropTypes.string.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
@@ -99,6 +100,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = () => ({
   sendToTopics: (path) => {
     window.open(urlToTopic(path));
+  },
+  sendToTopicHomePage: () => {
+    window.open('https://topics.mediacloud.org/#/home');
   },
 });
 
