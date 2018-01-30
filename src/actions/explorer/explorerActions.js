@@ -96,6 +96,9 @@ export const saveUserSearch = createAsyncAction(SAVE_USER_SEARCH, api.saveUserSe
 export const LOAD_USER_SEARCHES = 'LOAD_USER_SEARCHES';
 export const loadUserSearches = createAsyncAction(LOAD_USER_SEARCHES, api.loadUserSearches, props => props);
 
+export const DELETE_USER_SEARCH = 'DELETE_USER_SEARCH';
+export const deleteUserSearch = createAsyncAction(DELETE_USER_SEARCH, api.deleteUserSearch, props => props);
+
 export const MARK_AS_DELETED_QUERY = 'MARK_AS_DELETED_QUERY';
 export const markAsDeletedQuery = createAction(MARK_AS_DELETED_QUERY);
 
