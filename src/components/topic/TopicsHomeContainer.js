@@ -31,9 +31,15 @@ const TopicsHomeContainer = (props) => {
       <div>
         <Title render={titleHandler} />
         <div className="masthead">
-          <h2><FormattedMessage {...messages.topicsToolName} /></h2>
-          <p><FormattedMessage {...messages.topicsToolDescription} /></p>
-          <h5><FormattedMessage {...messages.readGuide} /></h5>
+          <Grid>
+            <Row>
+              <Col lg={11}>
+                <h2><FormattedMessage {...messages.topicsToolName} /></h2>
+                <p><FormattedMessage {...messages.topicsToolDescription} /></p>
+                <h5><FormattedMessage {...messages.readGuide} /></h5>
+              </Col>
+            </Row>
+          </Grid>
         </div>
         <div className="controlbar">
           <div className="main">

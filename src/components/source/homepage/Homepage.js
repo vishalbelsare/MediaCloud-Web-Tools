@@ -45,9 +45,15 @@ const Homepage = (props) => {
   return (
     <div>
       <div className="masthead">
-        <h2><FormattedMessage {...messages.sourcesToolName} /></h2>
-        <p><FormattedMessage {...messages.sourcesToolDescription} /></p>
-        <h5><FormattedMessage {...messages.readGuide} /></h5>
+        <Grid>
+          <Row>
+            <Col lg={11}>
+              <h2><FormattedMessage {...messages.sourcesToolName} /></h2>
+              <p><FormattedMessage {...messages.sourcesToolDescription} /></p>
+              <h5><FormattedMessage {...messages.readGuide} /></h5>
+            </Col>
+          </Row>
+        </Grid>
       </div>
       <Grid>
         <Row>

@@ -21,13 +21,13 @@ const SearchForm = (props) => {
   return (
     <form className="app-form search-form" name="searchForm" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Row>
-        <Col md={4} />
+        <Col md={2} />
         <Col md={8}>
           <h2><FormattedMessage {...localMessages.search} /></h2>
         </Col>
       </Row>
       <Row>
-        <Col md={3} />
+        <Col md={2} />
         <Col md={6}>
           <Field
             name="keyword"
@@ -40,7 +40,7 @@ const SearchForm = (props) => {
         <Col md={2}>
           <SearchButton onClick={handleSubmit(onSearch.bind(this))} />
         </Col>
-        <Col md={1} />
+        <Col md={2} />
       </Row>
     </form>
   );

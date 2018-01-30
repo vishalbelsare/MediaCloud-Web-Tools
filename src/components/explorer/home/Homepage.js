@@ -50,15 +50,19 @@ const Homepage = (props) => {
     <div className="homepage">
       <div className="masthead">
         <Grid>
-          <h2><FormattedMessage {...messages.explorerToolName} /></h2>
-          <p><FormattedMessage {...messages.explorerToolDescription} /></p>
-          <h5><FormattedMessage {...messages.readGuide} /></h5>
+          <Row>
+            <Col lg={11}>
+              <h2><FormattedMessage {...messages.explorerToolName} /></h2>
+              <p><FormattedMessage {...messages.explorerToolDescription} /></p>
+              <h5><FormattedMessage {...messages.readGuide} /></h5>
+            </Col>
+          </Row>
         </Grid>
       </div>
       <div className="search-section">
         <Grid>
           <Row>
-            <Col lg={10}>
+            <Col lg={12}>
               <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
             </Col>
           </Row>
