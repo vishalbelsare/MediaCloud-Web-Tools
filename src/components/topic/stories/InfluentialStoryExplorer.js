@@ -19,9 +19,6 @@ const localMessages = {
   facebookChartTitle: { id: 'topic.influentialStoryExplorer.facebookChart.title', defaultMessage: 'Facebook Shares' },
   facebookChartY: { id: 'topic.influentialStoryExplorer.facebookChart.y', defaultMessage: 'stories' },
   facebookChartX: { id: 'topic.influentialStoryExplorer.facebookChart.x', defaultMessage: 'shares' },
-  bitlyChartTitle: { id: 'topic.influentialStoryExplorer.bitlyChart.title', defaultMessage: 'Bit.ly Clicks' },
-  bitlyChartY: { id: 'topic.influentialStoryExplorer.bitlyChart.y', defaultMessage: 'stories' },
-  bitlyChartX: { id: 'topic.influentialStoryExplorer.bitlyChart.x', defaultMessage: 'clicks' },
   inlinkChartTitle: { id: 'topic.influentialStoryExplorer.inlinkChart.title', defaultMessage: 'Media Inlinks' },
   inlinkChartY: { id: 'topic.influentialStoryExplorer.inlinkChart.y', defaultMessage: 'stories' },
   inlinkChartX: { id: 'topic.influentialStoryExplorer.inlinkChart.x', defaultMessage: 'media inlinks' },
@@ -29,7 +26,6 @@ const localMessages = {
 };
 
 const FACEBOOK_BIN_COUNT = 15;
-const BITLY_BIN_COUNT = 15;
 const INLINK_BIN_COUNT = 15;
 
 class InfluentialStoryExplorer extends React.Component {
@@ -61,12 +57,6 @@ class InfluentialStoryExplorer extends React.Component {
   resetFacebookChart = (event) => {
     event.preventDefault();
     this.state.charts.facebookShareChart.filterAll();
-    dc.redrawAll();
-  }
-
-  resetBitlyChart = (event) => {
-    event.preventDefault();
-    this.state.charts.bitlyClickChart.filterAll();
     dc.redrawAll();
   }
 
@@ -104,7 +94,6 @@ class InfluentialStoryExplorer extends React.Component {
     const languageChart = dc.pieChart('#language-chart');
     const TopicStoryTable = dc.dataTable('#story-table');
     const facebookShareChart = dc.barChart('#facebook-share-chart');
-    const bitlyClickChart = dc.barChart('#bitly-click-chart');
     const inlinkChart = dc.barChart('#inlink-chart');
     // load the data up
     d3.csv(this.csvFileUrl(), (data) => {
@@ -112,8 +101,6 @@ class InfluentialStoryExplorer extends React.Component {
       // set up some binning
       const maxFacebookShares = d3.max(data.map(d => d.facebook_share_count));
       const facebookBinSize = maxFacebookShares / FACEBOOK_BIN_COUNT;
-      const maxBitlyClicks = d3.max(data.map(d => d.bitly_click_count));
-      const bitlyBinSize = maxBitlyClicks / BITLY_BIN_COUNT;
       const maxInlinks = d3.max(data.map(d => d.media_inlink_count));
       const inlinkBinSize = d3.max([1, (maxInlinks / INLINK_BIN_COUNT)]);  // don't do < 1 for bin size
       // clean up the data
@@ -121,7 +108,6 @@ class InfluentialStoryExplorer extends React.Component {
         const d = data[i];
         d.publishDate = (d.publish_date === STORY_PUB_DATE_UNDATEABLE) ? null : storyPubDateToMoment(d.publish_date).toDate();
         d.publishMonth = (d.publish_date === STORY_PUB_DATE_UNDATEABLE) ? null : d.publishDate.getMonth(); // pre-calculate month for better performance
-        d.bitly_click_count = +d.bitly_click_count; // coerce to number
         d.facebook_share_count = +d.facebook_share_count;
         d.inlink_count = +d.inlink_count;
         d.media_id = +d.media_id;
@@ -140,8 +126,6 @@ class InfluentialStoryExplorer extends React.Component {
       const languageGroup = languageDimension.group();
       const facebookDimension = ndx.dimension(d => d.facebook_share_count);
       const facebookGroup = facebookDimension.group(d => Math.floor(d / facebookBinSize) * facebookBinSize);
-      const bitlyDimension = ndx.dimension(d => d.bitly_click_count);
-      const bitlyGroup = bitlyDimension.group(d => Math.floor(d / bitlyBinSize) * bitlyBinSize);
       const inlinkDimension = ndx.dimension(d => d.media_inlink_count);
       const inlinkGroup = inlinkDimension.group(d => Math.floor(d / inlinkBinSize) * inlinkBinSize);
       // histogram of stories
@@ -173,17 +157,6 @@ class InfluentialStoryExplorer extends React.Component {
         .xUnits(() => FACEBOOK_BIN_COUNT)
         .xAxisLabel(formatMessage(localMessages.facebookChartX))
         .yAxisLabel(formatMessage(localMessages.facebookChartY))
-        .renderHorizontalGridLines(true);
-      // bit.ly click histogram
-      bitlyClickChart
-        .width(380).height(200)
-        .group(bitlyGroup)
-        .dimension(bitlyDimension)
-        .gap(1)
-        .x(d3.scaleLinear().domain([0, maxBitlyClicks]))
-        .xUnits(() => BITLY_BIN_COUNT)
-        .yAxisLabel(formatMessage(localMessages.bitlyChartY))
-        .xAxisLabel(formatMessage(localMessages.bitlyChartX))
         .renderHorizontalGridLines(true);
       // media inlink histogram
       inlinkChart
@@ -220,7 +193,6 @@ class InfluentialStoryExplorer extends React.Component {
           d => `<a href=${d.url} target="_blank">${d.title}</a>`,
           d => d.media_inlink_count,
           d => d.outlink_count,
-          d => d.bitly_click_count,
           d => d.facebook_share_count,
         ])
         .sortBy(d => d.media_inlink_count)  // TODO: make this selectable
@@ -228,7 +200,6 @@ class InfluentialStoryExplorer extends React.Component {
       this.setState({
         charts: {
           languageChart,
-          bitlyClickChart,
           facebookShareChart,
           inlinkChart,
           storiesOverTimeChart,
@@ -284,14 +255,6 @@ class InfluentialStoryExplorer extends React.Component {
                 </div>
               </Col>
               <Col lg={4}>
-                <div id="bitly-click-chart">
-                  <h3>
-                    <FormattedMessage {...localMessages.bitlyChartTitle} />
-                    <small><a className="reset" onClick={this.resetBitlyChart} style={{ display: 'none' }} tabIndex={0}><FormattedMessage {...messages.reset} /></a></small>
-                  </h3>
-                </div>
-              </Col>
-              <Col lg={4}>
                 <div id="inlink-chart">
                   <h3>
                     <FormattedMessage {...localMessages.inlinkChartTitle} />
@@ -321,7 +284,6 @@ class InfluentialStoryExplorer extends React.Component {
                       <th><FormattedMessage {...messages.storyTitle} /></th>
                       <th><FormattedMessage {...messages.mediaInlinks} /></th>
                       <th><FormattedMessage {...messages.outlinks} /></th>
-                      <th><FormattedMessage {...messages.bitlyClicks} /></th>
                       <th><FormattedMessage {...messages.facebookShares} /></th>
                     </tr>
                   </thead>

@@ -76,8 +76,6 @@ const messages = {
   mediaInlinks: { id: 'common.mediaInlinks', defaultMessage: 'Media Inlinks' },
   outlinks: { id: 'common.outlinks', defaultMessage: 'Outlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
-  bitlyClicks: { id: 'common.bitlyClicks', defaultMessage: 'Bit.ly Clicks' },
-  sortByBitlyClicks: { id: 'common.sortByBitlyClicks', defaultMessage: 'sort by Bit.ly clicks' },
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },

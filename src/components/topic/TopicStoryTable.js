@@ -69,7 +69,6 @@ class TopicStoryTable extends React.Component {
               <th><FormattedMessage {...messages.storyDate} /></th>
               <th className="numeric">{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
               <th className="numeric"><FormattedMessage {...messages.outlinks} /></th>
-              <th className="numeric">{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
               <th className="numeric">{this.sortableHeader('facebook', messages.facebookShares)}</th>
               <th>{}</th>
               <th><FormattedMessage {...messages.focusHeader} /></th>
@@ -125,7 +124,6 @@ class TopicStoryTable extends React.Component {
                   <td><span className={`story-date ${dateStyle}`}>{dateToShow}</span></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.media_inlink_count} /></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.outlink_count} /></td>
-                  <td className="numeric"><SafelyFormattedNumber value={story.bitly_click_count} /></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.facebook_share_count} /></td>
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
