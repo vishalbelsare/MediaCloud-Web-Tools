@@ -131,6 +131,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'foci_id': foci_id,
         'q': q,
         'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE,
+        'num_words': 500
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)

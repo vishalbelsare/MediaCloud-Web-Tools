@@ -28,7 +28,7 @@ function id(state = null, action) {
 function needsNewSnapshot(state = false, action) {
   switch (action.type) {
     case SET_TOPIC_NEEDS_NEW_SNAPSHOT:
-      return action.payload ? action.payload : {};
+      return action.payload;
     default:
       return state;
   }
@@ -66,7 +66,7 @@ const selected = combineReducers({
 
 const rootReducer = (state, action) => {
   let modifiedState = state;
-  if (action.type === SELECT_TOPIC) {
+  if ((action.type === SELECT_TOPIC) && (state.id !== action.payload)) {
     // when the switch topics re-initialize the whole state tree, to make sure
     // we don't get any weird artifacts from the previuos topic
     // @see: http://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store

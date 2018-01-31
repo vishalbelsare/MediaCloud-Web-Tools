@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
+import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import messages from '../../../resources/messages';
 import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
@@ -37,16 +38,16 @@ class EditTopicContainer extends React.Component {
     this.setState({ editConfirmationOpen: false });
   };
   handleConfirmSave = () => {
-    const { formData, topicInfo, reallyHandleSave } = this.props;
+    const { formData, topicInfo, handleSave } = this.props;
     this.setState({ editConfirmationOpen: false });
-    reallyHandleSave(formData.values, topicInfo);
+    handleSave(formData.values, topicInfo);
   };
   handleRequestSave = (values) => {
-    const { topicInfo, reallyHandleSave } = this.props;
+    const { topicInfo, handleSave } = this.props;
     if (this.riskModifiedTopicSpidering(values)) {
       this.setState({ editConfirmationOpen: true });
     } else {
-      reallyHandleSave(values, topicInfo);
+      handleSave(values, topicInfo);
     }
   };
   riskModifiedTopicSpidering = (values) => {
@@ -152,6 +153,7 @@ EditTopicContainer.propTypes = {
   topicInfo: PropTypes.object,
   formData: PropTypes.object,
   // from dispatch/merge
+  handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
 };
 
@@ -166,7 +168,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  reallyHandleSave: (values, topicInfo) => {
+  reallyHandleSave: (values, topicInfo, filters) => {
     const infoToSave = { ...values };   // clone it so we can edit as needed
     infoToSave.is_public = infoToSave.is_public ? 1 : 0;
     infoToSave.is_logogram = infoToSave.is_logogram ? 1 : 0;
@@ -185,10 +187,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           // if the dates changed tell them it needs a new snapshot
           if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
-            dispatch(setTopicNeedsNewSnapshot());
+            dispatch(setTopicNeedsNewSnapshot(true));
           }
+          const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`, filters);
+          dispatch(push(topicSummaryUrl));
           // update topic info and redirect back to topic summary
-          dispatch(push(`/topics/${results.topics_id}/summary`));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
@@ -197,10 +200,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    handleSave: (values, topicInfo) => dispatchProps.reallyHandleSave(values, topicInfo, stateProps.filters),
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       EditTopicContainer
     )
   );
