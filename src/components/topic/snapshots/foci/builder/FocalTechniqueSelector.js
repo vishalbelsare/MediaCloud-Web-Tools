@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import KeywordSearchIcon from '../../../../common/icons/KeywordSearchIcon';
 import FocalTechniqueDescription from './FocalTechniqueDescription';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME }
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME, FOCAL_TECHNIQUE_MEDIA_TYPE }
   from '../../../../../lib/focalTechniques';
 // import { assetUrl } from '../../../../../lib/assetUtil';
 
@@ -19,7 +19,8 @@ const localMessages = {
   retweetName: { id: 'focus.technique.retweet.name', defaultMessage: 'US Audience Partisanship' },
   retweetDescription: { id: 'focus.technique.retweet.description',
     defaultMessage: 'When you want to slice your topic by U.S. audience partisanship, as determined by each media source\'s ratio of twitter shares by liberal vs. conservative tweeters.' },
-
+  mediaTypeName: { id: 'focus.technique.mediaType.name', defaultMessage: 'Media Type' },
+  mediaTypeDescription: { id: 'focus.technique.mediaType.description', defaultMessage: 'When you want to compare coverage of different media types within your Topic.' },
   topCountriesName: { id: 'focus.technique.topCountries.name', defaultMessage: 'Top Countries' },
   topCountriesDescription: { id: 'focus.technique.topCountries.description', defaultMessage: 'When you want to compare coverage of different countries within your Topic.' },
   themeName: { id: 'focus.technique.theme.name', defaultMessage: 'Top Themes' },
@@ -84,6 +85,16 @@ class FocalTechniqueSelector extends React.Component {
               icon={KeywordSearchIcon}
               nameMsg={localMessages.themeName}
               descriptionMsg={localMessages.themeDescription}
+            />
+          </Col>
+          <Col lg={2} md={2} sm={3} xs={6}>
+            <FocalTechniqueDescription
+              onClick={() => this.handleSelection(FOCAL_TECHNIQUE_MEDIA_TYPE)}
+              selected={currentFocalTechnique === FOCAL_TECHNIQUE_MEDIA_TYPE}
+              id="technique-media-type"
+              icon={KeywordSearchIcon}
+              nameMsg={localMessages.mediaTypeName}
+              descriptionMsg={localMessages.mediaTypeDescription}
             />
           </Col>
           {

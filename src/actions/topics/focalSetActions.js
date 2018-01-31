@@ -13,7 +13,8 @@ export const FETCH_CREATE_FOCUS_TOP_COUNTRIES_STORY_COUNTS = 'FETCH_CREATE_FOCUS
 export const FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE = 'FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE';
 export const FETCH_CREATE_FOCUS_NYT_THEME_STORY_COUNTS = 'FETCH_CREATE_FOCUS_NYT_THEME_STORY_COUNTS';
 export const FETCH_CREATE_FOCUS_NYT_THEME_COVERAGE = 'FETCH_CREATE_FOCUS_NYT_THEME_COVERAGE';
-
+export const FETCH_CREATE_FOCUS_MEDIA_TYPE_STORY_COUNTS = 'FETCH_CREATE_FOCUS_MEDIA_TYPE_STORY_COUNTS';
+export const FETCH_CREATE_FOCUS_MEDIA_TYPE_COVERAGE = 'FETCH_CREATE_FOCUS_MEDIA_TYPE_COVERAGE';
 
 // pass in topicId and snapshotId
 export const fetchTopicFocalSetsList = createAsyncAction(FETCH_TOPIC_FOCAL_SETS_LIST, api.topicFocalSetsList);
@@ -35,8 +36,12 @@ export const fetchCreateFocusTopCountriesStoryCounts = createAsyncAction(FETCH_C
 
 export const fetchCreateFocusNytThemeStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_NYT_THEME_STORY_COUNTS, api.topicPreviewNytThemeStoryCounts);
 
+export const fetchCreateFocusMediaTypeStoryCounts = createAsyncAction(FETCH_CREATE_FOCUS_MEDIA_TYPE_STORY_COUNTS, api.topicPreviewMediaTypeStoryCounts);
+
 export const fetchCreateFocusRetweetCoverage = createAsyncAction(FETCH_CREATE_FOCUS_RETWEET_COVERAGE, api.topicPreviewRetweetPartisanshipCoverage);
 
 export const fetchCreateFocusTopCountriesCoverage = createAsyncAction(FETCH_CREATE_FOCUS_TOP_COUNTRIES_COVERAGE, api.topicPreviewTopCountriesCoverage);
 
 export const fetchCreateFocusNytThemeCoverage = createAsyncAction(FETCH_CREATE_FOCUS_NYT_THEME_COVERAGE, api.topicPreviewNytThemeCoverage);
+
+export const fetchCreateFocusMediaTypeCoverage = createAsyncAction(FETCH_CREATE_FOCUS_MEDIA_TYPE_COVERAGE, api.topicPreviewMediaTypeCoverage);
