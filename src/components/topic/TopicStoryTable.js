@@ -58,6 +58,8 @@ class TopicStoryTable extends React.Component {
   render() {
     const { stories, onChangeFocusSelection, topicId, maxTitleLength } = this.props;
     const { formatMessage, formatDate } = this.props.intl;
+    const showTweets = stories[0].simple_tweet_count !== null && stories[0].simple_tweet_count !== undefined;
+    const tweetHeader = showTweets ? <th className="numeric">{this.sortableHeader('twitter', messages.tweetCounts)}</th> : null;
     return (
       <div className="story-table">
         <table>
@@ -70,6 +72,7 @@ class TopicStoryTable extends React.Component {
               <th className="numeric">{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
               <th className="numeric"><FormattedMessage {...messages.outlinks} /></th>
               <th className="numeric">{this.sortableHeader('facebook', messages.facebookShares)}</th>
+              {tweetHeader}
               <th>{}</th>
               <th><FormattedMessage {...messages.focusHeader} /></th>
             </tr>
@@ -78,6 +81,7 @@ class TopicStoryTable extends React.Component {
               let dateToShow = null;  // need to handle undateable stories
               let dateStyle = '';
               const title = maxTitleLength !== undefined ? `${story.title.substr(0, maxTitleLength)}...` : story.title;
+              const tweetInfo = showTweets ? <td className="numeric"><SafelyFormattedNumber value={story.simple_tweet_count} /></td> : null;
               if (story.publish_date === STORY_PUB_DATE_UNDATEABLE) {
                 dateToShow = formatMessage(localMessages.undateable);
                 dateStyle = 'story-date-undateable';
@@ -125,6 +129,7 @@ class TopicStoryTable extends React.Component {
                   <td className="numeric"><SafelyFormattedNumber value={story.media_inlink_count} /></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.outlink_count} /></td>
                   <td className="numeric"><SafelyFormattedNumber value={story.facebook_share_count} /></td>
+                  {tweetInfo}
                   <td><ReadItNowButton onClick={this.handleReadItClick.bind(this, story)} /></td>
                   <td>{listOfFoci}</td>
                 </tr>
@@ -141,6 +146,7 @@ class TopicStoryTable extends React.Component {
 
 TopicStoryTable.propTypes = {
   stories: PropTypes.array.isRequired,
+  showTweets: PropTypes.bool,
   intl: PropTypes.object.isRequired,
   topicId: PropTypes.number, // not required as this table is now also used by query routine
   onChangeSort: PropTypes.func,

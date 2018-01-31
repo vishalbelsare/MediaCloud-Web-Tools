@@ -77,6 +77,7 @@ const messages = {
   outlinks: { id: 'common.outlinks', defaultMessage: 'Outlinks' },
   clicks: { id: 'common.clicks', defaultMessage: 'Clicks' },
   facebookShares: { id: 'common.facebookShares', defaultMessage: 'Facebook Shares' },
+  tweetCounts: { id: 'common.tweetCounts', defaultMessage: 'Tweet Counts' },
   publishDate: { id: 'common.publishDate', defaultMessage: 'Publish Data' },
   public: { id: 'common.public', defaultMessage: 'Public' },
   private: { id: 'common.private', defaultMessage: 'Private' },
