@@ -131,7 +131,7 @@ def media_with_tag(user_mc_key, tags_id, cached=False):
     while more_media:
         logger.debug("last_media_id %s", str(max_media_id))
         if cached:
-            media = _cached_media_with_tag_page(tags_id, max_media_id)
+            media = cached_media_with_tag_page(tags_id, max_media_id)
         else:
             media = _media_with_tag_page(tags_id, max_media_id)
         all_media = all_media + media
@@ -142,7 +142,7 @@ def media_with_tag(user_mc_key, tags_id, cached=False):
 
 
 @cache
-def _cached_media_with_tag_page(tags_id, max_media_id):
+def cached_media_with_tag_page(tags_id, max_media_id):
     '''
     We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,
     and some of the collections have TONS of sources
