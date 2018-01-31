@@ -43,7 +43,7 @@ const EditMediaTypeContainer = (props) => {
               id={TAG_SET_MEDIA_TYPE}
               showDescription
               name="mediaType"
-              form="advancedQueryForm"
+              form="snapshotFocus"
               floatingLabelText={formatMessage(localMessages.pMediaType)}
             />
           </Col>
