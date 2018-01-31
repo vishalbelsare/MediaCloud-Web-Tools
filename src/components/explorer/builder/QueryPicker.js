@@ -4,17 +4,19 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
 import AppButton from '../../common/AppButton';
 import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
+import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -22,6 +24,7 @@ const localMessages = {
   addQuery: { id: 'explorer.querypicker.addQuery', defaultMessage: 'Add query' },
   querySearch: { id: 'explorer.queryBuilder.advanced', defaultMessage: 'Search' },
   searchHint: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Search' },
+  deleteFailed: { id: 'explorer.queryBuilder.hint', defaultMessage: 'Sorry, deleting your search failed for some reason.' },
 };
 
 const formSelector = formValueSelector('queryForm');
@@ -155,9 +158,24 @@ class QueryPicker extends React.Component {
     }
     onSearch();
   }
+  saveThisSearch = (queryName) => {
+    const { queries, sendAndSaveUserSearch } = this.props; // formQuery same as selected
+    // filter out removed ids...
+    const searchstr = generateQueryParamString(queries.map(q => ({
+      label: q.label,
+      q: q.q,
+      color: q.color,
+      startDate: q.startDate,
+      endDate: q.endDate,
+      sources: q.sources,
+      collections: q.collections,
+    })));
+    const userSearch = Object.assign({}, queryName, { timestamp: Date.now(), queryParams: searchstr });
+    sendAndSaveUserSearch(userSearch);
+  }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, loadUserSearch } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -190,7 +208,7 @@ class QueryPicker extends React.Component {
       if (isLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory10[idx % 10];
         const dateObj = getPastTwoWeeksDateRange();
-        const newIndex = queries.length; // NOTE: all queries, including 'deleted' ones
+        const newIndex = queries.length; // all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
         const defaultQueryField = isLoggedIn ? '*' : '';
@@ -255,6 +273,8 @@ class QueryPicker extends React.Component {
           <QueryForm
             initialValues={selected}
             selected={selected}
+            searchNickname={queries.map(q => q.label).join(', ')}
+            savedSearches={savedSearches}
             form="queryForm"
             enableReinitialize
             destroyOnUnmount={false}
@@ -264,8 +284,10 @@ class QueryPicker extends React.Component {
             onMediaChange={this.handleMediaChange}
             onMediaDelete={this.handleMediaDelete}
             onDateChange={(dateObject, newValue) => this.updateQueryProperty(selected, dateObject.currentTarget.name, newValue)}
-            handleLoadSearch={loadUserSearch}
-            handleSaveSearch={q => saveUserSearch(q)}
+            handleLoadSearches={handleLoadUserSearches}
+            handleLoadSelectedSearch={handleLoadSelectedSearch}
+            handleSaveSearch={l => this.saveThisSearch(l)}
+            handleDeleteSearch={l => handleDeleteUserSearch(l)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
           />
@@ -299,8 +321,11 @@ QueryPicker.propTypes = {
   updateCurrentQuery: PropTypes.func.isRequired,
   updateCurrentQueryThenReselect: PropTypes.func.isRequired,
   addAQuery: PropTypes.func.isRequired,
-  loadUserSearch: PropTypes.func,
-  saveUserSearch: PropTypes.func.isRequired,
+  handleLoadUserSearches: PropTypes.func.isRequired,
+  handleLoadSelectedSearch: PropTypes.func.isRequired,
+  savedSearches: PropTypes.array.isRequired,
+  sendAndSaveUserSearch: PropTypes.func.isRequired,
+  handleDeleteUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
   // from parent
@@ -314,10 +339,11 @@ const mapStateToProps = state => ({
   queries: state.explorer.queries.queries ? state.explorer.queries.queries : null,
   isLoggedIn: state.user.isLoggedIn,
   formQuery: formSelector(state, 'q', 'color', 'media', 'startDate', 'endDate'),
+  savedSearches: state.explorer.savedSearches.list,
 });
 
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   handleQuerySelected: (query, index) => {
     const queryWithIndex = Object.assign({}, query, { index }); // if this doesn't exist...
     dispatch(selectQuery(queryWithIndex));
@@ -342,19 +368,37 @@ const mapDispatchToProps = dispatch => ({
       dispatch(selectQuery(query));
     }
   },
-  loadUserSearch: (query) => {
-    if (query) { // TODO - pop up a dialog and fetch the data
-      dispatch(loadUserSearches());
+  handleLoadUserSearches: () => {
+    dispatch(loadUserSearches());
+  },
+  handleLoadSelectedSearch: (selectedSearch) => {
+    if (selectedSearch && selectedSearch.queryParams) {
+      dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
     }
   },
-  saveUserSearch: (query) => {
-    if (query) { // TODO - save as JSON, and save full URL
-      dispatch(saveUserSearch({ label: query.label, query_string: query.q }));
+  handleDeleteUserSearch: (selectedSearch) => {
+    if (selectedSearch && selectedSearch.queryName) {
+      dispatch(deleteUserSearch(selectedSearch))
+      .then((results) => {
+        if (results.success) {
+          dispatch(loadUserSearches());
+        } else {
+          dispatch(updateFeedback({
+            open: true,
+            message: ownProps.intl.formatMessage(localMessages.deleteFailed),
+          }));
+        }
+      });
+    }
+  },
+  sendAndSaveUserSearch: (savedSearch) => {
+    if (savedSearch) {
+      dispatch(saveUserSearch(savedSearch));
     }
   },
   handleDeleteQuery: (query, replacementSelectionQuery) => {
     if (query) {
-      dispatch(markAsDeletedQuery(query)); // will change queries, but not URL, this is the problem
+      dispatch(markAsDeletedQuery(query));
       dispatch(selectQuery(replacementSelectionQuery));
     }
   },

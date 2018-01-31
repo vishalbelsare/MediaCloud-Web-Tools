@@ -11,6 +11,7 @@ import samples from './samples';
 import stories from './stories';
 import storyCount from './storyCount';
 import geo from './geo';
+import savedSearches from './savedSearches';
 
 const rootReducer = combineReducers({
   selected,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   geo,
   topEntitiesPeople,
   topEntitiesOrgs,
+  savedSearches,
 });
 
 export default rootReducer;

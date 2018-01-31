@@ -5,7 +5,7 @@ import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { fetchTopicSummary, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import BackLinkingControlBar from '../BackLinkingControlBar';
@@ -110,8 +110,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(setTopicNeedsNewSnapshot());
           }
           // update topic info and redirect back to topic summary
-          dispatch(fetchTopicSummary(results.topics_id))
-            .then(() => dispatch(push(`/topics/${results.topics_id}/summary`)));
+          dispatch(push(`/topics/${results.topics_id}/summary`));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }
