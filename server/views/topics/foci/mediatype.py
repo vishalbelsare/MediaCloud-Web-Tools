@@ -50,7 +50,7 @@ def get_media_type_by_sentence_field_counts(topics_id, num_countries):
 def media_type_story_counts(topics_id):
     # using sentence field count to approximate story mentions by top country
     num_media_type = int(request.args['numMediaType'])
-    return jsonify({'story_counts': get_top_countries_by_sentence_field_counts(topics_id, num_media_type)})
+    return jsonify({'story_counts': get_media_type_by_sentence_field_counts(topics_id, num_media_type)})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/preview/coverage', methods=['GET'])
@@ -59,7 +59,7 @@ def media_type_story_counts(topics_id):
 @api_error_handler
 def media_type_coverage(topics_id):
     num_media_type = int(request.args['numMediaType'])
-    tag_media_type_counts = get_top_countries_by_sentence_field_counts(topics_id, num_media_type)
+    tag_media_type_counts = get_media_type_by_sentence_field_counts(topics_id, num_media_type)
 
     # get the count for all stories tagged with these top country tags
     tag_list = [i['tags_id'] for i in tag_media_type_counts]
@@ -74,7 +74,7 @@ def media_type_coverage(topics_id):
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/create', methods=['POST'])
 @form_fields_required('focalSetName', 'focalSetDescription', 'data[]')
 @flask_login.login_required
-def create_top_countries_focal_set(topics_id):
+def create_media_type_focal_set(topics_id):
     user_mc = user_mediacloud_client()
     # grab the focalSetName and focalSetDescription and then make one
     focal_set_name = request.form['focalSetName']

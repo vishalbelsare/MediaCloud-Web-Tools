@@ -39,16 +39,11 @@ const EditMediaTypeContainer = (props) => {
         <Row>
           <Col md={12}>
             <Field
-              name="numberSelected"
+              name="typeSelected"
               component={renderSelectField}
               floatingLabelText={formatMessage(localMessages.numberLabel)}
               value={5}
             >
-              <MenuItem value={5} primaryText={formatMessage(messages.top5)} />
-              <MenuItem value={10} primaryText={formatMessage(messages.top10)} />
-              <MenuItem value={15} primaryText={formatMessage(messages.top15)} />
-              <MenuItem value={20} primaryText={formatMessage(messages.top20)} />
-              <MenuItem value={25} primaryText={formatMessage(messages.top25)} />
             </Field>
           </Col>
         </Row>
