@@ -304,12 +304,12 @@ export function topicPreviewNytThemeCoverage(topicId, numThemes) {
 }
 
 export function topicPreviewMediaTypeStoryCounts(topicId, numThemes) {
-  const acceptedParams = acceptParams(numThemes, ['numMediaType']);
+  const acceptedParams = acceptParams(numThemes, ['mediaTypeSelected']);
   return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/story-counts`, acceptedParams);
 }
 
 export function topicPreviewMediaTypeCoverage(topicId, numThemes) {
-  const acceptedParams = acceptParams(numThemes, ['numMediaType']);
+  const acceptedParams = acceptParams(numThemes, ['mediaTypeSelected']);
   return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/coverage`, acceptedParams);
 }
 

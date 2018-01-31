@@ -29,6 +29,7 @@ class EditFocusContainer extends React.Component {
       focalTechnique: focusDefinition.focalTechnique,
       keywords: focusDefinition.query,
       numberSelected: DEFAULT_SELECTED_NUMBER,
+      mediaType: 0,
     };
   }
 

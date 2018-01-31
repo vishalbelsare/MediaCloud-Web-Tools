@@ -5,8 +5,8 @@ import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../lib/focalTechniques';
-import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet, createTopCountriesFocalSet, createNytThemeFocalSet } from '../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME, FOCAL_TECHNIQUE_MEDIA_TYPE } from '../../../../lib/focalTechniques';
+import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet, createTopCountriesFocalSet, createNytThemeFocalSet, createMediaTypeFocalSet } from '../../../../actions/topicActions';
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
@@ -20,12 +20,13 @@ const localMessages = {
   duplicateName: { id: 'focus.create.invalid', defaultMessage: 'Duplicate name. Choose a unique focal set name.' },
   topCountriesFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics by top countries.' },
   nytFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics with NYT Themes tags.' },
+  mediaTypeFocusSaved: { id: 'focus.create.mediaType.saved', defaultMessage: 'We created a new subtopics with Media Type tags.' },
 };
 
 const CreateFocusContainer = (props) => {
   const { topicId, location, handleDone } = props;
   const { focalSetDefId, focalTechnique } = props.location.query;
-  const initialValues = { numberSelected: DEFAULT_SELECTED_NUMBER };
+  const initialValues = { numberSelected: DEFAULT_SELECTED_NUMBER, mediaType: 0 };
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
   } else {
@@ -111,6 +112,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         return dispatch(createNytThemeFocalSet(topicId, saveData))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.nytFocusSaved);
+            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+            dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
+            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+          });
+      case FOCAL_TECHNIQUE_MEDIA_TYPE: // TODO, not yet tested
+        saveData = { ...formValues, data: queryData.mediaType.map(c => ({ tags_id: c.tags_id, label: c.label })) };
+        return dispatch(createMediaTypeFocalSet(topicId, saveData))
+          .then(() => {
+            const focusSavedMessage = ownProps.intl.formatMessage(localMessages.mediaTypeFocusSaved);
             dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
             dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
             dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page

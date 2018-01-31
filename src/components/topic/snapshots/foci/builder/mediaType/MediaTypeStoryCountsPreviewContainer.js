@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../../../common/AsyncContainer';
-import { fetchCreateFocusTopCountriesStoryCounts } from '../../../../../../actions/topicActions';
+import { fetchCreateFocusMediaTypeStoryCounts } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import PackedBubbleChart from '../../../../../vis/PackedBubbleChart';
 import mapD3Top10Colors from '../../../../../../lib/colorUtil';
@@ -11,15 +11,15 @@ import mapD3Top10Colors from '../../../../../../lib/colorUtil';
 const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewTopCountriesStoriesCounts';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topCountries.storyCount.title', defaultMessage: 'Stories By Top Countries' },
-  intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Stories about however many most-talked-about-countries' },
+  title: { id: 'topic.snapshot.topCountries.storyCount.title', defaultMessage: 'Stories By Media Type' },
+  intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Stories about most-talked-about media types' },
 };
 
 class MediaTypeStoryCountsPreviewContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { topicId, numCountries, fetchData } = this.props;
-    if (nextProps.numCountries !== numCountries) {
-      fetchData(topicId, nextProps.numCountries);
+    const { topicId, mediaTypeSelected, fetchData } = this.props;
+    if (nextProps.mediaTypeSelected !== mediaTypeSelected) {
+      fetchData(topicId, nextProps.mediaTypeSelected);
     }
   }
   render() {
@@ -56,7 +56,7 @@ MediaTypeStoryCountsPreviewContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
-  numCountries: PropTypes.number.isRequired,
+  mediaTypeSelected: PropTypes.number.isRequired,
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   asyncFetch: PropTypes.func.isRequired,
@@ -71,15 +71,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (topicId, numCountries) => {
-    dispatch(fetchCreateFocusTopCountriesStoryCounts(topicId, { numCountries }));
+  fetchData: (topicId, mediaTypeSelected) => {
+    dispatch(fetchCreateFocusMediaTypeStoryCounts(topicId, { mediaTypeSelected }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
+      dispatchProps.fetchData(ownProps.topicId, ownProps.mediaTypeSelected);
     },
 
   });

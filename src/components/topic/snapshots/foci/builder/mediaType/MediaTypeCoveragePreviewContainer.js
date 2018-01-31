@@ -3,23 +3,23 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../../../common/AsyncContainer';
-import { fetchCreateFocusTopCountriesCoverage } from '../../../../../../actions/topicActions';
+import { fetchCreateFocusMediaTypeCoverage } from '../../../../../../actions/topicActions';
 import DataCard from '../../../../../common/DataCard';
 import PieChart from '../../../../../vis/PieChart';
 import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
-  title: { id: 'topic.snapshot.topStories.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.topStories.coverage.intro', defaultMessage: 'By Top Stories' },
-  included: { id: 'topic.snapshot.keywords.coverage.matching', defaultMessage: 'Stories about these top countries for this topic' },
-  notIncluded: { id: 'topic.snapshot.keywords.coverage.total', defaultMessage: 'All Stories about this topic' },
+  title: { id: 'topic.snapshot.mediaType.coverage.title', defaultMessage: 'Story Coverage' },
+  intro: { id: 'topic.snapshot.mediaType.coverage.intro', defaultMessage: 'By Media Type' },
+  included: { id: 'topic.snapshot.mediaType.coverage.matching', defaultMessage: 'Stories about these media types for this topic' },
+  notIncluded: { id: 'topic.snapshot.mediaType.coverage.total', defaultMessage: 'All Stories about this topic' },
 };
 
 class MediaTypeCoveragePreviewContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
-    const { topicId, numCountries, fetchData } = this.props;
-    if (nextProps.numCountries !== numCountries) {
-      fetchData(topicId, nextProps.numCountries);
+    const { topicId, mediaTypeSelected, fetchData } = this.props;
+    if (nextProps.mediaTypeSelected !== mediaTypeSelected) {
+      fetchData(topicId, nextProps.mediaTypeSelected);
     }
   }
   render() {
@@ -56,7 +56,7 @@ MediaTypeCoveragePreviewContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
-  numCountries: PropTypes.number.isRequired,
+  mediaTypeSelected: PropTypes.number.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   fetchData: PropTypes.func.isRequired,
@@ -73,15 +73,15 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchData: (topicId, numCountries) => {
-    dispatch(fetchCreateFocusTopCountriesCoverage(topicId, { numCountries }));
+  fetchData: (topicId, mediaTypeSelected) => {
+    dispatch(fetchCreateFocusMediaTypeCoverage(topicId, { mediaTypeSelected }));
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     asyncFetch: () => {
-      dispatchProps.fetchData(ownProps.topicId, ownProps.numCountries);
+      dispatchProps.fetchData(ownProps.topicId, ownProps.mediaTypeSelected);
     },
 
   });

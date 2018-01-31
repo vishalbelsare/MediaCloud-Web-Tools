@@ -21,6 +21,10 @@ export function fetchMediaPickerSources(params) {
   acceptedParams['tags[]'] = acceptedParams.tags;
   return createApiPromise('/api/mediapicker/sources/search', acceptedParams);
 }
+
+export function metadataValuesForMediaType(id) {
+  return createApiPromise(`api/metadata/${id}/values`);
+}
 /*
 export function fetchMediaPickerSourcesByMetadata(params) {
   const acceptedParams = acceptParams(params, ['searchString', 'tags']);

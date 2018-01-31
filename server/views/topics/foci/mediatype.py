@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_SAMPLE_SIZE = 5000
 
-def get_media_type_by_sentence_field_counts(topics_id, num_countries):
+def get_media_type_by_sentence_field_counts(topics_id, num_media_type):
     tag_media_type_counts= []
 
     # get the total stories for a topic
@@ -29,8 +29,6 @@ def get_media_type_by_sentence_field_counts(topics_id, num_countries):
     
     # get the total stories for a topic
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
-
-    top_media_type_tags = top_media_type_tags[:num_themes]
     # for each country, set up the requisite info for UI
     for tag in top_media_type_tags:
         tag_media_type_counts.append({
@@ -45,20 +43,20 @@ def get_media_type_by_sentence_field_counts(topics_id, num_countries):
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/preview/story-counts', methods=['GET'])
 @flask_login.login_required
-@arguments_required('numCountries')
+@arguments_required('mediaTypeSelected')
 @api_error_handler
 def media_type_story_counts(topics_id):
     # using sentence field count to approximate story mentions by top country
-    num_media_type = int(request.args['numMediaType'])
+    num_media_type = int(request.args['mediaTypeSelected'])
     return jsonify({'story_counts': get_media_type_by_sentence_field_counts(topics_id, num_media_type)})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/preview/coverage', methods=['GET'])
 @flask_login.login_required
-@arguments_required('numCountries')
+@arguments_required('mediaTypeSelected')
 @api_error_handler
 def media_type_coverage(topics_id):
-    num_media_type = int(request.args['numMediaType'])
+    num_media_type = int(request.args['mediaTypeSelected'])
     tag_media_type_counts = get_media_type_by_sentence_field_counts(topics_id, num_media_type)
 
     # get the count for all stories tagged with these top country tags
