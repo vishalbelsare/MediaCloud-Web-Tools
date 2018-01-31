@@ -1,7 +1,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
-from server.views.media_search import media_search, _matching_collections_by_set
+from server.views.media_search import media_search, matching_collections_by_set
 
 from server import app
 from server.util.request import api_error_handler
@@ -36,7 +36,7 @@ def api_media_search(search_str):
 @api_error_handler
 def collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
-    results = _matching_collections_by_set(search_str, public_only, VALID_COLLECTION_TAG_SETS_IDS)
+    results = matching_collections_by_set(search_str, public_only, VALID_COLLECTION_TAG_SETS_IDS)
     trim_count = MAX_COLLECTIONS if len(results) > 20 else len(results)
     trimmed = results[:trim_count]
     #flat_list = [{'tags_id': t['tags_id'], 'tag_set_label':t['tag_set_label'],'label':t['label'], 'tag':t['tag']} for t in trimmed]

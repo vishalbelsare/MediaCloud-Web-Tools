@@ -8,8 +8,8 @@ import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
-  pickCountry: { id: 'system.mediaPicker.select.pickCountry', defaultMessage: 'Search By Country' },
-  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search Collections' },
+  pickCountry: { id: 'system.mediaPicker.select.pickCountry', defaultMessage: 'Search Geographic Collections' },
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search All Collections' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
   selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
   pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
@@ -85,7 +85,7 @@ const mapDispatchToProps = dispatch => ({
   handleUnselectMedia: (selectedMedia) => {
     if (selectedMedia) {
       const unselectecMedia = Object.assign({}, selectedMedia, { selected: false });
-      dispatch(selectMedia(unselectecMedia)); // disable MediaPickerPreviewList button too
+      dispatch(selectMedia(unselectecMedia)); // disable button too
     }
   },
 });
