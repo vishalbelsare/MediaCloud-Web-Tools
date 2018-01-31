@@ -37,7 +37,7 @@ class MediaStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId, helpButton, handleFocusSelected } = this.props;
+    const { inlinkedStories, showTweetCounts, topicId, helpButton, handleFocusSelected } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -50,6 +50,7 @@ class MediaStoriesContainer extends React.Component {
         </h2>
         <TopicStoryTable
           stories={inlinkedStories}
+          showTweetCounts={showTweetCounts}
           topicId={topicId}
           onChangeSort={this.onChangeSort}
           onChangeFocusSelection={handleFocusSelected}
@@ -77,6 +78,7 @@ MediaStoriesContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
+  showTweetCounts: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -84,6 +86,7 @@ const mapStateToProps = state => ({
   inlinkedStories: state.topics.selected.mediaSource.stories.stories,
   sort: state.topics.selected.mediaSource.stories.sort,
   filters: state.topics.selected.filters,
+  showTweetCounts: state.topics.selected.info.ch_monitor_id,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
