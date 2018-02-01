@@ -9,6 +9,7 @@ from flask_mail import Mail
 import flask_login
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
+from raven.handlers.logging import SentryHandler
 import mediacloud
 from mediameter.cliff import Cliff
 
@@ -48,7 +49,7 @@ else:
 
 # setup optional sentry logging service
 try:
-    handler = config.get('SENTRY_DSN')
+    handler = SentryHandler(config.get('SENTRY_DSN'))
     handler.setLevel(logging.ERROR)
     setup_logging(handler)
 except ConfigException as e:
