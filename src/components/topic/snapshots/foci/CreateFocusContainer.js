@@ -63,6 +63,7 @@ const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
   topCountries: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
   topThemes: state.topics.selected.focalSets.create.nytThemeStoryCounts.story_counts,
+  mediaType: state.topics.selected.focalSets.create.mediaTypeStoryCounts.story_counts,
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
 });
 

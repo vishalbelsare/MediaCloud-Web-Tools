@@ -15,8 +15,7 @@ const formSelector = formValueSelector('snapshotFocus');
 const localMessages = {
   title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Media type' },
   about: { id: 'focus.create.edit.about',
-    defaultMessage: 'This will create a set of subtopics as filtered by the media type you have selected.' },
-  pMediaType: { id: 'focus.create.edit.select', defaultMessage: 'Select Media Type' },
+    defaultMessage: 'This will create a set of subtopics as filtered by media types.' },
 };
 
 const EditMediaTypeContainer = (props) => {

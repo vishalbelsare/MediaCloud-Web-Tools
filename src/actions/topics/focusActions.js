@@ -36,6 +36,6 @@ export const createRetweetFocalSet = createAsyncAction(CREATE_RETWEET_FOCUS_SET,
 
 export const createTopCountriesFocalSet = createAsyncAction(CREATE_TOP_COUNTRIES_FOCUS_SET, api.createTopCountriesFocalSet);
 
-export const createMediaTypeFocalSet = createAsyncAction(CREATE_MEDIA_TYPE_FOCUS_SET, api.createMediaTYpeFocalSet);
+export const createMediaTypeFocalSet = createAsyncAction(CREATE_MEDIA_TYPE_FOCUS_SET, api.createMediaTypeFocalSet);
 
 export const createNytThemeFocalSet = createAsyncAction(CREATE_NYT_THEME_FOCUS_SET, api.createNytThemeFocalSet);
