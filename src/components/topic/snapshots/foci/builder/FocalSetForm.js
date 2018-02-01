@@ -48,8 +48,8 @@ class FocalSetForm extends React.Component {
         setDescription = formatMessage(localMessages.defaultSetDescriptionNytTheme);
         break;
       case FOCAL_TECHNIQUE_MEDIA_TYPE:
-        setName = formatMessage(localMessages.defaultSetNameNytTheme);
-        setDescription = formatMessage(localMessages.defaultSetDescriptionNytTheme);
+        setName = formatMessage(localMessages.defaultSetNameMediaType);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionMediaType);
         break;
       default:
         setName = formatMessage(localMessages.defaultSetName);

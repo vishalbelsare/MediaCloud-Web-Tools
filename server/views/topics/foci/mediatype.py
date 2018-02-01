@@ -21,18 +21,23 @@ def media_type_story_counts(topics_id):
     media_type_tags = cached_media_tags(TAG_SETS_ID_MEDIA_TYPE)
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
-    # make a count for each tag based on media_od
+    # make a count for each tag based on media_id
     for tag in media_type_tags:
-        tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=tag['media_query'])['count']
+        
+        tag_media_ids = " ".join(tag['media_ids'])
+        media_ids_query_clause = "media_id:({})".format(tag_media_ids)
+        if len(tag['media_ids']) > 0:
+            tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=media_ids_query_clause)['count']
+        else:
+            tagged_story_count = 0
         tag_story_counts.append({
             'label': tag['label'],
             'tags_id': tag['tags_id'],
             'count': tagged_story_count,
             'pct': float(tagged_story_count)/float(total_stories)
         })
-    # order them in the way a person would expect ( left to center to right)
-    ordered_tag_story_counts = list()
-    return jsonify({'story_counts': ordered_tag_story_counts})
+
+    return jsonify({'story_counts': tag_story_counts})
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/preview/coverage', methods=['GET'])

@@ -15,9 +15,9 @@ import { TAG_SET_MEDIA_TYPE } from '../../../../../../lib/tagUtil';
 const formSelector = formValueSelector('snapshotFocus');
 
 const localMessages = {
-  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Top Countries' },
+  title: { id: 'focus.create.edit.title', defaultMessage: 'Step 2: Preview Subtopics by Media type' },
   about: { id: 'focus.create.edit.about',
-    defaultMessage: 'This will create a set of subtopics as filtered by the set of top countries you have selected.' },
+    defaultMessage: 'This will create a set of subtopics as filtered by the media type you have selected.' },
   pMediaType: { id: 'focus.create.edit.select', defaultMessage: 'Select Media Type' },
 };
 
