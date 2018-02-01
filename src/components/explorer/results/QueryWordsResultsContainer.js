@@ -18,6 +18,7 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
   descriptionIntro: { id: 'explorer.topWords.help.title', defaultMessage: '<p>Here are the top words used with each query. Looking at the language used can help you identify how this issue is talked about in the media online.</p>' },
+  menuHeader: { id: 'explorer.topWords.menuHeader', defaultMessage: 'Query: {queryName}' },
 };
 
 const WORD_CLOUD_DOM_ID = 'query-word-cloud-wrapper';
@@ -57,6 +58,7 @@ class QueryWordsResultsContainer extends React.Component {
   }
   render() {
     const { results, queries, handleWordCloudClick } = this.props;
+    const { formatMessage } = this.props.intl;
     const subHeaderContent = (
       <QueryResultsSelector
         options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
@@ -67,7 +69,7 @@ class QueryWordsResultsContainer extends React.Component {
     const downloadUrl = this.getDownloadCsvUrl(selectedQuery);
     return (
       <EditableWordCloudDataCard
-        actionMenuHeaderText={selectedQuery.label}
+        actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
         subHeaderContent={subHeaderContent}
         words={results[this.state.selectedQueryIndex].list}
         onViewModeClick={handleWordCloudClick}
@@ -77,6 +79,7 @@ class QueryWordsResultsContainer extends React.Component {
         downloadUrl={downloadUrl}
         textAndLinkColor={selectedQuery.color}
         actionsAsLinksUnderneath
+        hideGoogleWord2Vec
       />
     );
   }
@@ -101,7 +104,6 @@ QueryWordsResultsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.topWords.fetchStatus,
   results: state.explorer.topWords.results,
 });
@@ -152,7 +154,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, [messages.wordcloudHelpText, messages.wordCloudWord2VecLayoutHelp])(
+      composeSummarizedVisualization(localMessages.title, localMessages.descriptionIntro, messages.wordcloudHelpText)(
         composeAsyncContainer(
           QueryWordsResultsContainer
         )

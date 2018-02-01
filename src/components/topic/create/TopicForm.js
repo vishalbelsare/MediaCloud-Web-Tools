@@ -126,6 +126,7 @@ function validate(values, props) {
 }
 
 const asyncValidate = (values, dispatch) => (
+  // verify topic name is unique
   dispatch(fetchTopicWithNameExists(values.name))
     .then((results) => {
       if (results.nameInUse === true) {
