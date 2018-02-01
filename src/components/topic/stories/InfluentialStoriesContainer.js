@@ -102,7 +102,7 @@ const mapStateToProps = state => ({
   links: state.topics.selected.stories.link_ids,
   filters: state.topics.selected.filters,
   topicInfo: state.topics.selected.info,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
   topicId: state.topics.selected.id,
 });
 

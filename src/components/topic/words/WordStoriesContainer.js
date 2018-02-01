@@ -81,7 +81,7 @@ const mapStateToProps = state => ({
   inlinkedStories: state.topics.selected.word.stories.stories,
   sort: state.topics.selected.word.stories.sort,
   stem: state.topics.selected.word.info.stem,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -67,7 +67,7 @@ const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.inlinks.fetchStatus,
   inlinkedStories: state.topics.selected.story.inlinks.stories,
   filters: state.topics.selected.filters,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

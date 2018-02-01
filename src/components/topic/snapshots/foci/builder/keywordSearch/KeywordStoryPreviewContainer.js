@@ -55,7 +55,7 @@ KeywordStoryPreviewContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.matchingStories.fetchStatus,
   stories: state.topics.selected.focalSets.create.matchingStories.stories,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

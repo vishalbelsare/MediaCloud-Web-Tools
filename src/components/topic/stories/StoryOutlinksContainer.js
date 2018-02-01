@@ -68,7 +68,7 @@ const mapStateToProps = state => ({
   outlinkedStories: state.topics.selected.story.outlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,
   filters: state.topics.selected.filters,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

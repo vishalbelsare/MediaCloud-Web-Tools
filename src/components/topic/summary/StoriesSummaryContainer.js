@@ -118,7 +118,7 @@ const mapStateToProps = state => ({
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.stories,
   user: state.user,
-  showTweetCounts: state.topics.selected.info.ch_monitor_id,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
