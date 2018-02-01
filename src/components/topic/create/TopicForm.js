@@ -6,10 +6,10 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
-import SourceCollectionsForm from '../../common/form/SourceCollectionsForm';
+import SourceCollectionsForm from './SourceCollectionsForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
-import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
@@ -126,14 +126,9 @@ function validate(values, props) {
 }
 
 const asyncValidate = (values, dispatch) => (
-  dispatch(fetchTopicSearchResults(values.name))
+  dispatch(fetchTopicWithNameExists(values.name))
     .then((results) => {
-      const checkForNameMatches = results.topics.filter(t => t.name.toLowerCase() === values.name.toLowerCase());
-      const checkForIdMatches = results.topics.filter(t => t.id === values.topics_id);
-
-      if (results.topics && (results.topics.length !== 0) &&
-        (checkForNameMatches.length > 0) &&
-        (!values.topics_id || (values.topics_id && (checkForIdMatches.length > 0)))) {
+      if (results.nameInUse === true) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }

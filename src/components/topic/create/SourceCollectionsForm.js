@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { FieldArray, Field } from 'redux-form';
-import composeIntlForm from '../IntlForm';
+import composeIntlForm from '../../common/IntlForm';
 import SourceSearchContainer from '../../source/controlbar/SourceSearchContainer';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 

@@ -306,6 +306,23 @@ def topic_w2v_timespan_embeddings(topics_id):
     return jsonify({'list': ts_embeddings})
 
 
+@app.route('/api/topics/name-exists', methods=['GET'])
+@flask_login.login_required
+@arguments_required('searchStr')
+@api_error_handler
+def topic_name_exists():
+    '''Check if topic with name exists already
+    Have to do this in a unique method, instead of in topic_search because we need to use an admin connection
+    to media cloud to list all topics, but we don't want to return topics a user can't see to them.
+    :return: boolean indicating if topic with this name exists for not (case insensive check)
+    '''
+    search_str = request.args['searchStr']
+    matching_topics = mc.topicList(name=search_str, limit=15)
+    matching_topic_names = [t['name'].lower() for t in matching_topics['topics']]
+    name_in_use = search_str.lower() in matching_topic_names
+    return jsonify({'nameInUse': name_in_use})
+
+
 @app.route('/api/topics/admin/list', methods=['GET'])
 @flask_login.login_required
 @api_error_handler

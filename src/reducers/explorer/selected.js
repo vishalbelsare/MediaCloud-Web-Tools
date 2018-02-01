@@ -25,4 +25,5 @@ function selected(state = INITIAL_STATE, action) {
       return state;
   }
 }
+
 export default selected;

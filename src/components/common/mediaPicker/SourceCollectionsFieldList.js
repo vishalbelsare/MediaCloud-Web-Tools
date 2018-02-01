@@ -36,7 +36,7 @@ renderCollectionSelector.propTypes = {
   onDelete: PropTypes.func,
 };
 
-const SourceCollectionsForm = (props) => {
+const SourceCollectionsFieldList = (props) => {
   const { initialValues, allowRemoval, onDelete } = props;
   return (
     <div className="explorer-source-collection-form">
@@ -53,7 +53,7 @@ const SourceCollectionsForm = (props) => {
   );
 };
 
-SourceCollectionsForm.propTypes = {
+SourceCollectionsFieldList.propTypes = {
   // from parent
   intl: PropTypes.object.isRequired,
   initialValues: PropTypes.object,
@@ -66,7 +66,7 @@ export default
   injectIntl(
     composeIntlForm(
       reduxForm({ propTypes })(
-        SourceCollectionsForm
+        SourceCollectionsFieldList
       )
     )
   );
