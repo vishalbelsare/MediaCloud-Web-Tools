@@ -6,11 +6,9 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../../../../common/AppButton';
 import composeIntlForm from '../../../../../common/IntlForm';
-import MetadataPickerContainer from '../../../../../common/MetadataPickerContainer';
 import messages from '../../../../../../resources/messages';
 import MediaTypeCoveragePreviewContainer from './MediaTypeCoveragePreviewContainer';
 import MediaTypeStoryCountsPreviewContainer from './MediaTypeStoryCountsPreviewContainer';
-import { TAG_SET_MEDIA_TYPE } from '../../../../../../lib/tagUtil';
 
 const formSelector = formValueSelector('snapshotFocus');
 
@@ -35,17 +33,6 @@ const EditMediaTypeContainer = (props) => {
           <Col lg={8} md={12}>
             <h1><FormattedMessage {...localMessages.title} /></h1>
             <p><FormattedMessage {...localMessages.about} /></p>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            <MetadataPickerContainer
-              id={TAG_SET_MEDIA_TYPE}
-              showDescription
-              name="mediaType"
-              form="snapshotFocus"
-              floatingLabelText={formatMessage(localMessages.pMediaType)}
-            />
           </Col>
         </Row>
         <Row>

@@ -10,10 +10,10 @@ const localMessages = {
 const MediaTypeSummary = (props) => {
   const { counts } = props;
   return (
-    <div className="focus-create-cofirm-retweet-partisanship">
+    <div className="focus-create-cofirm-media-type">
       <p><FormattedMessage {...localMessages.intro} /></p>
       <ul>
-        {counts.map(ctry => <li>{ctry.label}</li>
+        {counts.map(t => <li>{t.label}</li>
         )}
       </ul>
     </div>
