@@ -55,7 +55,7 @@ const TopicForm = (props) => {
         title={title}
         intro={intro}
         initialValues={initialValues}
-        allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+        allowRemoval
         maxSources={10}
         maxCollections={10}
       />

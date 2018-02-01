@@ -317,9 +317,9 @@ def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kw
 def topic_timespan(topics_id, snapshots_id, foci_id, timespans_id):
     '''
     No timespan/single end point, so we need a helper to do it
-    :param snapshots_id:
-    :param timespans_id:
-    :param foci_id:
+    :param snapshots_id: 
+    :param timespans_id: 
+    :param foci_id: 
     :return: info about one timespan as specified
     '''
     timespans = cached_topic_timespan_list(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id, foci_id=foci_id)

@@ -161,7 +161,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(addNotice(info));
   },
   removeTopicId: () => {
-    dispatch(selectTopic(null));
+    // ispatch(selectTopic(null));
     dispatch(setSubHeaderVisible(false));
   },
   asyncFetch: () => {
