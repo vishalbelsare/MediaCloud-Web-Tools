@@ -4,7 +4,7 @@ import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from 'redux-simple-promise';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { errorReportingMiddleware } from './lib/reduxHelpers';
-import rootReducer from './reducers/root';
+import getRootReducer from './reducers/root';
 
 const reduxRouterMiddleware = routerMiddleware(hashHistory);
 
@@ -15,19 +15,27 @@ const middlewares = [
   errorReportingMiddleware,
 ];
 
-function configDevelopmentStore() {
-  return createStore(rootReducer, {}, compose(
+function configDevelopmentStore(appName) {
+  return createStore(getRootReducer(appName), {}, compose(
     applyMiddleware(...middlewares),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ));
 }
 
-function configProductionStore() {
-  return createStore(rootReducer, {}, compose(
+function configProductionStore(appName) {
+  return createStore(getRootReducer(appName), {}, compose(
     applyMiddleware(...middlewares),
   ));
 }
 
-const store = (process.env.NODE_ENV === 'production') ? configProductionStore() : configDevelopmentStore();
+let store;   // singleton store
 
-export default store;
+// acts as a singleton factory method
+function getStore(appName) {
+  if (store === undefined) {
+    store = (process.env.NODE_ENV === 'production') ? configProductionStore(appName) : configDevelopmentStore(appName);
+  }
+  return store;
+}
+
+export default getStore;

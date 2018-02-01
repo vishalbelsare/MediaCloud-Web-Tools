@@ -1,5 +1,5 @@
 import ReactGA from 'react-ga';
-import { setAppName, setVersion } from './config';
+import { setAppName, setVersion, APP_TOOLS } from './config';
 import { setAppColors } from './styles/colors';
 import routes from './routes/toolsRoutes';
 import initializeApp from './index';
@@ -12,7 +12,7 @@ ReactGA.initialize('UA-60744513-9');
 
 setVersion('1.11.5');
 
-setAppName('tools');
+setAppName(APP_TOOLS);
 
 setAppColors({
   light: 'rgb(189,189,189)',
