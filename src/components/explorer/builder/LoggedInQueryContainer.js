@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { updateTimestampForQueries, resetSelected, resetSentenceCounts, resetSampleStories,
-  resetStoryCounts, resetGeo, selectQuery } from '../../../actions/explorerActions';
+  resetStoryCounts, resetGeo, selectQuery, removeDeletedQueries } from '../../../actions/explorerActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from '../results/QueryResultsContainer';
 import composeUrlBasedQueryContainer from '../UrlBasedQueryContainer';
@@ -73,6 +73,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(resetGeo());
   },
   reallyHandleSearch: () => {
+    dispatch(removeDeletedQueries());
     dispatch(updateTimestampForQueries()); // but this doesn't update the query... only the timestamp.. nextprops.queries should be new?
     // update URL location according to updated queries
   },

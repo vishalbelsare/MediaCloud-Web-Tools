@@ -1,4 +1,3 @@
-import ConfigParser
 import json
 import logging.config
 import os
@@ -14,6 +13,7 @@ from raven.handlers.logging import SentryHandler
 import mediacloud
 from mediameter.cliff import Cliff
 
+from server.util.config import get_default_config, ConfigException
 from server.database import AppDatabase
 
 SERVER_MODE_DEV = "dev"
@@ -26,11 +26,7 @@ SERVER_APP_EXPLORER = "explorer"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# load the shared settings file
-server_config_file_path = os.path.join(base_dir, 'config', 'server.config')
-settings = ConfigParser.ConfigParser()
-settings.read(server_config_file_path)
-
+# setup logging
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
     logging_config = json.load(f)
     logging_config['handlers']['file']['filename'] = os.path.join(base_dir, logging_config['handlers']['file']['filename'])
@@ -40,50 +36,51 @@ logger.info("-------------------------------------------------------------------
 flask_login_logger = logging.getLogger('flask_login')
 flask_login_logger.setLevel(logging.DEBUG)
 
-server_mode = settings.get('server', 'mode').lower()
+# load the config helper
+config = get_default_config()
+
+server_mode = config.get('SERVER_MODE').lower()
 if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
-    logger.error("Unknown server mode '%s', set a mode in the `config/server.config` file", server_mode)
+    logger.error(u"Unknown server mode '{}', set a mode in the `config/app.config` file".format(server_mode))
     sys.exit(1)
 else:
-    logger.info("Started server in %s mode", server_mode)
+    logger.info(u"Started server in %s mode", server_mode)
 
 
 # setup optional sentry logging service
 try:
-    handler = SentryHandler(settings.get('sentry', 'dsn'))
+    handler = SentryHandler(config.get('SENTRY_DSN'))
     handler.setLevel(logging.ERROR)
     setup_logging(handler)
-except Exception as e:
+except ConfigException as e:
     logger.info("no sentry logging")
 
 # Connect to MediaCloud
-TOOL_API_KEY = settings.get('mediacloud', 'api_key')
+TOOL_API_KEY = config.get('MEDIA_CLOUD_API_KEY')
 
 mc = mediacloud.api.AdminMediaCloud(TOOL_API_KEY)
-logger.info("Connected to mediacloud")
+logger.info(u"Connected to mediacloud")
 
 # Connect to CLIFF if the settings are there
 cliff = None
 try:
-    cliff = Cliff(settings.get('cliff', 'host'), settings.get('cliff', 'port'))
+    cliff = Cliff(config.CLIFF_URL)
 except Exception:
-    logger.warn("no CLIFF connection")
+    logger.warn(u"no CLIFF connection")
 
-NYT_THEME_LABELLER_URL = settings.get('services', 'nyt_theme_labeller_url')
+NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')
 
 # Connect to the app's mongo DB
-db_host = settings.get('database', 'host')
-db_name = settings.get('database', 'name')
-db = AppDatabase(db_host, db_name)
+db = AppDatabase(config.get('MONGO_URL'))
 
 try:
     db.check_connection()
 except Exception as err:
-    print("DB error: {0}".format(err))
-    print("Make sure Mongo is running")
+    logger.error(u"DB error: {0}".format(err))
+    logger.exception(err)
     sys.exit()
 
-logger.info("Connected to DB: %s@%s", db_name, db_host)
+logger.info(u"Connected to DB: {}".format(config.get('MONGO_URL')))
 
 
 def is_dev_mode():
@@ -99,18 +96,17 @@ mail = Mail()
 
 def create_app():
     # Factory method to create the app
-    prod_app_name = settings.get('server', 'app')
+    prod_app_name = config.get('SERVER_APP')
     my_app = Flask(__name__)
     # set up uploading
     my_app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1MB
     my_app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
     # Set up sentry logging
     try:
-        sentry_dsn = settings.get('sentry', 'dsn')
+        sentry_dsn = config.get('SENTRY_DSN')
         Sentry(my_app, dsn=sentry_dsn)
-    except Exception as e:
-        logger.info("no sentry logging")
-        logger.error(e)
+    except ConfigException as e:
+        logger.warn(e)
     # set up webpack
     if is_dev_mode():
         manifest_path = '../build/manifest.json'
@@ -123,37 +119,34 @@ def create_app():
     # caching and CDN config
     my_app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 7 * 24 * 60 * 60
     try:
-        cdn_asset_url = settings.get('cdn', 'asset_url')
+        cdn_asset_url = config.get('ASSET_URL')
         webpack_config['WEBPACK_ASSETS_URL'] = cdn_asset_url
         logger.info("Asset pipeline: {}".format(cdn_asset_url))
-    except ConfigParser.NoOptionError:
-        logger.info("Asset pipeline: no cdn")
-    except ConfigParser.NoSectionError:
+    except ConfigException:
         logger.info("Asset pipeline: no cdn")
     my_app.config.update(webpack_config)
     webpack.init_app(my_app)
     # set up mail sending
-    if settings.has_option('smtp', 'enabled'):
-        mail_enabled = settings.get('smtp', 'enabled')
-        if mail_enabled is '1':
+    try:
+        if config.get('SMTP_ENABLED') is '1':
             mail_config = {     # @see https://pythonhosted.org/Flask-Mail/
-                'MAIL_SERVER': settings.get('smtp', 'server'),
-                'MAIL_PORT': settings.get('smtp', 'port'),
-                'MAIL_USE_SSL': settings.get('smtp', 'use_ssl'),
-                'MAIL_USERNAME': settings.get('smtp', 'username'),
-                'MAIL_PASSWORD': settings.get('smtp', 'password'),
+                'MAIL_SERVER': config.get('SMTP_SERVER'),
+                'MAIL_PORT': config.get('SMTP_PORT'),
+                'MAIL_USE_SSL': config.get('SMTP_USE_SSL'),
+                'MAIL_USERNAME': config.get('SMTP_USER'),
+                'MAIL_PASSWORD': config.get('SMTP_PASS'),
             }
             my_app.config.update(mail_config)
             mail.init_app(my_app)
-            logger.info('Mailing from '+settings.get('smtp', 'username')+' via '+settings.get('smtp', 'server'))
+            logger.info(u'Mailing from {} via {}'.format(config.get('SMTP_USER'), config.get('SMTP_SERVER')))
         else:
             logger.info("Mail configured, but not enabled")
-    else: 
+    except ConfigException:
         logger.info("No mail configured")
     return my_app
 
 app = create_app()
-app.secret_key = settings.get('server', 'secret_key')
+app.secret_key = config.get('SECRET_KEY')
 
 # Create user login manager
 login_manager = flask_login.LoginManager()
@@ -174,7 +167,7 @@ import server.views.media_search
 import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
-server_app = settings.get('server', 'app')
+server_app = config.get('SERVER_APP')
 if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.collection
     import server.views.sources.collectionedit

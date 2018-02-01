@@ -11,8 +11,9 @@ import { addNotice } from '../../actions/appActions';
 import { selectBySearchParams, fetchSampleSearches, updateQuerySourceLookupInfo, updateQueryCollectionLookupInfo,
   fetchQuerySourcesByIds, fetchQueryCollectionsByIds, demoQuerySourcesByIds, demoQueryCollectionsByIds } from '../../actions/explorerActions';
 // import { FETCH_INVALID, FETCH_SUCCEEDED } from '../../lib/fetchConstants';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString, decodeQueryParamString } from '../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../lib/dateUtil';
+import { notEmptyString } from '../../lib/formValidators';
 
 const localMessages = {
   errorInURLParams: { id: 'explorer.queryBuilder.urlParams',
@@ -30,8 +31,9 @@ function composeUrlBasedQueryContainer() {
         queryInStore: false,
       };
       componentWillMount() {
+        const { location } = this.props;
         this.setState({ queryInStore: false }); // necc?
-        this.setQueryFromUrl(this.props.location.pathname);
+        this.setQueryFromLocation(location);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -40,7 +42,7 @@ function composeUrlBasedQueryContainer() {
         if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
-          this.setQueryFromUrl(nextProps.location.pathname);
+          this.setQueryFromLocation(location);
         // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
@@ -55,46 +57,59 @@ function composeUrlBasedQueryContainer() {
           // console.log('  other change');
         }
       }
-      setQueryFromUrl(url) {
-        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn, samples } = this.props;
-        const { formatMessage } = this.props.intl;
-        const queryAsJsonStr = url.slice(url.lastIndexOf('/') + 1, url.length);
-        // here we need to handle sample ids vs. url-encoded query
-        const sampleSearchId = parseInt(queryAsJsonStr, 10);
-        let queriesFromUrl;
-        if (!isNaN(sampleSearchId)) {
-          // need to add in the id of the search here - why isn't this in there already?
-          queriesFromUrl = samples[sampleSearchId].queries;
+      setQueryFromLocation(location) {
+        // regular searches are in a queryParam, but samples by id are part of the path
+        const url = location.pathname;
+        const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
+        const sampleNumber = parseInt(lastPathPart, 10);
+        if (!isNaN(sampleNumber)) {
+          this.setQueryFromSample(sampleNumber);
         } else {
-          try {
-            queriesFromUrl = JSON.parse(queryAsJsonStr);
-          } catch (e) {
-            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-            return;
-          }
-          let extraDefaults = {};
-          // add in an index, label, and color if they are not there
-          if (!isLoggedIn) {  // and demo mode needs some extra stuff too
-            const defaultDates = getPastTwoWeeksDateRange();
-            extraDefaults = {
-              sources: [],
-              collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
-              startDate: defaultDates.start,
-              endDate: defaultDates.end,
-            };
-          }
-          queriesFromUrl = queriesFromUrl.map((query, index) => ({
-            ...query, // let anything on URL override label and color
-            label: query.label ? decodeURIComponent(query.label) : autoMagicQueryLabel(query),
-            // remember demo queries won't have sources or collections on the URL
-            sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
-            collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
-            q: decodeURIComponent(query.q),
-            color: query.color ? decodeURIComponent(query.color) : schemeCategory10[index % 10],
-            index,  // redo index to be zero-based on reload of query
-            ...extraDefaults, // for demo mode
-          }));
+          this.setQueryFromSearch(location.search);
         }
+      }
+      setQueryFromSearch(search) {
+        const queryAsJsonStr = search.slice(3, search.length);
+        this.setQueryFromString(queryAsJsonStr);
+      }
+      setQueryFromSample(sampleNumber) {
+        const { saveQueriesFromParsedUrl, samples, isLoggedIn } = this.props;
+        const queriesFromUrl = samples[sampleNumber].queries;
+        // push the queries in to the store
+        saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
+      }
+      setQueryFromString(queryAsJsonStr) {
+        const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
+        const { formatMessage } = this.props.intl;
+        let queriesFromUrl;
+        try {
+          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
+        } catch (e) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
+        }
+        let extraDefaults = {};
+        // add in an index, label, and color if they are not there
+        if (!isLoggedIn) {  // and demo mode needs some extra stuff too
+          const defaultDates = getPastTwoWeeksDateRange();
+          extraDefaults = {
+            sources: [],
+            collections: DEFAULT_COLLECTION_OBJECT_ARRAY,
+            startDate: defaultDates.start,
+            endDate: defaultDates.end,
+          };
+        }
+        queriesFromUrl = queriesFromUrl.map((query, index) => ({
+          ...query, // let anything on URL override label and color
+          label: notEmptyString(query.label) ? query.label : autoMagicQueryLabel(query),
+          // remember demo queries won't have sources or collections on the URL
+          sources: query.sources ? query.sources.map(s => ({ id: s, media_id: s })) : undefined,
+          collections: query.collections ? query.collections.map(s => ({ id: s, tags_id: s })) : undefined,
+          q: query.q,
+          color: query.color ? query.color : schemeCategory10[index % 10],
+          index,  // redo index to be zero-based on reload of query
+          ...extraDefaults, // for demo mode
+        }));
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
@@ -190,12 +205,18 @@ function composeUrlBasedQueryContainer() {
         const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
         if (!isLoggedIn) {
           const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
-          const newLocation = `/queries/demo/search/[${urlParamString}]`;
-          dispatch(push(newLocation));
+          dispatch(push({ pathname: '/queries/demo/search', search: `?q=[${urlParamString}]` }));
         } else {
-          const urlParamString = generateQueryParamString(unDeletedQueries);
-          const newLocation = `/queries/search/${urlParamString}`;
-          dispatch(push(newLocation));
+          const search = generateQueryParamString(queries.map(q => ({
+            label: q.label,
+            q: q.q,
+            color: q.color,
+            startDate: q.startDate,
+            endDate: q.endDate,
+            sources: q.sources, // de-aggregate media bucket into sources and collections
+            collections: q.collections,
+          })));
+          dispatch(push({ pathname: '/queries/search', search: `?q=${search}` })); // query adds a '?query='
         }
       },
     });

@@ -42,16 +42,16 @@ class MediaPickerSearchForm extends React.Component {
   }
 
   render() {
-    const { initValues, hintText } = this.props;
+    const { initValues, hintText, children, pristine } = this.props;
     const { formatMessage } = this.props.intl;
 
     const storedKeyword = initValues.storedKeyword;
     if (storedKeyword.mediaKeyword === undefined || storedKeyword.mediaKeyword === null) {
       storedKeyword.mediaKeyword = '';
     }
-    return (
+    const defaultFormChildren = (
       <Row>
-        <Col lg={6}>
+        <Col lg={8}>
           <TextField
             name="mediaKeyword"
             defaultValue={storedKeyword.mediaKeyword}
@@ -66,11 +66,14 @@ class MediaPickerSearchForm extends React.Component {
             style={{ marginTop: 10 }}
             label={formatMessage(localMessages.search)}
             onClick={this.handleSearchButtonClick}
+            disabled={pristine}
             primary
           />
         </Col>
       </Row>
     );
+    const whichChildren = (children !== null && children !== undefined) ? children : defaultFormChildren;
+    return whichChildren;
   }
 }
 
@@ -81,6 +84,8 @@ MediaPickerSearchForm.propTypes = {
   initValues: PropTypes.object,
   submitting: PropTypes.bool,
   hintText: PropTypes.string,
+  children: PropTypes.object,
+  pristine: PropTypes.bool,
 };
 
 export default

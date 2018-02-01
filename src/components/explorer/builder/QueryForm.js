@@ -8,11 +8,12 @@ import composeIntlForm from '../../common/IntlForm';
 import AppButton from '../../common/AppButton';
 import ColorPicker from '../../common/ColorPicker';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import SourceCollectionsForm from './SourceCollectionsForm';
+import SourceCollectionsFieldList from '../../common/mediaPicker/SourceCollectionsFieldList';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
+import SavedSearchControls from './SavedSearchControls';
 import { emptyString, validDate } from '../../../lib/formValidators';
-import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.queryBuilder.maintitle', defaultMessage: 'Create Query' },
@@ -27,10 +28,9 @@ const localMessages = {
   dateTo: { id: 'explorer.queryBuilder.dateTo', defaultMessage: 'to' },
   queryHelpTitle: { id: 'explorer.queryBuilder.queryHelp.title', defaultMessage: 'Building Query Strings' },
   queryHelpContent: { id: 'explorer.queryBuilder.queryHelp.content', defaultMessage: '<p>You can write boolean queries to search against out database. To search for a single word, just enter that word:</p><code>gender</code><p>You can also use boolean and phrase searches like this:</p><code>"gender equality" OR "gender equity"</code>' },
-  loadSavedSearches: { id: 'explorer.queryBuilder.loadSavedSearches', defaultMessage: 'Load Saved Search...' },
   saveSearch: { id: 'explorer.queryBuilder.saveQueries', defaultMessage: 'Save Search...' },
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
-  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Searching for data more than a year old may yield unreliable results.' },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
 };
 
@@ -53,15 +53,19 @@ class QueryForm extends React.Component {
   preserveRef = ref => (this.queryRef = ref);
 
   render() {
-    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, /* handleLoadSearch, handleSaveSearch, */
+    const { initialValues, onWillSearch, isEditable, selected, buttonLabel, onMediaDelete, onDateChange, handleLoadSearches, handleDeleteSearch, handleLoadSelectedSearch, savedSearches, searchNickname, handleSaveSearch,
       submitting, handleSubmit, onSave, onColorChange, onMediaChange, renderTextField, renderTextFieldWithFocus } = this.props;
     const cleanedInitialValues = initialValues ? { ...initialValues } : {};
     if (cleanedInitialValues.disabled === undefined) {
       cleanedInitialValues.disabled = false;
     }
-    cleanedInitialValues.media = [  // merge sources and collections into one list for display with `renderFields`
+    cleanedInitialValues.media = [  // merge intial sources and collections into one list for display with `renderFields`
       ...initialValues.sources,
       ...initialValues.collections,
+    ];
+    selected.media = [  // merge sources and collections into one list for display with `renderFields`
+      ...selected.sources,
+      ...selected.collections,
     ];
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
@@ -117,7 +121,7 @@ class QueryForm extends React.Component {
               <Col lg={6}>
                 <div className="media-field-wrapper">
                   {mediaLabel}
-                  <SourceCollectionsForm
+                  <SourceCollectionsFieldList
                     className="query-field"
                     form="queryForm"
                     destroyOnUnmount={false}
@@ -156,41 +160,33 @@ class QueryForm extends React.Component {
             </Row>
           </Grid>
         </div>
-        <Grid>
-          <Row>
-            <Col lg={11} />
-            {/*
-            <Col lg={2}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                onClick={handleLoadSearch}
-                label={formatMessage(localMessages.loadSavedSearches)}
-                disabled={submitting}
-                secondary
-              />
-            </Col>
-            <Col lg={2}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                onClick={handleSaveSearch}
-                label={formatMessage(localMessages.saveSearch)}
-                disabled={submitting}
-                secondary
-              />
-            </Col>
-            */}
-            <Col lg={1}>
-              <AppButton
-                style={{ marginTop: 30 }}
-                type="submit"
-                label={buttonLabel}
-                disabled={submitting}
-                onClick={onWillSearch}
-                primary
-              />
-            </Col>
-          </Row>
-        </Grid>
+        <div className="query-form-actions-wrapper">
+          <Grid>
+            <Row>
+              <Col lg={6} />
+              <Col lg={6} >
+                <div className="query-form-actions">
+                  <SavedSearchControls
+                    searchNickname={searchNickname}
+                    savedSearches={savedSearches}
+                    handleLoadSearches={handleLoadSearches}
+                    handleLoadSelectedSearch={handleLoadSelectedSearch}
+                    handleSaveSearch={l => handleSaveSearch(l)}
+                    handleDeleteSearch={handleDeleteSearch}
+                    submitting={submitting}
+                  />
+                  <AppButton
+                    type="submit"
+                    label={buttonLabel}
+                    disabled={submitting}
+                    onClick={onWillSearch}
+                    primary
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
       </form>
     );
   }
@@ -210,9 +206,12 @@ QueryForm.propTypes = {
   renderTextField: PropTypes.func.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   renderTextFieldWithFocus: PropTypes.func.isRequired,
-
-  handleLoadSearch: PropTypes.func.isRequired,
+  searchNickname: PropTypes.string.isRequired,
+  handleLoadSearches: PropTypes.func.isRequired,
+  handleLoadSelectedSearch: PropTypes.func.isRequired,
   handleSaveSearch: PropTypes.func.isRequired,
+  handleDeleteSearch: PropTypes.func.isRequired,
+  savedSearches: PropTypes.array,
   onMediaDelete: PropTypes.func.isRequired,
   onDateChange: PropTypes.func.isRequired,
   // from form healper
@@ -240,7 +239,7 @@ function validate(values, props) {
   if (!validDate(values.endDate)) {
     errors.endDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
-  if (validDate(values.startDate) && isMoreThanAYearInPast(values.startDate)) {
+  if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
     errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
   }
   return errors;

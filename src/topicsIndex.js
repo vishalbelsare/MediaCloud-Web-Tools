@@ -1,5 +1,5 @@
 import ReactGA from 'react-ga';
-import { setAppName, setVersion } from './config';
+import { setAppName, setVersion, APP_TOPIC_MAPPER } from './config';
 import { setAppColors } from './styles/colors';
 import routes from './routes/topicRoutes';
 import initializeApp from './index';
@@ -12,7 +12,7 @@ ReactGA.initialize('UA-60744513-7');
 
 setVersion('2.1.1');
 
-setAppName('topics');
+setAppName(APP_TOPIC_MAPPER);
 
 setAppColors({
   light: '#daf3ee',

@@ -12,11 +12,15 @@ function selectMedia(state = INITIAL_STATE, action) {
   switch (action.type) {
     case MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA:
       updatedSelectedList = [...state.list];
-      if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
+      /* if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
         const selectedObj = action.payload;
-        selectedObj.selected = true; // set this now, this is the init master list
+        selectedObj.selected = true; // set this now, one as a time? this is the init master list
         updatedSelectedList.push(selectedObj);
-      }
+      } */
+      updatedSelectedList = action.payload;
+      updatedSelectedList = updatedSelectedList.map(c => ({ ...c, selected: true }));
+
+      // what about if it isn't found? how is it removed? from init to selected
       return { list: updatedSelectedList };
     case MEDIA_PICKER_SELECT_MEDIA:
       updatedSelectedList = [...state.list];

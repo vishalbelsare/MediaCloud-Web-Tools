@@ -1,4 +1,5 @@
 import { trimToMaxLength } from './stringUtil';
+import { notEmptyString } from './formValidators';
 
 export const DEFAULT_SOURCES = '';
 
@@ -9,9 +10,8 @@ export const DEFAULT_COLLECTION_OBJECT_ARRAY = [{ id: DEFAULT_COLLECTION, tags_i
 export const PICK_COLLECTION = 0;
 export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
-export const STARRED = 3;
+export const PICK_ADVANCED = 3;
 
-// we use the media bucket to grab updated and deleted media from two different operations. hence, we need to check that value first
 export function generateQueryParamString(queries) {
   const queriesForUrl = queries.map(query => ({
     label: encodeURIComponent(query.label),
@@ -19,10 +19,23 @@ export function generateQueryParamString(queries) {
     color: encodeURIComponent(query.color),
     startDate: query.startDate,
     endDate: query.endDate,
-    sources: query.media ? query.media.filter(m => m.type === 'source' || m.media_id).map(s => s.id) : query.sources.map(s => s.id), // de-aggregate media bucket into sources and collections
-    collections: query.media ? query.media.filter(m => m.type === 'collection' || m.tags_id).map(s => s.id) : query.collections.map(s => s.id),
+    sources: query.sources && query.sources.length > 0 ? query.sources.map(s => s.id) : [], // de-aggregate media bucket into sources and collections
+    collections: query.collections && query.collections.length > 0 ? query.collections.map(s => s.id) : [],
   }));
   return JSON.stringify(queriesForUrl);
+}
+
+export function decodeQueryParamString(queryString) {
+  const queriesForUrl = JSON.parse(queryString).map(query => ({
+    label: notEmptyString(query.label) ? decodeURIComponent(query.label) : undefined,
+    q: notEmptyString(query.q) ? decodeURIComponent(query.q) : undefined,
+    color: notEmptyString(query.color) ? decodeURIComponent(query.color) : undefined,
+    startDate: query.startDate,
+    endDate: query.endDate,
+    sources: query.sources, // de-aggregate media bucket into sources and collections
+    collections: query.collections,
+  }));
+  return queriesForUrl;
 }
 
 export function queryPropertyHasChanged(queries, nextQueries, propName) {

@@ -45,10 +45,12 @@ def source_suggestion_update(suggestion_id):
     email_note = ""
     if status == "approved":
         # if approved, we have to create it
+        flattend_tags = [t['tags_id'] for t in suggestion['tags_ids']]
+
         media_source_to_create = { 'url': suggestion['url'],
               'name': suggestion['name'],
               'feeds': [suggestion['feed_url']],
-              'tags_ids': suggestion['tags_ids'] if 'tags_ids 'in suggestion else None,
+              'tags_ids': flattend_tags,
               'editor_notes': 'Suggested approved by {} on because {}.  Suggested by {} on {} because {} (id #{}).'.format(
                   user_name(),  datetime.now().strftime("%I:%M%p on %B %d, %Y"), reason,
                   suggestion['email'], suggestion['date_submitted'], suggestion['reason'], suggestion['media_suggestions_id']
@@ -97,7 +99,7 @@ def source_suggest():
     reason = request.form['reason'] if 'reason' in request.form else None
     tag_ids_to_add = tag_ids_from_collections_param()
     new_suggestion = user_mc.mediaSuggest(url=url, name=name, feed_url=feed_url, reason=reason,
-                                          collections=tag_ids_to_add)
+                                          tags_ids=tag_ids_to_add)
     # send an email confirmation
     email_title = "Thanks for Suggesting " + url
     send_html_email(email_title,

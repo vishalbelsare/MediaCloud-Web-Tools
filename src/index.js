@@ -13,7 +13,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { hasCookies, deleteCookies } from './lib/auth';
 import { loginWithCookie } from './actions/userActions';
-import store from './store';
+import getStore from './store';
+import { getAppName } from './config';
 import { getBrandColors } from './styles/colors';
 
 const APP_DOM_ELEMENT_ID = 'app';
@@ -26,6 +27,8 @@ const DEFAULT_LOCALE = 'en';
 export default function initializeApp(routes) {
   // necessary lines for Material-UI library to work
   injectTapEventPlugin();
+
+  const store = getStore(getAppName());
 
   // Create an enhanced history that syncs navigation events with the store
   const history = syncHistoryWithStore(hashHistory, store);
@@ -40,6 +43,13 @@ export default function initializeApp(routes) {
 
   const muiTheme = getMuiTheme({
     fontFamily: 'Lato, sans',
+    zIndex: {
+      menu: 10001,
+      dialogOverlay: 9999,
+      dialog: 10000,
+      layer: 10001,
+      popover: 10001,
+    },
     palette: {
       primary1Color: getBrandColors().dark,
       accent1Color: getBrandColors().light,

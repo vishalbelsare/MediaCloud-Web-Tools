@@ -1,0 +1,38 @@
+
+# A custom string you create to make cookies more secure
+SECRET_KEY = A_RANDOM_STRING
+
+# Controls a variety of debug settings - set to 'dev' or 'prod'
+SERVER_MODE = dev
+
+# The name of the application you want to run if SERVER_MODE=='prod'
+SERVER_APP = tools
+
+# The path to pass-through CloudFront account for serving up static assets
+#ASSET_URL = https://DISTRIBUTION_NAME.cloudfront.net/static/gen/topics/
+
+# Configuration for sending emails to users over SMTP
+SMTP_ENABLED = 0
+SMTP_SERVER = mail.your_server.suffix
+SMTP_PORT = 22
+SMTP_USE_SSL = 1
+SMTP_USER = me_the_user
+SMTP_PASS = my_passowrd
+
+# Service: API Key for accessing Media Cloud (get this on your profile page)
+MEDIA_CLOUD_API_KEY = YOUR_MEDIACLOUD_API_KEY_HERE
+
+# Service: URL to Mongo db to use for storing user-specific information (shared across apps)
+MONGO_URL = mongodb://localhost:27017/mediacloud-app
+
+# Service: The URL to an install of CLIFF for entity parsing and geocoding
+CLIFF_URL = http://www.localhost:8080
+
+# Service: The URL to an instal of our word embeddings server, so word2vec results
+WORD_EMBEDDINGS_SERVER_URL = http://word-embeddings-server-url
+
+# Service: The URL to an install of our news label predictor, for story-level results
+NYT_THEME_LABELLER_URL = http://predict-news-labels-server-url
+
+# Service: The URL to a sentry app for collecting error logs
+#SENTRY_DSN = https://<key>:<secret>@app.getsentry.com/<project>

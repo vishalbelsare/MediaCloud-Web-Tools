@@ -17,6 +17,7 @@ const localMessages = {
   retweetFocusSaved: { id: 'focus.create.retweetSaved', defaultMessage: 'We created a new set of Subtopics based on our parisan retweet measure.' },
   focusNotSaved: { id: 'focus.create.notSaved', defaultMessage: 'That didn\'t work for some reason!' },
   invalid: { id: 'focus.create.invalid', defaultMessage: 'Sorry - the data has an unknown subtopic technique. It failed!' },
+  duplicateName: { id: 'focus.create.invalid', defaultMessage: 'Duplicate name. Choose a unique focal set name.' },
   topCountriesFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics by top countries.' },
   nytFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics with NYT Themes tags.' },
 };
@@ -61,11 +62,16 @@ const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
   topCountries: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
   topThemes: state.topics.selected.focalSets.create.nytThemeStoryCounts.story_counts,
+  focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   submitDone: (topicId, formValues, queryData) => {
     let saveData = null;
+    const nameAlreadyExists = queryData.focalSetDefinitions.filter(fc => fc.name === formValues.focalSetName);
+    if (nameAlreadyExists.length > 0) {
+      return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.duplicateName) }));
+    }
     switch (formValues.focalTechnique) {
       case FOCAL_TECHNIQUE_BOOLEAN_QUERY:
         return dispatch(submitFocusUpdateOrCreate(topicId, formValues))

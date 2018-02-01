@@ -32,6 +32,14 @@ export function getShortDate(dateString) {
   return moment(dateString).format('ll');
 }
 
+export function getDateFromTimestamp(milliseconds) {
+  return moment.utc(parseInt(milliseconds, 10)).format(GAP_DATE_FORMAT);
+}
+
+export function isStartDateAfterEndDate(start, end) {
+  return moment(start).isAfter(end);
+}
+
 export function isMoreThanAYearInPast(dateInPast) {
   const yearPriorToNow = moment().subtract(1, 'years');
   return yearPriorToNow.isAfter(dateInPast);

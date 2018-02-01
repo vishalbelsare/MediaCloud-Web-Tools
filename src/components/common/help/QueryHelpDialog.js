@@ -18,6 +18,7 @@ const localMessages = {
 <li><code>cheese AND NOT blue</code> - using "NOT" lets you remove content you don't want; searching for sentences that use the word "cheese" but don't have the word "blue" in them</li>
 <li><code>cheese AND (blue OR manchego OR goat OR cheddar)</code> - using parentheses lets you author more complex queries; searching here for sentences that have the word "cheese" and at least one other word describing what type it is</li>
 <li><code>queso AND language:es</code> - using the "language:" keyword lets you narrow in on a language; here searching for sentences that use the word "queso" and have been detected by our system as being written in Spanish</li>
+<li><code>title:(cheese OR queso)</code> - using the "title:" keyword lets you limit your search to article titles (we search just the article text by default)</li>
 </ul>
 <p><a href="https://mediacloud.org/s/query-guide-rev1.pdf" target=_blank>Read our guide to creating queries to learn more</a>.</p>
   ` },
@@ -54,7 +55,9 @@ class QueryHelpDialog extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
-          <FormattedHTMLMessage {...localMessages.content} />
+          <div className="query-help-dialog-content">
+            <FormattedHTMLMessage {...localMessages.content} />
+          </div>
         </Dialog>
       </span>
     );

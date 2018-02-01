@@ -114,8 +114,8 @@ def parse_query_with_keywords(args):
         end_date = args['end_date'] if 'end_date' in args else end_date
         media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
         if 'collections' in args:
-            if len(args['collections']) == 1:
-                tags_ids = args['collections']
+            if len(args['collections']) == 0:
+                tags_ids = []
             else:
                 tags_ids = args['collections'].split(',')
         else:

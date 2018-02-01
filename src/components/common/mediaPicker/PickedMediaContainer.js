@@ -8,11 +8,11 @@ import SourceOrCollectionWidget from '../SourceOrCollectionWidget';
 // import SelectedMediaContainer from './SelectedMediaContainer';
 
 const localMessages = {
-  pickCountry: { id: 'system.mediaPicker.select.pickCountry', defaultMessage: 'Search By Country' },
-  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search Collections' },
+  pickCountry: { id: 'system.mediaPicker.select.pickCountry', defaultMessage: 'Search Geographic Collections' },
+  pickCollections: { id: 'system.mediaPicker.select.pickCollections', defaultMessage: 'Search All Collections' },
   pickSources: { id: 'system.mediaPicker.select.pickSources', defaultMessage: 'Search Sources' },
   selectedMedia: { id: 'system.mediaPicker.selected.title', defaultMessage: 'Selected Media' },
-  // pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
+  pickAdvanced: { id: 'system.mediaPicker.select.pickAdvanced', defaultMessage: 'Advanced Selection' },
   // pickStarred: { id: 'system.mediaPicker.select.pickStarred', defaultMessage: 'Pick From Starred' },
 };
 
@@ -36,6 +36,7 @@ class PickedMediaContainer extends React.Component {
       { label: localMessages.pickCountry, value: PICK_COUNTRY },
       { label: localMessages.pickCollections, value: PICK_COLLECTION },
       { label: localMessages.pickSources, value: PICK_SOURCE },
+      // { label: localMessages.pickAdvanced, value: PICK_ADVANCED },
     ];
     return (
       <div>
@@ -84,7 +85,7 @@ const mapDispatchToProps = dispatch => ({
   handleUnselectMedia: (selectedMedia) => {
     if (selectedMedia) {
       const unselectecMedia = Object.assign({}, selectedMedia, { selected: false });
-      dispatch(selectMedia(unselectecMedia)); // disable MediaPickerPreviewList button too
+      dispatch(selectMedia(unselectecMedia)); // disable button too
     }
   },
 });

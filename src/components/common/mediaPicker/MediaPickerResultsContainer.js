@@ -3,22 +3,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
-import messages from '../../../resources/messages';
 import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
-import composeHelpfulContainer from '../../common/HelpfulContainer';
 import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
 import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
-
-const localMessages = {
-  title: { id: 'system.mediaPicker.select.title', defaultMessage: 'title' },
-  intro: { id: 'system.mediaPicker.select.info',
-    defaultMessage: '<p>This is an intro</p>' },
-  helpTitle: { id: 'system.mediaPicker.select.help.title', defaultMessage: 'About Media' },
-};
-
 
 class MediaPickerResultsContainer extends React.Component {
   componentWillMount() {
@@ -163,7 +153,7 @@ const mapDispatchToProps = dispatch => ({
   handleToggleAndSelectMedia: (selectedMedia) => {
     if (selectedMedia) {
       // dispatch(toggleMedia(selectedMedia));
-      dispatch(selectMedia(selectedMedia)); // disable MediaPickerPreviewList button too
+      dispatch(selectMedia(selectedMedia)); // disable button too
     }
   },
   resetComponents: () => {
@@ -176,9 +166,7 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, [localMessages.intro, messages.mediaPickerHelpText])(
-        MediaPickerResultsContainer
-      )
+      MediaPickerResultsContainer
     )
   );
 

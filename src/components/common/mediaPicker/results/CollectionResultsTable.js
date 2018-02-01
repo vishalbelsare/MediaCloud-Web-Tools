@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import React from 'react';
 import { AddButton, DeleteButton } from '../../IconButton';
 import { urlToCollection } from '../../../../lib/urlUtil';
@@ -8,7 +8,6 @@ const localMessages = {
   name: { id: 'mediaPicker.searchResults.name', defaultMessage: 'Name' },
   tagSetLabel: { id: 'mediaPicker.searchResults.tagSetLabel', defaultMessage: 'Category' },
   description: { id: 'mediaPicker.searchResults.description', defaultMessage: 'Description' },
-  storiesLastWeek: { id: 'mediaPicker.searchResults.storiesLastWeek', defaultMessage: 'Stories Last Week' },
   mediaSources: { id: 'mediaPicker.searchResults.mediaSources', defaultMessage: 'Media Sources' },
   noResults: { id: 'mediaPicker.searchResults.noResults', defaultMessage: 'No matching collections' },
 };
@@ -24,7 +23,6 @@ const CollectionResultsTable = (props) => {
             <th><FormattedMessage {...localMessages.name} /></th>
             <th><FormattedMessage {...localMessages.tagSetLabel} /></th>
             <th><FormattedMessage {...localMessages.description} /></th>
-            <th className="numeric"><FormattedMessage {...localMessages.storiesLastWeek} /></th>
             <th className="numeric"><FormattedMessage {...localMessages.mediaSources} /></th>
             <th />
           </tr>
@@ -36,7 +34,6 @@ const CollectionResultsTable = (props) => {
                 <td><a href={urlToCollection(c.tags_id)} target="new">{c.name}</a></td>
                 <td>{c.tag_set_label}</td>
                 <td>{c.description}</td>
-                <td className="numeric"><FormattedNumber value={c.story_count} /></td>
                 <td className="numeric">{(c.media_count === 100) ? `${c.media_count}+` : c.media_count}</td>
                 <td>{actionContent}</td>
               </tr>

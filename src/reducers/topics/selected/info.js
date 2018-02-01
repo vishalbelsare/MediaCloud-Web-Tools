@@ -3,9 +3,9 @@ import { createAsyncReducer } from '../../../lib/reduxHelpers';
 
 const info = createAsyncReducer({
   action: FETCH_TOPIC_SUMMARY,
-  SET_TOPIC_FAVORITE_RESOLVED: (payload, state) => ({
+  UPDATE_TOPIC_RESOLVED: payload => ({ ...payload }),
+  SET_TOPIC_FAVORITE_RESOLVED: payload => ({
     // changing fav status returns full topic info, so update it here
-    ...state,
     ...payload,
   }),
 });
