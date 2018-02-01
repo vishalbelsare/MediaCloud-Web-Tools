@@ -173,6 +173,7 @@ const messages = {
   required: { id: 'required', defaultMessage: 'Required' },
   unimplemented: { id: 'unimplemented', defaultMessage: 'Unimplemented' },
   downloadDataCsv: { id: 'downloadDataCsv', defaultMessage: 'Download {name} data CSV' },
+  downloadDataSvg: { id: 'downloadDataSvg', defaultMessage: 'Download {name} data SVG' },
   play: { id: 'play', defaultMessage: 'Play' },
   pause: { id: 'pause', defaultMessage: 'Pause' },
   skipNext: { id: 'skipNext', defaultMessage: 'Next' },

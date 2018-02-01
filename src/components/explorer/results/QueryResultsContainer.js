@@ -11,6 +11,7 @@ import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsConta
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
+import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
 import QueryViewSelector from './QueryViewSelector';
 import { updateQuery } from '../../../actions/explorerActions';
 
@@ -57,13 +58,23 @@ class QueryResultsContainer extends React.Component {
           />
         </Col>
         <Col lg={12} xs={12}>
-          <QueryWordComparisonResultsContainer
+          <QueryWordSpaceResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
             onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
+        { (queries.length > 1) && (
+          <Col lg={12} xs={12}>
+            <QueryWordComparisonResultsContainer
+              lastSearchTime={lastSearchTime}
+              queries={queries}
+              isLoggedIn={isLoggedIn}
+              onQueryModificationRequested={handleQueryModificationRequested}
+            />
+          </Col>
+        )}
       </Row>
     );
     const peoplePlacesSection = (
