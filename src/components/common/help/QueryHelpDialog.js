@@ -55,7 +55,9 @@ class QueryHelpDialog extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
-          <FormattedHTMLMessage {...localMessages.content} />
+          <div className="query-help-dialog-content">
+            <FormattedHTMLMessage {...localMessages.content} />
+          </div>
         </Dialog>
       </span>
     );

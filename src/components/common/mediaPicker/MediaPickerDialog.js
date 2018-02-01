@@ -143,7 +143,7 @@ const mapDispatchToProps = dispatch => ({
   },
   handleInitialSelectionOfMedia: (prevSelectedMedia) => {
     if (prevSelectedMedia) {
-      dispatch(initializePreviouslySelectedMedia(prevSelectedMedia)); // disable MediaPickerPreviewList button too
+      dispatch(initializePreviouslySelectedMedia(prevSelectedMedia)); // disable button too
     }
   },
 });

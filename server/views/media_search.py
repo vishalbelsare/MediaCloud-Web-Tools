@@ -16,25 +16,6 @@ def media_search(search_str, tags_id=None):
     return mc.mediaList(name_like=search_str, tags_id=tags_id)
 
 
-def _source_search_worker(job):
-    mc = user_mediacloud_client()
-    return mc.mediaList(name_like=job['search_str'], tags_id=job['tags_id'], rows=100)
-
-
-def _matching_collections_by_set(search_str, public_only, tag_sets_id_list):
+def matching_collections_by_set(search_str, public_only, tag_sets_id_list):
     user_mc = user_mediacloud_client()
     return user_mc.tagList(tag_sets_id_list, public_only=public_only, name_like=search_str)
-
-
-def _matching_sources_by_set(search_str, tag_list):
-    use_pool = False    # this is causing a system exit :-(
-    search_jobs = [{'tags_id': tag_list, 'search_str': search_str}]
-    if use_pool:
-        pool = Pool(processes=MEDIA_SEARCH_POOL_SIZE)
-        matching_sources = pool.map(_source_search_worker, search_jobs)
-        pool.close()
-    else:
-        matching_sources = [_source_search_worker(job) for job in search_jobs]
-
-
-    return matching_sources

@@ -135,12 +135,17 @@ export function fetchQueryCollectionsByIds(params) {
 }
 
 export function loadUserSearches() {
-  return createApiPromise('api/explorer/loadUserSearches');
+  return createApiPromise('api/explorer/load-user-searches');
 }
 
 export function saveUserSearch(params) {
-  const acceptedParams = acceptParams(params, ['label', 'query_string']);
-  return createApiPromise('api/explorer/saveQuery', acceptedParams);
+  const acceptedParams = acceptParams(params, ['queryName', 'timestamp', 'queryParams']);
+  return createApiPromise('api/explorer/save-searches', acceptedParams);
+}
+
+export function deleteUserSearch(params) {
+  const acceptedParams = acceptParams(params, ['queryName', 'timestamp', 'queryParams']);
+  return createApiPromise('api/explorer/delete-search', acceptedParams);
 }
 
 export const TEMP = 'TEMP'; // placeholder to remove stupid lint error
