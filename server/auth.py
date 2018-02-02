@@ -45,9 +45,10 @@ class User(flask_login.UserMixin):
     def create_in_db_if_needed(self):
         if self.exists_in_db():
             logger.debug("user %s already in db", self.name)
+            db.update_user(self.name, {'api_key': self.id, 'profile': self.profile})
             return
         logger.debug("user %s created in db", self.name)
-        db.add_user_named(self.name)
+        db.add_user(self.name, self.id)
 
     def exists_in_db(self):
         return db.includes_user_named(self.name)
@@ -62,11 +63,12 @@ class User(flask_login.UserMixin):
     @classmethod
     def get(cls, userid):
         try:
-            return User.cached[userid]
+            return User(db.find_by_api_key(userid)['profile'])
+            # return User.cached[userid]
         except KeyError:
             return None
 
-User.cached = {}
+#User.cached = {}
 
 
 @login_manager.user_loader
@@ -92,7 +94,8 @@ def user_has_auth_role(role):
 
 def create_and_cache_user(profile):
     user = User(profile)
-    User.cached[user.id] = user
+    user.create_in_db_if_needed()
+    #User.cached[user.id] = user
     logger.debug("  added to user cache %s", user.id)
     return user
 
