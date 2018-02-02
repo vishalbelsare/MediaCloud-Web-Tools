@@ -11,7 +11,6 @@ import { Row } from 'react-flexbox-grid/lib';
 import NavToolbar from './common/header/NavToolbar';
 import messages from '../resources/messages';
 import { getVersion } from '../config';
-import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
 import { assetUrl } from '../lib/assetUtil';
@@ -24,7 +23,6 @@ const localMessages = {
 const AppContainer = (props) => {
   const { children, feedback, handleSnackBarRequestClose, name } = props;
   const { formatMessage } = props.intl;
-  const brandColors = getBrandColors();
 
   let content = children;
   if (document.appConfig.online === false) {
@@ -47,9 +45,7 @@ const AppContainer = (props) => {
     <div className={`app-contiainer app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
       <header>
-        <NavToolbar
-          backgroundColor={brandColors.dark}
-        />
+        <NavToolbar />
       </header>
       <div id="content">
         {content}

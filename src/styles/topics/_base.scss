@@ -22,5 +22,12 @@
     fill: $topics-primary;
   }
 
+  #nav-toolbar {
+    background-color: $topics-primary;
+    li.topics {
+      border-bottom: 2px solid white;
+    }
+  }
+
 }
 
