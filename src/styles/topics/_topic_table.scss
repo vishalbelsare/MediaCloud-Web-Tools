@@ -3,7 +3,9 @@
 .topic-table {
 
   tr.topic-state-error {
-    background-color: $material-red500;
+    .topic-state {
+      background-color: $material-red500;
+    }
   }
 
   code {
