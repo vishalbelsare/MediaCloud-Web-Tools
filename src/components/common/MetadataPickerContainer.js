@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
+import { FETCH_SUCCEEDED } from '../../lib/fetchConstants';
 import composeAsyncContainer from './AsyncContainer';
 import { fetchMetadataValuesForCountry, fetchMetadataValuesForState, fetchMetadataValuesForPrimaryLanguage, fetchMetadataValuesForCountryOfFocus, fetchMetadataValuesForMediaType } from '../../actions/sourceActions';
 import composeIntlForm from './IntlForm';
@@ -105,8 +106,6 @@ MetadataPickerContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   renderSelectField: PropTypes.func.isRequired,
   renderAutoComplete: PropTypes.func.isRequired,
-  // from dispatch
-  asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string,
   tags: PropTypes.array,
@@ -120,22 +119,22 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  asyncFetch: () => {
+  fetchTagsInCollection: (tagId) => {
     switch (ownProps.id) {
       case TAG_SET_PUBLICATION_COUNTRY:
-        dispatch(fetchMetadataValuesForCountry(ownProps.id));
+        dispatch(fetchMetadataValuesForCountry(tagId));
         break;
       case TAG_SET_PUBLICATION_STATE:
-        dispatch(fetchMetadataValuesForState(ownProps.id));
+        dispatch(fetchMetadataValuesForState(tagId));
         break;
       case TAG_SET_PRIMARY_LANGUAGE:
-        dispatch(fetchMetadataValuesForPrimaryLanguage(ownProps.id));
+        dispatch(fetchMetadataValuesForPrimaryLanguage(tagId));
         break;
       case TAG_SET_COUNTRY_OF_FOCUS:
-        dispatch(fetchMetadataValuesForCountryOfFocus(ownProps.id));
+        dispatch(fetchMetadataValuesForCountryOfFocus(tagId));
         break;
       case TAG_SET_MEDIA_TYPE:
-        dispatch(fetchMetadataValuesForMediaType(ownProps.id));
+        dispatch(fetchMetadataValuesForMediaType(tagId));
         break;
       default:
         break;
@@ -143,8 +142,20 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      // these sets don't change, so only refetch them if you don't have them already in the store
+      const alreadyLoadedTags = ((stateProps.fetchStatus === FETCH_SUCCEEDED) && (stateProps.tags.length > 0));
+      if (!alreadyLoadedTags) {
+        dispatchProps.fetchTagsInCollection(ownProps.id);
+      }
+    },
+  });
+}
+
 export default
-  connect(mapStateToProps, mapDispatchToProps)(
+  connect(mapStateToProps, mapDispatchToProps, mergeProps)(
     composeIntlForm(
       composeAsyncContainer(
         MetadataPickerContainer
