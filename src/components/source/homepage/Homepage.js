@@ -13,6 +13,7 @@ import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 import { assetUrl } from '../../../lib/assetUtil';
 import messages from '../../../resources/messages';
+import Masthead from '../../common/header/Masthead';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -44,17 +45,11 @@ const Homepage = (props) => {
   }
   return (
     <div>
-      <div className="masthead">
-        <Grid>
-          <Row>
-            <Col lg={11}>
-              <h2><FormattedMessage {...messages.sourcesToolName} /></h2>
-              <p><FormattedMessage {...messages.sourcesToolDescription} /></p>
-              <h5><FormattedMessage {...messages.readGuide} /></h5>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+      <Masthead
+        nameMsg={messages.sourcesToolName}
+        descriptionMsg={messages.sourcesToolDescription}
+        link="https://mediacloud.org/tools/"
+      />
       <Grid>
         <Row>
           <Col lg={12}>

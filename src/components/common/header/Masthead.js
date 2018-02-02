@@ -15,7 +15,7 @@ const Masthead = props => (
         </Col>
         <Col lg={2} />
         <Col lg={3}>
-          <a className="user-guide" href="{props.link}"><FormattedMessage {...messages.readGuide} /></a>
+          <a className="user-guide" href={props.link}><FormattedMessage {...messages.readGuide} /></a>
         </Col>
       </Row>
     </Grid>

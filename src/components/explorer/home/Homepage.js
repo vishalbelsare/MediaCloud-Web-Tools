@@ -52,6 +52,7 @@ const Homepage = (props) => {
       <Masthead
         nameMsg={messages.explorerToolName}
         descriptionMsg={messages.explorerToolDescription}
+        link="https://mediacloud.org/tools/"
       />
       <div className="search-section">
         <Grid>

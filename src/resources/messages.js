@@ -8,7 +8,7 @@ const messages = {
   dashboardToolName: { id: 'app.dashboard.name', defaultMessage: 'Dashboard' },
   dashboardToolDescription: { id: 'app.dashboard.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
   sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Sources' },
-  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'See a quick overview of how topics are covered by ditial news media, and compare coverage on topics' },
+  sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
   topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topics' },
   topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Support' },

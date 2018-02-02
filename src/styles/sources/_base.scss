@@ -4,49 +4,55 @@
   a {
     color: $sources-primary;
   }
-}
 
-.health-gap {
-  color: $warning-color;
-}
+  #nav-toolbar {
+    li.sources {
+      border-bottom: 2px solid white;
+    }
+  }
 
-.healthy {
-  color: rgba(0, 153, 0, 0.6);
-}
+  .health-gap {
+    color: $warning-color;
+  }
 
-.warning-color {
-  color: rgba(255, 0, 0, 0.6);
-}
+  .healthy {
+    color: rgba(0, 153, 0, 0.6);
+  }
 
-.details {
-  padding-top: 15px;
-}
+  .warning-color {
+    color: rgba(255, 0, 0, 0.6);
+  }
 
-h1 {
+  .details {
+    padding-top: 15px;
+  }
 
-  small.subtitle {
+  h1 {
+    small.subtitle {
+      display: inline-block;
+      margin-left: 20px;
+      color: $sources-primary;
+      font-weight: bold;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+
+  .google-icon {
+    padding-left: 10px;
+  }
+
+  .fav-toggle-button {
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 13px;
     color: $sources-primary;
-    font-weight: bold;
-    font-size: 14px;
-    text-transform: uppercase;
+    fill: $sources-primary;
+  }
+
+  div.app-icon.app-icon-filled-star > svg {
+    color: $sources-primary;
+    fill: $sources-primary;
   }
 
 }
 
-.google-icon {
-  padding-left: 10px;
-}
-
-.fav-toggle-button {
-  display: inline-block;
-  margin-left: 13px;
-  color: $sources-primary;
-  fill: $sources-primary;
-}
-
-div.app-icon.app-icon-filled-star > svg {
-  color: $sources-primary;
-  fill: $sources-primary;
-}
