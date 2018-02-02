@@ -23,11 +23,9 @@ const goToHome = () => {
 };
 
 const NavToolbar = (props) => {
-  const { backgroundColor } = props;
   const { formatMessage } = props.intl;
-  const styles = { backgroundColor };
   return (
-    <div id="nav-toolbar" style={styles} >
+    <div id="nav-toolbar">
       <Grid>
         <Row>
           <Col lg={11}>
@@ -80,8 +78,6 @@ const NavToolbar = (props) => {
 NavToolbar.propTypes = {
   // from composition chain
   intl: PropTypes.object.isRequired,
-  // from parent
-  backgroundColor: PropTypes.string.isRequired,
 };
 
 export default
