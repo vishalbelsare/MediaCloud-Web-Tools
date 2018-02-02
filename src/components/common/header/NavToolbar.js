@@ -36,8 +36,8 @@ const NavToolbar = (props) => {
                 className="app-logo"
                 alt={formatMessage(messages.suiteName)}
                 src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
-                width={25}
-                height={25}
+                width={40}
+                height={40}
               />
             </a>
             <ul>

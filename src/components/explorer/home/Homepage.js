@@ -15,6 +15,7 @@ import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQue
 import MarketingFeatureList from './MarketingFeatureList';
 import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 import messages from '../../../resources/messages';
+import Masthead from '../../common/header/Masthead';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -48,17 +49,10 @@ const Homepage = (props) => {
   }
   return (
     <div className="homepage">
-      <div className="masthead">
-        <Grid>
-          <Row>
-            <Col lg={11}>
-              <h2><FormattedMessage {...messages.explorerToolName} /></h2>
-              <p><FormattedMessage {...messages.explorerToolDescription} /></p>
-              <h5><FormattedMessage {...messages.readGuide} /></h5>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+      <Masthead
+        nameMsg={messages.explorerToolName}
+        descriptionMsg={messages.explorerToolDescription}
+      />
       <div className="search-section">
         <Grid>
           <Row>
