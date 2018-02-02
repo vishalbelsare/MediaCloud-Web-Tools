@@ -26,6 +26,7 @@ const localMessages = {
   startDate: { id: 'topic.form.detail.startDate', defaultMessage: 'Start Date' },
   endDate: { id: 'topic.form.detail.endDate', defaultMessage: 'End Date' },
   maxStories: { id: 'topic.form.detail.maxStories', defaultMessage: 'Maximum # of Seed Stories' },
+  maxSeedStoriesHelp: { id: 'topic.form.detail.maxStories', defaultMessage: 'Public users can make topics with up to 100,000 seed stories.  Change this if you want to allow a special case and it will let this topic contain up the that number of seed stories.' },
   public: { id: 'topic.form.detail.public', defaultMessage: 'Public?' },
   logogram: { id: 'topic.form.detail.logogram', defaultMessage: 'Content in a Logographic Language? (ie. Chinese or Japanese Kanji?)' },
   crimsonHexagon: { id: 'topic.form.detail.crimsonHexagon', defaultMessage: 'Crimson Hexagon Id' },
@@ -135,22 +136,6 @@ const TopicDetailForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={3}>
-          <Permissioned onlyRole={PERMISSION_ADMIN}>
-            <Field
-              name="max_stories"
-              component={renderTextField}
-              type="inline"
-              fullWidth
-              value="100000"
-              floatingLabelText={formatMessage(localMessages.maxStories)}
-              label={formatMessage(localMessages.maxStories)}
-              hintText={100000}
-            />
-          </Permissioned>
-        </Col>
-      </Row>
-      <Row>
         <Col lg={10}>
           <br />
           <Card style={{ boxShadow: 'none' }} >
@@ -161,6 +146,23 @@ const TopicDetailForm = (props) => {
               showExpandableButton
             />
             <CardText expandable>
+              <Permissioned onlyRole={PERMISSION_ADMIN}>
+                <Row>
+                  <Col lg={12}>
+                    <Field
+                      name="max_stories"
+                      component={renderTextField}
+                      type="inline"
+                      fullWidth
+                      value="100000"
+                      floatingLabelText={formatMessage(localMessages.maxStories)}
+                      label={formatMessage(localMessages.maxStories)}
+                      hintText={100000}
+                    />
+                    <small><FormattedMessage {...localMessages.maxSeedStoriesHelp} /></small>
+                  </Col>
+                </Row>
+              </Permissioned>
               <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
                 <Row>
                   <Col lg={12}>

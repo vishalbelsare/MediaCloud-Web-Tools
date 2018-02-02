@@ -43,7 +43,7 @@ def get_word_count():
     # add in word2vec results
     words = [w['term'] for w in word_data]
     # and now add in word2vec model position data
-    google_word2vec_data = _cached_word2vec_google_2d_results(words)
+    google_word2vec_data = _cached_word2vec_google_2d(words)
     for i in range(len(google_word2vec_data)):
         word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
@@ -127,7 +127,7 @@ def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
 
 
 @cache
-def _cached_word2vec_google_2d_results(words):
+def _cached_word2vec_google_2d(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
 
