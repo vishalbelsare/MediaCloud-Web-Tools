@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"assets":{"app_js.js":"app_js.add89be2.js","app_js.map":"app_js.add89be2.js.map","common_css.js":"common_css.29d2c7fc.js","common_css.css":"common_css.29d2c7fc.css","common_css.map":"common_css.29d2c7fc.css.map","app_css.js":"app_css.89d67df2.js","app_css.css":"app_css.89d67df2.css","app_css.map":"app_css.89d67df2.css.map"},"publicPath":"/static/gen/topics/"}
-=======
-{"assets":{"app_js.js":"app_js.e43dee08.js","app_js.map":"app_js.e43dee08.js.map","common_css.js":"common_css.d7326fa7.js","common_css.css":"common_css.d7326fa7.css","common_css.map":"common_css.d7326fa7.css.map","app_css.js":"app_css.2dffe97e.js","app_css.css":"app_css.2dffe97e.css","app_css.map":"app_css.2dffe97e.css.map"},"publicPath":"/static/gen/topics/"}
->>>>>>> 007372f473f910b7ad66865db9f85ece2aa4ed84
+{"assets":{"app_js.js":"app_js.0335a57e.js","app_js.map":"app_js.0335a57e.js.map","common_css.js":"common_css.ada041a5.js","common_css.css":"common_css.ada041a5.css","common_css.map":"common_css.ada041a5.css.map","app_css.js":"app_css.3c551513.js","app_css.css":"app_css.3c551513.css","app_css.map":"app_css.3c551513.css.map"},"publicPath":"/static/gen/topics/"}
