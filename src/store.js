@@ -34,7 +34,7 @@ let store;   // singleton store
 // acts as a singleton factory method
 function getStore(appName) {
   if (store === undefined) {
-    store = (isDevMode()) ? configProductionStore(appName) : configDevelopmentStore(appName);
+    store = (isDevMode()) ? configDevelopmentStore(appName) : configProductionStore(appName);
   }
   return store;
 }
