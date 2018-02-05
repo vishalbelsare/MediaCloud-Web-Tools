@@ -186,9 +186,9 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     # and make sure to ignore undateable stories
-    undateable_query_part = "NOT tags_id_stories:{}".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
+    undateable_query_part = "-(tags_id_stories:{})".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
     if (merged_args['q'] is not None) and (len(merged_args['q']) > 0):
-        merged_args['q'] = "(({}) AND ({}))".format(merged_args['q'], undateable_query_part)
+        merged_args['q'] = "(({}) AND {})".format(merged_args['q'], undateable_query_part)
     else:
         merged_args['q'] = "* AND {}".format(undateable_query_part)
     return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)
