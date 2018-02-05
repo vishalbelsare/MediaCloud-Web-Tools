@@ -12,6 +12,7 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { TOPIC_PUBLIC } from '../../../lib/topicFilterUtil';
 import messages from '../../../resources/messages';
 import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
+import { ErrorNotice } from '../../common/Notice';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
@@ -19,6 +20,7 @@ const localMessages = {
   links: { id: 'topitopic.list.links', defaultMessage: 'Story Links' },
   range: { id: 'topitopic.list.range', defaultMessage: '{start} - {end}' },
   createdBy: { id: 'topitopic.list.createdBy', defaultMessage: 'Created by: ' },
+  errorInTopic: { id: 'topitopic.list.error', defaultMessage: 'Error In Topic...' },
 };
 
 const TopicPreviewList = (props) => {
@@ -62,6 +64,10 @@ const TopicPreviewList = (props) => {
         if (currentFilter === TOPIC_PUBLIC && topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
           return '';
         }
+        let errorNotice = null;
+        if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
+          errorNotice = <ErrorNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
+        }
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
             <DataCard className="topic-preview-list-item">
@@ -74,6 +80,7 @@ const TopicPreviewList = (props) => {
                     />
                   </Permissioned>
                   <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
+                  {errorNotice}
                   <FormattedMessage
                     {...localMessages.range}
                     values={{
