@@ -13,7 +13,7 @@ const MediaTypeSummary = (props) => {
     <div className="focus-create-cofirm-media-type">
       <p><FormattedMessage {...localMessages.intro} values={{ count: counts.length }} /></p>
       <ul>
-        {counts.map(t => <li>{t.label}</li>
+        {counts.map((t, idx) => <li key={idx}>{t.label}</li>
         )}
       </ul>
     </div>
@@ -24,7 +24,7 @@ MediaTypeSummary.propTypes = {
   // from parent
   topicId: PropTypes.number.isRequired,
   formValues: PropTypes.object.isRequired,
-  counts: PropTypes.object.isRequired,
+  counts: PropTypes.array,
   // form context
   intl: PropTypes.object.isRequired,
 };
