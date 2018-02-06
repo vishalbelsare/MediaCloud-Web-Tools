@@ -303,14 +303,12 @@ export function topicPreviewNytThemeCoverage(topicId, numThemes) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`, acceptedParams);
 }
 
-export function topicPreviewMediaTypeStoryCounts(topicId, numThemes) {
-  const acceptedParams = acceptParams(numThemes, ['mediaTypeSelected']);
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/story-counts`, acceptedParams);
+export function topicPreviewMediaTypeStoryCounts(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/story-counts`);
 }
 
-export function topicPreviewMediaTypeCoverage(topicId, numThemes) {
-  const acceptedParams = acceptParams(numThemes, ['mediaTypeSelected']);
-  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/coverage`, acceptedParams);
+export function topicPreviewMediaTypeCoverage(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/coverage`);
 }
 
 export function createTopCountriesFocalSet(topicId, params) {
@@ -326,8 +324,7 @@ export function createNytThemeFocalSet(topicId, params) {
 }
 
 export function createMediaTypeFocalSet(topicId, params) {
-  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
-  acceptedParams['data[]'] = JSON.stringify(acceptedParams.data);
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/media-type/create`, acceptedParams);
 }
 

@@ -26,7 +26,7 @@ const localMessages = {
 const CreateFocusContainer = (props) => {
   const { topicId, location, handleDone } = props;
   const { focalSetDefId, focalTechnique } = props.location.query;
-  const initialValues = { numberSelected: DEFAULT_SELECTED_NUMBER, mediaType: 0 };
+  const initialValues = { numberSelected: DEFAULT_SELECTED_NUMBER };
   if (focalTechnique !== undefined) {
     initialValues.focalTechnique = focalTechnique;
   } else {
@@ -118,8 +118,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
-      case FOCAL_TECHNIQUE_MEDIA_TYPE: // TODO, not yet tested
-        saveData = { ...formValues, data: queryData.mediaType.map(c => ({ tags_id: c.tags_id, label: c.label })) };
+      case FOCAL_TECHNIQUE_MEDIA_TYPE:
+        saveData = { ...formValues };
         return dispatch(createMediaTypeFocalSet(topicId, saveData))
           .then(() => {
             const focusSavedMessage = ownProps.intl.formatMessage(localMessages.mediaTypeFocusSaved);
