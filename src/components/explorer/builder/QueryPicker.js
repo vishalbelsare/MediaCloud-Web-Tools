@@ -123,9 +123,6 @@ class QueryPicker extends React.Component {
   saveChangesToSelectedQuery() {
     const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = Object.assign({}, selected, formQuery);
-    if (selected.autoNaming) {
-      updatedQuery.label = autoMagicQueryLabel(formQuery);
-    }
     updateCurrentQuery(updatedQuery, 'label');
   }
 

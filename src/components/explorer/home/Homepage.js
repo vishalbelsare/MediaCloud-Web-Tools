@@ -12,6 +12,7 @@ import SampleSearchContainer from './SampleSearchContainer';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
+import { emptyString } from '../../../lib/formValidators';
 import MarketingFeatureList from './MarketingFeatureList';
 import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 
@@ -81,10 +82,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onKeywordSearch: (values, user) => {
     let urlParamString;
+    const keyword = emptyString(values.keyword) ? '' : values.keyword;
     if (hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN)) {
       const defaultDates = getPastTwoWeeksDateRange();
       const queries = [{
-        q: values.keyword,
+        q: keyword,
         startDate: defaultDates.start,
         endDate: defaultDates.end,
         color: schemeCategory10[0],
@@ -95,7 +97,7 @@ const mapDispatchToProps = dispatch => ({
       const queryStr = generateQueryParamString(queries);
       urlParamString = `search?q=${queryStr}`;
     } else {
-      const queryStr = `[{"q":"${encodeURIComponent(values.keyword)}"}]`;
+      const queryStr = `[{"q":"${encodeURIComponent(keyword)}"}]`;
       urlParamString = `demo/search?q=${queryStr}`;
     }
     dispatch(push(`/queries/${urlParamString}`));

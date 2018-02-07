@@ -1,4 +1,5 @@
 import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES } from '../../../actions/explorerActions';
+import { autoMagicQueryLabel } from '../../../lib/explorerUtil';
 
 const INITIAL_STATE = [];
 
@@ -17,6 +18,10 @@ function queries(state = INITIAL_STATE, action) {
         // we may not have an id if this is a custom query, use index. -- update we may not even use ID... TBD
         queryIndex = queryIndex > -1 ? queryIndex : action.payload.query.index;
         updatedState[queryIndex] = action.payload.query;
+        if (updatedState[queryIndex].autoNaming) {
+          updatedState[queryIndex].label = autoMagicQueryLabel(updatedState[queryIndex]);
+        }
+        updatedState[queryIndex].autoNaming = (updatedState[queryIndex].q === '*' || updatedState[queryIndex].q === '');
         return updatedState;
       }
       return null;
@@ -48,7 +53,7 @@ function queries(state = INITIAL_STATE, action) {
       }
       return state;
     case SELECT_SEARCH_BY_PARAMS: // select this set of queries as passed in by URL
-      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: false }));
+      updatedState = action.payload.map(q => Object.assign({}, q, { autoNaming: q.q === '*' || q.q === '' }));
       return updatedState;
     case MARK_AS_DELETED_QUERY:
       if (action.payload) {

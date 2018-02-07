@@ -4,7 +4,7 @@ import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 // import { push } from 'react-router-redux';
 import { selectQuery, resetSelected, resetQueries, resetSentenceCounts, resetSampleStories, resetStoryCounts,
-  resetGeo, updateTimestampForQueries } from '../../../actions/explorerActions';
+  resetGeo, updateTimestampForQueries, removeDeletedQueries } from '../../../actions/explorerActions';
 import QueryBuilderContainer from './QueryBuilderContainer';
 import QueryResultsContainer from '../results/QueryResultsContainer';
 import { WarningNotice } from '../../common/Notice';
@@ -80,14 +80,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(selectQuery(query));
   },
   reallyHandleSearch: () => {
+    dispatch(removeDeletedQueries());
     dispatch(updateTimestampForQueries());
-    // update URL location according to updated queries
-/*    const unDeletedQueries = queries.filter(q => q.deleted !== true);
-    const nonEmptyQueries = unDeletedQueries.filter(q => q.q !== undefined && q.q !== '');
-    const urlParamString = nonEmptyQueries.map((q, idx) => `{"index":${idx},"q":"${encodeURIComponent(q.q)}","color":"${encodeURIComponent(q.color)}"}`);
-    const newLocation = `/queries/demo/search/[${urlParamString}]`;
-    dispatch(push(newLocation));
-    */
   },
 });
 
