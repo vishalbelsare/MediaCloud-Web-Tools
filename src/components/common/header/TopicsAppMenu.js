@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -41,7 +42,7 @@ const TopicsAppMenu = (props) => {
     <AppMenu
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'topics'}
-      onTitleClick={() => { props.handleItemClick('about'); }}
+      onTitleClick={() => { props.handleItemClick('about', props.isLoggedIn); }}
     >
       {menu}
     </AppMenu>
@@ -61,9 +62,13 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = () => ({
-  handleItemClick: (path) => {
-    window.location.href = urlToTopicMapper(path);
+const mapDispatchToProps = dispatch => ({
+  handleItemClick: (path, isLoggedIn = true) => {
+    if (isLoggedIn) {
+      dispatch(push(urlToTopicMapper(path)));
+    } else {
+      window.location.href = urlToTopicMapper(path);
+    }
   },
 });
 
