@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import LoadingSpinner from '../../common/LoadingSpinner';
+import { SearchButton } from '../../common/IconButton';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
@@ -152,6 +153,7 @@ class SourceSearchContainer extends React.Component {
     const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search source-search">
+        <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
         <AutoComplete
           hintText={formatMessage(localMessages.searchHint)}

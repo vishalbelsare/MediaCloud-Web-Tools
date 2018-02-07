@@ -37,9 +37,10 @@ const sourceRoutes = (
 
     <IndexRedirect to="/home" />
 
+    <Route path="/home" component={Homepage} />
+
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
-      <Route path="/home" component={Homepage} />
       <Route path="/search" component={AdvancedSearchContainer} onEnter={requireAuth} />
       <Route path="/favorites" component={FavoritedContainer} onEnter={requireAuth} />
     </Route>

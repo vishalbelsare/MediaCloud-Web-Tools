@@ -9,6 +9,10 @@ import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
 import DescriptiveButton from '../../common/DescriptiveButton';
+import SourceControlBar from '../controlbar/SourceControlBar';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { AddButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 import { assetUrl } from '../../../lib/assetUtil';
@@ -27,6 +31,8 @@ const localMessages = {
   browseEMMabout: { id: 'sources.into.browse.emm.about', defaultMessage: 'See country-focused collections we created based on source in the <a href="http://emm.newsbrief.eu/">European Media Monitor</a> project.' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
+  addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create a Collection' },
+  addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
 const Homepage = (props) => {
@@ -50,6 +56,23 @@ const Homepage = (props) => {
         descriptionMsg={messages.sourcesToolDescription}
         link="https://mediacloud.org/tools/"
       />
+      <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+        <SourceControlBar>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <Grid>
+              <Link to="collections/create">
+                <AddButton />
+                <FormattedMessage {...localMessages.addCollection} />
+              </Link>
+              &nbsp; &nbsp;
+              <Link to="sources/create">
+                <AddButton />
+                <FormattedMessage {...localMessages.addSource} />
+              </Link>
+            </Grid>
+          </Permissioned>
+        </SourceControlBar>
+      </Permissioned>
       <Grid>
         <Row>
           <Col lg={12}>
