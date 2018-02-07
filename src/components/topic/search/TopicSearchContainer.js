@@ -88,6 +88,7 @@ class TopicSearchContainer extends React.Component {
     const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search topic-search right">
+        <SearchButton />
         <div className="fetching">{fetchingStatus}</div>
         <AutoComplete
           hintText={formatMessage(localMessages.searchHint)}
@@ -100,7 +101,6 @@ class TopicSearchContainer extends React.Component {
           maxSearchResults={10}
           filter={() => true}
         />
-        <SearchButton />
       </div>
     );
   }
