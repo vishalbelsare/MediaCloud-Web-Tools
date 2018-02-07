@@ -1,4 +1,10 @@
 .topic-search {
 	position: relative;
 	font-weight: normal;
+    
+    .icon-button {
+      float: right !important;
+      position: absolute !important;
+      padding: 10px;
+    }
 }

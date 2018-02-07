@@ -3,8 +3,7 @@
 .controlbar {
 
   &.controlbar-topic {
-
-    border-bottom: 0px !important;
+    background-color: $white !important;
 
     .active-filters{
       float: right;
@@ -20,7 +19,7 @@
     }
 
     .main {
-      border-bottom: 0px;
+      background-color: $white !important;
       min-height: 45px;
       .left {
         vertical-align:middle;
@@ -34,7 +33,7 @@
       }
     }
     .filter {
-      background-color: $material-grey800;
+      background-color: $white;
       .filter-selector {
 
         .snapshot-selector, .focus-selector {

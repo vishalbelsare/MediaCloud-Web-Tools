@@ -7,6 +7,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchTopicSearchResults } from '../../../actions/topicActions';
 import LoadingSpinner from '../../common/LoadingSpinner';
+import { SearchButton } from '../../common/IconButton';
 import { FETCH_ONGOING } from '../../../lib/fetchConstants';
 
 const MAX_SUGGESTION_CHARS = 60;
@@ -86,7 +87,7 @@ class TopicSearchContainer extends React.Component {
     const isFetching = fetchStatus === FETCH_ONGOING;
     const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
     return (
-      <div className="async-search topic-search">
+      <div className="async-search topic-search right">
         <div className="fetching">{fetchingStatus}</div>
         <AutoComplete
           hintText={formatMessage(localMessages.searchHint)}
@@ -99,6 +100,7 @@ class TopicSearchContainer extends React.Component {
           maxSearchResults={10}
           filter={() => true}
         />
+        <SearchButton />
       </div>
     );
   }
