@@ -20,7 +20,6 @@ const localMessages = {
 class QueryPickerLoadUserSearchesDialog extends React.Component {
   state = {
     loadSearchDialogOpen: false,
-    selectedSearch: '',  // the actual label they type into the change-label popup dialog
   };
 
   onLoadRequest = () => {
@@ -34,9 +33,9 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     handleDeleteSearch(selectedSearch);
   }
 
-  onLoadConfirm = () => {
+  onLoadConfirm = (search) => {
     const { handleLoadSelectedSearch } = this.props;
-    handleLoadSelectedSearch(this.state.selectedSearch);
+    handleLoadSelectedSearch(search);
     this.setState({ loadSearchDialogOpen: false });
   };
 
@@ -49,9 +48,6 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
     this.onSaveConfirm();
   };
 
-  updateSelectedSearch = (val) => {
-    this.setState({ selectedSearch: val });
-  };
   render() {
     const { searches, submitting } = this.props;
     const { formatMessage } = this.props.intl;
@@ -72,7 +68,7 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           name="searchNameInDialog"
         >
           {searches.map((search, idx) => (
-            <ListItem key={idx}>
+            <ListItem key={idx} onClick={() => this.onLoadConfirm(search)}>
               <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
               <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
               <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />

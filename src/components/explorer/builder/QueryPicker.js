@@ -370,7 +370,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleLoadSelectedSearch: (selectedSearch) => {
     if (selectedSearch && selectedSearch.queryParams) {
+      // this does not cause the url to reload
       dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
+      // but this does
+      // window.location.href = `#/queries/search?q=${selectedSearch.queryParams}`;
     }
   },
   handleDeleteUserSearch: (selectedSearch) => {
