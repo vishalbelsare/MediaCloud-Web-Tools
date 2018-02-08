@@ -16,8 +16,6 @@ const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Source Manager' },
   home: { id: 'sources.menu.items.home', defaultMessage: 'Home' },
   mc: { id: 'sources.menu.items.mc', defaultMessage: 'Collections: Media Cloud' },
-  gv: { id: 'sources.menu.items.gv', defaultMessage: 'Collections: Global Voices' },
-  emm: { id: 'sources.menu.items.emm', defaultMessage: 'Collections: European Media Monitor' },
   country: { id: 'sources.menu.items.country', defaultMessage: 'Collections: Country & State' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
@@ -67,12 +65,6 @@ class SourcesDrawer extends React.Component {
           </MenuItem>
           <MenuItem id="media-cloud-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/media-cloud'); }}>
             <FormattedMessage {...localMessages.mc} />
-          </MenuItem>
-          <MenuItem id="european-media-monitor-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/european-media-monitor'); }}>
-            <FormattedMessage {...localMessages.emm} />
-          </MenuItem>
-          <MenuItem id="global-voices-collections" onTouchTap={() => { this.close(); handleMenuItemClick('/collections/global-voices'); }}>
-            <FormattedMessage {...localMessages.gv} />
           </MenuItem>
           <Divider />
           <MenuItem onTouchTap={() => { this.close(); handleMenuItemClick('/favorites'); }}>

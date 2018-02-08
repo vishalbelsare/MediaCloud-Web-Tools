@@ -21,8 +21,6 @@ import EditSourceFeedContainer from '../components/source/mediaSource/EditSource
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
 import Homepage from '../components/source/homepage/Homepage';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
-import GVCollectionListContainer from '../components/source/collection/list/GVCollectionListContainer';
-import EMMCollectionListContainer from '../components/source/collection/list/EMMCollectionListContainer';
 import CountryCollectionListContainer from '../components/source/collection/list/CountryCollectionListContainer';
 import PageWrapper from '../components/source/PageWrapper';
 import FavoritedContainer from '../components/source/FavoritedContainer';
@@ -63,8 +61,6 @@ const sourceRoutes = (
 
     <Route path="/collections" >
       <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
-      <Route path="global-voices" component={GVCollectionListContainer} onEnter={requireAuth} />
-      <Route path="european-media-monitor" component={EMMCollectionListContainer} onEnter={requireAuth} />
       <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />
       <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       <Redirect from="details" to=":collectionId" />

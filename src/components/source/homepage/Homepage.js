@@ -8,10 +8,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
-import DescriptiveButton from '../../common/DescriptiveButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
-import { assetUrl } from '../../../lib/assetUtil';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -21,15 +19,12 @@ const localMessages = {
   browseCountryAbout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the global country and state-level collections we\'ve imported from <a href="http://www.abyznewslinks.com/">ABYZ</a>.' },
   browseMC: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Custom Collections' },
   browseMCabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the collections our team has put together to support our various investigations.' },
-  browseEMM: { id: 'sources.into.browse.emm', defaultMessage: 'Browse EMM Collections' },
-  browseEMMabout: { id: 'sources.into.browse.emm.about', defaultMessage: 'See country-focused collections we created based on source in the <a href="http://emm.newsbrief.eu/">European Media Monitor</a> project.' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
 const Homepage = (props) => {
-  const { goToUrl, user } = props;
-  const { formatMessage } = props.intl;
+  const { user } = props;
   let sideBarContent;
   if (user.isLoggedIn) {
     sideBarContent = <FavoriteSourcesAndCollectionsContainer />;
@@ -60,32 +55,6 @@ const Homepage = (props) => {
         </Col>
         <Col lg={5} xs={12}>
           {sideBarContent}
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
-            label={formatMessage(localMessages.browseCountry)}
-            description={<FormattedHTMLMessage {...localMessages.browseCountryAbout} />}
-            onClick={() => { goToUrl('/collections/country-and-state'); }}
-          />
-        </Col>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/mediacloud-logo-black-2x.png')}
-            label={formatMessage(localMessages.browseMC)}
-            description={<FormattedHTMLMessage {...localMessages.browseMCabout} />}
-            onClick={() => { goToUrl('/collections/media-cloud'); }}
-          />
-        </Col>
-        <Col lg={4} xs={12}>
-          <DescriptiveButton
-            imageUrl={assetUrl('/static/img/logo-emm.png')}
-            label={formatMessage(localMessages.browseEMM)}
-            description={<FormattedHTMLMessage {...localMessages.browseEMMabout} />}
-            onClick={() => { goToUrl('/collections/european-media-monitor'); }}
-          />
         </Col>
       </Row>
       <Row>
