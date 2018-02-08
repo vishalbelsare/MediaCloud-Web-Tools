@@ -82,16 +82,14 @@ function composeUrlBasedQueryContainer() {
         const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
         const { formatMessage } = this.props.intl;
         let queriesFromUrl;
+
         try {
-          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
-        } catch (e) { // clunky but a necessary check for Firefox
-          try {
-            queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr));
-          } catch (f) {
-            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-            return;
-          }
+          queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr));
+        } catch (f) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
         }
+
         let extraDefaults = {};
         // add in an index, label, and color if they are not there
         if (!isLoggedIn) {  // and demo mode needs some extra stuff too
