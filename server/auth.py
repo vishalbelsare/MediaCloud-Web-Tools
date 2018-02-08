@@ -65,7 +65,8 @@ class User(flask_login.UserMixin):
         try:
             return User(db.find_by_api_key(userid)['profile'])
             # return User.cached[userid]
-        except KeyError:
+        except Exception:
+            # be safer here... if anything goes wrong make them login again
             return None
 
 #User.cached = {}
