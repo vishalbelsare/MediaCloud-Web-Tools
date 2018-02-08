@@ -73,7 +73,8 @@ export function acceptParams(params, acceptableKeys) {
   const accepted = {};
   Object.keys(params).forEach((key) => {
     if (acceptableKeys.includes(key)) {
-      accepted[key] = params[key];
+      const valueToSend = (params[key] === undefined) ? null : params[key];
+      accepted[key] = valueToSend;
     }
   });
   return accepted;
