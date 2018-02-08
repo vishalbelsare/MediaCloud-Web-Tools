@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { push } from 'react-router-redux';
+// import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
@@ -370,10 +370,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleLoadSelectedSearch: (selectedSearch) => {
     if (selectedSearch && selectedSearch.queryParams) {
-      // this does not cause the url to reload
-      dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
-      // but this does
-      // window.location.href = `#/queries/search?q=${selectedSearch.queryParams}`;
+      window.location = `https://explorer.mediacloud.org/#/queries/search?q=${selectedSearch.queryParams}`;
     }
   },
   handleDeleteUserSearch: (selectedSearch) => {
