@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedDate, FormattedHTMLMessage } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import { Col } from 'react-flexbox-grid/lib';
 import { List, ListItem } from 'material-ui/List';
 import Link from 'react-router/lib/Link';
 import { DeleteButton } from '../../common/IconButton';
@@ -68,11 +69,15 @@ class QueryPickerLoadUserSearchesDialog extends React.Component {
           name="searchNameInDialog"
         >
           {searches.map((search, idx) => (
-            <ListItem key={idx} onClick={() => this.onLoadConfirm(search)}>
-              <Link key={idx} to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
+            <div key={idx}>
+              <Col lg={11} >
+                <ListItem onTouchTap={() => this.onLoadConfirm(search)}>
+                  <Link to={`queries/search?q=${search.queryParams}`}>{search.queryName}</Link>
+                  <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
+                </ListItem>
+              </Col>
               <DeleteButton className="delete-search" onClick={() => this.onDeleteRequest(search)} />
-              <br /><FormattedDate value={getDateFromTimestamp(search.timestamp)} />
-            </ListItem>
+            </div>
           ))}
         </List>
       );
