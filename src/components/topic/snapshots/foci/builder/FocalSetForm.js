@@ -3,7 +3,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import composeIntlForm from '../../../../common/IntlForm';
-import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../../lib/focalTechniques';
+import { FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME, FOCAL_TECHNIQUE_MEDIA_TYPE } from '../../../../../lib/focalTechniques';
 import { notEmptyString } from '../../../../../lib/formValidators';
 
 const localMessages = {
@@ -20,6 +20,8 @@ const localMessages = {
   defaultSetDescriptionTopCountries: { id: 'focalSet.default.setDescription.retweet', defaultMessage: 'Subtopics for the countries stories are most often about.' },
   defaultSetNameNytTheme: { id: 'focalSet.default.setName.nyt', defaultMessage: 'Nyt Theme' },
   defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Subtopics for the themes stories are most often related to.' },
+  defaultSetNameMediaType: { id: 'focalSet.default.setName.mediaType', defaultMessage: 'Media Type' },
+  defaultSetDescriptionMediaType: { id: 'focalSet.default.setDescription.mediaType', defaultMessage: 'Automatically generated subtopics that group together stories by the type of media source that published them.' },
 
 };
 
@@ -44,6 +46,10 @@ class FocalSetForm extends React.Component {
       case FOCAL_TECHNIQUE_NYT_THEME:
         setName = formatMessage(localMessages.defaultSetNameNytTheme);
         setDescription = formatMessage(localMessages.defaultSetDescriptionNytTheme);
+        break;
+      case FOCAL_TECHNIQUE_MEDIA_TYPE:
+        setName = formatMessage(localMessages.defaultSetNameMediaType);
+        setDescription = formatMessage(localMessages.defaultSetDescriptionMediaType);
         break;
       default:
         setName = formatMessage(localMessages.defaultSetName);

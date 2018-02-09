@@ -5,8 +5,8 @@ import { injectIntl } from 'react-intl';
 import { push } from 'react-router-redux';
 import { reset } from 'redux-form';
 import FocusBuilderWizard from './builder/FocusBuilderWizard';
-import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME } from '../../../../lib/focalTechniques';
-import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet, createTopCountriesFocalSet, createNytThemeFocalSet } from '../../../../actions/topicActions';
+import { FOCAL_TECHNIQUE_BOOLEAN_QUERY, FOCAL_TECHNIQUE_RETWEET_PARTISANSHIP, FOCAL_TECHNIQUE_TOP_COUNTRIES, FOCAL_TECHNIQUE_NYT_THEME, FOCAL_TECHNIQUE_MEDIA_TYPE } from '../../../../lib/focalTechniques';
+import { submitFocusUpdateOrCreate, setTopicNeedsNewSnapshot, createRetweetFocalSet, createTopCountriesFocalSet, createNytThemeFocalSet, createMediaTypeFocalSet } from '../../../../actions/topicActions';
 import { LEVEL_ERROR } from '../../../common/Notice';
 import { updateFeedback, addNotice } from '../../../../actions/appActions';
 
@@ -20,6 +20,7 @@ const localMessages = {
   duplicateName: { id: 'focus.create.invalid', defaultMessage: 'Duplicate name. Choose a unique focal set name.' },
   topCountriesFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics by top countries.' },
   nytFocusSaved: { id: 'focus.create.booleanSaved', defaultMessage: 'We created a new subtopics with NYT Themes tags.' },
+  mediaTypeFocusSaved: { id: 'focus.create.mediaType.saved', defaultMessage: 'We created a new subtopics with Media Type tags.' },
 };
 
 const CreateFocusContainer = (props) => {
@@ -62,6 +63,7 @@ const mapStateToProps = (state, ownProps) => ({
   topicId: parseInt(ownProps.params.topicId, 10),
   topCountries: state.topics.selected.focalSets.create.topCountriesStoryCounts.story_counts,
   topThemes: state.topics.selected.focalSets.create.nytThemeStoryCounts.story_counts,
+  mediaType: state.topics.selected.focalSets.create.mediaTypeStoryCounts.story_counts,
   focalSetDefinitions: state.topics.selected.focalSets.definitions.list,
 });
 
@@ -116,6 +118,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
             dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
           });
+      case FOCAL_TECHNIQUE_MEDIA_TYPE:
+        saveData = { ...formValues };
+        return dispatch(createMediaTypeFocalSet(topicId, saveData))
+          .then(() => {
+            const focusSavedMessage = ownProps.intl.formatMessage(localMessages.mediaTypeFocusSaved);
+            dispatch(setTopicNeedsNewSnapshot(true));           // user feedback
+            dispatch(updateFeedback({ open: true, message: focusSavedMessage }));  // user feedback
+            dispatch(push(`/topics/${topicId}/snapshot/foci`)); // go back to focus management page
+            dispatch(reset('snapshotFocus')); // it is a wizard so we have to do this by hand
+          });
       default:
         return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.invalid) }));
     }
@@ -124,9 +136,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    handleDone: (topicId, formValues) => {
-      dispatchProps.submitDone(topicId, formValues, stateProps);
-    },
+    handleDone: (topicId, formValues) => dispatchProps.submitDone(topicId, formValues, stateProps),
   });
 }
 

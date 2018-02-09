@@ -24,14 +24,14 @@ class KeywordStoryPreviewContainer extends React.Component {
     }
   }
   render() {
-    const { stories, topicId, helpButton } = this.props;
+    const { stories, topicId, helpButton, showTweetCounts } = this.props;
     return (
       <DataCard>
         <h2>
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={stories} topicId={topicId} />
+        <TopicStoryTable stories={stories} showTweetCounts={showTweetCounts} topicId={topicId} />
       </DataCard>
     );
   }
@@ -49,11 +49,13 @@ KeywordStoryPreviewContainer.propTypes = {
   // from state
   fetchStatus: PropTypes.string.isRequired,
   stories: PropTypes.array,
+  showTweetCounts: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.focalSets.create.matchingStories.fetchStatus,
   stories: state.topics.selected.focalSets.create.matchingStories.stories,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

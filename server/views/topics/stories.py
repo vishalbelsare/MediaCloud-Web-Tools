@@ -227,7 +227,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     props = ['stories_id', 'publish_date', 'date_is_reliable',
              'title', 'url', 'media_id', 'media_name',
              'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
-             'facebook_share_count', 'language', 'subtopics', 'themes']
+             'facebook_share_count', 'simple_tweet_count', 'language', 'subtopics', 'themes']
     user_mc = user_mediacloud_client()
     try:
         while more_stories:

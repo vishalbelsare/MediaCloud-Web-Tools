@@ -38,7 +38,7 @@ class WordStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId, helpButton } = this.props;
+    const { inlinkedStories, topicId, helpButton, showTweetCounts } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -49,7 +49,7 @@ class WordStoriesContainer extends React.Component {
           <FormattedMessage {...localMessages.title} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.handleSortData} />
+        <TopicStoryTable stories={inlinkedStories} showTweetCounts={showTweetCounts} topicId={topicId} onChangeSort={this.handleSortData} />
       </DataCard>
     );
   }
@@ -73,6 +73,7 @@ WordStoriesContainer.propTypes = {
   sort: PropTypes.string.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
+  showTweetCounts: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -80,6 +81,7 @@ const mapStateToProps = state => ({
   inlinkedStories: state.topics.selected.word.stories.stories,
   sort: state.topics.selected.word.stories.sort,
   stem: state.topics.selected.word.info.stem,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

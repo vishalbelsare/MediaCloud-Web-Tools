@@ -53,7 +53,6 @@ class MediaTable extends React.Component {
               <th><FormattedMessage {...messages.storyPlural} /></th>
               <th className="numeric">{this.sortableHeader('inlink', messages.mediaInlinks)}</th>
               <th className="numeric"><FormattedMessage {...messages.outlinks} /></th>
-              <th className="numeric">{this.sortableHeader('bitly', messages.bitlyClicks)}</th>
               <th className="numeric">{this.sortableHeader('facebook', messages.facebookShares)}</th>
             </tr>
             {media.map((m, idx) =>
@@ -69,7 +68,6 @@ class MediaTable extends React.Component {
                 <td className="numeric"><FormattedNumber value={m.story_count !== undefined ? m.story_count : '?'} /></td>
                 <td className="numeric"><FormattedNumber value={m.media_inlink_count !== undefined ? m.media_inlink_count : '?'} /></td>
                 <td className="numeric"><FormattedNumber value={m.outlink_count !== undefined ? m.outlink_count : '?'} /></td>
-                <td className="numeric"><FormattedNumber value={m.bitly_click_count !== undefined ? m.bitly_click_count : '?'} /></td>
                 <td className="numeric"><FormattedNumber value={m.facebook_share_count !== undefined ? m.facebook_share_count : '?'} /></td>
               </tr>)
             )}

@@ -28,7 +28,7 @@ class StoryInlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId, helpButton } = this.props;
+    const { inlinkedStories, showTweetCounts, topicId, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -39,7 +39,7 @@ class StoryInlinksContainer extends React.Component {
           <FormattedMessage {...messages.inlinks} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={inlinkedStories} topicId={topicId} />
+        <TopicStoryTable stories={inlinkedStories} showTweetCounts={showTweetCounts} topicId={topicId} />
       </DataCard>
     );
   }
@@ -60,12 +60,14 @@ StoryInlinksContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
   filters: PropTypes.object.isRequired,
+  showTweetCounts: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   fetchStatus: state.topics.selected.story.inlinks.fetchStatus,
   inlinkedStories: state.topics.selected.story.inlinks.stories,
   filters: state.topics.selected.filters,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

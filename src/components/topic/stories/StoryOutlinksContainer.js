@@ -28,7 +28,7 @@ class StoryOutlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { outlinkedStories, topicId, helpButton } = this.props;
+    const { outlinkedStories, showTweetCounts, topicId, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -39,7 +39,7 @@ class StoryOutlinksContainer extends React.Component {
           <FormattedMessage {...messages.outlinks} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={outlinkedStories} topicId={topicId} />
+        <TopicStoryTable stories={outlinkedStories} showTweetCounts={showTweetCounts} topicId={topicId} />
       </DataCard>
     );
   }
@@ -60,6 +60,7 @@ StoryOutlinksContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   outlinkedStories: PropTypes.array.isRequired,
+  showTweetCounts: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -67,6 +68,7 @@ const mapStateToProps = state => ({
   outlinkedStories: state.topics.selected.story.outlinks.stories,
   timespanId: state.topics.selected.filters.timespanId,
   filters: state.topics.selected.filters,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

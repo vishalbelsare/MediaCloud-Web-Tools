@@ -48,7 +48,7 @@ class StoriesSummaryContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, filters, handleFocusSelected, user } = this.props;
+    const { stories, sort, topicId, filters, handleFocusSelected, user, showTweetCounts } = this.props;
     const { formatMessage } = this.props.intl;
     const exploreUrl = `/topics/${topicId}/stories`;
     const isLoggedIn = hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN);
@@ -82,6 +82,7 @@ class StoriesSummaryContainer extends React.Component {
         </h2>
         <TopicStoryTable
           stories={stories}
+          showTweetCounts={showTweetCounts}
           topicId={topicId}
           onChangeSort={isLoggedIn ? this.onChangeSort : null}
           onChangeFocusSelection={handleFocusSelected}
@@ -109,6 +110,7 @@ StoriesSummaryContainer.propTypes = {
   sort: PropTypes.string.isRequired,
   stories: PropTypes.array,
   user: PropTypes.object,
+  showTweetCounts: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -116,6 +118,7 @@ const mapStateToProps = state => ({
   sort: state.topics.selected.summary.topStories.sort,
   stories: state.topics.selected.summary.topStories.stories,
   user: state.user,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

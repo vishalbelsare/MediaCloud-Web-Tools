@@ -8,7 +8,7 @@ const localMessages = {
   q1: { id: 'faq.q1', defaultMessage: 'What is MediaCloud?' },
   a1: { id: 'faq.a1', defaultMessage: 'Media Cloud is an open source and open data platform for storing, retrieving, visualizing, and analyzing online news.' },
   q2: { id: 'faq.q2', defaultMessage: 'What type of data does Media Cloud collect?' },
-  a2: { id: 'faq.a2', defaultMessage: 'The bulk of our data is news stories from media sites around the web. In order to allow for insightful analyses of media ecosystems we also optionally collect data such as hyperlinks, Bitly clicks, Facebook shares, and Twitter shares.' },
+  a2: { id: 'faq.a2', defaultMessage: 'The bulk of our data is news stories from media sites around the web. In order to allow for insightful analyses of media ecosystems we also optionally collect data such as hyperlinks, Facebook shares, and Twitter shares.' },
   q3: { id: 'faq.q3', defaultMessage: 'How does Media Cloud get the data?' },
   a3: { id: 'faq.a3', defaultMessage: 'Media Cloud collects most of its content through the RSS feeds of the media sources we follow. We only have data for a source from the time we started scraping its\' RSS feeds.' },
   q4: { id: 'faq.q4', defaultMessage: 'What tools exist so that I can explore this data?  ' },
