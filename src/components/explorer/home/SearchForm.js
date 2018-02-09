@@ -4,14 +4,15 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
+import AppButton from '../../common/AppButton';
 import { emptyString } from '../../../lib/formValidators';
-import { SearchButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   mainTitle: { id: 'explorer.search.title', defaultMessage: 'Enter Keyword' },
   addButton: { id: 'explorer.search', defaultMessage: 'Search' },
-  searchHint: { id: 'explorer.intro.searchHint', defaultMessage: 'Try searching for the names of people, places, events' },
-  search: { id: 'explorer.intro.search', defaultMessage: 'Search the Media Cloud database of over 547 million stories.' },
+  searchHint: { id: 'explorer.intro.searchHint', defaultMessage: 'Try searching for the names of people, places, or events' },
+  search: { id: 'explorer.intro.search', defaultMessage: 'Search the Media Cloud database of over 500 million stories.' },
 };
 
 const SearchForm = (props) => {
@@ -21,26 +22,22 @@ const SearchForm = (props) => {
   return (
     <form className="app-form search-form" name="searchForm" onSubmit={handleSubmit(onSearch.bind(this))}>
       <Row>
-        <Col md={2} />
-        <Col md={8}>
+        <Col lg={3} />
+        <Col lg={6}>
           <h2><FormattedMessage {...localMessages.search} /></h2>
         </Col>
       </Row>
       <Row>
-        <Col md={2} />
-        <Col md={6}>
+        <Col lg={3} />
+        <Col lg={6}>
           <Field
             name="keyword"
             className="explorer-home-search-field"
             component={renderTextField}
             hintText={localMessages.searchHint}
-            fullWidth
           />
+          <AppButton type="submit" label={messages.search} primary />
         </Col>
-        <Col md={2}>
-          <SearchButton onClick={handleSubmit(onSearch.bind(this))} />
-        </Col>
-        <Col md={2} />
       </Row>
     </form>
   );
