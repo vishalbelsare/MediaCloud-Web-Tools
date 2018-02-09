@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import AppMenu from '../../common/header/AppMenu';
 import { urlToExplorer } from '../../../lib/urlUtil';
@@ -36,13 +35,9 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleItemClick: (path, isLoggedIn = true) => {
-    if (isLoggedIn) {
-      dispatch(push(urlToExplorer(path)));
-    } else {
-      window.location.href = urlToExplorer(path);
-    }
+const mapDispatchToProps = () => ({
+  handleItemClick: (path) => {
+    window.location.href = urlToExplorer(path);
   },
 });
 

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -62,13 +61,9 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleItemClick: (path, isLoggedIn = true) => {
-    if (isLoggedIn) {
-      dispatch(push(urlToTopicMapper(path)));
-    } else {
-      window.location.href = urlToTopicMapper(path);
-    }
+const mapDispatchToProps = () => ({
+  handleItemClick: (path) => {
+    window.location.href = urlToTopicMapper(path);
   },
 });
 
