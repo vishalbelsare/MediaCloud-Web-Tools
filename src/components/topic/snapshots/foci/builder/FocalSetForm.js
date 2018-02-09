@@ -21,7 +21,7 @@ const localMessages = {
   defaultSetNameNytTheme: { id: 'focalSet.default.setName.nyt', defaultMessage: 'Nyt Theme' },
   defaultSetDescriptionNytTheme: { id: 'focalSet.default.setDescription.nyt', defaultMessage: 'Subtopics for the themes stories are most often related to.' },
   defaultSetNameMediaType: { id: 'focalSet.default.setName.mediaType', defaultMessage: 'Media Type' },
-  defaultSetDescriptionMediaType: { id: 'focalSet.default.setDescription.mediaType', defaultMessage: 'Subtopics for media types.' },
+  defaultSetDescriptionMediaType: { id: 'focalSet.default.setDescription.mediaType', defaultMessage: 'Automatically generated subtopics that group together stories by the type of media source that published them.' },
 
 };
 

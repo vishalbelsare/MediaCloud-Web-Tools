@@ -12,7 +12,7 @@ const BUBBLE_CHART_DOM_ID = 'focalSetCreatePreviewTopCountriesStoriesCounts';
 
 const localMessages = {
   title: { id: 'topic.snapshot.topCountries.storyCount.title', defaultMessage: 'Stories By Media Type' },
-  intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Stories about most-talked-about media types' },
+  intro: { id: 'topic.snapshot.topCountries.storyCount.intro', defaultMessage: 'Of the stories that are from sources we have categorized with a media type, here is a breakdown of how many stories are from each type of source. This gives you a quick sense of the main sources of coverage, by media type.' },
 };
 
 const MediaTypeStoryCountsPreviewContainer = (props) => {

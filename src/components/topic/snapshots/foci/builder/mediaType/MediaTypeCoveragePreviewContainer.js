@@ -10,7 +10,7 @@ import { getBrandDarkColor } from '../../../../../../styles/colors';
 
 const localMessages = {
   title: { id: 'topic.snapshot.mediaType.coverage.title', defaultMessage: 'Story Coverage' },
-  intro: { id: 'topic.snapshot.mediaType.coverage.intro', defaultMessage: 'By Media Type' },
+  intro: { id: 'topic.snapshot.mediaType.coverage.intro', defaultMessage: 'This chart shows you how many of the stories are from sources that we have tagged with a media type.  If the colored slice is big, it means that you have enough coverage to do an analysis comparing coverage of this topic from different media types.  If the colored slice is small, you might not want to use this approach, because not many stories will be included in the subtopics.' },
   included: { id: 'topic.snapshot.mediaType.coverage.matching', defaultMessage: 'Stories from media sources that have a Media Type' },
   notIncluded: { id: 'topic.snapshot.mediaType.coverage.total', defaultMessage: 'Stories from media sources that have NO Media Type' },
 };
