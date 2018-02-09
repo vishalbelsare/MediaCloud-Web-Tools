@@ -23,11 +23,8 @@ def media_type_story_counts(topics_id):
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
     # make a count for each tag based on media_id
     for tag in media_type_tags:
-            query_clause = "tags_id_media:{}".format(tag['tags_id'])
-        if len(tag['media_ids']) > 0:
-            tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=query_clause)['count']
-        else:
-            tagged_story_count = 0
+        query_clause = "tags_id_media:{}".format(tag['tags_id'])
+        tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=query_clause)['count']
         tag_story_counts.append({
             'label': tag['label'],
             'tags_id': tag['tags_id'],
@@ -42,12 +39,12 @@ def media_type_story_counts(topics_id):
 @flask_login.login_required
 @api_error_handler
 def media_type_coverage(topics_id):
-    media_type_tags = cached_media_tags(TAG_SETS_ID_MEDIA_TYPE)
+    media_type_tags = cached_tags_in_tag_set(TAG_SETS_ID_MEDIA_TYPE)
     # grab the total stories
     total_stories = topic_story_count(user_mediacloud_key(), topics_id)['count']
     # count the stories in any media in tagged as media_type
-    tag_media_ids = " ".join(str(tag['tags_id']) for tag in media_type_tags)
-    query_clause = "tags_id_media:({})".format(tag_media_ids)
+    tags_ids = " ".join(str(tag['tags_id']) for tag in media_type_tags)
+    query_clause = "tags_id_media:({})".format(tags_ids)
     tagged_story_count = topic_story_count(user_mediacloud_key(), topics_id, q=query_clause)['count']
     return jsonify({'counts': {'count': tagged_story_count, 'total': total_stories}})
 
