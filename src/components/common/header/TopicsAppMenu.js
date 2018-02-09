@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import messages from '../../../resources/messages';
@@ -23,14 +24,14 @@ const TopicsAppMenu = (props) => {
   if (props.isLoggedIn) {
     menu = (
       <Menu>
-        <MenuItem onTouchTap={() => { props.handleItemClick('home'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...localMessages.home} />
         </MenuItem>
-        <MenuItem onTouchTap={() => { props.handleItemClick('topics/create'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('topics/create', true); }}>
           <FormattedMessage {...messages.createNewTopic} />
         </MenuItem>
         <Permissioned onlyRole={PERMISSION_ADMIN}>
-          <MenuItem onTouchTap={() => { props.handleItemClick('topics/status'); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('topics/status', true); }}>
             <FormattedMessage {...localMessages.listTopics} />
           </MenuItem>
         </Permissioned>
@@ -41,7 +42,7 @@ const TopicsAppMenu = (props) => {
     <AppMenu
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'topics'}
-      onTitleClick={() => { props.handleItemClick('about', props.isLoggedIn); }}
+      onTitleClick={() => { props.handleItemClick('about', getAppName() === 'topics'); }}
     >
       {menu}
     </AppMenu>
@@ -61,9 +62,13 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = () => ({
-  handleItemClick: (path) => {
-    window.location.href = urlToTopicMapper(path);
+const mapDispatchToProps = dispatch => ({
+  handleItemClick: (path, isLocal) => {
+    if (isLocal) {
+      dispatch(push(path));
+    } else {
+      window.location.href = urlToTopicMapper(path);
+    }
   },
 });
 

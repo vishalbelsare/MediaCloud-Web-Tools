@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
@@ -28,29 +29,29 @@ const SourcesAppMenu = (props) => {
   if (props.isLoggedIn) {
     menu = (
       <Menu>
-        <MenuItem onTouchTap={() => { props.handleItemClick('home'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...messages.home} />
         </MenuItem>
-        <MenuItem onTouchTap={() => { props.handleItemClick('search'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('search', true); }}>
           <FormattedMessage {...messages.search} />
         </MenuItem>
         <Divider />
-        <MenuItem onTouchTap={() => { props.handleItemClick('favorites'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('favorites', true); }}>
           <FormattedMessage {...localMessages.favoritedItems} />
         </MenuItem>
-        <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggest'); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggest', true); }}>
           <FormattedMessage {...localMessages.suggestSource} />
         </MenuItem>
         <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
           <Divider />
-          <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggestions'); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggestions', true); }}>
             <FormattedMessage {...localMessages.pendingSuggestions} />
           </MenuItem>
           <Divider />
-          <MenuItem onTouchTap={() => { props.handleItemClick('sources/create'); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('sources/create', true); }}>
             <FormattedMessage {...localMessages.newSource} />
           </MenuItem>
-          <MenuItem onTouchTap={() => { props.handleItemClick('collections/create'); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('collections/create', true); }}>
             <FormattedMessage {...localMessages.newCollection} />
           </MenuItem>
         </Permissioned>
@@ -61,7 +62,7 @@ const SourcesAppMenu = (props) => {
     <AppMenu
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'sources'}
-      onTitleClick={() => { props.handleItemClick('about', props.isLoggedIn); }}
+      onTitleClick={() => { props.handleItemClick('about', getAppName() === 'sources'); }}
     >
       {menu}
     </AppMenu>
@@ -81,9 +82,13 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = () => ({
-  handleItemClick: (path) => {
-    window.location.href = urlToSourceManager(path);
+const mapDispatchToProps = dispatch => ({
+  handleItemClick: (path, isLocal) => {
+    if (isLocal) {
+      dispatch(push(path));
+    } else {
+      window.location.href = urlToSourceManager(path);
+    }
   },
 });
 

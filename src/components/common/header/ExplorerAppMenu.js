@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import AppMenu from '../../common/header/AppMenu';
 import { urlToExplorer } from '../../../lib/urlUtil';
+import { getAppName } from '../../../config';
 
 const localMessages = {
   menuTitle: { id: 'explorer.menu.title', defaultMessage: 'Explorer' },
@@ -15,7 +17,7 @@ const ExplorerAppMenu = (props) => {
     <AppMenu
       titleMsg={localMessages.menuTitle}
       showMenu={false}
-      onTitleClick={() => { props.handleItemClick('home', props.isLoggedIn); }}
+      onTitleClick={() => { props.handleItemClick('home', getAppName() === 'explorer'); }}
     >
       {menu}
     </AppMenu>
@@ -35,9 +37,13 @@ const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const mapDispatchToProps = () => ({
-  handleItemClick: (path) => {
-    window.location.href = urlToExplorer(path);
+const mapDispatchToProps = dispatch => ({
+  handleItemClick: (path, isLocal) => {
+    if (isLocal) {
+      dispatch(push(path));
+    } else {
+      window.location.href = urlToExplorer(path);
+    }
   },
 });
 
