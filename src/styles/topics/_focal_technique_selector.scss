@@ -4,13 +4,18 @@
   
   margin-bottom: 50px;
 
+  .light {
+    margin-top: 30px;
+  }
+
   .focal-technique-description {
+    margin-top: 30px;
+    margin-right: 20px;
 
     .focal-technique-icon {
       cursor: pointer;
       position: relative;
-      width: 136px;
-      height: 136px;
+      height: 100px;
       background-color: $material-grey300;
       .app-icon {
         position: absolute;
@@ -41,8 +46,14 @@
 
     &.selected {
       border-bottom: 4px solid $black;
+      background-color: $topics-darker;
+      color: white;
       .focal-technique-icon {
-        background-color: $topics-darker;
+        background-color: $topics-primary;
+      }
+      p {
+        margin-left: 10px;
+        margin-right: 10px;
       }
     }
 
