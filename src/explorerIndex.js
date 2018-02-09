@@ -9,7 +9,7 @@ import routes from './routes/explorerRoutes';
  */
 ReactGA.initialize('UA-60744513-11');
 
-setVersion('2.3.0');
+setVersion('2.3.2');
 
 setAppName(APP_EXPLORER);
 
