@@ -1,129 +1,51 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { injectIntl } from 'react-intl';
-import { push } from 'react-router-redux';
-import NavToolbar from './NavToolbar';
-import messages from '../../../resources/messages';
-import { getBrandColors } from '../../../styles/colors';
-import AppNoticesContainer from './AppNoticesContainer';
-import { assetUrl } from '../../../lib/assetUtil';
-
-const localMessages = {
-  goHome: { id: 'brand.goHome', defaultMessage: 'go home' },
-};
+import Link from 'react-router/lib/Link';
+import FavoriteToggler from '../FavoriteToggler';
+import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import Permissioned from '../../common/Permissioned';
 
 const AppHeader = (props) => {
-  const { drawer, name, subHeader, showSubHeader, description, backgroundColor, navigateToHome } = props;
-  const { formatMessage } = props.intl;
-  const brandColors = getBrandColors();
-  const styles = {
-    root: {
-      backgroundColor,
-    },
-    right: {
-      float: 'right',
-    },
-  };
-  let content;
-  if (showSubHeader) {
-    content = (
-      <Row>
-        <Col lg={2}>
-          <h1>
-            <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-              <img
-                className="app-logo"
-                alt={formatMessage(messages.suiteName)}
-                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
-                width={65}
-                height={65}
-              />
-            </a>
-          </h1>
-        </Col>
-        <Col lg={8}>
-          {subHeader}
-        </Col>
-        <Col lg={2} />
-      </Row>
-    );
+  const { link, title, isFavorite, onSetFavorited, subTitle } = props;
+  let titleContent;
+  if (link) {
+    titleContent = (<Link to={link}>{title}</Link>);
   } else {
-    content = (
-      <Row>
-        <Col lg={7}>
-          <h1>
-            <a href={`#${formatMessage(localMessages.goHome)}`} onClick={navigateToHome}>
-              <img
-                className="app-logo"
-                alt={formatMessage(messages.suiteName)}
-                src={assetUrl('/static/img/mediacloud-logo-white-2x.png')}
-                width={65}
-                height={65}
-              />
-            </a>
-            <strong>{name}</strong>
-          </h1>
-        </Col>
-        <Col lg={5}>
-          <div style={styles.right} >
-            <small className="app-description">{description}</small>
-          </div>
-        </Col>
-      </Row>
-    );
+    titleContent = title;
   }
   return (
     <div className="app-header">
-      <AppNoticesContainer />
-      <NavToolbar
-        backgroundColor={brandColors.dark}
-        drawer={drawer}
-      />
-      <div style={styles.root} >
-        <Grid>
-          {content}
-        </Grid>
-      </div>
+      <Grid>
+        <Row>
+          <Col lg={12}>
+            <h1>
+              {titleContent}
+              <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+                <FavoriteToggler
+                  isFavorited={isFavorite}
+                  onSetFavorited={isFavNow => onSetFavorited(isFavNow)}
+                />
+              </Permissioned>
+            </h1>
+            <p className="sub-title">{subTitle}</p>
+          </Col>
+        </Row>
+      </Grid>
     </div>
   );
 };
 
 AppHeader.propTypes = {
   // from parent
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-  lightColor: PropTypes.string.isRequired,
-  drawer: PropTypes.node,
-  subHeader: PropTypes.node,
-  // from context
-  intl: PropTypes.object.isRequired,
-  // state
-  showSubHeader: PropTypes.bool,
-  // from dispatch
-  navigateToHome: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  isFavorite: PropTypes.bool,
+  onSetFavorited: PropTypes.func,
+  subTitle: PropTypes.string,
+  link: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]),
 };
 
-AppHeader.contextTypes = {
-  router: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = store => ({
-  showSubHeader: store.app.showSubHeader,
-});
-
-const mapDispatchToProps = dispatch => ({
-  navigateToHome: (event) => {
-    event.preventDefault();
-    dispatch(push('/home'));
-  },
-});
-
-export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      AppHeader
-    )
-  );
+export default AppHeader;

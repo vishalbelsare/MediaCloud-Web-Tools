@@ -6,7 +6,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
-import { setSubHeaderVisible } from '../../../actions/appActions';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import Permissioned from '../../common/Permissioned';
@@ -97,17 +96,14 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   removeSourceId: () => {
     dispatch(selectSource(null));
-    dispatch(setSubHeaderVisible(false));
   },
   fetchData: (sourceId) => {
     dispatch(selectSource(sourceId));
-    dispatch(fetchSourceDetails(sourceId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchSourceDetails(sourceId));
   },
   asyncFetch: () => {
     dispatch(selectSource(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 

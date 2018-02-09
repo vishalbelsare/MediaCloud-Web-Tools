@@ -10,13 +10,14 @@ import composeAsyncContainer from '../common/AsyncContainer';
 import AppButton from '../common/AppButton';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery,
   topicStartSpider } from '../../actions/topicActions';
-import { addNotice, setSubHeaderVisible } from '../../actions/appActions';
+import { addNotice } from '../../actions/appActions';
 import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING,
   TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import TopicUnderConstruction from './TopicUnderConstruction';
 import Permissioned from '../common/Permissioned';
 import { PERMISSION_ADMIN } from '../../lib/auth';
+import TopicHeaderContainer from './TopicHeaderContainer';
 
 const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
@@ -70,7 +71,7 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, topicInfo, snapshotCount, handleSpiderRequest } = this.props;
+    const { children, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
@@ -121,6 +122,7 @@ class TopicContainer extends React.Component {
       <div className="topic-container">
         <div>
           <Title render={titleHandler} />
+          <TopicHeaderContainer topicId={topicId} topicInfo={topicInfo} filters={filters} />
           {contentToShow}
         </div>
       </div>
@@ -162,7 +164,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   removeTopicId: () => {
     dispatch(selectTopic(null));
-    dispatch(setSubHeaderVisible(false));
   },
   asyncFetch: () => {
     dispatch(selectTopic(ownProps.params.topicId));
@@ -185,7 +186,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(fetchTopicSummary(ownProps.params.topicId))
       .then((response) => {
         // show the subheader info
-        dispatch(setSubHeaderVisible(true));
         // show any warnings based on the topic state
         switch (response.state) {
           case TOPIC_SNAPSHOT_STATE_QUEUED:

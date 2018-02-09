@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import messages from '../../resources/messages';
-import AppSubHeader from '../common/header/AppSubHeader';
+import AppHeader from '../common/header/AppHeader';
 import { favoriteSource, favoriteCollection } from '../../actions/sourceActions';
 import { updateFeedback } from '../../actions/appActions';
 import { nullOrUndefined } from '../../lib/formValidators';
@@ -30,7 +30,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     details += (sourceInfo.is_monitored) ? ` • ${formatMessage(messages.monitored)}` : '';
     content = (
       <div className="source-sub-header">
-        <AppSubHeader
+        <AppHeader
           title={`${formatMessage(messages.sourceName)}: ${sourceInfo.name}`}
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
@@ -45,7 +45,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
       <div className="collection-sub-header">
-        <AppSubHeader
+        <AppHeader
           title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
           isFavorite={collectionInfo.isFavorite}

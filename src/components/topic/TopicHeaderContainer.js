@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import AppSubHeader from '../common/header/AppSubHeader';
+import AppHeader from '../common/header/AppHeader';
 import { setTopicFavorite } from '../../actions/topicActions';
 import { updateFeedback } from '../../actions/appActions';
 import messages from '../../resources/messages';
@@ -13,7 +13,7 @@ const localMessages = {
   topicUnfavorited: { id: 'source.unfavorited', defaultMessage: 'Un-starred this topic' },
 };
 
-const TopicMgrSubHeaderContainer = (props) => {
+const TopicHeaderContainer = (props) => {
   const { topicId, filters, topicInfo, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let title = '';
@@ -24,34 +24,31 @@ const TopicMgrSubHeaderContainer = (props) => {
   let content = null;
   if (topicInfo !== null) {
     content = (
-      <div className="topic-sub-header">
-        <AppSubHeader
-          title={title}
-          link={filteredLinkTo(`/topics/${topicInfo.topics_id}/summary`, filters)}
-          subTitle={topicInfo.description}
-          isFavorite={topicInfo.isFavorite}
-          onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
-        />
-      </div>
+      <AppHeader
+        title={title}
+        link={filteredLinkTo(`/topics/${topicInfo.topics_id}/summary`, filters)}
+        subTitle={topicInfo.description}
+        isFavorite={topicInfo.isFavorite}
+        onSetFavorited={isFav => handleSetFavorited(topicId, isFav)}
+      />
     );
   } else {
     content = null;
   }
   return (
-    <div className="topic-subheader">
+    <div className="topic-header">
       {content}
     </div>
   );
 };
 
-TopicMgrSubHeaderContainer.propTypes = {
+TopicHeaderContainer.propTypes = {
   // from parent
-  // from context
-  intl: PropTypes.object.isRequired,
-  // state
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
   filters: PropTypes.object,
+  // from context
+  intl: PropTypes.object.isRequired,
   // from dispatch
   handleSetFavorited: PropTypes.func.isRequired,
 };
@@ -75,6 +72,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      TopicMgrSubHeaderContainer
+      TopicHeaderContainer
     )
   );

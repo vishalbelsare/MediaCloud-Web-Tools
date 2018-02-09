@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateSource, fetchSourceDetails } from '../../../actions/sourceActions';
-import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
+import { updateFeedback } from '../../../actions/appActions';
 import SourceForm from './form/SourceForm';
 import { isCollectionTagSet, TAG_SET_PUBLICATION_COUNTRY, TAG_SET_PUBLICATION_STATE, TAG_SET_PRIMARY_LANGUAGE, TAG_SET_COUNTRY_OF_FOCUS, TAG_SET_MEDIA_TYPE } from '../../../lib/tagUtil';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
@@ -108,7 +108,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           // need to fetch it again because something may have changed
           dispatch(fetchSourceDetails(ownProps.params.sourceId))
             .then(() => {
-              dispatch(setSubHeaderVisible(true));
               dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
               dispatch(push(`/sources/${ownProps.params.sourceId}`));
             });

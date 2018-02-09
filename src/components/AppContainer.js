@@ -91,7 +91,6 @@ AppContainer.propTypes = {
   description: PropTypes.string.isRequired,
   drawer: PropTypes.node,
   showLoginButton: PropTypes.bool,
-  subHeader: PropTypes.node,
 };
 
 AppContainer.contextTypes = {

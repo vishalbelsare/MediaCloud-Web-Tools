@@ -6,7 +6,6 @@ import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
-import { setSubHeaderVisible } from '../../../actions/appActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -82,17 +81,14 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   removeCollectionId: () => {
     dispatch(selectCollection(null));
-    dispatch(setSubHeaderVisible(false));
   },
   fetchData: (collectionId) => {
     dispatch(selectCollection(collectionId));
-    dispatch(fetchCollectionDetails(collectionId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchCollectionDetails(collectionId));
   },
   asyncFetch: () => {
     dispatch(selectCollection(ownProps.params.collectionId));
-    dispatch(fetchCollectionDetails(ownProps.params.collectionId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchCollectionDetails(ownProps.params.collectionId));
   },
 });
 

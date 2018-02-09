@@ -5,7 +5,6 @@ import Title from 'react-title-component';
 import AppContainer from '../AppContainer';
 import TopicsDrawer from './TopicsDrawer';
 import messages from '../../resources/messages';
-import TopicsSubHeaderContainer from './TopicsSubHeaderContainer';
 
 const TopicsApp = (props) => {
   const { formatMessage } = props.intl;
@@ -19,7 +18,6 @@ const TopicsApp = (props) => {
         title={formatMessage(messages.topicsToolName)}
         description={formatMessage(messages.topicsToolDescription)}
         drawer={drawer}
-        subHeader={<TopicsSubHeaderContainer />}
       >
         {props.children}
       </AppContainer>
