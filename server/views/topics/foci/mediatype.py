@@ -56,12 +56,6 @@ def media_type_coverage(topics_id):
 @cache
 def cached_media_tags(tag_sets_id):
     media_type_tags = cached_tags_in_tag_set(tag_sets_id)
-    for tag in media_type_tags:
-        media = media_with_tag(user_mediacloud_key(), tag['tags_id'], True)  # cache this list
-        media_ids = [str(m['media_id']) for m in media] # as strs so we can concat into a query str later with .join call
-        tag['media'] = media
-        tag['media_ids'] = media_ids
-        tag['media_query'] = "media_id:({})".format(" ".join(media_ids))
     return media_type_tags
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/create', methods=['POST'])
