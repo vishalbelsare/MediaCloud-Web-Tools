@@ -76,9 +76,13 @@ class OrderedWordCloud extends React.Component {
       words.forEach((term, idx) => { words[idx].tfnorm = term.count / allSum; });
     }
     // create a rollover tooltip helper
-    const tooltipDiv = d3.select('body').append('div')
-      .attr('class', 'viz-tooltip ordered-word-cloud-tooltip')
-      .style('opacity', 0);
+    const body = d3.select('body');
+    let tooltipDiv = body.select('.viz-tooltip.word-cloud-tooltip');
+    if (tooltipDiv.empty()) {
+      tooltipDiv = body.append('div')
+        .attr('class', 'viz-tooltip word-cloud-tooltip')
+        .style('opacity', 0);
+    }
     // start layout calculations
     const node = ReactFauxDOM.createElement('svg');
     if (options.fullExtent === undefined) {
