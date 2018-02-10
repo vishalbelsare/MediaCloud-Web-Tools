@@ -15,9 +15,9 @@ setVersion('2.1.0');
 setAppName('explorer');
 
 setAppColors({
-  light: '#CF73C7',
-  dark: '#8F3387',
-  darker: '#8F3387',
+  light: '#AF53A7',
+  dark: '#8F3387',  // primary
+  darker: '#6F1367',
 });
 
 initializeApp(routes);

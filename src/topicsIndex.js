@@ -15,9 +15,9 @@ setVersion('2.1.0');
 setAppName('topics');
 
 setAppColors({
-  light: '#daf3ee',
-  dark: '#47c4ac',
-  darker: '#448e80',
+  light: '#58DBCC',
+  dark: '#38BBAC',  // primary
+  darker: '#189B8C',
 });
 
 initializeApp(routes);
