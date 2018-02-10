@@ -3,7 +3,8 @@
 .topic-container {
 
   .app-header {
-    background-color: #38BBAC;
+    background-color: $topics-primary;
+    background-color: $topics-darker;
   }
 
   .topic-warning {

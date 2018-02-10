@@ -57,7 +57,7 @@ const Homepage = (props) => {
         link="https://mediacloud.org/tools/"
       />
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-        <SourceControlBar>
+        <SourceControlBar showSearch>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Grid>
               <Link to="collections/create">

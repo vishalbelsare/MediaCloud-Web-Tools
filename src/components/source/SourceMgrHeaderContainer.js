@@ -18,7 +18,7 @@ const localMessages = {
   collectionStatic: { id: 'collection.unfavorited', defaultMessage: 'Static (won\'t change)' },
 };
 
-const SourceMgrSubHeaderContainer = (props) => {
+const SourceMgrHeaderContainer = (props) => {
   const { sourceId, sourceInfo, collectionId, collectionInfo, location, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
@@ -29,7 +29,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
     details += (sourceInfo.is_monitored) ? ` • ${formatMessage(messages.monitored)}` : '';
     content = (
-      <div className="source-sub-header">
+      <div className="source-header">
         <AppHeader
           title={`${formatMessage(messages.sourceName)}: ${sourceInfo.name}`}
           subTitle={details}
@@ -44,7 +44,7 @@ const SourceMgrSubHeaderContainer = (props) => {
     details += (collectionInfo.show_on_media === 1) ? ` • ${formatMessage(messages.public)}` : ` • ${formatMessage(messages.private)}`;
     details += (collectionInfo.is_static === 1) ? ` • ${formatMessage(localMessages.collectionStatic)}` : ` • ${formatMessage(localMessages.collectionDynamic)}`;
     content = (
-      <div className="collection-sub-header">
+      <div className="collection-header">
         <AppHeader
           title={`${formatMessage(messages.collectionName)}: ${collectionInfo.label || collectionInfo.tag}`}
           subTitle={details}
@@ -63,7 +63,7 @@ const SourceMgrSubHeaderContainer = (props) => {
   );
 };
 
-SourceMgrSubHeaderContainer.propTypes = {
+SourceMgrHeaderContainer.propTypes = {
   // from parent
   // from context
   params: PropTypes.object,       // params from router
@@ -112,6 +112,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      withRouter(SourceMgrSubHeaderContainer)
+      withRouter(SourceMgrHeaderContainer)
     )
   );

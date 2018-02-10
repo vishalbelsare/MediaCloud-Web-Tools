@@ -11,6 +11,7 @@ import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
+import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 
 const localMessages = {
   editCollection: { id: 'collection.edit', defaultMessage: 'Modify this Collection' },
@@ -34,8 +35,9 @@ class SelectCollectionContainer extends React.Component {
     const { children, collection } = this.props;
     const titleHandler = parentTitle => `${collection.label} | ${parentTitle}`;
     return (
-      <div>
+      <div className="collection-container">
         <Title render={titleHandler} />
+        <SourceMgrHeaderContainer />
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <span className="collection-edit-link">

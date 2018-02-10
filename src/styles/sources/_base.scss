@@ -55,5 +55,13 @@
     fill: $sources-primary;
   }
 
-}
+  .app-header {
+    background-color: $sources-primary;
+    border-top: 1px solid $sources-darker;
+    h1 {
+      color: white;
+    }
+  }
 
+
+}

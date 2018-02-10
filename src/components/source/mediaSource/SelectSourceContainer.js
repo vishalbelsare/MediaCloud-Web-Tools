@@ -11,6 +11,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
+import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 
 const localMessages = {
   editSource: { id: 'source.edit', defaultMessage: 'Modify this Source' },
@@ -35,8 +36,9 @@ class SelectSourceContainer extends React.Component {
     const { children, source } = this.props;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     return (
-      <div>
+      <div className="source-container">
         <Title render={titleHandler} />
+        <SourceMgrHeaderContainer />
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Row>
