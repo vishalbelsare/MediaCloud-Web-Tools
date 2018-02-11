@@ -7,7 +7,7 @@ import composeIntlForm from '../../../common/IntlForm';
 import { emptyString, invalidUrl } from '../../../../lib/formValidators';
 
 const localMessages = {
-  nameLabel: { id: 'source.suggest.name.label', defaultMessage: 'Name' },
+  nameLabel: { id: 'source.suggest.name.label', defaultMessage: 'Source Name' },
   urlLabel: { id: 'source.suggest.url.label', defaultMessage: 'Homepage (required)' },
   feedUrlLabel: { id: 'source.suggest.feedurl.label', defaultMessage: 'RSS feed URL' },
   feedUrlHint: { id: 'source.suggest.feedurl.hint', defaultMessage: 'if you know the url of an RSS feed, enter it here' },

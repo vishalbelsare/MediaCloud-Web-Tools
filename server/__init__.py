@@ -128,10 +128,10 @@ def create_app():
     webpack.init_app(my_app)
     # set up mail sending
     try:
-        if config.get('SMTP_ENABLED') is '1':
+        if config.get('SMTP_ENABLED') == u'1':
             mail_config = {     # @see https://pythonhosted.org/Flask-Mail/
                 'MAIL_SERVER': config.get('SMTP_SERVER'),
-                'MAIL_PORT': config.get('SMTP_PORT'),
+                'MAIL_PORT': int(config.get('SMTP_PORT')),
                 'MAIL_USE_SSL': config.get('SMTP_USE_SSL'),
                 'MAIL_USERNAME': config.get('SMTP_USER'),
                 'MAIL_PASSWORD': config.get('SMTP_PASS'),
@@ -140,9 +140,10 @@ def create_app():
             mail.init_app(my_app)
             logger.info(u'Mailing from {} via {}'.format(config.get('SMTP_USER'), config.get('SMTP_SERVER')))
         else:
-            logger.info("Mail configured, but not enabled")
-    except ConfigException:
-        logger.info("No mail configured")
+            logger.warn("Mail configured, but not enabled")
+    except ConfigException as ce:
+        logger.exception(ce)
+        logger.warn("No mail configured")
     return my_app
 
 app = create_app()
