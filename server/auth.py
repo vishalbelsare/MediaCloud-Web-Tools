@@ -48,7 +48,7 @@ class User(flask_login.UserMixin):
             db.update_user(self.name, {'api_key': self.id, 'profile': self.profile})
             return
         logger.debug("user %s created in db", self.name)
-        db.add_user(self.name, self.id)
+        db.add_user(self.name, self.id, self.profile)
 
     def exists_in_db(self):
         return db.includes_user_named(self.name)
