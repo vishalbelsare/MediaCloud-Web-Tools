@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import Link from 'react-router/lib/Link';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { generateQueryParamString } from '../../../lib/explorerUtil';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { assetUrl } from '../../../lib/assetUtil';
 
@@ -12,16 +13,23 @@ const SampleSearchItem = (props) => {
   // else just put in the id...
   const isNotLoggedInUser = !(hasPermissions(getUserRoles(user), PERMISSION_LOGGED_IN));
   let urlParamString = null;
+
   if (isNotLoggedInUser) {
     urlParamString = `demo/${search.id}`;
   } else {
     // use default dates, collection, sources. The logged in user can change in url or in the querybuilder
     const dateObj = getPastTwoWeeksDateRange();
-    const collection = search.queries.map(query => query.collections.map(c => `[${c}]`));
-    // const sources = '[]'; we default to empty sources for searches from this page so we don't need to do any prep like we do in the query builder
-
-    urlParamString = search.queries.map((query, idx) => `{"index":${query.index},"q":"${query.q}","startDate":"${dateObj.start}","endDate":"${dateObj.end}","sources":[],"collections":${collection[idx].join()}}`);
-    urlParamString = `search?q=[${urlParamString}]`;
+    urlParamString = generateQueryParamString(search.queries.map(q => ({
+      index: q.index,
+      label: q.label,
+      q: q.q,
+      color: q.color,
+      startDate: dateObj.start,
+      endDate: dateObj.end,
+      sources: [],
+      collections: q.collections,
+    })));
+    urlParamString = `search?q=${urlParamString}`;
   }
   const link = `/queries/${urlParamString}`;
   return (
