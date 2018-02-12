@@ -12,7 +12,9 @@ from raven.contrib.flask import Sentry
 from raven.handlers.logging import SentryHandler
 import mediacloud
 from mediameter.cliff import Cliff
+import redis
 
+from server.sessions import RedisSessionInterface
 from server.util.config import get_default_config, ConfigException
 from server.database import AppDatabase
 
@@ -72,7 +74,6 @@ NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')
 
 # Connect to the app's mongo DB
 db = AppDatabase(config.get('MONGO_URL'))
-
 try:
     db.check_connection()
 except Exception as err:
@@ -144,6 +145,8 @@ def create_app():
     except ConfigException as ce:
         logger.exception(ce)
         logger.warn("No mail configured")
+    # connect to the shared session storage
+    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
     return my_app
 
 app = create_app()
