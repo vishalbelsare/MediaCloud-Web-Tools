@@ -1,4 +1,5 @@
 import { SELECT_QUERY, UPDATE_QUERY, RESET_SELECTED } from '../../actions/explorerActions';
+import { autoMagicQueryLabel } from '../../lib/explorerUtil';
 
 const INITIAL_STATE = null;
 
@@ -17,6 +18,10 @@ function selected(state = INITIAL_STATE, action) {
     case UPDATE_QUERY:
       updatedState = state ? { ...state } : undefined;
       updatedState = { ...action.payload.query };
+      if (updatedState.autoNaming) {
+        updatedState.label = autoMagicQueryLabel(updatedState);
+      }
+      updatedState.autoNaming = (updatedState.q === '*' || updatedState.q === '');
 
       return updatedState;
     case RESET_SELECTED:

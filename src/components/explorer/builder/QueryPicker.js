@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { push } from 'react-router-redux';
+// import { push } from 'react-router-redux';
 import * as d3 from 'd3';
 import messages from '../../../resources/messages';
 import QueryForm from './QueryForm';
@@ -123,9 +123,6 @@ class QueryPicker extends React.Component {
   saveChangesToSelectedQuery() {
     const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = Object.assign({}, selected, formQuery);
-    if (selected.autoNaming) {
-      updatedQuery.label = autoMagicQueryLabel(formQuery);
-    }
     updateCurrentQuery(updatedQuery, 'label');
   }
 
@@ -373,7 +370,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleLoadSelectedSearch: (selectedSearch) => {
     if (selectedSearch && selectedSearch.queryParams) {
-      dispatch(push({ pathname: '/queries/search', search: `?q=${selectedSearch.queryParams}` }));
+      window.location = `https://explorer.mediacloud.org/#/queries/search?q=${selectedSearch.queryParams}`;
     }
   },
   handleDeleteUserSearch: (selectedSearch) => {
