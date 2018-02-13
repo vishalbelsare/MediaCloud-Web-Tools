@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
+// import MenuItem from 'material-ui/MenuItem';
 import Popover from 'material-ui/Popover';
-import MenuItem from 'material-ui/MenuItem';
 import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
 class AppMenu extends React.Component {
@@ -30,15 +30,27 @@ class AppMenu extends React.Component {
 
   close = () => this.setState({ open: false, iconDown: true });
 
+  // ES6
+  flatten = list => list.reduce(
+    (a, b) => a.concat(Array.isArray(b) ? this.flatten(b) : b), []
+  );
   render() {
     const { titleMsg, showMenu, onTitleClick, menuComponent } = this.props;
     const { formatMessage } = this.props.intl;
-    const closeFxn = this.close;
+    // const closeFxn = this.close;
     let newItems;
     if (menuComponent && menuComponent.props) {
-      newItems = menuComponent.props.children.map(m => (
-        <MenuItem onClick={closeFxn}>{m}</MenuItem>
-      ));
+      const flattenedMenu = this.flatten(menuComponent.props.children);
+      newItems = flattenedMenu.map(m => ({ // for each MenuItem, update the onClick event
+        ...m,
+        props: {
+          ...m.props,
+          onClick: () => {
+            this.setState({ open: false, iconDown: true });
+            m.props.onClick();
+          },
+        },
+      }));
     }
     // let titleButtonClickHandler;
     let menuHeader = (

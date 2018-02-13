@@ -35,10 +35,10 @@ const SourcesAppMenu = (props) => {
         <MenuItem onClick={() => { props.handleItemClick('search', true); }}>
           <FormattedMessage {...messages.search} />
         </MenuItem>
-        <Divider />
         <MenuItem onClick={() => { props.handleItemClick('favorites', true); }}>
           <FormattedMessage {...localMessages.favoritedItems} />
         </MenuItem>
+        <Divider />
         <MenuItem onClick={() => { props.handleItemClick('sources/suggest', true); }}>
           <FormattedMessage {...localMessages.suggestSource} />
         </MenuItem>
@@ -61,7 +61,7 @@ const SourcesAppMenu = (props) => {
   return (
     <AppMenu
       titleMsg={localMessages.menuTitle}
-      showMenu={getAppName() === 'sources'}
+      showMenu={getAppName() === 'sources' && props.isLoggedIn}
       onTitleClick={() => { props.handleItemClick('about', getAppName() === 'sources'); }}
       menuComponent={menu}
     />
