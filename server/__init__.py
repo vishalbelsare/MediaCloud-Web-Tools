@@ -48,7 +48,6 @@ if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
 else:
     logger.info(u"Started server in %s mode", server_mode)
 
-
 # setup optional sentry logging service
 try:
     handler = SentryHandler(config.get('SENTRY_DSN'))
@@ -145,6 +144,13 @@ def create_app():
     except ConfigException as ce:
         logger.exception(ce)
         logger.warn("No mail configured")
+    # set up user login
+    cookie_domain = config.get('COOKIE_DOMAIN')
+    my_app.config['SESSION_COOKIE_NAME'] = "mc_session"
+    my_app.config['REMEMBER_COOKIE_NAME'] = "mc_remember_token"
+    if cookie_domain != 'localhost':    # can't set cookie domain on localhost
+        my_app.config['SESSION_COOKIE_DOMAIN'] = cookie_domain
+        my_app.config['REMEMBER_COOKIE_DOMAIN'] = cookie_domain
     # connect to the shared session storage
     my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
     return my_app
@@ -161,7 +167,7 @@ login_manager.init_app(app)
 @app.route('/')
 def index():
     logger.debug("homepage request")
-    return render_template('index.html')
+    return render_template('index.html', cookie_domain=config.get('COOKIE_DOMAIN'))
 
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user

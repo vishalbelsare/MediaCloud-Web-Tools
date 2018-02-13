@@ -8,6 +8,9 @@ SERVER_MODE = dev
 # The name of the application you want to run if SERVER_MODE=='prod'
 SERVER_APP = tools
 
+# The domain to set on cookies sent to the browser
+COOKIE_DOMAIN = localhost
+
 # The path to pass-through CloudFront account for serving up static assets
 #ASSET_URL = https://DISTRIBUTION_NAME.cloudfront.net/static/gen/topics/
 

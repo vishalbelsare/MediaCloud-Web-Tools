@@ -16,16 +16,17 @@ export const PERMISSION_MEDIA_EDIT = 'media-edit';
 export const PERMISSION_STORY_EDIT = 'story-edit';
 
 const COOKIE_USERNAME = 'mc_username';
+const COOKIE_DOMAIN = document.appConfig.cookieDomain;
 
 const cookiesContext = new Cookies();
 
 export function saveCookies(username) {
   // note: this is actually your email address, since username is email in our system
-  cookiesContext.set(COOKIE_USERNAME, username);
+  cookiesContext.set(COOKIE_USERNAME, username, { domain: COOKIE_DOMAIN });
 }
 
 export function deleteCookies() {
-  cookiesContext.remove(COOKIE_USERNAME);
+  cookiesContext.remove(COOKIE_USERNAME, { domain: COOKIE_DOMAIN });
 }
 
 export function logout() {
