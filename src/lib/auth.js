@@ -16,6 +16,8 @@ export const PERMISSION_MEDIA_EDIT = 'media-edit';
 export const PERMISSION_STORY_EDIT = 'story-edit';
 
 const COOKIE_USERNAME = 'mc_username';
+const SESSION_COOKIE_NAME = 'mc_session';
+const REMEMBER_COOKIE_NAME = 'mc_remember_token';
 const COOKIE_DOMAIN = document.appConfig.cookieDomain;
 
 const cookiesContext = new Cookies();
@@ -35,7 +37,8 @@ export function logout() {
 }
 
 export function hasCookies() {
-  const hasUsernameCookie = (cookiesContext.get(COOKIE_USERNAME) !== undefined);
+  const hasUsernameCookie = (cookiesContext.get(SESSION_COOKIE_NAME) !== undefined) &&
+    (cookiesContext.get(REMEMBER_COOKIE_NAME) !== undefined);
   return hasUsernameCookie;
 }
 
