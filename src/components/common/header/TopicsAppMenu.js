@@ -24,14 +24,14 @@ const TopicsAppMenu = (props) => {
   if (props.isLoggedIn) {
     menu = (
       <Menu>
-        <MenuItem onTouchTap={() => { props.handleItemClick('home', true); }}>
+        <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...localMessages.home} />
         </MenuItem>
-        <MenuItem onTouchTap={() => { props.handleItemClick('topics/create', true); }}>
+        <MenuItem onClick={() => { props.handleItemClick('topics/create', true); }}>
           <FormattedMessage {...messages.createNewTopic} />
         </MenuItem>
         <Permissioned onlyRole={PERMISSION_ADMIN}>
-          <MenuItem onTouchTap={() => { props.handleItemClick('topics/status', true); }}>
+          <MenuItem onClick={() => { props.handleItemClick('topics/status', true); }}>
             <FormattedMessage {...localMessages.listTopics} />
           </MenuItem>
         </Permissioned>
@@ -43,9 +43,8 @@ const TopicsAppMenu = (props) => {
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'topics'}
       onTitleClick={() => { props.handleItemClick('about', getAppName() === 'topics'); }}
-    >
-      {menu}
-    </AppMenu>
+      menuComponent={menu}
+    />
   );
 };
 

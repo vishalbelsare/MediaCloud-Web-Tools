@@ -18,9 +18,8 @@ const ExplorerAppMenu = (props) => {
       titleMsg={localMessages.menuTitle}
       showMenu={false}
       onTitleClick={() => { props.handleItemClick('home', getAppName() === 'explorer'); }}
-    >
-      {menu}
-    </AppMenu>
+      menuComponent={menu}
+    />
   );
 };
 
