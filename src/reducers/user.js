@@ -1,6 +1,5 @@
 import { resolve, reject } from 'redux-simple-promise';
 import { LOGIN_WITH_PASSWORD, LOGIN_WITH_COOKIE, RESET_API_KEY } from '../actions/userActions';
-import { saveCookies, deleteCookies } from '../lib/auth';
 import * as fetchConstants from '../lib/fetchConstants';
 
 const INITIAL_STATE = {
@@ -20,12 +19,6 @@ export default function user(state = INITIAL_STATE, action) {
       });
     case resolve(LOGIN_WITH_PASSWORD):
       const passwordLoginWorked = (action.payload.status !== 500);
-      if (passwordLoginWorked) {
-        saveCookies(action.payload.email);
-      } else {
-        // for safety, delete any cookies that might be there
-        deleteCookies();
-      }
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         isLoggedIn: passwordLoginWorked,
@@ -45,16 +38,12 @@ export default function user(state = INITIAL_STATE, action) {
       });
     case resolve(LOGIN_WITH_COOKIE):
       const keyLoginWorked = (action.payload.status !== 401);
-      if (!keyLoginWorked) {
-        deleteCookies();
-      }
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_SUCCEEDED,
         isLoggedIn: keyLoginWorked,
         ...action.payload,
       });
     case reject(LOGIN_WITH_COOKIE):
-      deleteCookies();
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.FETCH_FAILED,
         isLoggedIn: false,

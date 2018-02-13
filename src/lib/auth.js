@@ -1,4 +1,3 @@
-import Cookies from 'universal-cookie';
 
 // persmisisons used WITHIN a topic
 export const PERMISSION_TOPIC_NONE = 'none';
@@ -15,30 +14,8 @@ export const PERMISSION_MEDIA_EDIT = 'media-edit';
 // can add and remove tags from stories
 export const PERMISSION_STORY_EDIT = 'story-edit';
 
-const COOKIE_USERNAME = 'mc_username';
-const SESSION_COOKIE_NAME = 'mc_session';
-// const REMEMBER_COOKIE_NAME = 'mc_remember_token';
-const COOKIE_DOMAIN = document.appConfig.cookieDomain;
-
-const cookiesContext = new Cookies();
-
-export function saveCookies(username) {
-  // note: this is actually your email address, since username is email in our system
-  cookiesContext.set(COOKIE_USERNAME, username, { domain: COOKIE_DOMAIN });
-}
-
-export function deleteCookies() {
-  cookiesContext.remove(COOKIE_USERNAME, { domain: COOKIE_DOMAIN });
-}
-
 export function logout() {
-  deleteCookies();
   window.location = '/api/user/logout';
-}
-
-export function hasCookies() {
-  const hasUsernameCookie = (cookiesContext.get(SESSION_COOKIE_NAME) !== undefined);
-  return hasUsernameCookie;
 }
 
 /**
