@@ -29,29 +29,29 @@ const SourcesAppMenu = (props) => {
   if (props.isLoggedIn) {
     menu = (
       <Menu>
-        <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...messages.home} />
         </MenuItem>
-        <MenuItem onClick={() => { props.handleItemClick('search', true); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('search', true); }}>
           <FormattedMessage {...messages.search} />
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => { props.handleItemClick('favorites', true); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('favorites', true); }}>
           <FormattedMessage {...localMessages.favoritedItems} />
         </MenuItem>
-        <MenuItem onClick={() => { props.handleItemClick('sources/suggest', true); }}>
+        <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggest', true); }}>
           <FormattedMessage {...localMessages.suggestSource} />
         </MenuItem>
         <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
           <Divider />
-          <MenuItem onClick={() => { props.handleItemClick('sources/suggestions', true); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('sources/suggestions', true); }}>
             <FormattedMessage {...localMessages.pendingSuggestions} />
           </MenuItem>
           <Divider />
-          <MenuItem onClick={() => { props.handleItemClick('sources/create', true); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('sources/create', true); }}>
             <FormattedMessage {...localMessages.newSource} />
           </MenuItem>
-          <MenuItem onClick={() => { props.handleItemClick('collections/create', true); }}>
+          <MenuItem onTouchTap={() => { props.handleItemClick('collections/create', true); }}>
             <FormattedMessage {...localMessages.newCollection} />
           </MenuItem>
         </Permissioned>
@@ -63,8 +63,9 @@ const SourcesAppMenu = (props) => {
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'sources'}
       onTitleClick={() => { props.handleItemClick('about', getAppName() === 'sources'); }}
-      menuComponent={menu}
-    />
+    >
+      {menu}
+    </AppMenu>
   );
 };
 

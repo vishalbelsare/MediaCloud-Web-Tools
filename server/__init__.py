@@ -46,6 +46,14 @@ else:
     logger.info(u"Started server in %s mode", server_mode)
 
 
+# setup optional sentry logging service
+try:
+    handler = config.get('SENTRY_DSN')
+    handler.setLevel(logging.ERROR)
+    setup_logging(handler)
+except ConfigException as e:
+    logger.info("no sentry logging")
+
 # Connect to MediaCloud
 TOOL_API_KEY = config.get('MEDIA_CLOUD_API_KEY')
 
