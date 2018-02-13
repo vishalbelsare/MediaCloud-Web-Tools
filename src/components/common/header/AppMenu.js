@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover';
+import MenuItem from 'material-ui/MenuItem';
 import { ArrowDropDownButton, ArrowDropUpButton } from '../../common/IconButton';
 
 class AppMenu extends React.Component {
@@ -14,9 +15,9 @@ class AppMenu extends React.Component {
 
   whichArrowIcon = () => {
     if (this.state.iconDown) {
-      return <ArrowDropDownButton />;
+      return <ArrowDropDownButton color="#FFFFFF" />;
     }
-    return <ArrowDropUpButton />;
+    return <ArrowDropUpButton color="#FFFFFF" />;
   };
 
   toggleMenu = (event) => {
@@ -30,8 +31,15 @@ class AppMenu extends React.Component {
   close = () => this.setState({ open: false, iconDown: true });
 
   render() {
-    const { titleMsg, showMenu, onTitleClick, children } = this.props;
+    const { titleMsg, showMenu, onTitleClick, menuComponent } = this.props;
     const { formatMessage } = this.props.intl;
+    const closeFxn = this.close;
+    let newItems;
+    if (menuComponent && menuComponent.props) {
+      newItems = menuComponent.props.children.map(m => (
+        <MenuItem onClick={closeFxn}>{m}</MenuItem>
+      ));
+    }
     // let titleButtonClickHandler;
     let menuHeader = (
       <FlatButton
@@ -57,7 +65,7 @@ class AppMenu extends React.Component {
           anchorEl={this.state.anchorEl}
           onRequestClose={this.close}
         >
-          {children}
+          {newItems}
         </Popover>
       </div>
     );
@@ -69,6 +77,7 @@ AppMenu.propTypes = {
   titleMsg: PropTypes.object.isRequired,
   showMenu: PropTypes.bool,
   onTitleClick: PropTypes.func.isRequired,
+  menuComponent: PropTypes.object,
   // from dispatch
   children: PropTypes.node,
   // from context
