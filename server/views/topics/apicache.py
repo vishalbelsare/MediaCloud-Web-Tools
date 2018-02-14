@@ -153,7 +153,7 @@ def _word2vec_topic_2d_results(topics_id, words):
     word2vec_results = wordembeddings.topic_2d(topics_id, words)
     return word2vec_results
 
-
+@cache
 def _cached_word2vec_google_2d_results(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
@@ -165,7 +165,6 @@ def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_word_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    local_mc = None
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
