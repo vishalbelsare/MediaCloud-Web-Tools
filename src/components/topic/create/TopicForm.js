@@ -136,8 +136,8 @@ function validate(values, props) {
   if (invalidDate(values.end_date)) {
     errors.end_date = localMessages.dateError;
   }
-  if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
-    errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
+  if (validDate(values.start_date) && validDate(values.end_date) && isStartDateAfterEndDate(values.start_date, values.end_date)) {
+    errors.start_date = { _error: formatMessage(localMessages.startDateWarning) };
   }
   // not triggered if empty so we have to force a check
   if ((values.name && values.solr_seed_query && !values.sourcesAndCollections) || (values.sourcesAndCollections && values.sourcesAndCollections.length < 1)) {
