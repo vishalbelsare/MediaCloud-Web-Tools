@@ -56,6 +56,7 @@ try:
 except ConfigException as e:
     logger.info("no sentry logging")
 
+
 # Connect to MediaCloud
 TOOL_API_KEY = config.get('MEDIA_CLOUD_API_KEY')
 

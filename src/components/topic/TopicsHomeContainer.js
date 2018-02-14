@@ -13,6 +13,7 @@ import PublicTopicListContainer from './list/PublicTopicListContainer';
 import DataCard from '../common/DataCard';
 import { AddButton } from '../common/IconButton';
 import messages from '../../resources/messages';
+import Masthead from '../common/header/Masthead';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Home' },
@@ -26,10 +27,19 @@ const TopicsHomeContainer = (props) => {
   const title = formatMessage(localMessages.homeTitle);
   const titleHandler = parentTitle => `${title} | ${parentTitle}`;
   let content = null;
+  const mastHead = (
+    <Masthead
+      nameMsg={messages.topicsToolName}
+      descriptionMsg={messages.topicsToolDescription}
+      link="https://mediacloud.org/tools/"
+    />
+  );
   if (user.isLoggedIn) {
     content = (
       <div>
+
         <Title render={titleHandler} />
+
         <div className="controlbar">
           <div className="main">
             <Grid>
@@ -77,7 +87,12 @@ const TopicsHomeContainer = (props) => {
       </div>
     );
   }
-  return content;
+  return (
+    <div>
+      {mastHead}
+      {content}
+    </div>
+  );
 };
 
 TopicsHomeContainer.propTypes = {

@@ -15,9 +15,9 @@ setVersion('2.3.4');
 setAppName(APP_SOURCE_MANAGER);
 
 setAppColors({
-  light: '#4b9fcb',
-  dark: '#3c97bd',
-  darker: '#39788e',
+  light: '#5CB6DD',
+  dark: '#3C96BD',  // primary
+  darker: '#1C769D',
 });
 
 initializeApp(routes);

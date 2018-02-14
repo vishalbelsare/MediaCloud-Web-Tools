@@ -8,8 +8,14 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
 import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
+import SourceControlBar from '../controlbar/SourceControlBar';
+import Permissioned from '../../common/Permissioned';
+import { PERMISSION_MEDIA_EDIT, PERMISSION_LOGGED_IN } from '../../../lib/auth';
+import { AddButton } from '../../common/IconButton';
 import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
+import messages from '../../../resources/messages';
+import Masthead from '../../common/header/Masthead';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
@@ -21,6 +27,8 @@ const localMessages = {
   browseMCabout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the collections our team has put together to support our various investigations.' },
   created: { id: 'sources.intro.created', defaultMessage: "Collections I've created" },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
+  addCollection: { id: 'source.controlbar.addCollection', defaultMessage: 'Create a Collection' },
+  addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
 const Homepage = (props) => {
@@ -37,32 +45,56 @@ const Homepage = (props) => {
     );
   }
   return (
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <h1>
-            <FormattedMessage {...localMessages.title} />
-          </h1>
-          <p>
-            <FormattedHTMLMessage {...localMessages.about} />
-            <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
-          </p>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={7} xs={12}>
-          <FeaturedCollectionsContainer />
-        </Col>
-        <Col lg={5} xs={12}>
-          {sideBarContent}
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12} xs={12}>
-          <PopularCollectionsContainer />
-        </Col>
-      </Row>
-    </Grid>
+    <div>
+      <Masthead
+        nameMsg={messages.sourcesToolName}
+        descriptionMsg={messages.sourcesToolDescription}
+        link="https://mediacloud.org/tools/"
+      />
+      <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+        <SourceControlBar showSearch>
+          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+            <Grid>
+              <Link to="collections/create">
+                <AddButton />
+                <FormattedMessage {...localMessages.addCollection} />
+              </Link>
+              &nbsp; &nbsp;
+              <Link to="sources/create">
+                <AddButton />
+                <FormattedMessage {...localMessages.addSource} />
+              </Link>
+            </Grid>
+          </Permissioned>
+        </SourceControlBar>
+      </Permissioned>
+      <Grid>
+        <Row>
+          <Col lg={12}>
+            <h1>
+              <FormattedMessage {...localMessages.title} />
+            </h1>
+            <p>
+              <FormattedHTMLMessage {...localMessages.about} />
+              <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={7} xs={12}>
+            <FeaturedCollectionsContainer />
+          </Col>
+          <Col lg={5} xs={12}>
+            {sideBarContent}
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} xs={12}>
+            <PopularCollectionsContainer />
+          </Col>
+        </Row>
+      </Grid>
+    </div>
   );
 };
 

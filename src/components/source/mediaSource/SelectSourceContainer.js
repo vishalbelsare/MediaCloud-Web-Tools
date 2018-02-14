@@ -6,12 +6,12 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Link from 'react-router/lib/Link';
 import Title from 'react-title-component';
 import { selectSource, fetchSourceDetails } from '../../../actions/sourceActions';
-import { setSubHeaderVisible } from '../../../actions/appActions';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import { EditButton } from '../../common/IconButton';
+import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 
 const localMessages = {
   editSource: { id: 'source.edit', defaultMessage: 'Modify this Source' },
@@ -36,8 +36,9 @@ class SelectSourceContainer extends React.Component {
     const { children, source } = this.props;
     const titleHandler = parentTitle => `${source.name} | ${parentTitle}`;
     return (
-      <div>
+      <div className="source-container">
         <Title render={titleHandler} />
+        <SourceMgrHeaderContainer />
         <SourceControlBar>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Row>
@@ -97,17 +98,14 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   removeSourceId: () => {
     dispatch(selectSource(null));
-    dispatch(setSubHeaderVisible(false));
   },
   fetchData: (sourceId) => {
     dispatch(selectSource(sourceId));
-    dispatch(fetchSourceDetails(sourceId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchSourceDetails(sourceId));
   },
   asyncFetch: () => {
     dispatch(selectSource(ownProps.params.sourceId));
-    dispatch(fetchSourceDetails(ownProps.params.sourceId))
-      .then(() => dispatch(setSubHeaderVisible(true)));
+    dispatch(fetchSourceDetails(ownProps.params.sourceId));
   },
 });
 

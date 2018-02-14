@@ -15,6 +15,8 @@ import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQue
 import { emptyString } from '../../../lib/formValidators';
 import MarketingFeatureList from './MarketingFeatureList';
 import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
+import messages from '../../../resources/messages';
+import Masthead from '../../common/header/Masthead';
 
 const localMessages = {
   title: { id: 'explorer.intro.title', defaultMessage: 'Explorer' },
@@ -48,13 +50,20 @@ const Homepage = (props) => {
   }
   return (
     <div className="homepage">
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
-          </Col>
-        </Row>
-      </Grid>
+      <Masthead
+        nameMsg={messages.explorerToolName}
+        descriptionMsg={messages.explorerToolDescription}
+        link="https://mediacloud.org/tools/"
+      />
+      <div className="search-section">
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <SearchForm onSearch={val => onKeywordSearch(val, user)} user={user} />
+            </Col>
+          </Row>
+        </Grid>
+      </div>
       <SampleSearchContainer />
       {sideBarContent}
       <MarketingFeatureList />

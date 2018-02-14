@@ -12,5 +12,3 @@ export const updateFeedback = createAction(UPDATE_FEEDBACK, feedbackInfo => feed
 export const addNotice = createAction(ADD_NOTICE, info => info);
 
 export const dismissNotices = createAction(DISMISS_NOTICES);
-
-export const setSubHeaderVisible = createAction(SET_SUB_HEADER_VISIBLE, visible => visible);
