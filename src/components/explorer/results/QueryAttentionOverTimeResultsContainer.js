@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
+import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
@@ -18,6 +20,9 @@ const localMessages = {
   lineChartTitle: { id: 'explorer.attention.lineChart.title', defaultMessage: 'Attention Over Time' },
   descriptionIntro: { id: 'explorer.attention.lineChart.intro', defaultMessage: '<p>Compare the attention paid to your queries over time to understand how they are covered. This chart shows the number of sentences that match each of your queries. Spikes in attention can reveal key events. Plateaus can reveal stable, "normal", attention levels.</p>' },
   descriptionDetail: { id: 'explorer.attention.lineChart.detail', defaultMessage: '<p>This chart includes one line for each query in your search. Each line charts the average number of sentences that matched your query per day in the sources and collections you have specified.</p><p>Roll over the line chart to see the sentences per day in that period of time. Click the download button in the top right to download the raw counts in a CSV spreadsheet. Click the three lines in the top right of the chart to export the chart as an image file.</p>' },
+  details: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Here are some details about what was reported on for {date}' },
+  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories for {date}' },
+  topWords: { id: 'explorer.attention.drillDown.topWords', defaultMessage: 'Top Words for {date}' },
 };
 
 const SECS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -52,6 +57,12 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
+  handleDataPointClick = (startDate, endDate=null) => {
+    const { sourceId } = this.props;
+    const dateStr = `${startDate}`;
+  
+    // set datacard as open
+  }
   downloadCsv = (query) => {
     let url = null;
     if (parseInt(query.searchId, 10) >= 0) {
@@ -70,6 +81,10 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // we may have more results than queries b/c queries can be deleted but not executed
     // so we have to do the following
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
+
+    const specificDateInformation = (
+      <QueryAttentionOverTimeDrillDownDataCard />
+    );
 
     // stich together line chart data
     let series = [];
@@ -92,7 +107,12 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
     return (
       <div>
-        <AttentionOverTimeChart series={series} height={300} backgroundColor="#f5f5f5" />
+        <AttentionOverTimeChart
+          series={series}
+          height={300}
+          backgroundColor="#f5f5f5"
+          onDataPointClick={handleDataPointClick}
+        />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {mergedResultsWithQueryInfo.map((q, idx) =>
