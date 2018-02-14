@@ -16,12 +16,14 @@ const localMessages = {
   menuTitle: { id: 'sources.menu.title', defaultMessage: 'Sources' },
   home: { id: 'sources.menu.items.home', defaultMessage: 'Sources Home' },
   newCollection: { id: 'sources.menu.items.newCollection', defaultMessage: 'Create a Collection' },
+  search: { id: 'sources.menu.items.search', defaultMessage: 'Search Sources and Collections' },
   newSource: { id: 'sources.menu.items.newSource', defaultMessage: 'Add a Source' },
   favoritedItems: { id: 'sources.menu.items.favoritedItems', defaultMessage: 'My Starred Sources And Collections' },
   suggestSource: { id: 'sources.menu.items.suggestSource', defaultMessage: 'Suggest a Source' },
   pendingSuggestions: { id: 'sources.menu.items.pendingSuggestions', defaultMessage: 'Pending Suggestions' },
+  geographicCollections: { id: 'sources.menu.items.geographicCollections', defaultMessage: 'Browse Geographic Collections' },
+  otherCollections: { id: 'sources.menu.items.otherCollections', defaultMessage: 'Browse Other Collections' },
 };
-
 
 const SourcesAppMenu = (props) => {
   let menu;
@@ -31,8 +33,14 @@ const SourcesAppMenu = (props) => {
         <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...messages.home} />
         </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/country-and-state', true); }}>
+          <FormattedMessage {...localMessages.geographicCollections} />
+        </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/media-cloud', true); }}>
+          <FormattedMessage {...localMessages.otherCollections} />
+        </MenuItem>
         <MenuItem onClick={() => { props.handleItemClick('search', true); }}>
-          <FormattedMessage {...messages.search} />
+          <FormattedMessage {...localMessages.search} />
         </MenuItem>
         <MenuItem onClick={() => { props.handleItemClick('favorites', true); }}>
           <FormattedMessage {...localMessages.favoritedItems} />

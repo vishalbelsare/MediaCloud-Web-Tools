@@ -2,6 +2,10 @@
 
 .app-tools {
 
+  #nav-toolbar {
+    background-color: $tools-primary;
+  }
+
   a {
     color: $tools-primary;
   }

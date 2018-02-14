@@ -61,8 +61,10 @@ const sourceRoutes = (
     </Route>
 
     <Route path="/collections" >
-      <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
-      <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />
+      <Route component={PageWrapper}>
+        <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
+        <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />
+      </Route>
       <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       <Redirect from="details" to=":collectionId" />
       <Route path=":collectionId" component={SelectCollectionContainer} >
