@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     } else {
       infoToSave['collections[]'] = [];
     }// try to save it
-    dispatch(suggestSource(infoToSave))
+    return dispatch(suggestSource(infoToSave))
       .then((results) => {
         if (results.success === 1) {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));

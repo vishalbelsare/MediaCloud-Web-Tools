@@ -19,17 +19,17 @@ export function generateQueryParamString(queries) {
     color: encodeURIComponent(query.color),
     startDate: query.startDate,
     endDate: query.endDate,
-    sources: query.sources && query.sources.length > 0 ? query.sources.map(s => s.id) : [], // de-aggregate media bucket into sources and collections
-    collections: query.collections && query.collections.length > 0 ? query.collections.map(s => s.id) : [],
+    sources: query.sources && query.sources.length > 0 ? query.sources.map(s => (s.id ? s.id : s)) : [], // id field or the id itself
+    collections: query.collections && query.collections.length > 0 ? query.collections.map(s => (s.id ? s.id : s)) : [],
   }));
   return JSON.stringify(queriesForUrl);
 }
 
 export function decodeQueryParamString(queryString) {
   const queriesForUrl = JSON.parse(queryString).map(query => ({
-    label: notEmptyString(query.label) ? decodeURIComponent(query.label) : undefined,
-    q: notEmptyString(query.q) ? decodeURIComponent(query.q) : undefined,
-    color: notEmptyString(query.color) ? decodeURIComponent(query.color) : undefined,
+    label: notEmptyString(query.label) ? decodeURIComponent(query.label) : '',
+    q: notEmptyString(query.q) ? decodeURIComponent(query.q) : '*',
+    color: notEmptyString(query.color) ? decodeURIComponent(query.color) : '',
     startDate: query.startDate,
     endDate: query.endDate,
     sources: query.sources, // de-aggregate media bucket into sources and collections

@@ -126,7 +126,13 @@ const mapStateToProps = state => ({
   selectedMediaQueryType: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.type : 0,
   selectedMediaQueryKeyword: state.system.mediaPicker.selectMediaQuery ? state.system.mediaPicker.selectMediaQuery.args.mediaKeyword : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
-  formQuery: formSelector(state, 'advanced-media-picker-search.mediaType', 'advanced-media-picker-search.publicationCountry'),
+  formQuery: formSelector(state,
+    'advanced-media-picker-search.publicationCountry',
+    'advanced-media-picker-search.publicationState',
+    'advanced-media-picker-search.primaryLanguage',
+    'advanced-media-picker-search.countryOfFocus',
+    'advanced-media-picker-search.mediaType',
+  ),
 });
 
 const mapDispatchToProps = dispatch => ({

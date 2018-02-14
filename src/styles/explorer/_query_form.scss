@@ -78,4 +78,17 @@
     }
   }
 
+  .query-form-actions-wrapper {
+    border-bottom: 1px solid $material-grey200;
+    margin-bottom: 30px;
+
+    .query-form-actions {
+      float: right;
+        .app-button {
+          margin-top: 15px !important;
+          margin-bottom: 15px;
+        }
+    }
+  }
+
 }

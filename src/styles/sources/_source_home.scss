@@ -1,3 +1,4 @@
+@import '../_constants';
 .source-edit-link {
   margin-right: 15px;
 }
@@ -16,4 +17,8 @@ div.app-icon.app-icon-large.app-icon-collection {
 
 .featured-collections {
   margin-bottom: 30px;
+}
+
+.masthead {
+  background-color: $sources-primary;
 }

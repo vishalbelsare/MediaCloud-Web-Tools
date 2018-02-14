@@ -8,6 +8,8 @@ import topCountriesCoverage from './topCountriesCoverage';
 import topCountriesStoryCounts from './topCountriesStoryCounts';
 import nytThemeCoverage from './nytThemeCoverage';
 import nytThemeStoryCounts from './nytThemeStoryCounts';
+import mediaTypeCoverage from './mediaTypeCoverage';
+import mediaTypeStoryCounts from './mediaTypeStoryCounts';
 import workflow from './workflow';
 
 const createFocusReducer = combineReducers({
@@ -20,6 +22,8 @@ const createFocusReducer = combineReducers({
   topCountriesStoryCounts,
   nytThemeCoverage,
   nytThemeStoryCounts,
+  mediaTypeCoverage,
+  mediaTypeStoryCounts,
   workflow,
 });
 

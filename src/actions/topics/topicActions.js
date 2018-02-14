@@ -23,8 +23,10 @@ export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
 export const FETCH_TOPIC_SEARCH_RESULTS = 'FETCH_TOPIC_SEARCH_RESULTS';
+export const FETCH_TOPIC_WITH_NAME_EXISTS = 'FETCH_TOPIC_WITH_NAME_EXISTS';
 export const FETCH_USER_QUEUED_RUNNING_TOPICS = 'FETCH_USER_QUEUED_RUNNING_TOPICS';
 export const FETCH_TOPIC_WORD2VEC = 'FETCH_TOPIC_WORD2VEC';
+export const FETCH_TOPIC_WORD2VEC_TIMESPANS = 'FETCH_TOPIC_WORD2VEC_TIMESPANS';
 export const FETCH_ADMIN_TOPIC_LIST = 'FETCH_ADMIN_TOPIC_LIST';
 
 export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
@@ -74,8 +76,10 @@ export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 
 export const topicStartSpider = createAsyncAction(TOPIC_START_SPIDER, api.topicSpider, id => id);
 
-// pass in topic id, filters
+// pass in search string
 export const fetchTopicSearchResults = createAsyncAction(FETCH_TOPIC_SEARCH_RESULTS, api.fetchTopicSearchResults, searchStr => searchStr);
+
+export const fetchTopicWithNameExists = createAsyncAction(FETCH_TOPIC_WITH_NAME_EXISTS, api.fetchTopicWithNameExists, searchStr => searchStr);
 
 // pass in a boolean
 export const setTopicNeedsNewSnapshot = createAction(SET_TOPIC_NEEDS_NEW_SNAPSHOT, needsNewSnapshot => needsNewSnapshot);
@@ -87,3 +91,6 @@ export const fetchUserQueuedAndRunningTopics = createAsyncAction(FETCH_USER_QUEU
 
 // pass in topic id
 export const fetchTopicWord2Vec = createAsyncAction(FETCH_TOPIC_WORD2VEC, api.topicWord2Vec, id => id);
+
+// pass in topicId, snapshotId, focusId, q
+export const fetchTopicWord2VecTimespans = createAsyncAction(FETCH_TOPIC_WORD2VEC_TIMESPANS, api.topicWord2VecTimespans);

@@ -35,9 +35,13 @@ class WordCloud extends React.Component {
       showTooltips: showTooltips || false,
     };
     // create a rollover tooltip helper
-    const tooltipDiv = d3.select('body').append('div')
-      .attr('class', 'viz-tooltip word-cloud-tooltip')
-      .style('opacity', 0);
+    const body = d3.select('body');
+    let tooltipDiv = body.select('.viz-tooltip.word-cloud-tooltip');
+    if (tooltipDiv.empty()) {
+      tooltipDiv = body.append('div')
+        .attr('class', 'viz-tooltip word-cloud-tooltip')
+        .style('opacity', 0);
+    }
     // start layout
     const node = ReactFauxDOM.createElement('svg');
     const counts = words.map(({ count }) => count);

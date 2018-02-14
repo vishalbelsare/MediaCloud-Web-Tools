@@ -131,6 +131,7 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'foci_id': foci_id,
         'q': q,
         'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE,
+        'num_words': 500
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
@@ -153,6 +154,7 @@ def _word2vec_topic_2d_results(topics_id, words):
     return word2vec_results
 
 
+@cache
 def _cached_word2vec_google_2d_results(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
@@ -164,7 +166,6 @@ def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_word_counts instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    local_mc = None
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
@@ -185,9 +186,9 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     # and make sure to ignore undateable stories
-    undateable_query_part = "NOT tags_id_stories:{}".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
+    undateable_query_part = "-(tags_id_stories:{})".format(STORY_UNDATEABLE_TAG)   # doesn't work if the query includes parens!!!
     if (merged_args['q'] is not None) and (len(merged_args['q']) > 0):
-        merged_args['q'] = "(({}) AND ({}))".format(merged_args['q'], undateable_query_part)
+        merged_args['q'] = "(({}) AND {})".format(merged_args['q'], undateable_query_part)
     else:
         merged_args['q'] = "* AND {}".format(undateable_query_part)
     return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)

@@ -34,8 +34,8 @@ def map_files(topics_id):
         rendered_filename = prefix+".gexf"
         # check if rendered file is there
         is_rendered = os.path.isfile(os.path.join(DATA_DIR,rendered_filename))
-        logger.warn(os.path.join(DATA_DIR,rendered_filename))
-        logger.warn(is_rendered)
+        #logger.warn(os.path.join(DATA_DIR,rendered_filename))
+        #logger.warn(is_rendered)
         if is_rendered:
             status = 'rendered'
         else:

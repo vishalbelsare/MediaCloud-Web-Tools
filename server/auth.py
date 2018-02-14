@@ -3,13 +3,10 @@ import logging
 import flask_login
 from flask_login import current_user
 import mediacloud
-from flask import request
 
-from server import db, mc, login_manager
+from server import db, login_manager
 
 logger = logging.getLogger(__name__)
-
-COOKIE_USER_KEY = "mediameter_user_key"
 
 ROLE_ADMIN = 'admin'                        # Do everything, including editing users
 ROLE_ADMIN_READ_ONLY = 'admin-readonly'     # Read access to admin interface
@@ -48,9 +45,10 @@ class User(flask_login.UserMixin):
     def create_in_db_if_needed(self):
         if self.exists_in_db():
             logger.debug("user %s already in db", self.name)
+            db.update_user(self.name, {'api_key': self.id, 'profile': self.profile})
             return
         logger.debug("user %s created in db", self.name)
-        db.add_user_named(self.name)
+        db.add_user(self.name, self.id, self.profile)
 
     def exists_in_db(self):
         return db.includes_user_named(self.name)
@@ -65,18 +63,18 @@ class User(flask_login.UserMixin):
     @classmethod
     def get(cls, userid):
         try:
-            return User.cached[userid]
-        except KeyError:
+            return User(db.find_by_api_key(userid)['profile'])
+            # return User.cached[userid]
+        except Exception:
+            # be safer here... if anything goes wrong make them login again
             return None
 
-User.cached = {}
+#User.cached = {}
 
 
 @login_manager.user_loader
 def load_user(userid):
-    '''
-    flask-login uses this method to lookup users to see if they are logged in already
-    '''
+    # Flask-login uses this method to lookup users to see if they are logged in already
     logger.debug("trying to load_user %s", userid)
     return User.get(userid)
 
@@ -97,7 +95,8 @@ def user_has_auth_role(role):
 
 def create_and_cache_user(profile):
     user = User(profile)
-    User.cached[user.id] = user
+    user.create_in_db_if_needed()
+    #User.cached[user.id] = user
     logger.debug("  added to user cache %s", user.id)
     return user
 
@@ -111,25 +110,19 @@ def user_name():
 
 
 def user_mediacloud_key():
-    '''
-    Return the IP-restricted API token for this user from the cookie (note: this is the server IP)
-    '''
+    # Return the IP-restricted API token for this user from the cookie (note: this is the server IP)
     return current_user.profile['api_key']
 
 
 def user_admin_mediacloud_client():
-    '''
-    Return a mediacloud client for the logged in user
-    '''
+    # Return a mediacloud client for the logged in user
     user_mc_key = user_mediacloud_key()
     user_mc = mediacloud.api.AdminMediaCloud(user_mc_key)
     return user_mc
 
 
 def user_mediacloud_client():
-    '''
-    Return a mediacloud client for the logged in user
-    '''
+    # Return a mediacloud client for the logged in user
     user_mc_key = user_mediacloud_key()
     user_mc = mediacloud.api.MediaCloud(user_mc_key)
     return user_mc

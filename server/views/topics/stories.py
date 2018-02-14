@@ -214,6 +214,7 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     '''
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
+    q_data = request.args['q'] if 'q' in request.args and request.args['q'] not in [None, '', 'null', 'undefined'] else None
     all_stories = []
     more_stories = True
     params = kwargs
@@ -226,11 +227,11 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     props = ['stories_id', 'publish_date', 'date_is_reliable',
              'title', 'url', 'media_id', 'media_name',
              'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
-             'facebook_share_count', 'language', 'subtopics', 'themes']
+             'facebook_share_count', 'simple_tweet_count', 'language', 'subtopics', 'themes']
     user_mc = user_mediacloud_client()
     try:
         while more_stories:
-            page = topic_story_list(user_mc_key, topics_id, **params)
+            page = topic_story_list(user_mc_key, topics_id, q=q_data, **params)
             # need to make another call to fetch the tags :-(
             story_ids = [str(s['stories_id']) for s in page['stories']]
             stories_with_tags = user_mc.storyList('stories_id:('+" ".join(story_ids)+")", rows=kwargs['limit'])

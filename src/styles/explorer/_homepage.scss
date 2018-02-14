@@ -1,6 +1,21 @@
+@import '../constants';
+
 .homepage {
 
+  .search-section {
+    margin: 1px auto;
+    padding: 40px;
+  }
   .search-form {
+    margin: 60px 0px;
+    text-align: center;
+    .search-icon {
+      display: inline-block;
+    }
+    .explorer-home-search-field {
+      width: 410px !important;
+      margin-right: 30px;
+    }
     .icon-button {
       margin-top: 20px;
     }
@@ -17,6 +32,10 @@
   p {
     font-size: 20px;
     line-height: 30px;
+  }
+
+  .masthead {
+    background-color: $explorer-primary;
   }
 
 }

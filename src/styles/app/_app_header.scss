@@ -1,0 +1,57 @@
+@import '../_constants';
+
+.app-header {
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  h1 {
+    margin: 0px;
+    padding: 0px;
+    font-family: $font-families;
+    font-size: 30px;
+    font-weight: bold;
+    a {
+      color: rgb(255,255,255)
+    }
+  }
+
+  .sub-title {
+    margin: 0px;
+    font-family: $font-families;
+    color: rgb(255,255,255);
+    opacity: 0.8;
+  }
+
+  .fav-toggle-button {
+
+    margin-left: 8px;
+    display: inline-block;
+
+    button {
+      width: 22px !important;
+      height: 22px !important;
+    }
+
+    .app-icon {
+      width: 22px !important;
+      height: 22px !important;
+    }
+
+    .app-icon-filled-star {
+      svg {
+        color: rgb(255,255,255) !important;
+        fill: rgb(255,255,255) !important;
+        width: 18px;
+      }
+    }
+
+    .app-icon-empty-star {
+      svg {
+        color: rgb(255,255,255) !important;
+        width: 18px;
+      }
+    }
+
+  }
+
+}

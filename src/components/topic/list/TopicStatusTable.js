@@ -13,6 +13,8 @@ const localMessages = {
   owners: { id: 'topic.adminList.table.owners', defaultMessage: 'Owners' },
 };
 
+const MAX_MESSAGE_CHARS = 600;
+
 const classNameForState = (state) => {
   let className;
   switch (state) {
@@ -44,11 +46,11 @@ const TopicStatusTable = props => (
         {props.topics.map((t, idx) =>
           (<tr key={t.topics_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} ${classNameForState(t.state)}`}>
             <td><b><Link to={`/topics/${t.topics_id}/summary`}>{t.name}</Link></b></td>
-            <td>{t.state}</td>
+            <td className="topic-state">{t.state}</td>
             <td><FormattedDate value={t.start_date} /> - <FormattedDate value={t.end_date} /></td>
             <td>{t.job_queue}</td>
             <td className="numeric">{t.max_stories}</td>
-            <td>{t.message}</td>
+            <td>{(t.message && (t.message.length > MAX_MESSAGE_CHARS)) ? `${t.message.substring(0, 600)}...` : t.message}</td>
             <td>{t.owners.map(u => <a key={u.auth_users_id} href="mailto:{u.email}">{u.full_name}</a>)}</td>
           </tr>)
         )}

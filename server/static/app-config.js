@@ -1,5 +1,3 @@
 
-document.appConfig = {
-  online: true,
-  captchaSiteKey: '6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG',
-};
+document.appConfig.online = true;
+document.appConfig.captchaSiteKey = '6Le8zhgUAAAAANfXdzoR0EFXNcjZnVTRhIh6JVnG';

@@ -118,7 +118,6 @@ class StoryContainer extends React.Component {
                   { message: messages.inlinks, data: formatNumber(story.inlink_count) },
                   { message: messages.outlinks, data: formatNumber(story.outlink_count) },
                   { message: messages.facebookShares, data: formatNumber(story.facebook_share_count) },
-                  { message: messages.bitlyClicks, data: formatNumber(story.bitly_click_count) },
                   { message: messages.language, data: story.language || formatMessage(localMessages.unknownLanguage) },
                 ]}
               />

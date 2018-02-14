@@ -34,7 +34,7 @@ class MediaInlinksContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { inlinkedStories, topicId, helpButton } = this.props;
+    const { inlinkedStories, topicId, helpButton, showTweetCounts } = this.props;
     const { formatMessage } = this.props.intl;
     return (
       <DataCard>
@@ -45,7 +45,7 @@ class MediaInlinksContainer extends React.Component {
           <FormattedMessage {...messages.inlinks} />
           {helpButton}
         </h2>
-        <TopicStoryTable stories={inlinkedStories} topicId={topicId} onChangeSort={this.onChangeSort} />
+        <TopicStoryTable stories={inlinkedStories} showTweetCounts={showTweetCounts} topicId={topicId} onChangeSort={this.onChangeSort} />
       </DataCard>
     );
   }
@@ -68,6 +68,7 @@ MediaInlinksContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
+  showTweetCounts: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -75,6 +76,7 @@ const mapStateToProps = state => ({
   inlinkedStories: state.topics.selected.mediaSource.inlinks.stories,
   sort: state.topics.selected.mediaSource.inlinks.sort,
   filters: state.topics.selected.filters,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

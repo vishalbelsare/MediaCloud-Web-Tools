@@ -76,7 +76,6 @@ class MediaContainer extends React.Component {
         { message: messages.inlinks, data: formatMessage(messages.unknown) },
         { message: messages.outlinks, data: formatMessage(messages.unknown) },
         { message: messages.facebookShares, data: formatMessage(messages.unknown) },
-        { message: messages.bitlyClicks, data: formatMessage(messages.unknown) },
         { message: localMessages.storyCount, data: formatMessage(messages.unknown) },
       ];
     } else {
@@ -85,7 +84,6 @@ class MediaContainer extends React.Component {
         { message: messages.inlinks, data: formatNumber(media.inlink_count) },
         { message: messages.outlinks, data: formatNumber(media.outlink_count) },
         { message: messages.facebookShares, data: formatNumber(media.facebook_share_count) },
-        { message: messages.bitlyClicks, data: formatNumber(media.bitly_click_count) },
         { message: localMessages.storyCount, data: formatNumber(media.story_count) },
       ];
     }

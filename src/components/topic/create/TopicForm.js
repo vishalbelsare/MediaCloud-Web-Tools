@@ -10,7 +10,7 @@ import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
 import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
-import { fetchTopicSearchResults } from '../../../actions/topicActions';
+import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
 export const TOPIC_FORM_MODE_EDIT = 'TOPIC_FORM_MODE_EDIT';
@@ -146,11 +146,10 @@ function validate(values, props) {
 }
 
 const asyncValidate = (values, dispatch) => (
-  dispatch(fetchTopicSearchResults(values.name))
+  // verify topic name is unique
+  dispatch(fetchTopicWithNameExists(values.name))
     .then((results) => {
-      if (results.topics && (results.topics.length !== 0) &&
-        (results.topics[0].name.toLowerCase() === values.name.toLowerCase()) &&
-        (!values.topicId || (values.topicId && (results.topics[0].topics_id !== values.topicId)))) {
+      if (results.nameInUse === true) {
         const error = { name: localMessages.nameInUseError };
         throw error;
       }

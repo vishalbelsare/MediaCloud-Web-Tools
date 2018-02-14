@@ -36,7 +36,7 @@ const EntitiesTable = (props) => {
                 </a>
               </td>
               <td className="numeric">
-                { formatNumber(entity.pct, { style: 'percent', maximumFractionDigits: 2 }) }
+                { formatNumber(entity.pct, { style: 'percent', maximumFractionDigits: 0 }) }
               </td>
             </tr>
             )

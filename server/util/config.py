@@ -55,6 +55,7 @@ class EnvOrFileBasedConfig(object):
                 logger.warn(error_details)
                 raise ConfigException(error_details)
 
+
 def get_default_config():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname((os.path.abspath(__file__)))))
     path_to_config_file = os.path.join(base_dir, 'config', 'app.config')

@@ -9,9 +9,12 @@ from flask_mail import Mail
 import flask_login
 from raven.conf import setup_logging
 from raven.contrib.flask import Sentry
+from raven.handlers.logging import SentryHandler
 import mediacloud
 from mediameter.cliff import Cliff
+import redis
 
+from server.sessions import RedisSessionInterface
 from server.util.config import get_default_config, ConfigException
 from server.database import AppDatabase
 
@@ -45,14 +48,14 @@ if server_mode not in [SERVER_MODE_DEV, SERVER_MODE_PROD]:
 else:
     logger.info(u"Started server in %s mode", server_mode)
 
-
 # setup optional sentry logging service
 try:
-    handler = config.get('SENTRY_DSN')
+    handler = SentryHandler(config.get('SENTRY_DSN'))
     handler.setLevel(logging.ERROR)
     setup_logging(handler)
 except ConfigException as e:
     logger.info("no sentry logging")
+
 
 # Connect to MediaCloud
 TOOL_API_KEY = config.get('MEDIA_CLOUD_API_KEY')
@@ -71,7 +74,6 @@ NYT_THEME_LABELLER_URL = config.get('NYT_THEME_LABELLER_URL')
 
 # Connect to the app's mongo DB
 db = AppDatabase(config.get('MONGO_URL'))
-
 try:
     db.check_connection()
 except Exception as err:
@@ -127,10 +129,10 @@ def create_app():
     webpack.init_app(my_app)
     # set up mail sending
     try:
-        if config.get('SMTP_ENABLED') is '1':
+        if config.get('SMTP_ENABLED') == u'1':
             mail_config = {     # @see https://pythonhosted.org/Flask-Mail/
                 'MAIL_SERVER': config.get('SMTP_SERVER'),
-                'MAIL_PORT': config.get('SMTP_PORT'),
+                'MAIL_PORT': int(config.get('SMTP_PORT')),
                 'MAIL_USE_SSL': config.get('SMTP_USE_SSL'),
                 'MAIL_USERNAME': config.get('SMTP_USER'),
                 'MAIL_PASSWORD': config.get('SMTP_PASS'),
@@ -139,9 +141,19 @@ def create_app():
             mail.init_app(my_app)
             logger.info(u'Mailing from {} via {}'.format(config.get('SMTP_USER'), config.get('SMTP_SERVER')))
         else:
-            logger.info("Mail configured, but not enabled")
-    except ConfigException:
-        logger.info("No mail configured")
+            logger.warn("Mail configured, but not enabled")
+    except ConfigException as ce:
+        logger.exception(ce)
+        logger.warn("No mail configured")
+    # set up user login
+    cookie_domain = config.get('COOKIE_DOMAIN')
+    my_app.config['SESSION_COOKIE_NAME'] = "mc_session"
+    my_app.config['REMEMBER_COOKIE_NAME'] = "mc_remember_token"
+    if cookie_domain != 'localhost':    # can't set cookie domain on localhost
+        my_app.config['SESSION_COOKIE_DOMAIN'] = cookie_domain
+        my_app.config['REMEMBER_COOKIE_DOMAIN'] = cookie_domain
+    # connect to the shared session storage
+    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
     return my_app
 
 app = create_app()
@@ -156,7 +168,7 @@ login_manager.init_app(app)
 @app.route('/')
 def index():
     logger.debug("homepage request")
-    return render_template('index.html')
+    return render_template('index.html', cookie_domain=config.get('COOKIE_DOMAIN'))
 
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
@@ -188,6 +200,7 @@ if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.foci.retweetpartisanship
     import server.views.topics.foci.topcountries
     import server.views.topics.foci.nyttheme
+    import server.views.topics.foci.mediatype
     import server.views.topics.permissions
     import server.views.topics.maps
     import server.views.topics.nyttags

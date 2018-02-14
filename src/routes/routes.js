@@ -1,6 +1,7 @@
-import store from '../store';
+import getStore from '../store';
 
 function isLoggedIn() {
+  const store = getStore();
   const state = store.getState();
   return state.user.isLoggedIn === true;
 }

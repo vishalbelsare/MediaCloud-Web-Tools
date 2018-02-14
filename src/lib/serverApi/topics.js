@@ -197,7 +197,7 @@ export function wordMedia(topicId, word, params) {
 */
 
 export function createTopic(params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations',
+  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_stories', 'max_iterations',
     'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]', 'is_logogram']);
   return createPostingApiPromise('/api/topics/create', acceptedParams, 'put');
 }
@@ -223,7 +223,7 @@ export function fetchWordsByQuery(params) {
 }
 
 export function updateTopic(topicId, params) {
-  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_iterations',
+  const acceptedParams = acceptParams(params, ['name', 'description', 'solr_seed_query', 'is_public', 'max_stories', 'max_iterations',
     'ch_monitor_id', 'start_date', 'end_date', 'spidered', 'sources[]', 'collections[]', 'is_logogram']);
   return createPostingApiPromise(`/api/topics/${topicId}/update`, acceptedParams, 'put');
 }
@@ -240,6 +240,10 @@ export function fetchCustomMap(topicId, params) {
 
 export function fetchTopicSearchResults(searchStr) {
   return createApiPromise('/api/topics/search', { searchStr });
+}
+
+export function fetchTopicWithNameExists(searchStr) {
+  return createApiPromise('/api/topics/name-exists', { searchStr });
 }
 
 export function topicNytTaggedStoryCoverage(topicId, params) {
@@ -303,6 +307,14 @@ export function topicPreviewNytThemeCoverage(topicId, numThemes) {
   return createApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/preview/coverage`, acceptedParams);
 }
 
+export function topicPreviewMediaTypeStoryCounts(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/story-counts`);
+}
+
+export function topicPreviewMediaTypeCoverage(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/focal-sets/media-type/preview/coverage`);
+}
+
 export function createTopCountriesFocalSet(topicId, params) {
   const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription', 'data']);
   acceptedParams['data[]'] = JSON.stringify(acceptedParams.data);
@@ -315,8 +327,18 @@ export function createNytThemeFocalSet(topicId, params) {
   return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/nyt-theme/create`, acceptedParams);
 }
 
+export function createMediaTypeFocalSet(topicId, params) {
+  const acceptedParams = acceptParams(params, ['focalSetName', 'focalSetDescription']);
+  return createPostingApiPromise(`/api/topics/${topicId}/focal-sets/media-type/create`, acceptedParams);
+}
+
 export function topicWord2Vec(topicId) {
   return createApiPromise(`/api/topics/${topicId}/word2vec`);
+}
+
+export function topicWord2VecTimespans(topicId, params) {
+  const acceptedParams = acceptParams(params, ['snapshotId', 'focusId', 'q']);
+  return createApiPromise(`/api/topics/${topicId}/word2vec-timespans`, acceptedParams);
 }
 
 export function topicTopPeople(topicId, params) {
@@ -328,4 +350,3 @@ export function topicTopOrgs(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
   return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
 }
-

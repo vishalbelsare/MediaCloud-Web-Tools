@@ -38,7 +38,7 @@ class InfluentialStoriesContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { stories, sort, topicId, previousButton, nextButton, helpButton } = this.props;
+    const { stories, showTweetCounts, sort, topicId, previousButton, nextButton, helpButton } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(localMessages.title)} | ${parentTitle}`;
     return (
@@ -59,7 +59,7 @@ class InfluentialStoriesContainer extends React.Component {
                   <FormattedMessage {...localMessages.exploreLink} />
                 </LinkWithFilters>
               </p>
-              <TopicStoryTable topicId={topicId} stories={stories} onChangeSort={this.onChangeSort} sortedBy={sort} />
+              <TopicStoryTable topicId={topicId} stories={stories} showTweetCounts={showTweetCounts} onChangeSort={this.onChangeSort} sortedBy={sort} />
               { previousButton }
               { nextButton }
             </DataCard>
@@ -89,6 +89,7 @@ InfluentialStoriesContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   links: PropTypes.object,
   topicId: PropTypes.number.isRequired,
+  showTweetCounts: PropTypes.bool,
   // from PagedContainer wrapper
   nextButton: PropTypes.node,
   previousButton: PropTypes.node,
@@ -101,6 +102,7 @@ const mapStateToProps = state => ({
   links: state.topics.selected.stories.link_ids,
   filters: state.topics.selected.filters,
   topicInfo: state.topics.selected.info,
+  showTweetCounts: Boolean(state.topics.selected.info.ch_monitor_id),
   topicId: state.topics.selected.id,
 });
 
