@@ -42,15 +42,15 @@ class EditTopicContainer extends React.Component {
   handleConfirmSave = () => {
     const { formData, topicInfo, handleSave } = this.props;
     this.setState({ editConfirmationOpen: false });
-    handleSave(formData.values, topicInfo);
+    return handleSave(formData.values, topicInfo);
   };
   handleRequestSave = (values) => {
     const { topicInfo, handleSave } = this.props;
     if (this.riskModifiedTopicSpidering(values)) {
       this.setState({ editConfirmationOpen: true });
-    } else {
-      handleSave(values, topicInfo);
+      return false;
     }
+    return handleSave(values, topicInfo);
   };
   riskModifiedTopicSpidering = (values) => {
     const { formData } = this.props;
