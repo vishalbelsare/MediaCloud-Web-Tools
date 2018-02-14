@@ -20,7 +20,9 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
   };
 
   onSaveRequest = () => {
+    const { setQueryFormChildDialogOpen } = this.props;
     this.setState({ saveSearchDialogOpen: true });
+    setQueryFormChildDialogOpen(true);
   }
 
   onSaveConfirm = () => {
@@ -28,8 +30,18 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
     handleSaveSearch({ queryName: this.state.searchName });
   };
 
+  focusQueryInputField = (input) => {
+    if (input) {
+      setTimeout(() => {
+        input.focus();
+      }, 100);
+    }
+  };
+
   handleDialogClose = () => {
+    const { setQueryFormChildDialogOpen } = this.props;
     this.setState({ saveSearchDialogOpen: false });
+    setQueryFormChildDialogOpen(false);
   };
 
   handleLabelChangeAndClose = () => {
@@ -71,6 +83,7 @@ class QueryPickerSaveUserSearchesDialog extends React.Component {
             className="query-picker-save-search-name"
             id="searchNameInDialog"
             name="searchNameInDialog"
+            ref={this.focusQueryInputField}
             onChange={(e, val) => {
               this.updateTextInDialog(val);
             }}
@@ -93,6 +106,7 @@ QueryPickerSaveUserSearchesDialog.propTypes = {
   submitting: PropTypes.bool.isRequired,
   searchNickname: PropTypes.string.isRequired,
   handleSaveSearch: PropTypes.func,
+  setQueryFormChildDialogOpen: PropTypes.func.isRequired,
   // from composition
   intl: PropTypes.object.isRequired,
 };

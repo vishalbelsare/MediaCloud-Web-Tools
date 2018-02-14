@@ -6,7 +6,7 @@ import QueryPickerSaveUserSearchesDialog from './QueryPickerSaveUserSearchesDial
 
 
 const SavedSearchControls = (props) => {
-  const { handleLoadSearches, handleLoadSelectedSearch, handleSaveSearch, handleDeleteSearch, savedSearches, searchNickname, submitting } = props;
+  const { handleLoadSearches, handleLoadSelectedSearch, handleSaveSearch, handleDeleteSearch, savedSearches, searchNickname, submitting, setQueryFormChildDialogOpen } = props;
   return (
     <div className="saved-search-controls-wrapper">
       <QueryPickerLoadUserSearchesDialog
@@ -15,11 +15,13 @@ const SavedSearchControls = (props) => {
         handleLoadSelectedSearch={handleLoadSelectedSearch}
         searches={savedSearches}
         submitting={submitting}
+        setQueryFormChildDialogOpen={setQueryFormChildDialogOpen}
       />
       <QueryPickerSaveUserSearchesDialog
         handleSaveSearch={handleSaveSearch}
         searchNickname={searchNickname}
         submitting={submitting}
+        setQueryFormChildDialogOpen={setQueryFormChildDialogOpen}
       />
     </div>
 
@@ -33,7 +35,7 @@ SavedSearchControls.propTypes = {
   updateQuery: PropTypes.func,
   handleSubmit: PropTypes.func,
   pristine: PropTypes.bool,
-
+  setQueryFormChildDialogOpen: PropTypes.func.isRequired,
   searchNickname: PropTypes.string.isRequired,
   savedSearches: PropTypes.array,
   handleSaveSearch: PropTypes.func.isRequired,
