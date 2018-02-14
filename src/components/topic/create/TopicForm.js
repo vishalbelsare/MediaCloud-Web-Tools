@@ -72,7 +72,7 @@ const TopicForm = (props) => {
             name="sourcesAndCollections"
             onDelete={onMediaDelete}
             initialValues={initialValues.sourcesAndCollections}
-            allowRemoval={mode === TOPIC_FORM_MODE_CREATE}
+            allowRemoval
           />
           {mediaPicker}
         </div>

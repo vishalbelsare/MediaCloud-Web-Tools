@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
 import { filteredLinkTo } from '../../util/location';
@@ -27,12 +27,10 @@ const localMessages = {
   feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
   failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
   editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
-  riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Narrowing these query parameters (date range, seed query and/or media) will cause a re-spider - continue at your own risk!' },
-  handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'If you proceed, you could potentially corrupt your topic!' },
+  riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Be Careful' },
+  handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'Narrowing these topic settings (date range, seed query and/or media) requires you to re-spider, but previous stories that matched them will NOT be removed. This means your topic will be a confusing combination of what you have now and what you want to have. Only confirm if you know what you are doing.' },
   // editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
 };
-
-const formSelector = formValueSelector('topicForm');
 
 class EditTopicContainer extends React.Component {
   state = {
@@ -159,7 +157,7 @@ EditTopicContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
-  formData: PropTypes.array,
+  formData: PropTypes.object,
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
@@ -174,7 +172,7 @@ const mapStateToProps = (state, ownProps) => ({
   timespan: state.topics.selected.timespans.selected,
   snapshots: state.topics.selected.snapshots.list,
   user: state.user,
-  formData: formSelector(state, 'sourcesAndCollections'),
+  formData: state.form.topicForm,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
