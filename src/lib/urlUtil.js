@@ -1,3 +1,4 @@
+import { getBrandDarkerColor } from '../styles/colors';
 
 // internal tag used to get the hostname from a url
 const tempATag = document.createElement('a');
@@ -26,4 +27,21 @@ export function urlToCollection(collectionId) {
 
 export function urlToSource(mediaId) {
   return `https://sources.mediacloud.org/#/sources/${mediaId}`;
+}
+
+export function urlToDashboardQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
+  const mediaInfo = {};
+  if (sourceIds && sourceIds.length > 0) {
+    mediaInfo.sources = sourceIds;
+  }
+  if (collectionIds && collectionIds.length > 0) {
+    mediaInfo.sets = collectionIds;
+  }
+  const startDateStr = startDate;
+  const endDateStr = endDate;
+  return `https://dashboard.mediacloud.org/#query/["${keywords}"]/[${JSON.stringify(mediaInfo)}]/["${startDateStr}"]/["${endDateStr}"]/[{"uid":1,"name":"${name}","color":"${getBrandDarkerColor().substr(1)}"}]`;
+}
+
+export function urlToExplorerQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
+  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${name}","q":"${keywords}","color":"${getBrandDarkerColor().substr(1)}","startDate":"${startDate}","endDate":"${endDate}","sources":${JSON.stringify(sourceIds)},"collections":${JSON.stringify(collectionIds)}}]`;
 }
