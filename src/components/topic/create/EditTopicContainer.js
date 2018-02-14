@@ -3,11 +3,13 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
 import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
+import composeIntlForm from '../../common/IntlForm';
 import messages from '../../../resources/messages';
 import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -29,6 +31,8 @@ const localMessages = {
   handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'If you proceed, you could potentially corrupt your topic!' },
   // editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
 };
+
+const formSelector = formValueSelector('topicForm');
 
 class EditTopicContainer extends React.Component {
   state = {
@@ -136,6 +140,7 @@ class EditTopicContainer extends React.Component {
               keepDirtyOnReinitialize
               onMediaChange={handleMediaChange}
               onMediaDelete={handleMediaDelete}
+              destroyOnUnmount
             />
           </Permissioned>
         </Grid>
@@ -154,12 +159,12 @@ EditTopicContainer.propTypes = {
   filters: PropTypes.object.isRequired,
   topicId: PropTypes.number,
   topicInfo: PropTypes.object,
-  formData: PropTypes.object,
+  formData: PropTypes.array,
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
-  handleMediaDelete: PropTypes.func.isRequired,\
+  handleMediaDelete: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -169,7 +174,7 @@ const mapStateToProps = (state, ownProps) => ({
   timespan: state.topics.selected.timespans.selected,
   snapshots: state.topics.selected.snapshots.list,
   user: state.user,
-  formData: state.form.topicForm,
+  formData: formSelector(state, 'sourcesAndCollections'),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

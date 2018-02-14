@@ -9,7 +9,7 @@ import TopicDetailForm from './TopicDetailForm';
 import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
 import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
-import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
 import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
@@ -23,7 +23,7 @@ const localMessages = {
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
-  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
   downloadUserGuide: { id: 'topic.create.downloadUserGuide', defaultMessage: 'Downlod the Topic Creation Guide' },
   selectSandC: { id: 'topic.create.selectSAndC', defaultMessage: 'Select media' },
@@ -136,6 +136,9 @@ function validate(values, props) {
   if (invalidDate(values.end_date)) {
     errors.end_date = localMessages.dateError;
   }
+  if (validDate(values.startDate) && validDate(values.endDate) && isStartDateAfterEndDate(values.startDate, values.endDate)) {
+    errors.startDate = { _error: formatMessage(localMessages.startDateWarning) };
+  }
   // not triggered if empty so we have to force a check
   if ((values.name && values.solr_seed_query && !values.sourcesAndCollections) || (values.sourcesAndCollections && values.sourcesAndCollections.length < 1)) {
     // errors.sourcesAndCollections = localMessages.sourceCollectionsError;
@@ -147,7 +150,7 @@ function validate(values, props) {
 
 const asyncValidate = (values, dispatch) => (
   // verify topic name is unique
-  dispatch(fetchTopicWithNameExists(values.name))
+  dispatch(fetchTopicWithNameExists(values.name, values.topics_id))
     .then((results) => {
       if (results.nameInUse === true) {
         const error = { name: localMessages.nameInUseError };
@@ -156,20 +159,11 @@ const asyncValidate = (values, dispatch) => (
     })
 );
 
-const warn = (values) => {
-  const warnings = {};
-  if (validDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
-    warnings.start_date = localMessages.startDateWarning;
-  }
-  return warnings;
-};
-
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
   asyncValidate,
   asyncBlurFields: ['name'],
-  warn,
   // so the create wizard works
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,

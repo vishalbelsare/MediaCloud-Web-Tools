@@ -317,8 +317,12 @@ def topic_name_exists():
     :return: boolean indicating if topic with this name exists for not (case insensive check)
     '''
     search_str = request.args['searchStr']
+    topics_id = int(request.args['topicId']) if 'topicId' in request.args else None
     matching_topics = mc.topicList(name=search_str, limit=15)
-    matching_topic_names = [t['name'].lower() for t in matching_topics['topics']]
+    if topics_id:
+        matching_topic_names = [t['name'].lower().strip() for t in matching_topics['topics'] if t['topics_id'] != topics_id]
+    else:
+        matching_topic_names = [t['name'].lower().strip() for t in matching_topics['topics']]
     name_in_use = search_str.lower() in matching_topic_names
     return jsonify({'nameInUse': name_in_use})
 

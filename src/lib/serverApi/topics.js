@@ -242,8 +242,8 @@ export function fetchTopicSearchResults(searchStr) {
   return createApiPromise('/api/topics/search', { searchStr });
 }
 
-export function fetchTopicWithNameExists(searchStr) {
-  return createApiPromise('/api/topics/name-exists', { searchStr });
+export function fetchTopicWithNameExists(searchStr, topicId) {
+  return createApiPromise('/api/topics/name-exists', { searchStr, topicId });
 }
 
 export function topicNytTaggedStoryCoverage(topicId, params) {

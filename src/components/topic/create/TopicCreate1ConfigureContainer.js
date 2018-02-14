@@ -24,7 +24,7 @@ const localMessages = {
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { finishStep, handleMediaChange } = props;
+  const { finishStep, handleMediaChange, handleMediaDelete } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
@@ -45,7 +45,7 @@ const TopicCreate1ConfigureContainer = (props) => {
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
         onMediaChange={handleMediaChange}
-        // onMediaDelete={this.handleMediaDelete}
+        onMediaDelete={handleMediaDelete}
       />
     </Grid>
   );
@@ -66,6 +66,7 @@ TopicCreate1ConfigureContainer.propTypes = {
   // from dispatch
   finishStep: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
+  handleMediaDelete: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -84,6 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
     ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
   },
+  handleMediaDelete: () => null,   // in create mode we don't need to update the values
 });
 
 const reduxFormConfig = {
