@@ -3,12 +3,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
-import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
+import { QueryAttentionOverTimeDrillDownDataCard } from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
@@ -62,8 +62,19 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
-    this.setState({ isDrillDownVisible: true, date0, date1, evt, origin });
+    const { fetchStories, fetchWords } = this.props;
+    const q = origin.series.name;
+    // date calculations for span/range
+    const date = date0;
+    const clickedQuery = {
+      dateRange: false,
+      date,
+      q,
+    };
+    this.setState({ isDrillDownVisible: true, clickedQuery });
     // set datacard as open
+    fetchStories(clickedQuery);
+    fetchWords(clickedQuery);
   }
   downloadCsv = (query) => {
     let url = null;
@@ -75,7 +86,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { results, queries } = this.props;
+    const { results, queries, words, stories } = this.props;
     const { formatMessage } = this.props.intl;
     // stich together bubble chart data
 
@@ -87,7 +98,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     let drillDown = null;
     if (this.state.isDrillDownVisible) {
       drillDown = (
-        <QueryAttentionOverTimeDrillDownDataCard dateRange={this.state.dateRange} query={this.state.clickedQuery} />
+        <QueryAttentionOverTimeDrillDownDataCard info={this.state.clickedQuery} words={words} stories={stories} />
       );
     }
 
@@ -147,6 +158,10 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
+  fetchStories: PropTypes.array.isRequired,
+  fetchWords: PropTypes.array.isRequired,
+  words: PropTypes.array,
+  stories: PropTypes.array,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
@@ -157,6 +172,8 @@ const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
+  words: state.explorer.topWordsPerDateRange ? state.explorer.topWordsPerDateRange.results : null,
+  stories: state.explorer.storiesPerDateRange ? state.explorer.storiesPerDateRange.results : null,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -188,6 +205,20 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         };
         return dispatch(fetchDemoQuerySentenceCounts(demoInfo));
       });
+    }
+  },
+  fetchStories: (clickedQuery) => {
+    if (ownProps.isLoggedIn) {
+      dispatch(fetchQueryPerDateSampleStories({ ...clickedQuery, start_date: clickedQuery.date }));
+    } else {
+      dispatch(fetchDemoQueryPerDateSampleStories(clickedQuery));
+    }
+  },
+  fetchWords: (clickedQuery) => {
+    if (ownProps.isLoggedIn) {
+      dispatch(fetchQueryPerDateTopWords({ ...clickedQuery, start_date: clickedQuery.date }));
+    } else {
+      dispatch(fetchDemoQueryPerDateTopWords(clickedQuery));
     }
   },
 });
