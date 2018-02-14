@@ -6,11 +6,11 @@ import { push } from 'react-router-redux';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import messages from '../../../resources/messages';
-import Permissioned from '../../common/Permissioned';
 import AppMenu from '../../common/header/AppMenu';
-import { PERMISSION_ADMIN } from '../../../lib/auth';
 import { urlToTopicMapper } from '../../../lib/urlUtil';
 import { getAppName } from '../../../config';
+import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+
 
 const localMessages = {
   menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topics' },
@@ -21,7 +21,7 @@ const localMessages = {
 
 const TopicsAppMenu = (props) => {
   let menu;
-  if (props.isLoggedIn) {
+  if (props.isLoggedIn && hasPermissions(getUserRoles(props.user), PERMISSION_MEDIA_EDIT)) {
     menu = (
       <Menu>
         <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
@@ -30,11 +30,20 @@ const TopicsAppMenu = (props) => {
         <MenuItem onClick={() => { props.handleItemClick('topics/create', true); }}>
           <FormattedMessage {...messages.createNewTopic} />
         </MenuItem>
-        <Permissioned onlyRole={PERMISSION_ADMIN}>
-          <MenuItem onClick={() => { props.handleItemClick('topics/status', true); }}>
-            <FormattedMessage {...localMessages.listTopics} />
-          </MenuItem>
-        </Permissioned>
+        <MenuItem onClick={() => { props.handleItemClick('topics/status', true); }}>
+          <FormattedMessage {...localMessages.listTopics} />
+        </MenuItem>
+      </Menu>
+    );
+  } else {
+    menu = (
+      <Menu>
+        <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
+          <FormattedMessage {...localMessages.home} />
+        </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('topics/create', true); }}>
+          <FormattedMessage {...messages.createNewTopic} />
+        </MenuItem>
       </Menu>
     );
   }
@@ -51,6 +60,7 @@ const TopicsAppMenu = (props) => {
 TopicsAppMenu.propTypes = {
   // state
   isLoggedIn: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
   // from dispatch
   handleItemClick: PropTypes.func.isRequired,
   // from context
@@ -59,6 +69,7 @@ TopicsAppMenu.propTypes = {
 
 const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({
