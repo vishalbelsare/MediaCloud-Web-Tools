@@ -71,7 +71,7 @@ class EditTopicContainer extends React.Component {
     return false;
   };
   render() {
-    const { topicInfo, topicId } = this.props;
+    const { topicInfo, topicId, handleMediaChange, handleMediaDelete } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
     let dialogContent = null;
@@ -132,7 +132,10 @@ class EditTopicContainer extends React.Component {
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
               mode={TOPIC_FORM_MODE_EDIT}
-              destroyOnUnmount
+              enabledReinitialize
+              keepDirtyOnReinitialize
+              onMediaChange={handleMediaChange}
+              onMediaDelete={handleMediaDelete}
             />
           </Permissioned>
         </Grid>
@@ -155,6 +158,8 @@ EditTopicContainer.propTypes = {
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
+  handleMediaChange: PropTypes.func.isRequired,
+  handleMediaDelete: PropTypes.func.isRequired,\
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -198,6 +203,22 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
     );
   },
+  handleMediaDelete: (toBeDeletedObj) => {
+    // the user has removed media from the form
+    const updatedSources = toBeDeletedObj.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = toBeDeletedObj.filter(m => m.type === 'collection' || m.tags_id);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
+  handleMediaChange: (sourceAndCollections) => {
+    // take selections from mediaPicker and push them back into topicForm
+    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -206,9 +227,17 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
+const reduxFormConfig = {
+  form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+};
+
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      EditTopicContainer
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        EditTopicContainer
+      )
     )
   );

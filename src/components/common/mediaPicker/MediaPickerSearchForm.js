@@ -37,7 +37,7 @@ class MediaPickerSearchForm extends React.Component {
   handleSearchButtonClick = (evt) => {
     const { onSearch } = this.props;
     evt.preventDefault();
-    const searchStr = document.getElementsByTagName('input')[0].value;  // note: this is a brittle hack
+    const searchStr = document.getElementsByName('mediaKeyword')[0].value;
     onSearch({ mediaKeyword: searchStr });
   }
 
