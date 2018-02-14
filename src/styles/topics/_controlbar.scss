@@ -5,6 +5,11 @@
   &.controlbar-topic {
     background-color: $white !important;
 
+    .jumps {
+      font-weight: bold;
+      margin-left: 15px;
+    }
+
     .active-filters{
       float: right;
       display: inline-block;

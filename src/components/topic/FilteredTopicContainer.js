@@ -25,7 +25,8 @@ class FilteredTopicContainer extends React.Component {
   }
 
   render() {
-    const { children, location, topicId, topicInfo, filters, fetchStatusInfo, fetchStatusSnapshot } = this.props;
+    const { children, location, topicId, topicInfo, filters, fetchStatusInfo,
+            fetchStatusSnapshot } = this.props;
     let subContent = null;
     // If the generation process is still ongoing, ask the user to wait a few minutes
     if (this.snapshotIsSet()) {
@@ -38,7 +39,12 @@ class FilteredTopicContainer extends React.Component {
       }
       subContent = (
         <div>
-          <TopicFilterControlBar topicId={topicId} location={location} filters={filters} />
+          <TopicFilterControlBar
+            topicId={topicId}
+            topic={topicInfo}
+            location={location}
+            filters={filters}
+          />
           {childContent}
         </div>
       );
