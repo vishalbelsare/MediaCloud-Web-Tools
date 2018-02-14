@@ -10,22 +10,19 @@ const localMessages = {
 };
 
 class QueryAttentionOverTimeDrillDownDataCard extends React.Component {
-  state = {
-    isVisible: 0,
-  }
 
   render() {
 
     return (
       <DataCard>
         <Row>
-          <FormattedMessage {localMessages.details} values={{ date: date }} />
-          <Col lg={6}
-            <h3><FormattedMessage {localMessages.sampleStories} values={{ date: date }} /></h3>
+          <FormattedMessage {...localMessages.details} values={{ date: date }} />
+          <Col lg={6}>
+            <h3><FormattedMessage {...localMessages.sampleStories} values={{ date: date }} /></h3>
             {StoryTable}
           </Col>
-          <Col>
-            <h3><FormattedMessage {localMessages.topWords} values={{ date: date }} /></h3>
+          <Col lg={6}>
+            <h3><FormattedMessage {...localMessages.topWords} values={{ date: date }} /></h3>
             <OrderedWordCloud />
           </Col>
         </Row>
@@ -38,6 +35,8 @@ QueryAttentionOverTimeDrillDownDataCard.propTypes = {
   // from parent
   options: PropTypes.array,
   onViewSelected: PropTypes.func,
+  dateRange: PropTypes.object,
+  queryInfo: PropTypes.object,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

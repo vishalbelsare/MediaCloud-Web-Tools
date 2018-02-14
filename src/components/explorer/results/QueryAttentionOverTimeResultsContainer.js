@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import MenuItem from 'material-ui/MenuItem';
 import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -38,6 +37,11 @@ function dataAsSeries(data) {
 }
 
 class QueryAttentionOverTimeResultsContainer extends React.Component {
+  state = {
+    isDrillDownVisible: false,
+    dateRange: null,
+    clickedQuery: null,
+  }
   componentWillReceiveProps(nextProps) {
     const { lastSearchTime, fetchData } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
@@ -57,10 +61,8 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
-  handleDataPointClick = (startDate, endDate=null) => {
-    const { sourceId } = this.props;
-    const dateStr = `${startDate}`;
-  
+  handleDataPointClick = (date0, date1, evt, origin) => {
+    this.setState({ isDrillDownVisible: true, date0, date1, evt, origin });
     // set datacard as open
   }
   downloadCsv = (query) => {
@@ -82,9 +84,12 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // so we have to do the following
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
-    const specificDateInformation = (
-      <QueryAttentionOverTimeDrillDownDataCard />
-    );
+    let drillDown = null;
+    if (this.state.isDrillDownVisible) {
+      drillDown = (
+        <QueryAttentionOverTimeDrillDownDataCard dateRange={this.state.dateRange} query={this.state.clickedQuery} />
+      );
+    }
 
     // stich together line chart data
     let series = [];
@@ -111,7 +116,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
           series={series}
           height={300}
           backgroundColor="#f5f5f5"
-          onDataPointClick={handleDataPointClick}
+          onDataPointClick={this.handleDataPointClick}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -126,6 +131,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
+        {drillDown}
       </div>
     );
   }
