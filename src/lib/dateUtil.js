@@ -15,7 +15,8 @@ const TOPIC_DATE_FORMAT = 'YYYY-MM-DD';
 // "2017-04-13 12:26:59.649513"
 const SNAPSHOT_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
 
-// const SHORT_DATE_STRING = 'MMM Do YY';
+
+export const ONE_DAY_RANGE = '+1DAY';
 
 export const PAST_WEEK = 'week';
 export const PAST_TWO_WEEKS = 'two_weeks';
@@ -40,9 +41,20 @@ export function isStartDateAfterEndDate(start, end) {
   return moment(start).isAfter(end);
 }
 
+export function oneWeekLater(date) {
+  const weekLater = moment(date).add(1, 'week');
+  return weekLater;
+}
+
 export function isMoreThanAYearInPast(dateInPast) {
   const yearPriorToNow = moment().subtract(1, 'years');
   return yearPriorToNow.isAfter(dateInPast);
+}
+
+export function isADayDifference(date0, date1) {
+  const firstDate = moment(date0);
+  const oneDayAfter = firstDate.add(1, 'days');
+  return oneDayAfter.isAfter(moment(date1));
 }
 
 export function getMomentDateSubtraction(date, num, timeUnit) {
