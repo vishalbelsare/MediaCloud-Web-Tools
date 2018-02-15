@@ -1,5 +1,14 @@
-import hermes.backend.memcached
-cache = hermes.Hermes(hermes.backend.memcached.Backend, ttl=86400*3)  # three days
+from dogpile.cache import make_region
 
-#import hermes.backend.redis
-#cache = hermes.Hermes(hermes.backend.redis.Backend, host='localhost', db=1, ttl=86400*3)  # three days
+from server import config
+
+cache = make_region().configure(
+    'dogpile.cache.redis',
+    arguments = {
+        'url': config.get('CACHE_REDIS_URL'),
+        'port': 6379,
+        'db': 0,
+        'redis_expiration_time': 60*60*24*3,   # 3 days
+        'distributed_lock': True
+        }
+)

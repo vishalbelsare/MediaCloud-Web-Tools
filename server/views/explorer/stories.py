@@ -38,7 +38,7 @@ def api_explorer_demo_story_sample():
     return jsonify(story_count_result)  
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_random_stories(query):
     return mc.storyList(solr_query=query, sort=mc.SORT_RANDOM)
 
@@ -104,7 +104,7 @@ def api_explorer_demo_story_count():
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_story_count(query):
     return mc.storyCount(solr_query=query)
 

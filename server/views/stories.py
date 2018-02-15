@@ -74,7 +74,7 @@ def entities_from_mc_or_cliff(user_mediacloud_key, stories_id):
     return unique_entities
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_story_raw_cliff_results(stories_id):
     user_mc = user_mediacloud_client()
     themes = user_mc.storyRawCliffResults([stories_id])
@@ -108,7 +108,7 @@ def nyt_themes_from_mc_or_labeller(stories_id):
     return results
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_story_raw_theme_results(stories_id):
     user_mc = user_mediacloud_client()
     themes = user_mc.storyRawNytThemeResults([stories_id])[0]

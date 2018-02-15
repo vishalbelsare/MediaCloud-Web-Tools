@@ -115,7 +115,7 @@ def _query_geotags(query):
     return _cached_geotags(user_mc_key, query)
 
 
-@cache
+@cache.cache_on_arguments()
 def _cached_geotags(user_mc_key, query):
     if is_user_logged_in():   # no user session
         api_client = user_mediacloud_client()

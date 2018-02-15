@@ -21,7 +21,7 @@ MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for sources
 
 
-@cache
+@cache.cache_on_arguments()
 def _cached_media_health(media_id):
     # this is cached across al users, so we can use the tool-level API client object
     return mc.mediaHealth(media_id)
@@ -106,7 +106,7 @@ def api_explorer_featured_collections():
     return jsonify({'results': featured_collections})
 
 
-@cache
+@cache.cache_on_arguments()
 def _cached_featured_collection_list():
     featured_collections = []
     for tags_id in FEATURED_COLLECTION_LIST:

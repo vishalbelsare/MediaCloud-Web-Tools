@@ -82,7 +82,7 @@ def source_stats(media_id):
     results['nytPct'] = ratio_nyt_tagged_count
     return jsonify(results)
 
-@cache
+@cache.cache_on_arguments()
 def _cached_media_source_health(user_mc_key, media_id):
     user_mc = user_admin_mediacloud_client()
     results = None

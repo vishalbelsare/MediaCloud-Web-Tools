@@ -9,7 +9,7 @@ from server.auth import user_admin_mediacloud_client
 logger = logging.getLogger(__name__)
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_geotag_count(user_mc_key, query):
     user_mc = user_admin_mediacloud_client()
     res = user_mc.sentenceFieldCount('*', query, field='tags_id_stories', tag_sets_id=tag_utl.GEO_TAG_SET, sample_size=tag_utl.GEO_SAMPLE_SIZE)

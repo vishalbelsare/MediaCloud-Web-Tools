@@ -116,7 +116,7 @@ def query_wordcount(query, ngram_size=1, num_words=DEFAULT_NUM_WORDS, sample_siz
     return _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size)
 
 
-@cache
+@cache.cache_on_arguments()
 def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
     if is_user_logged_in():   # no user session
         api_client = user_mediacloud_client()
@@ -126,7 +126,7 @@ def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
     return results
 
 
-@cache
+@cache.cache_on_arguments()
 def _cached_word2vec_google_2d(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results

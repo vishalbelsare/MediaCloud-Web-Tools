@@ -181,7 +181,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
     return solr_query
 
 
-@cache
+@cache.cache_on_arguments()
 def load_sample_searches():
     json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
     # load the sample searches file

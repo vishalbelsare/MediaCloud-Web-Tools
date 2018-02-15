@@ -56,7 +56,7 @@ def api_explorer_demo_sentences_count():
     return jsonify(results)
 
 
-@cache
+@cache.cache_on_arguments()
 def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_str=None):
     sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
     return sentence_count_result

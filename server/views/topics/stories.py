@@ -84,7 +84,7 @@ def topic_story_update(stories_id):
 
     return jsonify(stories)
 
-@cache
+@cache.cache_on_arguments()
 def _cached_geoname(geonames_id):
     return cliff.geonamesLookup(geonames_id)
 

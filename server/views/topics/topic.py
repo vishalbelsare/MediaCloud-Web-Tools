@@ -185,7 +185,7 @@ def favorite_topics():
 
 @app.route('/api/topics/public', methods=['GET'])
 @api_error_handler
-@cache
+@cache.cache_on_arguments()
 def public_topics():
     public_topics_list = sorted_public_topic_list()
     return jsonify({"topics": public_topics_list})

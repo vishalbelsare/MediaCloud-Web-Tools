@@ -14,7 +14,6 @@ pymongo==3.2.2
 requests==2.10.0
 six==1.10.0
 wsgiref==0.1.2
-HermesCache==0.7.1
 raven[flask]
 blinker
 redis==2.10.6
@@ -25,3 +24,4 @@ python-dateutil==2.6.0
 unicodecsv==0.14.1
 gunicorn==19.7.1
 pylibmc==1.5.2
+dogpile.cache==0.6.4
