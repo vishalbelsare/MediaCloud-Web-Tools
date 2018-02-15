@@ -62,14 +62,15 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
-    const { fetchStories, fetchWords, daySpread } = this.props;
+    const { fetchStories, fetchWords } = this.props;
     const q = origin.series.name;
+    const dayGap = origin.series.options.dateRangeSpread;
     // date calculations for span/range
     const clickedQuery = {
       q,
       start_date: date0,
     };
-    if (!daySpread) {
+    if (!dayGap) {
       clickedQuery.end_date = oneWeekLater(date0);
     }
     this.setState({ isDrillDownVisible: true, clickedQuery });
@@ -117,6 +118,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
               pointStart: data.start,
               pointInterval: data.intervalMs,
               color: query.color,
+              dateRangeSpread: query.dateRangeSpread,
             };
           } return {};
         }),
