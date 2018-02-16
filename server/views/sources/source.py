@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD, TAG_ACTION_REMOVE
 
 from server import app, db
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name, user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLICATION_STATE, VALID_COLLECTION_TAG_SETS_IDS, \
@@ -82,7 +82,7 @@ def source_stats(media_id):
     results['nytPct'] = ratio_nyt_tagged_count
     return jsonify(results)
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_media_source_health(user_mc_key, media_id):
     user_mc = user_admin_mediacloud_client()
     results = None

@@ -3,7 +3,7 @@ import logging
 
 from server import mc
 from server.auth import user_mediacloud_client
-from server.cache import cache
+from server.cache import cache, key_generator
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ def format_metadata_fields(media_dict, field, value):
         media_dict['media_type'] = value
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_tags_in_tag_set(tag_sets_id):
     '''
     This is cached at the app level, so it doesn't need a user key.  This is because
@@ -139,7 +139,7 @@ def media_with_tag(user_mc_key, tags_id, cached=False):
     return sorted(all_media, key=lambda t: t['name'].lower())
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_media_with_tag_page(tags_id, max_media_id):
     '''
     We have to do this on the page, not the full list because memcache has a 1MB cache upper limit,

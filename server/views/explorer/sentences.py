@@ -5,7 +5,7 @@ import flask_login
 from operator import itemgetter
 from server import app, mc
 from server.auth import user_admin_mediacloud_client
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 import server.util.csv as csv
 from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
@@ -56,7 +56,7 @@ def api_explorer_demo_sentences_count():
     return jsonify(results)
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_str=None):
     sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
     return sentence_count_result

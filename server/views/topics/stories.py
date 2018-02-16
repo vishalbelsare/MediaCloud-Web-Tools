@@ -5,7 +5,7 @@ import flask_login
 
 from server import app, cliff, mc, TOOL_API_KEY
 from server.auth import is_user_logged_in
-from server.cache import cache
+from server.cache import cache, key_generator
 import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler, form_fields_required
@@ -84,7 +84,7 @@ def topic_story_update(stories_id):
 
     return jsonify(stories)
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_geoname(geonames_id):
     return cliff.geonamesLookup(geonames_id)
 

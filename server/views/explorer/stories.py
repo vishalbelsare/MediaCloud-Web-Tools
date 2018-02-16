@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, request
 import flask_login
 from server import app, mc
-from server.cache import cache
+from server.cache import cache, key_generator
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.views.explorer import prep_simple_solr_query, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
@@ -38,7 +38,7 @@ def api_explorer_demo_story_sample():
     return jsonify(story_count_result)  
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_random_stories(query):
     return mc.storyList(solr_query=query, sort=mc.SORT_RANDOM)
 
@@ -104,7 +104,7 @@ def api_explorer_demo_story_count():
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_count(query):
     return mc.storyCount(solr_query=query)
 

@@ -4,7 +4,7 @@ import flask_login
 from multiprocessing import Pool
 from operator import itemgetter
 
-from server.cache import cache
+from server.cache import cache, key_generator
 from media_search import matching_collections_by_set
 from server import app, mc
 from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
@@ -21,7 +21,7 @@ MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for sources
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_media_health(media_id):
     # this is cached across al users, so we can use the tool-level API client object
     return mc.mediaHealth(media_id)
@@ -106,7 +106,7 @@ def api_explorer_featured_collections():
     return jsonify({'results': featured_collections})
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_featured_collection_list():
     featured_collections = []
     for tags_id in FEATURED_COLLECTION_LIST:

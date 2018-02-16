@@ -1,5 +1,5 @@
 import logging
-from server.cache import cache
+from server.cache import cache, key_generator
 import os
 import json
 from server import mc
@@ -181,7 +181,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
     return solr_query
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def load_sample_searches():
     json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
     # load the sample searches file

@@ -9,7 +9,7 @@ from server import app, cliff, mc, NYT_THEME_LABELLER_URL
 from server.auth import user_mediacloud_client, user_mediacloud_key
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.cache import cache
+from server.cache import cache, key_generator
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ def entities_from_mc_or_cliff(user_mediacloud_key, stories_id):
     return unique_entities
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_raw_cliff_results(stories_id):
     user_mc = user_mediacloud_client()
     themes = user_mc.storyRawCliffResults([stories_id])
@@ -108,7 +108,7 @@ def nyt_themes_from_mc_or_labeller(stories_id):
     return results
 
 
-@cache.cache_on_arguments()
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_story_raw_theme_results(stories_id):
     user_mc = user_mediacloud_client()
     themes = user_mc.storyRawNytThemeResults([stories_id])[0]
