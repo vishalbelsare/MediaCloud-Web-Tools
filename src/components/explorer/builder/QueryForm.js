@@ -45,10 +45,17 @@ const focusQueryInputField = (input) => {
 };
 
 class QueryForm extends React.Component {
+  state = { // do not focus on primary textfield if we have a dialog open
+    childDialogOpen: false,
+  }
+
   componentDidMount() {
     this.queryRef.input.refs.input.focus();
   }
 
+  setQueryFormChildDialogOpen = () => {
+    this.setState({ childDialogOpen: !this.state.childDialogOpen });
+  }
   // required to be able to reference the Field/TextField component in order to set focus
   preserveRef = ref => (this.queryRef = ref);
 
@@ -69,7 +76,7 @@ class QueryForm extends React.Component {
     ];
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
-      if (selected.q === undefined || selected.q === '*') {
+      if ((selected.q === undefined || selected.q === '*') && !this.state.childDialogOpen) {
         focusQueryInputField(this.queryRef);
       }
     }
@@ -174,6 +181,7 @@ class QueryForm extends React.Component {
                     handleSaveSearch={l => handleSaveSearch(l)}
                     handleDeleteSearch={handleDeleteSearch}
                     submitting={submitting}
+                    setQueryFormChildDialogOpen={this.setQueryFormChildDialogOpen}
                   />
                   <AppButton
                     type="submit"

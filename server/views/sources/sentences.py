@@ -2,7 +2,7 @@ import logging
 import datetime
 from operator import itemgetter
 import server.util.csv as csv
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
     return csv.stream_response(clean_results, props, filename)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date_str=None):
     '''
     Helper to fetch sentences counts over the last year for an arbitrary query

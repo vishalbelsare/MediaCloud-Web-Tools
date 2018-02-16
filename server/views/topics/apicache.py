@@ -2,7 +2,7 @@ import logging
 from flask import request
 
 from server import mc, TOOL_API_KEY
-from server.cache import cache
+from server.cache import cache, key_generator, key_generator
 from server.util.tags import STORY_UNDATEABLE_TAG
 import server.util.wordembeddings as wordembeddings
 from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in
@@ -33,7 +33,7 @@ def topic_media_list(user_mc_key, topics_id, **kwargs):
     return _cached_topic_media_list(user_mc_key, topics_id, **merged_args)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_media_list(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_media_list instead. This needs user_mc_key in the
@@ -63,7 +63,7 @@ def topic_story_count(user_mc_key, topics_id, **kwargs):
     return _cached_topic_story_count(user_mc_key, topics_id, **merged_args)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
@@ -95,7 +95,7 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
     return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_story_list instead. This needs user_mc_key in the
@@ -154,13 +154,13 @@ def _word2vec_topic_2d_results(topics_id, words):
     return word2vec_results
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_word2vec_google_2d_results(words):
     word2vec_results = wordembeddings.google_news_2d(words)
     return word2vec_results
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_word_counts(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_word_counts instead. This needs user_mc_key in the
@@ -194,7 +194,7 @@ def topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     return _cached_topic_sentence_counts(user_mc_key, topics_id, **merged_args)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
     '''
     Internal helper - don't call this; call topic_sentence_counts instead. This needs user_mc_key in the
@@ -214,7 +214,7 @@ def _cached_topic_sentence_counts(user_mc_key, topics_id, **kwargs):
         **kwargs)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
     '''
     This needs user_mc_key in the function signature to make sure the caching is keyed correctly.
@@ -224,7 +224,7 @@ def topic_focal_sets(user_mc_key, topics_id, snapshots_id):
     return response
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_topic_timespan_list(user_mc_key, topics_id, snapshots_id=None, foci_id=None):
     # this includes the user_mc_key as a first param so the cache works right
     user_mc = user_admin_mediacloud_client()
@@ -261,7 +261,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
-    timespan_query = "timespans_id:{}".format(timespans_id)
+    timespan_query = "{~ timespan:"+str(timespans_id)+" }"
     if (q is None) or (len(q) == 0):
         query = timespan_query
     else:
@@ -269,7 +269,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
     return _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size, query):
     user_mc = user_mediacloud_client()
     # we don't need ot use topics_id here because the timespans_id is in the query argument
@@ -296,7 +296,7 @@ def topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kwargs):
     return _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size, **merged_args)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_sentence_sample(user_mc_key, topics_id, sample_size=1000, **kwargs):
     '''
     Internal helper - don't call this; call topic_sentence_sample instead. This needs user_mc_key in the

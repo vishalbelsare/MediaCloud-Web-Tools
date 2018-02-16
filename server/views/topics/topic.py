@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from functools import partial
 
 from server import app, db, mc
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
 from server.util.request import form_fields_required, arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
@@ -185,7 +185,7 @@ def favorite_topics():
 
 @app.route('/api/topics/public', methods=['GET'])
 @api_error_handler
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def public_topics():
     public_topics_list = sorted_public_topic_list()
     return jsonify({"topics": public_topics_list})

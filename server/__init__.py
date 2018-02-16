@@ -153,7 +153,7 @@ def create_app():
         my_app.config['SESSION_COOKIE_DOMAIN'] = cookie_domain
         my_app.config['REMEMBER_COOKIE_DOMAIN'] = cookie_domain
     # connect to the shared session storage
-    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
+    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('SESSION_REDIS_URL')))
     return my_app
 
 app = create_app()

@@ -12,7 +12,7 @@ import server.util.csv as csv
 from server import app, mc, db
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
-from server.cache import cache
+from server.cache import cache, key_generator
 
 from server.util.request import arguments_required, form_fields_required, api_error_handler
 from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields, media_with_tag
@@ -79,7 +79,7 @@ def api_collection_set(tag_sets_id):
     add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_tag_list(tag_sets_id, last_tags_id, rows, public_only):
     user_mc = user_mediacloud_client()
     # user agnostic cache here, because it isn't user-dependent
@@ -142,7 +142,7 @@ def api_featured_collections():
     return jsonify({'results': featured_collections})
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_featured_collections():
     featured_collections = []
     for tags_id in FEATURED_COLLECTION_LIST:
@@ -163,7 +163,7 @@ def api_popular_collections():
     return jsonify({'results': sorted_popular_collections})
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_popular_collections():
     popular_collections = []
     for tags_id in POPULAR_COLLECTION_LIST:
@@ -294,13 +294,13 @@ def _collection_source_sentence_historical_counts(collection_id, start_date_str,
     return results
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_source_sentence_count(user_mc_key, query):
     user_mc = user_mediacloud_client()
     return user_mc.sentenceCount(query)['count']
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_source_split_sentence_count(user_mc_key, query, split_start, split_end):
     user_mc = user_mediacloud_client()
     return user_mc.sentenceCount(query, split=True, split_start_date=split_start, split_end_date=split_end)
@@ -326,7 +326,7 @@ def collection_source_sentence_counts_csv(collection_id):
     return csv.stream_response(results, props, filename)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_media_with_sentence_counts(user_mc_key, tag_sets_id):
     sample_size = 2000  # kind of arbitrary
     # list all sources first
