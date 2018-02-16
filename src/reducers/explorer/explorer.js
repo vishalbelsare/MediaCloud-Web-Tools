@@ -12,6 +12,8 @@ import stories from './stories';
 import storyCount from './storyCount';
 import geo from './geo';
 import savedSearches from './savedSearches';
+import storiesPerDateRange from './storiesPerDateRange';
+import topWordsPerDateRange from './topWordsPerDateRange';
 
 const rootReducer = combineReducers({
   selected,
@@ -27,6 +29,8 @@ const rootReducer = combineReducers({
   topEntitiesPeople,
   topEntitiesOrgs,
   savedSearches,
+  storiesPerDateRange,
+  topWordsPerDateRange,
 });
 
 export default rootReducer;

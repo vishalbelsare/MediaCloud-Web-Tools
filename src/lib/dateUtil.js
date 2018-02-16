@@ -4,6 +4,8 @@ export const STORY_PUB_DATE_UNDATEABLE = 'undateable';
 
 const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
+const SHORT_SOLR_DATE_FORMAT = 'YYYY-MM-DD';
+
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
 const DB_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -55,6 +57,10 @@ export function isADayDifference(date0, date1) {
   const firstDate = moment(date0);
   const oneDayAfter = firstDate.add(1, 'days');
   return oneDayAfter.isAfter(moment(date1));
+}
+
+export function solrFormat(date, short = true) {
+  return moment(date).format(short ? SHORT_SOLR_DATE_FORMAT : SOLR_DATE_FORMAT);
 }
 
 export function getMomentDateSubtraction(date, num, timeUnit) {

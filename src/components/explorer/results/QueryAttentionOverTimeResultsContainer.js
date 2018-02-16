@@ -10,7 +10,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import { QueryAttentionOverTimeDrillDownDataCard } from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
-import { cleanDateCounts, oneWeekLater } from '../../../lib/dateUtil';
+import { cleanDateCounts, oneWeekLater, solrFormat } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 
@@ -49,14 +49,16 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { results, queries } = this.props;
+    const { results, queries, stories, words } = this.props;
     // only re-render if results, any labels, or any colors have changed
     if (results.length) { // may have reset results so avoid test if results is empty
       const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
       const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
       return (
         ((labelsHaveChanged || colorsHaveChanged))
-         || (results !== nextProps.results)
+        || (results !== nextProps.results)
+        || (nextProps.stories !== stories
+        || nextProps.words !== words)
       );
     }
     return false; // if both results and queries are empty, don't update
@@ -64,14 +66,14 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
   handleDataPointClick = (date0, date1, evt, origin) => {
     const { fetchStories, fetchWords } = this.props;
     const q = origin.series.name;
-    const dayGap = origin.series.options.dateRangeSpread;
+    const dayGap = false; // origin.series.options.dateRangeSpread;
     // date calculations for span/range
     const clickedQuery = {
       q,
-      start_date: date0,
+      start_date: solrFormat(date0),
     };
     if (!dayGap) {
-      clickedQuery.end_date = oneWeekLater(date0);
+      clickedQuery.end_date = solrFormat(oneWeekLater(date0), true);
     }
     this.setState({ isDrillDownVisible: true, clickedQuery });
 
@@ -161,10 +163,10 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
-  fetchStories: PropTypes.array.isRequired,
-  fetchWords: PropTypes.array.isRequired,
+  fetchStories: PropTypes.func.isRequired,
+  fetchWords: PropTypes.func.isRequired,
   words: PropTypes.array,
-  stories: PropTypes.array,
+  stories: PropTypes.object,
   daySpread: PropTypes.bool,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
@@ -176,8 +178,8 @@ const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
-  words: state.explorer.topWordsPerDateRange ? state.explorer.topWordsPerDateRange.results : null,
-  stories: state.explorer.storiesPerDateRange ? state.explorer.storiesPerDateRange.results : null,
+  words: state.explorer.topWordsPerDateRange.list,
+  stories: state.explorer.storiesPerDateRange,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
