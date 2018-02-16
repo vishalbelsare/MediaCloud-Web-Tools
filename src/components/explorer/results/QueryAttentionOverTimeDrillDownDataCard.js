@@ -10,6 +10,9 @@ const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
   language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
   people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
+  details: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Here are some details about what was reported on for {date}' },
+  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories for {date}' },
+  topWords: { id: 'explorer.attention.drillDown.topWords', defaultMessage: 'Top Words for {date}' },
 };
 
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
@@ -21,7 +24,7 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
         <FormattedMessage {...localMessages.details} values={{ date }} />
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
-          <StoryTable sources={stories} />
+          <StoryTable stories={Object.values(stories)} />
         </Col>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>
@@ -36,7 +39,7 @@ QueryAttentionOverTimeDrillDownDataCard.propTypes = {
   // from parent
   stories: PropTypes.object,
   words: PropTypes.array,
-  info: PropTypes.string,
+  info: PropTypes.object,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
-import { QueryAttentionOverTimeDrillDownDataCard } from './QueryAttentionOverTimeDrillDownDataCard';
+import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts, oneWeekLater, solrFormat } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
@@ -100,7 +100,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     let drillDown = null;
-    if (this.state.isDrillDownVisible) {
+    if (this.state.isDrillDownVisible && words && words.length > 0 && stories !== undefined) {
       drillDown = (
         <QueryAttentionOverTimeDrillDownDataCard info={this.state.clickedQuery} words={words} stories={stories} />
       );
