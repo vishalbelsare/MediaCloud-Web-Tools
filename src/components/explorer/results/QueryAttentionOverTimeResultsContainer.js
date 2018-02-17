@@ -10,7 +10,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts } from '../../../lib/dateUtil';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -57,7 +57,8 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     if (parseInt(query.searchId, 10) >= 0) {
       url = `/api/explorer/sentences/count.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/sentences/count.csv/[{"q":"${query.q}"}]/${query.index}`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/sentences/count.csv/${urlParamString}/${query.index}`;
     }
     window.location = url;
   }
