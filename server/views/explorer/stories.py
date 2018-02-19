@@ -148,5 +148,5 @@ def stream_story_count_csv(fn, search_id_or_query_list):
 
 @app.route('/api/explorer/stories/count.csv/<search_id_or_query_list>', methods=['GET'])
 def explorer_story_count_csv(search_id_or_query_list):
-    return stream_story_count_csv('explorer-stories-', search_id_or_query_list)
+    return stream_story_count_csv('explorer-story-count-', search_id_or_query_list)
 

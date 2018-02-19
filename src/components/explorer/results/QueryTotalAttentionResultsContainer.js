@@ -11,7 +11,7 @@ import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
 import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import { downloadSvg } from '../../util/svg';
+// TODO import { downloadSvg } from '../../util/svg';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
@@ -47,16 +47,15 @@ class QueryTotalAttentionResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   // if demo, use only sample search queries to download
-  downloadCsv = () => {
+  downloadCsv = (query) => {
     const { queries } = this.props;
     let url = null;
     const testFirstQuery = queries[0];
     if (parseInt(testFirstQuery.searchId, 10) >= 0) {
       url = `/api/explorer/stories/count.csv/${testFirstQuery.searchId}`;
     } else {
-      const unDeletedQueries = queries.filter(q => q.deleted !== true);
-      const urlParamString = generateQueryParamString(unDeletedQueries);
-      url = `/api/explorer/stories/count.csv/[${urlParamString}]`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/stories/count.csv/${urlParamString}`;
     }
     window.location = url;
   }
@@ -90,18 +89,15 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         {content}
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(messages.downloadCSV)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={this.downloadCsv}
-            />
-            <MenuItem
-              className="action-icon-menu-item"
-              primaryText={formatMessage(messages.downloadSVG)}
-              rightIcon={<DownloadButton />}
-              onTouchTap={() => downloadSvg(BUBBLE_CHART_DOM_ID)}
-            />
+            {mergedResultsWithQueryInfo.map((q, idx) =>
+              <MenuItem
+                key={idx}
+                className="action-icon-menu-item"
+                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                rightIcon={<DownloadButton />}
+                onTouchTap={() => this.downloadCsv(q)}
+              />
+            )}
           </ActionMenu>
         </div>
       </div>
