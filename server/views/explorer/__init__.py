@@ -143,6 +143,39 @@ def parse_query_with_keywords(args):
     return solr_query
 
 
+
+def parse_query_for_sample_search(sample_search_id, query_id):
+    solr_query = ''
+
+    # default dates
+    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+    def_start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    def_end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    
+    SAMPLE_SEARCHES = load_sample_searches()
+    current_query_info = SAMPLE_SEARCHES[sample_search_id]['queries'][query_id]
+
+    solr_query = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
+            start_date= current_query_info['start_date'],
+            end_date=current_query_info['end_date'],
+            media_ids=current_query_info['media_ids'],
+            tags_ids=current_query_info['tags_ids'])
+
+    return solr_query
+
+def parse_as_sample(search_id_or_query, query_id=None):
+    try:
+        if isinstance(search_id_or_query, int): # special handling for an indexed query
+            sample_search_id = search_id_or_query
+            parse_query_for_sample_search(sample_search_id, query_id)
+
+    except Exception as e:
+        logger.warn("error " + str(e))
+
+#yikes - TODO get rid of this function ASAP
+# args_or_query - either search-id/index in parameters or in request.args 
+# this came from demo url calls versus request.args for custom queries
+# this is only called when handling a sample search
 def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     solr_query = ''
