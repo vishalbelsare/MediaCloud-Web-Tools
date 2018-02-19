@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 // import { DownloadButton } from '../../common/IconButton';
 // import ActionMenu from '../../common/ActionMenu';
 import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
@@ -52,7 +52,8 @@ class QueryWordsResultsContainer extends React.Component {
     if (parseInt(query.searchId, 10) >= 0) {
       url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
     } else {
-      url = `/api/explorer/words/wordcount.csv/[{"q":"${query.q}"}]/${query.index}?`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/words/wordcount.csv/${urlParamString}/${query.index}?`;
     }
     return url;
   }

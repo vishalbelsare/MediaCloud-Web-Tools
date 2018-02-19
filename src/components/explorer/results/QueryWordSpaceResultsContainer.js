@@ -6,7 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import Word2VecChart from '../../vis/Word2VecChart';
@@ -44,7 +44,8 @@ class QueryWordSpaceResultsContainer extends React.Component {
     if (parseInt(query.searchId, 10) >= 0) {
       url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
     } else {
-      url = `/api/explorer/words/wordcount.csv/[{"q":"${query.q}"}]/${query.index}?`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/words/wordcount.csv/${urlParamString}/${query.index}?`;
     }
     return url;
   }

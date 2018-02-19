@@ -19,7 +19,7 @@ DEFAULT_DISPLAY_AMOUNT= 10
 ENTITY_DOWNLOAD_COLUMNS = ['label', 'count', 'pct', 'sample_size','tags_id']
 
 
-# @cache
+# @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_entities(query, type):
     if is_user_logged_in():   # no user session
         api_client = user_admin_mediacloud_client()

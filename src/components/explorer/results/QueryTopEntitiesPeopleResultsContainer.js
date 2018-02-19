@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesPeople, fetchTopEntitiesPeople, fetchDemoTopEntitiesPeople } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 
@@ -50,7 +50,8 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
     if (parseInt(query.searchId, 10) >= 0) {
       url = `/api/explorer/entities/people/entities.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/entities/people/entities.csv/[{"q":"${query.q}"}]/${query.index}`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/entities/people/entities.csv/${urlParamString}/${query.index}`;
     }
     window.location = url;
   }

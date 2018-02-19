@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @api_error_handler
 def topic_focal_set_list(topics_id):
     snapshots_id = request.args.get('snapshotId')
-    focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id=snapshots_id)
+    focal_sets = topic_focal_sets(user_mediacloud_key(), topics_id, snapshots_id)
     return jsonify(focal_sets)
 
 

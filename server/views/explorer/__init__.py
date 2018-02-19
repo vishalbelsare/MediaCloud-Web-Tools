@@ -1,5 +1,5 @@
 import logging
-from server.cache import cache
+from server.cache import cache, key_generator
 import os
 import json
 from server import mc
@@ -112,12 +112,20 @@ def parse_query_with_keywords(args):
         current_query = args['q']
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
+        media_ids = None
+        if isinstance(args['sources'], basestring):
+            media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
+        else:
+            media_ids = args['sources']
+        tags_ids = None
         if 'collections' in args:
-            if len(args['collections']) == 0:
-                tags_ids = []
+            if isinstance(args['collections'], basestring):
+                if len(args['collections']) == 0:
+                    tags_ids = []
+                else:
+                    tags_ids = args['collections'].split(',')
             else:
-                tags_ids = args['collections'].split(',')
+                tags_ids = args['collections']
         else:
             tags_ids = DEFAULT_COLLECTION_IDS
 
@@ -181,7 +189,7 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
     return solr_query
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def load_sample_searches():
     json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
     # load the sample searches file

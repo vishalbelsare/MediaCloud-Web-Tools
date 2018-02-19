@@ -84,7 +84,7 @@ const SourcesAppMenu = (props) => {
     <AppMenu
       titleMsg={localMessages.menuTitle}
       showMenu={getAppName() === 'sources' && props.isLoggedIn}
-      onTitleClick={() => { props.handleItemClick('about', getAppName() === 'sources'); }}
+      onTitleClick={() => { props.handleItemClick('', getAppName() === 'sources'); }}
       menuComponent={menu}
     />
   );

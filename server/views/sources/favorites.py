@@ -4,7 +4,7 @@ import flask_login
 import server.util.csv as csv
 from server import app, mc, db
 from server.util.request import  api_error_handler
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_name
 from server.views.sources import download_sources_csv
 logger = logging.getLogger(__name__)
