@@ -153,13 +153,13 @@ def parse_query_for_sample_search(sample_search_id, query_id):
     def_end_date = datetime.datetime.now().strftime("%Y-%m-%d")
     
     SAMPLE_SEARCHES = load_sample_searches()
-    current_query_info = SAMPLE_SEARCHES[sample_search_id]['queries'][query_id]
+    current_query_info = SAMPLE_SEARCHES[int(sample_search_id)]['queries'][int(query_id)]
 
     solr_query = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
-            start_date= current_query_info['start_date'],
-            end_date=current_query_info['end_date'],
-            media_ids=current_query_info['media_ids'],
-            tags_ids=current_query_info['tags_ids'])
+            start_date= current_query_info['startDate'],
+            end_date=current_query_info['endDate'],
+            media_ids=current_query_info['sources'],
+            tags_ids=current_query_info['collections'])
 
     return solr_query
 

@@ -74,6 +74,8 @@ def stream_sentence_count_csv(fn, search_id_or_query, index):
         search_id = int(search_id_or_query)
         if search_id >= 0: # this is a sample query
             solr_query = parse_as_sample(search_id, index)
+            # TODO 
+            filename = fn #+ current_query['q']
 
     except Exception as e: 
         # planned exception if search_id is actually a keyword or query
