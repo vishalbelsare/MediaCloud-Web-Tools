@@ -167,7 +167,7 @@ def parse_as_sample(search_id_or_query, query_id=None):
     try:
         if isinstance(search_id_or_query, int): # special handling for an indexed query
             sample_search_id = search_id_or_query
-            parse_query_for_sample_search(sample_search_id, query_id)
+            return parse_query_for_sample_search(sample_search_id, query_id)
 
     except Exception as e:
         logger.warn("error " + str(e))

@@ -8,7 +8,7 @@ from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, processed_by_cliff_query_
 from server.util.request import api_error_handler
 from server.views.topics.apicache import topic_tag_coverage
 import server.util.csv as csv
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import datetime
 import json
 logger = logging.getLogger(__name__)
@@ -113,18 +113,21 @@ def api_explorer_demo_top_entities_organizations():
 @app.route('/api/explorer/entities/<type_entity>/entities.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
 def explorer_entities_csv(type_entity, search_id_or_query, index):
-
+    tag_type = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
+    fn = 'explorer-entities-{}'.format(type_entity)
     try:
-        search_id = int(search_id_or_query) # ie. the search_id_or_query is sample search id
-        if search_id >= 0:
-            sample_searches = load_sample_searches()
-            current_search = sample_searches[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
-    except ValueError:  # ie. the search_id_or_query is a query
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        tag_type = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
+        search_id = int(search_id_or_query)
+        if search_id >= 0: # this is a sample query
+            solr_query = parse_as_sample(search_id, index)
+            # TODO 
+            filename = fn #+ current_query['q']
+
+    except Exception as e: 
+        # planned exception if search_id is actually a keyword or query
+        # csv downloads are 1:1 - one query to one download, so we can use index of 0
+        query_or_keyword = search_id_or_query
+        current_query = json.loads(query_or_keyword)[0]
+        filename = fn + current_query['q']
         solr_query = parse_query_with_keywords(current_query)
 
     top_tag_counts = top_tags_in_set(solr_query, tag_type, DEFAULT_SAMPLE_SIZE)
@@ -133,4 +136,4 @@ def explorer_entities_csv(type_entity, search_id_or_query, index):
         tag['sample_size'] = DEFAULT_SAMPLE_SIZE
 
     return csv.stream_response(top_tag_counts, ENTITY_DOWNLOAD_COLUMNS,
-                               'explorer-entities-{}'.format(type_entity))
+                               filename.format(type_entity))
