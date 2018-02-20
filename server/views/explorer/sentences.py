@@ -26,7 +26,7 @@ def api_explorer_sentences_count():
     sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.args['start_date'], split_end_date=request.args['end_date'], split=True)
     # make sure we return the query and the id passed in..
     return jsonify(sentence_count_result)
-
+    # TODO should we be using the cache call here?
 
 @app.route('/api/explorer/demo/sentences/count', methods=['GET'])
 # handles search id query or keyword query
@@ -50,7 +50,6 @@ def api_explorer_demo_sentences_count():
     else:
         solr_query = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
-    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date, split_end_date=end_date, split=True)
     results = cached_by_query_sentence_counts(solr_query, start_date, end_date)
     
     return jsonify(results)

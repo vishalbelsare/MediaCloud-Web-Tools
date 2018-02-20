@@ -112,11 +112,12 @@ def parse_query_with_keywords(args):
         current_query = args['q']
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = None
-        if isinstance(args['sources'], basestring):
-            media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
-        else:
-            media_ids = args['sources']
+        media_ids = []
+        if 'sources' in args:
+            if isinstance(args['sources'], basestring):
+                media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
+            else:
+                media_ids = args['sources']
         tags_ids = None
         if 'collections' in args:
             if isinstance(args['collections'], basestring):
@@ -137,7 +138,7 @@ def parse_query_with_keywords(args):
 
     # otherwise, default
     except Exception as e:
-        tags_ids = args['collections']
+        tags_ids = args['collections'] if 'collections' in args and len(args['collections']) > 0 else []
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
@@ -145,13 +146,6 @@ def parse_query_with_keywords(args):
 
 
 def parse_query_for_sample_search(sample_search_id, query_id):
-    solr_query = ''
-
-    # default dates
-    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    def_start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    def_end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    
     SAMPLE_SEARCHES = load_sample_searches()
     current_query_info = SAMPLE_SEARCHES[int(sample_search_id)]['queries'][int(query_id)]
 

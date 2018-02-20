@@ -112,7 +112,7 @@ def stream_story_count_csv(fn, search_id_or_query_list):
     simply be passed on to a call to topicStoryList.
     '''
     # if we have a search id, we load the samples from our sample searches file
-    filename = ''
+    filename = fn
     story_count_results = []
     SAMPLE_SEARCHES = load_sample_searches()
     try:
