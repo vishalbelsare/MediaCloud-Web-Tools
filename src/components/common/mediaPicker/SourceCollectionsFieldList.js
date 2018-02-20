@@ -12,7 +12,7 @@ const renderCollectionSelector = ({ allowRemoval, fields, onDelete }) => (
         key={name}
         name={name}
         component={(info) => {
-          const handleDelete = (allowRemoval || info.meta.dirty) && fields.length > 1 ? () => { fields.remove(index); onDelete(info.input.value); } : undefined;
+          const handleDelete = (allowRemoval || info.meta.dirty) && fields.length > 0 ? () => { fields.remove(index); onDelete(info.input.value); } : undefined;
           const val = info.input.value;
           let tempObj = {};
           if (val && typeof val === 'number') {
@@ -44,6 +44,7 @@ const SourceCollectionsFieldList = (props) => {
         form={propTypes.form}
         name="media"
         validate={propTypes.validate}
+        warn={propTypes.warn}
         allowRemoval={allowRemoval}
         component={renderCollectionSelector}
         initialValues={initialValues}
