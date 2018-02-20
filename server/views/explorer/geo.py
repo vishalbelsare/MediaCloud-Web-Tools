@@ -10,7 +10,7 @@ from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 import server.util.tags as tag_utl
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import json
 # load the shared settings file
 
@@ -30,7 +30,7 @@ def api_explorer_demo_geotag_count():
 
 @app.route('/api/explorer/geography/geography.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
-def explorer_geo_csv(search_id_or_query, index):
+def explorer_geo_csv(search_id_or_query, index=None):
     return stream_geo_csv('explorer-geography', search_id_or_query, index)
 
 
@@ -73,21 +73,18 @@ def stream_geo_csv(fn, search_id_or_query, index):
     SAMPLE_SEARCHES = load_sample_searches()
     try:
         search_id = int(search_id_or_query)
-        if search_id >= 0:
-            SAMPLE_SEARCHES = load_sample_searches()
-            current_search = SAMPLE_SEARCHES[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+        if search_id >= 0: # this is a sample query
+            solr_query = parse_as_sample(search_id, index)
+            # TODO 
+            filename = filename # don't have this info + current_query['q']
 
-            if int(index) < len(current_search): 
-                start_date = current_search[int(index)]['startDate']
-                end_date = current_search[int(index)]['endDate']
-                filename = fn + current_search[int(index)]['q']
-    except Exception as e:
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        solr_query = parse_query_with_keywords(current_query)
-        filename = fn + current_query['q']
+    except Exception as e: 
+        # planned exception if search_id is actually a keyword or query
+        # csv downloads are 1:1 - one query to one download, so we can use index of 0
+        query_or_keyword = search_id_or_query
+        current_query = json.loads(query_or_keyword)[0]
+        solr_query = parse_query_with_keywords(current_query) # TODO don't mod the start and end date unless permissions
+        filename = filename + current_query['q']
 
     res = _query_geotags(solr_query)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]

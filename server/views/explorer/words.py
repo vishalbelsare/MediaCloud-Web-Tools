@@ -9,7 +9,7 @@ from server.auth import is_user_logged_in, user_mediacloud_key, user_mediacloud_
 from server.util.request import api_error_handler
 import server.util.wordembeddings as wordembeddings
 import server.util.csv as csv
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 
 # load the shared settings file
 DEFAULT_NUM_WORDS = 100
@@ -50,22 +50,24 @@ def get_word_count():
     # return combined data
     return jsonify({"list": word_data})
 
-
+# if this is a sample search, we will have a search id and a query index
+# if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
 @app.route('/api/explorer/words/wordcount.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
 def explorer_wordcount_csv(search_id_or_query, index):
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1
     try:
-        search_id = int(search_id_or_query) # ie. the search_id_or_query is sample search id
-        if search_id >= 0:
-            sample_searches = load_sample_searches()
-            current_search = sample_searches[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
-    except ValueError:  # ie. the search_id_or_query is a query
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
+        search_id = int(search_id_or_query)
+        if search_id >= 0: # this is a sample query
+            solr_query = parse_as_sample(search_id, index)
+
+    except Exception as e:
+        # planned exception if search_id is actually a keyword or query
+        # csv downloads are 1:1 - one query to one download, so we can use index of 0
+        query_or_keyword = search_id_or_query
+        current_query = json.loads(query_or_keyword)[0]
         solr_query = parse_query_with_keywords(current_query)
+
     return stream_wordcount_csv('Explorer-wordcounts-ngrams-{}'.format(ngram_size), solr_query, ngram_size)
 
 

@@ -6,10 +6,8 @@ from server import app, mc
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
 from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, processed_by_cliff_query_clause
 from server.util.request import api_error_handler
-from server.views.topics.apicache import topic_tag_coverage
 import server.util.csv as csv
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import datetime
 import json
 logger = logging.getLogger(__name__)
 

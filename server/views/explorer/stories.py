@@ -6,7 +6,7 @@ from server import app, mc
 from server.cache import cache, key_generator
 import server.util.csv as csv
 from server.util.request import api_error_handler
-from server.views.explorer import prep_simple_solr_query, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import prep_simple_solr_query, parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
 import json
 # load the shared settings file
 
@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 def api_explorer_story_sample():
     solr_query = parse_query_with_keywords(request.args)
  
-    story_count_result = cached_random_stories(solr_query)
-    return jsonify(story_count_result)  
+    story_sample_result = cached_random_stories(solr_query)
+    return jsonify(story_sample_result)  
 
 
 @app.route('/api/explorer/demo/stories/sample', methods=['GET'])
@@ -34,36 +34,33 @@ def api_explorer_demo_story_sample():
     else:
         solr_query = parse_query_with_keywords(request.args)
  
-    story_count_result = cached_random_stories(solr_query)
-    return jsonify(story_count_result)  
+    story_sample_result = cached_random_stories(solr_query)
+    return jsonify(story_sample_result)  
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_random_stories(query):
     return mc.storyList(solr_query=query, sort=mc.SORT_RANDOM)
 
-
+# if this is a sample search, we will have a search id and a query index
+# if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
 @app.route('/api/explorer/stories/samples.csv/<search_id_or_query>/<index>', methods=['GET'])
-def explorer_stories_csv(search_id_or_query, index):
-    filename = ''
-    SAMPLE_SEARCHES = load_sample_searches()
+def explorer_stories_csv(search_id_or_query, index=None):
+    filename = 'explorer-stories-'
     try:
         search_id = int(search_id_or_query)
-        if search_id >= 0:
-            SAMPLE_SEARCHES = load_sample_searches()
-            current_search = SAMPLE_SEARCHES[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
+        if search_id >= 0: # this is a sample query
+            solr_query = parse_as_sample(search_id, index)
+            # TODO 
+            filename = filename # don't have this info + current_query['q']
 
-            if int(index) < len(current_search): 
-                start_date = current_search[int(index)]['startDate']
-                end_date = current_search[int(index)]['endDate']
-            filename = 'explorer-stories-' + current_search[int(index)]['q']
-    except Exception as e:
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        solr_query = parse_query_with_keywords(current_query)
-        filename = 'explorer-stories-' + current_query['q']
+    except Exception as e: 
+        # planned exception if search_id is actually a keyword or query
+        # csv downloads are 1:1 - one query to one download, so we can use index of 0
+        query_or_keyword = search_id_or_query
+        current_query = json.loads(query_or_keyword)[0]
+        solr_query = parse_query_with_keywords(current_query) # TODO don't mod the start and end date unless permissions
+        filename = filename + current_query['q']
 
     story_count_result = cached_random_stories(solr_query)
     
