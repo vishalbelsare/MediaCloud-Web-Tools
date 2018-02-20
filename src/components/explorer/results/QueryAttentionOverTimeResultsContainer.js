@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -13,6 +13,7 @@ import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts, oneWeekLater, solrFormat } from '../../../lib/dateUtil';
 import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
@@ -100,10 +101,12 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
 
     let drillDown = null;
-    if (this.state.isDrillDownVisible && words && words.length > 0 && stories !== undefined) {
-      drillDown = (
-        <QueryAttentionOverTimeDrillDownDataCard info={this.state.clickedQuery} words={words} stories={stories} />
-      );
+    if (this.state.isDrillDownVisible) {
+      if (words && words.length > 0 && stories !== undefined) {
+        drillDown = <QueryAttentionOverTimeDrillDownDataCard info={this.state.clickedQuery} words={words} stories={stories} />;
+      } else {
+        drillDown = <LoadingSpinner />;
+      }
     }
 
     // stich together line chart data
@@ -214,6 +217,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   fetchStories: (clickedQuery) => {
+    dispatch(resetQueriesPerDateSampleStories());
     if (ownProps.isLoggedIn) {
       dispatch(fetchQueryPerDateSampleStories({ ...clickedQuery }));
     } else {
@@ -221,6 +225,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   fetchWords: (clickedQuery) => {
+    dispatch(resetQueriesPerDateTopWords());
     if (ownProps.isLoggedIn) {
       dispatch(fetchQueryPerDateTopWords({ ...clickedQuery }));
     } else {

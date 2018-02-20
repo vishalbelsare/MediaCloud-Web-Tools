@@ -17,14 +17,14 @@ const localMessages = {
 
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
   const { stories, words, info } = props;
-  const date = info.date;
+  const date = info.start_date;
   return (
     <DataCard>
       <Row>
-        <FormattedMessage {...localMessages.details} values={{ date }} />
+        <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
-          <StoryTable stories={Object.values(stories)} />
+          <StoryTable stories={stories.length > 0 ? Object.values(stories) : []} />
         </Col>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>

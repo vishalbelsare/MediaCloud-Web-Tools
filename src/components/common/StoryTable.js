@@ -39,7 +39,7 @@ const StoryTable = (props) => {
               }
             }
             return (
-              <tr key={story.stories_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+              <tr key={`${story.stories_id}${idx}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td>
                   <a href={story.url} rel="noopener noreferrer" target="_blank">{title}</a>
                 </td>

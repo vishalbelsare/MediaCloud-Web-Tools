@@ -79,6 +79,11 @@ export const FETCH_QUERY_PER_DATE_TOP_WORDS = 'FETCH_QUERY_PER_DATE_TOP_WORDS';
 export const fetchQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);
 export const fetchDemoQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);
 
+export const RESET_QUERY_PER_DATE_SAMPLE_STORIES = 'RESET_QUERY_PER_DATE_SAMPLE_STORIES';
+export const resetQueriesPerDateSampleStories = createAction(RESET_QUERY_PER_DATE_SAMPLE_STORIES);
+
+export const RESET_QUERY_PER_DATE_TOP_WORDS = 'RESET_QUERY_PER_DATE_TOP_WORDS';
+export const resetQueriesPerDateTopWords = createAction(RESET_QUERY_PER_DATE_TOP_WORDS);
 
 export const FETCH_QUERY_TOP_WORDS_COMPARISON = 'FETCH_QUERY_TOP_WORDS_COMPARISON';
 export const fetchQueryTopWordsComparison = createAsyncAction(FETCH_QUERY_TOP_WORDS_COMPARISON, api.fetchQueryTopWordsComparison, params => params);
