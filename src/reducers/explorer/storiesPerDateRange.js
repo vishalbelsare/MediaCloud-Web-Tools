@@ -5,9 +5,7 @@ import { FETCH_QUERY_PER_DATE_SAMPLE_STORIES, RESET_QUERY_PER_DATE_SAMPLE_STORIE
 
 const storiesPerDateRange = createAsyncReducer({
   action: FETCH_QUERY_PER_DATE_SAMPLE_STORIES,
-  [RESET_QUERY_PER_DATE_SAMPLE_STORIES]: () => ({
-    results: [],
-  }),
+  [RESET_QUERY_PER_DATE_SAMPLE_STORIES]: () => {},
 });
 
 export default storiesPerDateRange;
