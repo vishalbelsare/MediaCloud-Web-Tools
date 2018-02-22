@@ -84,10 +84,14 @@ function composeUrlBasedQueryContainer() {
         let queriesFromUrl;
 
         try {
-          queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr));
-        } catch (f) {
-          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-          return;
+          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
+        } catch (e) { // clunky but a necessary check for Firefox
+          try {
+            queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr)); // and this doesn't work for quoted search strings in chrome
+          } catch (f) {
+            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+            return;
+          }
         }
 
         let extraDefaults = {};

@@ -10,7 +10,7 @@ import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia',
-    defaultMessage: 'no media sources or collections' },
+    defaultMessage: 'all MediaCloud sources (generally not a good idea)' },
   sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{sourceCount, plural, \n =1 {# source} \n other {# sources }\n}' },
   collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
