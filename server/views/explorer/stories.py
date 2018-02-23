@@ -8,7 +8,6 @@ from server import app, mc
 from server.cache import cache, key_generator
 import server.util.csv as csv
 from server.util.request import api_error_handler
-from server.auth import user_mediacloud_client, user_mediacloud_key
 from server.views.explorer import prep_simple_solr_query, parse_as_sample, parse_query_with_args_and_sample_search,\
     parse_query_with_keywords, load_sample_searches
 
