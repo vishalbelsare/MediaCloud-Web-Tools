@@ -3,7 +3,8 @@ from flask import jsonify, request
 import flask_login
 
 from server import app, mc
-from server.auth import user_mediacloud_key, user_admin_mediacloud_client, is_user_logged_in
+from server.cache import cache, key_generator
+from server.auth import user_admin_mediacloud_client, is_user_logged_in
 from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, processed_by_cliff_query_clause
 from server.util.request import api_error_handler
 import server.util.csv as csv
@@ -17,7 +18,7 @@ DEFAULT_DISPLAY_AMOUNT= 10
 ENTITY_DOWNLOAD_COLUMNS = ['label', 'count', 'pct', 'sample_size','tags_id']
 
 
-# @cache.cache_on_arguments(function_key_generator=key_generator)
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_entities(query, type):
     if is_user_logged_in():   # no user session
         api_client = user_admin_mediacloud_client()
@@ -27,13 +28,12 @@ def _cached_entities(query, type):
 
 
 def top_tags_in_set(solr_query, tag_type, display_size):
-
     sentence_count_results = _cached_entities(solr_query, tag_type)
     top_count_results = sentence_count_results[:display_size]
     return top_count_results
 
 
-def get_CLIFF_coverage_for_query(solr_query):
+def get_cliff_coverage_for_query(solr_query):
     if is_user_logged_in():   # no user session
         api_client = user_admin_mediacloud_client()
     else:
@@ -48,7 +48,7 @@ def process_tags_for_coverage(solr_query, tag_counts):
     else:
         api_client = mc
     story_count_total = api_client.storyCount(solr_query=solr_query)
-    story_count_cliff = get_CLIFF_coverage_for_query(solr_query)
+    story_count_cliff = get_cliff_coverage_for_query(solr_query)
 
     coverage={}
     coverage['total'] = story_count_total['count']
