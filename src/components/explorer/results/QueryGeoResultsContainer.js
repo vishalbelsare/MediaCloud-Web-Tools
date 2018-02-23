@@ -10,7 +10,7 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
 import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
@@ -50,7 +50,8 @@ class QueryGeoResultsContainer extends React.Component {
     if (parseInt(query.searchId, 10) >= 0) {
       url = `/api/explorer/geography/geography.csv/${query.searchId}/${query.index}`;
     } else {
-      url = `/api/explorer/geography/geography.csv/[{"q":"${query.q}"}]/${query.index}`;
+      const urlParamString = generateQueryParamString([query]);
+      url = `/api/explorer/geography/geography.csv/${urlParamString}/${query.index}`;
     }
     window.location = url;
   }

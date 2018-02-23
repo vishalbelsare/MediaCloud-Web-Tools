@@ -112,12 +112,21 @@ def parse_query_with_keywords(args):
         current_query = args['q']
         start_date = args['start_date'] if 'start_date' in args else start_date
         end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
-        if 'collections' in args:
-            if len(args['collections']) == 0:
-                tags_ids = []
+        media_ids = []
+        if 'sources' in args:
+            if isinstance(args['sources'], basestring):
+                media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
             else:
-                tags_ids = args['collections'].split(',')
+                media_ids = args['sources']
+        tags_ids = None
+        if 'collections' in args:
+            if isinstance(args['collections'], basestring):
+                if len(args['collections']) == 0:
+                    tags_ids = []
+                else:
+                    tags_ids = args['collections'].split(',')
+            else:
+                tags_ids = args['collections']
         else:
             tags_ids = DEFAULT_COLLECTION_IDS
 
@@ -129,12 +138,38 @@ def parse_query_with_keywords(args):
 
     # otherwise, default
     except Exception as e:
-        tags_ids = args['collections']
+        tags_ids = args['collections'] if 'collections' in args and len(args['collections']) > 0 else []
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
 
 
+
+def parse_query_for_sample_search(sample_search_id, query_id):
+    SAMPLE_SEARCHES = load_sample_searches()
+    current_query_info = SAMPLE_SEARCHES[int(sample_search_id)]['queries'][int(query_id)]
+
+    solr_query = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
+            start_date= current_query_info['startDate'],
+            end_date=current_query_info['endDate'],
+            media_ids=current_query_info['sources'],
+            tags_ids=current_query_info['collections'])
+
+    return solr_query
+
+def parse_as_sample(search_id_or_query, query_id=None):
+    try:
+        if isinstance(search_id_or_query, int): # special handling for an indexed query
+            sample_search_id = search_id_or_query
+            return parse_query_for_sample_search(sample_search_id, query_id)
+
+    except Exception as e:
+        logger.warn("error " + str(e))
+
+#yikes - TODO get rid of this function ASAP
+# args_or_query - either search-id/index in parameters or in request.args 
+# this came from demo url calls versus request.args for custom queries
+# this is only called when handling a sample search
 def parse_query_with_args_and_sample_search(args_or_query, current_search) :
 
     solr_query = ''

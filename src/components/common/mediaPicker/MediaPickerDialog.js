@@ -49,21 +49,24 @@ class MediaPickerDialog extends React.Component {
     reset();
   }
   handleModifyClick = (evt) => {
+    const { setQueryFormChildDialogOpen } = this.props;
     if (evt) {
       evt.preventDefault();
     }
     this.setState({ open: true });
     document.body.style.overflow = 'hidden';
+    setQueryFormChildDialogOpen(true);
     // need to set body to overflow: hidden somehow...
   };
 
   handleRemoveDialogClose = (confirm) => {
-    const { onConfirmSelection, selectedMedia } = this.props;
+    const { onConfirmSelection, selectedMedia, setQueryFormChildDialogOpen } = this.props;
     this.setState({ open: false });
     document.body.style.overflow = 'auto';
     if (confirm) {
       onConfirmSelection(selectedMedia); // passed in from containing element
     }
+    setQueryFormChildDialogOpen(false);
   };
 
   render() {
@@ -124,6 +127,7 @@ MediaPickerDialog.propTypes = {
   handleInitialSelectionOfMedia: PropTypes.func.isRequired,
   onConfirmSelection: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
+  setQueryFormChildDialogOpen: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
