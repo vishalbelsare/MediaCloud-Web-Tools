@@ -14,6 +14,7 @@ import { getVersion } from '../config';
 import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
 import { assetUrl } from '../lib/assetUtil';
+import AppNoticesContainer from './common/header/AppNoticesContainer';
 
 const localMessages = {
   supportOptions: { id: 'app.supportOptions', defaultMessage: 'Need help? Join our <a href="https://groups.io/g/mediacloud">discussion group</a><br />or email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
@@ -44,6 +45,7 @@ const AppContainer = (props) => {
   return (
     <div className={`app-contiainer app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
+      <AppNoticesContainer />
       <header>
         <NavToolbar />
       </header>
