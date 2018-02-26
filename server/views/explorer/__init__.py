@@ -104,21 +104,30 @@ def parse_query_with_keywords(args):
     solr_query = ''
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    default_start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    default_end_date = datetime.datetime.now().strftime("%Y-%m-%d")
     current_query = ''
     # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
         current_query = args['q']
-        start_date = args['start_date'] if 'start_date' in args else start_date
-        end_date = args['end_date'] if 'end_date' in args else end_date
+        if 'startDate' in args:
+            start_date = args['startDate']
+        elif 'start_date' in args:
+            start_date = args['start_date']
+        else:
+            start_date = default_start_date
+        if 'endDate' in args:
+            end_date = args['endDate']
+        elif 'end_date' in args:
+            end_date = args['end_date']
+        else:
+            end_date = default_end_date
         media_ids = []
         if 'sources' in args:
             if isinstance(args['sources'], basestring):
                 media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
             else:
                 media_ids = args['sources']
-        tags_ids = None
         if 'collections' in args:
             if isinstance(args['collections'], basestring):
                 if len(args['collections']) == 0:
