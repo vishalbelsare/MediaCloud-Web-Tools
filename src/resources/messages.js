@@ -5,8 +5,6 @@ const messages = {
 
   blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
   blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
-  dashboardToolName: { id: 'app.dashboard.name', defaultMessage: 'Dashboard' },
-  dashboardToolDescription: { id: 'app.dashboard.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },
   sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Sources' },
   sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
   topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topics' },
