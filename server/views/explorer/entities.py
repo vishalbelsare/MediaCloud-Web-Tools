@@ -110,6 +110,7 @@ def api_explorer_demo_top_entities_organizations():
     top_tag_counts = top_tags_in_set(solr_query, CLIFF_ORGS, DEFAULT_DISPLAY_AMOUNT)
     return jsonify(process_tags_for_coverage(solr_query, top_tag_counts))
 
+
 @app.route('/api/explorer/entities/<type_entity>/entities.csv/<search_id_or_query>/<index>', methods=['GET'])
 @api_error_handler
 def explorer_entities_csv(type_entity, search_id_or_query, index):
