@@ -7,9 +7,9 @@ from server import app, mc
 from server.cache import cache, key_generator
 from server.auth import is_user_logged_in, user_mediacloud_key, user_mediacloud_client
 from server.util.request import api_error_handler
-import server.util.wordembeddings as wordembeddings
 import server.util.csv as csv
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+import server.views.explorer.apicache as apicache
 
 # load the shared settings file
 DEFAULT_NUM_WORDS = 100
@@ -43,12 +43,13 @@ def get_word_count():
     # add in word2vec results
     words = [w['term'] for w in word_data]
     # and now add in word2vec model position data
-    google_word2vec_data = _cached_word2vec_google_2d(words)
+    google_word2vec_data = apicache.word2vec_google_2d(words)
     for i in range(len(google_word2vec_data)):
         word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
         word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
     # return combined data
     return jsonify({"list": word_data})
+
 
 # if this is a sample search, we will have a search id and a query index
 # if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
@@ -111,27 +112,7 @@ def api_explorer_demo_compare_words():
 
 
 def query_wordcount(query, ngram_size=1, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
-    if is_user_logged_in():   # no user session
-        user_mc_key = user_mediacloud_key()
-    else:
-        user_mc_key = None
-    return _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
-    if is_user_logged_in():   # no user session
-        api_client = user_mediacloud_client()
-    else:
-        api_client = mc
-    results = api_client.wordCount('*', query, ngram_size=ngram_size, num_words=num_words, sample_size=sample_size)
-    return results
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_word2vec_google_2d(words):
-    word2vec_results = wordembeddings.google_news_2d(words)
-    return word2vec_results
+    return apicache.word_count(query, ngram_size, num_words, sample_size)
 
 
 def stream_wordcount_csv(filename, query, ngram_size=1):
