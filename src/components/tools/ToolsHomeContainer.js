@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
-import { TOPICS_URL, EXPLORER_URL, SOURCES_URL } from '../common/header/AppToolbar';
+import { TOPICS_URL, EXPLORER_URL, SOURCES_URL } from '../common/header/NavToolbar';
 import ToolDescription from './ToolDescription';
 import Faq from './faq/ToolsFaq';
 import SystemStatsContainer from '../common/statbar/SystemStatsContainer';
