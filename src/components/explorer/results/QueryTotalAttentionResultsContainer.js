@@ -81,7 +81,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         data={bubbleData}
         padding={0}
         domId={BUBBLE_CHART_DOM_ID}
-        width={440}
+        width={650}
       />);
     }
     return (
