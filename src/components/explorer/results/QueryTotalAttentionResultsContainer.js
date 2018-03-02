@@ -9,7 +9,7 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 // TODO import { downloadSvg } from '../../util/svg';
 
@@ -48,16 +48,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
   }
   // if demo, use only sample search queries to download
   downloadCsv = (query) => {
-    const { queries } = this.props;
-    let url = null;
-    const testFirstQuery = queries[0];
-    if (parseInt(testFirstQuery.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/count.csv/${testFirstQuery.searchId}`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/stories/count.csv/${urlParamString}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/stories/count.csv', query);
   }
   render() {
     const { results, queries } = this.props;

@@ -157,43 +157,24 @@ def api_explorer_demo_story_count():
     return jsonify(story_count_result)  # give them back new data, so they can update the client
 
 
-def stream_story_count_csv(fn, search_id_or_query_list):
-    '''
-    Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
-    simply be passed on to a call to topicStoryList.
-    '''
-    # if we have a search id, we load the samples from our sample searches file
-    filename = fn
+@app.route('/api/explorer/stories/count.csv', methods=['POST'])
+def explorer_story_count_csv():
+    filename = 'explorer-story-count-'
     story_count_results = []
-    try:
-        search_id = int(search_id_or_query_list)
-        if search_id >= 0:
-            sample_searches = load_sample_searches()
-
-            sample_queries = sample_searches[search_id]['queries']
-
-            for query in sample_queries:
-                solr_query = prep_simple_solr_query(query)
-                story_count = apicache.story_count(solr_query)
-                query_and_story_count = {'query' : query['label'], 'count': story_count['count']}
-                story_count_results.append(query_and_story_count)
-
-    except ValueError:
-        custom_queries = json.loads(search_id_or_query_list)
-
-        for query in custom_queries:
-            solr_query = parse_query_with_keywords(query)
-            filename = fn + query['q']
-
-            story_count = apicache.story_count(solr_query)
-            query_and_story_count = {'query' : query['label'], 'count': story_count['count']}
-            story_count_results.append(query_and_story_count)
-    
+    data = request.form
+    if 'searchId' in data:
+        # TODO: don't load this query twice becauyse thats kind of dumb
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+        filename = filename  # don't have this info + current_query['q']
+        sample_searches = load_sample_searches()
+        query_object = sample_searches[data['searchId']]['queries'][data['index']]
+        label = query_object['label']
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object, True)
+        label = query_object['label']
+    # sentence count needs dates to be sent explicitly -TODO check what has priority
+    story_count = apicache.story_count(solr_query)
+    story_count_results.append({ 'query': label, 'count': story_count['count'] })
     props = ['query', 'count']
     return csv.stream_response(story_count_results, props, filename)
-
-
-@app.route('/api/explorer/stories/count.csv/<search_id_or_query_list>', methods=['GET'])
-def explorer_story_count_csv(search_id_or_query_list):
-    return stream_story_count_csv('explorer-story-count-', search_id_or_query_list)
-
