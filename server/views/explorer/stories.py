@@ -137,7 +137,6 @@ def _story_list_by_page(query, stories_per_page, sort, page_limit=None):
 @api_error_handler
 def api_explorer_story_count():
     solr_query = parse_query_with_keywords(request.args)
- 
     story_count_result = apicache.story_count(solr_query)
     return jsonify(story_count_result)  
 

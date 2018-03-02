@@ -48,14 +48,15 @@ def _cached_most_used_tags(api_key, query, tag_sets_id, sample_size):
 
 def story_count(q):
     api_key = _api_key()
-    return _cached_story_count(api_key, q)
+    return _cached_total_story_count(api_key, q)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_story_count(api_key, q):
+def _cached_total_story_count(api_key, q):
     # api_key is included to keep the cache at the user-level
     local_mc = _mc_client()
-    return local_mc.storyCount(q)['count']
+    count = local_mc.storyCount(q)
+    return count
 
 
 def random_story_list(q, limit):
