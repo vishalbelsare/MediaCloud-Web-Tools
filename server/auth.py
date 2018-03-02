@@ -80,7 +80,7 @@ def load_user(userid):
 
 
 def is_user_logged_in():
-    if current_user is None:
+    if current_user == None:
         return False
     return current_user.is_authenticated
 
