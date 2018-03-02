@@ -30,8 +30,8 @@ def cliff_coverage(q):
 def tag_set_coverage(total_q, subset_q):
     api_key = _api_key()
     coverage = {
-        'totals': _cached_story_count(api_key, total_q),
-        'counts': _cached_story_count(api_key, subset_q),
+        'totals': _cached_total_story_count(api_key, total_q)['count'],
+        'counts': _cached_total_story_count(api_key, subset_q)['count'],
     }
     coverage['coverage_percentage'] = 0 if coverage['totals'] is 0 else float(coverage['counts'])/float(coverage['totals'])
     return coverage

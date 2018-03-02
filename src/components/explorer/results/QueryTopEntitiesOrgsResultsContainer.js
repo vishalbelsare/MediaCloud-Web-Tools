@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesOrgs, fetchTopEntitiesOrgs, fetchDemoTopEntitiesOrgs } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 
@@ -46,14 +46,7 @@ class QueryTopEntitiesOrgsResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/entities/organizations/entities.csv/${query.searchId}/${query.index}`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/entities/organizations/entities.csv/${urlParamString}/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/entities/organizations.csv', query);
   }
   render() {
     const { results, queries, handleEntitySelection } = this.props;

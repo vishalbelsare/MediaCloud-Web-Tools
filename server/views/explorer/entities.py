@@ -68,27 +68,19 @@ def demo_top_tags_with_coverage(tag_sets_id, limit=DEFAULT_DISPLAY_AMOUNT):
     return apicache.top_tags_with_coverage(q, tag_sets_id, limit, DEFAULT_FIELD_COUNT_SAMPLE_SIZE)
 
 
-@app.route('/api/explorer/entities/<type_entity>/entities.csv/<search_id_or_query>/<index>', methods=['GET'])
+@app.route('/api/explorer/entities/<type_entity>.csv', methods=['POST'])
 @api_error_handler
-def explorer_entities_csv(type_entity, search_id_or_query, index):
+def explorer_entities_csv(type_entity):
     sample_size = DEFAULT_FIELD_COUNT_SAMPLE_SIZE
     tag_sets_id = CLIFF_PEOPLE if type_entity == 'people' else CLIFF_ORGS
-    fn = 'explorer-entities-{}'.format(type_entity)
-
-    try:
-        search_id = int(search_id_or_query)
-        if search_id >= 0: # this is a sample query
-            solr_query = parse_as_sample(search_id, index)
-            # TODO 
-            filename = fn  #+ current_query['q']
-    except ValueError:
-        # planned exception if search_id is actually a keyword or query
-        # csv downloads are 1:1 - one query to one download, so we can use index of 0
-        query_or_keyword = search_id_or_query
-        current_query = json.loads(query_or_keyword)[0]
-        filename = fn + current_query['q']
-        solr_query = parse_query_with_keywords(current_query)
-
+    filename = u'explorer-entities-{}'.format(type_entity)
+    data = request.form
+    if 'searchId' in data:
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object, True)
+        filename = filename + query_object['label']
     top_tag_counts = apicache.top_tags_with_coverage(solr_query, tag_sets_id, None, sample_size)['results']
     for tag in top_tag_counts:
         tag['sample_size'] = sample_size
