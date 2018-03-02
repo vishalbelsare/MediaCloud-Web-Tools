@@ -12,11 +12,11 @@ export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
 
-export function generateQueryParamObject(query) {
+export function generateQueryParamObject(query, skipEncoding) {
   return {
-    label: encodeURIComponent(query.label),
-    q: encodeURIComponent(query.q),
-    color: encodeURIComponent(query.color),
+    label: skipEncoding ? query.label : encodeURIComponent(query.label),
+    q: skipEncoding ? query.q : encodeURIComponent(query.q),
+    color: skipEncoding ? query.color : encodeURIComponent(query.color),
     startDate: query.startDate,
     endDate: query.endDate,
     sources: query.sources && query.sources.length > 0 ? query.sources.map(s => (s.id ? s.id : s)) : [], // id field or the id itself
@@ -56,14 +56,17 @@ export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(q
 
 // This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this
 // via a form submission (after trying lots of other options).
-export function postToDownloadUrl(url, query) {
+export function postToDownloadUrl(url, query, otherData) {
   const name = 'download.csv';
   // figure out if it is sample or user-created query
-  const data = { index: query.index };
+  let data = { index: query.index };
   if (parseInt(query.searchId, 10) >= 0) {
     data.sampleId = query.searchId;
   } else {
-    data.q = JSON.stringify(generateQueryParamObject(query));
+    data.q = JSON.stringify(generateQueryParamObject(query, true)); // don't encode the params because we're not putting them on the url
+  }
+  if (otherData) {
+    data = { ...data, ...otherData };
   }
   const windowOptions = 'width=730,height=345,left=100,top=100,resizable=no,scrollbars=no';
   // make a form with all the info we want to submit

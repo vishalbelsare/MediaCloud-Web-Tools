@@ -8,12 +8,10 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 // import { DownloadButton } from '../../common/IconButton';
 // import ActionMenu from '../../common/ActionMenu';
 import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
-
-// const NUM_TO_SHOW = 20;
 
 const localMessages = {
   title: { id: 'explorer.topWords.title', defaultMessage: 'Top Words' },
@@ -47,15 +45,8 @@ class QueryWordsResultsContainer extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
-  getDownloadCsvUrl = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/words/wordcount.csv/${urlParamString}/${query.index}?`;
-    }
-    return url;
+  handleDownload = (query, ngramSize) => {
+    postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
   render() {
     const { results, queries, handleWordCloudClick } = this.props;
@@ -67,7 +58,6 @@ class QueryWordsResultsContainer extends React.Component {
       />
     );
     const selectedQuery = queries[this.state.selectedQueryIndex];
-    const downloadUrl = this.getDownloadCsvUrl(selectedQuery);
     return (
       <EditableWordCloudDataCard
         actionMenuHeaderText={formatMessage(localMessages.menuHeader, { queryName: selectedQuery.label })}
@@ -77,7 +67,7 @@ class QueryWordsResultsContainer extends React.Component {
         border={false}
         domId={WORD_CLOUD_DOM_ID}
         width={585}
-        downloadUrl={downloadUrl}
+        onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize)}
         textAndLinkColor={selectedQuery.color}
         actionsAsLinksUnderneath
         hideGoogleWord2Vec

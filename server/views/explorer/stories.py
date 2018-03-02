@@ -6,8 +6,8 @@ from mediacloud.api import MediaCloud
 
 from server import app
 import server.util.csv as csv
-from server.util.request import api_error_handler, arguments_required
-from server.views.explorer import prep_simple_solr_query, parse_as_sample, parse_query_with_args_and_sample_search,\
+from server.util.request import api_error_handler
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search,\
     parse_query_with_keywords, load_sample_searches
 import server.views.explorer.apicache as apicache
 

@@ -78,12 +78,21 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   downloadCsv = (ngramSize) => {
-    const { downloadUrl } = this.props;
-    let url = downloadUrl;
-    if (ngramSize) {
-      url = `${url}&ngram_size=${ngramSize}`;
+    const { downloadUrl, onDownload } = this.props;
+    if (onDownload) {
+      onDownload(ngramSize);
+    } else {
+      let url = downloadUrl;
+      // be smart about tacking on hte ngram size requested automatically here
+      if (ngramSize) {
+        if (url.indexOf('?') !== -1) {
+          url = `${url}&ngram_size=${ngramSize}`;
+        } else {
+          url = `${url}?ngram_size=${ngramSize}`;
+        }
+      }
+      window.location = url;
     }
-    window.location = url;
   };
 
   buildActionMenu = (uniqueDomId) => {
@@ -348,6 +357,7 @@ EditableWordCloudDataCard.propTypes = {
   title: PropTypes.string,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
+  onDownload: PropTypes.func,             // if you want to handle the download request yourself, pass in a function (overrides downloadUrl)
   explore: PropTypes.object,              // show an exlore button and link it to this URL
   helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
   subtitleContent: PropTypes.object,      // shows up to the right of the H2 title

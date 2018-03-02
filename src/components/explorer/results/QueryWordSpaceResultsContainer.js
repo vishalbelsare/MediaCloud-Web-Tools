@@ -6,7 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import Word2VecChart from '../../vis/Word2VecChart';
@@ -39,15 +39,8 @@ class QueryWordSpaceResultsContainer extends React.Component {
     }
     return false; // if both results and queries are empty, don't update
   }
-  getDownloadCsvUrl = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/words/wordcount.csv/${urlParamString}/${query.index}?`;
-    }
-    return url;
+  handleDownloadCsv = (query) => {
+    postToDownloadUrl('/api/explorer/words/wordcount.csv', query);
   }
   render() {
     const { results, queries } = this.props;
@@ -74,7 +67,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   className="action-icon-menu-item"
                   primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
                   rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
+                  onTouchTap={() => this.handleDownloadCsv(q)}
                 />
                 <MenuItem
                   className="action-icon-menu-item"
