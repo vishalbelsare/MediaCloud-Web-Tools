@@ -10,7 +10,7 @@ import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts } from '../../../lib/dateUtil';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -53,14 +53,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/sentences/count.csv/${query.searchId}/${query.index}`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/sentences/count.csv/${urlParamString}/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/sentences/count.csv', query);
   }
   render() {
     const { results, queries } = this.props;

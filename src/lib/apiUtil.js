@@ -39,6 +39,18 @@ export function createApiPromise(url, params, httpMethod = 'get') {
   );
 }
 
+export function objectToFormData(obj) {
+  const formData = new FormData();
+  if (obj !== undefined) {
+    Object.keys(obj).forEach((key) => {
+      if ({}.hasOwnProperty.call(obj, key)) {
+        formData.append(key, obj[key]);
+      }
+    });
+  }
+  return formData;
+}
+
 /**
  * Helper to create a promise that calls the API on the server with some POST'd data. Pass in the endpoint url,
  * and a data object to encode and POST, and this will return a promise to call it with the appropriate headers
@@ -46,14 +58,7 @@ export function createApiPromise(url, params, httpMethod = 'get') {
  * TODO: rename this to createFormBasedApiPromise or something... cause it could be a POST or a PUT or whatever
  */
 export function createPostingApiPromise(url, params, httpMethod = 'post') {
-  const formData = new FormData();
-  if (params !== undefined) {
-    Object.keys(params).forEach((key) => {
-      if ({}.hasOwnProperty.call(params, key)) {
-        formData.append(key, params[key]);
-      }
-    });
-  }
+  const formData = objectToFormData(params);
   return fetch(url, {
     method: httpMethod,
     credentials: 'include',
@@ -78,4 +83,15 @@ export function acceptParams(params, acceptableKeys) {
     }
   });
   return accepted;
+}
+
+export function jsonPostToServer(url, jsonData) {
+  return fetch(url, {
+    method: 'post',
+    credentials: 'include',
+    body: JSON.stringify(jsonData),
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 }

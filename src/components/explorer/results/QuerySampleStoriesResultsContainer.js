@@ -9,11 +9,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
-
-// const NUM_TO_SHOW = 20;
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -48,14 +46,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
     return false; // if both results and queries are empty, don't update
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/samples.csv/${query.searchId}/${query.index}`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/stories/samples.csv/${urlParamString}/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
   render() {
     const { results, queries, handleStorySelection } = this.props;

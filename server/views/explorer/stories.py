@@ -40,6 +40,22 @@ def api_explorer_demo_story_sample():
     return jsonify(story_sample_result)  
 
 
+@app.route('/api/explorer/stories/samples.csv', methods=['POST'])
+def explorer_stories_csv2():
+    filename = u'explorer-stories-'
+    data = request.form
+    if 'searchId' in data:
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+        filename = filename  # don't have this info + current_query['q']
+        # for demo users we only download 100 random stories (ie. not all matching stories)
+        return _stream_story_list_csv(filename, solr_query, 100, MediaCloud.SORT_RANDOM, 1)
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object, True)
+        # now page through all the stories and download them
+        return _stream_story_list_csv(filename, solr_query)
+
+
 # if this is a sample search, we will have a search id and a query index
 # if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
 @app.route('/api/explorer/stories/samples.csv/<search_id_or_query>/<index>', methods=['GET'])
@@ -63,7 +79,7 @@ def explorer_stories_csv(search_id_or_query, index=None):
         return _stream_story_list_csv(filename, solr_query)
 
 
-def _stream_story_list_csv(filename, query, stories_per_page=1000, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
+def _stream_story_list_csv(filename, query, stories_per_page=500, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
                            page_limit=None):
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
              'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version',

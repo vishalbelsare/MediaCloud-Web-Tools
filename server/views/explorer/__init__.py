@@ -6,6 +6,7 @@ from server import mc
 from flask import send_from_directory
 from server.auth import is_user_logged_in
 import datetime
+import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +98,7 @@ def concatenate_query_and_dates(start_date, end_date):
     return publish_date
 
 
-def parse_query_with_keywords(args):
+def parse_query_with_keywords(args, decode=False):
     solr_query = ''
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
@@ -106,7 +107,7 @@ def parse_query_with_keywords(args):
     # should I break this out into just a demo routine where we add in the start/end date without relying that the
     # try statement will fail?
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
-        current_query = args['q']
+        current_query = urllib.unquote(args['q']).decode('utf8')
         if 'startDate' in args:
             start_date = args['startDate']
         elif 'start_date' in args:
