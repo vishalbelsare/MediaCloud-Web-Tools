@@ -6,7 +6,8 @@ import json
 from server import app
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, file_name_for_download
 import server.views.explorer.apicache as apicache
 
 # load the shared settings file
@@ -49,12 +50,13 @@ def get_word_count():
 def explorer_wordcount_csv():
     data = request.form
     ngram_size = data['ngramSize'] if 'ngramSize' in data else 1    # defaul to words if ngram not specified
-    filename = u'Explorer-wordcounts-ngrams-{}'.format(ngram_size)
+    filename = u'sampled-ngrams-{}'.format(ngram_size)
     if 'searchId' in data:
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
+        filename = file_name_for_download(query_object['label'], filename)
     return stream_wordcount_csv(filename, solr_query, ngram_size)
 
 

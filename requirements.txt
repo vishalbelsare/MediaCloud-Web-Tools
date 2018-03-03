@@ -25,3 +25,4 @@ unicodecsv==0.14.1
 gunicorn==19.7.1
 pylibmc==1.5.2
 dogpile.cache==0.6.4
+python-slugify==1.2.4

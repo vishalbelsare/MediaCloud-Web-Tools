@@ -8,7 +8,7 @@ from server import app
 import server.util.csv as csv
 from server.util.request import api_error_handler
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search,\
-    parse_query_with_keywords, load_sample_searches
+    parse_query_with_keywords, load_sample_searches, file_name_for_download
 import server.views.explorer.apicache as apicache
 
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ def api_explorer_demo_story_sample():
 
 @app.route('/api/explorer/stories/samples.csv', methods=['POST'])
 def explorer_stories_csv():
-    filename = u'explorer-stories-'
+    filename = u'stories'
     data = request.form
     if 'searchId' in data:
         solr_query = parse_as_sample(data['searchId'], data['index'])
@@ -52,6 +52,7 @@ def explorer_stories_csv():
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
+        filename = file_name_for_download(query_object['label'], filename)
         # now page through all the stories and download them
         return _stream_story_list_csv(filename, solr_query)
 
@@ -136,7 +137,7 @@ def api_explorer_demo_story_count():
 
 @app.route('/api/explorer/stories/count.csv', methods=['POST'])
 def explorer_story_count_csv():
-    filename = 'explorer-story-count-'
+    filename = u'story-count'
     story_count_results = []
     data = request.form
     if 'searchId' in data:
@@ -150,6 +151,7 @@ def explorer_story_count_csv():
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
         label = query_object['label']
+        filename = file_name_for_download(label, filename)
     # sentence count needs dates to be sent explicitly -TODO check what has priority
     story_count = apicache.story_count(solr_query)
     story_count_results.append({ 'query': label, 'count': story_count['count'] })

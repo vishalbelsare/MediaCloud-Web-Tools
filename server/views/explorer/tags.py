@@ -9,7 +9,7 @@ from server import app
 from server.util.request import api_error_handler
 from server.util.tags import CLIFF_PEOPLE, CLIFF_ORGS, NYT_LABELS_TAG_SET_ID
 from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
-    load_sample_searches
+    load_sample_searches, file_name_for_download
 import server.views.explorer.apicache as apicache
 
 logger = logging.getLogger(__name__)
@@ -73,14 +73,14 @@ def demo_top_tags_with_coverage(tag_sets_id, limit=DEFAULT_DISPLAY_AMOUNT):
 def explorer_entities_csv(tag_sets_id):
     sample_size = DEFAULT_FIELD_COUNT_SAMPLE_SIZE
     tag_set = apicache.tag_set(tag_sets_id)
-    filename = u'explorer-top-{}'.format(tag_set['label'])
+    filename = u'sampled-{}'.format(tag_set['label'])
     data = request.form
     if 'searchId' in data:
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
-        filename = filename + query_object['label']
+        filename = file_name_for_download(query_object['label'], filename)
     top_tag_counts = apicache.top_tags_with_coverage(solr_query, tag_sets_id, None, sample_size)['results']
     for tag in top_tag_counts:
         tag['sample_size'] = sample_size

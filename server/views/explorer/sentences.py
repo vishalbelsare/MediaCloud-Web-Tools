@@ -7,7 +7,8 @@ from server.auth import user_admin_mediacloud_client
 from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches, parse_as_sample
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, parse_as_sample, file_name_for_download
 import datetime
 import json
 
@@ -62,7 +63,7 @@ def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_st
 @app.route('/api/explorer/sentences/count.csv', methods=['POST'])
 @api_error_handler
 def api_explorer_sentence_count_csv():
-    filename = 'explorer-sentence-counts-'
+    filename = u'sentences-over-time'
     data = request.form
     if 'searchId' in data:
         solr_query = parse_as_sample(data['searchId'], data['index'])
@@ -73,7 +74,7 @@ def api_explorer_sentence_count_csv():
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
-        filename = filename + query_object['label']
+        filename = file_name_for_download(query_object['label'], filename)
         start_date = query_object['startDate']
         end_date = query_object['endDate']
     # sentence count needs dates to be sent explicitly -TODO check what has priority

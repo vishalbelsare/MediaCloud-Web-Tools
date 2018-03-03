@@ -2,6 +2,7 @@
 import logging
 from flask import jsonify, request
 import flask_login
+import json
 
 from server import app, mc
 import server.util.csv as csv
@@ -10,9 +11,8 @@ from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 import server.util.tags as tag_utl
-from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import json
-# load the shared settings file
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, file_name_for_download
 
 logger = logging.getLogger(__name__)
 
@@ -31,14 +31,14 @@ def api_explorer_demo_geotag_count():
 @app.route('/api/explorer/geography/geography.csv', methods=['POST'])
 @api_error_handler
 def explorer_geo_csv():
-    filename = 'explorer-geography'
+    filename = u'sampled-geographic-coverage'
     data = request.form
     if 'searchId' in data:
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object)
-        filename = filename + query_object['label']
+        filename = file_name_for_download(query_object['label'], filename)
     res = _query_geotags(solr_query)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
     for r in res:

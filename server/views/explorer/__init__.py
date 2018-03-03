@@ -6,6 +6,7 @@ from server import mc
 from flask import send_from_directory
 from server.auth import is_user_logged_in
 import datetime
+from slugify import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -231,3 +232,9 @@ def read_sample_searches():
     # load the sample searches file
     return send_from_directory(json_dir, 'sample_searches.json', as_attachment=True)
 
+
+def file_name_for_download(label, type):
+    length_limited_label = label
+    if len(label) > 30:
+        length_limited_label = label.substr(0, 30)
+    return u'{}-{}'.format(slugify(length_limited_label), type)
