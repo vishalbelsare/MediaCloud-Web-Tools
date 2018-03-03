@@ -7,7 +7,7 @@ from operator import itemgetter
 from server.cache import cache, key_generator
 from media_search import matching_collections_by_set
 from server import app, mc
-from server.auth import user_mediacloud_client, user_has_auth_role, ROLE_MEDIA_EDIT
+from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
 from server.views.sources import FEATURED_COLLECTION_LIST
 from server.util.request import api_error_handler, arguments_required
