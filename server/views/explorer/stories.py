@@ -41,7 +41,7 @@ def api_explorer_demo_story_sample():
 
 
 @app.route('/api/explorer/stories/samples.csv', methods=['POST'])
-def explorer_stories_csv2():
+def explorer_stories_csv():
     filename = u'explorer-stories-'
     data = request.form
     if 'searchId' in data:
@@ -52,29 +52,6 @@ def explorer_stories_csv2():
     else:
         query_object = json.loads(data['q'])
         solr_query = parse_query_with_keywords(query_object, True)
-        # now page through all the stories and download them
-        return _stream_story_list_csv(filename, solr_query)
-
-
-# if this is a sample search, we will have a search id and a query index
-# if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
-@app.route('/api/explorer/stories/samples.csv/<search_id_or_query>/<index>', methods=['GET'])
-def explorer_stories_csv(search_id_or_query, index=None):
-    filename = u'explorer-stories-'
-    try:
-        search_id = int(search_id_or_query)
-        if search_id >= 0:  # this is a sample query
-            solr_query = parse_as_sample(search_id, index)
-            # TODO
-            filename = filename  # don't have this info + current_query['q']
-        # for demo users we only download 100 random stories (ie. not all matching stories)
-        return _stream_story_list_csv(filename, solr_query, 100, MediaCloud.SORT_RANDOM, 1)
-    except ValueError:
-        # planned exception if search_id is actually a keyword or query
-        # csv downloads are 1:1 - one query to one download, so we can use index of 0
-        query_or_keyword = search_id_or_query
-        current_query = json.loads(query_or_keyword)[0]
-        solr_query = parse_query_with_keywords(current_query)  # TODO don't mod the start and end date unless permissions
         # now page through all the stories and download them
         return _stream_story_list_csv(filename, solr_query)
 
