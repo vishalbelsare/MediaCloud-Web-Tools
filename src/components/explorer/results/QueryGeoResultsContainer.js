@@ -10,7 +10,7 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
@@ -31,19 +31,9 @@ class QueryGeoResultsContainer extends React.Component {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-      return (
-        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/geography/geography.csv', query);

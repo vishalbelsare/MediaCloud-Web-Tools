@@ -42,11 +42,25 @@ export function decodeQueryParamString(queryString) {
   return queriesForUrl;
 }
 
-export function queryPropertyHasChanged(queries, nextQueries, propName) {
+function queryPropertyHasChanged(queries, nextQueries, propName) {
   const currentProps = queries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
   const nextProps = nextQueries.map(q => q[propName]).reduce((allProps, prop) => allProps + prop);
   const propHasChanged = currentProps !== nextProps;
   return propHasChanged;
+}
+
+// call this from componentShouldUpdate to figure out if it should or not
+export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextResults) {
+  // only re-render if results, any labels, or any colors have changed
+  if (results.length) { // may have reset results so avoid test if results is empty
+    const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextQueries.slice(0, results.length), 'label');
+    const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextQueries.slice(0, results.length), 'color');
+    return (
+      ((labelsHaveChanged || colorsHaveChanged))
+       || (results !== nextResults.results)
+    );
+  }
+  return false; // if both results and queries are empty, don't update
 }
 
 // TODO: implement this logic from Dashboard

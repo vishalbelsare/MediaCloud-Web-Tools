@@ -9,11 +9,10 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import EntitiesTable from '../../common/EntitiesTable';
 import { resetEntitiesPeople, fetchTopEntitiesPeople, fetchDemoTopEntitiesPeople } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
-
-// const NUM_TO_SHOW = 20;
+import { TAG_SET_CLIFF_PEOPLE } from '../../../lib/tagUtil';
 
 const localMessages = {
   title: { id: 'explorer.entities.title', defaultMessage: 'Top People' },
@@ -31,22 +30,12 @@ class QueryTopEntitiesPeopleResultsContainer extends React.Component {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-      return (
-        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   downloadCsv = (query) => {
-    postToDownloadUrl('/api/explorer/entities/people.csv', query);
+    postToDownloadUrl(`/api/explorer/tags/${TAG_SET_CLIFF_PEOPLE}/top-tags.csv`, query);
   }
   render() {
     const { results, queries, handleEntitySelection } = this.props;
