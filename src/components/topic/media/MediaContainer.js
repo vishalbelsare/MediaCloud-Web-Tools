@@ -58,7 +58,7 @@ class MediaContainer extends React.Component {
   }
 
   render() {
-    const { media, topicId, mediaId, filters } = this.props;
+    const { media, topicId, mediaId, filters, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${media.name} | ${parentTitle}`;
     const dialogActions = [
@@ -143,7 +143,7 @@ class MediaContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={6} md={6} sm={12}>
-              <MediaWordsContainer topicId={topicId} mediaId={mediaId} />
+              <MediaWordsContainer topicId={topicId} mediaId={mediaId} topicName={topicName} />
             </Col>
             <Col lg={6} xs={12}>
               <CollectionList
@@ -179,6 +179,7 @@ MediaContainer.propTypes = {
   media: PropTypes.object.isRequired,
   mediaId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   fetchStatus: PropTypes.string.isRequired,
 };
 
@@ -186,7 +187,8 @@ const mapStateToProps = (state, ownProps) => ({
   filters: state.topics.selected.filters,
   fetchStatus: state.topics.selected.mediaSource.info.fetchStatus,
   mediaId: parseInt(ownProps.params.mediaId, 10),
-  topicId: parseInt(ownProps.params.topicId, 10),
+  topicId: state.topics.selected.id,
+  topicName: state.topics.selected.info.name,
   media: state.topics.selected.mediaSource.info,
 });
 

@@ -96,10 +96,10 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, onSvgDownload } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
-    if (includeTopicWord2Vec) {
+    if (includeTopicWord2Vec === true) {
       topicWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
@@ -110,7 +110,7 @@ class EditableWordCloudDataCard extends React.Component {
       );
     }
     let googleWord2VecMenuItem;
-    if (hideGoogleWord2Vec === false) {
+    if (hideGoogleWord2Vec !== true) {
       googleWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
@@ -183,11 +183,8 @@ class EditableWordCloudDataCard extends React.Component {
               const svgChild = document.getElementById(uniqueDomId);
               domIdOrElement = svgChild.firstChild;
             }
-            if (onSvgDownload) {
-              onSvgDownload(1, domIdOrElement);
-            } else {
-              downloadSvg(domIdOrElement);
-            }
+            const filename = svgDownloadPrefix || 'word-cloud';
+            downloadSvg(filename, domIdOrElement);
           }}
         />
       </span>
@@ -364,7 +361,7 @@ EditableWordCloudDataCard.propTypes = {
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
   onDownload: PropTypes.func,             // if you want to handle the download request yourself, pass in a function (overrides downloadUrl)
-  onSvgDownload: PropTypes.func,           // if you want to handle the SVG download request yourself, pass in a function (overrides downloadUrl)
+  svgDownloadPrefix: PropTypes.string,    // for naming the SVG download file
   explore: PropTypes.object,              // show an exlore button and link it to this URL
   helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
   subtitleContent: PropTypes.object,      // shows up to the right of the H2 title

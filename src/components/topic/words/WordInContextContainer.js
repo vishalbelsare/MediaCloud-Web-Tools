@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import slugify from 'slugify';
 import { fetchWordSampleSentences } from '../../../actions/topicActions';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -10,6 +11,7 @@ import WordTree from '../../vis/WordTree';
 import messages from '../../../resources/messages';
 import { downloadSvg } from '../../util/svg';
 import { DownloadButton } from '../../common/IconButton';
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   title: { id: 'word.inContext.title', defaultMessage: 'Word in Context: {word}' },
@@ -34,9 +36,13 @@ class WordInContextContainer extends React.Component {
     const { topicId } = this.props;
     return `word-in-context-${topicId}`;
   }
-  downloadSvg = () => {
-    const svgNode = document.getElementById(this.getUniqueDomId()).children[0].children[0].children[0].children[0];
-    downloadSvg(svgNode);
+  handleDownloadSvg = () => {
+    const { topicName, filters, term } = this.props;
+    // a little crazy, but it works (we have to just walk the DOM rendered by the library we are using)
+    const domId = this.getUniqueDomId();
+    const svgNode = document.getElementById(domId).children[0].children[0].children[0].children[0];
+    const svgDownloadPrefix = `${topicDownloadFilename(topicName, filters)}-${slugify(term)}-in-context`;
+    downloadSvg(svgDownloadPrefix, svgNode);
   }
   render() {
     const { term, fragments, helpButton } = this.props;
@@ -45,7 +51,7 @@ class WordInContextContainer extends React.Component {
     return (
       <DataCard>
         <div className="actions">
-          <DownloadButton tooltip={formatMessage(messages.downloadSVG)} onClick={() => this.downloadSvg()} />
+          <DownloadButton tooltip={formatMessage(messages.downloadSVG)} onClick={this.handleDownloadSvg} />
         </div>
         <h2>
           <FormattedMessage {...localMessages.title} values={{ word: term }} />
@@ -67,6 +73,7 @@ WordInContextContainer.propTypes = {
   stem: PropTypes.string.isRequired,
   term: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   // from store
   fragments: PropTypes.array.isRequired,
