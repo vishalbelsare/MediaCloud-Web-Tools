@@ -54,7 +54,7 @@ def explorer_wordcount_csv():
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
     return stream_wordcount_csv(filename, solr_query, ngram_size)
 
 

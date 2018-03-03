@@ -72,7 +72,7 @@ def api_explorer_sentence_count_csv():
         end_date = datetime.datetime.now().strftime("%Y-%m-%d")
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
         filename = filename + query_object['label']
         start_date = query_object['startDate']
         end_date = query_object['endDate']

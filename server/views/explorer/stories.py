@@ -51,7 +51,7 @@ def explorer_stories_csv():
         return _stream_story_list_csv(filename, solr_query, 100, MediaCloud.SORT_RANDOM, 1)
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
         # now page through all the stories and download them
         return _stream_story_list_csv(filename, solr_query)
 
@@ -148,7 +148,7 @@ def explorer_story_count_csv():
         label = query_object['label']
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
         label = query_object['label']
     # sentence count needs dates to be sent explicitly -TODO check what has priority
     story_count = apicache.story_count(solr_query)

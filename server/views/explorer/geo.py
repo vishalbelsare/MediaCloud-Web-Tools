@@ -37,7 +37,7 @@ def explorer_geo_csv():
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
         filename = filename + query_object['label']
     res = _query_geotags(solr_query)
     res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]

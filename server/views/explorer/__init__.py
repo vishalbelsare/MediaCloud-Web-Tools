@@ -6,7 +6,6 @@ from server import mc
 from flask import send_from_directory
 from server.auth import is_user_logged_in
 import datetime
-import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +97,7 @@ def concatenate_query_and_dates(start_date, end_date):
     return publish_date
 
 
-def parse_query_with_keywords(args, decode=False):
+def parse_query_with_keywords(args):
     solr_query = ''
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)

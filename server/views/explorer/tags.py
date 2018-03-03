@@ -79,7 +79,7 @@ def explorer_entities_csv(tag_sets_id):
         solr_query = parse_as_sample(data['searchId'], data['index'])
     else:
         query_object = json.loads(data['q'])
-        solr_query = parse_query_with_keywords(query_object, True)
+        solr_query = parse_query_with_keywords(query_object)
         filename = filename + query_object['label']
     top_tag_counts = apicache.top_tags_with_coverage(solr_query, tag_sets_id, None, sample_size)['results']
     for tag in top_tag_counts:
