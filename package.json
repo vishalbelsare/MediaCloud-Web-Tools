@@ -63,6 +63,7 @@
     "redux-logger": "3.0.6",
     "redux-simple-promise": "2.0.2",
     "redux-thunk": "2.2.0",
+    "slugify": "^1.2.9",
     "universal-cookie": "2.0.8"
   },
   "devDependencies": {
