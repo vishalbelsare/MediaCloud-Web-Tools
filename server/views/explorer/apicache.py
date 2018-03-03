@@ -112,6 +112,16 @@ def _cached_word2vec_google_2d(words):
     return word2vec_results
 
 
+def tag_set(tag_sets_id):
+    return _cached_tag_set(_api_key(), tag_sets_id)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_tag_set(api_key, tag_sets_id):
+    local_mc = _mc_client()
+    return local_mc.tagSet(tag_sets_id)
+
+
 def _api_key():
     api_key = user_mediacloud_key() if is_user_logged_in() else TOOL_API_KEY
     return api_key

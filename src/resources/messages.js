@@ -221,6 +221,8 @@ const messages = {
   entityHelpTitle: { id: 'geo.help.title', defaultMessage: 'About Our Entity Detection' },
   entityHelpContent: { id: 'geo.help.content', defaultMessage: 'We automatically detect the people, organizations, and places in articles using our <a href="https://cliff.mediacloud.org/" target="_top">CLIFF-CLAVIN engine</a>. This tags each story with the people and organizations that it mentions.  We do additional processing and disambiguation to tag stories with the country and state that our custom heuristic algorithm thinks they are about (ie. not each country/state mentioned).' },
 
+  nytThemeHelpDetails: { id: 'nytTheme.help.deatils', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  To build these models we took the approach of transfer learning - starting with the <a href="https://code.google.com/archive/p/word2vec/">Google News word2vec</a> models and then adapting them to produce based on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19">New York Times annotated corpus</a>.  We score each story against the most common 600 descriptors from the NYT corpus.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
+
   mediaTypeHelpTitle: { id: 'mediaType.help.title', defaultMessage: 'About Media Type' },
   mediaTypeHelpContent: { id: 'mediaType.help.content', defaultMessage: `
       <p><b>Print Native</b>: This source is primarly a print publication. Use this for newspapers and magazines. Examples: New York Times, The Economist.</p>
