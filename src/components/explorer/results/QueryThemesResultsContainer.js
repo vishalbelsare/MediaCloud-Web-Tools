@@ -8,7 +8,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import { resetThemes, fetchTopThemes, fetchDemoTopThemes } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import { TAG_SET_NYT_THEMES } from '../../../lib/tagUtil';
@@ -65,13 +65,21 @@ class QueryThemesResultsContainer extends React.Component {
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {queries.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
+              <span key={`q${idx}-items`}>
+                <MenuItem
+                  key={idx}
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => downloadExplorerSvg(q.label, 'sampled-nyt_labels', BUBBLE_CHART_DOM_ID)}
+                />
+              </span>
             )}
           </ActionMenu>
         </div>

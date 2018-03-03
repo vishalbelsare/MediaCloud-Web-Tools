@@ -1,20 +1,19 @@
+import { downloadViaFormPost } from '../../lib/apiUtil';
 
-export function domElementToSvgString(domIdOrElement) {
-  let elem;
+const SVG_HEADER = '<svg xmlns="http://www.w3.org/2000/svg">';
+const SVG_FOOTER = '</svg>';
+
+const DOWNLOAD_SVG_URL = '/api/download/svg';
+
+export function downloadSvg(filename, domIdOrElement) {
+  let element;
   if (typeof domIdOrElement === 'string') {
-    elem = document.getElementById(domIdOrElement);
-    elem.setAttribute('title', elem);
+    element = document.getElementById(domIdOrElement);
   } else {
-    elem = domIdOrElement;
-    elem.setAttribute('title', 'SVG');
+    element = domIdOrElement;
   }
-  elem.setAttribute('version', 1.1);
-  elem.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  const html = elem.parentNode.innerHTML;
-  const downloadStr = `data:image/svg+xml;base64,${btoa(html)}`;
-  return downloadStr;
+  const svgText = `${SVG_HEADER}${element.innerHTML}${SVG_FOOTER}`;
+  downloadViaFormPost(DOWNLOAD_SVG_URL, { svgText, filename });
 }
 
-export function downloadSvg(domIdOrElement) {
-  window.open(domElementToSvgString(domIdOrElement), '_new');
-}
+export const TEMP = 'temp'; // to resolve stupid linting error

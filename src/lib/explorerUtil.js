@@ -1,5 +1,8 @@
+import slugify from 'slugify';
 import { trimToMaxLength } from './stringUtil';
 import { notEmptyString } from './formValidators';
+import { downloadViaFormPost } from './apiUtil';
+import { downloadSvg } from '../components/util/svg';
 
 export const DEFAULT_SOURCES = '';
 
@@ -71,7 +74,6 @@ export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(q
 // This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this
 // via a form submission (after trying lots of other options).
 export function postToDownloadUrl(url, query, otherData) {
-  const name = 'download.csv';
   // figure out if it is sample or user-created query
   let data = { index: query.index };
   if (parseInt(query.searchId, 10) >= 0) {
@@ -82,23 +84,10 @@ export function postToDownloadUrl(url, query, otherData) {
   if (otherData) {
     data = { ...data, ...otherData };
   }
-  const windowOptions = 'width=730,height=345,left=100,top=100,resizable=no,scrollbars=no';
-  // make a form with all the info we want to submit
-  const form = document.createElement('form');
-  form.setAttribute('method', 'post');
-  form.setAttribute('action', url);
-  form.setAttribute('target', 'downloading');
-  Object.keys(data).forEach((key) => {
-    if ({}.hasOwnProperty.call(data, key)) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = data[key];
-      form.appendChild(input);
-    }
-  });
-  document.body.appendChild(form);
-  window.open(url, name, windowOptions);
-  form.submit();
-  document.body.removeChild(form);
+  downloadViaFormPost(url, data);
+}
+
+export function downloadExplorerSvg(queryLabel, type, domIdOrElement) {
+  const filename = `${slugify(trimToMaxLength(queryLabel, 30))}-${type}`;
+  downloadSvg(filename, domIdOrElement);
 }

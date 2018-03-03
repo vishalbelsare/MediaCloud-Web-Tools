@@ -96,7 +96,7 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, onSvgDownload } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
     if (includeTopicWord2Vec) {
@@ -176,11 +176,17 @@ class EditableWordCloudDataCard extends React.Component {
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onTouchTap={() => {
+            let domIdOrElement;
             if (this.state.ordered) { // tricky to get the correct element to serialize
-              downloadSvg(uniqueDomId);
+              domIdOrElement = uniqueDomId;
             } else {
               const svgChild = document.getElementById(uniqueDomId);
-              downloadSvg(svgChild.firstChild);
+              domIdOrElement = svgChild.firstChild;
+            }
+            if (onSvgDownload) {
+              onSvgDownload(1, domIdOrElement);
+            } else {
+              downloadSvg(domIdOrElement);
             }
           }}
         />
@@ -358,6 +364,7 @@ EditableWordCloudDataCard.propTypes = {
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
   onDownload: PropTypes.func,             // if you want to handle the download request yourself, pass in a function (overrides downloadUrl)
+  onSvgDownload: PropTypes.func,           // if you want to handle the SVG download request yourself, pass in a function (overrides downloadUrl)
   explore: PropTypes.object,              // show an exlore button and link it to this URL
   helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
   subtitleContent: PropTypes.object,      // shows up to the right of the H2 title

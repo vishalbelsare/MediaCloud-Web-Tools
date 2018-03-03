@@ -5,12 +5,12 @@ import flask
 logger = logging.getLogger(__name__)
 
 
-def _file_name_timestamp():
+def filename_timestamp():
     return datetime.datetime.now().strftime(u'%Y%m%d%H%M%S')
 
 
 def safe_filename(name):
-    return u"{}-{}.csv".format(name, _file_name_timestamp())
+    return u"{}-{}.csv".format(name, filename_timestamp())
 
 
 def dict2row(keys_to_include, dict_row):

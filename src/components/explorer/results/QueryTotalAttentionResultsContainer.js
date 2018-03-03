@@ -9,9 +9,8 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-// TODO import { downloadSvg } from '../../util/svg';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
@@ -72,13 +71,20 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {mergedResultsWithQueryInfo.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
+              <span key={`q${idx}-items`}>
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => downloadExplorerSvg(q.label, 'story-count', BUBBLE_CHART_DOM_ID)}
+                />
+              </span>
             )}
           </ActionMenu>
         </div>

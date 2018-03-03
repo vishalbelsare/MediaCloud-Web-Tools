@@ -6,11 +6,10 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import Word2VecChart from '../../vis/Word2VecChart';
-import { downloadSvg } from '../../util/svg';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
@@ -65,7 +64,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => {
                     const svgChild = document.getElementById(WORD_SPACE_DOM_ID);
-                    downloadSvg(svgChild.firstChild);
+                    downloadExplorerSvg(q.label, 'sampled-word-space', svgChild);
                   }}
                 />
               </span>

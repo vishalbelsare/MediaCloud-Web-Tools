@@ -2,13 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-// import MenuItem from 'material-ui/MenuItem';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
-// import { DownloadButton } from '../../common/IconButton';
-// import ActionMenu from '../../common/ActionMenu';
 import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
-import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
@@ -38,6 +35,9 @@ class QueryWordsResultsContainer extends React.Component {
   handleDownload = (query, ngramSize) => {
     postToDownloadUrl('/api/explorer/words/wordcount.csv', query, { ngramSize });
   }
+  handleSvgDownload = (queryLabel, ngramSize, domIdOrElement) => {
+    downloadExplorerSvg(queryLabel, `ngram-${ngramSize}`, domIdOrElement);
+  }
   render() {
     const { results, queries, handleWordCloudClick } = this.props;
     const { formatMessage } = this.props.intl;
@@ -58,6 +58,7 @@ class QueryWordsResultsContainer extends React.Component {
         domId={WORD_CLOUD_DOM_ID}
         width={585}
         onDownload={ngramSize => this.handleDownload(selectedQuery, ngramSize)}
+        onSvgDownload={(ngramSize, domIdOrElement) => this.handleSvgDownload(selectedQuery.label, ngramSize, domIdOrElement)}
         textAndLinkColor={selectedQuery.color}
         actionsAsLinksUnderneath
         hideGoogleWord2Vec
