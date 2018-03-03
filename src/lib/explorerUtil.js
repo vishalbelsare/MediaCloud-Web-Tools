@@ -87,7 +87,9 @@ export function postToDownloadUrl(url, query, otherData) {
   downloadViaFormPost(url, data);
 }
 
+export const slugifiedQueryLabel = queryLabel => slugify(trimToMaxLength(queryLabel, 30));
+
 export function downloadExplorerSvg(queryLabel, type, domIdOrElement) {
-  const filename = `${slugify(trimToMaxLength(queryLabel, 30))}-${type}`;
+  const filename = `${slugifiedQueryLabel(queryLabel)}-${type}`;
   downloadSvg(filename, domIdOrElement);
 }
