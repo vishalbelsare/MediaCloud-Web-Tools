@@ -3,7 +3,7 @@ import json
 from flask import jsonify, request
 import flask_login
 
-from server import app, cliff, mc, TOOL_API_KEY
+from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
 import server.util.csv as csv
@@ -84,6 +84,7 @@ def topic_story_update(stories_id):
 
     return jsonify(stories)
 
+
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_geoname(geonames_id):
     return cliff.geonamesLookup(geonames_id)
@@ -155,7 +156,7 @@ def story_words_csv(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_inlinks(topics_id, stories_id):
-    inlinks = topic_story_list(user_mediacloud_key(), topics_id, link_to_stories_id=stories_id)
+    inlinks = topic_story_list(user_mediacloud_key(), topics_id, link_to_stories_id=stories_id, limit=50)
     return jsonify(inlinks)
 
 
@@ -169,7 +170,7 @@ def story_inlinks_csv(topics_id, stories_id):
 @flask_login.login_required
 @api_error_handler
 def story_outlinks(topics_id, stories_id):
-    outlinks = topic_story_list(user_mediacloud_key(), topics_id, link_from_stories_id=stories_id)
+    outlinks = topic_story_list(user_mediacloud_key(), topics_id, link_from_stories_id=stories_id, limit=50)
     return jsonify(outlinks)
 
 
