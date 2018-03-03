@@ -107,7 +107,7 @@ def parse_query_with_keywords(args, decode=False):
     # should I break this out into just a demo routine where we add in the start/end date without relying that the
     # try statement will fail?
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
-        current_query = urllib.unquote(args['q']).decode('utf8')
+        current_query = args['q']
         if 'startDate' in args:
             start_date = args['startDate']
         elif 'start_date' in args:
