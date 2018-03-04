@@ -55,7 +55,9 @@ class MediaPickerDialog extends React.Component {
     }
     this.setState({ open: true });
     document.body.style.overflow = 'hidden';
-    setQueryFormChildDialogOpen(true);
+    if (setQueryFormChildDialogOpen) {
+      setQueryFormChildDialogOpen(true);
+    }
     // need to set body to overflow: hidden somehow...
   };
 
