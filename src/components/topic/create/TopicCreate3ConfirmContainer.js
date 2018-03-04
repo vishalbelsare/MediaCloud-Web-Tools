@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { push } from 'react-router-redux';
-import { Grid } from 'react-flexbox-grid/lib';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeIntlForm from '../../common/IntlForm';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
@@ -29,21 +30,18 @@ const localMessages = {
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: "Sorry, we can't save this topic because you need a minimum of 500 seed stories." },
   tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100K seed stories." },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'Approaching story limit. Proceed with caution.' },
+  creatingTitle: { id: 'topic.creating.title', defaultMessage: 'Please wait - we\'re creating your Topic now' },
+  creatingDetail: { id: 'topic.creating.detail', defaultMessage: 'We are creating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is created, you\'ll be shown a page telling you we are gathering the stories.' },
 };
 
 const TopicCreate3ConfirmContainer = (props) => {
-  const { formValues, finishStep, handlePreviousStep, storyCount } = props;
+  const { formValues, finishStep, handlePreviousStep, storyCount, handleSubmit, pristine, submitting } = props;
   const { formatMessage } = props.intl;
-
   let sourcesAndCollections = [];
   sourcesAndCollections = formValues.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
   sourcesAndCollections.concat(formValues.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id));
-  return (
-    <Grid className="topic-container">
-      <h2>
-        <FormattedMessage {...localMessages.title} />
-      </h2>
-      <WarningNotice ><FormattedMessage {...localMessages.state} /></WarningNotice >
+  const topicDetailsContent = (
+    <div>
       <p>
         <b><FormattedMessage {...localMessages.name} /></b>: {formValues.name}
         <br />
@@ -67,27 +65,57 @@ const TopicCreate3ConfirmContainer = (props) => {
       {formValues.sourcesAndCollections.map(object =>
         <SourceOrCollectionChip key={object.tags_id || object.media_id} object={object} />
       )}
-      <br />
-      <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
-      &nbsp; &nbsp;
-      <AppButton
-        type="submit"
-        label={formatMessage(localMessages.createTopic)}
-        primary
-        onClick={() => finishStep()}
-      />
-    </Grid>
+    </div>
+  );
+  if (submitting) {
+    return (
+      <Grid className="topic-container">
+        <Row>
+          <Col lg={10}>
+            <h2><FormattedMessage {...localMessages.creatingTitle} /></h2>
+            <p><FormattedMessage {...localMessages.creatingDetail} /></p>
+            <LoadingSpinner />
+            {topicDetailsContent}
+          </Col>
+        </Row>
+      </Grid>
+    );
+  }
+  // havne't submitted yet
+  return (
+    <form className="create-topic" name="topicForm" onSubmit={handleSubmit(finishStep.bind(this))}>
+      <Grid className="topic-container">
+        <Row>
+          <Col lg={10}>
+            <h2><FormattedMessage {...localMessages.title} /></h2>
+            <WarningNotice ><FormattedMessage {...localMessages.state} /></WarningNotice>
+            {topicDetailsContent}
+            <br />
+            <AppButton flat label={formatMessage(messages.previous)} onClick={() => handlePreviousStep()} />
+            &nbsp; &nbsp;
+            <AppButton
+              style={{ marginTop: 30 }}
+              type="submit"
+              disabled={pristine || submitting}
+              label={formatMessage(localMessages.createTopic)}
+              primary
+            />
+          </Col>
+        </Row>
+      </Grid>
+    </form>
   );
 };
 
 TopicCreate3ConfirmContainer.propTypes = {
   // from parent
-
   initialValues: PropTypes.object,
   // form context
   intl: PropTypes.object.isRequired,
   handleCreateTopic: PropTypes.func.isRequired,
   submitting: PropTypes.bool,
+  handleSubmit: PropTypes.func.isRequired,
+  pristine: PropTypes.bool.isRequired,
   // from state
   formValues: PropTypes.object.isRequired,
   // from dispatch
@@ -108,7 +136,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleCreateTopic: (storyCount, user, values) => {
     if (storyCount > MIN_RECOMMENDED_STORIES &&
-      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN))) { // if proper range of seed stories
+      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN))) {
+      // all good, so submit!
       const queryInfo = {
         name: values.name,
         description: values.description,
@@ -129,35 +158,35 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         queryInfo['sources[]'] = '';
         queryInfo['collections[]'] = '';
       }
-      dispatch(createTopic(queryInfo)).then((results) => {
+      return dispatch(createTopic(queryInfo)).then((results) => {
         if (results.topics_id) {
           // let them know it worked
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          dispatch(push(`/topics/${results.topics_id}/summary`));
-        } else {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+          return dispatch(push(`/topics/${results.topics_id}/summary`));
         }
+        return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
       });
     } else if (storyCount < MIN_RECOMMENDED_STORIES) {
+      // not enough seed stories - show error
       dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
-      dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
+      return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
     } else if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
+      // can't make topics this big - show error
       if (storyCount > WARNING_LIMIT_RECOMMENDED_STORIES && storyCount < MAX_RECOMMENDED_STORIES) {
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
-        dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
+        return dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
       } else if (storyCount > MAX_RECOMMENDED_STORIES) {
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
-        dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+        return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
       }
     }
+    return null;
   },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: () => {
-      dispatchProps.handleCreateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues);
-    },
+    finishStep: () => dispatchProps.handleCreateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues),
   });
 }
 
@@ -168,12 +197,10 @@ const reduxFormConfig = {
 };
 
 export default
-  injectIntl(
-    composeIntlForm(
-      reduxForm(reduxFormConfig)(
-        connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-          TopicCreate3ConfirmContainer
-        )
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        TopicCreate3ConfirmContainer
       )
     )
   );
