@@ -9,9 +9,8 @@ import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import BubbleRowChart from '../../vis/BubbleRowChart';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-// TODO import { downloadSvg } from '../../util/svg';
 
 const BUBBLE_CHART_DOM_ID = 'bubble-chart-story-total';
 
@@ -35,29 +34,11 @@ class QueryTotalAttentionResultsContainer extends React.Component {
   }
   shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      return (
-        ((labelsHaveChanged || colorsHaveChanged))
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   // if demo, use only sample search queries to download
   downloadCsv = (query) => {
-    const { queries } = this.props;
-    let url = null;
-    const testFirstQuery = queries[0];
-    if (parseInt(testFirstQuery.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/count.csv/${testFirstQuery.searchId}`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/stories/count.csv/${urlParamString}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/stories/count.csv', query);
   }
   render() {
     const { results, queries } = this.props;
@@ -81,7 +62,7 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         data={bubbleData}
         padding={0}
         domId={BUBBLE_CHART_DOM_ID}
-        width={440}
+        width={650}
       />);
     }
     return (
@@ -90,13 +71,20 @@ class QueryTotalAttentionResultsContainer extends React.Component {
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
             {mergedResultsWithQueryInfo.map((q, idx) =>
-              <MenuItem
-                key={idx}
-                className="action-icon-menu-item"
-                primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
-                rightIcon={<DownloadButton />}
-                onTouchTap={() => this.downloadCsv(q)}
-              />
+              <span key={`q${idx}-items`}>
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => this.downloadCsv(q)}
+                />
+                <MenuItem
+                  className="action-icon-menu-item"
+                  primaryText={formatMessage(messages.downloadDataSvg, { name: q.label })}
+                  rightIcon={<DownloadButton />}
+                  onTouchTap={() => downloadExplorerSvg(q.label, 'story-count', BUBBLE_CHART_DOM_ID)}
+                />
+              </span>
             )}
           </ActionMenu>
         </div>

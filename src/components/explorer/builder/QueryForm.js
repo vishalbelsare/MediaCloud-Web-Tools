@@ -35,6 +35,7 @@ const localMessages = {
   noMediaSpecified: { id: 'explorer.queryBuilder.warning.noMediaSpecified', defaultMessage: 'Searching all sources - generally not a great idea' },
 };
 
+/*
 const focusQueryInputField = (input) => {
   if (input && input.input !== null && input.input.refs) {
     setTimeout(() => {
@@ -44,6 +45,7 @@ const focusQueryInputField = (input) => {
     }, 100);
   }
 };
+*/
 
 class QueryForm extends React.Component {
   state = { // do not focus on primary textfield if we have a dialog open
@@ -75,12 +77,14 @@ class QueryForm extends React.Component {
       ...selected.sources,
       ...selected.collections,
     ];
+    /*
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
       if ((selected.q === undefined || selected.q === '*') && !this.state.childDialogOpen) {
         focusQueryInputField(this.queryRef);
       }
     }
+    */
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;

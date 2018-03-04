@@ -2,7 +2,7 @@ import logging
 from flask import request
 
 from server import mc, TOOL_API_KEY
-from server.cache import cache, key_generator, key_generator
+from server.cache import cache, key_generator
 from server.util.tags import STORY_UNDATEABLE_TAG
 import server.util.wordembeddings as wordembeddings
 from server.auth import user_mediacloud_client, user_admin_mediacloud_client, user_mediacloud_key, is_user_logged_in

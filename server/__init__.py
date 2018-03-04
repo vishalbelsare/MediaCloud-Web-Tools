@@ -173,6 +173,7 @@ def index():
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
 import server.views.stat
+import server.views.download
 import server.views.stories
 import server.views.media_search
 import server.views.media_picker
@@ -213,4 +214,4 @@ if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.words
     import server.views.explorer.stories
     import server.views.explorer.geo
-    import server.views.explorer.entities
+    import server.views.explorer.tags

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { trimToMaxLength } from '../../../lib/stringUtil';
 
 class QueryResultsSelector extends React.Component {
   state = {
@@ -26,7 +27,7 @@ class QueryResultsSelector extends React.Component {
               onQuerySelected(q.index);
             }}
           >
-            {q.label}
+            {trimToMaxLength(q.label, 20)}
           </li>
         )}
       </ul>

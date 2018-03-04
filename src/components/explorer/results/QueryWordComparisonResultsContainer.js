@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
-// import { generateParamStr } from '../../../lib/apiUtil';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ComparativeOrderedWordCloud from '../../vis/ComparativeOrderedWordCloud';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
@@ -40,18 +39,10 @@ class QueryWordComparisonResultsContainer extends React.Component {
   }
   shouldComponentUpdate(nextProps) {
     const { results, queries, leftQuery, rightQuery } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results && results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      return (
-        ((labelsHaveChanged || colorsHaveChanged))
-         || (results !== nextProps.results)
-         || (nextProps.leftQuery !== leftQuery
-         || nextProps.rightQuery !== rightQuery)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    const shouldChange = queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+    // also check if they changed their view choices
+    return (shouldChange || (nextProps.leftQuery !== leftQuery || nextProps.rightQuery !== rightQuery)
+    );
   }
 
   componentWillUnmount() {

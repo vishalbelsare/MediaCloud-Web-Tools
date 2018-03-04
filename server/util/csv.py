@@ -5,12 +5,12 @@ import flask
 logger = logging.getLogger(__name__)
 
 
-def _file_name_timestamp():
+def filename_timestamp():
     return datetime.datetime.now().strftime(u'%Y%m%d%H%M%S')
 
 
 def safe_filename(name):
-    return u"{}_{}.csv".format(name, _file_name_timestamp())
+    return u"{}-{}.csv".format(name, filename_timestamp())
 
 
 def dict2row(keys_to_include, dict_row):
@@ -67,6 +67,7 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         dict_keys = ','.join(dict_keys) + '\n'
         return flask.Response(dict_keys,
                               mimetype='text/csv; charset=utf-8', headers=headers)
+
 
 def download_media_csv(all_media, file_prefix, what_type_download):
 

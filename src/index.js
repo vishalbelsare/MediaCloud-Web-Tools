@@ -70,19 +70,7 @@ export default function initializeApp(routes) {
     );
   };
 
-  // log them in if they have a valid cookie
+  // log them in if they have a valid cookie (wait till login attempt complete before rendering app)
   store.dispatch(loginWithCookie())
-    .then(
-      (results) => {
-        if ({}.hasOwnProperty.call(results, 'status') && (results.status !== 200)) {
-          if (!window.location.href.includes('login') && !window.location.href.includes('home')) {
-            window.location = '/#/login';
-          }
-        }
-        renderApp();
-      },
-      () => {
-        renderApp();
-      }
-    );
+    .then(() => renderApp());
 }

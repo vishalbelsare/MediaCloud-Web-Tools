@@ -3,13 +3,12 @@ from flask import jsonify, request
 import flask_login
 import json
 
-from server import app, mc
-from server.cache import cache, key_generator
-from server.auth import is_user_logged_in, user_mediacloud_key, user_mediacloud_client
+from server import app
 from server.util.request import api_error_handler
-import server.util.wordembeddings as wordembeddings
 import server.util.csv as csv
-from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, file_name_for_download
+import server.views.explorer.apicache as apicache
 
 # load the shared settings file
 DEFAULT_NUM_WORDS = 100
@@ -40,35 +39,25 @@ def get_word_count():
     else:
         solr_query = parse_query_with_keywords(request.args)
     word_data = query_wordcount(solr_query)
-    # add in word2vec results
-    words = [w['term'] for w in word_data]
-    # and now add in word2vec model position data
-    google_word2vec_data = _cached_word2vec_google_2d(words)
-    for i in range(len(google_word2vec_data)):
-        word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
-        word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
     # return combined data
     return jsonify({"list": word_data})
 
+
 # if this is a sample search, we will have a search id and a query index
 # if this is a custom search, we will have a query will q,start_date, end_date, sources and collections
-@app.route('/api/explorer/words/wordcount.csv/<search_id_or_query>/<index>', methods=['GET'])
+@app.route('/api/explorer/words/wordcount.csv', methods=['POST'])
 @api_error_handler
-def explorer_wordcount_csv(search_id_or_query, index):
-    ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1
-    try:
-        search_id = int(search_id_or_query)
-        if search_id >= 0: # this is a sample query
-            solr_query = parse_as_sample(search_id, index)
-
-    except Exception as e:
-        # planned exception if search_id is actually a keyword or query
-        # csv downloads are 1:1 - one query to one download, so we can use index of 0
-        query_or_keyword = search_id_or_query
-        current_query = json.loads(query_or_keyword)[0]
-        solr_query = parse_query_with_keywords(current_query)
-
-    return stream_wordcount_csv('Explorer-wordcounts-ngrams-{}'.format(ngram_size), solr_query, ngram_size)
+def explorer_wordcount_csv():
+    data = request.form
+    ngram_size = data['ngramSize'] if 'ngramSize' in data else 1    # defaul to words if ngram not specified
+    filename = u'sampled-ngrams-{}'.format(ngram_size)
+    if 'searchId' in data:
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object)
+        filename = file_name_for_download(query_object['label'], filename)
+    return stream_wordcount_csv(filename, solr_query, ngram_size)
 
 
 @app.route('/api/explorer/words/compare/count', methods=['GET'])
@@ -111,27 +100,15 @@ def api_explorer_demo_compare_words():
 
 
 def query_wordcount(query, ngram_size=1, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
-    if is_user_logged_in():   # no user session
-        user_mc_key = user_mediacloud_key()
-    else:
-        user_mc_key = None
-    return _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_word_count(user_mc_key, query, ngram_size, num_words, sample_size):
-    if is_user_logged_in():   # no user session
-        api_client = user_mediacloud_client()
-    else:
-        api_client = mc
-    results = api_client.wordCount('*', query, ngram_size=ngram_size, num_words=num_words, sample_size=sample_size)
-    return results
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_word2vec_google_2d(words):
-    word2vec_results = wordembeddings.google_news_2d(words)
-    return word2vec_results
+    word_data = apicache.word_count(query, ngram_size, num_words, sample_size)
+    # add in word2vec results
+    words = [w['term'] for w in word_data]
+    # and now add in word2vec model position data
+    google_word2vec_data = apicache.word2vec_google_2d(words)
+    for i in range(len(google_word2vec_data)):
+        word_data[i]['google_w2v_x'] = google_word2vec_data[i]['x']
+        word_data[i]['google_w2v_y'] = google_word2vec_data[i]['y']
+    return word_data
 
 
 def stream_wordcount_csv(filename, query, ngram_size=1):
@@ -142,5 +119,5 @@ def stream_wordcount_csv(filename, query, ngram_size=1):
     for w in word_counts:
         w['sample_size'] = sample_size
         w['ratio'] = float(w['count'])/float(sample_size)
-    props = ['term', 'stem', 'count', 'sample_size', 'ratio']
+    props = ['term', 'stem', 'count', 'sample_size', 'ratio', 'google_w2v_x', 'google_w2v_y']
     return csv.stream_response(word_counts, props, filename)

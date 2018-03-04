@@ -148,4 +148,12 @@ export function deleteUserSearch(params) {
   return createApiPromise('api/explorer/delete-search', acceptedParams);
 }
 
-export const TEMP = 'TEMP'; // placeholder to remove stupid lint error
+export function fetchQueryTopThemes(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/themes', acceptedParams);
+}
+
+export function fetchDemoQueryTopThemes(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/themes', acceptedParams);
+}

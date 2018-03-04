@@ -1,0 +1,166 @@
+{
+  "releases": [
+    {
+      "date": "2018-03-04",
+      "version": "v2.4.10",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "Download files without popups.",
+        }
+      ]
+    },
+    {
+      "date": "2018-03-04",
+      "version": "v2.4.9",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "Show top themes results.",
+          "details": "These themes can help you identify the types of narratives the media is telling about your query. This is based on a transfer-learning model we built with the Google News word2vec model and the New York Times annotated corpus."
+        },
+        { 
+          "apps": ["sources"],
+          "note": "Show more results on advanced search."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Better feedback when creating topics."
+        },
+        { 
+          "apps": ["explorer"],
+          "note": "Correctly handle searches using \"quoted phrases\".",
+        },
+        { 
+          "apps": ["explorer"],
+          "note": "Use more consistent names for downloaded files.",
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Show more inlinks and outlinks on story details page."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-02",
+      "version": "v2.4.8",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "fix bug that wouldn't let you edit dates sometimes"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-27",
+      "version": "v2.4.7",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "more columns in story list CSV download"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-26",
+      "version": "v2.4.6",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "show better high level error messages"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-23",
+      "version": "v2.4.5",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "fixed password reset"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-26",
+      "version": "v2.4.4",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "better signup errors"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-16",
+      "version": "v2.4.3",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "work on cache errors some folks are seeing"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-15",
+      "version": "v2.4.2",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "work on cache errors some folks are seeing"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-14",
+      "version": "v2.4.1",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "better nav-bar links"
+        }
+      ]
+    },
+    {
+      "date": "2018-02-14",
+      "version": "v2.4.0",
+      "notes": [
+        { 
+          "apps": ["topics", "explorer", "sources"],
+          "note": "Single sign on! Once you log in, you're logged into all the tools."
+        },
+        { 
+          "apps": ["topics", "sources", "explorer"],
+          "note": "New homepages for all the tools.",
+          "details": "We did some user testing and have a new approach to the homepages. Hopefully this design clears up what each tool is for."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Create subtopics by media type.",
+          "details": "You can now automatically divide up a topic based on the type of each media the stories are published by. Use this to compare print vs. online coverage, for instance.  We have this information for lots of sources (from <a href=\"http://abyznewslinks.com\">abyznewslinks.com</a>), but definitely not all sources."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Use the new media picker when creating topics."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Link to let you query the a topic in the Dashboard.",
+          "details": "Find this new link on the control bar on your topic's summary page.",
+        },
+        { 
+          "apps": ["explorer"],
+          "note": "Support empty searches.",
+          "details": "These automatically turn into a \"wildcard\" search - ie. a search for \"*\"."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Show tweet counts on story tables (if twitter data available)",
+          "deatils": "For topics that been augmented by discovering links shared in related tweets, you can now see that twitter count on any story lists."
+        }
+      ]
+    },
+
+  ]
+     
+}

@@ -6,11 +6,10 @@ import MenuItem from 'material-ui/MenuItem';
 import ActionMenu from '../../common/ActionMenu';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import { DownloadButton } from '../../common/IconButton';
-import { queryPropertyHasChanged, generateQueryParamString } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 import Word2VecChart from '../../vis/Word2VecChart';
-import { downloadSvg } from '../../util/svg';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
@@ -25,29 +24,12 @@ class QueryWordSpaceResultsContainer extends React.Component {
   state = {
     selectedQueryIndex: 0,
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-      return (
-        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
-  getDownloadCsvUrl = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/words/wordcount.csv/${query.searchId}/${query.index}?`;
-    } else {
-      const urlParamString = generateQueryParamString([query]);
-      url = `/api/explorer/words/wordcount.csv/${urlParamString}/${query.index}?`;
-    }
-    return url;
+  handleDownloadCsv = (query) => {
+    postToDownloadUrl('/api/explorer/words/wordcount.csv', query);
   }
   render() {
     const { results, queries } = this.props;
@@ -74,7 +56,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   className="action-icon-menu-item"
                   primaryText={formatMessage(messages.downloadDataCsv, { name: q.label })}
                   rightIcon={<DownloadButton />}
-                  onTouchTap={() => this.downloadCsv(q)}
+                  onTouchTap={() => this.handleDownloadCsv(q)}
                 />
                 <MenuItem
                   className="action-icon-menu-item"
@@ -82,7 +64,7 @@ class QueryWordSpaceResultsContainer extends React.Component {
                   rightIcon={<DownloadButton />}
                   onTouchTap={() => {
                     const svgChild = document.getElementById(WORD_SPACE_DOM_ID);
-                    downloadSvg(svgChild.firstChild);
+                    downloadExplorerSvg(q.label, 'sampled-word-space', svgChild);
                   }}
                 />
               </span>

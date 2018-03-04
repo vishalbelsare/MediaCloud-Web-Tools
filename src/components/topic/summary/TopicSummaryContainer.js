@@ -86,7 +86,7 @@ class TopicSummaryContainer extends React.Component {
           </Permissioned>
           <Row>
             <Col lg={12}>
-              <WordsSummaryContainer topicId={topicId} filters={filters} width={720} />
+              <WordsSummaryContainer topicId={topicId} topicName={topicInfo.name} filters={filters} width={720} />
             </Col>
           </Row>
           <Row>

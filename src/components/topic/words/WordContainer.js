@@ -32,7 +32,7 @@ class WordContainer extends React.Component {
   }
 
   render() {
-    const { topicId, stem, term, filters } = this.props;
+    const { topicId, stem, term, filters, topicName } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = `${formatMessage(messages.word)}`;
 
@@ -52,12 +52,12 @@ class WordContainer extends React.Component {
               <WordSentenceCountContainer topicId={topicId} stem={stem} term={term} filters={filters} />
             </Col>
             <Col lg={6} xs={12}>
-              <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} />
+              <WordWordsContainer topicId={topicId} stem={stem} term={term} filters={filters} topicName={topicName} />
             </Col>
           </Row>
           <Row>
             <Col lg={12}>
-              <WordInContextContainer topicId={topicId} stem={stem} term={term} filters={filters} />
+              <WordInContextContainer topicId={topicId} stem={stem} term={term} filters={filters} topicName={topicName} />
             </Col>
           </Row>
           <Row>
@@ -87,6 +87,7 @@ WordContainer.propTypes = {
   selectNewWord: PropTypes.func.isRequired,
   saveParamsToStore: PropTypes.func.isRequired,
   // from state
+  topicName: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
   stem: PropTypes.string,
   term: PropTypes.string,
@@ -95,6 +96,7 @@ WordContainer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   topicId: state.topics.selected.id,
+  topicName: state.topics.selected.info.name,
   stem: ownProps.location.query.stem,
   term: ownProps.location.query.term,
   filters: state.topics.selected.filters,

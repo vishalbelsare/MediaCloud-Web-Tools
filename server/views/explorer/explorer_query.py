@@ -11,10 +11,12 @@ from operator import itemgetter
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/api/explorer/sample-searches', methods=['GET'])
 @api_error_handler
 def api_explorer_sample_searches():
     return read_sample_searches()
+
 
 @app.route('/api/explorer/sources/list', methods=['GET'])
 @flask_login.login_required
@@ -29,6 +31,7 @@ def api_explorer_sources_by_ids():
         info['id'] = int(media_id)
         source_list.append(info)
     return jsonify(source_list)
+
 
 @app.route('/api/explorer/collections/list', methods=['GET'])
 @flask_login.login_required
@@ -82,12 +85,14 @@ def save_user_search():
     db.add_item_to_users_list(username, 'searches', request.args)
     return jsonify({'savedQuery': request.args['queryName']})
 
+
 @app.route('/api/explorer/load-user-searches', methods=['GET'])
 @flask_login.login_required
 def load_user_searches():
     username = user_name()
     search_list = db.get_users_lists(username, 'searches')
     return jsonify({'list': search_list})
+
 
 @app.route('/api/explorer/delete-search', methods=['GET'])
 @flask_login.login_required
@@ -115,6 +120,7 @@ def api_explorer_collection_set(tag_sets_id):
 
     #_add_user_favorite_flag_to_collections(info['collections'])
     return jsonify(info)
+
 
 def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
 

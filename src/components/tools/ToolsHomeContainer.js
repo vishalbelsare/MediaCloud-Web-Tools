@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import messages from '../../resources/messages';
-import { TOPICS_URL, DASHBOARD_URL, SOURCES_URL } from '../common/header/AppToolbar';
+import { TOPICS_URL, EXPLORER_URL, SOURCES_URL } from '../common/header/NavToolbar';
 import ToolDescription from './ToolDescription';
 import Faq from './faq/ToolsFaq';
 import SystemStatsContainer from '../common/statbar/SystemStatsContainer';
@@ -57,11 +57,11 @@ const ToolsHomeContainer = (props) => {
         <Row>
           <Col lg={4}>
             <ToolDescription
-              name={messages.dashboardToolName}
-              className="tool-dashboard"
-              description={messages.dashboardToolDescription}
-              screenshotUrl={assetUrl('/static/img/preview-dashboard.png')}
-              url={DASHBOARD_URL}
+              name={messages.explorerToolName}
+              className="tool-explorer"
+              description={messages.explorerToolDescription}
+              screenshotUrl={assetUrl('/static/img/preview-explorer.png')}
+              url={EXPLORER_URL}
             />
           </Col>
           <Col lg={4}>

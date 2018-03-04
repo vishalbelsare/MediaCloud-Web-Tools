@@ -12,9 +12,15 @@ const localMessages = {
   noResults: { id: 'mediaPicker.searchResults.noResults', defaultMessage: 'No matching collections' },
 };
 
+const INCLUDE_SOURCE_COUNTS = false;
+
 const CollectionResultsTable = (props) => {
   const { title, collections, handleToggleAndSelectMedia } = props;
   let content = null;
+  let mediaCountHeader;
+  if (INCLUDE_SOURCE_COUNTS) {
+    mediaCountHeader = <th className="numeric"><FormattedMessage {...localMessages.mediaSources} /></th>;
+  }
   if (collections.length > 0) {
     content = (
       <table>
@@ -23,18 +29,22 @@ const CollectionResultsTable = (props) => {
             <th><FormattedMessage {...localMessages.name} /></th>
             <th><FormattedMessage {...localMessages.tagSetLabel} /></th>
             <th><FormattedMessage {...localMessages.description} /></th>
-            <th className="numeric"><FormattedMessage {...localMessages.mediaSources} /></th>
+            {mediaCountHeader}
             <th />
           </tr>
           {collections.map((c, idx) => {
             const ActionButton = c.selected ? DeleteButton : AddButton;
             const actionContent = <ActionButton onClick={() => handleToggleAndSelectMedia(c)} />;
+            let mediaCountValue;
+            if (INCLUDE_SOURCE_COUNTS) {
+              mediaCountValue = <td className="numeric">{(c.media_count === 100) ? `${c.media_count}+` : c.media_count}</td>;
+            }
             return (
               <tr key={`${c.tags_id}`} className={(idx % 2 === 0) ? 'even' : 'odd'}>
                 <td><a href={urlToCollection(c.tags_id)} target="new">{c.name}</a></td>
                 <td>{c.tag_set_label}</td>
                 <td>{c.description}</td>
-                <td className="numeric">{(c.media_count === 100) ? `${c.media_count}+` : c.media_count}</td>
+                {mediaCountValue}
                 <td>{actionContent}</td>
               </tr>
             );

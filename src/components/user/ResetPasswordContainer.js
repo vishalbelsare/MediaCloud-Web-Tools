@@ -37,20 +37,26 @@ ResetPasswordContainer.propTypes = {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   handlePasswordReset: (values) => {
+    // this link came from the email, so we need to grab the props to submit off of the url
     const email = ownProps.location.query.email;
     const passwordResetToken = ownProps.location.query.password_reset_token;
-    dispatch(sendPasswordReset({ ...values, email, password_reset_token: passwordResetToken }))
-    .then((response) => {
-      if (response.success) {
-        if (response.success === 1) {
-          dispatch(push('/user/reset-password-success'));
-        } else {
-          dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
+    // send the request to reset the password
+    return dispatch(sendPasswordReset({ ...values, email, password_reset_token: passwordResetToken }))
+      .then((response) => {
+        if (response.success) { // the token was ok
+          // and the pswd change worked
+          if (response.success === 1) {
+            return dispatch(push('/user/reset-password-success'));  // them them it worked
+          }
+          // or it failed
+          return dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
+        } else if (response.message.includes('Password reset token is invalid')) {
+          // the token was not valid
+          return dispatch(addNotice({ message: localMessages.badToken, level: LEVEL_ERROR }));
         }
-      } else if (response.message.includes('Password reset token is invalid')) {
-        dispatch(addNotice({ message: localMessages.badToken, level: LEVEL_ERROR }));
-      }
-    });
+        // someone else bad happened
+        return dispatch(addNotice({ message: localMessages.failed, level: LEVEL_ERROR }));
+      });
   },
 });
 

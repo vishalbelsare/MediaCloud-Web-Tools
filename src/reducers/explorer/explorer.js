@@ -12,6 +12,7 @@ import stories from './stories';
 import storyCount from './storyCount';
 import geo from './geo';
 import savedSearches from './savedSearches';
+import topThemes from './topThemes';
 
 const rootReducer = combineReducers({
   selected,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   geo,
   topEntitiesPeople,
   topEntitiesOrgs,
+  topThemes,
   savedSearches,
 });
 
