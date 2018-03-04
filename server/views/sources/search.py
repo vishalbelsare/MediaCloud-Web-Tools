@@ -11,8 +11,8 @@ from server.views.sources.favorites import add_user_favorite_flag_to_sources, ad
 
 logger = logging.getLogger(__name__)
 
-MAX_SOURCES = 20
-MAX_COLLECTIONS = 20
+MAX_SOURCES = 50
+MAX_COLLECTIONS = 50
 
 
 @app.route('/api/sources/search/<search_str>', methods=['GET'])
