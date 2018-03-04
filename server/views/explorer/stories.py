@@ -141,7 +141,7 @@ def explorer_story_count_csv():
     story_count_results = []
     data = request.form
     if 'searchId' in data:
-        # TODO: don't load this query twice becauyse thats kind of dumb
+        # TODO: don't load this query twice because that is kind of dumb
         solr_query = parse_as_sample(data['searchId'], data['index'])
         filename = filename  # don't have this info + current_query['q']
         sample_searches = load_sample_searches()
@@ -154,6 +154,6 @@ def explorer_story_count_csv():
         filename = file_name_for_download(label, filename)
     # sentence count needs dates to be sent explicitly -TODO check what has priority
     story_count = apicache.story_count(solr_query)
-    story_count_results.append({ 'query': label, 'count': story_count['count'] })
+    story_count_results.append({'query': label, 'count': story_count['count']})
     props = ['query', 'count']
     return csv.stream_response(story_count_results, props, filename)
