@@ -90,7 +90,6 @@ export function downloadViaFormPost(url, data) {
   const form = document.createElement('form');
   form.setAttribute('method', 'post');
   form.setAttribute('action', url);
-  form.setAttribute('target', 'downloading');
   Object.keys(data).forEach((key) => {
     if ({}.hasOwnProperty.call(data, key)) {
       const input = document.createElement('input');
