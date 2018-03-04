@@ -34,7 +34,7 @@ def api_media_search(search_str):
 @app.route('/api/collections/search/<search_str>', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
-def collection_search(search_str):
+def api_collection_search(search_str):
     public_only = False if user_has_auth_role(ROLE_MEDIA_EDIT) else True
     results = collection_search(search_str, public_only, VALID_COLLECTION_TAG_SETS_IDS)
     trim_count = MAX_COLLECTIONS if len(results) > 20 else len(results)
