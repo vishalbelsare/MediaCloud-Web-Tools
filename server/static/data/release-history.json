@@ -1,6 +1,47 @@
 {
   "releases": [
     {
+      "date": "2018-03-04",
+      "version": "v2.4.10",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "Download files without popups.",
+        }
+      ]
+    },
+    {
+      "date": "2018-03-04",
+      "version": "v2.4.9",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "note": "Show top themes results.",
+          "details": "These themes can help you identify the types of narratives the media is telling about your query. This is based on a transfer-learning model we built with the Google News word2vec model and the New York Times annotated corpus."
+        },
+        { 
+          "apps": ["sources"],
+          "note": "Show more results on advanced search."
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Better feedback when creating topics."
+        },
+        { 
+          "apps": ["explorer"],
+          "note": "Correctly handle searches using \"quoted phrases\".",
+        },
+        { 
+          "apps": ["explorer"],
+          "note": "Use more consistent names for downloaded files.",
+        },
+        { 
+          "apps": ["topics"],
+          "note": "Show more inlinks and outlinks on story details page."
+        }
+      ]
+    },
+    {
       "date": "2018-03-02",
       "version": "v2.4.8",
       "notes": [
