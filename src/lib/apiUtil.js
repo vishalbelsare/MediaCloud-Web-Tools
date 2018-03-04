@@ -86,8 +86,6 @@ export function acceptParams(params, acceptableKeys) {
 }
 
 export function downloadViaFormPost(url, data) {
-  const name = 'download.csv';
-  const windowOptions = 'width=730,height=345,left=100,top=100,resizable=no,scrollbars=no';
   // make a form with all the info we want to submit
   const form = document.createElement('form');
   form.setAttribute('method', 'post');
@@ -103,7 +101,6 @@ export function downloadViaFormPost(url, data) {
     }
   });
   document.body.appendChild(form);
-  window.open(url, name, windowOptions);
   form.submit();
   document.body.removeChild(form);
 }
