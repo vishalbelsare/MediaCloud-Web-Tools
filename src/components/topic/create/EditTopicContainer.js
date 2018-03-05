@@ -11,7 +11,7 @@ import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import messages from '../../../resources/messages';
-import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateTopic, resetTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -51,6 +51,14 @@ class EditTopicContainer extends React.Component {
       return false;
     }
     return handleSave(values, topicInfo);
+  };
+  handleRequestReset = (values) => {
+    const { topicInfo, handleReset } = this.props;
+    if (this.riskModifiedTopicSpidering(values)) {
+      this.setState({ editConfirmationOpen: true });
+      return false;
+    }
+    return handleReset(values, topicInfo);
   };
   riskModifiedTopicSpidering = (values) => {
     const { formData } = this.props;
@@ -99,6 +107,11 @@ class EditTopicContainer extends React.Component {
           label={formatMessage(messages.confirm)}
           primary
           onTouchTap={this.handleConfirmSave}
+        />,
+        <AppButton
+          label={formatMessage(messages.reset)}
+          primary
+          onTouchTap={this.handleRequestReset}
         />,
       ];
       dialogContent = (
@@ -163,6 +176,7 @@ EditTopicContainer.propTypes = {
   reallyHandleSave: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
   handleMediaDelete: PropTypes.func.isRequired,
+  handleReset: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -221,6 +235,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const selectedMedia = updatedCollections.concat(updatedSources);
 
     ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
+  handleReset: (values, topicInfo) => {
+    const infoToSave = { ...values };
+    return dispatch(resetTopic(ownProps.params.topicId))
+      .then((results) => {
+        if (results.topics_id) {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+        }
+        if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
+          dispatch(setTopicNeedsNewSnapshot(true));
+        }
+      });
   },
 });
 
