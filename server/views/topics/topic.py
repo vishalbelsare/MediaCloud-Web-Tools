@@ -208,6 +208,13 @@ def get_topic_info_per_snapshot_timespan(topic_id):
 
     return {'snapshot': most_recent_running_snapshot, 'timespan': overall_timespan}
 
+@app.route("/api/topics/<topics_id>/reset", methods=['POST'])
+@flask_login.login_required
+@api_error_handler
+def topic_reset(topics_id):
+    user_mc = user_admin_mediacloud_client()
+    results = user_mc.topicReset(topics_id) # user wants to reset topic
+    return jsonify(results)
 
 @app.route('/api/topics/<topics_id>/update', methods=['PUT'])
 @flask_login.login_required

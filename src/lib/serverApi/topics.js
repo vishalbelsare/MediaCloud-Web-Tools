@@ -350,3 +350,7 @@ export function topicTopOrgs(topicId, params) {
   const acceptedParams = acceptParams(params, ['snapshotId', 'timespanId', 'focusId', 'sort', 'limit', 'q', 'linkId']);
   return createApiPromise(`/api/topics/${topicId}/entities/organizations`, acceptedParams);
 }
+
+export function resetTopic(topicId) {
+  return createApiPromise(`/api/topics/${topicId}/reset`);
+}

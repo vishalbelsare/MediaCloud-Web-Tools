@@ -19,6 +19,7 @@ export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
 export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
+export const RESET_TOPIC = 'RESET_TOPIC';
 export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
 export const TOPIC_GENERATE_SNAPSHOT = 'TOPIC_GENERATE_SNAPSHOT';
@@ -73,6 +74,8 @@ export const setTopicFavorite = createAsyncAction(SET_TOPIC_FAVORITE, api.topicS
 export const fetchFavoriteTopics = createAsyncAction(FETCH_FAVORITE_TOPICS, api.favoriteTopics);
 
 export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
+
+export const resetTopic = createAsyncAction(RESET_TOPIC, api.resetTopic);
 
 export const topicStartSpider = createAsyncAction(TOPIC_START_SPIDER, api.topicSpider, id => id);
 
