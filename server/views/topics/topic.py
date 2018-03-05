@@ -7,7 +7,7 @@ from functools import partial
 
 from server import app, db, mc
 from server.cache import cache, key_generator
-from server.util.common import _media_ids_from_sources_param, _media_tag_ids_from_collections_param
+from server.util.stringutil import ids_from_comma_separated_str
 from server.util.request import form_fields_required, arguments_required, api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name, is_user_logged_in
 from server.views.topics.apicache import cached_topic_timespan_list, topic_word_counts, _cached_topic_word_counts
@@ -232,8 +232,8 @@ def topic_update(topics_id):
     }
 
     # parse out any sources and collections to add
-    media_ids_to_add = _media_ids_from_sources_param(request.form['sources[]'])
-    tag_ids_to_add = _media_tag_ids_from_collections_param(request.form['collections[]'])
+    media_ids_to_add = ids_from_comma_separated_str(request.form['sources[]'])
+    tag_ids_to_add = ids_from_comma_separated_str(request.form['collections[]'])
     # hack to support twitter-only topics
     if (len(media_ids_to_add) is 0) and (len(tag_ids_to_add) is 0):
         media_ids_to_add = None
