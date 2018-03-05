@@ -6,7 +6,8 @@
       "notes": [
         { 
           "apps": ["explorer"],
-          "note": "Download files without popups.",
+          "type": "Fix",
+          "note": "Download files without popups."
         }
       ]
     },
@@ -17,26 +18,32 @@
         { 
           "apps": ["explorer"],
           "note": "Show top themes results.",
+          "type": "Feature",
           "details": "These themes can help you identify the types of narratives the media is telling about your query. This is based on a transfer-learning model we built with the Google News word2vec model and the New York Times annotated corpus."
         },
         { 
           "apps": ["sources"],
+          "type": "Fix",
           "note": "Show more results on advanced search."
         },
         { 
           "apps": ["topics"],
+          "type": "Fix",
           "note": "Better feedback when creating topics."
         },
         { 
           "apps": ["explorer"],
-          "note": "Correctly handle searches using \"quoted phrases\".",
+          "type": "Fix",
+          "note": "Correctly handle searches using \"quoted phrases\"."
         },
         { 
           "apps": ["explorer"],
-          "note": "Use more consistent names for downloaded files.",
+          "type": "Fix",
+          "note": "Use more consistent names for downloaded files."
         },
         { 
           "apps": ["topics"],
+          "type": "Fix",
           "note": "Show more inlinks and outlinks on story details page."
         }
       ]
@@ -47,7 +54,8 @@
       "notes": [
         { 
           "apps": ["explorer"],
-          "note": "fix bug that wouldn't let you edit dates sometimes"
+          "type": "Fix",
+          "note": "Fix bug that wouldn't let you edit dates sometimes."
         }
       ]
     },
@@ -57,7 +65,8 @@
       "notes": [
         { 
           "apps": ["explorer"],
-          "note": "more columns in story list CSV download"
+          "type": "Feature",
+          "note": "More columns in story list CSV download."
         }
       ]
     },
@@ -67,7 +76,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "show better high level error messages"
+          "type": "Fix",
+          "note": "Show better high level error messages."
         }
       ]
     },
@@ -77,7 +87,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "fixed password reset"
+          "type": "Fix",
+          "note": "Password reset works again."
         }
       ]
     },
@@ -87,7 +98,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "better signup errors"
+          "type": "Fix",
+          "note": "Better signup errors."
         }
       ]
     },
@@ -97,7 +109,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "work on cache errors some folks are seeing"
+          "type": "Fix",
+          "note": "Work on cache errors some folks are seeing."
         }
       ]
     },
@@ -107,7 +120,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "work on cache errors some folks are seeing"
+          "type": "Fix",
+          "note": "Work on cache errors some folks are seeing."
         }
       ]
     },
@@ -117,7 +131,8 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
-          "note": "better nav-bar links"
+          "type": "Fix",
+          "note": "Better nav-bar links between the tools."
         }
       ]
     },
@@ -127,39 +142,46 @@
       "notes": [
         { 
           "apps": ["topics", "explorer", "sources"],
+          "type": "Feature",
           "note": "Single sign on! Once you log in, you're logged into all the tools."
         },
         { 
           "apps": ["topics", "sources", "explorer"],
+          "type": "Feature",
           "note": "New homepages for all the tools.",
           "details": "We did some user testing and have a new approach to the homepages. Hopefully this design clears up what each tool is for."
         },
         { 
           "apps": ["topics"],
+          "type": "Feature",
           "note": "Create subtopics by media type.",
           "details": "You can now automatically divide up a topic based on the type of each media the stories are published by. Use this to compare print vs. online coverage, for instance.  We have this information for lots of sources (from <a href=\"http://abyznewslinks.com\">abyznewslinks.com</a>), but definitely not all sources."
         },
         { 
           "apps": ["topics"],
+          "type": "Fix",
           "note": "Use the new media picker when creating topics."
         },
         { 
           "apps": ["topics"],
+          "type": "Feature",
           "note": "Link to let you query the a topic in the Dashboard.",
-          "details": "Find this new link on the control bar on your topic's summary page.",
+          "details": "Find this new link on the control bar on your topic's summary page."
         },
         { 
           "apps": ["explorer"],
+          "type": "Feature",
           "note": "Support empty searches.",
           "details": "These automatically turn into a \"wildcard\" search - ie. a search for \"*\"."
         },
         { 
           "apps": ["topics"],
+          "type": "Feature",
           "note": "Show tweet counts on story tables (if twitter data available)",
           "deatils": "For topics that been augmented by discovering links shared in related tweets, you can now see that twitter count on any story lists."
         }
       ]
-    },
+    }
 
   ]
      

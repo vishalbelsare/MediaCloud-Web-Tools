@@ -243,6 +243,8 @@ const messages = {
   top20: { id: 'top20', defaultMessage: 'Top 20' },
   top25: { id: 'top25', defaultMessage: 'Top 25' },
 
+  recentNews: { id: 'recentNews.title', defaultMessage: 'Recent Changes' },
+
 };
 
 export default messages;

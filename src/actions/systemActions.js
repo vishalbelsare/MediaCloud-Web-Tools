@@ -2,3 +2,4 @@
 
 export * from './system/statActions';
 export * from './system/mediaPickerActions';
+export * from './system/recentNewsActions';

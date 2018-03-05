@@ -8,6 +8,7 @@ import SourcesAppMenu from './SourcesAppMenu';
 import TopicsAppMenu from './TopicsAppMenu';
 import ExplorerAppMenu from './ExplorerAppMenu';
 import { assetUrl } from '../../../lib/assetUtil';
+import RecentNewsMenuContainer from '../news/RecentNewsMenuContainer';
 
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
@@ -63,6 +64,9 @@ const NavToolbar = (props) => {
                 >
                   {formatMessage(messages.toolsAppName).toUpperCase()}
                 </a>
+              </li>
+              <li className="recent-changes">
+                <RecentNewsMenuContainer />
               </li>
             </ul>
           </Col>

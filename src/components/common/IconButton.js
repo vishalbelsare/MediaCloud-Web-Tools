@@ -14,6 +14,8 @@ import PlayIcon from 'material-ui/svg-icons/av/play-circle-filled';
 import PauseIcon from 'material-ui/svg-icons/av/pause-circle-filled';
 import NextIcon from 'material-ui/svg-icons/av/skip-next';
 import PreviousIcon from 'material-ui/svg-icons/av/skip-previous';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+import NotificationsActiveIcon from 'material-ui/svg-icons/social/notifications-active';
 import messages from '../../resources/messages';
 import ExploreIcon from './icons/ExploreIcon';
 import DownloadIcon from './icons/DownloadIcon';
@@ -38,7 +40,8 @@ import { getBrandDarkColor, getBrandDarkerColor } from '../../styles/colors';
  * The wrapper for our custom icons.  The idea is that you define all the SVG icons in individual
  * Components in the `icons` directory, then export wrapper instances of them here.
  */
-function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = true, defaultWidth = undefined, defaultHeight = undefined) {
+function composeIconButton(Icon, defaultTooltipMessage, useBackgroundColor = true,
+  defaultWidth = undefined, defaultHeight = undefined) {
   class AppIconButton extends React.Component {
     state = {
       backgroundColor: getBrandDarkColor(),
@@ -172,3 +175,7 @@ export const PauseButton = composeIconButton(PauseIcon, messages.pause, false);
 export const NextButton = composeIconButton(NextIcon, messages.skipNext, false);
 
 export const PreviousButton = composeIconButton(PreviousIcon, messages.skipPrevious, false);
+
+export const NotificationsButton = composeIconButton(NotificationsIcon, messages.recentNews, false);
+
+export const NotificationsActivesButton = composeIconButton(NotificationsActiveIcon, messages.recentNews, false);
