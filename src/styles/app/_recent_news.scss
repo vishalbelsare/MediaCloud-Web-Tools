@@ -31,10 +31,12 @@
 
 }
 
-.recent-news-item {
+.recent-news-menu-item {
   padding: 8px;
   font-size: 16px;
+}
 
+.recent-news-menu-item, .recent-news-item {
   .news-type {
     background-color: $material-grey200;
     border-radius: 13px;
@@ -44,6 +46,44 @@
     margin-right: 5px;
     &.news-feature {
       background-color: $material-green500;
+    }
+  }
+}
+
+.recent-news-item {
+  font-size: 18px;
+  padding: 5px 0px;
+
+  small {
+    margin-top: 5px;
+    display: block;
+    font-size: 14px;
+  }
+
+  .item-app-list {
+    font-size: 14px;
+  }
+
+}
+
+.release-note {
+  padding-bottom: 30px;
+  margin-top: 20px;
+
+  .release-version {
+    background-color: $material-grey200;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    h2 {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    small {
+      float: right;
+      padding-top: 10px;
+      font-size: 14px;
     }
   }
 
