@@ -72,6 +72,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     const clickedQuery = {
       q,
       start_date: solrFormat(date0),
+      color: '#fff000',
     };
     if (!dayGap) {
       clickedQuery.end_date = solrFormat(oneWeekLater(date0), true);
@@ -169,7 +170,7 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   fetchStories: PropTypes.func.isRequired,
   fetchWords: PropTypes.func.isRequired,
   words: PropTypes.array,
-  stories: PropTypes.object,
+  stories: PropTypes.array,
   daySpread: PropTypes.bool,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,

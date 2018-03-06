@@ -18,12 +18,18 @@ const localMessages = {
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
   const { stories, words, info } = props;
   const date = info.start_date;
+  let titleStyle = '';
+  if (info.color) {
+    titleStyle = { color: '#ff00ff' };
+  } else {
+    titleStyle = { color: '#0000ff' };
+  }
   return (
     <DataCard>
       <Row>
         <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
         <Col lg={6}>
-          <h3><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
+          <h3 style={{ titleStyle }} ><FormattedMessage {...localMessages.sampleStories} values={{ date }} style={{ titleStyle }} /></h3>
           <StorySentencePreview stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
         </Col>
         <Col lg={6}>

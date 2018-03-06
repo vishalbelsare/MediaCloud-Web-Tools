@@ -6,7 +6,7 @@ import { storyPubDateToTimestamp } from '../../lib/dateUtil';
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
   foci: { id: 'story.foci.list', defaultMessage: 'List of Subtopics {list}' },
-  viewArticle: { id: 'story.foci.viewArticle', defaultMessage: 'view article' },
+  viewArticle: { id: 'story.foci.viewArticle', defaultMessage: '(view article)' },
 };
 
 const StorySentencePreview = (props) => {
@@ -16,23 +16,18 @@ const StorySentencePreview = (props) => {
     <div className="story-sentence-preview">
       {stories.map((story) => {
         let dateToShow = null;  // need to handle undateable stories
-        let dateStyle = '';
         if (story.publish_date === 'undateable') {
           dateToShow = formatMessage(localMessages.undateable);
-          dateStyle = 'story-date-undateable';
         } else {
           dateToShow = formatDate(storyPubDateToTimestamp(story.publish_date));
-          dateStyle = (story.date_is_reliable === 0) ? 'story-date-unreliable' : 'story-date-reliable';
           if (story.date_is_reliable === 0) {
             dateToShow += '?';
           }
         }
         return (
-          <div>
-            <h3>{story.medium_name}</h3>
-            <span className={`story-date ${dateStyle}`}>{dateToShow}</span>
-            <a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a>
-            <p>{story.sentence}</p>
+          <div className="story-sentence-preview-item">
+            <h3>{`${story.medium_name} - ${dateToShow}`}<a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a></h3>
+            <p>{`"...${story.sentence}..."`}</p>
           </div>
         );
       })};
