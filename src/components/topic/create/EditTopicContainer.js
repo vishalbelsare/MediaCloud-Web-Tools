@@ -39,11 +39,6 @@ class EditTopicContainer extends React.Component {
   handleCancelSave = () => {
     this.setState({ editConfirmationOpen: false });
   };
-  handleConfirmSave = () => {
-    const { formData, topicInfo, handleSave } = this.props;
-    this.setState({ editConfirmationOpen: false });
-    return handleSave(formData.values, topicInfo);
-  };
   handleRequestSave = (values) => {
     const { topicInfo, handleSave } = this.props;
     if (this.riskModifiedTopicSpidering(values)) {
@@ -52,13 +47,10 @@ class EditTopicContainer extends React.Component {
     }
     return handleSave(values, topicInfo);
   };
-  handleRequestReset = (values) => {
-    const { topicInfo, handleReset } = this.props;
-    if (this.riskModifiedTopicSpidering(values)) {
-      this.setState({ editConfirmationOpen: true });
-      return false;
-    }
-    return handleReset(values, topicInfo);
+  handleConfirmSave = () => {
+    const { formData, topicInfo, handleResetAndSave } = this.props;
+    this.setState({ editConfirmationOpen: false });
+    return handleResetAndSave(formData.values, topicInfo);
   };
   riskModifiedTopicSpidering = (values) => {
     const { formData } = this.props;
@@ -108,11 +100,6 @@ class EditTopicContainer extends React.Component {
           primary
           onTouchTap={this.handleConfirmSave}
         />,
-        <AppButton
-          label={formatMessage(messages.reset)}
-          primary
-          onTouchTap={this.handleRequestReset}
-        />,
       ];
       dialogContent = (
         <Dialog
@@ -151,6 +138,7 @@ class EditTopicContainer extends React.Component {
               keepDirtyOnReinitialize
               onMediaChange={handleMediaChange}
               onMediaDelete={handleMediaDelete}
+              handleRequestReset={this.handleRequestReset}
               destroyOnUnmount
             />
           </Permissioned>
@@ -173,10 +161,11 @@ EditTopicContainer.propTypes = {
   formData: PropTypes.object,
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
+  handleResetAndSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
   handleMediaDelete: PropTypes.func.isRequired,
-  handleReset: PropTypes.func.isRequired,
+  handleResetTopic: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -202,7 +191,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoToSave['sources[]'] = '';
       infoToSave['collections[]'] = '';
     }
-    return dispatch(updateTopic(ownProps.params.topicId, infoToSave))
+    dispatch(updateTopic(ownProps.params.topicId, infoToSave))
       .then((results) => {
         if (results.topics_id) {
           // let them know it worked
@@ -236,23 +225,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
     ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
   },
-  handleReset: (values, topicInfo) => {
-    const infoToSave = { ...values };
-    return dispatch(resetTopic(ownProps.params.topicId))
-      .then((results) => {
-        if (results.topics_id) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-        }
-        if ((infoToSave.start_date !== topicInfo.start_date) || (infoToSave.end_date !== topicInfo.end_date)) {
-          dispatch(setTopicNeedsNewSnapshot(true));
-        }
-      });
-  },
+  handleResetTopic: () => dispatch(resetTopic(ownProps.params.topicId)),
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     handleSave: (values, topicInfo) => dispatchProps.reallyHandleSave(values, topicInfo, stateProps.filters),
+    handleResetAndSave: (values, topicInfo) => {
+      dispatchProps.handleResetTopic(values, topicInfo, stateProps.filters)
+        .then(() => dispatchProps.reallyHandleSave(values, topicInfo, stateProps.filters));
+    },
   });
 }
 

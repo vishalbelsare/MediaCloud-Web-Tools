@@ -208,7 +208,7 @@ def get_topic_info_per_snapshot_timespan(topic_id):
 
     return {'snapshot': most_recent_running_snapshot, 'timespan': overall_timespan}
 
-@app.route("/api/topics/<topics_id>/reset", methods=['GET'])
+@app.route("/api/topics/<topics_id>/reset", methods=['PUT'])
 @flask_login.login_required
 @api_error_handler
 def topic_reset(topics_id):

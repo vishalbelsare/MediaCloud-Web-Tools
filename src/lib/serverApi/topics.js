@@ -352,5 +352,5 @@ export function topicTopOrgs(topicId, params) {
 }
 
 export function resetTopic(topicId) {
-  return createApiPromise(`/api/topics/${topicId}/reset`);
+  return createPostingApiPromise(`/api/topics/${topicId}/reset`, {}, 'put');
 }
