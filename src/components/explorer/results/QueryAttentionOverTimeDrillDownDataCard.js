@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import DataCard from '../../common/DataCard';
-import StoryTable from '../../common/StoryTable';
+import StorySentencePreview from '../../common/StorySentencePreview';
 import OrderedWordCloud from '../../vis/OrderedWordCloud';
 
 const localMessages = {
@@ -24,7 +24,7 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
         <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
-          <StoryTable stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
+          <StorySentencePreview stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
         </Col>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>

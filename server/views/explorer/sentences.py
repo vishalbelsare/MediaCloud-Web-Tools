@@ -27,6 +27,15 @@ def api_explorer_sentences_count():
     # make sure we return the query and the id passed in..
     return jsonify(sentence_count_result)
 
+@app.route('/api/explorer/sentences/list', methods=['GET'])
+@flask_login.login_required
+@api_error_handler
+def api_explorer_sentences_list():
+    solr_query = parse_query_with_keywords(request.args)
+    results = mc.sentenceList(solr_query=solr_query, rows=10)
+    sentences = results['response']['docs']
+    return jsonify(sentences)
+
 
 @app.route('/api/explorer/demo/sentences/count', methods=['GET'])
 # handles search id query or keyword query

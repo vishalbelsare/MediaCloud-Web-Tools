@@ -129,7 +129,7 @@ export function fetchQuerySampleStories(params) {
 
 export function fetchQueryPerDateSampleStories(params) {
   const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
-  return createApiPromise('/api/explorer/stories/sample', acceptedParams);
+  return createApiPromise('/api/explorer/sentences/list', acceptedParams);
 }
 
 export function fetchQueryStoryCount(params) {
