@@ -183,7 +183,7 @@ const mapStateToProps = state => ({
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
   words: state.explorer.topWordsPerDateRange.list,
-  stories: state.explorer.storiesPerDateRange,
+  stories: state.explorer.storiesPerDateRange.results,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
