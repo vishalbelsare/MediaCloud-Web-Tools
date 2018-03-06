@@ -2,9 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Popover from 'material-ui/Popover';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import Link from 'react-router/lib/Link';
 import { NotificationsButton } from '../IconButton';
 import messages from '../../../resources/messages';
-import RecentNewsMenuItem from './RecentNewsMenuItem';
+import RecentNewsItem from './RecentNewsItem';
+
+const localMessages = {
+  releaseNotes: { id: 'recentNewsMenu.releaseNotes', defaultMessage: 'Read More Release Notes' },
+};
 
 class RecentNewsMenu extends React.Component {
 
@@ -43,7 +48,10 @@ class RecentNewsMenu extends React.Component {
           <div className="recent-news-menu-content">
             <h3> <FormattedMessage {...messages.recentNews} /></h3>
             <div className="recent-news-menu-items">
-              {newsItems.map(item => <RecentNewsMenuItem item={item} />)}
+              {newsItems.map(item => <RecentNewsItem item={item} />)}
+            </div>
+            <div className="recent-news-menu-link">
+              <Link to="recent-news"><FormattedMessage {...localMessages.releaseNotes} /></Link>
             </div>
           </div>
         </Popover>
