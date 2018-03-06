@@ -232,6 +232,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
     handleSave: (values, topicInfo) => dispatchProps.reallyHandleSave(values, topicInfo, stateProps.filters),
     handleResetAndSave: (values, topicInfo) => {
+      // TODO- I think we want to test the return val for resetTopic...
       dispatchProps.handleResetTopic(values, topicInfo, stateProps.filters)
         .then(() => dispatchProps.reallyHandleSave(values, topicInfo, stateProps.filters));
     },
