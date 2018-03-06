@@ -91,7 +91,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     window.location = url;
   }
   render() {
-    const { results, queries, words, stories } = this.props;
+    const { results, queries, words, stories, handleExtraContent } = this.props;
     const { formatMessage } = this.props.intl;
     // stich together bubble chart data
 
@@ -107,6 +107,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
       } else {
         drillDown = <LoadingSpinner />;
       }
+      handleExtraContent(drillDown);
     }
 
     // stich together line chart data
@@ -150,7 +151,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
             )}
           </ActionMenu>
         </div>
-        {drillDown}
       </div>
     );
   }
@@ -175,6 +175,7 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
+  handleExtraContent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

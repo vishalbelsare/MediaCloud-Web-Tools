@@ -24,7 +24,7 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
         <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
-          <StoryTable stories={stories.length > 0 ? Object.values(stories) : []} />
+          <StoryTable stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
         </Col>
         <Col lg={6}>
           <h3><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>
