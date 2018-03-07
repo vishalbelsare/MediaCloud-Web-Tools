@@ -9,7 +9,7 @@ const messages = {
   sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
   topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topics' },
   topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
-  toolsAppName: { id: 'app.tools.name', defaultMessage: 'Support' },
+  toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Support for MediaCloud, including FAQs, tools and how to use them' },
   explorerToolName: { id: 'app.explorer.name', defaultMessage: 'Explorer' },
   explorerToolDescription: { id: 'app.explorer.description', defaultMessage: 'Get a quick overview of how your topic of interest is covered by digital news media' },

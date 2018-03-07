@@ -8,6 +8,7 @@ import LoggedInQueryContainer from '../components/explorer/builder/LoggedInQuery
 import ExplorerApp from '../components/explorer/ExplorerApp';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
+import systemRoutes from './systemRoutes';
 
 const explorerRoutes = (
   <Route path="/" component={ExplorerApp}>
@@ -26,6 +27,8 @@ const explorerRoutes = (
     </Route>
 
     {userRoutes}
+    {systemRoutes}
+
   </Route>
 );
 
