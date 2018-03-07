@@ -16,7 +16,7 @@ const ReleaseNotes = props => (
         </Col>
       </Row>
     </div>
-    {props.release.notes.map(item => <RecentNewsItem item={item} includeDetails />)}
+    {props.release.notes.map((item, idx) => <RecentNewsItem item={item} key={`item${idx}`} />)}
   </div>
 );
 

@@ -16,7 +16,7 @@ const RecentNews = props => (
           <h1><FormattedMessage {...localMessages.releaseNotes} /></h1>
         </Col>
       </Row>
-      {props.recentNews.releases.map(release => <ReleaseNotes release={release} />)}
+      {props.recentNews.releases.map(release => <ReleaseNotes release={release} key={release.version} />)}
     </Grid>
   </div>
 );

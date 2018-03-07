@@ -26,7 +26,6 @@ const RecentNewsItem = props => (
 RecentNewsItem.propTypes = {
   // from parent
   item: PropTypes.object,
-  includeDetails: PropTypes.boolean,
 };
 
 export default

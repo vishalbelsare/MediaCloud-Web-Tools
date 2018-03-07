@@ -48,10 +48,10 @@ class RecentNewsMenu extends React.Component {
           <div className="recent-news-menu-content">
             <h3> <FormattedMessage {...messages.recentNews} /></h3>
             <div className="recent-news-menu-items">
-              {newsItems.map(item => <RecentNewsMenuItem item={item} />)}
+              {newsItems.map((item, idx) => <RecentNewsMenuItem item={item} key={`item${idx}`} />)}
             </div>
             <div className="recent-news-menu-link">
-              <Link to="recent-news"><FormattedMessage {...localMessages.releaseNotes} /></Link>
+              <Link to="recent-news" onClick={this.handleRequestClose}><FormattedMessage {...localMessages.releaseNotes} /></Link>
             </div>
           </div>
         </Popover>
