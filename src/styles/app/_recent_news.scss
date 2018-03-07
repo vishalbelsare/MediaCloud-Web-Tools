@@ -16,6 +16,13 @@
 
   .recent-news-menu-items {
     border-bottom: 1px solid $material-grey200;
+    padding: 8px 0px;
+
+    .recent-news-menu-item {
+      padding: 8px;
+      font-size: 14px;
+    }
+
   }
 
   .recent-news-menu-link {
@@ -31,7 +38,7 @@
 
 }
 
-.recent-news-menu-item {
+.recent-news-item {
   padding: 8px;
   font-size: 16px;
 }
@@ -85,6 +92,10 @@
       padding-top: 10px;
       font-size: 14px;
     }
+  }
+
+  .news-type {
+    float: right;
   }
 
 }
