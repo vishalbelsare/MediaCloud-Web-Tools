@@ -19,6 +19,7 @@ import EditFocusContainer from '../components/topic/snapshots/foci/EditFocusCont
 import ManageFocalSetsContainer from '../components/topic/snapshots/foci/ManageFocalSetsContainer';
 import { requireAuth } from './routes';
 import userRoutes from './userRoutes';
+import systemRoutes from './systemRoutes';
 import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
@@ -30,7 +31,6 @@ import SnapshotBuilder from '../components/topic/snapshots/SnapshotBuilder';
 import SnapshotGenerate from '../components/topic/snapshots/SnapshotGenerate';
 import ManageTimespansContainer from '../components/topic/snapshots/timespans/ManageTimespansContainer';
 import InfluentialWordsContainer from '../components/topic/words/InfluentialWordsContainer';
-import PageNotFound from '../components/PageNotFound';
 import TopicStatusDashboardContainer from '../components/topic/list/TopicStatusDashboardContainer';
 
 const topicRoutes = (
@@ -82,8 +82,7 @@ const topicRoutes = (
     </Route>
 
     {userRoutes}
-
-    <Route path="*" component={PageNotFound} />
+    {systemRoutes}
 
   </Route>
 

@@ -62,6 +62,11 @@ export const FETCH_QUERY_SAMPLE_STORIES = 'FETCH_QUERY_SAMPLE_STORIES';
 export const fetchQuerySampleStories = createAsyncAction(FETCH_QUERY_SAMPLE_STORIES, api.fetchQuerySampleStories, params => params);
 export const fetchDemoQuerySampleStories = createAsyncAction(FETCH_QUERY_SAMPLE_STORIES, api.fetchDemoQuerySampleStories, params => params);
 
+export const FETCH_QUERY_PER_DATE_SAMPLE_STORIES = 'FETCH_QUERY_PER_DATE_SAMPLE_STORIES';
+export const fetchQueryPerDateSampleStories = createAsyncAction(FETCH_QUERY_PER_DATE_SAMPLE_STORIES, api.fetchQueryPerDateSampleStories, params => params);
+export const fetchDemoQueryPerDateSampleStories = createAsyncAction(FETCH_QUERY_PER_DATE_SAMPLE_STORIES, api.fetchDemoQueryPerDateSampleStories, params => params);
+
+
 export const FETCH_QUERY_STORY_COUNT = 'FETCH_QUERY_STORY_COUNT';
 export const fetchQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchQueryStoryCount, params => params);
 export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUNT, api.fetchDemoQueryStoryCount, params => params);
@@ -69,6 +74,16 @@ export const fetchDemoQueryStoryCount = createAsyncAction(FETCH_QUERY_STORY_COUN
 export const FETCH_QUERY_TOP_WORDS = 'FETCH_QUERY_TOP_WORDS';
 export const fetchQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchQueryTopWords, params => params);
 export const fetchDemoQueryTopWords = createAsyncAction(FETCH_QUERY_TOP_WORDS, api.fetchDemoQueryTopWords, params => params);
+
+export const FETCH_QUERY_PER_DATE_TOP_WORDS = 'FETCH_QUERY_PER_DATE_TOP_WORDS';
+export const fetchQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);
+export const fetchDemoQueryPerDateTopWords = createAsyncAction(FETCH_QUERY_PER_DATE_TOP_WORDS, api.fetchQueryPerDateTopWords, params => params);
+
+export const RESET_QUERY_PER_DATE_SAMPLE_STORIES = 'RESET_QUERY_PER_DATE_SAMPLE_STORIES';
+export const resetQueriesPerDateSampleStories = createAction(RESET_QUERY_PER_DATE_SAMPLE_STORIES);
+
+export const RESET_QUERY_PER_DATE_TOP_WORDS = 'RESET_QUERY_PER_DATE_TOP_WORDS';
+export const resetQueriesPerDateTopWords = createAction(RESET_QUERY_PER_DATE_TOP_WORDS);
 
 export const FETCH_QUERY_TOP_WORDS_COMPARISON = 'FETCH_QUERY_TOP_WORDS_COMPARISON';
 export const fetchQueryTopWordsComparison = createAsyncAction(FETCH_QUERY_TOP_WORDS_COMPARISON, api.fetchQueryTopWordsComparison, params => params);

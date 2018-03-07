@@ -13,9 +13,13 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
     class SummarizedVisualization extends React.Component {
       state = {
         showingDetails: false,
+        extraContent: null,
       };
       toggleShowingDetails = () => {
         this.setState({ showingDetails: !this.state.showingDetails });
+      }
+      handleExtraContent = (extraContent) => {
+        this.setState({ extraContent });
       }
       render() {
         let detailsContent;
@@ -63,10 +67,11 @@ function composeSummarizedVisualization(titleMesage, introMessage, detailedMesas
               <Col lg={1} />
               <Col lg={7}>
                 <div className="content">
-                  <ChildComponent {...this.props} showingDetails={this.state.showingDetails} />
+                  <ChildComponent {...this.props} showingDetails={this.state.showingDetails} handleExtraContent={this.handleExtraContent} />
                 </div>
               </Col>
             </Row>
+            {this.state.extraContent}
           </div>
         );
       }

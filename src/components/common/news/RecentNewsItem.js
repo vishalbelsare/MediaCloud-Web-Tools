@@ -1,14 +1,25 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { Row, Col } from 'react-flexbox-grid/lib';
+import messages from '../../../resources/messages';
 
 const RecentNewsItem = props => (
   <div className="recent-news-item">
-    <span className={`news-type news-${props.item.type.toLowerCase()}`}>{props.item.type}</span>
-    {props.item.note}
-    {props.includeDetails && (
-      <span className="news-details">{props.item.details}</span>
-    )}
+    <Row>
+      <Col lg={1}>
+        <span className={`news-type news-${props.item.type.toLowerCase()}`}>{props.item.type}</span>
+      </Col>
+      <Col lg={8}>
+        {props.item.note}
+        <small>{props.item.details}</small>
+      </Col>
+      <Col lg={1}>
+        <span className="item-app-list">
+          {props.item.apps.map(app => <span key={app}><FormattedMessage {...messages[`${app}ToolName`]} /> </span>)}
+        </span>
+      </Col>
+    </Row>
   </div>
 );
 

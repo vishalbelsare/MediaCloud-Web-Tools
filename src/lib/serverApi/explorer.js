@@ -18,6 +18,16 @@ export function fetchDemoQueryTopWords(params) {
   return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
 }
 
+export function fetchQueryPerDateTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/words/count', acceptedParams);
+}
+
+export function fetchDemoQueryPerDateTopWords(params) {
+  const acceptedParams = acceptParams(params, ['index', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/words/count', acceptedParams);
+}
+
 // top words is not like the other widgets. Will either have a search id, or will have comparedQueries
 export function fetchDemoQueryTopWordsComparison(queryA, queryB) {
   let acceptedParamsA = null;
@@ -71,6 +81,11 @@ export function fetchDemoQuerySampleStories(params) {
   return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
 }
 
+export function fetchDemoQueryPerDateSampleStories(params) {
+  const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
+  return createApiPromise('/api/explorer/demo/stories/sample', acceptedParams);
+}
+
 export function fetchDemoQueryStoryCount(params) {
   const acceptedParams = acceptParams(params, ['index', 'search_id', 'query_id', 'q']);
   return createApiPromise('/api/explorer/demo/story/count', acceptedParams);
@@ -110,6 +125,11 @@ export function fetchQuerySentenceCounts(params) {
 export function fetchQuerySampleStories(params) {
   const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
   return createApiPromise('/api/explorer/stories/sample', acceptedParams);
+}
+
+export function fetchQueryPerDateSampleStories(params) {
+  const acceptedParams = acceptParams(params, ['index', 'q', 'start_date', 'end_date', 'sources', 'collections']);
+  return createApiPromise('/api/explorer/sentences/list', acceptedParams);
 }
 
 export function fetchQueryStoryCount(params) {
