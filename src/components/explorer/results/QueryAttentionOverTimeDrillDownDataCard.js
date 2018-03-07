@@ -18,23 +18,20 @@ const localMessages = {
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
   const { stories, words, info } = props;
   const date = info.start_date;
-  let titleStyle = '';
-  if (info.color) {
-    titleStyle = { color: '#ff00ff' };
-  } else {
-    titleStyle = { color: '#0000ff' };
-  }
+  const color = info.color;
+  const hexToRGBArray = clr => clr.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
+  const rgbColor = hexToRGBArray(color);
   return (
     <DataCard>
       <Row>
         <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
         <Col lg={6}>
-          <h3 style={{ titleStyle }} ><FormattedMessage {...localMessages.sampleStories} values={{ date }} style={{ titleStyle }} /></h3>
+          <h3 style={{ color }} ><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
           <StorySentencePreview stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
         </Col>
         <Col lg={6}>
-          <h3><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>
-          <OrderedWordCloud words={words} />
+          <h3 style={{ color }} ><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>
+          <OrderedWordCloud words={words} textColor={`rgb(${rgbColor[0]}, ${rgbColor[1]}, ${rgbColor[2]})`} />
         </Col>
       </Row>
     </DataCard>

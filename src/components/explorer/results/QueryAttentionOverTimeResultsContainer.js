@@ -72,7 +72,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     const clickedQuery = {
       q,
       start_date: solrFormat(date0),
-      color: '#fff000',
+      color: origin.series.color,
     };
     if (!dayGap) {
       clickedQuery.end_date = solrFormat(oneWeekLater(date0), true);

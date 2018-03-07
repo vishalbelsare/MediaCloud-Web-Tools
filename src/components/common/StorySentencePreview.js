@@ -26,7 +26,7 @@ const StorySentencePreview = (props) => {
         }
         return (
           <div className="story-sentence-preview-item">
-            <h3>{`${story.medium_name} - ${dateToShow}`}<a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a></h3>
+            <h3>{`${story.medium_name} - ${dateToShow} `}<a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a></h3>
             <p>{`"...${story.sentence}..."`}</p>
           </div>
         );
