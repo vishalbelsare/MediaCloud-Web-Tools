@@ -251,7 +251,11 @@ export function createIndexedAsyncReducer(handlers) {
       const updatedResults = [...state.results];
       const updatedFetchStatuses = [...state.fetchStatuses];
       updatedFetchStatuses[index] = fetchConstants.FETCH_SUCCEEDED;
-      updatedResults[index] = payload;
+      if ('handleSuccess' in handlers) {
+        updatedResults[index] = handlers.handleSuccess(payload, state, args, index);
+      } else {
+        updatedResults[index] = payload;
+      }
       return Object.assign({}, state, {
         fetchStatus: fetchConstants.combineFetchStatuses(updatedFetchStatuses),
         fetchStatuses: updatedFetchStatuses,
@@ -268,11 +272,6 @@ export function createIndexedAsyncReducer(handlers) {
       });
     },
   };
-  Object.keys(reducers).forEach((key) => {   // override defaults with custom methods passed in
-    if (key in handlers) {
-      reducers[key] = handlers[key];
-    }
-  });
   // set up a lookup table for any other things the user passed in
   const extraActionLookup = {};
   Object.keys(handlers).forEach((key) => {
