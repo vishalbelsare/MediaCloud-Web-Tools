@@ -6,7 +6,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { SearchButton } from '../../common/IconButton';
-import { FETCH_ONGOING } from '../../../lib/fetchConstants';
+import { FETCH_ONGOING, FETCH_SUCCEEDED } from '../../../lib/fetchConstants';
 import { fetchSourceSearch, fetchCollectionSearch, resetSourceSearch, resetCollectionSearch } from '../../../actions/sourceActions';
 
 const MAX_SUGGESTION_CHARS = 70;
@@ -79,15 +79,16 @@ class SourceSearchContainer extends React.Component {
   }
 
   resetIfRequested = () => {
-    const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected, disableStaticCollections } = this.props;
+    const { sourceResults, collectionResults, searchSources, searchCollections, onAdvancedSearchSelected,
+      disableStaticCollections } = this.props;
     const { formatMessage } = this.props.intl;
     let results = [];
-
+    // if (!fetchesSucceeded) return [];  // can't wait for both, because collections results are too slow :-(
+    if (searchSources || searchSources === undefined) { // sources always return first, so so them first so list isn't jumpy
+      results = results.concat(sourceResults.slice(0, this.getMaxSourcesToShow()));
+    }
     if (searchCollections || searchCollections === undefined) {
       results = results.concat(collectionResults.slice(0, this.getMaxCollectionsToShow()));
-    }
-    if (searchSources || searchSources === undefined) {
-      results = results.concat(sourceResults.slice(0, this.getMaxSourcesToShow()));
     }
     let resultsAsComponents = results.map((item) => {
       let menuItemValue = (
@@ -146,11 +147,10 @@ class SourceSearchContainer extends React.Component {
   }
 
   render() {
-    const { sourceFetchStatus, collectionFetchStatus } = this.props;
+    const { fetchesOngoing } = this.props;
     const { formatMessage } = this.props.intl;
     const resultsAsComponents = this.resetIfRequested();
-    const isFetching = (sourceFetchStatus === FETCH_ONGOING) || (collectionFetchStatus === FETCH_ONGOING);
-    const fetchingStatus = (isFetching) ? <LoadingSpinner size={15} /> : null;
+    const fetchingStatus = (fetchesOngoing) ? <LoadingSpinner size={15} /> : null;
     return (
       <div className="async-search source-search">
         <SearchButton />
@@ -185,8 +185,8 @@ SourceSearchContainer.propTypes = {
   maxSources: PropTypes.number,
   maxCollections: PropTypes.number,
   // from state
-  sourceFetchStatus: PropTypes.array.isRequired,
-  collectionFetchStatus: PropTypes.array.isRequired,
+  fetchesOngoing: PropTypes.bool.isRequired,
+  fetchesSucceeded: PropTypes.bool.isRequired,
   sourceResults: PropTypes.array.isRequired,
   collectionResults: PropTypes.array.isRequired,
   // from dispatch
@@ -195,8 +195,10 @@ SourceSearchContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  sourceFetchStatus: state.sources.search.simple.sources.fetchStatus,
-  collectionFetchStatus: state.sources.search.simple.collections.fetchStatus,
+  fetchesOngoing: (state.sources.search.simple.sources.fetchStatus === FETCH_ONGOING) ||
+              (state.sources.search.simple.collections.fetchStatus === FETCH_ONGOING),
+  fetchesSucceeded: (state.sources.search.simple.sources.fetchStatus === FETCH_SUCCEEDED) &&
+              (state.sources.search.simple.collections.fetchStatus === FETCH_SUCCEEDED),
   sourceResults: state.sources.search.simple.sources.list,
   collectionResults: state.sources.search.simple.collections.list,
 });
