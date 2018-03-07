@@ -13,11 +13,13 @@ import RecentNewsMenuContainer from '../news/RecentNewsMenuContainer';
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
 export const SOURCES_URL = 'https://sources.mediacloud.org/';
-export const BLOG_URL = 'https://mediacloud.org/news/';
-export const TOOLS_URL = 'https://mediacloud.org/tools/';
+const BLOG_URL = 'https://mediacloud.org/news/';
+const SUPPORT_URL = 'https://mediacloud.org/tools/';
+const ABOUT_URL = 'https://mediacloud.org/about/';
 
 const localMessages = {
-  goHome: { id: 'sources.menu.title', defaultMessage: 'Home' },
+  goHome: { id: 'nav.home', defaultMessage: 'Home' },
+  support: { id: 'nav.support', defaultMessage: 'Support' },
 };
 
 const goToHome = () => {
@@ -30,7 +32,7 @@ const NavToolbar = (props) => {
     <div id="nav-toolbar">
       <Grid>
         <Row>
-          <Col lg={11}>
+          <Col lg={6}>
             <a href={`#${formatMessage(localMessages.goHome)}`} onClick={goToHome}>
               <img
                 className="app-logo"
@@ -50,6 +52,21 @@ const NavToolbar = (props) => {
               <li className="sources">
                 <SourcesAppMenu />
               </li>
+            </ul>
+          </Col>
+          <Col lg={5}>
+            <ul className="right">
+              <li className="recent-changes">
+                <RecentNewsMenuContainer />
+              </li>
+              <li className="support">
+                <a
+                  href={SUPPORT_URL}
+                  title={formatMessage(messages.toolsAppDescription)}
+                >
+                  {formatMessage(localMessages.support).toUpperCase()}
+                </a>
+              </li>
               <li className="blog">
                 <a
                   href={BLOG_URL}
@@ -58,16 +75,10 @@ const NavToolbar = (props) => {
                   {formatMessage(messages.blogToolName).toUpperCase()}
                 </a>
               </li>
-              <li className="tools">
-                <a
-                  href={TOOLS_URL}
-                  title={formatMessage(messages.toolsAppDescription)}
-                >
-                  {formatMessage(messages.toolsAppName).toUpperCase()}
+              <li className="about">
+                <a href={ABOUT_URL}>
+                  {formatMessage(messages.menuAbout).toUpperCase()}
                 </a>
-              </li>
-              <li className="recent-changes">
-                <RecentNewsMenuContainer />
               </li>
             </ul>
           </Col>

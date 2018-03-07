@@ -10,17 +10,20 @@
     margin: 0;
     padding: 0;
 
-    li.tools, li.blog, li.recent-changes {
+    &.right {
       float: right;
+      li {
+        margin-right: 20px;
+      }
+    }
+
+    li.support, li.blog, li.recent-changes {
       color: $white;
       margin-top: 10px;
     }
-    li.tools {
-      margin-right: 30px;
-    }
-    li.blog {
+    li.about {
       border-right: 1px solid white;
-      padding-right: 40px;
+      padding-right: 20px;
     }
     li.recent-changes {
       margin-top: 15px;
