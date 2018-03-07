@@ -3,17 +3,15 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, setSentenceDataPoint } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
 import { DownloadButton } from '../../common/IconButton';
-import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts, oneWeekLater, solrFormat } from '../../../lib/dateUtil';
 import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
-import LoadingSpinner from '../../common/LoadingSpinner';
 
 const localMessages = {
   overallSeries: { id: 'explorer.attention.series.overall', defaultMessage: 'Whole Query' },
@@ -50,11 +48,11 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { results, queries, stories, words } = this.props;
-    return (nextProps.stories !== stories) || (nextProps.words !== words) || queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+    const { results, queries } = this.props;
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
-    const { fetchStories, fetchWords } = this.props;
+    const { selectDataPoint } = this.props;
     const q = origin.series.name;
     const dayGap = false; // origin.series.options.dateRangeSpread;
     // date calculations for span/range
@@ -66,16 +64,14 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     if (!dayGap) {
       clickedQuery.end_date = solrFormat(oneWeekLater(date0), true);
     }
-    this.setState({ isDrillDownVisible: true, clickedQuery });
-
-    fetchStories(clickedQuery);
-    fetchWords(clickedQuery);
+    this.setState({ clickedQuery });
+    selectDataPoint(clickedQuery);
   }
   downloadCsv = (query) => {
     postToDownloadUrl('/api/explorer/sentences/count.csv', query);
   }
   render() {
-    const { results, queries, words, stories, handleExtraContent } = this.props;
+    const { results, queries } = this.props;
     const { formatMessage } = this.props.intl;
     // stich together bubble chart data
 
@@ -83,16 +79,6 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // we may have more results than queries b/c queries can be deleted but not executed
     // so we have to do the following
     const mergedResultsWithQueryInfo = results.map((r, idx) => Object.assign({}, r, queries[idx]));
-
-    let drillDown = null;
-    if (this.state.isDrillDownVisible) {
-      if (words && words.length > 0 && stories !== undefined) {
-        drillDown = <QueryAttentionOverTimeDrillDownDataCard info={this.state.clickedQuery} words={words} stories={stories} />;
-      } else {
-        drillDown = <LoadingSpinner />;
-      }
-      handleExtraContent(drillDown);
-    }
 
     // stich together line chart data
     let series = [];
@@ -150,24 +136,18 @@ QueryAttentionOverTimeResultsContainer.propTypes = {
   // from dispatch
   fetchData: PropTypes.func.isRequired,
   results: PropTypes.array.isRequired,
-  fetchStories: PropTypes.func.isRequired,
-  fetchWords: PropTypes.func.isRequired,
-  words: PropTypes.array,
-  stories: PropTypes.array,
   daySpread: PropTypes.bool,
   // from mergeProps
   asyncFetch: PropTypes.func.isRequired,
   // from state
   fetchStatus: PropTypes.string.isRequired,
-  handleExtraContent: PropTypes.func.isRequired,
+  selectDataPoint: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   lastSearchTime: state.explorer.lastSearchTime.time,
   fetchStatus: state.explorer.sentenceCount.fetchStatus,
   results: state.explorer.sentenceCount.results,
-  words: state.explorer.topWordsPerDateRange.list,
-  stories: state.explorer.storiesPerDateRange.results,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -201,21 +181,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       });
     }
   },
-  fetchStories: (clickedQuery) => {
-    dispatch(resetQueriesPerDateSampleStories());
-    if (ownProps.isLoggedIn) {
-      dispatch(fetchQueryPerDateSampleStories({ ...clickedQuery }));
-    } else {
-      dispatch(fetchDemoQueryPerDateSampleStories(clickedQuery));
-    }
-  },
-  fetchWords: (clickedQuery) => {
-    dispatch(resetQueriesPerDateTopWords());
-    if (ownProps.isLoggedIn) {
-      dispatch(fetchQueryPerDateTopWords({ ...clickedQuery }));
-    } else {
-      dispatch(fetchDemoQueryPerDateTopWords(clickedQuery));
-    }
+  selectDataPoint: (clickedDataPoint) => {
+    dispatch(setSentenceDataPoint(clickedDataPoint));
   },
 });
 

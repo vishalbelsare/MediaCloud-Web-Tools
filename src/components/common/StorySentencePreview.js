@@ -14,7 +14,7 @@ const StorySentencePreview = (props) => {
   const { formatMessage, formatDate } = props.intl;
   return (
     <div className="story-sentence-preview">
-      {stories.map((story) => {
+      {stories.map((story, idx) => {
         let dateToShow = null;  // need to handle undateable stories
         if (story.publish_date === 'undateable') {
           dateToShow = formatMessage(localMessages.undateable);
@@ -25,7 +25,7 @@ const StorySentencePreview = (props) => {
           }
         }
         return (
-          <div className="story-sentence-preview-item">
+          <div key={idx} className="story-sentence-preview-item">
             <h3>{`${story.medium_name} - ${dateToShow} `}<a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a></h3>
             <p>{`"...${story.sentence}..."`}</p>
           </div>

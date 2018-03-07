@@ -17,10 +17,10 @@ const localMessages = {
 
 const QueryAttentionOverTimeDrillDownDataCard = (props) => {
   const { stories, words, info } = props;
-  const date = info.start_date;
-  const color = info.color;
+  const date = info ? info.start_date : '';
+  const color = info ? info.color : '';
   const hexToRGBArray = clr => clr.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
-  const rgbColor = hexToRGBArray(color);
+  const rgbColor = color ? hexToRGBArray(color) : '#000000';
   return (
     <DataCard>
       <Row>
@@ -40,9 +40,10 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
 
 QueryAttentionOverTimeDrillDownDataCard.propTypes = {
   // from parent
-  stories: PropTypes.object,
+  stories: PropTypes.array,
   words: PropTypes.array,
   info: PropTypes.object,
+  queries: PropTypes.array,
   // from compositional chain
   intl: PropTypes.object.isRequired,
 };

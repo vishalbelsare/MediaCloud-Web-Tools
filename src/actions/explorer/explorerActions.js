@@ -146,3 +146,10 @@ export const FETCH_TOP_THEMES = 'FETCH_TOP_THEMES';
 export const resetThemes = createAction(RESET_THEMES);
 export const fetchTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchQueryTopThemes, params => params);
 export const fetchDemoTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchDemoQueryTopThemes, params => params);
+
+export const SELECT_SENTENCE_DATA_POINT = 'SELECT_SENTENCE_DATA_POINT';
+export const setSentenceDataPoint = createAction(SELECT_SENTENCE_DATA_POINT, params => params);
+
+export const RESET_SENTENCE_DATA_POINT = 'RESET_SENTENCE_DATA_POINT';
+export const resetSentenceDataPoint = createAction(RESET_SENTENCE_DATA_POINT);
+
