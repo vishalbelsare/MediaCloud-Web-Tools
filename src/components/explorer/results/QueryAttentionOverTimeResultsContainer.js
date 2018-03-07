@@ -3,7 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import MenuItem from 'material-ui/MenuItem';
-import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, setSentenceDataPoint } from '../../../actions/explorerActions';
+import { fetchQuerySentenceCounts, fetchDemoQuerySentenceCounts, resetSentenceCounts, setSentenceDataPoint, resetSentenceDataPoint } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import AttentionOverTimeChart from '../../vis/AttentionOverTimeChart';
@@ -182,6 +182,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
   },
   selectDataPoint: (clickedDataPoint) => {
+    dispatch(resetSentenceDataPoint());
     dispatch(setSentenceDataPoint(clickedDataPoint));
   },
 });

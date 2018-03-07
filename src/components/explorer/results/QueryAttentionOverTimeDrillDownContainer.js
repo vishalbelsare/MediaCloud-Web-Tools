@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories, resetSentenceDataPoint } from '../../../actions/explorerActions';
+import { fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPerDateSampleStories, fetchDemoQueryPerDateSampleStories, resetQueriesPerDateTopWords, resetQueriesPerDateSampleStories } from '../../../actions/explorerActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 // import { queryChangedEnoughToUpdate /* postToDownloadUrl */ } from '../../../lib/explorerUtil';
@@ -32,7 +32,8 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     const { words, stories, dataPoint } = this.props;
 
     let drillDown = <br />;
-    if (words && words.length > 0 && stories !== undefined) {
+    // don't bother if datapoint is empty
+    if (dataPoint && words && words.length > 0 && stories !== undefined) {
       drillDown = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} />;
     }
 
@@ -72,18 +73,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     // this should trigger when the user clicks a data point on the attention over time chart
     dispatch(resetQueriesPerDateSampleStories());
     dispatch(resetQueriesPerDateTopWords());
-    dispatch(resetSentenceDataPoint())
-      .then(() => {
-        if (clickedQuery && clickedQuery !== undefined) {
-          if (ownProps.isLoggedIn) {
-            dispatch(fetchQueryPerDateSampleStories({ ...clickedQuery }));
-            dispatch(fetchQueryPerDateTopWords({ ...clickedQuery }));
-          } else {
-            dispatch(fetchDemoQueryPerDateTopWords(clickedQuery));
-            dispatch(fetchDemoQueryPerDateSampleStories(clickedQuery));
-          }
-        }
-      });
+    if (clickedQuery && clickedQuery !== undefined) {
+      if (ownProps.isLoggedIn) {
+        dispatch(fetchQueryPerDateSampleStories({ ...clickedQuery }));
+        dispatch(fetchQueryPerDateTopWords({ ...clickedQuery }));
+      } else {
+        dispatch(fetchDemoQueryPerDateTopWords(clickedQuery));
+        dispatch(fetchDemoQueryPerDateSampleStories(clickedQuery));
+      }
+    }
   },
 });
 
