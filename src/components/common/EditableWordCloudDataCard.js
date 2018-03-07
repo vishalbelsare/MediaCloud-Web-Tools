@@ -78,19 +78,28 @@ class EditableWordCloudDataCard extends React.Component {
   };
 
   downloadCsv = (ngramSize) => {
-    const { downloadUrl } = this.props;
-    let url = downloadUrl;
-    if (ngramSize) {
-      url = `${url}&ngram_size=${ngramSize}`;
+    const { downloadUrl, onDownload } = this.props;
+    if (onDownload) {
+      onDownload(ngramSize);
+    } else {
+      let url = downloadUrl;
+      // be smart about tacking on hte ngram size requested automatically here
+      if (ngramSize) {
+        if (url.indexOf('?') !== -1) {
+          url = `${url}&ngram_size=${ngramSize}`;
+        } else {
+          url = `${url}?ngram_size=${ngramSize}`;
+        }
+      }
+      window.location = url;
     }
-    window.location = url;
   };
 
   buildActionMenu = (uniqueDomId) => {
-    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath } = this.props;
+    const { includeTopicWord2Vec, hideGoogleWord2Vec, actionMenuHeaderText, actionsAsLinksUnderneath, svgDownloadPrefix } = this.props;
     const { formatMessage } = this.props.intl;
     let topicWord2VecMenuItem;
-    if (includeTopicWord2Vec) {
+    if (includeTopicWord2Vec === true) {
       topicWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
@@ -101,7 +110,7 @@ class EditableWordCloudDataCard extends React.Component {
       );
     }
     let googleWord2VecMenuItem;
-    if (hideGoogleWord2Vec === false) {
+    if (hideGoogleWord2Vec !== true) {
       googleWord2VecMenuItem = (
         <MenuItem
           className="action-icon-menu-item"
@@ -167,12 +176,15 @@ class EditableWordCloudDataCard extends React.Component {
           rightIcon={<DownloadButton />}
           disabled={this.state.editing} // can't download until done editing
           onTouchTap={() => {
+            let domIdOrElement;
             if (this.state.ordered) { // tricky to get the correct element to serialize
-              downloadSvg(uniqueDomId);
+              domIdOrElement = uniqueDomId;
             } else {
               const svgChild = document.getElementById(uniqueDomId);
-              downloadSvg(svgChild.firstChild);
+              domIdOrElement = svgChild.firstChild;
             }
+            const filename = svgDownloadPrefix || 'word-cloud';
+            downloadSvg(filename, domIdOrElement);
           }}
         />
       </span>
@@ -348,6 +360,8 @@ EditableWordCloudDataCard.propTypes = {
   title: PropTypes.string,     // rendered as an H2 inside the DataCard
   words: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,          // used as the base for downloads, ngram_size appended for bigram/trigram download
+  onDownload: PropTypes.func,             // if you want to handle the download request yourself, pass in a function (overrides downloadUrl)
+  svgDownloadPrefix: PropTypes.string,    // for naming the SVG download file
   explore: PropTypes.object,              // show an exlore button and link it to this URL
   helpButton: PropTypes.node,             // pass in a helpButton to render to the right of the H2 title
   subtitleContent: PropTypes.object,      // shows up to the right of the H2 title

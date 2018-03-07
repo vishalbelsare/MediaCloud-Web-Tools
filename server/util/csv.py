@@ -5,12 +5,12 @@ import flask
 logger = logging.getLogger(__name__)
 
 
-def _file_name_timestamp():
-    return datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+def filename_timestamp():
+    return datetime.datetime.now().strftime(u'%Y%m%d%H%M%S')
 
 
 def safe_filename(name):
-    return u"{}_{}.csv".format(name, _file_name_timestamp())
+    return u"{}-{}.csv".format(name, filename_timestamp())
 
 
 def dict2row(keys_to_include, dict_row):
@@ -21,12 +21,12 @@ def dict2row(keys_to_include, dict_row):
             if isinstance(value, (int, long, float)):
                 cleaned_value = str(dict_row[k])
             elif value in ['', None]:
-                cleaned_value = ''
+                cleaned_value = u''
             else:
-                cleaned_value = '"' + value.encode('utf-8').replace('"', '""') + '"'
+                cleaned_value = u'"' + value.replace(u'"', u'""') + u'"'
             attributes.append(cleaned_value)
     except Exception as e:
-        logger.error("Couldn't process a CSV row: " + str(e))
+        logger.error(u"Couldn't process a CSV row: " + str(e))
         logger.exception(e)
         logger.debug(dict_row)
     return attributes
@@ -41,13 +41,13 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
     column_names -- (optional) column names to use, defaults to dict_keys if not specified
     """
     if len(data) == 0:
-        logger.debug("data is empty, must be asking for template")
+        logger.debug(u"data is empty, must be asking for template")
     else:
-        logger.debug("csv.stream_response with "+str(len(data))+" rows of data")
+        logger.debug(u"csv.stream_response with "+str(len(data))+" rows of data")
     if column_names is None:
         column_names = dict_keys
-    logger.debug("  cols: "+' '.join(column_names))
-    logger.debug("  props: "+' '.join(dict_keys))
+    logger.debug(u"  cols: "+' '.join(column_names))
+    logger.debug(u"  props: "+' '.join(dict_keys))
 
     # stream back a csv
     def stream_as_csv(dataset, props, names):
@@ -67,6 +67,7 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
         dict_keys = ','.join(dict_keys) + '\n'
         return flask.Response(dict_keys,
                               mimetype='text/csv; charset=utf-8', headers=headers)
+
 
 def download_media_csv(all_media, file_prefix, what_type_download):
 

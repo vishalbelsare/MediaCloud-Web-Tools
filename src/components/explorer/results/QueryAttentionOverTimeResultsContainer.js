@@ -11,7 +11,7 @@ import { DownloadButton } from '../../common/IconButton';
 import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 import ActionMenu from '../../common/ActionMenu';
 import { cleanDateCounts, oneWeekLater, solrFormat } from '../../../lib/dateUtil';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import LoadingSpinner from '../../common/LoadingSpinner';
 
@@ -51,18 +51,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
   }
   shouldComponentUpdate(nextProps) {
     const { results, queries, stories, words } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      return (
-        ((labelsHaveChanged || colorsHaveChanged))
-        || (results !== nextProps.results)
-        || (nextProps.stories !== stories
-        || nextProps.words !== words)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return (nextProps.stories !== stories) || (nextProps.words !== words) || queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
     const { fetchStories, fetchWords } = this.props;
@@ -83,13 +72,7 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     fetchWords(clickedQuery);
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/sentences/count.csv/${query.searchId}/${query.index}`;
-    } else {
-      url = `/api/explorer/sentences/count.csv/[{"q":"${query.q}"}]/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/sentences/count.csv', query);
   }
   render() {
     const { results, queries, words, stories, handleExtraContent } = this.props;

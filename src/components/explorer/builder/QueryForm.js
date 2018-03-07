@@ -32,8 +32,10 @@ const localMessages = {
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
   startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
+  noMediaSpecified: { id: 'explorer.queryBuilder.warning.noMediaSpecified', defaultMessage: 'Searching all sources - generally not a great idea' },
 };
 
+/*
 const focusQueryInputField = (input) => {
   if (input && input.input !== null && input.input.refs) {
     setTimeout(() => {
@@ -43,12 +45,20 @@ const focusQueryInputField = (input) => {
     }, 100);
   }
 };
+*/
 
 class QueryForm extends React.Component {
+  state = { // do not focus on primary textfield if we have a dialog open
+    childDialogOpen: false,
+  }
+
   componentDidMount() {
     this.queryRef.input.refs.input.focus();
   }
 
+  setQueryFormChildDialogOpen = () => {
+    this.setState({ childDialogOpen: !this.state.childDialogOpen });
+  }
   // required to be able to reference the Field/TextField component in order to set focus
   preserveRef = ref => (this.queryRef = ref);
 
@@ -67,18 +77,26 @@ class QueryForm extends React.Component {
       ...selected.sources,
       ...selected.collections,
     ];
+    /*
     if (selected === null) return 'Error';
     else if (this.queryRef) { // set the focus to query field ref when a query is selected
-      if (selected.q === undefined || selected.q === '*') {
+      if ((selected.q === undefined || selected.q === '*') && !this.state.childDialogOpen) {
         focusQueryInputField(this.queryRef);
       }
     }
+    */
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
     let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
     if (isEditable) {
-      mediaPicker = <MediaPickerDialog initMedia={selected.media ? selected.media : cleanedInitialValues.media} onConfirmSelection={selections => onMediaChange(selections)} />;
+      mediaPicker = (
+        <MediaPickerDialog
+          initMedia={selected.media ? selected.media : cleanedInitialValues.media}
+          onConfirmSelection={selections => onMediaChange(selections)}
+          setQueryFormChildDialogOpen={this.setQueryFormChildDialogOpen}
+        />
+      );
       mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
     }
     if (!selected) { return null; }
@@ -174,6 +192,7 @@ class QueryForm extends React.Component {
                     handleSaveSearch={l => handleSaveSearch(l)}
                     handleDeleteSearch={handleDeleteSearch}
                     submitting={submitting}
+                    setQueryFormChildDialogOpen={this.setQueryFormChildDialogOpen}
                   />
                   <AppButton
                     type="submit"
@@ -230,9 +249,6 @@ function validate(values, props) {
     const errString = formatMessage(localMessages.queryStringError, { name: values.label });
     errors.q = { _error: errString };
   }
-  if (!values.collections || !values.collections.length) {
-    errors.collections = { _error: 'At least one collection must be chosen' };
-  }
   if (!validDate(values.startDate)) {
     errors.startDate = { _error: formatMessage(localMessages.invalidDateWarning) };
   }
@@ -245,11 +261,22 @@ function validate(values, props) {
   return errors;
 }
 
+function warn(values, props) {
+  const { formatMessage } = props.intl;
+  const warnings = {};
+  if ((!values.collections || !values.collections.length) &&
+    (!values.sources || !values.sources.length) &&
+    (!values.media || !values.media.length)) {
+    warnings.media = { _warning: formatMessage(localMessages.noMediaSpecified) };
+  }
+  return warnings;
+}
+
 export default
   injectIntl(
     composeIntlForm(
       composeHelpfulContainer(localMessages.queryHelpTitle, localMessages.queryHelpContent)(
-        reduxForm({ propTypes, validate })(
+        reduxForm({ propTypes, validate, warn })(
           QueryForm
         ),
       ),

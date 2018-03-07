@@ -17,7 +17,7 @@ const PageWrapper = (props) => {
   return (
     <div>
       <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
-        <SourceControlBar>
+        <SourceControlBar showSearch>
           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
             <Link to="collections/create">
               <AddButton />

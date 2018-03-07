@@ -8,13 +8,13 @@ import Snackbar from 'material-ui/Snackbar';
 import intl from 'intl';  // eslint-disable-line
 import intlEn from 'intl/locale-data/jsonp/en.js';  // eslint-disable-line
 import { Row } from 'react-flexbox-grid/lib';
-import AppHeader from './common/header/AppHeader';
+import NavToolbar from './common/header/NavToolbar';
 import messages from '../resources/messages';
 import { getVersion } from '../config';
-import { getBrandColors } from '../styles/colors';
 import { updateFeedback } from '../actions/appActions';
 import { ErrorNotice } from './common/Notice';
 import { assetUrl } from '../lib/assetUtil';
+import AppNoticesContainer from './common/header/AppNoticesContainer';
 
 const localMessages = {
   supportOptions: { id: 'app.supportOptions', defaultMessage: 'Need help? Join our <a href="https://groups.io/g/mediacloud">discussion group</a><br />or email <a href="mailto:support@mediacloud.org">support@mediacloud.org</a>.' },
@@ -22,9 +22,8 @@ const localMessages = {
 };
 
 const AppContainer = (props) => {
-  const { children, feedback, subHeader, handleSnackBarRequestClose, name, title, description, drawer, showLoginButton } = props;
+  const { children, feedback, handleSnackBarRequestClose, name } = props;
   const { formatMessage } = props.intl;
-  const brandColors = getBrandColors();
 
   let content = children;
   if (document.appConfig.online === false) {
@@ -46,16 +45,9 @@ const AppContainer = (props) => {
   return (
     <div className={`app-contiainer app-${name}`}>
       <Title render={formatMessage(messages.suiteName)} />
+      <AppNoticesContainer />
       <header>
-        <AppHeader
-          name={title}
-          description={description}
-          backgroundColor={brandColors.dark}
-          lightColor={brandColors.light}
-          showLoginButton={showLoginButton}
-          drawer={drawer}
-          subHeader={subHeader}
-        />
+        <NavToolbar />
       </header>
       <div id="content">
         {content}
@@ -99,9 +91,7 @@ AppContainer.propTypes = {
   name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  drawer: PropTypes.node,
   showLoginButton: PropTypes.bool,
-  subHeader: PropTypes.node,
 };
 
 AppContainer.contextTypes = {

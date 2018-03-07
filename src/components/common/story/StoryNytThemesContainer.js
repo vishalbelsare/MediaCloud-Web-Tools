@@ -13,7 +13,6 @@ import { DownloadButton } from '../../common/IconButton';
 const localMessages = {
   title: { id: 'story.themes.title', defaultMessage: 'Themes' },
   helpTitle: { id: 'story.themes.help.title', defaultMessage: 'About Themes' },
-  helpIntro: { id: 'story.themes.help.text', defaultMessage: '<p>We run all our english stories through set of trained models to predict what themes they focus on.  These models are trained on the <a href="https://catalog.ldc.upenn.edu/ldc2008t19">New York Times annotated corpus</a>.  We analyzed it to find the top 600 descriptors used, and score each story against them.  Any descriptors that score above 0.2 probability are counted as themes this story focuses on.</p>' },
   noThemes: { id: 'story.themes.none', defaultMessage: 'None' },
   notProcessed: { id: 'story.themes.notProcessed', defaultMessage: 'This story has not been processed by our theme analyzer.' },
   themeName: { id: 'story.theme.name', defaultMessage: 'Theme' },
@@ -152,7 +151,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      composeHelpfulContainer(localMessages.helpTitle, localMessages.helpIntro)(
+      composeHelpfulContainer(localMessages.helpTitle, messages.nytThemeHelpDetails)(
         composeAsyncContainer(
           StoryNytThemesContainer
         )

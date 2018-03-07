@@ -3,6 +3,7 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import slugify from 'slugify';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import { fetchWordWords } from '../../../actions/topicActions';
@@ -10,6 +11,7 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   helpTitle: { id: 'word.words.help.title', defaultMessage: 'About Word Top Words' },
@@ -29,7 +31,7 @@ class WordWordsContainer extends React.Component {
   }
 
   render() {
-    const { topicId, filters, words, term, handleWordCloudClick, helpButton } = this.props;
+    const { topicId, filters, words, term, handleWordCloudClick, helpButton, topicName } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words/${term}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
@@ -41,6 +43,7 @@ class WordWordsContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
+        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-${slugify(term)}-words`}
       />
     );
   }
@@ -52,6 +55,7 @@ WordWordsContainer.propTypes = {
   helpButton: PropTypes.node.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   term: PropTypes.string.isRequired,
   stem: PropTypes.string.isRequired,

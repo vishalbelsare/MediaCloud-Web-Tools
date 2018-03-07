@@ -10,6 +10,7 @@ import { fetchTopicTopWords } from '../../../actions/topicActions';
 import messages from '../../../resources/messages';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   descriptionIntro: { id: 'topic.summary.words.help.into',
@@ -26,7 +27,7 @@ class WordsSummaryContainer extends React.Component {
     }
   }
   render() {
-    const { topicId, filters, words, handleWordCloudClick } = this.props;
+    const { topicId, filters, words, handleWordCloudClick, topicName } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/words.csv?${filtersAsUrlParams(filters)}`;
     return (
@@ -38,7 +39,7 @@ class WordsSummaryContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         domId={WORD_CLOUD_DOM_ID}
         width={720}
-        includeTopicWord2Vec
+        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-words`}
       />
     );
   }
@@ -49,6 +50,7 @@ WordsSummaryContainer.propTypes = {
   intl: PropTypes.object.isRequired,
   // from parent
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,

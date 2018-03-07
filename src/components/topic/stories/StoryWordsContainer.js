@@ -10,7 +10,7 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { filteredLinkTo } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
-
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   helpTitle: { id: 'story.words.help.title', defaultMessage: 'About Story Top Words' },
@@ -31,7 +31,7 @@ class StoryWordsContainer extends React.Component {
   }
 
   render() {
-    const { storiesId, topicId, words, helpButton, handleWordCloudClick, filters } = this.props;
+    const { storiesId, topicId, words, helpButton, handleWordCloudClick, filters, topicName } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/stories/${storiesId}/words.csv`;
     return (
@@ -43,6 +43,7 @@ class StoryWordsContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
+        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-story-${storiesId}-words`}
       />
     );
   }
@@ -55,6 +56,7 @@ StoryWordsContainer.propTypes = {
   // from parent
   storiesId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object,
   // from dispatch
   fetchData: PropTypes.func.isRequired,

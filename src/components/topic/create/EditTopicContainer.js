@@ -3,11 +3,13 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+import { reduxForm } from 'redux-form';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import Dialog from 'material-ui/Dialog';
 import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
+import composeIntlForm from '../../common/IntlForm';
 import messages from '../../../resources/messages';
 import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
@@ -25,8 +27,8 @@ const localMessages = {
   feedback: { id: 'topic.edit.save.feedback', defaultMessage: 'We saved your changes' },
   failed: { id: 'topic.edit.save.failed', defaultMessage: 'Sorry, that didn\'t work!' },
   editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
-  riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Narrowing these query parameters (date range, seed query and/or media) will cause a re-spider - continue at your own risk!' },
-  handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'If you proceed, you could potentially corrupt your topic!' },
+  riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Be Careful' },
+  handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'Narrowing these topic settings (date range, seed query and/or media) requires you to re-spider, but previous stories that matched them will NOT be removed. This means your topic will be a confusing combination of what you have now and what you want to have. Only confirm if you know what you are doing.' },
   // editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
 };
 
@@ -40,15 +42,15 @@ class EditTopicContainer extends React.Component {
   handleConfirmSave = () => {
     const { formData, topicInfo, handleSave } = this.props;
     this.setState({ editConfirmationOpen: false });
-    handleSave(formData.values, topicInfo);
+    return handleSave(formData.values, topicInfo);
   };
   handleRequestSave = (values) => {
     const { topicInfo, handleSave } = this.props;
     if (this.riskModifiedTopicSpidering(values)) {
       this.setState({ editConfirmationOpen: true });
-    } else {
-      handleSave(values, topicInfo);
+      return false;
     }
+    return handleSave(values, topicInfo);
   };
   riskModifiedTopicSpidering = (values) => {
     const { formData } = this.props;
@@ -71,7 +73,7 @@ class EditTopicContainer extends React.Component {
     return false;
   };
   render() {
-    const { topicInfo, topicId } = this.props;
+    const { topicInfo, topicId, handleMediaChange, handleMediaDelete } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
     let dialogContent = null;
@@ -132,6 +134,10 @@ class EditTopicContainer extends React.Component {
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
               mode={TOPIC_FORM_MODE_EDIT}
+              enabledReinitialize
+              keepDirtyOnReinitialize
+              onMediaChange={handleMediaChange}
+              onMediaDelete={handleMediaDelete}
               destroyOnUnmount
             />
           </Permissioned>
@@ -155,6 +161,8 @@ EditTopicContainer.propTypes = {
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
+  handleMediaChange: PropTypes.func.isRequired,
+  handleMediaDelete: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -198,6 +206,22 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
     );
   },
+  handleMediaDelete: (toBeDeletedObj) => {
+    // the user has removed media from the form
+    const updatedSources = toBeDeletedObj.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = toBeDeletedObj.filter(m => m.type === 'collection' || m.tags_id);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
+  handleMediaChange: (sourceAndCollections) => {
+    // take selections from mediaPicker and push them back into topicForm
+    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    const selectedMedia = updatedCollections.concat(updatedSources);
+
+    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
@@ -206,9 +230,17 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   });
 }
 
+const reduxFormConfig = {
+  form: 'topicForm',
+  destroyOnUnmount: false,  // so the wizard works
+  forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+};
+
 export default
-  injectIntl(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      EditTopicContainer
+  composeIntlForm(
+    reduxForm(reduxFormConfig)(
+      connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+        EditTopicContainer
+      )
     )
   );

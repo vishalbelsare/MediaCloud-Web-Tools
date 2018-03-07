@@ -9,14 +9,14 @@ import routes from './routes/explorerRoutes';
  */
 ReactGA.initialize('UA-60744513-11');
 
-setVersion('2.3.5');
+setVersion('2.4.10');
 
 setAppName(APP_EXPLORER);
 
 setAppColors({
-  light: '#CF73C7',
-  dark: '#8F3387',
-  darker: '#8F3387',
+  light: '#AF53A7',
+  dark: '#8F3387',  // primary
+  darker: '#6F1367',
 });
 
 initializeApp(routes);

@@ -3,7 +3,7 @@ import logging
 from server import mc
 import server.util.csv as csv
 from server.util.wordembeddings import google_news_2d
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ def stream_wordcount_csv(user_mc_key, filename, query):
     return csv.stream_response(response, props, filename)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_wordcount(user_mc_key, query, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
     api_client = mc if user_mc_key is None else user_admin_mediacloud_client()
     word_data = api_client.wordCount('*', query, num_words=num_words, sample_size=sample_size)
@@ -34,7 +34,7 @@ def cached_wordcount(user_mc_key, query, num_words=DEFAULT_NUM_WORDS, sample_siz
     return word_data
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_word2vec_google_results(words):
     word2vec_results = google_news_2d(words)
     return word2vec_results

@@ -186,7 +186,7 @@ export function errorReportingMiddleware({ dispatch }) {
   return next => (action) => {
     let message = null;
     if (action.type.endsWith('_RESOLVED') || action.type.endsWith('_REJECTED')) {
-      if ('status' in action.payload) {
+      if ((typeof action.payload === 'object') && ('status' in action.payload)) {
         if (action.payload.status === 401) {
           // unauthorized - ie. needs to login so delete cookies by going to logout
           if ((action.type !== 'LOGIN_WITH_PASSWORD_RESOLVED') && (action.type !== 'LOGIN_WITH_COOKIE_RESOLVED')) { // unless they are trying to login (cause that would be dumb)

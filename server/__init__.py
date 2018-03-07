@@ -56,6 +56,7 @@ try:
 except ConfigException as e:
     logger.info("no sentry logging")
 
+
 # Connect to MediaCloud
 TOOL_API_KEY = config.get('MEDIA_CLOUD_API_KEY')
 
@@ -152,7 +153,7 @@ def create_app():
         my_app.config['SESSION_COOKIE_DOMAIN'] = cookie_domain
         my_app.config['REMEMBER_COOKIE_DOMAIN'] = cookie_domain
     # connect to the shared session storage
-    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('REDIS_URL')))
+    my_app.session_interface = RedisSessionInterface(redis.StrictRedis.from_url(config.get('SESSION_REDIS_URL')))
     return my_app
 
 app = create_app()
@@ -172,6 +173,7 @@ def index():
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
 import server.views.stat
+import server.views.download
 import server.views.stories
 import server.views.media_search
 import server.views.media_picker
@@ -212,4 +214,4 @@ if (server_app == SERVER_APP_EXPLORER) or is_dev_mode():
     import server.views.explorer.words
     import server.views.explorer.stories
     import server.views.explorer.geo
-    import server.views.explorer.entities
+    import server.views.explorer.tags

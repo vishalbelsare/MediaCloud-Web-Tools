@@ -2,17 +2,17 @@
 import logging
 from flask import jsonify, request
 import flask_login
+import json
 
 from server import app, mc
 import server.util.csv as csv
 from server.auth import is_user_logged_in, user_mediacloud_key, user_mediacloud_client
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 from server.util.geo import COUNTRY_GEONAMES_ID_TO_APLHA3, HIGHCHARTS_KEYS
 import server.util.tags as tag_utl
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
-import json
-# load the shared settings file
+from server.views.explorer import parse_as_sample, parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, file_name_for_download
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +28,32 @@ def api_explorer_demo_geotag_count():
     return geotag_count()
 
 
-@app.route('/api/explorer/geography/geography.csv/<search_id_or_query>/<index>', methods=['GET'])
+@app.route('/api/explorer/geography/geography.csv', methods=['POST'])
 @api_error_handler
-def explorer_geo_csv(search_id_or_query, index):
-    return stream_geo_csv('explorer-geography', search_id_or_query, index)
+def explorer_geo_csv():
+    filename = u'sampled-geographic-coverage'
+    data = request.form
+    if 'searchId' in data:
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object)
+        filename = file_name_for_download(query_object['label'], filename)
+    res = _query_geotags(solr_query)
+    res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
+    for r in res:
+        geonamesId = int(r['tag'].split('_')[1])
+        if geonamesId not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():   # only include countries
+            continue
+        r['geonamesId'] = geonamesId
+        r['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[geonamesId]
+        r['count'] = (float(r['count'])/float(tag_utl.GEO_SAMPLE_SIZE))    # WTF: why is the API returning this as a string and not a number?
+        for hq in HIGHCHARTS_KEYS:
+            if hq['properties']['iso-a3'] == r['alpha3']:
+                r['iso-a2'] = hq['properties']['iso-a2']
+                r['value'] = r['count']
+    props = ['label', 'count', 'alpha3', 'iso-a2', 'geonamesId', 'tags_id', 'tag']
+    return csv.stream_response(res, props, filename)
 
 
 def geotag_count():
@@ -66,47 +88,6 @@ def geotag_count():
     return jsonify(res)
 
 
-def stream_geo_csv(fn, search_id_or_query, index):
-    filename = ''
-
-    # TODO: there is duplicate code here...
-    SAMPLE_SEARCHES = load_sample_searches()
-    try:
-        search_id = int(search_id_or_query)
-        if search_id >= 0:
-            SAMPLE_SEARCHES = load_sample_searches()
-            current_search = SAMPLE_SEARCHES[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
-
-            if int(index) < len(current_search): 
-                start_date = current_search[int(index)]['startDate']
-                end_date = current_search[int(index)]['endDate']
-                filename = fn + current_search[int(index)]['q']
-    except Exception as e:
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        solr_query = parse_query_with_keywords(current_query)
-        filename = fn + current_query['q']
-
-    res = _query_geotags(solr_query)
-    res = [r for r in res if int(r['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
-    for r in res:
-        geonamesId = int(r['tag'].split('_')[1])
-        if geonamesId not in COUNTRY_GEONAMES_ID_TO_APLHA3.keys():   # only include countries
-            continue
-        r['geonamesId'] = geonamesId
-        r['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[geonamesId]
-        r['count'] = (float(r['count'])/float(tag_utl.GEO_SAMPLE_SIZE))    # WTF: why is the API returning this as a string and not a number?
-        for hq in HIGHCHARTS_KEYS:
-            if hq['properties']['iso-a3'] == r['alpha3']:
-                r['iso-a2'] = hq['properties']['iso-a2']
-                r['value'] = r['count']
-
-    props = ['label', 'count']
-    return csv.stream_response(res, props, filename)
-
-
 def _query_geotags(query):
     if is_user_logged_in():   # no user session
         user_mc_key = user_mediacloud_key()
@@ -115,7 +96,7 @@ def _query_geotags(query):
     return _cached_geotags(user_mc_key, query)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_geotags(user_mc_key, query):
     if is_user_logged_in():   # no user session
         api_client = user_mediacloud_client()

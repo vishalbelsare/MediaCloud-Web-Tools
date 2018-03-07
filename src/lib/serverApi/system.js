@@ -33,3 +33,6 @@ export function fetchMediaPickerSourcesByMetadata(params) {
 }
 */
 
+export function fetchRecentNews() {
+  return createApiPromise('static/data/release_history.json');
+}

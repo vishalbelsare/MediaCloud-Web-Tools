@@ -18,6 +18,9 @@ export const TAG_SET_NYT_THEMES = 1963;
 // tags indicating what media type a source is
 export const TAG_SET_MEDIA_TYPE = 1972;
 
+export const TAG_SET_CLIFF_ORGS = 2388;
+export const TAG_SET_CLIFF_PEOPLE = 2389;
+
 // tag sets that hold collections we want to show to the user
 export const TAG_SET_MC_ID = 5;
 

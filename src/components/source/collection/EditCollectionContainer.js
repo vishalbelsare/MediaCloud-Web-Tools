@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { updateCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
-import { updateFeedback, setSubHeaderVisible } from '../../../actions/appActions';
+import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
@@ -88,7 +88,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then(() => {
         dispatch(fetchCollectionDetails(ownProps.params.collectionId))
         .then(() => {
-          dispatch(setSubHeaderVisible(true));
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
           dispatch(push(`/collections/${ownProps.params.collectionId}`));
         });

@@ -34,4 +34,11 @@
     padding-bottom: 0px; /* so the results background color connects all the way to the footer */
   }
 
+  #nav-toolbar {
+    background-color: $explorer-primary;
+    li.explorer {
+      border-bottom: 2px solid white;
+    }
+  }
+
 }

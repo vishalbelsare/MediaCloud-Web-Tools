@@ -35,9 +35,10 @@ const sourceRoutes = (
 
     <IndexRedirect to="/home" />
 
+    <Route path="/home" component={Homepage} />
+
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />
-      <Route path="/home" component={Homepage} />
       <Route path="/search" component={AdvancedSearchContainer} onEnter={requireAuth} />
       <Route path="/favorites" component={FavoritedContainer} onEnter={requireAuth} />
     </Route>
@@ -60,8 +61,10 @@ const sourceRoutes = (
     </Route>
 
     <Route path="/collections" >
-      <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
-      <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />
+      <Route component={PageWrapper}>
+        <Route path="media-cloud" component={MCCollectionListContainer} onEnter={requireAuth} />
+        <Route path="country-and-state" component={CountryCollectionListContainer} onEnter={requireAuth} />
+      </Route>
       <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       <Redirect from="details" to=":collectionId" />
       <Route path=":collectionId" component={SelectCollectionContainer} >

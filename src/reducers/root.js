@@ -11,7 +11,7 @@ import system from './system/system';
 import notebook from './notebook/notebook';
 import story from './story/story';
 
-const LIMIT_REDUCERS = false; // change to true once Topics decoupled from Sources
+const LIMIT_REDUCERS = true;  // so we enforce that apps don't accidently use another apps reducer
 
 function getRootReducer(appName) {
   let appReducers;

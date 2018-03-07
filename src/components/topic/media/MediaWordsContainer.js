@@ -10,6 +10,7 @@ import EditableWordCloudDataCard from '../../common/EditableWordCloudDataCard';
 import { filteredLinkTo, filtersAsUrlParams } from '../../util/location';
 import messages from '../../../resources/messages';
 import { generateParamStr } from '../../../lib/apiUtil';
+import { topicDownloadFilename } from '../../util/topicUtil';
 
 const localMessages = {
   helpTitle: { id: 'media.words.help.title', defaultMessage: 'About Media Top Words' },
@@ -18,7 +19,7 @@ const localMessages = {
   },
 };
 
-const WORD_CLOUD_DOM_ID = 'word-cloud';
+const WORD_CLOUD_DOM_ID = 'topic-summary-media-word-cloud';
 
 class MediaWordsContainer extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -29,7 +30,7 @@ class MediaWordsContainer extends React.Component {
   }
 
   render() {
-    const { topicId, mediaId, words, helpButton, filters, handleWordCloudClick } = this.props;
+    const { topicId, mediaId, words, helpButton, filters, handleWordCloudClick, topicName } = this.props;
     const { formatMessage } = this.props.intl;
     const urlDownload = `/api/topics/${topicId}/media/${mediaId}/words.csv?${filtersAsUrlParams(filters)}`;
 
@@ -42,6 +43,7 @@ class MediaWordsContainer extends React.Component {
         title={formatMessage(messages.topWords)}
         helpButton={helpButton}
         domId={WORD_CLOUD_DOM_ID}
+        svgDownloadPrefix={`${topicDownloadFilename(topicName, filters)}-media-${mediaId}-words`}
       />
     );
   }
@@ -54,6 +56,7 @@ MediaWordsContainer.propTypes = {
   // from parent
   mediaId: PropTypes.number.isRequired,
   topicId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   filters: PropTypes.object.isRequired,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,

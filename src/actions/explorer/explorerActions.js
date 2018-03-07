@@ -141,3 +141,8 @@ export const resetStoryCounts = createAction(RESET_STORY_COUNTS);
 export const RESET_GEO = 'RESET_GEO';
 export const resetGeo = createAction(RESET_GEO);
 
+export const RESET_THEMES = 'RESET_THEMES';
+export const FETCH_TOP_THEMES = 'FETCH_TOP_THEMES';
+export const resetThemes = createAction(RESET_THEMES);
+export const fetchTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchQueryTopThemes, params => params);
+export const fetchDemoTopThemes = createAsyncAction(FETCH_TOP_THEMES, api.fetchDemoQueryTopThemes, params => params);

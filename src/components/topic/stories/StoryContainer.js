@@ -62,7 +62,7 @@ class StoryContainer extends React.Component {
   }
 
   render() {
-    const { story, topicId, storiesId } = this.props;
+    const { story, topicId, storiesId, topicName } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
     const titleHandler = parentTitle => `${formatMessage(messages.story)} | ${parentTitle}`;
     let displayTitle = story.title;
@@ -123,7 +123,7 @@ class StoryContainer extends React.Component {
               />
             </Col>
             <Col lg={6} xs={12} >
-              <StoryWordsContainer topicId={topicId} storiesId={storiesId} />
+              <StoryWordsContainer topicId={topicId} storiesId={storiesId} topicName={topicName} />
             </Col>
             <Col lg={12}>
               <StoryInlinksContainer topicId={topicId} storiesId={storiesId} />
@@ -170,6 +170,7 @@ StoryContainer.propTypes = {
   // from state
   story: PropTypes.object.isRequired,
   storiesId: PropTypes.number.isRequired,
+  topicName: PropTypes.string.isRequired,
   topicId: PropTypes.number.isRequired,
   fetchStatus: PropTypes.string.isRequired,
 };
@@ -177,7 +178,8 @@ StoryContainer.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
   fetchStatus: state.topics.selected.story.info.fetchStatus,
   storiesId: parseInt(ownProps.params.storiesId, 10),
-  topicId: parseInt(ownProps.params.topicId, 10),
+  topicId: state.topics.selected.id,
+  topicName: state.topics.selected.info.name,
   story: state.topics.selected.story.info,
 });
 

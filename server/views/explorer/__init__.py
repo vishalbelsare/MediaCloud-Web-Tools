@@ -1,19 +1,19 @@
 import logging
-from server.cache import cache
+from server.cache import cache, key_generator
 import os
 import json
 from server import mc
-from server.util.common import _tag_ids_from_collections_param, _media_ids_from_sources_param
 from flask import send_from_directory
 from server.auth import is_user_logged_in
 import datetime
+from slugify import slugify
 
 logger = logging.getLogger(__name__)
 
 SORT_SOCIAL = 'social'
 SORT_INLINK = 'inlink'
 
-DEFAULT_COLLECTION_IDS = [ 9139487 ]
+DEFAULT_COLLECTION_IDS = [9139487]
 
 
 def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
@@ -26,7 +26,7 @@ def validated_sort(desired_sort, default_sort=SORT_SOCIAL):
 def topic_is_public(topics_id):
     topic = mc.topic(topics_id)
     is_public = topic['is_public']
-    return int(is_public)== 1
+    return int(is_public) == 1
 
 
 def access_public_topic(topics_id):
@@ -53,7 +53,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
         # add in the media sources they specified
         if len(media_ids) > 0:
             id_chain = []
-            if type(media_ids) is list: #if an object versus a string - see sample_searches.json
+            if type(media_ids) is list:  # if an object versus a string - see sample_searches.json
                 for t in media_ids:
                     if type(t) is dict:
                         id_chain.append(t['id'] if 'id' in t else 0)
@@ -94,9 +94,7 @@ def concatenate_query_for_solr(solr_seed_query, start_date, end_date, media_ids,
 def concatenate_query_and_dates(start_date, end_date):
     testa = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
     testb = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
-    publish_date = mc.publish_date_query(testa,
-                                              testb,
-                                              True, True)
+    publish_date = mc.publish_date_query(testa, testb, True, True)
     return publish_date
 
 
@@ -104,20 +102,38 @@ def parse_query_with_keywords(args):
     solr_query = ''
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    current_query = ''
-    # should I break this out into just a demo routine where we add in the start/end date without relying that the try statement will fail?
+    default_start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+    default_end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    # should I break this out into just a demo routine where we add in the start/end date without relying that the
+    # try statement will fail?
     try:    # if user arguments are present and allowed by the client endpoint, use them, otherwise use defaults
         current_query = args['q']
-        start_date = args['start_date'] if 'start_date' in args else start_date
-        end_date = args['end_date'] if 'end_date' in args else end_date
-        media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
-        if 'collections' in args:
-            if len(args['collections']) == 0:
-                tags_ids = []
+        if 'startDate' in args:
+            start_date = args['startDate']
+        elif 'start_date' in args:
+            start_date = args['start_date']
+        else:
+            start_date = default_start_date
+        if 'endDate' in args:
+            end_date = args['endDate']
+        elif 'end_date' in args:
+            end_date = args['end_date']
+        else:
+            end_date = default_end_date
+        media_ids = []
+        if 'sources' in args:
+            if isinstance(args['sources'], basestring):
+                media_ids = args['sources'].split(',') if 'sources' in args and len(args['sources']) > 0 else []
             else:
-                tags_ids = args['collections'].split(',')
+                media_ids = args['sources']
+        if 'collections' in args:
+            if isinstance(args['collections'], basestring):
+                if len(args['collections']) == 0:
+                    tags_ids = []
+                else:
+                    tags_ids = args['collections'].split(',')
+            else:
+                tags_ids = args['collections']
         else:
             tags_ids = DEFAULT_COLLECTION_IDS
 
@@ -129,29 +145,49 @@ def parse_query_with_keywords(args):
 
     # otherwise, default
     except Exception as e:
-        tags_ids = args['collections']
+        # tags_ids = args['collections'] if 'collections' in args and len(args['collections']) > 0 else []
         logger.warn("user custom query failed, there's a problem with the arguments " + str(e))
 
     return solr_query
 
 
+def parse_query_for_sample_search(sample_search_id, query_id):
+    sample_searches = load_sample_searches()
+    current_query_info = sample_searches[int(sample_search_id)]['queries'][int(query_id)]
+    solr_query = concatenate_query_for_solr(solr_seed_query=current_query_info['q'],
+                                            start_date= current_query_info['startDate'],
+                                            end_date=current_query_info['endDate'],
+                                            media_ids=current_query_info['sources'],
+                                            tags_ids=current_query_info['collections'])
+    return solr_query
+
+
+def parse_as_sample(search_id_or_query, query_id=None):
+    try:
+        if isinstance(search_id_or_query, int): # special handling for an indexed query
+            sample_search_id = search_id_or_query
+            return parse_query_for_sample_search(sample_search_id, query_id)
+
+    except Exception as e:
+        logger.warn("error " + str(e))
+
+
+# yikes - TODO get rid of this function ASAP
+# args_or_query - either search-id/index in parameters or in request.args 
+# this came from demo url calls versus request.args for custom queries
+# this is only called when handling a sample search
 def parse_query_with_args_and_sample_search(args_or_query, current_search) :
-
-    solr_query = ''
-
     # default dates
     two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
     start_date = two_weeks_before_now.strftime("%Y-%m-%d")
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    current_query = ''
     try:
         if isinstance(args_or_query, int): # special handling for an indexed query
             index = int(args_or_query)
         else:
             index = int(args_or_query['index']) if 'index' in args_or_query else None
             query_id = int(args_or_query['query_id']) if 'query_id' in args_or_query else None
-         # not using this now, but we could use this as an extra check
+        # not using this now, but we could use this as an extra check
         current_query = current_search[index]['q']
         start_date = current_search[index]['startDate']
         end_date = current_search[index]['endDate']
@@ -159,10 +195,10 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
         tags_ids = current_search[index]['collections']
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-            start_date= start_date,
-            end_date=end_date,
-            media_ids=media_ids,
-            tags_ids=tags_ids)
+                                                start_date=start_date,
+                                                end_date=end_date,
+                                                media_ids=media_ids,
+                                                tags_ids=tags_ids)
 
     # we dont have a query_id. Do we have a q param?
     except Exception as e:
@@ -173,17 +209,17 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
             current_query = args_or_query['q'] if 'q' in args_or_query else None
 
         solr_query = concatenate_query_for_solr(solr_seed_query=current_query,
-            start_date= start_date,
-            end_date=end_date,
-            media_ids=[],
-            tags_ids=[9139487])
+                                                start_date=start_date,
+                                                end_date=end_date,
+                                                media_ids=[],
+                                                tags_ids=[9139487])
 
     return solr_query
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def load_sample_searches():
-    json_file = os.path.join(os.path.dirname( __file__ ), '../..', 'static/data/sample_searches.json')
+    json_file = os.path.join(os.path.dirname(__file__), '../..', 'static/data/sample_searches.json')
     # load the sample searches file
     with open(json_file) as json_data:
         d = json.load(json_data)
@@ -191,10 +227,14 @@ def load_sample_searches():
 
 
 def read_sample_searches():
-    json_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'static/data'))
+    json_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'static/data'))
 
     # load the sample searches file
-    return send_from_directory(
-            json_dir,
-            'sample_searches.json', as_attachment=True)
+    return send_from_directory(json_dir, 'sample_searches.json', as_attachment=True)
 
+
+def file_name_for_download(label, type):
+    length_limited_label = label
+    if len(label) > 30:
+        length_limited_label = label.substr(0, 30)
+    return u'{}-{}'.format(slugify(length_limited_label), type)

@@ -9,11 +9,9 @@ import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import StoryTable from '../../common/StoryTable';
 import { fetchQuerySampleStories, fetchDemoQuerySampleStories, resetSampleStories } from '../../../actions/explorerActions';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
-
-// const NUM_TO_SHOW = 20;
 
 const localMessages = {
   title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
@@ -33,28 +31,13 @@ class QuerySampleStoriesResultsContainer extends React.Component {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) { // , nextState) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-      return (
-        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
+//      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/stories/samples.csv/${query.searchId}/${query.index}`;
-    } else {
-      url = `/api/explorer/stories/samples.csv/[{"q":"${query.q}"}]/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/stories/samples.csv', query);
   }
   render() {
     const { results, queries, handleStorySelection } = this.props;

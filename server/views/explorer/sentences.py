@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 import logging
 from flask import jsonify, request
 import flask_login
 from operator import itemgetter
 from server import app, mc
 from server.auth import user_admin_mediacloud_client
-from server.cache import cache
+from server.cache import cache, key_generator
 from server.util.request import api_error_handler
 import server.util.csv as csv
-from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, load_sample_searches
+from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, \
+    load_sample_searches, parse_as_sample, file_name_for_download
 import datetime
 import json
-# load the shared settings file
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +22,7 @@ def api_explorer_sentences_count():
     user_mc = user_admin_mediacloud_client()
     # dates are required as is one collection, how do we handle default for logged in users?
     solr_query = parse_query_with_keywords(request.args)
-    sentence_count_result = user_mc.sentenceCount(solr_query=solr_query, split_start_date=request.args['start_date'], split_end_date=request.args['end_date'], split=True)
-    # make sure we return the query and the id passed in..
+    sentence_count_result = cached_by_query_sentence_counts(solr_query, request.args['start_date'], request.args['end_date'])
     return jsonify(sentence_count_result)
 
 @app.route('/api/explorer/sentences/list', methods=['GET'])
@@ -59,53 +57,38 @@ def api_explorer_demo_sentences_count():
     else:
         solr_query = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
-    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date, split_end_date=end_date, split=True)
     results = cached_by_query_sentence_counts(solr_query, start_date, end_date)
     
     return jsonify(results)
 
 
-@cache
+@cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_str=None):
-    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str, split_end_date=end_date_str, split=True)
+    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str,
+                                             split_end_date=end_date_str, split=True)
     return sentence_count_result
 
 
-def stream_sentence_count_csv(fn, search_id_or_query, index):
-
-    two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
-    start_date = two_weeks_before_now.strftime("%Y-%m-%d")
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    SAMPLE_SEARCHES = load_sample_searches() # TODO: some duplicate code here
-    try:
-        search_id = int(search_id_or_query)
-        if search_id >= 0:
-            SAMPLE_SEARCHES = load_sample_searches()
-            current_search = SAMPLE_SEARCHES[search_id]['queries']
-            solr_query = parse_query_with_args_and_sample_search(search_id, current_search)
-
-            if int(index) < len(current_search): 
-                start_date = current_search[int(index)]['startDate']
-                end_date = current_search[int(index)]['endDate']
-                filename = fn + current_search[int(index)]['q']
-
-    except Exception as e:
-        # so far, we will only be fielding one keyword csv query at a time, so we can use index of 0
-        query = json.loads(search_id_or_query)
-        current_query = query[0]
-        solr_query = parse_query_with_keywords(current_query) # TODO don't mod the start and end date unless permissions
-        filename = fn + current_query['q']
-
-    results = cached_by_query_sentence_counts(solr_query, start_date, end_date) # get dates out of query?
+@app.route('/api/explorer/sentences/count.csv', methods=['POST'])
+@api_error_handler
+def api_explorer_sentence_count_csv():
+    filename = u'sentences-over-time'
+    data = request.form
+    if 'searchId' in data:
+        solr_query = parse_as_sample(data['searchId'], data['index'])
+        filename = filename  # don't have this info + current_query['q']
+        two_weeks_before_now = datetime.datetime.now() - datetime.timedelta(days=14)
+        start_date = two_weeks_before_now.strftime("%Y-%m-%d")
+        end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    else:
+        query_object = json.loads(data['q'])
+        solr_query = parse_query_with_keywords(query_object)
+        filename = file_name_for_download(query_object['label'], filename)
+        start_date = query_object['startDate']
+        end_date = query_object['endDate']
+    # sentence count needs dates to be sent explicitly -TODO check what has priority
+    results = cached_by_query_sentence_counts(solr_query, start_date, end_date)  # get dates out of query?
     clean_results = [{'date': date, 'sentences': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
     clean_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'sentences']
     return csv.stream_response(clean_results, props, filename)
-
-
-@app.route('/api/explorer/sentences/count.csv/<search_id_or_query>/<index>', methods=['GET'])
-@api_error_handler
-def api_explorer_sentence_count_csv(search_id_or_query, index):
-    return stream_sentence_count_csv('explorer-sentence-counts-', search_id_or_query, index)
-

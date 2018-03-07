@@ -10,7 +10,7 @@ import { fetchDemoQueryGeo, fetchQueryGeo, resetGeo } from '../../../actions/exp
 import { DownloadButton } from '../../common/IconButton';
 import ActionMenu from '../../common/ActionMenu';
 import messages from '../../../resources/messages';
-import { queryPropertyHasChanged } from '../../../lib/explorerUtil';
+import { queryChangedEnoughToUpdate, postToDownloadUrl } from '../../../lib/explorerUtil';
 import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
@@ -31,30 +31,13 @@ class QueryGeoResultsContainer extends React.Component {
       fetchData(nextProps.queries);
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { results, queries } = this.props;
-    // only re-render if results, any labels, or any colors have changed
-    if (results.length) { // may have reset results so avoid test if results is empty
-      const labelsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'label');
-      const colorsHaveChanged = queryPropertyHasChanged(queries.slice(0, results.length), nextProps.queries.slice(0, results.length), 'color');
-      const selectedQueryChanged = this.state.selectedQueryIndex !== nextState.selectedQueryIndex;
-      return (
-        (labelsHaveChanged || colorsHaveChanged || selectedQueryChanged)
-         || (results !== nextProps.results)
-      );
-    }
-    return false; // if both results and queries are empty, don't update
+    return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   downloadCsv = (query) => {
-    let url = null;
-    if (parseInt(query.searchId, 10) >= 0) {
-      url = `/api/explorer/geography/geography.csv/${query.searchId}/${query.index}`;
-    } else {
-      url = `/api/explorer/geography/geography.csv/[{"q":"${query.q}"}]/${query.index}`;
-    }
-    window.location = url;
+    postToDownloadUrl('/api/explorer/geography/geography.csv', query);
   }
-
   render() {
     const { results, intl, queries, handleCountryClick } = this.props;
     const { formatMessage } = intl;

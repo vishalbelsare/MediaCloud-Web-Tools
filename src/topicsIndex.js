@@ -10,14 +10,14 @@ import initializeApp from './index';
 
 ReactGA.initialize('UA-60744513-7');
 
-setVersion('2.3.4');
+setVersion('2.4.10');
 
 setAppName(APP_TOPIC_MAPPER);
 
 setAppColors({
-  light: '#daf3ee',
-  dark: '#47c4ac',
-  darker: '#448e80',
+  light: '#58DBCC',
+  dark: '#38BBAC',  // primary
+  darker: '#189B8C',
 });
 
 initializeApp(routes);

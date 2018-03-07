@@ -20,6 +20,7 @@ const localMessages = {
   missingEmail: { id: 'user.missingEmail', defaultMessage: 'You need to enter a valid email address.' },
   missingFullname: { id: 'user.missingName', defaultMessage: 'You need to enter your full name.' },
   missingPassword: { id: 'user.missingPassword', defaultMessage: 'You need to enter your password.' },
+  missingNotes: { id: 'user.missingNotes', defaultMessage: 'You have to tell us a little about why you want to use Media Cloud.' },
   feedback: { id: 'user.signUp.feedback', defaultMessage: 'Successfully signed up.' },
   notesHint: { id: 'user.notes.hint', defaultMessage: 'Tell us a little about what you want to use Media Cloud for' },
   subscribeToNewsletter: { id: 'user.signUp.subscribeToNewsletter', defaultMessage: 'Subscribe to Newsletter?' },
@@ -191,6 +192,9 @@ function validate(values) {
   }
   if (stringsDoNotMatch(values.password, values.confirmPassword)) {
     errors.password = messages.passwordsMismatch;
+  }
+  if (emptyString(values.notes)) {
+    errors.notes = localMessages.missingNotes;
   }
   return errors;
 }

@@ -6,9 +6,10 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import TopicDetailForm from './TopicDetailForm';
-import SourceCollectionsForm from './SourceCollectionsForm';
+import MediaPickerDialog from '../../common/mediaPicker/MediaPickerDialog';
+import SourceCollectionsMediaForm from '../../common/form/SourceCollectionsMediaForm';
 import { emptyString, invalidDate, validDate } from '../../../lib/formValidators';
-import { isMoreThanAYearInPast } from '../../../lib/dateUtil';
+import { isStartDateAfterEndDate } from '../../../lib/dateUtil';
 import { fetchTopicWithNameExists } from '../../../actions/topicActions';
 import { assetUrl } from '../../../lib/assetUtil';
 
@@ -22,14 +23,22 @@ const localMessages = {
   seedQueryError: { id: 'topic.form.detail.seedQuery.error', defaultMessage: 'You must give us a seed query to start this topic from.' },
   createTopic: { id: 'topic.form.detail.create', defaultMessage: 'Create' },
   dateError: { id: 'topic.form.detail.date.error', defaultMessage: 'Please provide a date in YYYY-MM-DD format.' },
-  startDateWarning: { id: 'topic.form.detail.startdate.warning', defaultMessage: "For older dates we find that spidering doesn't work that well due to link-rot (urls that don't work anymore). We advise not going back more than 12 months." },
+  startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   sourceCollectionsError: { id: 'topic.form.detail.sourcesCollections.error', defaultMessage: 'You must select at least one Source or one Collection to seed this topic.' },
   downloadUserGuide: { id: 'topic.create.downloadUserGuide', defaultMessage: 'Downlod the Topic Creation Guide' },
+  selectSandC: { id: 'topic.create.selectSAndC', defaultMessage: 'Select media' },
+  SandC: { id: 'topic.create.sAndC', defaultMessage: 'Media' },
 };
 
 const TopicForm = (props) => {
-  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode } = props;
+  const { topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, initialValues, title, intro, mode, onMediaChange, onMediaDelete } = props;
   const { formatMessage } = props.intl;
+  const emptyArray = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
+  let mediaPicker = null;
+  let mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.SandC} /></label>;
+  mediaPicker = <MediaPickerDialog initMedia={emptyArray} onConfirmSelection={selections => onMediaChange(selections)} />;
+  mediaLabel = <label htmlFor="media"><FormattedMessage {...localMessages.selectSandC} /></label>;
+
   return (
     <form className="create-topic" name="topicForm" onSubmit={handleSubmit(onSubmit.bind(this))}>
       <input type="hidden" name="topicId" value={topicId} />
@@ -51,14 +60,23 @@ const TopicForm = (props) => {
         </Col>
       </Row>
       <Row><Col lg={12}><hr /></Col></Row>
-      <SourceCollectionsForm
-        title={title}
-        intro={intro}
-        initialValues={initialValues}
-        allowRemoval
-        maxSources={10}
-        maxCollections={10}
-      />
+      <Row><Col lg={6}>
+        <div className="media-field-wrapper">
+          {mediaLabel}
+          <SourceCollectionsMediaForm
+            title={title}
+            intro={intro}
+            className="query-field"
+            form="topicForm"
+            destroyOnUnmount={false}
+            name="sourcesAndCollections"
+            onDelete={onMediaDelete}
+            initialValues={initialValues.sourcesAndCollections}
+            allowRemoval
+          />
+          {mediaPicker}
+        </div>
+      </Col></Row>
       <Row><Col lg={12}><hr /></Col></Row>
       <Row>
         <Col lg={12}>
@@ -96,6 +114,8 @@ TopicForm.propTypes = {
   validate: PropTypes.func.isRequired,
   topicNameSearch: PropTypes.object,
   mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  onMediaChange: PropTypes.func.isRequired,
+  onMediaDelete: PropTypes.func.isRequired,
 };
 
 function validate(values, props) {
@@ -116,6 +136,9 @@ function validate(values, props) {
   if (invalidDate(values.end_date)) {
     errors.end_date = localMessages.dateError;
   }
+  if (validDate(values.start_date) && validDate(values.end_date) && isStartDateAfterEndDate(values.start_date, values.end_date)) {
+    errors.start_date = { _error: formatMessage(localMessages.startDateWarning) };
+  }
   // not triggered if empty so we have to force a check
   if ((values.name && values.solr_seed_query && !values.sourcesAndCollections) || (values.sourcesAndCollections && values.sourcesAndCollections.length < 1)) {
     // errors.sourcesAndCollections = localMessages.sourceCollectionsError;
@@ -127,7 +150,7 @@ function validate(values, props) {
 
 const asyncValidate = (values, dispatch) => (
   // verify topic name is unique
-  dispatch(fetchTopicWithNameExists(values.name))
+  dispatch(fetchTopicWithNameExists(values.name, values.topics_id))
     .then((results) => {
       if (results.nameInUse === true) {
         const error = { name: localMessages.nameInUseError };
@@ -136,20 +159,11 @@ const asyncValidate = (values, dispatch) => (
     })
 );
 
-const warn = (values) => {
-  const warnings = {};
-  if (validDate(values.start_date) && isMoreThanAYearInPast(values.start_date)) {
-    warnings.start_date = localMessages.startDateWarning;
-  }
-  return warnings;
-};
-
 const reduxFormConfig = {
   form: 'topicForm',
   validate,
   asyncValidate,
   asyncBlurFields: ['name'],
-  warn,
   // so the create wizard works
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
