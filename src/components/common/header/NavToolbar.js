@@ -12,6 +12,7 @@ import RecentNewsMenuContainer from '../news/RecentNewsMenuContainer';
 
 export const TOPICS_URL = 'https://topics.mediacloud.org/';
 export const EXPLORER_URL = 'https://explorer.mediacloud.org/';
+export const SOURCES_URL = 'https://sources.mediacloud.org/';
 export const BLOG_URL = 'https://mediacloud.org/news/';
 export const TOOLS_URL = 'https://mediacloud.org/tools/';
 
