@@ -32,7 +32,7 @@ const localMessages = {
   queryStringError: { id: 'explorer.queryBuilder.queryStringError', defaultMessage: 'Your {name} query is missing keywords.' },
   startDateWarning: { id: 'explorer.queryBuilder.warning.startDate', defaultMessage: 'Start Date must be before End Date' },
   invalidDateWarning: { id: 'explorer.queryBuilder.warning.invalidDate', defaultMessage: 'Use the YYYY-MM-DD format' },
-  noMediaSpecified: { id: 'explorer.queryBuilder.warning.noMediaSpecified', defaultMessage: 'Searching all sources - generally not a great idea' },
+  noMediaSpecified: { id: 'explorer.queryBuilder.warning.noMediaSpecified', defaultMessage: 'Searching all media - generally not a great idea' },
 };
 
 /*
@@ -147,6 +147,7 @@ class QueryForm extends React.Component {
                     onDelete={onMediaDelete}
                     initialValues={cleanedInitialValues}
                     allowRemoval={isEditable}
+                    showWarningIfEmpty
                   />
                   {mediaPicker}
                 </div>
