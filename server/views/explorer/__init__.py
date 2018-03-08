@@ -233,8 +233,8 @@ def read_sample_searches():
     return send_from_directory(json_dir, 'sample_searches.json', as_attachment=True)
 
 
-def file_name_for_download(label, type):
+def file_name_for_download(label, type_of_download):
     length_limited_label = label
     if len(label) > 30:
-        length_limited_label = label.substr(0, 30)
-    return u'{}-{}'.format(slugify(length_limited_label), type)
+        length_limited_label = label[:30]
+    return u'{}-{}'.format(slugify(length_limited_label), type_of_download)
