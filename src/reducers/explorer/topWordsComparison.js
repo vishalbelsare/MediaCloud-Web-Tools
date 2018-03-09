@@ -21,6 +21,8 @@ const topWordsComparison = createAsyncReducer({
   },
   [RESET_QUERY_TOP_WORDS_COMPARISON]: () => ({
     list: [],
+    left: null,
+    right: null,
   }),
 });
 export default topWordsComparison;

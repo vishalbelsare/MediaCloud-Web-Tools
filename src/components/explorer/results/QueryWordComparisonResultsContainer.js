@@ -4,7 +4,7 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
+import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, resetTopWordsComparison, updateQuery } from '../../../actions/explorerActions';
 import { queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ComparativeOrderedWordCloud from '../../vis/ComparativeOrderedWordCloud';
@@ -32,8 +32,12 @@ class QueryWordComparisonResultsContainer extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, leftQuery, rightQuery } = this.props;
+    const { lastSearchTime, fetchData, queries, leftQuery, rightQuery, selectComparativeWords } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
+      const leftQ = queries[0];
+      const rightQ = queries.length > 1 ? queries[1] : queries[0];
+      selectComparativeWords(leftQ, LEFT);
+      selectComparativeWords(rightQ, RIGHT);
       fetchData([leftQuery, rightQuery]);
     }
   }
@@ -43,10 +47,6 @@ class QueryWordComparisonResultsContainer extends React.Component {
     // also check if they changed their view choices
     return (shouldChange || (nextProps.leftQuery !== leftQuery || nextProps.rightQuery !== rightQuery)
     );
-  }
-
-  componentWillUnmount() {
-    this.setState({ leftQuery: '', rightQuery: '' });
   }
 
   selectAndFetchComparedQueries = (queryObj, target) => {
@@ -169,7 +169,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
+    dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
       const comparedQueries = runTheseQueries.map(q => ({
