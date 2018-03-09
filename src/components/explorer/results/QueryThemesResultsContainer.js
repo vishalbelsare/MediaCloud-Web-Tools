@@ -19,7 +19,8 @@ const BUBBLE_CHART_DOM_ID = 'explorer-nyt-theme-chart';
 
 const localMessages = {
   title: { id: 'explorer.themes.title', defaultMessage: 'Top Themes' },
-  helpIntro: { id: 'explorer.themes.help.intro', defaultMessage: '<p>News coverage can be grouped into themes to identify the differing narratives.  This chart shows you the top themes we\'ve detected in stories matching your query. Use this to try and understand what and how this is being talked about.</p>' },
+  helpIntro: { id: 'explorer.themes.help.intro', defaultMessage: '<p>News coverage can be grouped into themes to identify the differing narratives.  This chart shows you how many stories match a fixed list of themes we detect in stories.</p>' },
+  helpDetail: { id: 'explorer.themes.help.detail', defaultMessage: '<p>The larger the color circled, the more prominent it is in the stories that matched your query. The grey circle represents all the stories matching your query. The colored circle in the center represents the number of stories found that match each particular theme.</p>' },
 };
 
 class QueryThemesResultsContainer extends React.Component {
@@ -42,8 +43,12 @@ class QueryThemesResultsContainer extends React.Component {
   render() {
     const { results, queries, handleThemeClicked } = this.props;
     const { formatMessage, formatNumber } = this.props.intl;
-    const data = results[this.state.selectedQueryIndex].results.slice(0, 4).map((info, idx) => ({
-      value: info.count,
+    let rawData = [];
+    if (results) {
+      rawData = results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].results : [];
+    }
+    const data = rawData.slice(0, 4).map((info, idx) => ({
+      value: info.pct, // info.count,
       fill: mapD3Top10Colors(idx),
       aboveText: (idx % 2 === 0) ? info.label : null,
       belowText: (idx % 2 !== 0) ? info.label : null,
@@ -57,10 +62,12 @@ class QueryThemesResultsContainer extends React.Component {
         />
         <BubbleRowChart
           data={data}
+          maxBubbleRadius={60}
           domId={BUBBLE_CHART_DOM_ID}
           width={650}
           padding={0}
           onClick={handleThemeClicked}
+          asPercentage
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>
@@ -160,7 +167,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [messages.nytThemeHelpDetails])(
+      composeSummarizedVisualization(localMessages.title, localMessages.helpIntro, [localMessages.helpDetail, messages.nytThemeHelpDetails])(
         composeAsyncContainer(
           QueryThemesResultsContainer
         )
