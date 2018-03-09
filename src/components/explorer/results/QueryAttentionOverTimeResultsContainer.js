@@ -59,11 +59,11 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     // date calculations for span/range
     const clickedQuery = {
       q: currentQueryOfInterest.q,
-      start_date: solrFormat(date0),
+      start_date: solrFormat(date1),
       color: origin.series.color,
     };
     if (!dayGap) {
-      clickedQuery.end_date = solrFormat(oneWeekLater(date0), true);
+      clickedQuery.end_date = solrFormat(oneWeekLater(date1), true);
     }
     this.setState({ clickedQuery });
     selectDataPoint(clickedQuery);
