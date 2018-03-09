@@ -6,6 +6,7 @@ import { fetchQueryPerDateTopWords, fetchDemoQueryPerDateTopWords, fetchQueryPer
 import composeAsyncContainer from '../../common/AsyncContainer';
 import QueryAttentionOverTimeDrillDownDataCard from './QueryAttentionOverTimeDrillDownDataCard';
 // import { queryChangedEnoughToUpdate /* postToDownloadUrl */ } from '../../../lib/explorerUtil';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 class QueryAttentionOverTimeDrillDownContainer extends React.Component {
   state = {
@@ -37,6 +38,8 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     // don't bother if datapoint is empty
     if (dataPoint && words && words.length > 0 && stories !== undefined) {
       drillDown = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} />;
+    } else if (dataPoint) {
+      drillDown = <LoadingSpinner />;
     }
 
     return drillDown;
