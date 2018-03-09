@@ -21,8 +21,10 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    const { dataPoint } = this.props;
-    return (nextProps.dataPoint !== dataPoint);
+    const { dataPoint, words, stories } = this.props;
+    return (nextProps.dataPoint !== dataPoint ||
+      nextProps.words !== words ||
+      nextProps.stories !== stories);
   }
 
   downloadCsv = () => {
