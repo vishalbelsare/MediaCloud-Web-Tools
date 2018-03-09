@@ -26,15 +26,27 @@ class QueryWordComparisonResultsContainer extends React.Component {
     const { queries, selectComparativeWords } = this.props;
     const leftQ = queries[0];
     const rightQ = queries.length > 1 ? queries[1] : queries[0];
-    selectComparativeWords(leftQ, LEFT);
-    selectComparativeWords(rightQ, RIGHT);
+    if (leftQ === null) {
+      selectComparativeWords(leftQ, LEFT); // default selection
+      selectComparativeWords(rightQ, RIGHT);
+    }
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, selectComparativeWords } = this.props;
+    const { lastSearchTime, fetchData, selectComparativeWords, leftQuery, rightQuery } = this.props;
+    let leftQ = null;
+    let rightQ = null;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      // this won't work if we have more than 2 queries...
-      const leftQ = nextProps.queries[0];
-      const rightQ = nextProps.queries.length > 1 ? nextProps.queries[1] : nextProps.queries[0];
+      // if a search query change from the top
+      leftQ = nextProps.queries[0];
+      rightQ = nextProps.queries.length > 1 ? nextProps.queries[1] : nextProps.queries[0];
+      selectComparativeWords(leftQ, LEFT);
+      selectComparativeWords(rightQ, RIGHT);
+      fetchData([leftQ, rightQ]);
+    } else if (nextProps.leftQuery !== leftQuery ||
+      nextProps.rightQuery !== rightQuery) {
+      // if a change in the comparison UI selection
+      leftQ = nextProps.leftQuery;
+      rightQ = nextProps.rightQuery;
       selectComparativeWords(leftQ, LEFT);
       selectComparativeWords(rightQ, RIGHT);
       fetchData([leftQ, rightQ]);
