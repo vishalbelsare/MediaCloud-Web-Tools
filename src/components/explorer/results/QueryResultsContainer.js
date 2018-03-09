@@ -13,7 +13,7 @@ import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
 import QueryViewSelector from './QueryViewSelector';
-import QueryThemesResultsContainer from './QueryThemesResultsContainer';
+// import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 
 class QueryResultsContainer extends React.Component {
@@ -37,14 +37,6 @@ class QueryResultsContainer extends React.Component {
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
-          />
-        </Col>
-        <Col lg={12}>
-          <QueryThemesResultsContainer
-            lastSearchTime={lastSearchTime}
-            queries={queries}
-            isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>

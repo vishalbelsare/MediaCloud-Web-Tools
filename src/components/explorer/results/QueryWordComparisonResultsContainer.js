@@ -23,22 +23,21 @@ const RIGHT = 1;
 
 class QueryWordComparisonResultsContainer extends React.Component {
   componentWillMount() {
-    const { queries, leftQuery, selectComparativeWords } = this.props;
-    if (leftQuery === null) { // selections haven't been set yet so do init
-      const leftQ = queries[0];
-      const rightQ = queries.length > 1 ? queries[1] : queries[0];
-      selectComparativeWords(leftQ, LEFT);
-      selectComparativeWords(rightQ, RIGHT);
-    }
+    const { queries, selectComparativeWords } = this.props;
+    const leftQ = queries[0];
+    const rightQ = queries.length > 1 ? queries[1] : queries[0];
+    selectComparativeWords(leftQ, LEFT);
+    selectComparativeWords(rightQ, RIGHT);
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, queries, leftQuery, rightQuery, selectComparativeWords } = this.props;
+    const { lastSearchTime, fetchData, selectComparativeWords } = this.props;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      const leftQ = queries[0];
-      const rightQ = queries.length > 1 ? queries[1] : queries[0];
+      // this won't work if we have more than 2 queries...
+      const leftQ = nextProps.queries[0];
+      const rightQ = nextProps.queries.length > 1 ? nextProps.queries[1] : nextProps.queries[0];
       selectComparativeWords(leftQ, LEFT);
       selectComparativeWords(rightQ, RIGHT);
-      fetchData([leftQuery, rightQuery]);
+      fetchData([leftQ, rightQ]);
     }
   }
   shouldComponentUpdate(nextProps) {
