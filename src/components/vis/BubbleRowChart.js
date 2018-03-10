@@ -119,10 +119,10 @@ class BubbleRowChart extends React.Component {
           .data(circles)
           .enter();
         totalBubbles.append('circle')
-        .attr('r', options.maxBubbleRadius)
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y)
-        .style('fill', '#CCCCCC');
+          .attr('class', 'total')
+          .attr('r', options.maxBubbleRadius)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
       }
       // now add the bubbles on top
       const bubbles = svg.append('g')
@@ -132,6 +132,7 @@ class BubbleRowChart extends React.Component {
           .enter();
       const cursor = onBubbleClick ? 'pointer' : '';
       bubbles.append('circle')
+        .attr('class', 'pct')
         .attr('r', d => d.r)
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
