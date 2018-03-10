@@ -10,8 +10,8 @@ const localMessages = {
   attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
   language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
   people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
-  details: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Here are some details about what was reported on for {date}' },
-  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories for {date}' },
+  details: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details about {date}' },
+  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories from {date}' },
   topWords: { id: 'explorer.attention.drillDown.topWords', defaultMessage: 'Top Words for {date}' },
 };
 
@@ -24,10 +24,14 @@ const QueryAttentionOverTimeDrillDownDataCard = (props) => {
   return (
     <DataCard>
       <Row>
-        <Col lg={6}>
+        <Col lg={12}>
           <h2><FormattedMessage {...localMessages.details} values={{ date }} /></h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.sampleStories} values={{ date }} /></h3>
-          <StorySentencePreview stories={stories !== null && stories !== undefined ? Object.values(stories) : []} />
+          <StorySentencePreview stories={stories !== null && stories !== undefined ? Object.values(stories.slice(0, 8)) : []} />
         </Col>
         <Col lg={6}>
           <h3 style={{ color }} ><FormattedMessage {...localMessages.topWords} values={{ date }} /></h3>

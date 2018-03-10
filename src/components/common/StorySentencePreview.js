@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { storyPubDateToTimestamp } from '../../lib/dateUtil';
+import { googleFavIconUrl, storyDomainName } from '../../lib/urlUtil';
 
 const localMessages = {
   undateable: { id: 'story.publishDate.undateable', defaultMessage: 'Undateable' },
   foci: { id: 'story.foci.list', defaultMessage: 'List of Subtopics {list}' },
-  viewArticle: { id: 'story.foci.viewArticle', defaultMessage: '(view article)' },
+  readArticle: { id: 'story.foci.viewArticle', defaultMessage: 'read article' },
 };
 
 const StorySentencePreview = (props) => {
@@ -24,13 +25,24 @@ const StorySentencePreview = (props) => {
             dateToShow += '?';
           }
         }
+        const domainName = storyDomainName(story);
         return (
           <div key={idx} className="story-sentence-preview-item">
-            <h3>{`${story.medium_name} - ${dateToShow} `}<a href={story.url} rel="noopener noreferrer" target="_blank"><FormattedMessage {...localMessages.viewArticle} /></a></h3>
             <p>{`"...${story.sentence}..."`}</p>
+            <h4>
+              <a href={story.url} rel="noopener noreferrer" target="_blank">
+                <img
+                  className="google-icon"
+                  src={googleFavIconUrl(domainName)}
+                  alt={formatMessage(localMessages.readArticle)}
+                />
+                {story.medium_name}
+                <small>{dateToShow}</small>
+              </a>
+            </h4>
           </div>
         );
-      })};
+      })}
     </div>
   );
 };
