@@ -34,15 +34,18 @@ class QueryAttentionOverTimeDrillDownContainer extends React.Component {
   render() {
     const { words, stories, dataPoint } = this.props;
 
+    let dateSelected = true;
     let content = <span />;
     // don't bother if datapoint is empty
     if (dataPoint && words && words.length > 0 && stories !== undefined) {
       content = <QueryAttentionOverTimeDrillDownDataCard info={dataPoint} words={words} stories={stories} />;
     } else if (dataPoint) {
       content = <LoadingSpinner />;
+    } else {
+      dateSelected = false;
     }
 
-    if (content) {
+    if (dateSelected) {
       return (
         <div className="query-attention-drill-down">
           {content}
