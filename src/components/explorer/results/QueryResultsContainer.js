@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import QueryTopEntitiesPeopleResultsContainer from './QueryTopEntitiesPeopleResultsContainer';
 import QueryTopEntitiesOrgsResultsContainer from './QueryTopEntitiesOrgsResultsContainer';
 import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
+import QueryAttentionOverTimeDrillDownContainer from './QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
@@ -13,7 +14,7 @@ import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
 import QueryViewSelector from './QueryViewSelector';
-import QueryThemesResultsContainer from './QueryThemesResultsContainer';
+// import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
 
 class QueryResultsContainer extends React.Component {
@@ -33,18 +34,17 @@ class QueryResultsContainer extends React.Component {
           />
         </Col>
         <Col lg={12} xs={12}>
-          <QueryTotalAttentionResultsContainer
+          <QueryAttentionOverTimeDrillDownContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
           />
         </Col>
-        <Col lg={12}>
-          <QueryThemesResultsContainer
+        <Col lg={12} xs={12}>
+          <QueryTotalAttentionResultsContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}
-            onQueryModificationRequested={handleQueryModificationRequested}
           />
         </Col>
         <Col lg={12} xs={12}>
