@@ -5,6 +5,27 @@ from server.util.tags import processed_by_cliff_query_clause
 import server.util.wordembeddings as wordembeddings
 
 
+def sentence_count(q, start_date_str=None, end_date_str=None):
+    return cached_sentence_count(q, start_date_str, end_date_str)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def cached_sentence_count(q, start_date_str=None, end_date_str=None):
+    sentence_count_result = mc.sentenceCount(solr_query=q, split_start_date=start_date_str,
+                                             split_end_date=end_date_str, split=True)
+    return sentence_count_result
+
+
+def sentence_list(q, rows=10):
+    # can't cache by api key here because we need to use tool mc to get sentences
+    return _cached_sentence_list(q, rows)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_sentence_list(q, rows):
+    return mc.sentenceList(solr_query=q, rows=rows)
+
+
 def top_tags_with_coverage(q, tag_sets_id, limit, sample_size):
     tag_counts = most_used_tags(q, tag_sets_id, limit, sample_size)
     coverage = cliff_coverage(q)
