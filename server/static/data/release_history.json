@@ -1,6 +1,85 @@
 {
   "releases": [
     {
+      "date": "2018-03-12",
+      "version": "v2.5.0",
+      "notes": [
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Click on a point on the attention chart to see more details.",
+          "details": "This replicates a feature we used to have on the Dashboard tool.  Click a data point on an Explorer attention chart and you'll see a sample of stories and a word cloud for just that time period.  This can help you identify what happened on a specific day."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Comparative word cloud now reloads after new search is run."
+        },
+        { 
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Theme charts are now normalized so they aren't misleading.",
+          "details": "Sometimes the bubbles were really big, even though the number of stories with a certain theme were quite small.  We're now showing these as a ratio on top of a grey circle that represents the total number of stories, so you won't be misled by a big bubble only showing a small quantity.  This also helps compare theme results across different Explorer searches."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Theme downloads now work for multiple queries."
+        },
+        { 
+          "apps": ["explorer", "topics", "sources"],
+          "type": "Feature",
+          "note": "New release notes menu and webpage to show recent changes."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Created <a href=\"https://github.com/mitmedialab/MediaCloud-Web-Tools/blob/master/doc/collections-csv-data-dictonary.md\">a data-dictionary</a> to document the collections CSV file format."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "You can now search in all Media Cloud sources, even though this is a bad idea.",
+          "details": "Our collection of media sources is closely aligned with topics we have researched before, and doesn't represent a balanced list of media sources that represent the media ecosystem online. For instance, because we have done deep research on gender and reproductive rights, we have an over-representation of blogs and media outlets that cover those issues. The same is true for public health and international development. You should try to avoid searching all sources. Click 'Add Media' and pick some specific sources, or country-based collections to localize your search and get more representative results."
+        },
+        { 
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Maps and entity lists now work for larger topics."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fix reloading explorer results pages."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Save search button now works in Firefox."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better handling of unicode file names."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Reduce jumpiness of source search autocomplete."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Listing geographic collections and metadata is much faster."
+        },
+        { 
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Fixed link to Sources app on the Tools page."
+        }
+      ]
+    },
+    {
       "date": "2018-03-04",
       "version": "v2.4.10",
       "notes": [
