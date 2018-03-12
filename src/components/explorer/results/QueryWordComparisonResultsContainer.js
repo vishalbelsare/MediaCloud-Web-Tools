@@ -23,11 +23,11 @@ const RIGHT = 1;
 
 class QueryWordComparisonResultsContainer extends React.Component {
   componentWillMount() {
-    const { queries, selectComparativeWords } = this.props;
+    const { queries, selectComparativeWords, leftQuery } = this.props;
     const leftQ = queries[0];
     const rightQ = queries.length > 1 ? queries[1] : queries[0];
-    if (leftQ === null) {
-      selectComparativeWords(leftQ, LEFT); // default selection
+    if (leftQuery === null) {
+      selectComparativeWords(leftQ, LEFT); // default selection. we can't do this if the user has set the UI widget
       selectComparativeWords(rightQ, RIGHT);
     }
   }
