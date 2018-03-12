@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 const RecentNewsMenuItem = props => (
   <div className="recent-news-menu-item">
     <span className={`news-type news-${props.item.type.toLowerCase()}`}>{props.item.type}</span>
-    {props.item.note}
+    <span dangerouslySetInnerHTML={{ __html: props.item.note }} />
   </div>
 );
 

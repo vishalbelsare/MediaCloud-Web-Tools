@@ -63,7 +63,7 @@ def _cached_tag_list(mc_api_key, tag_sets_id, last_tags_id, rows, public_only):
 
 
 def featured_collections():
-    return cached_featured_collections
+    return cached_featured_collections()
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
