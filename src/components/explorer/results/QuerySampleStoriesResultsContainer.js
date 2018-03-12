@@ -50,7 +50,7 @@ class QuerySampleStoriesResultsContainer extends React.Component {
         />
         <StoryTable
           className="story-table"
-          stories={results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex] : []}
+          stories={results[this.state.selectedQueryIndex] ? results[this.state.selectedQueryIndex].slice(0, 10) : []}
           onChangeFocusSelection={handleStorySelection}
           maxTitleLength={50}
         />
