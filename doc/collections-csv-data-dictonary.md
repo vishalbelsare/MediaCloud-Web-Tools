@@ -25,12 +25,12 @@ This indicates the state the source is published in. Values in this column are b
 
 ## primary_language
 
-This is the main language the source publishes in.  This is algorithmically determined by our language detection system.  If this column is empty, or says "none", that means we do not have enough stories to make a good judgement about the primary language. If uploading data, you should leave this empty, because it is algorithmically determined.
+This is the main language the source publishes in. This is encoded based on the [2-letter 639-1 standard](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes). This is algorithmically determined by our language detection system.  If this column is empty, or says "none", that means we do not have enough stories to make a good judgement about the primary language. If uploading data, you should leave this empty, because it is algorithmically determined. When uploading, you should write the language code in lowercase.
 
 
 ## subject_country
 
-This is the main county stories from this source are about.  This is algorithmically determined by our geo-parsing and geo-location engine. Countries are represented by their ["alpha3" ISO-3166-1 standard](https://en.wikipedia.org/wiki/ISO_3166-1).  If this column is empty, or says "none", that means we do not have enough stories to make a good judgement. If uploading data, you should leave this empty, because it is algorithmically determined.
+This is the main county stories from this source are about.  This is algorithmically determined by our geo-parsing and geo-location engine. Countries are represented by their full official name.  If this column is empty, or says "none", that means we do not have enough stories to make a good judgement. If uploading data, you should leave this empty, because it is algorithmically determined.
 
 ## media_type
 

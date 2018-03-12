@@ -165,7 +165,7 @@ def api_collection_sources_csv(collection_id):
     for src in all_media:
         for tag in src['media_source_tags']:
             if is_metadata_tag_set(tag['tag_sets_id']):
-                format_metadata_fields(src, tag['tag_sets_id'], tag['tag'])
+                format_metadata_fields(src, tag)
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
     what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
     return csv.download_media_csv(all_media, file_prefix, what_type_download)
