@@ -96,6 +96,7 @@ class QueryThemesResultsContainer extends React.Component {
 }
 
 QueryThemesResultsContainer.propTypes = {
+  // from parent
   lastSearchTime: PropTypes.number.isRequired,
   queries: PropTypes.array.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
