@@ -109,7 +109,7 @@ const mapDispatchToProps = dispatch => ({
       const queryStr = `[{"q":"${encodeURIComponent(keyword)}"}]`;
       urlParamString = `demo/search?q=${queryStr}`;
     }
-    dispatch(push(`/queries/${urlParamString}`));
+    dispatch(push(`/queries/${urlParamString}&auto=true`));
   },
 });
 
