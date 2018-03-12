@@ -4,8 +4,8 @@ import flask_login
 from operator import itemgetter
 from server import app, mc
 from server.auth import user_admin_mediacloud_client
-from server.cache import cache, key_generator
 from server.util.request import api_error_handler
+import server.views.explorer.apicache as apicache
 import server.util.csv as csv
 from server.views.explorer import parse_query_with_args_and_sample_search, parse_query_with_keywords, \
     load_sample_searches, parse_as_sample, file_name_for_download
@@ -22,16 +22,19 @@ def api_explorer_sentences_count():
     user_mc = user_admin_mediacloud_client()
     # dates are required as is one collection, how do we handle default for logged in users?
     solr_query = parse_query_with_keywords(request.args)
-    sentence_count_result = cached_by_query_sentence_counts(solr_query, request.args['start_date'], request.args['end_date'])
+    sentence_count_result = apicache.sentence_count(solr_query, request.args['start_date'], request.args['end_date'])
     return jsonify(sentence_count_result)
+
 
 @app.route('/api/explorer/sentences/list', methods=['GET'])
 @flask_login.login_required
 @api_error_handler
 def api_explorer_sentences_list():
     solr_query = parse_query_with_keywords(request.args)
-    results = mc.sentenceList(solr_query=solr_query, rows=10)
-    sentences = [s for s in results['response']['docs'] if s['sentence']]
+    results = apicache.sentence_list(solr_query, rows=10)
+    sentences = []
+    if 'docs' in results['response']:
+        sentences = [s for s in results['response']['docs'] if s['sentence']]
     return jsonify({'results': sentences})
 
 
@@ -57,16 +60,9 @@ def api_explorer_demo_sentences_count():
     else:
         solr_query = parse_query_with_keywords(request.args)
     # why is this call fundamentally different than the cache call???
-    results = cached_by_query_sentence_counts(solr_query, start_date, end_date)
+    results = apicache.sentence_count(solr_query, start_date, end_date)
     
     return jsonify(results)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_by_query_sentence_counts(solr_query, start_date_str=None, end_date_str=None):
-    sentence_count_result = mc.sentenceCount(solr_query=solr_query, split_start_date=start_date_str,
-                                             split_end_date=end_date_str, split=True)
-    return sentence_count_result
 
 
 @app.route('/api/explorer/sentences/count.csv', methods=['POST'])
@@ -87,7 +83,7 @@ def api_explorer_sentence_count_csv():
         start_date = query_object['startDate']
         end_date = query_object['endDate']
     # sentence count needs dates to be sent explicitly -TODO check what has priority
-    results = cached_by_query_sentence_counts(solr_query, start_date, end_date)  # get dates out of query?
+    results = apicache.sentence_count(solr_query, start_date, end_date)  # get dates out of query?
     clean_results = [{'date': date, 'sentences': count} for date, count in results['split'].iteritems() if date not in ['gap', 'start', 'end']]
     clean_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'sentences']

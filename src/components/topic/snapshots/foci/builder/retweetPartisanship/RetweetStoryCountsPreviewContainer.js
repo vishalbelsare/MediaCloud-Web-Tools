@@ -23,7 +23,7 @@ const RetweetStoryCountsPreviewContainer = (props) => {
   let content = null;
   if (counts !== null) {
     const data = counts.map((info, idx) => ({
-      value: info.count,
+      value: info.pct,
       fill: PARTISANSHIP_COLORS[idx],
       aboveText: info.label,
       aboveTextColor: 'rgb(0,0,0)',
@@ -34,6 +34,8 @@ const RetweetStoryCountsPreviewContainer = (props) => {
       domId={BUBBLE_CHART_DOM_ID}
       width={700}
       padding={30}
+      maxBubbleRadius={60}
+      asPercentage
     />);
   }
   return (

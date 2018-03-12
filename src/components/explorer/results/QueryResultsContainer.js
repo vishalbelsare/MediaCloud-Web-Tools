@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import QueryTopEntitiesPeopleResultsContainer from './QueryTopEntitiesPeopleResultsContainer';
 import QueryTopEntitiesOrgsResultsContainer from './QueryTopEntitiesOrgsResultsContainer';
 import QueryAttentionOverTimeResultsContainer from './QueryAttentionOverTimeResultsContainer';
+import QueryAttentionOverTimeDrillDownContainer from './QueryAttentionOverTimeDrillDownContainer';
 import QueryWordComparisonResultsContainer from './QueryWordComparisonResultsContainer';
 import QuerySampleStoriesResultsContainer from './QuerySampleStoriesResultsContainer';
 import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsContainer';
@@ -27,6 +28,13 @@ class QueryResultsContainer extends React.Component {
       <Row>
         <Col lg={12} xs={12}>
           <QueryAttentionOverTimeResultsContainer
+            lastSearchTime={lastSearchTime}
+            queries={queries}
+            isLoggedIn={isLoggedIn}
+          />
+        </Col>
+        <Col lg={12} xs={12}>
+          <QueryAttentionOverTimeDrillDownContainer
             lastSearchTime={lastSearchTime}
             queries={queries}
             isLoggedIn={isLoggedIn}

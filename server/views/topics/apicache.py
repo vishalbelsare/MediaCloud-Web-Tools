@@ -261,7 +261,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
-    timespan_query = "{~ timespan:"+str(timespans_id)+" }"
+    timespan_query = "timespans_id:{}".format(timespans_id)
     if (q is None) or (len(q) == 0):
         query = timespan_query
     else:
