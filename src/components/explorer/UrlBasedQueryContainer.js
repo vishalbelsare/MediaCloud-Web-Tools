@@ -32,8 +32,10 @@ function composeUrlBasedQueryContainer() {
       };
       componentWillMount() {
         const { location } = this.props;
-        this.setState({ queryInStore: false }); // necc?
-        this.setQueryFromLocation(location);
+        // if from homepage, allow automagic, if from URL, do not...
+        const autoMagic = location.query.auto === 'true';
+        this.setState({ queryInStore: false }); // if/def automagic here
+        this.setQueryFromLocation(location, autoMagic);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -57,7 +59,7 @@ function composeUrlBasedQueryContainer() {
           // console.log('  other change');
         }
       }
-      setQueryFromLocation(location) {
+      setQueryFromLocation(location, autoName) {
         // regular searches are in a queryParam, but samples by id are part of the path
         const url = location.pathname;
         const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
@@ -65,12 +67,12 @@ function composeUrlBasedQueryContainer() {
         if (!isNaN(sampleNumber)) {
           this.setQueryFromSample(sampleNumber);
         } else {
-          this.setQueryFromSearch(location.search);
+          this.setQueryFromSearch(location.query.q, autoName);
         }
       }
-      setQueryFromSearch(search) {
-        const queryAsJsonStr = search.slice(3, search.length);
-        this.setQueryFromString(queryAsJsonStr);
+      setQueryFromSearch(search, autoName) {
+        // const queryAsJsonStr = search.slice(3, search.length);
+        this.setQueryFromString(search, autoName);
       }
       setQueryFromSample(sampleNumber) {
         const { saveQueriesFromParsedUrl, samples, isLoggedIn } = this.props;
@@ -78,20 +80,16 @@ function composeUrlBasedQueryContainer() {
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
-      setQueryFromString(queryAsJsonStr) {
+      setQueryFromString(queryAsJsonStr, autoNaming) {
         const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
         const { formatMessage } = this.props.intl;
         let queriesFromUrl;
 
         try {
-          queriesFromUrl = decodeQueryParamString(queryAsJsonStr);
-        } catch (e) { // clunky but a necessary check for Firefox
-          try {
-            queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr)); // and this doesn't work for quoted search strings in chrome
-          } catch (f) {
-            addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
-            return;
-          }
+          queriesFromUrl = decodeQueryParamString(decodeURIComponent(queryAsJsonStr));
+        } catch (f) {
+          addAppNotice({ level: LEVEL_ERROR, message: formatMessage(localMessages.errorInURLParams) });
+          return;
         }
 
         let extraDefaults = {};
@@ -104,6 +102,8 @@ function composeUrlBasedQueryContainer() {
             startDate: defaultDates.start,
             endDate: defaultDates.end,
           };
+        } else {
+          extraDefaults = { autoNaming };
         }
         queriesFromUrl = queriesFromUrl.map((query, index) => ({
           ...query, // let anything on URL override label and color

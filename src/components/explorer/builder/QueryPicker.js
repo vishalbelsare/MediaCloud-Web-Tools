@@ -40,7 +40,8 @@ class QueryPicker extends React.Component {
     }
   } */
   addAQuery(newQueryObj) {
-    const { addAQuery } = this.props;
+    const { addAQuery, selected } = this.props;
+    this.handleSelectedQueryChange(selected, selected.index);
     addAQuery(newQueryObj);
   }
   focusRequested = field => field.focus();
