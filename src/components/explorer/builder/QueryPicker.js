@@ -211,6 +211,10 @@ class QueryPicker extends React.Component {
       if (isLoggedIn || isEditable) {
         const colorPallette = idx => d3.schemeCategory10[idx % 10];
         const dateObj = getPastTwoWeeksDateRange();
+        if (unDeletedQueries.length > 0) {
+          dateObj.start = unDeletedQueries[unDeletedQueries.length - 1].startDate;
+          dateObj.end = unDeletedQueries[unDeletedQueries.length - 1].endDate;
+        }
         const newIndex = queries.length; // all queries, including 'deleted' ones
         const genDefColor = colorPallette(newIndex);
         const newQueryLabel = `Query ${String.fromCharCode('A'.charCodeAt(0) + newIndex)}`;
