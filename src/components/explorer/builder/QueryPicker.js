@@ -57,8 +57,11 @@ class QueryPicker extends React.Component {
   }
   // called by query picker to update things like label or color
   updateQueryProperty(query, propertyName, newValue) {
-    const { updateCurrentQuery } = this.props;
-    const updatedQuery = { ...query };
+    const { updateCurrentQuery, formQuery } = this.props;
+    const updatedQuery = {
+      ...query,
+      ...formQuery,
+    };
     updatedQuery[propertyName] = newValue;
     if (propertyName === 'label') { // no longer auto-name query if the user has intentionally changed it
       updatedQuery.autoNaming = false;
@@ -72,11 +75,13 @@ class QueryPicker extends React.Component {
 
   handleColorChange = (newColorInfo) => {
     // when user changes color we want to change it on all charts right away
-    const { selected, updateCurrentQuery } = this.props;
+    const { selected, formQuery, updateCurrentQuery } = this.props;
     const updatedQuery = {
       ...selected,
+      ...formQuery,
       color: newColorInfo.value,
     };
+    // this.handleSelectedQueryChange(selected, selected.index);
     updateCurrentQuery(updatedQuery, 'color');
   }
   handleMediaDelete = (toBeDeletedObj) => {
