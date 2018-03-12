@@ -4,7 +4,7 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, updateQuery } from '../../../actions/explorerActions';
+import { fetchQueryTopWordsComparison, fetchDemoQueryTopWordsComparison, selectComparativeWordField, resetTopWordsComparison, updateQuery } from '../../../actions/explorerActions';
 import { queryChangedEnoughToUpdate } from '../../../lib/explorerUtil';
 import { getBrandDarkColor } from '../../../styles/colors';
 import ComparativeOrderedWordCloud from '../../vis/ComparativeOrderedWordCloud';
@@ -23,18 +23,33 @@ const RIGHT = 1;
 
 class QueryWordComparisonResultsContainer extends React.Component {
   componentWillMount() {
-    const { queries, leftQuery, selectComparativeWords } = this.props;
-    if (leftQuery === null) { // selections haven't been set yet so do init
-      const leftQ = queries[0];
-      const rightQ = queries.length > 1 ? queries[1] : queries[0];
-      selectComparativeWords(leftQ, LEFT);
+    const { queries, selectComparativeWords } = this.props;
+    const leftQ = queries[0];
+    const rightQ = queries.length > 1 ? queries[1] : queries[0];
+    if (leftQ === null) {
+      selectComparativeWords(leftQ, LEFT); // default selection
       selectComparativeWords(rightQ, RIGHT);
     }
   }
   componentWillReceiveProps(nextProps) {
-    const { lastSearchTime, fetchData, leftQuery, rightQuery } = this.props;
+    const { lastSearchTime, fetchData, selectComparativeWords, leftQuery, rightQuery } = this.props;
+    let leftQ = null;
+    let rightQ = null;
     if (nextProps.lastSearchTime !== lastSearchTime) {
-      fetchData([leftQuery, rightQuery]);
+      // if a search query change from the top
+      leftQ = nextProps.queries[0];
+      rightQ = nextProps.queries.length > 1 ? nextProps.queries[1] : nextProps.queries[0];
+      selectComparativeWords(leftQ, LEFT);
+      selectComparativeWords(rightQ, RIGHT);
+      fetchData([leftQ, rightQ]);
+    } else if (nextProps.leftQuery !== leftQuery ||
+      nextProps.rightQuery !== rightQuery) {
+      // if a change in the comparison UI selection
+      leftQ = nextProps.leftQuery;
+      rightQ = nextProps.rightQuery;
+      selectComparativeWords(leftQ, LEFT);
+      selectComparativeWords(rightQ, RIGHT);
+      fetchData([leftQ, rightQ]);
     }
   }
   shouldComponentUpdate(nextProps) {
@@ -43,10 +58,6 @@ class QueryWordComparisonResultsContainer extends React.Component {
     // also check if they changed their view choices
     return (shouldChange || (nextProps.leftQuery !== leftQuery || nextProps.rightQuery !== rightQuery)
     );
-  }
-
-  componentWillUnmount() {
-    this.setState({ leftQuery: '', rightQuery: '' });
   }
 
   selectAndFetchComparedQueries = (queryObj, target) => {
@@ -169,7 +180,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
-    // dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
+    dispatch(resetTopWordsComparison()); // necessary if a query deletion has occurred
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
       const comparedQueries = runTheseQueries.map(q => ({
