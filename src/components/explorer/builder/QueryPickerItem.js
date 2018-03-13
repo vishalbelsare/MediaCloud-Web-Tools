@@ -10,8 +10,8 @@ import { getShortDate } from '../../../lib/dateUtil';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia', defaultMessage: 'all media (generally not a good idea)' },
-  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{sourceCount, plural, \n =1 {# source} \n other {# sources }\n}' },
-  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =1 {# collection} \n other {# collections }\n}' },
+  sourcesSummary: { id: 'explorer.querypicker.sources', defaultMessage: '{sourceCount, plural, \n =0 {``} \n =1 {# source} \n other {# sources }\n}' },
+  collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =0 {``} \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
 };
@@ -119,14 +119,16 @@ class QueryPickerItem extends React.Component {
           />
         );
       }
-
+      const LABEL_LIMIT = 30;
       const collectionCount = query.collections ? query.collections.length : 0;
       const sourceCount = query.sources ? query.sources.length : 0;
       // const srcDesc = query.media;
       const totalMediaCount = collectionCount + sourceCount;
       const queryLabel = query.label;
+      let oneSourceLabel = query.sources[0] && query.sources[0].name ? query.sources[0].name : '';
       const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
       const oneCollLabel = collectionCount === 1 ? oneCollLabelOrNumber : '';
+      oneSourceLabel = sourceCount === 1 ? oneSourceLabel : '';
 
       const oneCollStatus = oneCollLabel;
       subT = <FormattedMessage {...localMessages.emptyMedia} values={{ totalMediaCount }} />;
@@ -135,7 +137,15 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            {oneCollStatus}<br />
+            {oneCollStatus.slice(0, LABEL_LIMIT).concat('...')}<br />
+            {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
+          </div>
+        );
+      } else if (collectionCount === 0 && sourceCount === 1) {
+        subT = (
+          <div className="query-info">
+            {displayLabel ? query.label : ''}
+            {oneSourceLabel.slice(0, LABEL_LIMIT).concat('...')}<br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -143,8 +153,8 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            <FormattedMessage {...localMessages.collectionsSummary} values={{ collectionCount, label: queryLabel }} /><br />
-            <FormattedMessage {...localMessages.sourcesSummary} values={{ sourceCount, label: queryLabel }} /><br />
+            {collectionCount > 0 ? <div><FormattedMessage {...localMessages.collectionsSummary} values={{ collectionCount, label: queryLabel }} /><br /></div> : ''}
+            {sourceCount > 0 ? <div><FormattedMessage {...localMessages.sourcesSummary} values={{ sourceCount, label: queryLabel }} /><br /> </div> : ''}
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
