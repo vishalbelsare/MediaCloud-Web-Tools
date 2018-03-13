@@ -15,12 +15,11 @@ export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
 
-export function generateQueryParamObject(query) {
-  const skipPerQuery = this;
+export function generateQueryParamObject(query, skipEncoding) {
   return {
-    label: skipPerQuery ? query.label : encodeURIComponent(query.label),
-    q: skipPerQuery ? query.q : encodeURIComponent(query.q),
-    color: skipPerQuery ? query.color : encodeURIComponent(query.color),
+    label: skipEncoding ? query.label : encodeURIComponent(query.label),
+    q: skipEncoding ? query.q : encodeURIComponent(query.q),
+    color: skipEncoding ? query.color : encodeURIComponent(query.color),
     startDate: query.startDate,
     endDate: query.endDate,
     sources: query.sources && query.sources.length > 0 ? query.sources.map(s => (s.id ? s.id : s)) : [], // id field or the id itself
@@ -29,7 +28,7 @@ export function generateQueryParamObject(query) {
 }
 
 export function generateQueryParamString(queries) {
-  const queriesForUrl = queries.map(generateQueryParamObject, false);
+  const queriesForUrl = queries.map(q => generateQueryParamObject(q, false));
   return JSON.stringify(queriesForUrl);
 }
 
