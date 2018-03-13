@@ -27,8 +27,9 @@ svg.bubble-chart {
 
   circle {
     fill: $material-grey800;
-    stroke-width: 5px;
-    stroke: $white;
+    &.total {
+      fill: $material-grey200;
+    }
   }
 
   text {

@@ -91,17 +91,18 @@ def format_name_from_label(user_label):
     return formatted_name
 
 
-def format_metadata_fields(media_dict, field, value):
-    if field == TAG_SETS_ID_PUBLICATION_COUNTRY:
-        media_dict['pub_country'] = value[-3:]
-    elif field == TAG_SETS_ID_PUBLICATION_STATE:
-        media_dict['pub_state'] = value
-    elif field == TAG_SETS_ID_PRIMARY_LANGUAGE:
-        media_dict['primary_language'] = value
-    elif field == TAG_SETS_ID_COUNTRY_OF_FOCUS:
-        media_dict['subject_country'] = value
-    elif field == TAG_SETS_ID_MEDIA_TYPE:
-        media_dict['media_type'] = value
+def format_metadata_fields(media_dict, tag):
+    tag_sets_id = tag['tag_sets_id']
+    if tag_sets_id == TAG_SETS_ID_PUBLICATION_COUNTRY:
+        media_dict['pub_country'] = tag['tag'][-3:]
+    elif tag_sets_id == TAG_SETS_ID_PUBLICATION_STATE:
+        media_dict['pub_state'] = tag['tag'][4:]
+    elif tag_sets_id == TAG_SETS_ID_PRIMARY_LANGUAGE:
+        media_dict['primary_language'] = tag['tag']
+    elif tag_sets_id == TAG_SETS_ID_COUNTRY_OF_FOCUS:
+        media_dict['subject_country'] = tag['tag']
+    elif tag_sets_id == TAG_SETS_ID_MEDIA_TYPE:
+        media_dict['media_type'] = tag['tag']
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)

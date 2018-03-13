@@ -1,10 +1,9 @@
 import datetime
 import logging
-import os
-from operator import itemgetter
-
 from multiprocessing import Pool
+
 import flask_login
+import os
 from flask import jsonify, request
 from mediacloud.tags import MediaTag, TAG_ACTION_ADD
 
@@ -13,10 +12,11 @@ from server import app, mc, db
 from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, \
     ROLE_MEDIA_EDIT
 from server.cache import cache, key_generator
-
+import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
-from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, format_metadata_fields, media_with_tag
-from server.views.sources import POPULAR_COLLECTION_LIST, FEATURED_COLLECTION_LIST, SOURCES_TEMPLATE_PROPS_EDIT, \
+from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, format_name_from_label, \
+    format_metadata_fields, media_with_tag
+from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
@@ -72,50 +72,15 @@ def api_collection_set(tag_sets_id):
     :return: dict of info and list of collections in
     '''
     if user_has_auth_role(ROLE_MEDIA_EDIT):
-        info = _tag_set_with_private_collections(tag_sets_id)
+        info = apicache.tag_set_with_private_collections(user_mediacloud_key(), tag_sets_id)
     else:
-        info = _tag_set_with_public_collections(tag_sets_id)
+        info = apicache.tag_set_with_public_collections(user_mediacloud_key(), tag_sets_id)
 
-    add_user_favorite_flag_to_collections(info['collections'])
+    add_user_favorite_flag_to_collections(info['tags'])
+    # rename to make more sense here
+    info['collections'] = info['tags']
+    del info['tags']
     return jsonify(info)
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_tag_list(tag_sets_id, last_tags_id, rows, public_only):
-    user_mc = user_mediacloud_client()
-    # user agnostic cache here, because it isn't user-dependent
-    tag_list = user_mc.tagList(tag_sets_id=tag_sets_id, last_tags_id=last_tags_id, rows=rows, public_only=public_only)
-    return tag_list
-
-
-def _tag_set_with_collections(tag_sets_id, show_only_public_collections):
-    user_mc = user_mediacloud_client()
-    tag_set = user_mc.tagSet(tag_sets_id)
-    # page through tags
-    more_tags = True
-    all_tags = []
-    last_tags_id = 0
-    while more_tags:
-        tags = _cached_tag_list(tag_set['tag_sets_id'], last_tags_id, 100, show_only_public_collections)
-        all_tags = all_tags + tags
-        if len(tags) > 0:
-            last_tags_id = tags[-1]['tags_id']
-        more_tags = len(tags) != 0
-    collection_list = [t for t in all_tags if
-                       t['show_on_media'] is 1 or t['show_on_media'] is True]  # double check the show_on_media because that controls public or not
-    collection_list = sorted(collection_list, key=itemgetter('label'))
-    return {
-        'name': tag_set['label'],
-        'description': tag_set['description'],
-        'collections': collection_list
-    }
-
-
-def _tag_set_with_private_collections(tag_sets_id):
-    return _tag_set_with_collections(tag_sets_id, False)
-
-
-def _tag_set_with_public_collections(tag_sets_id):
-    return _tag_set_with_collections(tag_sets_id, True)
 
 
 # seems that this should have a better name- it's getting a list of sources given a list of collections...
@@ -138,39 +103,17 @@ def api_collections_by_ids():
 @app.route('/api/collections/featured', methods=['GET'])
 @api_error_handler
 def api_featured_collections():
-    featured_collections = _cached_featured_collections()
+    featured_collections = apicache.featured_collections()
     return jsonify({'results': featured_collections})
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_featured_collections():
-    featured_collections = []
-    for tags_id in FEATURED_COLLECTION_LIST:
-        info = mc.tag(tags_id)
-        info['id'] = tags_id
-        # use None here to use app-level mc object
-        info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tags_id))
-        featured_collections += [info]
-    return featured_collections
 
 
 @app.route('/api/collections/popular', methods=['GET'])
 @api_error_handler
 def api_popular_collections():
-    popular_collections = _cached_popular_collections()
+    popular_collections = apicache.popular_collections()
     sorted_popular_collections = sorted(popular_collections,
                                         key=lambda t: t['label'].lower() if t['label'] is not None else None)
     return jsonify({'results': sorted_popular_collections})
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_popular_collections():
-    popular_collections = []
-    for tags_id in POPULAR_COLLECTION_LIST:
-        info = mc.tag(tags_id)
-        info['id'] = tags_id
-        popular_collections += [info]
-    return popular_collections
 
 
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
@@ -222,7 +165,7 @@ def api_collection_sources_csv(collection_id):
     for src in all_media:
         for tag in src['media_source_tags']:
             if is_metadata_tag_set(tag['tag_sets_id']):
-                format_metadata_fields(src, tag['tag_sets_id'], tag['tag'])
+                format_metadata_fields(src, tag)
     file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
     what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
     return csv.download_media_csv(all_media, file_prefix, what_type_download)
