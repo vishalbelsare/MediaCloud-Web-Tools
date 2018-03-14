@@ -7,6 +7,7 @@ import AppButton from '../../common/AppButton';
 import QueryPickerLoggedInHeader from './QueryPickerLoggedInHeader';
 import QueryPickerDemoHeader from './QueryPickerDemoHeader';
 import { getShortDate } from '../../../lib/dateUtil';
+import messages from '../../../resources/messages';
 
 const localMessages = {
   emptyMedia: { id: 'explorer.querypicker.emptyMedia', defaultMessage: 'all media (generally not a good idea)' },
@@ -14,6 +15,7 @@ const localMessages = {
   collectionsSummary: { id: 'explorer.querypicker.coll', defaultMessage: '{collectionCount, plural, \n =0 {``} \n =1 {# collection} \n other {# collections }\n}' },
   searchHint: { id: 'explorer.querypicker.searchHint', defaultMessage: 'keywords' },
   queryDialog: { id: 'explorer.querypicker.queryDialog', defaultMessage: 'The query label shows up on the legend of the various charts and graphs below. We autogenerate it for you based on your query, but you can also set your own short name to make the charts easier to read.' },
+  title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
 };
 
 const focusUsernameInputField = (input) => {
@@ -81,12 +83,13 @@ class QueryPickerItem extends React.Component {
     */
     const actions = [
       <AppButton
-        label="Cancel"
+        className="query-item-header-dialog-button"
+        label={formatMessage(messages.cancel)}
         primary
         onClick={this.handleLabelClose}
       />,
       <AppButton
-        label="Save"
+        label={formatMessage(messages.rename)}
         primary
         keyboardFocused
         onClick={() => this.handleLabelChangeAndClose(query)}
@@ -169,7 +172,7 @@ class QueryPickerItem extends React.Component {
       >
         {headerInfo}
         <Dialog
-          title="Change Query Label"
+          title={formatMessage(localMessages.title)}
           actions={actions}
           modal={false}
           open={this.state.labelChangeDialogOpen}

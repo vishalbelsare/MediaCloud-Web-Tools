@@ -6,26 +6,30 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ColorPicker from '../../common/ColorPicker';
+import messages from '../../../resources/messages';
 
+const localMessages = {
+  title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
+};
 
 class QueryPickerLoggedInHeader extends React.Component {
   render() {
     const { query, isDeletable, onColorChange, onDelete, onLabelEditRequest } = this.props;
-    // const { formatMessage } = this.props.intl;
+    const { formatMessage } = this.props.intl;
     let nameInfo = <div />;
     let menuChildren = null;
     let iconOptions = null;
     if (isDeletable()) { // if this is not the only QueryPickerItem
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
-          <MenuItem primaryText="Delete" onTouchTap={() => onDelete(query)} />
+          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem primaryText={formatMessage(messages.delete)} onTouchTap={() => onDelete(query)} />
         </div>
       );
     } else {
       menuChildren = (
         <div>
-          <MenuItem primaryText="Edit Query Label" onTouchTap={() => onLabelEditRequest()} />
+          <MenuItem primaryText={formatMessage(localMessages.title)} onTouchTap={() => onLabelEditRequest()} />
         </div>
       );
     }
