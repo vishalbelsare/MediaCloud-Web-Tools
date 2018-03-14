@@ -55,7 +55,10 @@ class QueryPickerItem extends React.Component {
   handleLabelChangeAndClose = () => {
     const { updateQueryProperty } = this.props;
     this.setState({ labelChangeDialogOpen: false });
-    const updatedLabel = this.state.labelInDialog;
+    let updatedLabel = this.state.labelInDialog;
+    if (updatedLabel.indexOf('...') > 0) {
+      updatedLabel = updatedLabel.slice(0, updatedLabel.indexOf('...') - 1);
+    }
     updateQueryProperty('label', updatedLabel);
   };
 
@@ -164,7 +167,10 @@ class QueryPickerItem extends React.Component {
       }
     }
     const extraClassNames = (isSelected) ? 'selected' : '';
-
+    let fullQuery = query.label;
+    if (fullQuery.indexOf('...') > 0) {
+      fullQuery = fullQuery.slice(0, fullQuery.indexOf('...') - 1);
+    }
     return (
       <div
         className={`query-picker-item ${extraClassNames}`}
@@ -183,7 +189,7 @@ class QueryPickerItem extends React.Component {
             className="query-picker-editable-name"
             id="labelInDialog"
             name="labelInDialog"
-            defaultValue={query.label}
+            defaultValue={fullQuery}
             maxLength={QUERY_LABEL_CHARACTER_LIMIT}
             onChange={(e, val) => {
               this.updateLabelInDialog(val);
