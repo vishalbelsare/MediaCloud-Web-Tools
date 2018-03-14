@@ -17,6 +17,7 @@ export const PICK_ADVANCED = 3;
 
 
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;
+export const QUERY_LABEL_DISPLAY_LIMIT = 25;
 
 export function generateQueryParamObject(query, skipEncoding) {
   return {
