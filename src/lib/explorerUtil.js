@@ -16,7 +16,7 @@ export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
 
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;
-export const QUERY_LABEL_DISPLAY_LIMIT = 25;
+export const QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT = 27;
 
 export function generateQueryParamObject(query) {
   const skipPerQuery = this;
@@ -71,8 +71,7 @@ export function queryChangedEnoughToUpdate(queries, nextQueries, results, nextRe
 }
 
 // TODO: implement this logic from Dashboard
-const MAX_QUERY_LABEL_LENGTH = 60;
-export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, MAX_QUERY_LABEL_LENGTH));
+export const autoMagicQueryLabel = query => decodeURIComponent(trimToMaxLength(query.q, QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT));
 
 
 // This handles samples or user-generated queries for you.  To handle quotes and utf and such, we do this
