@@ -153,3 +153,6 @@ export const setSentenceDataPoint = createAction(SELECT_SENTENCE_DATA_POINT, par
 export const RESET_SENTENCE_DATA_POINT = 'RESET_SENTENCE_DATA_POINT';
 export const resetSentenceDataPoint = createAction(RESET_SENTENCE_DATA_POINT);
 
+export const COPY_FIELD_TO_QUERY = 'COPY_FIELD_TO_QUERY';
+export const copyFieldToQuery = createAction(COPY_FIELD_TO_QUERY, params => params);
+
