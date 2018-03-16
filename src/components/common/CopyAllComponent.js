@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
-import TransformIcon from 'material-ui/svg-icons/image/transform';
 import Dialog from 'material-ui/Dialog';
 import messages from '../../resources/messages';
 
@@ -52,7 +51,7 @@ class CopyAllComponent extends React.Component {
     const dialogTitle = title ? formatMessage(localMessages.title) : '';
     return (
       <span className="copy-all">
-        <label htmlFor="q">{label}</label><TransformIcon onClick={this.handleOpen} />
+        <label htmlFor="q">{label}</label><a role="button" tabIndex="0" onClick={this.handleOpen}>&nbsp;&#x00BB;</a>
         <Dialog
           title={dialogTitle}
           actions={dialogActions}
