@@ -13,7 +13,7 @@ import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery, copyFieldToQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery, copyAndReplaceQueryField } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
@@ -383,7 +383,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     const field = selected[whichFilter];
     queries.map((query) => {
       if (selected.index !== query.index) {
-        return dispatch(copyFieldToQuery({ whichFilter, index: query.index, field }));
+        return dispatch(copyAndReplaceQueryField({ whichFilter, index: query.index, field }));
       }
       return null;
     });

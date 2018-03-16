@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
+import TransformIcon from 'material-ui/svg-icons/image/transform';
 import Dialog from 'material-ui/Dialog';
 import messages from '../../resources/messages';
-import { AddButton } from './IconButton';
 
 const localMessages = {
   title: { id: 'title', defaultMessage: 'Copy To All Queries' },
@@ -26,7 +26,7 @@ class CopyAllComponent extends React.Component {
     this.setState({ open: false });
   };
   render() {
-    const { title, msg } = this.props;
+    const { label, title, msg } = this.props;
     const { formatMessage } = this.props.intl;
     const dialogActions = [
       <FlatButton
@@ -52,7 +52,7 @@ class CopyAllComponent extends React.Component {
     const dialogTitle = title ? formatMessage(localMessages.title) : '';
     return (
       <span className="copy-all">
-        <AddButton onClick={this.handleOpen} />
+        <label htmlFor="q">{label}</label><TransformIcon onClick={this.handleOpen} />
         <Dialog
           title={dialogTitle}
           actions={dialogActions}
@@ -72,6 +72,7 @@ CopyAllComponent.propTypes = {
   // from composition
   intl: PropTypes.object.isRequired,
   // from parent
+  label: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   msg: PropTypes.string.isRequired,
   onOk: PropTypes.func.isRequired,

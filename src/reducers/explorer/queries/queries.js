@@ -1,4 +1,4 @@
-import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES, COPY_FIELD_TO_QUERY } from '../../../actions/explorerActions';
+import { UPDATE_QUERY, UPDATE_QUERY_COLLECTION_LOOKUP_INFO, UPDATE_QUERY_SOURCE_LOOKUP_INFO, ADD_CUSTOM_QUERY, SELECT_SEARCH_BY_ID, SELECT_SEARCH_BY_PARAMS, MARK_AS_DELETED_QUERY, RESET_QUERIES, REMOVE_DELETED_QUERIES, COPY_AND_REPLACE_QUERY_FIELD } from '../../../actions/explorerActions';
 import { autoMagicQueryLabel } from '../../../lib/explorerUtil';
 
 const INITIAL_STATE = [];
@@ -27,10 +27,10 @@ function queries(state = INITIAL_STATE, action) {
         return updatedState;
       }
       return null;
-    case COPY_FIELD_TO_QUERY: // add property to existing
+    case COPY_AND_REPLACE_QUERY_FIELD: // replace property
       if (action.payload.index !== undefined && action.payload.field) {
         updatedState = [...state];
-        updatedState[action.payload.index][action.payload.whichFilter] = updatedState[action.payload.index][action.payload.whichFilter].concat(' OR ').concat(action.payload.field);
+        updatedState[action.payload.index][action.payload.whichFilter] = action.payload.field;
         return updatedState;
       }
       return null;
