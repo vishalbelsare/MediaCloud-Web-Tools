@@ -97,7 +97,7 @@ class QueryForm extends React.Component {
     const currentColor = selected.color; // for ColorPicker
     const currentQ = selected.q;
     let mediaPicker = null;
-    let mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.SandC} /></label>;
+    let mediaLabel = formatMessage(localMessages.SandC);
     if (isEditable) {
       mediaPicker = (
         <MediaPickerDialog
@@ -106,7 +106,7 @@ class QueryForm extends React.Component {
           setQueryFormChildDialogOpen={this.setQueryFormChildDialogOpen}
         />
       );
-      mediaLabel = <label htmlFor="sources"><FormattedMessage {...localMessages.selectSandC} /></label>;
+      mediaLabel = formatMessage(localMessages.selectSandC);
     }
     if (!selected) { return null; }
     // if we have a ref field, we have intend to set the focus to a particular field - the query field

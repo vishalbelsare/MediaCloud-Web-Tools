@@ -131,7 +131,7 @@ class QueryPickerItem extends React.Component {
       // const srcDesc = query.media;
       const totalMediaCount = collectionCount + sourceCount;
       const queryLabel = query.label;
-      let oneSourceLabel = query.sources[0] && query.sources[0].name ? query.sources[0].name : '';
+      let oneSourceLabel = query.sources && query.sources[0] && query.sources[0].name ? query.sources[0].name : '';
       const oneCollLabelOrNumber = query.collections[0] && query.collections[0].label ? query.collections[0].label : '';
       const oneCollLabel = collectionCount === 1 ? oneCollLabelOrNumber : '';
       oneSourceLabel = sourceCount === 1 ? oneSourceLabel : '';
