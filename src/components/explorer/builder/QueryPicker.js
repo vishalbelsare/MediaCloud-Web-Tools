@@ -16,7 +16,7 @@ import QueryHelpDialog from '../../common/help/QueryHelpDialog';
 import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery, copyAndReplaceQueryField } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
-import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
+import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString, KEYWORD, DATES, MEDIA } from '../../../lib/explorerUtil';
 
 const localMessages = {
   mainTitle: { id: 'explorer.querypicker.mainTitle', defaultMessage: 'Query List' },
@@ -380,7 +380,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   handleCopyAll: (whichFilter, selected, queries) => {
     // formQuery
-    const field = selected[whichFilter];
+    let field = null;
+    if (whichFilter === KEYWORD) {
+      field = { q: selected[whichFilter] };
+    } else if (whichFilter === DATES) {
+      field = { startDate: selected.startDate, endDate: selected.endDate };
+    } else if (whichFilter === MEDIA) {
+      field = { collections: selected.collections, sources: selected.sources };
+    }
     queries.map((query) => {
       if (selected.index !== query.index) {
         return dispatch(copyAndReplaceQueryField({ whichFilter, index: query.index, field }));
