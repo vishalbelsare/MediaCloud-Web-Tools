@@ -25,6 +25,11 @@
       padding: 10px;
     }
   }
+
+  span.copy-all a {
+    font-weight: bold;
+    cursor: pointer;
+  }
 }
 
 .query-form {
