@@ -160,8 +160,10 @@ class QueryForm extends React.Component {
                   />
                   {mediaPicker}
                 </div>
-                <div className="dates-field-wrapper">
+                <div>
                   <CopyAllComponent label={formatMessage(localMessages.dates)} title={formatMessage(localMessages.copyQueryDatesTitle)} msg={formatMessage(localMessages.copyQueryDatesMsg)} onOk={() => handleCopyAll(DATES)} />
+                </div>
+                <div className="dates-field-wrapper">
                   <Field
                     className="query-field start-date-wrapper"
                     maxLength="12"
