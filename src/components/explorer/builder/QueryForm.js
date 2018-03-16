@@ -118,8 +118,7 @@ class QueryForm extends React.Component {
             <Row>
               <Col lg={5}>
                 <div className="q-field-wrapper">
-                  <label htmlFor="q"><FormattedMessage {...localMessages.query} /></label>
-                  <CopyAllComponent title={formatMessage(localMessages.copyQueryKeywordTitle)} msg={formatMessage(localMessages.copyQueryKeywordMsg)} onOk={() => handleCopyAll(KEYWORD)} />
+                  <CopyAllComponent label={formatMessage(localMessages.query)} title={formatMessage(localMessages.copyQueryKeywordTitle)} msg={formatMessage(localMessages.copyQueryKeywordMsg)} onOk={() => handleCopyAll(KEYWORD)} />
                   <Field
                     className="query-field"
                     name="q"
@@ -148,8 +147,7 @@ class QueryForm extends React.Component {
               <Col lg={1} />
               <Col lg={6}>
                 <div className="media-field-wrapper">
-                  {mediaLabel}
-                  <CopyAllComponent title={formatMessage(localMessages.copyQueryMediaTitle)} msg={formatMessage(localMessages.copyQueryMediaMsg)} onOk={() => handleCopyAll(MEDIA)} />
+                  <CopyAllComponent label={mediaLabel} title={formatMessage(localMessages.copyQueryMediaTitle)} msg={formatMessage(localMessages.copyQueryMediaMsg)} onOk={() => handleCopyAll(MEDIA)} />
                   <SourceCollectionsFieldList
                     className="query-field"
                     form="queryForm"
@@ -163,8 +161,7 @@ class QueryForm extends React.Component {
                   {mediaPicker}
                 </div>
                 <div className="dates-field-wrapper">
-                  <CopyAllComponent title={formatMessage(localMessages.copyQueryDatesTitle)} msg={formatMessage(localMessages.copyQueryDatesMsg)} onOk={() => handleCopyAll(DATES)} />
-                  <label htmlFor="startDate"><FormattedMessage {...localMessages.dates} /></label>
+                  <CopyAllComponent label={formatMessage(localMessages.dates)} title={formatMessage(localMessages.copyQueryDatesTitle)} msg={formatMessage(localMessages.copyQueryDatesMsg)} onOk={() => handleCopyAll(DATES)} />
                   <Field
                     className="query-field start-date-wrapper"
                     maxLength="12"
