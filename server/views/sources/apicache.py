@@ -1,41 +1,15 @@
-from operator import itemgetter
-import os
 import json
-from mediacloud import MediaCloud
 import codecs
 
-from server import mc, base_dir
+from server import mc
 from server.cache import cache, key_generator
 from server.views.sources import FEATURED_COLLECTION_LIST, POPULAR_COLLECTION_LIST
 from server.views.sources.words import cached_wordcount
-
-static_tag_set_cache_dir = os.path.join(base_dir, 'server', 'static', 'data')
+import server.util.tags as tags
 
 
 def tags_in_tag_set(mc_api_key, tag_sets_id, only_public_tags, use_file_cache=False):
-    local_mc = MediaCloud(mc_api_key)
-    if use_file_cache:
-        file_name = "tags_in_{}.json".format(tag_sets_id)
-        file_path = os.path.join(static_tag_set_cache_dir, file_name)
-        if os.path.isfile(file_path):
-            return cached_tag_set_file(file_path)   # more caching!
-    tag_set = local_mc.tagSet(tag_sets_id)
-    # page through tags
-    more_tags = True
-    all_tags = []
-    last_tags_id = 0
-    while more_tags:
-        tags = _cached_tag_list(mc_api_key, tag_set['tag_sets_id'], last_tags_id, 100, only_public_tags)
-        all_tags = all_tags + tags
-        if len(tags) > 0:
-            last_tags_id = tags[-1]['tags_id']
-        more_tags = len(tags) != 0
-    tag_list = [t for t in all_tags if (only_public_tags is False) or
-                (t['show_on_media'] is 1 or t['show_on_media'] is True)]  # double check the show_on_media because that controls public or not
-    tag_list = sorted(tag_list, key=itemgetter('label'))
-    tag_set['tags'] = tag_list
-    tag_set['name'] = tag_set['label']  # for backwards compatability
-    return tag_set
+    return tags.tag_set_with_tags(mc_api_key, tag_sets_id, only_public_tags, use_file_cache)
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
@@ -52,14 +26,6 @@ def tag_set_with_private_collections(mc_api_key, tag_sets_id):
 
 def tag_set_with_public_collections(mc_api_key, tag_sets_id):
     return tags_in_tag_set(mc_api_key, tag_sets_id, True, True)
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def _cached_tag_list(mc_api_key, tag_sets_id, last_tags_id, rows, public_only):
-    local_mc = MediaCloud(mc_api_key)
-    # user agnostic cache here, because it isn't user-dependent
-    tag_list = local_mc.tagList(tag_sets_id=tag_sets_id, last_tags_id=last_tags_id, rows=rows, public_only=public_only)
-    return tag_list
 
 
 def featured_collections():
