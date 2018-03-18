@@ -67,7 +67,7 @@ function composeUrlBasedQueryContainer() {
         if (!isNaN(sampleNumber)) {
           this.setQueryFromSample(sampleNumber);
         } else {
-          this.setQueryFromSearch(location.query.q, autoName);
+          this.setQueryFromSearch(location.query.q.replace(/:""/g, ':"\\"').replace(/"",/g, '\\"",'), autoName);
         }
       }
       setQueryFromSearch(search, autoName) {

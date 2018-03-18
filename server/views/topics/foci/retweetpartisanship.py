@@ -2,11 +2,11 @@ import logging
 from flask import jsonify, request
 import flask_login
 
-from server import app
+from server import app, TOOL_API_KEY
 from server.util.request import api_error_handler, json_error_response, form_fields_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
-from server.util.tags import cached_tags_in_tag_set, TAG_SETS_ID_RETWEET_PARTISANSHIP_2016
+from server.util.tags import tags_in_tag_set, TAG_SETS_ID_RETWEET_PARTISANSHIP_2016
 from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ def retweet_partisanship_coverage(topics_id):
 
 
 def _cached_media_tags(tag_sets_id):
-    partisanship_tags = cached_tags_in_tag_set(tag_sets_id)
+    partisanship_tags = tags_in_tag_set(TOOL_API_KEY, tag_sets_id)
     for tag in partisanship_tags:
         tag['query'] = u"tags_id_media:{}".format(tag['tags_id'])
     return partisanship_tags

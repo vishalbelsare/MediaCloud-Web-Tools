@@ -8,12 +8,10 @@ import json
 import codecs
 import os
 
-from server import mc, TOOL_API_KEY, base_dir
+from server import mc, TOOL_API_KEY, data_dir
 import server.views.sources.apicache as apicache
 
 logger = logging.getLogger(__name__)
-
-output_dir = os.path.join(base_dir, 'server', 'static', 'data')
 
 
 def write_tags_in_set_to_json(tag_sets_id_list, only_public_tags=True, filepath=None):
@@ -23,7 +21,7 @@ def write_tags_in_set_to_json(tag_sets_id_list, only_public_tags=True, filepath=
         tag_set = mc.tagSet(tag_sets_id)
         logger.info(u"  {}".format(tag_set['label']))
         tags_list = apicache.tags_in_tag_set(TOOL_API_KEY, tag_sets_id, only_public_tags)
-        output_filepath = os.path.join(output_dir, filename) if filepath is None else filepath
+        output_filepath = os.path.join(data_dir, filename) if filepath is None else filepath
         with open(output_filepath, 'wb') as f:
             json.dump(tags_list, codecs.getwriter('utf-8')(f), ensure_ascii=False)
         logger.info(u"    wrote {} collections to {}".format(len(tags_list['tags']), filename))

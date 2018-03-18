@@ -22,7 +22,7 @@ export function fetchMediaPickerSources(params) {
 }
 
 export function metadataValuesForMediaType(id) {
-  return createApiPromise(`api/metadata/${id}/values`);
+  return createApiPromise(`/api/metadata/${id}/values`);
 }
 /*
 export function fetchMediaPickerSourcesByMetadata(params) {
@@ -34,5 +34,5 @@ export function fetchMediaPickerSourcesByMetadata(params) {
 */
 
 export function fetchRecentNews() {
-  return createApiPromise('static/data/release_history.json');
+  return createApiPromise('/api/release-notes');
 }

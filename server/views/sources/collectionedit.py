@@ -9,18 +9,20 @@ from werkzeug.utils import secure_filename
 import csv as pycsv
 from multiprocessing import Pool
 
-from server import app, config
+from server import app, config, TOOL_API_KEY
 from server.util.config import ConfigException
 from server.auth import user_admin_mediacloud_client, user_mediacloud_key, user_name
 from server.util.request import json_error_response, form_fields_required, api_error_handler
 from server.views.sources.collection import allowed_file
 from server.views.sources import COLLECTIONS_TEMPLATE_PROPS_EDIT, COLLECTIONS_TEMPLATE_METADATA_PROPS
 from server.util.tags import VALID_METADATA_IDS, METADATA_PUB_COUNTRY_NAME, \
-    format_name_from_label, cached_tags_in_tag_set, media_with_tag
+    format_name_from_label, tags_in_tag_set, media_with_tag
+
 logger = logging.getLogger(__name__)
 
 MEDIA_UPDATE_POOL_SIZE = 15  # number of parallel processes to use while batch updating media sources
 MEDIA_METADATA_UPDATE_POOL_SIZE = 10  # number of parallel processes to use while batch updating media metadata
+
 
 @app.route('/api/collections/<collection_id>/update', methods=['POST'])
 @form_fields_required('name', 'description')
@@ -195,7 +197,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             results.append(src)
     # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        use_pool = False #causing a system exit 
+        use_pool = True #causing a system exit
         if use_pool:
             pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
             update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
@@ -271,7 +273,7 @@ def update_metadata_for_sources(source_list):
     for m in VALID_METADATA_IDS:
         mid = m.values()[0]
         mkey = m.keys()[0]
-        tag_codes = cached_tags_in_tag_set(mid)
+        tag_codes = tags_in_tag_set(TOOL_API_KEY, mid)
         for source in source_list:
             if mkey in source:
                 metadata_tag_name = source[mkey]
@@ -290,7 +292,7 @@ def update_metadata_for_sources(source_list):
     # now do all the tags in parallel batches so it happens quickly
     if len(tags) > 0:
         chunks = [tags[x:x + 50] for x in xrange(0, len(tags), 50)]  # do 50 tags in each request
-        use_pool = False
+        use_pool = True
         if use_pool:
             pool = Pool(processes=MEDIA_METADATA_UPDATE_POOL_SIZE )  # process updates in parallel with worker function
             pool.map(_tag_media_worker, chunks)  # blocks until they are all done

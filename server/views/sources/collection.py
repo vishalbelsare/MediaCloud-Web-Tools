@@ -9,8 +9,8 @@ from mediacloud.tags import MediaTag, TAG_ACTION_ADD
 
 import server.util.csv as csv
 from server import app, mc, db
-from server.auth import user_mediacloud_key, user_mediacloud_client, user_name, user_has_auth_role, \
-    ROLE_MEDIA_EDIT
+from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client, user_name,\
+    user_has_auth_role, ROLE_MEDIA_EDIT
 from server.cache import cache, key_generator
 import server.views.sources.apicache as apicache
 from server.util.request import arguments_required, form_fields_required, api_error_handler
@@ -367,7 +367,7 @@ def similar_collections(collection_id):
 @flask_login.login_required
 @api_error_handler
 def collection_create():
-    user_mc = user_mediacloud_client()
+    user_mc = user_admin_mediacloud_client()     # has to be admin to call createTag
     label = '{}'.format(request.form['name'])
     description = request.form['description']
     static = request.form['static'] if 'static' in request.form else None

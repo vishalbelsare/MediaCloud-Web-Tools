@@ -27,6 +27,7 @@ SERVER_APP_TOOLS = "tools"
 SERVER_APP_EXPLORER = "explorer"
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+data_dir = os.path.join(base_dir, 'server', 'static', 'data')
 
 # setup logging
 with open(os.path.join(base_dir, 'config', 'server-logging.json'), 'r') as f:
@@ -172,7 +173,7 @@ def index():
 
 # now load in the appropriate view endpoints, after the app has been initialized
 import server.views.user
-import server.views.stat
+import server.views.app
 import server.views.download
 import server.views.stories
 import server.views.media_search
