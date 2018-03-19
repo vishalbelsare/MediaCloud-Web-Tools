@@ -21,7 +21,9 @@ function selected(state = INITIAL_STATE, action) {
       if (updatedState.autoNaming) {
         updatedState.label = autoMagicQueryLabel(updatedState);
       }
-      updatedState.autoNaming = (updatedState.q === '*' || updatedState.q === '');
+      if (updatedState.q === '*' || updatedState.q === '') {
+        updatedState.autoNaming = true;
+      }
 
       return updatedState;
     case RESET_SELECTED:

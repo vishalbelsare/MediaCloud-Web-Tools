@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeSummarizedVisualization from './SummarizedVizualization';
 import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchQueryTopWords, fetchDemoQueryTopWords } from '../../../actions/explorerActions';
+import { fetchQueryTopWords, fetchDemoQueryTopWords, resetTopWords } from '../../../actions/explorerActions';
 import { queryChangedEnoughToUpdate, postToDownloadUrl, slugifiedQueryLabel } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
@@ -91,6 +91,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (queries) => {
     // this should trigger when the user clicks the Search button or changes the URL
     // for n queries, run the dispatch with each parsed query
+    dispatch(resetTopWords());
     if (ownProps.isLoggedIn) {
       const runTheseQueries = queries || ownProps.queries;
       runTheseQueries.map((q) => {

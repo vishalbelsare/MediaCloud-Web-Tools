@@ -129,6 +129,10 @@ export const resetSelected = createAction(RESET_SELECTED);
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
+export const RESET_QUERY_TOP_WORDS = 'RESET_QUERY_TOP_WORDS';
+export const resetTopWords = createAction(RESET_QUERY_TOP_WORDS);
+
+
 export const RESET_QUERY_TOP_WORDS_COMPARISON = 'RESET_QUERY_TOP_WORDS_COMPARISON';
 export const resetTopWordsComparison = createAction(RESET_QUERY_TOP_WORDS_COMPARISON);
 
@@ -152,4 +156,7 @@ export const setSentenceDataPoint = createAction(SELECT_SENTENCE_DATA_POINT, par
 
 export const RESET_SENTENCE_DATA_POINT = 'RESET_SENTENCE_DATA_POINT';
 export const resetSentenceDataPoint = createAction(RESET_SENTENCE_DATA_POINT);
+
+export const COPY_AND_REPLACE_QUERY_FIELD = 'COPY_AND_REPLACE_QUERY_FIELD';
+export const copyAndReplaceQueryField = createAction(COPY_AND_REPLACE_QUERY_FIELD, params => params);
 
