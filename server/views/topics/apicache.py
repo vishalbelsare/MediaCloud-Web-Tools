@@ -69,7 +69,6 @@ def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_story_count instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    local_mc = None
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
@@ -101,12 +100,23 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_story_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    local_mc = None
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
         local_mc = user_admin_mediacloud_client()
     return local_mc.topicStoryList(topics_id, **kwargs)
+
+
+def story_list(user_mc_key, q, rows):
+    return _cached_story_list(user_mc_key, q, rows)
+
+
+def _cached_story_list(user_mc_key, q, rows):
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_admin_mediacloud_client()
+    return local_mc.storyList(q, rows=rows)
 
 
 def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q):
