@@ -13,7 +13,7 @@ import ItemSlider from '../../common/ItemSlider';
 import QueryPickerItem from './QueryPickerItem';
 import { updateFeedback } from '../../../actions/appActions';
 import QueryHelpDialog from '../../common/help/QueryHelpDialog';
-import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery } from '../../../actions/explorerActions';
+import { selectQuery, updateQuery, addCustomQuery, loadUserSearches, saveUserSearch, deleteUserSearch, markAsDeletedQuery, copyFieldToQuery } from '../../../actions/explorerActions';
 import { AddQueryButton } from '../../common/IconButton';
 import { getPastTwoWeeksDateRange } from '../../../lib/dateUtil';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, autoMagicQueryLabel, generateQueryParamString } from '../../../lib/explorerUtil';
@@ -178,7 +178,7 @@ class QueryPicker extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches } = this.props;
+    const { isLoggedIn, selected, queries, isEditable, handleLoadUserSearches, handleLoadSelectedSearch, handleDeleteUserSearch, savedSearches, handleCopyAll } = this.props;
     const { formatMessage } = this.props.intl;
     let queryPickerContent; // editable if demo mode
     let queryFormContent; // hidden if demo mode
@@ -295,8 +295,10 @@ class QueryPicker extends React.Component {
             handleLoadSelectedSearch={handleLoadSelectedSearch}
             handleSaveSearch={l => this.saveThisSearch(l)}
             handleDeleteSearch={l => handleDeleteUserSearch(l)}
+            handleCopyAll={property => handleCopyAll(property, selected, queries)}
             isEditable={canSelectMedia}
             focusRequested={this.focusRequested}
+            // TODO change to on
           />
         );
       }
@@ -334,6 +336,7 @@ QueryPicker.propTypes = {
   sendAndSaveUserSearch: PropTypes.func.isRequired,
   handleDeleteUserSearch: PropTypes.func.isRequired,
   handleDeleteQuery: PropTypes.func.isRequired,
+  handleCopyAll: PropTypes.func.isRequired,
   updateOneQuery: PropTypes.func.isRequired,
   // from parent
   isEditable: PropTypes.bool.isRequired,
@@ -374,6 +377,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(addCustomQuery(query));
       dispatch(selectQuery(query));
     }
+  },
+  handleCopyAll: (whichFilter, selected, queries) => {
+    // formQuery
+    const field = selected[whichFilter];
+    queries.map((query) => {
+      if (selected.index !== query.index) {
+        return dispatch(copyFieldToQuery({ whichFilter, index: query.index, field }));
+      }
+      return null;
+    });
   },
   handleLoadUserSearches: () => {
     dispatch(loadUserSearches());

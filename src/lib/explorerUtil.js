@@ -19,6 +19,10 @@ export const PICK_ADVANCED = 3;
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;
 export const QUERY_LABEL_AUTOMAGIC_DISPLAY_LIMIT = 27;
 
+export const KEYWORD = 'q';
+export const MEDIA = 'media';
+export const DATES = ['startDate', 'endDate'];
+
 export function generateQueryParamObject(query, skipEncoding) {
   return {
     label: skipEncoding ? query.label : encodeURIComponent(query.label),
