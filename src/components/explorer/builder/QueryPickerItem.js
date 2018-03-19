@@ -7,6 +7,7 @@ import AppButton from '../../common/AppButton';
 import QueryPickerLoggedInHeader from './QueryPickerLoggedInHeader';
 import QueryPickerDemoHeader from './QueryPickerDemoHeader';
 import { getShortDate } from '../../../lib/dateUtil';
+import { QUERY_LABEL_CHARACTER_LIMIT } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 
 const localMessages = {
@@ -122,7 +123,6 @@ class QueryPickerItem extends React.Component {
           />
         );
       }
-      const LABEL_LIMIT = 30;
       const collectionCount = query.collections ? query.collections.length : 0;
       const sourceCount = query.sources ? query.sources.length : 0;
       // const srcDesc = query.media;
@@ -140,7 +140,7 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            {oneCollStatus.slice(0, LABEL_LIMIT).concat('...')}<br />
+            {oneCollStatus.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...')}<br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -148,7 +148,7 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            {oneSourceLabel.slice(0, LABEL_LIMIT).concat('...')}<br />
+            {oneSourceLabel.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...')}<br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -183,6 +183,8 @@ class QueryPickerItem extends React.Component {
             className="query-picker-editable-name"
             id="labelInDialog"
             name="labelInDialog"
+            defaultValue={query.label}
+            maxLength={QUERY_LABEL_CHARACTER_LIMIT}
             onChange={(e, val) => {
               this.updateLabelInDialog(val);
             }}

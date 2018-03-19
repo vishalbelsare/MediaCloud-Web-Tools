@@ -15,6 +15,9 @@ export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
 export const PICK_ADVANCED = 3;
 
+
+export const QUERY_LABEL_CHARACTER_LIMIT = 30;
+
 export function generateQueryParamObject(query, skipEncoding) {
   return {
     label: skipEncoding ? query.label : encodeURIComponent(query.label),

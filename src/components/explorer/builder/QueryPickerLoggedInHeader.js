@@ -7,6 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ColorPicker from '../../common/ColorPicker';
 import messages from '../../../resources/messages';
+import { QUERY_LABEL_CHARACTER_LIMIT } from '../../../lib/explorerUtil';
 
 const localMessages = {
   title: { id: 'explorer.querypicker.title', defaultMessage: 'Rename Query' },
@@ -44,7 +45,10 @@ class QueryPickerLoggedInHeader extends React.Component {
           {menuChildren}
         </IconMenu>
       );
-
+      let abbrevQuery = query.label;
+      if (abbrevQuery.length > QUERY_LABEL_CHARACTER_LIMIT) {
+        abbrevQuery = abbrevQuery.slice(0, QUERY_LABEL_CHARACTER_LIMIT).join('...');
+      }
       if (query) {
         nameInfo = (
           <div>
@@ -55,7 +59,7 @@ class QueryPickerLoggedInHeader extends React.Component {
             <span
               className="query-picker-name"
             >
-              {query.label}
+              {abbrevQuery}
             </span>
             {iconOptions}
           </div>
