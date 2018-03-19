@@ -1,6 +1,62 @@
 {
   "releases": [
     {
+      "date": "2018-03-19",
+      "version": "v2.6.0",
+      "notes": [
+        { 
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Media stories/inlinks/outlinks are downloadable again."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "Allow you to copy keywords/date/media to all queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Return more results while searching for sources."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Faster langauge results when comparing multiple queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better cursor when clicking a day on the attention over time chart."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Force short query names so the UI doesn't wrap weirdly."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Consistent text when renaming queries."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better summaries on the little query tabs about sources/collections."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "When you add a new query it copies the date from the last one."
+        },
+        { 
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Lets you edit query names after adding new queries."
+        }        
+      ]
+    },
+    {
       "date": "2018-03-16",
       "version": "v2.5.1",
       "notes": [
