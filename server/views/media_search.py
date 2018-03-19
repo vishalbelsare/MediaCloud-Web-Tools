@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 def media_search(search_str, tags_id=None):
     mc = user_mediacloud_client()
-    return mc.mediaList(name_like=search_str, tags_id=tags_id)
+    return mc.mediaList(name_like=search_str, tags_id=tags_id, rows=60)
 
 
 def collection_search(search_str, public_only, tag_sets_id_list):
