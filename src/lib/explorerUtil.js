@@ -23,6 +23,9 @@ export const KEYWORD = 'q';
 export const MEDIA = 'media';
 export const DATES = ['startDate', 'endDate'];
 
+export const LEFT = 0;
+export const RIGHT = 1;
+
 export function generateQueryParamObject(query, skipEncoding) {
   return {
     label: skipEncoding ? query.label : encodeURIComponent(query.label),

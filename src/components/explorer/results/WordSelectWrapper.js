@@ -51,7 +51,7 @@ class WordSelectWrapper extends React.Component {
           <Col>
             <SelectField
               floatingLabelText="Right Column"
-              value={rightQuery.index || queries[1].index}
+              value={rightQuery ? rightQuery.index : queries[1].index}
               onChange={(...args) => this.selectThisQuery(RIGHT, args[2])}
             >
               {menuItems}
