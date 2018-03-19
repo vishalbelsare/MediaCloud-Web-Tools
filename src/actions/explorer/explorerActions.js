@@ -129,6 +129,10 @@ export const resetSelected = createAction(RESET_SELECTED);
 export const RESET_SENTENCE_COUNTS = 'RESET_SENTENCE_COUNTS';
 export const resetSentenceCounts = createAction(RESET_SENTENCE_COUNTS);
 
+export const RESET_QUERY_TOP_WORDS = 'RESET_QUERY_TOP_WORDS';
+export const resetTopWords = createAction(RESET_QUERY_TOP_WORDS);
+
+
 export const RESET_QUERY_TOP_WORDS_COMPARISON = 'RESET_QUERY_TOP_WORDS_COMPARISON';
 export const resetTopWordsComparison = createAction(RESET_QUERY_TOP_WORDS_COMPARISON);
 

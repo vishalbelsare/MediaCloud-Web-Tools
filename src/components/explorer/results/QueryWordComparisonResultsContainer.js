@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
@@ -120,9 +120,9 @@ class QueryWordComparisonResultsContainer extends React.Component {
                 rightTextColor={rightQuery.color}
                 textColor={getBrandDarkColor()}
                 onWordClick={handleWordCloudClick}
-                leftTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
-                centerTitleMsg={<FormattedHTMLMessage {...localMessages.centerTitle} />}
-                rightTitleMsg={<FormattedHTMLMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
+                leftTitleMsg={<FormattedMessage {...localMessages.sideTitle} values={{ name: leftQuery.label }} />}
+                centerTitleMsg={<FormattedMessage {...localMessages.centerTitle} />}
+                rightTitleMsg={<FormattedMessage {...localMessages.sideTitle} values={{ name: rightQuery.label }} />}
               />
             </Col>
           </Row>
