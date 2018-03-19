@@ -83,6 +83,7 @@ class AttentionOverTimeChart extends React.Component {
     // setup up custom chart configuration
     const config = this.getConfig();
     config.chart.height = height;
+    let classNameForPath = 'sentences-over-time-chart';
     if (filename !== undefined) {
       config.exporting.filename = filename;
     } else {
@@ -105,6 +106,7 @@ class AttentionOverTimeChart extends React.Component {
           },
         },
       };
+      classNameForPath = 'sentences-over-time-chart-with-node-info';
     }
     let allSeries = null;
     if (data !== undefined) {
@@ -143,7 +145,7 @@ class AttentionOverTimeChart extends React.Component {
     }
     // render out the chart
     return (
-      <div className="sentences-over-time-chart">
+      <div className={classNameForPath}>
         {totalInfo}
         <ReactHighcharts config={config} />
       </div>
