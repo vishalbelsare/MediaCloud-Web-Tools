@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSourceStats } from '../../../actions/sourceActions';
 import StatBar from '../../common/statbar/StatBar';
-import HealthBadge from '../HealthBadge';
 import messages from '../../../resources/messages';
 import { healthStartDateToMoment } from '../../../lib/dateUtil';
 
@@ -38,7 +37,6 @@ const SourceStatInfo = (props) => {
       stats={[
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
         { message: localMessages.coveredSince, data: formattedDateStr },
-        { message: localMessages.health, data: <HealthBadge isHealthy={sourceInfo.is_healthy} /> },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collection_count) },
         { message: localMessages.geoPct,
           data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 0 }),
