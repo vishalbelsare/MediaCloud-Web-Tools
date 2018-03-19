@@ -17,8 +17,12 @@ const topWordsComparison = createAsyncReducer({
   }),
   [SELECT_COMPARATIVE_WORD_FIELD]: (payload) => {
     // store query selection
-    if (payload.target === LEFT) return { left: payload.query };
-    return { right: payload.query };
+    let value = payload.query;
+    if (payload.query.length) {
+      value = payload.query[payload.target];
+    }
+    if (payload.target === LEFT) return { left: value };
+    return { right: value };
   },
   [RESET_QUERY_TOP_WORDS_COMPARISON]: () => ({
     list: [],
