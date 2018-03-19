@@ -8,10 +8,10 @@ from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
 import server.util.csv as csv
 import server.util.tags as tag_util
-from server.util.request import api_error_handler, form_fields_required
+from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
-    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
+    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts, story_list
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,6 @@ PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
 @flask_login.login_required
 @api_error_handler
 def story(topics_id, stories_id):
-
-    local_mc = None
     if is_user_logged_in():
         local_mc = user_mediacloud_client()
         story_topic_info = topic_story_list(user_mediacloud_key(), topics_id, stories_id=stories_id)['stories'][0]
@@ -47,9 +45,8 @@ def story(topics_id, stories_id):
                 story_topic_info['facebook_collection_date'] = fb_item['facebook_api_collect_date']
         '''
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
-    
     story_info = local_mc.story(stories_id)  # add in other fields from regular call
     for k in story_info.keys():
         story_topic_info[k] = story_info[k]
@@ -94,7 +91,6 @@ def _cached_geoname(geonames_id):
 @flask_login.login_required
 @api_error_handler
 def story_counts(topics_id):
-    local_key = None
     if access_public_topic(topics_id):
         local_key = TOOL_API_KEY
     elif is_user_logged_in():
@@ -163,7 +159,8 @@ def story_inlinks(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
 @flask_login.login_required
 def story_inlinks_csv(topics_id, stories_id):
-    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-inlinks', topics_id, link_to_stories_id=stories_id)
+    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-inlinks', topics_id,
+                                 link_to_stories_id=stories_id)
 
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks', methods=['GET'])
@@ -177,19 +174,19 @@ def story_outlinks(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
 @flask_login.login_required
 def story_outlinks_csv(topics_id, stories_id):
-    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id, link_from_stories_id=stories_id)
+    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id,
+                                 link_from_stories_id=stories_id)
 
 
 @app.route('/api/topics/<topics_id>/stories', methods=['GET'])
 @api_error_handler
 def topic_stories(topics_id):
-    local_mc = None
     if access_public_topic(topics_id):
         stories = topic_story_list(TOOL_API_KEY, topics_id, snapshots_id=None, timespans_id=None, foci_id=None, q=None)
     elif is_user_logged_in():
         stories = topic_story_list(user_mediacloud_key(), topics_id)
     else:
-        return jsonify({'status':'Error', 'message': 'Invalid attempt'})
+        return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
 
     return jsonify(stories)
 
@@ -199,23 +196,21 @@ def topic_stories(topics_id):
 def topic_stories_csv(topics_id):
     as_attachment = True
     fb_data = False
-    if ('attach' in request.args):
+    if 'attach' in request.args:
         as_attachment = request.args['attach'] == 1
-    if ('fbData' in request.args):
+    if 'fbData' in request.args:
         fb_data = int(request.args['fbData']) == 1
     user_mc = user_admin_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id, as_attachment=as_attachment, fb_data=fb_data)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id,
+                                 as_attachment=as_attachment, fb_data=fb_data)
 
 
 def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
-    '''
-    Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
-    simply be passed on to a call to topicStoryList.
-    '''
+    # Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
+    # simply be passed on to a call to topicStoryList.
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
-    q_data = request.args['q'] if 'q' in request.args and request.args['q'] not in [None, '', 'null', 'undefined'] else None
     all_stories = []
     more_stories = True
     params = kwargs
@@ -223,19 +218,19 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
         del params['as_attachment']
     if 'fb_data' in params:
         del params['fb_data']
-
+    if 'q' in params:
+        params['q'] = params['q'] if 'q' not in [None, '', 'null', 'undefined'] else None
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
     props = ['stories_id', 'publish_date', 'date_is_reliable',
              'title', 'url', 'media_id', 'media_name',
              'media_inlink_count', 'inlink_count', 'outlink_count', 'bitly_click_count',
              'facebook_share_count', 'simple_tweet_count', 'language', 'subtopics', 'themes']
-    user_mc = user_mediacloud_client()
     try:
         while more_stories:
-            page = topic_story_list(user_mc_key, topics_id, q=q_data, **params)
+            page = topic_story_list(user_mc_key, topics_id, **params)
             # need to make another call to fetch the tags :-(
             story_ids = [str(s['stories_id']) for s in page['stories']]
-            stories_with_tags = user_mc.storyList('stories_id:('+" ".join(story_ids)+")", rows=kwargs['limit'])
+            stories_with_tags = story_list(user_mc_key, 'stories_id:('+" ".join(story_ids)+")", kwargs['limit'])
             story_ids_to_tags = {int(s['stories_id']): s['story_tags'] for s in stories_with_tags}
             for s in page['stories']:
                 s['themes'] = '?'  # means we haven't processed it for themes yet
@@ -275,12 +270,11 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
                     more_fb_count = False
    
             # now iterate through each list and set up the fb collection date
-            for story in all_stories:
-              for fb_item in all_fb_count:
-                if int(fb_item['stories_id']) == int(story['stories_id']):
-                    story['facebook_collection_date'] = fb_item['facebook_api_collect_date']
+            for s in all_stories:
+                for fb_item in all_fb_count:
+                    if int(fb_item['stories_id']) == int(s['stories_id']):
+                        s['facebook_collection_date'] = fb_item['facebook_api_collect_date']
             props.append('facebook_collection_date')
-
 
         return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
 
