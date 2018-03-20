@@ -143,7 +143,7 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            {oneCollStatus.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...')}<br />
+            {oneCollStatus.length >= QUERY_LABEL_CHARACTER_LIMIT - 1 ? oneCollStatus.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...') : oneCollStatus}<br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
@@ -151,7 +151,7 @@ class QueryPickerItem extends React.Component {
         subT = (
           <div className="query-info">
             {displayLabel ? query.label : ''}
-            {oneSourceLabel.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...')}<br />
+            {oneSourceLabel.length >= QUERY_LABEL_CHARACTER_LIMIT - 1 ? oneSourceLabel.slice(0, QUERY_LABEL_CHARACTER_LIMIT).concat('...') : oneSourceLabel}<br />
             {query.startDate ? getShortDate(query.startDate) : ''} to {query.endDate ? getShortDate(query.endDate) : ''}
           </div>
         );
