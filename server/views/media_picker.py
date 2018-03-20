@@ -6,7 +6,7 @@ from operator import itemgetter
 import time
 
 from server.cache import cache, key_generator
-from media_search import collection_search
+from media_search import collection_search, media_search
 from server import app, mc
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
@@ -16,7 +16,6 @@ from server.util.tags import cached_media_with_tag_page
 
 logger = logging.getLogger(__name__)
 
-MAX_SOURCES = 20
 MAX_COLLECTIONS = 20
 MEDIA_SEARCH_POOL_SIZE = len(VALID_COLLECTION_TAG_SETS_IDS)
 STORY_COUNT_POOL_SIZE = 20  # number of parallel processes to use while fetching historical sentence counts for sources
@@ -50,7 +49,7 @@ def api_mediapicker_source_search():
     if 'tags' in request.args:
         tags = request.args['tags'].split(',')
     t1 = time.time()
-    matching_sources = mc.mediaList(name_like=cleaned_search_str, tags_id=tags, rows=MAX_SOURCES)
+    matching_sources = media_search(cleaned_search_str, tags)
     t2 = time.time()
     if use_pool:
         pool = Pool(processes=STORY_COUNT_POOL_SIZE)
