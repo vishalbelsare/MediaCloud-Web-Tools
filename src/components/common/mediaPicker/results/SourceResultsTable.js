@@ -7,7 +7,7 @@ import { urlToSource } from '../../../../lib/urlUtil';
 const localMessages = {
   name: { id: 'mediaPicker.searchResults.name', defaultMessage: 'Name' },
   url: { id: 'mediaPicker.searchResults.url', defaultMessage: 'URL' },
-  recentStoryCount: { id: 'mediaPicker.searchResults.recentStoryCount', defaultMessage: 'Stories in the Past 90 Days' },
+  recentStoryCount: { id: 'mediaPicker.searchResults.recentStoryCount', defaultMessage: 'Stories per Day' },
   noResults: { id: 'mediaPicker.searchResults.noResults', defaultMessage: 'No matching sources' },
 };
 
