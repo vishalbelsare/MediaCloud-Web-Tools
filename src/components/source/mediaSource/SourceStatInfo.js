@@ -12,8 +12,7 @@ const localMessages = {
   nytPct: { id: 'source.summary.statbar.nyt', defaultMessage: 'With Themes' },
   geoPct: { id: 'source.summary.statbar.geo', defaultMessage: 'With Entities' },
   collections: { id: 'source.summary.statbar.collections', defaultMessage: 'Collections' },
-  isHealthy: { id: 'source.summary.statbar.isHealthy', defaultMessage: '{value, plural,\n =1{healthy}\n =0{not healthy}\n}' },
-  health: { id: 'source.summary.statbar.health', defaultMessage: 'Health' },
+  storiesPerWeek: { id: 'source.summary.statbar.storiesPerWeek', defaultMessage: 'Stories Per Week' },
   coveredSince: { id: 'source.summary.statbar.coveredSince', defaultMessage: 'Covered Since' },
   storyCount: { id: 'source.summary.statbar.storyCount', defaultMessage: 'Total Stories' },
 };
@@ -38,6 +37,7 @@ const SourceStatInfo = (props) => {
         { message: localMessages.storyCount, data: formatNumber(sourceInfo.story_count) },
         { message: localMessages.coveredSince, data: formattedDateStr },
         { message: localMessages.collections, data: formatNumber(sourceInfo.collection_count) },
+        { message: localMessages.storiesPerWeek, data: formatNumber(Math.round(sourceInfo.num_stories_90)) },
         { message: localMessages.geoPct,
           data: formatNumber(sourceInfo.geoPct, { style: 'percent', maximumFractionDigits: 0 }),
           helpTitleMsg: messages.entityHelpTitle,
