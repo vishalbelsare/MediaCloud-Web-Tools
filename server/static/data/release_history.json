@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "2018-03-21",
+      "version": "v2.6.1",
+      "notes": [
+        { 
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Creating new topics works again."
+        }
+      ]
+    },
+    {
       "date": "2018-03-19",
       "version": "v2.6.0",
       "notes": [
