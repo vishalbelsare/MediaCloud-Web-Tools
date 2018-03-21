@@ -9,6 +9,22 @@ import messages from '../../../../resources/messages';
 
 const CollectionTable = (props) => {
   const { title, description, collections } = props;
+  let tableEntries = Object.values(collections);
+  tableEntries = tableEntries.map(c => (
+    <tr>{c.map((s, idx) => (
+      <tr key={s.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+        <td>
+          <Link to={`/collections/${s.tags_id}`}>{s.label}</Link>
+        </td>
+        <td>
+          {s.description}
+        </td>
+        <td>
+          { s.isFavorite ? <FilledStarIcon /> : '' }
+        </td>
+      </tr>
+    ))}</tr>
+  ));
   return (
     <div className="collection-table">
       <Grid>
@@ -28,19 +44,7 @@ const CollectionTable = (props) => {
                 <th><FormattedMessage {...messages.collectionNameProp} /></th>
                 <th><FormattedMessage {...messages.collectionDescriptionProp} /></th>
               </tr>
-              {collections.map((c, idx) => (
-                <tr key={c.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-                  <td>
-                    <Link to={`/collections/${c.tags_id}`}>{c.label}</Link>
-                  </td>
-                  <td>
-                    {c.description}
-                  </td>
-                  <td>
-                    { c.isFavorite ? <FilledStarIcon /> : '' }
-                  </td>
-                </tr>
-              ))}
+              {tableEntries}
             </tbody>
           </table>
         </Row>
@@ -51,7 +55,7 @@ const CollectionTable = (props) => {
 
 CollectionTable.propTypes = {
   // from parent
-  collections: PropTypes.array.isRequired,
+  collections: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   // from context
