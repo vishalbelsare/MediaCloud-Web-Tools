@@ -35,7 +35,7 @@ const localMessages = {
 
 class CollectionDetailsContainer extends React.Component {
 
-  searchOnDashboard = () => {
+  searchOnExplorer = () => {
     const { collection } = this.props;
     const endDate = getCurrentDate();
     const startDate = oneMonthBefore(endDate);
@@ -65,7 +65,7 @@ class CollectionDetailsContainer extends React.Component {
             </p>
           </Col>
           <Col lg={4}>
-            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnDashboard} />
+            <RaisedButton label={formatMessage(localMessages.searchNow)} primary onClick={this.searchOnExplorer} />
           </Col>
         </Row>
         <Row>
