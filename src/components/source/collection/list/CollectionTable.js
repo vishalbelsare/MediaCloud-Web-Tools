@@ -10,19 +10,22 @@ import messages from '../../../../resources/messages';
 const CollectionTable = (props) => {
   const { title, description, collections } = props;
   let tableEntries = Object.values(collections);
-  tableEntries = tableEntries.map(c => (
-    <tr>{c.map((s, idx) => (
-      <tr key={s.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-        <td>
-          <Link to={`/collections/${s.tags_id}`}>{s.label}</Link>
-        </td>
-        <td>
-          {s.description}
-        </td>
-        <td>
-          { s.isFavorite ? <FilledStarIcon /> : '' }
-        </td>
-      </tr>
+  const keys = Object.keys(collections);
+  tableEntries = tableEntries.map((c, index) => (
+    <tr>
+      <h2>{collections[keys[index]][0].label}</h2>
+      {c.map((s, idx) => (
+        <tr key={s.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+          <td>
+            <Link to={`/collections/${s.tags_id}`}>{s.label}</Link>
+          </td>
+          <td>
+            {s.description}
+          </td>
+          <td>
+            { s.isFavorite ? <FilledStarIcon /> : '' }
+          </td>
+        </tr>
     ))}</tr>
   ));
   return (
