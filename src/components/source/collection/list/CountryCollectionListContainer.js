@@ -9,17 +9,10 @@ import { TAG_SET_ABYZ_GEO_COLLECTIONS } from '../../../../lib/tagUtil';
 
 const CountryCollectionListContainer = (props) => {
   const { name, description, collections } = props;
-  const collectionsByCountry = {};
-  // collection parsing here - maybe move into reducer or back end
-  collections.forEach((c) => {
-    const countryCode = c.tag.slice(0, 7);
-    const geoCollection = collections.filter(g => g.tag.slice(0, 7) === countryCode);
-    collectionsByCountry[countryCode] = geoCollection;
-  });
   return (
     <div className="country-collections-table">
       <CollectionTable
-        collections={collectionsByCountry}
+        collections={collections}
         title={name}
         description={description}
       />
