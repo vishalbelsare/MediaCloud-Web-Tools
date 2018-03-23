@@ -7,8 +7,7 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import PeriodicEditableWordCloudDataCard from '../../common/PeriodicEditableWordCloudDataCard';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
-import { calculateTimePeriods, getCurrentDate, oneMonthBefore } from '../../../lib/dateUtil';
-import { urlToExplorerQuery } from '../../../lib/urlUtil';
+import { calculateTimePeriods } from '../../../lib/dateUtil';
 
 const localMessages = {
   title: { id: 'collection.summary.topWords.title', defaultMessage: 'Top Words' },
@@ -26,11 +25,9 @@ class CollectionTopWordsContainer extends React.Component {
 
   handleWordClick = (word) => {
     const { collectionId } = this.props;
-    const endDate = getCurrentDate();
-    const startDate = oneMonthBefore(endDate);
     const searchStr = `${word.stem}*`;
-    const explorerUrl = urlToExplorerQuery(collectionId, searchStr, collectionId, '', startDate, endDate);
-    window.open(explorerUrl, '_blank');
+    const url = `https://dashboard.mediacloud.org/#query/["${searchStr}"]/[{"sets":[${collectionId}]}]/[]/[]/[{"uid":1,"name":"${searchStr}","color":"55868A"}]`;
+    window.open(url, '_blank');
   }
   render() {
     const { collectionId, timePeriod, words, helpButton } = this.props;
