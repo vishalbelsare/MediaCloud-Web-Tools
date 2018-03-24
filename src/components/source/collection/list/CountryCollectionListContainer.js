@@ -29,7 +29,7 @@ const CountryCollectionListContainer = (props) => {
       {nationalCollections.map((nationalCollection) => {
         const countryName = nationalCollection.label.substring(0, nationalCollection.label.length - 11);
         return (
-          <div key={nationalCollections.tags_id}>
+          <div key={nationalCollection.tags_id}>
             <CollectionTable
               collections={collections.filter(c => c.label.includes(countryName))}
               title={countryName}
