@@ -9,35 +9,32 @@ import messages from '../../../../resources/messages';
 
 const CollectionTable = (props) => {
   const { title, description, collections } = props;
-  let tableEntries = Object.values(collections);
-  const keys = Object.keys(collections);
-  tableEntries = tableEntries.map((c, index) => (
-    <tr>
-      <h2>{collections[keys[index]][0].label}</h2>
-      {c.map((s, idx) => (
-        <tr key={s.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
-          <td>
-            <Link to={`/collections/${s.tags_id}`}>{s.label}</Link>
-          </td>
-          <td>
-            {s.description}
-          </td>
-          <td>
-            { s.isFavorite ? <FilledStarIcon /> : '' }
-          </td>
-        </tr>
-    ))}</tr>
-  ));
+  let headerContent;
+  if (description) {
+    headerContent = (
+      <div>
+        <h2>
+          <CollectionIcon height={32} />
+          {title}
+        </h2>
+        <p>{description}</p>
+      </div>
+    );
+  } else {
+    headerContent = (
+      <div>
+        <h2>
+          {title}
+        </h2>
+      </div>
+    );
+  }
   return (
     <div className="collection-table">
       <Grid>
         <Row>
           <Col lg={12} md={12} sm={12}>
-            <h2>
-              <CollectionIcon height={32} />
-              {title}
-            </h2>
-            <p>{description}</p>
+            {headerContent}
           </Col>
         </Row>
         <Row>
@@ -47,7 +44,19 @@ const CollectionTable = (props) => {
                 <th><FormattedMessage {...messages.collectionNameProp} /></th>
                 <th><FormattedMessage {...messages.collectionDescriptionProp} /></th>
               </tr>
-              {tableEntries}
+              {collections.map((c, idx) => (
+                <tr key={c.tags_id} className={(idx % 2 === 0) ? 'even' : 'odd'}>
+                  <td>
+                    <Link to={`/collections/${c.tags_id}`}>{c.label}</Link>
+                  </td>
+                  <td>
+                    {c.description}
+                  </td>
+                  <td>
+                    { c.isFavorite ? <FilledStarIcon /> : '' }
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </Row>
@@ -58,7 +67,7 @@ const CollectionTable = (props) => {
 
 CollectionTable.propTypes = {
   // from parent
-  collections: PropTypes.object.isRequired,
+  collections: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   // from context
