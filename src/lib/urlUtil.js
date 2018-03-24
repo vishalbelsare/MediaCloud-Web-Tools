@@ -56,5 +56,13 @@ export function urlToDashboardQuery(name, keywords, sourceIds, collectionIds, st
 
 export function urlToExplorerQuery(name, keywords, sourceIds, collectionIds, startDate, endDate) {
   const color = encodeURIComponent(`#${getBrandDarkerColor().substr(1)}`);
-  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${name}","q":"${keywords}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":[${sourceIds}],"collections":[${collectionIds}]}]`;
+  let sources = sourceIds;
+  if (!sources || sources.length === 0) {
+    sources = '[]';
+  }
+  let collections = collectionIds;
+  if (!collections || collections.length === 0) {
+    collections = '[]';
+  }
+  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${name}","q":"${keywords}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":${sources},"collections":${collections}}]`;
 }
