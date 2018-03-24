@@ -64,5 +64,5 @@ export function urlToExplorerQuery(name, keywords, sourceIds, collectionIds, sta
   if (!collections || collections.length === 0) {
     collections = '[]';
   }
-  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${name}","q":"${keywords}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":${sources},"collections":${collections}}]`;
+  return `https://explorer.mediacloud.org/#/queries/search?q=[{"label":"${encodeURIComponent(name)}","q":"${encodeURIComponent(keywords)}","color":"${color}","startDate":"${startDate}","endDate":"${endDate}","sources":${sources},"collections":${collections}}]`;
 }
