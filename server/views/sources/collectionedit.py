@@ -133,6 +133,10 @@ def _parse_sources_from_csv_upload(filepath):
                                    k, v in newline.items() if v not in ['', None]}
                 empties = {k: v for k, v in newline.items() if v in ['', None]}
 
+                # source urls have to start with the http, so add it if the user didn't
+                if not newline_decoded['url'].startswith(u'http://') or not newline_decoded['url'].startswith(u'https://'):
+                    newline_decoded['url'] = u'http://{}'.format(newline_decoded['url'])
+
                 if updatedSrc:
                     newline_decoded.update(empties)
                     sources_to_update.append(newline_decoded)
@@ -154,6 +158,11 @@ def _update_source_worker(source_info):
                          and k not in COLLECTIONS_TEMPLATE_METADATA_PROPS}
     response = user_mc.mediaUpdate(media_id, source_no_metadata_no_id)
     return response
+
+
+def _create_media_worker(media_list):
+    user_mc = user_admin_mediacloud_client()
+    return user_mc.mediaCreate(media_list)
 
 
 def _create_or_update_sources(source_list_from_csv, create_new):
@@ -180,7 +189,18 @@ def _create_or_update_sources(source_list_from_csv, create_new):
         for src in sources_to_create:
             sources_to_create_no_metadata.append(
                 {k: v for k, v in src.items() if k not in COLLECTIONS_TEMPLATE_METADATA_PROPS})
-        creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata)
+        # parallelize media creation to make it faster
+        chunk_size = 5  # @ 10, each call takes over a minute; @ 5 each takes around ~40 secs
+        media_to_create_batches = [sources_to_create_no_metadata[x:x + chunk_size]
+                                   for x in xrange(0, len(sources_to_create_no_metadata), chunk_size)]
+        pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)  # process updates in parallel with worker function
+        creation_batched_responses = pool.map(_create_media_worker, media_to_create_batches)
+        creation_responses = []
+        for responses in creation_batched_responses:
+            creation_responses = creation_responses + responses
+        pool.terminate()  # extra safe garbage collection attemp
+        # creation_responses = user_mc.mediaCreate(sources_to_create_no_metadata)
+        # now group creation attempts by outcome
         for idx, response in enumerate(creation_responses):
             src = sources_to_create[idx]
             src['status'] = 'found and updated this source' if response['status'] == 'existing' else response['status']
@@ -197,7 +217,7 @@ def _create_or_update_sources(source_list_from_csv, create_new):
             results.append(src)
     # process all the entries we think are updates in parallel so it happens quickly
     if len(sources_to_update) > 0:
-        use_pool = True #causing a system exit
+        use_pool = True
         if use_pool:
             pool = Pool(processes=MEDIA_UPDATE_POOL_SIZE)    # process updates in parallel with worker function
             update_responses = pool.map(_update_source_worker, sources_to_update)  # blocks until they are all done
