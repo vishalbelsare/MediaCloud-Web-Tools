@@ -1,6 +1,60 @@
 {
   "releases": [
     {
+      "date": "2018-03-24",
+      "version": "v2.7.0",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Sped up source searching."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Fixed default collection names on new Explorer queries."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Feature",
+          "note": "Add option to view topic in Explorer to Topic control bar."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "List geographic collections by country.",
+          "details": "Visit the Source Manager, then click the menu and select the 'Browse Geographic Collections' menu option."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Speed up uploading a CSV of sources to a collection."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Link from source/collection page to Explorer, not Dashboard."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Automatically add http:// to source urls when uploaded in CSV."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Add stories per week to source detail page.",
+          "details": "This is really helpful if you are trying to find the most useful sources in our system."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Remove misleading source health indications.",
+          "details": "The health measurement was based on some math about average stories per week that didn't work well.  Until we come up with a better solution we have removed that for now, so you're not told a source is 'unhealthy' when in fact it is working quite well."
+        }
+      ]
+    },
+    {
       "date": "2018-03-19",
       "version": "v2.6.0",
       "notes": [
