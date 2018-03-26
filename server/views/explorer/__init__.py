@@ -217,13 +217,18 @@ def parse_query_with_args_and_sample_search(args_or_query, current_search) :
     return solr_query
 
 
-@cache.cache_on_arguments(function_key_generator=key_generator)
+sample_searches = None  # use as singeton, not cache so that we can change the file and restart and see changes
+
+
 def load_sample_searches():
-    json_file = os.path.join(os.path.dirname(__file__), '../..', 'static/data/sample_searches.json')
-    # load the sample searches file
-    with open(json_file) as json_data:
-        d = json.load(json_data)
-        return d
+    global sample_searches
+    if sample_searches is None:
+        json_file = os.path.join(os.path.dirname(__file__), '../..', 'static/data/sample_searches.json')
+        # load the sample searches file
+        with open(json_file) as json_data:
+            d = json.load(json_data)
+            sample_searches = d
+    return sample_searches
 
 
 def read_sample_searches():
