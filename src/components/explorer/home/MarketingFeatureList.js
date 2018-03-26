@@ -44,12 +44,12 @@ const MarketingFeatureList = () => (
       titleMsg={localMessages.framingTitle}
       contentMsg={localMessages.framingDescription}
       imageName={'framing-2x.png'}
-      imageOnLeft
     />
     <MarketingFeatureItem
       titleMsg={localMessages.mapTitle}
       contentMsg={localMessages.mapDescription}
       imageName={'mapping-2x.png'}
+      imageOnLeft
     />
   </div>
 );
