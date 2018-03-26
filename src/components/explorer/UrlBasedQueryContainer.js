@@ -35,7 +35,7 @@ function composeUrlBasedQueryContainer() {
         // if from homepage, allow automagic, if from URL, do not...
         const autoMagic = location.query.auto === 'true';
         this.setState({ queryInStore: false }); // if/def automagic here
-        this.setQueryFromLocation(location, autoMagic);
+        this.updateQueriesFromLocation(location, autoMagic);
       }
       componentWillReceiveProps(nextProps) {
         const { location, lastSearchTime, updateUrl, isLoggedIn } = this.props;
@@ -44,7 +44,7 @@ function composeUrlBasedQueryContainer() {
         if ((nextProps.location.pathname !== location.pathname) && (lastSearchTime === nextProps.lastSearchTime)) {
           this.setState({ queryInStore: false }); // show spinner while parsing and loading query
           // console.log('  url change');
-          this.setQueryFromLocation(location);
+          this.updateQueriesFromLocation(location);
         // if we don't have all the data in the store yet
         } else if (this.state.queryInStore === false) {   // make sure to only do this once
           // console.log('  waiting for media info from server');
@@ -63,28 +63,40 @@ function composeUrlBasedQueryContainer() {
           // console.log('  other change');
         }
       }
-      setQueryFromLocation(location, autoName) {
+      updateQueriesFromLocation(location, autoName) {
         // regular searches are in a queryParam, but samples by id are part of the path
         const url = location.pathname;
         const lastPathPart = url.slice(url.lastIndexOf('/') + 1, url.length);
         const sampleNumber = parseInt(lastPathPart, 10);
         if (!isNaN(sampleNumber)) {
-          this.setQueryFromSample(sampleNumber);
+          this.updateQueriesFromSampleId(sampleNumber);
         } else {
-          this.setQueryFromSearch(location.query.q.replace(/:""/g, ':"\\"').replace(/"",/g, '\\"",'), autoName);
+          // this is a crazy fix to make embedded quotes work by forcing us to escape them all... partially because
+          // react-router decided to decode url components, partially because the JSON parser isn't that clever
+          const text = location.query.q;
+          const pattern = /:"([^,]*)"[,}]/g;  // gotta end with , or } here to support demo case (})
+          let match = pattern.exec(text);
+          let cleanedText = '';
+          let lastSpot = 0;
+          while (match != null) {
+            const matchText = text.substring(match.index + 2, pattern.lastIndex - 2);
+            const cleanedMatch = matchText.replace(/"/g, '\\"');
+            cleanedText += `${text.substring(lastSpot, match.index)}:"${cleanedMatch}`;
+            lastSpot = pattern.lastIndex - 2;
+            match = pattern.exec(text);
+          }
+          cleanedText += text.substring(lastSpot, text.length);
+          // now that we have a relatively clean url, lets use it!
+          this.updateQueriesFromString(cleanedText, autoName);
         }
       }
-      setQueryFromSearch(search, autoName) {
-        // const queryAsJsonStr = search.slice(3, search.length);
-        this.setQueryFromString(search, autoName);
-      }
-      setQueryFromSample(sampleNumber) {
+      updateQueriesFromSampleId(sampleNumber) {
         const { saveQueriesFromParsedUrl, samples, isLoggedIn } = this.props;
         const queriesFromUrl = samples[sampleNumber].queries;
         // push the queries in to the store
         saveQueriesFromParsedUrl(queriesFromUrl, isLoggedIn);
       }
-      setQueryFromString(queryAsJsonStr, autoNaming) {
+      updateQueriesFromString(queryAsJsonStr, autoNaming) {
         const { addAppNotice, saveQueriesFromParsedUrl, isLoggedIn } = this.props;
         const { formatMessage } = this.props.intl;
         let queriesFromUrl;

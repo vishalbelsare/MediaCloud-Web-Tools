@@ -2,6 +2,23 @@
   "releases": [
     {
       "date": "2018-03-26",
+      "version": "v2.7.2",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Support multiple quoted phrases in searches."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Better feedback when a topic you create is in the queue to run.",
+          "details": "This is not an error; you're just in line behind some other topics to run.  The note at the top tells you details about that."
+        }
+      ]
+    },
+    {
+      "date": "2018-03-26",
       "version": "v2.7.1",
       "notes": [
         {
