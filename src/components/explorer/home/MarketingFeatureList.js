@@ -8,10 +8,10 @@ const localMessages = {
 
   attentionTitle: { id: 'marketing.attention.title', defaultMessage: 'Track Attention Over Time' },
   attentionDescription: { id: 'marketing.attention.description', defaultMessage: '<p>Media Cloud shows you attention to an issue over time to help you understand how much it is covered. Our data can reveal key events that cause spikes in coverage and conversation. Plateaus can reveal stable, "normal", levels of attention to compare against. You can download all our charts and the underlying aggregated data.</p>' },
-
+/*
   influenceTitle: { id: 'marketing.influence.title', defaultMessage: 'Find Influential Sources and Stories' },
   influenceDescription: { id: 'marketing.influence.description', defaultMessage: '<p>Ranking media by social shares and cross-linking patterns can reveal influential sources and stories that drive narratives about an issue. Media Cloud can gather bit.ly clicks, Facebook shares, media inlinks and outlinks, and Twitter shares. You can can also simply download lists of stories with URLs to drive your own custom analysis. Due to copyright restrictions Media Cloud can\'t share the full content of stories in our database.</p>' },
-
+*/
   framingTitle: { id: 'marketing.framing.title', defaultMessage: 'Identify How an Issue is Talked About' },
   framingDescription: { id: 'marketing.framing.description', defaultMessage: '<p>Examine the words used to talk about an issue in order to pinpoint differing media narratives. Media Cloud can show word clouds, word counts, bri-grams, word trees, word embeddings, and more to help you narrow in on the language used.</p>' },
 
@@ -33,11 +33,13 @@ const MarketingFeatureList = () => (
       imageName={'attention-2x.png'}
       imageOnLeft
     />
-    <MarketingFeatureItem
-      titleMsg={localMessages.influenceTitle}
-      contentMsg={localMessages.influenceDescription}
-      imageName={'influence-2x.png'}
-    />
+    {/*
+        <MarketingFeatureItem
+          titleMsg={localMessages.influenceTitle}
+          contentMsg={localMessages.influenceDescription}
+          imageName={'influence-2x.png'}
+        />
+    */}
     <MarketingFeatureItem
       titleMsg={localMessages.framingTitle}
       contentMsg={localMessages.framingDescription}
