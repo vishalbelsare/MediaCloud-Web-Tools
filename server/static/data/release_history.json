@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "2018-03-26",
+      "version": "v2.7.1",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Update sample searches and example images."
+        }
+      ]
+    },
+    {
       "date": "2018-03-25",
       "version": "v2.7.0",
       "notes": [
