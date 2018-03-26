@@ -180,6 +180,7 @@ import server.views.media_search
 import server.views.media_picker
 import server.views.sources.search
 import server.views.notebook.management
+import server.views.metadata
 server_app = config.get('SERVER_APP')
 if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.collection
@@ -190,7 +191,6 @@ if (server_app == SERVER_APP_SOURCES) or is_dev_mode():
     import server.views.sources.sentences
     import server.views.sources.words
     import server.views.sources.geocount
-    import server.views.sources.metadata
 if (server_app == SERVER_APP_TOPICS) or is_dev_mode():
     import server.views.topics.media
     import server.views.topics.sentences
