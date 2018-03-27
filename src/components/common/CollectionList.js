@@ -17,7 +17,7 @@ const CollectionList = (props) => {
   const { formatMessage } = props.intl;
   // show private collections only if user has right permission
   const canSeePrivateCollections = hasPermissions(getUserRoles(user), PERMISSION_MEDIA_EDIT);
-  const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media === 1 || canSeePrivateCollections)));
+  const validCollections = collections.filter(c => (isCollectionTagSet(c.tag_sets_id) && (c.show_on_media || canSeePrivateCollections)));
   validCollections.sort(compareTagNames);
   let actions = null;
   if (onDownload) {
@@ -35,7 +35,7 @@ const CollectionList = (props) => {
       <div className="collection-list-item-wrapper">
         {validCollections.map(c =>
           <SourceOrCollectionChip key={c.tags_id} object={c} onClick={() => handleClick(c.tags_id)}>
-            { c.show_on_media === 0 ? <LockIcon /> : '' }
+            { c.show_on_media === false ? <LockIcon /> : '' }
             { c.isFavorite ? <FilledStarIcon /> : '' }
           </SourceOrCollectionChip>
         )}
