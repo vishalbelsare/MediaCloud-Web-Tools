@@ -1,16 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, FormattedHTMLMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { ErrorNotice } from '../common/Notice';
+// import { ErrorNotice } from '../common/Notice';
 import TopicFilterControlBar from './controlbar/TopicFilterControlBar';
+import ResetTopicContainer from './create/ResetTopicContainer';
 import * as fetchConstants from '../../lib/fetchConstants';
-
-const localMessages = {
-  exceededStories: { id: 'topics.summary.exceededStories', defaultMessage: 'Your topic has collected more than the 100,000 story limit! You\'ll need to make a new topic with fewer seed stories if you want to investigate this.  Email us at support@mediacloud.org if you need help narrowing down your query.' },
-  noUsableSnapshot: { id: 'topics.summary.noUsableSnapshot', defaultMessage: 'Error in topic generation. More info on the way. No usable snapshots.' },
-};
 
 class FilteredTopicContainer extends React.Component {
 
@@ -59,7 +55,7 @@ class FilteredTopicContainer extends React.Component {
       if (topicInfo && topicInfo.message) {
         if (topicInfo.message.includes('exceeds')) {
           subContent = (
-            <ErrorNotice><FormattedHTMLMessage {...localMessages.exceededStories} /></ErrorNotice>
+            <ResetTopicContainer />
           );
         }
       }

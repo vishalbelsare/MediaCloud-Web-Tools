@@ -24,6 +24,7 @@ import TopicsApp from '../components/topic/TopicsApp';
 import About from '../components/topic/About';
 import CreateTopicContainer from '../components/topic/create/CreateTopicContainer';
 import EditTopicContainer from '../components/topic/create/EditTopicContainer';
+import EditUpdateTopicContainer from '../components/topic/create/EditUpdateTopicContainer';
 import AttentionContainer from '../components/topic/attention/AttentionContainer';
 import WordContainer from '../components/topic/words/WordContainer';
 import TopicPermissionsContainer from '../components/topic/permissions/TopicPermissionsContainer';
@@ -50,6 +51,8 @@ const topicRoutes = (
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 
       <Route path="edit" component={EditTopicContainer} onEnter={requireAuth} />
+
+      <Route path="editUpdate" component={EditUpdateTopicContainer} onEnter={requireAuth} />
 
       <Route path="permissions" component={TopicPermissionsContainer} onEnter={requireAuth} />
 

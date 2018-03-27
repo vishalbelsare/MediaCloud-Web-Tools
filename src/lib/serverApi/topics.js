@@ -202,6 +202,10 @@ export function createTopic(params) {
   return createPostingApiPromise('/api/topics/create', acceptedParams, 'put');
 }
 
+export function resetTopic(topicId) {
+  return createPostingApiPromise(`/api/topics/${topicId}/reset`);
+}
+
 export function fetchStoryCountByQuery(params) {
   const acceptedParams = acceptParams(params, ['q', 'start_date', 'end_date', 'sources[]', 'collections[]']);
   return createPostingApiPromise('/api/topics/create/preview/story/count', acceptedParams);

@@ -11,7 +11,7 @@ import { filteredLinkTo } from '../../util/location';
 import AppButton from '../../common/AppButton';
 import composeIntlForm from '../../common/IntlForm';
 import messages from '../../../resources/messages';
-import { updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { updateTopic, resetTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback } from '../../../actions/appActions';
 import BackLinkingControlBar from '../BackLinkingControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -29,7 +29,7 @@ const localMessages = {
   editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
   riskConfirmTitle: { id: 'topic.edit.save.riskConfirmTitle', defaultMessage: 'Warning! Be Careful' },
   handleRiskDescription: { id: 'topic.edit.save.handleRiskDescription', defaultMessage: 'Narrowing these topic settings (date range, seed query and/or media) requires you to re-spider, but previous stories that matched them will NOT be removed. This means your topic will be a confusing combination of what you have now and what you want to have. Only confirm if you know what you are doing.' },
-  // editRisk: { id: 'topic.edit.save.risk', defaultMessage: 'You have modified this topic and if you proceed you may corrupt your topic!' },
+  resetting: { id: 'topic.edit.save.resetting', defaultMessage: 'Resetting Topic. Please wait....' },
 };
 
 class EditTopicContainer extends React.Component {
@@ -200,6 +200,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`, filters);
           dispatch(push(topicSummaryUrl));
           // update topic info and redirect back to topic summary
+        } else if (results.error === 500 && results.message.indexOf('cannot reduce') > -1) {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
+          dispatch(resetTopic(ownProps.params.topicId))
+            .then(() => {
+              const topicEditUpdateUrl = filteredLinkTo(`/topics/${results.topics_id}/editUpdate`, filters);
+              dispatch(push(topicEditUpdateUrl));
+            });
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }

@@ -83,6 +83,13 @@ def api_topics_preview_word_count():
 
     return jsonify(word_count_result)  # give them back new data, so they can update the client
 
+@app.route('/api/topics/<topics_id>/reset')
+@flask_login.login_required
+@api_error_handler
+def topic_reset(topics_id):
+    user_mc = user_admin_mediacloud_client()
+    reset_result = user_mc.topicReset(topics_id)
+    return jsonify(reset_result)
 
 @app.route('/api/topics/create', methods=['PUT'])
 @flask_login.login_required
