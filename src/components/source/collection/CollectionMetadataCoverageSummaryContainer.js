@@ -58,7 +58,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
     } else {
       content = (
         <Row>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubCountryTitle)}
               sources={sources}
@@ -67,7 +67,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubCountryNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pubStateTitle)}
               sources={sources}
@@ -76,7 +76,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pubStateNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pLanguageTitle)}
               sources={sources}
@@ -85,7 +85,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pLanguageNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.pCountryOfFocusTitle)}
               sources={sources}
@@ -94,7 +94,7 @@ class CollectionMetadataCoverageSummaryContainer extends React.Component {
               notTaggedText={formatMessage(localMessages.pCountryOfFocusNotTagged)}
             />
           </Col>
-          <Col lg={2}>
+          <Col lg={6}>
             <MetadataCoverageItem
               title={formatMessage(localMessages.mediaTypeTitle)}
               sources={sources}

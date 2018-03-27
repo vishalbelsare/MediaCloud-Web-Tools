@@ -64,22 +64,16 @@ class CollectionDetailsContainer extends React.Component {
     switch (this.state.selectedViewIndex) {
       case 0:
         viewContent = (
-          <span>
-            <Row>
-              <Col lg={12} md={12} xs={12}>
-                <CollectionMetadataCoverageSummaryContainer collection={collection} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6} xs={12}>
-                <CollectionSourceListContainer collectionId={collection.tags_id} />
-              </Col>
-              <Col lg={6} xs={12}>
-                <CollectionSourceRepresentation collectionId={collection.tags_id} />
-                <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
-              </Col>
-            </Row>
-          </span>
+          <Row>
+            <Col lg={6} xs={12}>
+              <CollectionSourceListContainer collectionId={collection.tags_id} />
+            </Col>
+            <Col lg={6} xs={12}>
+              <CollectionSourceRepresentation collectionId={collection.tags_id} />
+              <CollectionMetadataCoverageSummaryContainer collection={collection} />
+              <CollectionSimilarContainer collectionId={collection.tags_id} filename={filename} />
+            </Col>
+          </Row>
         );
         break;
       case 1:

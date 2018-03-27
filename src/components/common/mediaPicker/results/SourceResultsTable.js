@@ -3,11 +3,11 @@ import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import React from 'react';
 import { AddButton, DeleteButton } from '../../IconButton';
 import { urlToSource } from '../../../../lib/urlUtil';
+import messages from '../../../../resources/messages';
 
 const localMessages = {
   name: { id: 'mediaPicker.searchResults.name', defaultMessage: 'Name' },
   url: { id: 'mediaPicker.searchResults.url', defaultMessage: 'URL' },
-  recentStoryCount: { id: 'mediaPicker.searchResults.recentStoryCount', defaultMessage: 'Stories per Day' },
   noResults: { id: 'mediaPicker.searchResults.noResults', defaultMessage: 'No matching sources' },
 };
 
@@ -21,7 +21,7 @@ const SourceResultsTable = (props) => {
           <tr>
             <th><FormattedMessage {...localMessages.name} /></th>
             <th><FormattedMessage {...localMessages.url} /></th>
-            <th className="numeric"><FormattedMessage {...localMessages.recentStoryCount} /></th>
+            <th className="numeric"><FormattedMessage {...messages.storiesPerDay} /></th>
             <th />
           </tr>
           {sources.map((s, idx) => {
