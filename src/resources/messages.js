@@ -248,6 +248,7 @@ const messages = {
 
   attention: { id: 'attention', defaultMessage: 'Attention' },
   peopleAndPlaces: { id: 'peopleAndPlaces', defaultMessage: 'People & Places' },
+  storiesPerDay: { id: 'source.storiesPerDay', defaultMessage: 'Stories per Day' },
 
 };
 
