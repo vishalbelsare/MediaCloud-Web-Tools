@@ -165,10 +165,10 @@ export function getDateRange(timePeriod) {
     .minutes(0)
     .seconds(0)
     .milliseconds(0);  // make it a day so caching works better
-  const targetYear = today.subtract(1, 'year');
-  const targetMonth = today.subtract(1, 'month');
-  const targetWeek = today.subtract(1, 'week');
-  const targetPastTwoWeeks = today.subtract(2, 'week');
+  const targetYear = today.clone().subtract(1, 'year');
+  const targetMonth = today.clone().subtract(1, 'month');
+  const targetWeek = today.clone().subtract(1, 'week');
+  const targetPastTwoWeeks = today.clone().subtract(2, 'week');
   switch (timePeriod) {
     case PAST_WEEK: // past week
       targetPeriodStart = targetWeek;
