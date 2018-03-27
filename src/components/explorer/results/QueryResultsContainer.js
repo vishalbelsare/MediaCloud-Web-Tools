@@ -13,9 +13,15 @@ import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsCon
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
-import QueryViewSelector from './QueryViewSelector';
+import TabSelector from '../../common/TabSelector';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
+
+const localMessages = {
+  attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
+  language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
+  people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
+};
 
 class QueryResultsContainer extends React.Component {
   state = {
@@ -24,6 +30,7 @@ class QueryResultsContainer extends React.Component {
 
   render() {
     const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = this.props;
+    const { formatMessage } = this.props.intl;
     const attentionSection = (
       <Row>
         <Col lg={12} xs={12}>
@@ -141,7 +148,12 @@ class QueryResultsContainer extends React.Component {
       <div className="query-results-container">
         <Grid>
           <Row>
-            <QueryViewSelector
+            <TabSelector
+              tabLabels={[
+                formatMessage(localMessages.attention),
+                formatMessage(localMessages.language),
+                formatMessage(localMessages.people),
+              ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
           </Row>
