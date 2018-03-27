@@ -153,7 +153,7 @@ class QueryResultsContainer extends React.Component {
             />
           </Row>
         </Grid>
-        <div className="query-results-content">
+        <div className="tabbed-content-wrapper">
           <Grid>
             <Row>
               {viewContent}
