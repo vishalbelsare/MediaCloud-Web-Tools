@@ -39,8 +39,8 @@ class SelectSourceContainer extends React.Component {
       <div className="source-container">
         <Title render={titleHandler} />
         <SourceMgrHeaderContainer />
-        <SourceControlBar>
-          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+          <SourceControlBar>
             <Row>
               <Col lg={12}>
                 <span className="source-edit-link">
@@ -57,8 +57,8 @@ class SelectSourceContainer extends React.Component {
                 </span>
               </Col>
             </Row>
-          </Permissioned>
-        </SourceControlBar>
+          </SourceControlBar>
+        </Permissioned>
         <Grid className="details source-details">
           {children}
         </Grid>

@@ -13,9 +13,10 @@ import QueryTotalAttentionResultsContainer from './QueryTotalAttentionResultsCon
 import QueryGeoResultsContainer from './QueryGeoResultsContainer';
 import QueryWordsResultsContainer from './QueryWordsResultsContainer';
 import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
-import QueryViewSelector from './QueryViewSelector';
+import TabSelector from '../../common/TabSelector';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
+import messages from '../../../resources/messages';
 
 class QueryResultsContainer extends React.Component {
   state = {
@@ -24,6 +25,7 @@ class QueryResultsContainer extends React.Component {
 
   render() {
     const { queries, isLoggedIn, lastSearchTime, handleQueryModificationRequested } = this.props;
+    const { formatMessage } = this.props.intl;
     const attentionSection = (
       <Row>
         <Col lg={12} xs={12}>
@@ -141,12 +143,17 @@ class QueryResultsContainer extends React.Component {
       <div className="query-results-container">
         <Grid>
           <Row>
-            <QueryViewSelector
+            <TabSelector
+              tabLabels={[
+                formatMessage(messages.attention),
+                formatMessage(messages.language),
+                formatMessage(messages.peopleAndPlaces),
+              ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />
           </Row>
         </Grid>
-        <div className="query-results-content">
+        <div className="tabbed-content-wrapper">
           <Grid>
             <Row>
               {viewContent}
