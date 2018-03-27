@@ -12,7 +12,7 @@ import messages from '../../../resources/messages';
 import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
-import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
+import { getUserRoles, hasPermissions, PERMISSION_ADMIN } from '../../../lib/auth';
 import { LEVEL_ERROR, LEVEL_WARNING, WarningNotice } from '../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES } from '../../../lib/formValidators';
 
@@ -28,7 +28,7 @@ const localMessages = {
   failed: { id: 'topic.create.feedback', defaultMessage: 'Sorry, something went wrong.' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: "Sorry, we can't save this topic because you need a minimum of 500 seed stories." },
-  tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100K seed stories." },
+  tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100,000 seed stories." },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'Approaching story limit. Proceed with caution.' },
   creatingTitle: { id: 'topic.creating.title', defaultMessage: 'Please wait - we\'re creating your Topic now' },
   creatingDetail: { id: 'topic.creating.detail', defaultMessage: 'We are creating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is created, you\'ll be shown a page telling you we are gathering the stories.' },
@@ -135,8 +135,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(goToCreateTopicStep(1));
   },
   handleCreateTopic: (storyCount, user, values) => {
-    if (storyCount > MIN_RECOMMENDED_STORIES &&
-      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN))) {
+    if (((storyCount > MIN_RECOMMENDED_STORIES) && (storyCount < MAX_RECOMMENDED_STORIES))
+      || hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) {  // min/max limits dont apply to admin users
       // all good, so submit!
       const queryInfo = {
         name: values.name,
@@ -166,18 +166,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
         return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
       });
-    } else if (storyCount < MIN_RECOMMENDED_STORIES) {
-      // not enough seed stories - show error
-      dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
-      return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
-    } else if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
-      // can't make topics this big - show error
+    } else if (!hasPermissions(getUserRoles(user), PERMISSION_ADMIN)) {
+      // min/max don't apply to admins
       if (storyCount > WARNING_LIMIT_RECOMMENDED_STORIES && storyCount < MAX_RECOMMENDED_STORIES) {
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
         return dispatch(addNotice({ level: LEVEL_WARNING, message: ownProps.intl.formatMessage(localMessages.warningLimitStories) }));
       } else if (storyCount > MAX_RECOMMENDED_STORIES) {
         dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
         return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.tooManyStories) }));
+      } else if (storyCount < MIN_RECOMMENDED_STORIES) {
+        dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
+        return dispatch(addNotice({ level: LEVEL_ERROR, message: ownProps.intl.formatMessage(localMessages.notEnoughStories) }));
       }
     }
     return null;
