@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Row, Col } from 'react-flexbox-grid/lib';
-import SourceList from '../../common/SourceList';
+import CollectionSourceListContainer from './CollectionSourceListContainer';
 import CollectionSentenceCountContainer from './CollectionSentenceCountContainer';
 import CollectionTopWordsContainer from './CollectionTopWordsContainer';
 import CollectionGeographyContainer from './CollectionGeographyContainer';
@@ -83,12 +83,12 @@ class CollectionDetailsContainer extends React.Component {
         </Row>
         <Row>
           <Col lg={12} md={12} xs={12}>
-            <CollectionMetadataCoverageSummaryContainer collectionId={collection.tags_id} collection={collection} sources={collection.media} />
+            <CollectionMetadataCoverageSummaryContainer collection={collection} />
           </Col>
         </Row>
         <Row>
           <Col lg={6} xs={12}>
-            <SourceList collectionId={collection.tags_id} sources={collection.media} />
+            <CollectionSourceListContainer collectionId={collection.tags_id} />
           </Col>
           <Col lg={6} xs={12}>
             <CollectionSourceRepresentation collectionId={collection.tags_id} />
