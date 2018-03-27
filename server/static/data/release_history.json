@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "2018-03-27",
+      "version": "v2.7.3",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Better feedback about min/max sizes while creating topics."
+        }
+      ]
+    },
+    {
       "date": "2018-03-26",
       "version": "v2.7.2",
       "notes": [
