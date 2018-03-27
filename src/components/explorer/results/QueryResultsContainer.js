@@ -16,12 +16,7 @@ import QueryWordSpaceResultsContainer from './QueryWordSpaceResultsContainer';
 import TabSelector from '../../common/TabSelector';
 import QueryThemesResultsContainer from './QueryThemesResultsContainer';
 import { updateQuery } from '../../../actions/explorerActions';
-
-const localMessages = {
-  attention: { id: 'explorer.results.attention.title', defaultMessage: 'Attention' },
-  language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
-  people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
-};
+import messages from '../../../resources/messages';
 
 class QueryResultsContainer extends React.Component {
   state = {
@@ -150,9 +145,9 @@ class QueryResultsContainer extends React.Component {
           <Row>
             <TabSelector
               tabLabels={[
-                formatMessage(localMessages.attention),
-                formatMessage(localMessages.language),
-                formatMessage(localMessages.people),
+                formatMessage(messages.attention),
+                formatMessage(messages.language),
+                formatMessage(messages.peopleAndPlaces),
               ]}
               onViewSelected={index => this.setState({ selectedViewIndex: index })}
             />

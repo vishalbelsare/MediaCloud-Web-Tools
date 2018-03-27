@@ -246,6 +246,9 @@ const messages = {
 
   recentNews: { id: 'recentNews.title', defaultMessage: 'Recent Changes' },
 
+  attention: { id: 'attention', defaultMessage: 'Attention' },
+  peopleAndPlaces: { id: 'peopleAndPlaces', defaultMessage: 'People & Places' },
+
 };
 
 export default messages;
