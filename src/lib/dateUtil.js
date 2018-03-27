@@ -160,10 +160,15 @@ export function getDateRange(timePeriod) {
     throw error;
   }
   let targetPeriodStart = null;
-  const targetYear = moment().subtract(1, 'year');
-  const targetMonth = moment().subtract(1, 'month');
-  const targetWeek = moment().subtract(1, 'week');
-  const targetPastTwoWeeks = moment().subtract(2, 'week');
+  const today = moment()
+    .hours(0)
+    .minutes(0)
+    .seconds(0)
+    .milliseconds(0);  // make it a day so caching works better
+  const targetYear = today.subtract(1, 'year');
+  const targetMonth = today.subtract(1, 'month');
+  const targetWeek = today.subtract(1, 'week');
+  const targetPastTwoWeeks = today.subtract(2, 'week');
   switch (timePeriod) {
     case PAST_WEEK: // past week
       targetPeriodStart = targetWeek;
@@ -182,7 +187,7 @@ export function getDateRange(timePeriod) {
     default:
       break;
   }
-  return { start: targetPeriodStart, end: moment() };
+  return { start: targetPeriodStart, end: today };
 }
 
 export function getPastTwoWeeksDateRange() {
