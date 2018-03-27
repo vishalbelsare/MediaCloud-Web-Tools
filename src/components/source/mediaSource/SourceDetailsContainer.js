@@ -21,7 +21,6 @@ import SourceMetadataStatBar from '../../common/SourceMetadataStatBar';
 
 const localMessages = {
   searchNow: { id: 'source.basicInfo.searchNow', defaultMessage: 'Search in Explorer' },
-  sourceDetailsTitle: { id: 'source.details.title', defaultMessage: 'Media Source: {name}' },
   sourceDetailsCollectionsTitle: { id: 'source.details.collections.title', defaultMessage: 'Collections' },
   sourceDetailsCollectionsIntro: { id: 'source.details.collections.intro',
     defaultMessage: 'Here are the collections {name} media source is part of:\n.',
