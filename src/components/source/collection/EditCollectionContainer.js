@@ -26,10 +26,10 @@ const EditCollectionContainer = (props) => {
     ...collection,
     name: collection.label,
     sources: collection.media,
-    static: collection.is_static === 1,
-    showOnMedia: collection.show_on_media === 1,
-    showOnStories: collection.show_on_stories === 1,
-    disabled: collection.is_static === 1,
+    static: collection.is_static === true,
+    showOnMedia: collection.show_on_media === true,
+    showOnStories: collection.show_on_stories === true,
+    disabled: collection.is_static === true,
   };
   return (
     <div className="edit-collection">

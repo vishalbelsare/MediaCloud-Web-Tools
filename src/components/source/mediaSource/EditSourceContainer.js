@@ -34,7 +34,7 @@ const EditSourceContainer = (props) => {
     // if user cannot edit media, disabled=true
     collections: source.media_source_tags
       .map(t => ({ ...t, name: t.label }))
-      .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media === 1 || canSeePrivateCollections))),
+      .filter(t => (isCollectionTagSet(t.tag_sets_id) && (t.show_on_media || canSeePrivateCollections))),
     publicationCountry: pubCountry ? pubCountry.tags_id : undefined,
     publicationState: pubState ? pubState.tags_id : undefined,
     primaryLanguage: pLanguage ? pLanguage.tags_id : undefined,
