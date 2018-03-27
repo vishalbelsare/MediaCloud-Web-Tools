@@ -38,16 +38,16 @@ class SelectCollectionContainer extends React.Component {
       <div className="collection-container">
         <Title render={titleHandler} />
         <SourceMgrHeaderContainer />
-        <SourceControlBar>
-          <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+        <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
+          <SourceControlBar>
             <span className="collection-edit-link">
               <Link to={`/collections/${collection.tags_id}/edit`} >
                 <EditButton />
                 <FormattedMessage {...localMessages.editCollection} />
               </Link>
             </span>
-          </Permissioned>
-        </SourceControlBar>
+          </SourceControlBar>
+        </Permissioned>
         <Grid className="details collection-details">
           {children}
         </Grid>
