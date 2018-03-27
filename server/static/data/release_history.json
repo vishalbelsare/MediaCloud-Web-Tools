@@ -8,6 +8,11 @@
           "apps": ["topics"],
           "type": "Fix",
           "note": "Better feedback about min/max sizes while creating topics."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Redid the source and collection homepages."
         }
       ]
     },
