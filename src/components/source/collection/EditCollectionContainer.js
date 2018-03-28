@@ -19,13 +19,13 @@ const localMessages = {
 };
 
 const EditCollectionContainer = (props) => {
-  const { handleSave, collection, collectionId } = props;
+  const { handleSave, collection, collectionId, sources } = props;
   const { formatMessage } = props.intl;
   const titleHandler = parentTitle => `${formatMessage(localMessages.mainTitle)} | ${parentTitle}`;
   const intialValues = {
     ...collection,
     name: collection.label,
-    sources: collection.media,
+    sources,
     static: collection.is_static === true,
     showOnMedia: collection.show_on_media === true,
     showOnStories: collection.show_on_stories === true,
@@ -61,11 +61,13 @@ EditCollectionContainer.propTypes = {
   // form state
   collectionId: PropTypes.number.isRequired,
   collection: PropTypes.object,
+  sources: PropTypes.array,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
   collection: state.sources.collections.selected.collectionDetails.object,
+  sources: state.sources.collections.selected.collectionSourceList.sources,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
