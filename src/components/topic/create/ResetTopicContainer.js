@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Grid } from 'react-flexbox-grid/lib';
 import { push } from 'react-router-redux';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -10,7 +11,8 @@ import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../l
 import AppButton from '../../common/AppButton';
 
 const localMessages = {
-  errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Ask an admin to reset it for you.' },
+  errorInTopicNonAdmin: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Ask an admin to reset it for you.' },
+  errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Click the Reset button to reset and follow the prompts to correct and update your topic.' },
   reset: { id: 'topic.reset', defaultMessage: 'Reset' },
 };
 
@@ -19,17 +21,22 @@ const ResetTopicContainer = (props) => {
   const { formatMessage } = props.intl;
   if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN)) {
     return (
-      <WarningNotice><FormattedHTMLMessage {...localMessages.errorInTopic} /></WarningNotice>
+      <WarningNotice><FormattedHTMLMessage {...localMessages.errorInTopicNonAdmin} /></WarningNotice>
     );
   }
   return (
-    <AppButton
-      style={{ marginTop: 30 }}
-      type="submit"
-      label={formatMessage(localMessages.reset)}
-      onClick={() => resetErrorTopic(topicInfo.topics_id, filters)}
-      primary
-    />
+    <div>
+      <WarningNotice><FormattedHTMLMessage {...localMessages.errorInTopic} /></WarningNotice>
+      <Grid>
+        <AppButton
+          style={{ marginTop: 30 }}
+          type="submit"
+          label={formatMessage(localMessages.reset)}
+          onClick={() => resetErrorTopic(topicInfo.topics_id, filters)}
+          primary
+        />
+      </Grid>
+    </div>
   );
 };
 
