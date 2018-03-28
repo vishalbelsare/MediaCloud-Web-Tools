@@ -89,6 +89,7 @@ def api_topics_preview_word_count():
 def topic_reset(topics_id):
     user_mc = user_admin_mediacloud_client()
     reset_result = user_mc.topicReset(topics_id)
+    reset_result['topics_id'] = topics_id
     return jsonify(reset_result)
 
 @app.route('/api/topics/create', methods=['PUT'])

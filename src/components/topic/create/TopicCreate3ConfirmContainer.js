@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
+import { filteredLinkTo } from '../../util/location';
 import composeIntlForm from '../../common/IntlForm';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 import messages from '../../../resources/messages';
-import { createTopic, goToCreateTopicStep } from '../../../actions/topicActions';
+import { createTopic, goToCreateTopicStep, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
 import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
@@ -113,6 +114,7 @@ TopicCreate3ConfirmContainer.propTypes = {
   // form context
   intl: PropTypes.object.isRequired,
   handleCreateTopic: PropTypes.func.isRequired,
+  handleUpdateTopic: PropTypes.func.isRequired,
   submitting: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
@@ -182,11 +184,50 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
     return null;
   },
+  handleUpdateTopic: (storyCount, user, values) => {
+    if (storyCount > MIN_RECOMMENDED_STORIES &&
+      (storyCount < MAX_RECOMMENDED_STORIES || hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN))) {
+      const infoToSave = { ...values };   // clone it so we can edit as needed
+      infoToSave.is_public = infoToSave.is_public ? 1 : 0;
+      infoToSave.is_logogram = infoToSave.is_logogram ? 1 : 0;
+      infoToSave.ch_monitor_id = values.ch_monitor_id === undefined ? '' : values.ch_monitor_id;
+      if ('sourcesAndCollections' in values) {
+        infoToSave['sources[]'] = values.sourcesAndCollections.filter(s => s.media_id).map(s => s.media_id);
+        infoToSave['collections[]'] = values.sourcesAndCollections.filter(s => s.tags_id).map(s => s.tags_id);
+      } else {
+        infoToSave['sources[]'] = '';
+        infoToSave['collections[]'] = '';
+      }
+      return dispatch(updateTopic(infoToSave.topics_id, infoToSave))
+        .then((results) => {
+          if (results.topics_id) {
+            // let them know it worked
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+            // if the dates changed tell them it needs a new snapshot
+            if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
+              dispatch(setTopicNeedsNewSnapshot(true));
+            }
+            const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
+            return dispatch(push(topicSummaryUrl));
+            // update topic info and redirect back to topic summary
+          }
+          return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
+        }
+      );
+    }
+    return null; // won't save
+  },
 });
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
   return Object.assign({}, stateProps, dispatchProps, ownProps, {
-    finishStep: () => dispatchProps.handleCreateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues),
+    finishStep: () => {
+      if (stateProps.formValues.isUpdating) {
+        dispatchProps.handleUpdateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues);
+      } else {
+        dispatchProps.handleCreateTopic(stateProps.storyCount, stateProps.user, stateProps.formValues);
+      }
+    },
   });
 }
 

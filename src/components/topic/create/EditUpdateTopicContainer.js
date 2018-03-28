@@ -26,6 +26,7 @@ const EditUpdateTopicContainer = (props) => {
       ...topicInfo,
       sourcesAndCollections,
       title: formatMessage(localMessages.edit),
+      isUpdating: true,
     };
   }
   if (!hasPermissions(getUserRoles(user), PERMISSION_TOPIC_ADMIN) && !canUpdateTopic) {

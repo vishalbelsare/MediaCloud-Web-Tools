@@ -24,11 +24,17 @@ const localMessages = {
 const formSelector = formValueSelector('topicForm');
 
 const TopicCreate1ConfigureContainer = (props) => {
-  const { finishStep, handleMediaChange, handleMediaDelete } = props;
+  const { finishStep, initialValues, handleMediaChange, handleMediaDelete } = props;
   const { formatMessage } = props.intl;
   const endDate = getCurrentDate();
   const startDate = getMomentDateSubtraction(endDate, 3, 'months');
-  const initialValues = { start_date: startDate, end_date: endDate, max_iterations: 15, buttonLabel: formatMessage(messages.preview) };
+  const allInitialValues = {
+    start_date: startDate,
+    end_date: endDate,
+    max_iterations: 15,
+    buttonLabel: formatMessage(messages.preview),
+    ...initialValues,
+  };
   return (
     <Grid>
       <Title render={formatMessage(localMessages.title)} />
@@ -39,7 +45,7 @@ const TopicCreate1ConfigureContainer = (props) => {
         </Col>
       </Row>
       <TopicForm
-        initialValues={initialValues}
+        initialValues={allInitialValues}
         onSubmit={() => finishStep(1)}
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}

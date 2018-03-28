@@ -203,7 +203,7 @@ export function createTopic(params) {
 }
 
 export function resetTopic(topicId) {
-  return createPostingApiPromise(`/api/topics/${topicId}/reset`);
+  return createApiPromise(`/api/topics/${topicId}/reset`);
 }
 
 export function fetchStoryCountByQuery(params) {
