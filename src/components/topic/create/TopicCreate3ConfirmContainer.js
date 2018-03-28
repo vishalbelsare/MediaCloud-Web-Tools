@@ -18,22 +18,26 @@ import { LEVEL_ERROR, LEVEL_WARNING, WarningNotice } from '../../common/Notice';
 import { MAX_RECOMMENDED_STORIES, MIN_RECOMMENDED_STORIES, WARNING_LIMIT_RECOMMENDED_STORIES } from '../../../lib/formValidators';
 
 const localMessages = {
-  title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your New Topic' },
+  title: { id: 'topic.create.confirm.title', defaultMessage: 'Step 3: Confirm Your Topic' },
   name: { id: 'topic.create.confirm.name', defaultMessage: 'Name' },
   description: { id: 'topic.create.confirm.description', defaultMessage: 'Description' },
   state: { id: 'topic.create.state', defaultMessage: 'Not yet saved.' },
   storyCount: { id: 'topic.create.story.count', defaultMessage: 'Seed Stories' },
-  topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your new Topic.' },
+  topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your Topic.' },
   topicNotSaved: { id: 'topic.create.notSaved', defaultMessage: 'That didn\'t work!' },
-  feedback: { id: 'topic.create.failed', defaultMessage: 'Successfully created your new topic!' },
-  failed: { id: 'topic.create.feedback', defaultMessage: 'Sorry, something went wrong.' },
+  feedback: { id: 'topic.create.feedback', defaultMessage: 'Successfully created your topic!' },
+  failed: { id: 'topic.create.failed', defaultMessage: 'Sorry, something went wrong.' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
+  updateTopic: { id: 'topic.update', defaultMessage: 'Update Topic' },
   notEnoughStories: { id: 'topic.create.notenough', defaultMessage: "Sorry, we can't save this topic because you need a minimum of 500 seed stories." },
   tooManyStories: { id: 'topic.create.toomany', defaultMessage: "Sorry, we can't save this topic because you need to select less than 100K seed stories." },
   warningLimitStories: { id: 'topic.create.warningLimit', defaultMessage: 'Approaching story limit. Proceed with caution.' },
   creatingTitle: { id: 'topic.creating.title', defaultMessage: 'Please wait - we\'re creating your Topic now' },
   creatingDetail: { id: 'topic.creating.detail', defaultMessage: 'We are creating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is created, you\'ll be shown a page telling you we are gathering the stories.' },
+  updatingTitle: { id: 'topic.updating.title', defaultMessage: 'Please wait - we\'re updating your Topic now' },
+  updatingDetail: { id: 'topic.updating.detail', defaultMessage: 'We are updating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is updating, you\'ll be shown a page telling you we are gathering the stories.' },
 };
+
 
 const TopicCreate3ConfirmContainer = (props) => {
   const { formValues, finishStep, handlePreviousStep, storyCount, handleSubmit, pristine, submitting } = props;
@@ -68,16 +72,29 @@ const TopicCreate3ConfirmContainer = (props) => {
       )}
     </div>
   );
+  let content = (
+    <Col lg={10}>
+      <h2><FormattedMessage {...localMessages.creatingTitle} /></h2>
+      <p><FormattedMessage {...localMessages.creatingDetail} /></p>
+      <LoadingSpinner />
+      {topicDetailsContent}
+    </Col>
+  );
+  if (formValues.isUpdating) {
+    content = (
+      <Col lg={10}>
+        <h2><FormattedMessage {...localMessages.updatingTitle} /></h2>
+        <p><FormattedMessage {...localMessages.updatingDetail} /></p>
+        <LoadingSpinner />
+        {topicDetailsContent}
+      </Col>
+    );
+  }
   if (submitting) {
     return (
       <Grid className="topic-container">
         <Row>
-          <Col lg={10}>
-            <h2><FormattedMessage {...localMessages.creatingTitle} /></h2>
-            <p><FormattedMessage {...localMessages.creatingDetail} /></p>
-            <LoadingSpinner />
-            {topicDetailsContent}
-          </Col>
+          {content}
         </Row>
       </Grid>
     );
@@ -98,7 +115,7 @@ const TopicCreate3ConfirmContainer = (props) => {
               style={{ marginTop: 30 }}
               type="submit"
               disabled={pristine || submitting}
-              label={formatMessage(localMessages.createTopic)}
+              label={formatMessage(formValues.isUpdating ? localMessages.updateTopic : localMessages.createTopic)}
               primary
             />
           </Col>

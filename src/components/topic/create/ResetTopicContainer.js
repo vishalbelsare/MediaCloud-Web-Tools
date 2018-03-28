@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { filteredLinkTo } from '../../util/location';
-import { resetTopic } from '../../../actions/topicActions';
+import { resetTopic, updateFeedback } from '../../../actions/topicActions';
 import { WarningNotice } from '../../common/Notice';
 import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
 import AppButton from '../../common/AppButton';
@@ -14,6 +14,7 @@ const localMessages = {
   errorInTopicNonAdmin: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Ask an admin to reset it for you.' },
   errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Click the Reset button to reset and follow the prompts to correct and update your topic.' },
   reset: { id: 'topic.reset', defaultMessage: 'Reset' },
+  errorResetting: { id: 'topic.errorResetting', defaultMessage: 'Sorry, resetting failed.' },
 };
 
 const ResetTopicContainer = (props) => {
@@ -55,12 +56,16 @@ const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   resetErrorTopic: (topicId, filters) => (
     dispatch(resetTopic(topicId))
       .then((r) => {
-        const topicEditUpdateUrl = filteredLinkTo(`/topics/${r.topics_id}/editUpdate`, filters);
-        dispatch(push(topicEditUpdateUrl));
+        if (r.topics_id) {
+          const topicEditUpdateUrl = filteredLinkTo(`/topics/${r.topics_id}/editUpdate`, filters);
+          dispatch(push(topicEditUpdateUrl));
+        } else {
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.errorResetting) }));
+        }
       })
   ),
 });
