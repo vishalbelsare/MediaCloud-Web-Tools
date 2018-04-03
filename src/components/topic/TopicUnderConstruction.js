@@ -6,7 +6,7 @@ import { assetUrl } from '../../lib/assetUtil';
 
 const localMessages = {
   title: { id: 'topic.underConsutrction.title', defaultMessage: 'Success!' },
-  text: { id: 'topic.underConsutrction.text', defaultMessage: 'Your new topic is under construction! Our army of kittens in scouring the net for articles to include in your topic. Check back soon to see if it is ready.' },
+  text: { id: 'topic.underConsutrction.text', defaultMessage: 'Your new or updated topic is under construction! Our army of kittens in scouring the net for articles to include in your topic. Check back soon to see if it is ready.' },
 };
 
 const TopicUnderConstruction = props => (
