@@ -50,9 +50,8 @@ const topicRoutes = (
 
     <Route path="/topics/:topicId" component={TopicContainer} onEnter={requireAuth} >
 
-      <Route path="edit" component={EditTopicContainer} onEnter={requireAuth} />
-
-      <Route path="editUpdate" component={EditUpdateTopicContainer} onEnter={requireAuth} />
+      <Route path="/topics/:topicId/editUpdate" component={EditUpdateTopicContainer} onEnter={requireAuth} />
+      <Route path="/topics/:topicId/edit" component={EditTopicContainer} onEnter={requireAuth} />
 
       <Route path="permissions" component={TopicPermissionsContainer} onEnter={requireAuth} />
 

@@ -26,6 +26,7 @@ const localMessages = {
   topicSaved: { id: 'topic.create.saved', defaultMessage: 'We saved your Topic.' },
   topicNotSaved: { id: 'topic.create.notSaved', defaultMessage: 'That didn\'t work!' },
   feedback: { id: 'topic.create.feedback', defaultMessage: 'Successfully created your topic!' },
+  updateFeedback: { id: 'topic.update.feedback', defaultMessage: 'Successfully updated your topic!' },
   failed: { id: 'topic.create.failed', defaultMessage: 'Sorry, something went wrong.' },
   createTopic: { id: 'topic.create', defaultMessage: 'Create Topic' },
   updateTopic: { id: 'topic.update', defaultMessage: 'Update Topic' },
@@ -219,7 +220,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         .then((results) => {
           if (results.topics_id) {
             // let them know it worked
-            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
+            dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.updateFeedback) }));
             // if the dates changed tell them it needs a new snapshot
             if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
               dispatch(setTopicNeedsNewSnapshot(true));

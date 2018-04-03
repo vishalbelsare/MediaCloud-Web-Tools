@@ -13,6 +13,9 @@ const localMessages = {
   title: { id: 'topic.create.preview.title', defaultMessage: 'Step 2: Preview Your Topic' },
   about: { id: 'topic.create.preview.about',
     defaultMessage: '<b>Make sure your topic looks right before you create it</b>.  We start your topic by finding all the stories in our database that match your query. From there we follow all the links and download them. We check if they match your keywords, and if they do then we add them to your topic (this is called "spidering"). Check the result below and make sure your topic is finding you the stories you want before creating it.' },
+  aboutUpdate: { id: 'topic.update.preview.about',
+    defaultMessage: '<b>Make sure your topic looks right before you update it</b>. Pay special attention to the amount of seed stories - a large number can easily spider out of scope.' },
+
 };
 
 const TopicCreate2PreviewContainer = (props) => {
@@ -20,15 +23,24 @@ const TopicCreate2PreviewContainer = (props) => {
   const { formatMessage } = props.intl;
 
   const content = <TopicCreatePreview formData={formData} />;
-
+  let titleInfo = (
+    <p>
+      <FormattedHTMLMessage {...localMessages.about} />
+    </p>
+  );
+  if (formData.isUpdating) {
+    titleInfo = (
+      <p>
+        <FormattedHTMLMessage {...localMessages.aboutUpdate} />
+      </p>
+    );
+  }
   return (
     <Grid>
       <h1>
         <FormattedHTMLMessage {...localMessages.title} />
       </h1>
-      <p>
-        <FormattedHTMLMessage {...localMessages.about} />
-      </p>
+      {titleInfo}
       { content }
       <br />
       <Row>
