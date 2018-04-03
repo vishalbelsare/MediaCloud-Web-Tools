@@ -12,8 +12,9 @@ import AppButton from '../../common/AppButton';
 
 const localMessages = {
   errorInTopicNonAdmin: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Ask an admin to reset it for you.' },
-  errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Click the Reset button to reset and follow the prompts to correct and update your topic.' },
-  reset: { id: 'topic.reset', defaultMessage: 'Reset' },
+  errorTooBig: { id: 'topic.error.tooBig', defaultMessage: 'Your topic is too big' },
+  errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Sorry, but you\'ve exceed the size limit for topics you can create. That limit is {maxStories} stories total (seed stories in out database already + stories we discover while spidering). You need to make your topic smaller by editing the dates, query, or collections and sources.' },
+  reset: { id: 'topic.reset', defaultMessage: 'Reset and Edit this Topic' },
   errorResetting: { id: 'topic.errorResetting', defaultMessage: 'Sorry, resetting failed.' },
 };
 
@@ -27,8 +28,10 @@ const ResetTopicContainer = (props) => {
   }
   return (
     <div>
-      <WarningNotice><FormattedHTMLMessage {...localMessages.errorInTopic} /></WarningNotice>
+      <WarningNotice><FormattedHTMLMessage {...localMessages.errorTooBig} /></WarningNotice>
       <Grid>
+        <h1><FormattedHTMLMessage {...localMessages.errorTooBig} /></h1>
+        <p><FormattedHTMLMessage {...localMessages.errorInTopic} values={{ maxStories: topicInfo.max_stories }} /></p>
         <AppButton
           style={{ marginTop: 30 }}
           type="submit"
