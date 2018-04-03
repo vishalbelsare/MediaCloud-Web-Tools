@@ -348,7 +348,7 @@ function drawViz(props) {
           // highlight similar words
           d3.select(node)
             .selectAll('text')
-            .filter(other => d.similar.map(x => x.term).includes(other.term) && other.term !== d.term)
+            .filter(other => d.similar.map(x => x.term).indexOf(other.term) !== -1 && other.term !== d.term)
             .transition()
             .duration(DEFAULT_MOUSEOVER_TRANSITION_TIME)
             .attr('fill', other => highlightColorScale(other.tfnorm))
@@ -362,13 +362,13 @@ function drawViz(props) {
           // bring similar words to front
           d3.select(node)
             .selectAll('text')
-            .filter(other => d.similar.map(x => x.term).includes(other.term) && other.term !== d.term)
+            .filter(other => d.similar.map(x => x.term).indexOf(other.term) !== -1 && other.term !== d.term)
             .raise();
 
           // gray-out non-similar words
           d3.select(node)
             .selectAll('text')
-            .filter(other => !d.similar.map(x => x.term).includes(other.term) && other.term !== d.term)
+            .filter(other => d.similar.map(x => x.term).indexOf(other.term) === -1 && other.term !== d.term)
             .transition()
             .duration(DEFAULT_MOUSEOVER_TRANSITION_TIME)
             .attr('fill', '#e2e2e2')
