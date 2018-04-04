@@ -7,7 +7,7 @@
         {
           "apps": ["sources"],
           "type": "Fix",
-          "note": "Shows the correct sources while editing a collection."
+          "note": "You can the sources in a collection again."
         },
         {
           "apps": ["sources"],
