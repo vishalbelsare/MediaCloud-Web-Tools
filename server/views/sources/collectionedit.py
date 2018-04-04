@@ -134,7 +134,8 @@ def _parse_sources_from_csv_upload(filepath):
                 empties = {k: v for k, v in newline.items() if v in ['', None]}
 
                 # source urls have to start with the http, so add it if the user didn't
-                if not newline_decoded['url'].startswith(u'http://') or not newline_decoded['url'].startswith(u'https://'):
+                if newline_decoded['url'][:7] not in [u'http://', 'http://'] and \
+                                newline_decoded['url'][:8] not in [u'https://', 'https://']:
                     newline_decoded['url'] = u'http://{}'.format(newline_decoded['url'])
 
                 if updatedSrc:
