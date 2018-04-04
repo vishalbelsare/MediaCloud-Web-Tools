@@ -5,12 +5,14 @@ import { push } from 'react-router-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { updateCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
+import { updateCollection, fetchCollectionDetails, fetchCollectionSourceList } from '../../../actions/sourceActions';
+import composeAsyncContainer from '../../common/AsyncContainer';
 import { updateFeedback } from '../../../actions/appActions';
 import CollectionForm from './form/CollectionForm';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
 import Permissioned from '../../common/Permissioned';
 import { nullOrUndefined } from '../../../lib/formValidators';
+import FETCH_SUCCEEDED from '../../../lib/fetchConstants';
 
 const localMessages = {
   mainTitle: { id: 'collection.mainTitle', defaultMessage: 'Modify this Collection' },
@@ -68,6 +70,7 @@ const mapStateToProps = (state, ownProps) => ({
   collectionId: parseInt(ownProps.params.collectionId, 10),
   collection: state.sources.collections.selected.collectionDetails.object,
   sources: state.sources.collections.selected.collectionSourceList.sources,
+  fetchStatus: state.sources.collections.selected.collectionSourceList.fetchStatus,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -86,20 +89,35 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       infoToSave['sources[]'] = [];
     }
     // try to save it
-    dispatch(updateCollection(infoToSave))
+    return dispatch(updateCollection(infoToSave))
       .then(() => {
         dispatch(fetchCollectionDetails(ownProps.params.collectionId))
         .then(() => {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.feedback) }));
-          dispatch(push(`/collections/${ownProps.params.collectionId}`));
+          return dispatch(push(`/collections/${ownProps.params.collectionId}`));
         });
       });
   },
+  fetchData: (collectionId) => {
+    dispatch(fetchCollectionSourceList(collectionId));
+  },
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    asyncFetch: () => {
+      if (stateProps.fetchStatus !== FETCH_SUCCEEDED) {
+        dispatchProps.fetchData(stateProps.collectionId);
+      }
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      EditCollectionContainer
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+      composeAsyncContainer(
+        EditCollectionContainer
+      )
     ),
   );

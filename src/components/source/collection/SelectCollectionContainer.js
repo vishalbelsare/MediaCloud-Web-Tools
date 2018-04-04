@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid } from 'react-flexbox-grid/lib';
 import Title from 'react-title-component';
-import { selectCollection, fetchCollectionDetails, fetchCollectionSourceList } from '../../../actions/sourceActions';
+import { selectCollection, fetchCollectionDetails } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -87,12 +87,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId) => {
     dispatch(selectCollection(collectionId));
     dispatch(fetchCollectionDetails(collectionId));
-    dispatch(fetchCollectionSourceList(collectionId));
   },
   asyncFetch: () => {
     dispatch(selectCollection(ownProps.params.collectionId));
     dispatch(fetchCollectionDetails(ownProps.params.collectionId));
-    dispatch(fetchCollectionSourceList(ownProps.params.collectionId));
   },
 });
 
