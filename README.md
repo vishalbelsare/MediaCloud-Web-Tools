@@ -66,9 +66,15 @@ Releasing
 
 1. Update the version number in the appropriate `src/[tool]Index.js` file.
 2. Change the server mode in `config/server.config` to `PROD`.
-3. Change the app you want to build in `config/server.config` (set the server/app variable).
+3. Change the app you want to build in `config/app.config` (set the server/app variable).
 4. Build the release version of the JS and CSS: `npm run topics-release` or `npm run sources-release`.
-5. Test it and then tag and commit it all.
+5. Test the changes to make sure they worked
+6. Tag it with the appropriate release label (ie. "sources-v2.7.3" or "topics-v2.4.3")
+7. SSH to civicdev and pull the latest from that branch (ie `git checkout v2.7.x; git pull`) into the approriate app dir (`/var/www/MediaCloud-SourceManager`)
+8. restart apache to test it: `sudo service apache2 restart`
+9. test it on the dev server: http://sources.dev.mediacloud.org
+10. if it all looks good, do the same on the civicprod server, except, checkout the exact tag: `git fetch; git checkout sources-v2.7.3`)
+11. check the prod server and make sure it worked
 
 Updating npm Depedencies
 ------------------------ 

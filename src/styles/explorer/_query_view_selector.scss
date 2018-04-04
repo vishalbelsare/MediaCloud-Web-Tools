@@ -1,32 +1,10 @@
 @import '../_constants';
 
-ul.query-view-selector {
-  background-color: $white;
-  margin: 0px;
-  padding: 0px;
-  margin-top: 10px;
-
+ul.tab-selector {
   li {
-    font-weight: bold;
-    display: inline-block;
-    font-size: 1.1em;
-    padding: 10px 15px;
-    text-transform: uppercase;
-
     &.selected {
       color: $explorer-primary;
       border-bottom: 2px solid $explorer-primary;
     }
-
-    &:hover {
-      cursor: pointer;
-    }
-
   }
-
-}
-
-.query-results-content {
-  background-color: $material-grey100 !important;
-  padding-bottom: 100px;
 }

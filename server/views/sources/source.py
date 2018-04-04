@@ -14,7 +14,7 @@ from server.util.tags import TAG_SETS_ID_PUBLICATION_COUNTRY, TAG_SETS_ID_PUBLIC
     TAG_SETS_ID_PRIMARY_LANGUAGE, TAG_SETS_ID_COUNTRY_OF_FOCUS, TAG_SETS_ID_MEDIA_TYPE, TAG_SET_GEOCODER_VERSION, \
     TAG_SET_NYT_LABELS_VERSION, GEO_SAMPLE_SIZE, is_metadata_tag_set
 from server.views.sources import _cached_source_story_count
-from server.views.sources.words import cached_wordcount, stream_wordcount_csv
+from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
@@ -203,7 +203,7 @@ def media_source_words(media_id):
     if ('q' in request.args) and (len(request.args['q']) > 0):
         query_arg = 'media_id:'+str(media_id) + " AND " + request.args.get('q')
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key(), query_arg)
+        'wordcounts': word_count(user_mediacloud_key(), query_arg)
     }
     return jsonify({'results': info})
 

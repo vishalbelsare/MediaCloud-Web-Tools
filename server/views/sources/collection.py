@@ -21,7 +21,7 @@ from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
 from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.words import cached_wordcount, stream_wordcount_csv
+from server.views.sources.words import word_count, stream_wordcount_csv
 
 logger = logging.getLogger(__name__)
 
@@ -139,11 +139,19 @@ def api_collection_details(collection_id):
     add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
-    all_media = media_with_tag(user_mediacloud_key(), collection_id)
-    add_user_favorite_flag_to_sources(all_media)
-    info['media'] = all_media
-
     return jsonify({'results': info})
+
+
+@app.route('/api/collections/<collection_id>/sources')
+@flask_login.login_required
+@api_error_handler
+def api_collection_sources(collection_id):
+    results = {}
+    results['tags_id'] = collection_id
+    media_in_colleciton = media_with_tag(user_mediacloud_key(), collection_id)
+    add_user_favorite_flag_to_sources(media_in_colleciton)
+    results['sources'] = media_in_colleciton
+    return jsonify(results)
 
 
 @app.route('/api/template/sources.csv')
@@ -337,7 +345,7 @@ def collection_words(collection_id):
     if ('q' in request.args) and (len(request.args['q']) > 0):
         query_arg = 'tags_id_media:' + str(collection_id) + " AND " + request.args.get('q')
     info = {
-        'wordcounts': cached_wordcount(user_mediacloud_key, query_arg)
+        'wordcounts': word_count(user_mediacloud_key, query_arg)
     }
     return jsonify({'results': info})
 

@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-04-04",
+      "version": "v2.7.5",
+      "notes": [
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "You can the sources in a collection again."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Collections now show public/private status correctly."
+        }
+      ]
+    },
+    {
       "date": "2018-03-27",
       "version": "v2.7.3",
       "notes": [
@@ -8,6 +24,11 @@
           "apps": ["topics"],
           "type": "Fix",
           "note": "Better feedback about min/max sizes while creating topics."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Redid the source and collection homepages."
         }
       ]
     },

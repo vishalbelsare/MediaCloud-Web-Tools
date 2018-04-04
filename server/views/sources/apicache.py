@@ -4,7 +4,7 @@ import codecs
 from server import mc
 from server.cache import cache, key_generator
 from server.views.sources import FEATURED_COLLECTION_LIST, POPULAR_COLLECTION_LIST
-from server.views.sources.words import cached_wordcount
+from server.views.sources.words import word_count
 import server.util.tags as tags
 
 
@@ -39,7 +39,7 @@ def cached_featured_collections():
         info = mc.tag(tags_id)
         info['id'] = tags_id
         # use None here to use app-level mc object
-        info['wordcount'] = cached_wordcount(None, 'tags_id_media:' + str(tags_id))
+        info['wordcount'] = word_count(None, 'tags_id_media:' + str(tags_id))
         collections += [info]
     return collections
 
