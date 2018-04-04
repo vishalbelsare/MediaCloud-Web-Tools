@@ -130,7 +130,8 @@ class TopicContainer extends React.Component {
           <TopicUnderConstruction />
         </div>
       );
-    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* and some way to determine if it has been reset */) {
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* and some way to determine if it has been reset */ &&
+      topicInfo.message === '') {
       contentToShow = (
         <div>
           <TopicReconstruction />
@@ -332,8 +333,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   handleSpiderRequest: topicId => dispatch(topicStartSpider(topicId))
     .then((results) => {
       if (results) {
-        return dispatch(push());
-        // window.location.reload();
+        // return dispatch(push(window.location.href));
+        window.location.reload();
       }
       return null;
     }),

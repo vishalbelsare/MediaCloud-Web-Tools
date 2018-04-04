@@ -72,6 +72,7 @@ const TopicCreate1ConfigureContainer = (props) => {
         title={formatMessage(localMessages.addCollectionsTitle)}
         intro={formatMessage(localMessages.addCollectionsIntro)}
         mode={TOPIC_FORM_MODE_CREATE}
+        enabledReinitialize
         onMediaChange={handleMediaChange}
         onMediaDelete={handleMediaDelete}
       />

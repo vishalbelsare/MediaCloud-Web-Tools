@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { push } from 'react-router-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { filteredLinkTo } from '../../util/location';
 import composeIntlForm from '../../common/IntlForm';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
@@ -227,14 +226,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
             if (infoToSave.state === 'error') { // } && results.message.indexOf('cannot reduce') > -1) {
               dispatch(resetTopic(results.topics_id));
               dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
-              const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
+              const topicSummaryUrl = `/topics/${results.topics_id}/summary`;
               dispatch(push(topicSummaryUrl));
             } else {
               // if the dates changed tell them it needs a new snapshot
               if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
                 dispatch(setTopicNeedsNewSnapshot(true));
               }
-              const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
+              const topicSummaryUrl = `/topics/${results.topics_id}/summary`;
               return dispatch(push(topicSummaryUrl));
               // update topic info and redirect back to topic summary
             }
