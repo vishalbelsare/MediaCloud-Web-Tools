@@ -116,6 +116,7 @@ class TopicListContainer extends React.Component {
           topics={whichTopics}
           currentFilter={currentFilter}
           linkGenerator={t => `topics/${t.topics_id}/summary`}
+          errorTopicHandler={t => `topics/${t.topics_id}/editUpdate`}
           onSetFavorited={handleSetFavorited}
         />
 

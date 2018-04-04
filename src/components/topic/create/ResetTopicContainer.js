@@ -66,12 +66,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((r) => {
         if (r.topics_id) {
           const topicEditUpdateUrl = filteredLinkTo(`/topics/${r.topics_id}/editUpdate`, filters);
-          dispatch(push(topicEditUpdateUrl));
-        } else {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.errorResetting) }));
+          return dispatch(push(topicEditUpdateUrl));
         }
+        return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.errorResetting) }));
       });
-    dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resettingInitiated) }));
+    return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resettingInitiated) }));
   },
 });
 

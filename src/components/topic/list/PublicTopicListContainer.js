@@ -17,6 +17,7 @@ const PublicTopicListContainer = (props) => {
           topics={topics}
           currentFilter={TOPIC_PUBLIC}
           linkGenerator={c => `/topics/public/${c.topics_id}/summary`}
+          errorTopicHandler={c => `/topics/public/${c.topics_id}/editUpdate`}
         />
       </Col>
     </Row>

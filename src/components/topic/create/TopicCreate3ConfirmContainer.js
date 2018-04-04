@@ -10,7 +10,7 @@ import composeIntlForm from '../../common/IntlForm';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import SourceOrCollectionChip from '../../common/SourceOrCollectionChip';
 import messages from '../../../resources/messages';
-import { createTopic, goToCreateTopicStep, updateTopic, setTopicNeedsNewSnapshot } from '../../../actions/topicActions';
+import { createTopic, goToCreateTopicStep, updateTopic, setTopicNeedsNewSnapshot, resetTopic } from '../../../actions/topicActions';
 import { updateFeedback, addNotice } from '../../../actions/appActions';
 import AppButton from '../../common/AppButton';
 import { getUserRoles, hasPermissions, PERMISSION_TOPIC_ADMIN } from '../../../lib/auth';
@@ -37,6 +37,7 @@ const localMessages = {
   creatingDetail: { id: 'topic.creating.detail', defaultMessage: 'We are creating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is created, you\'ll be shown a page telling you we are gathering the stories.' },
   updatingTitle: { id: 'topic.updating.title', defaultMessage: 'Please wait - we\'re updating your Topic now' },
   updatingDetail: { id: 'topic.updating.detail', defaultMessage: 'We are updating your topic now.  This can take a minute or so, just to make sure everyting is in order.  Once it is updating, you\'ll be shown a page telling you we are gathering the stories.' },
+  resetting: { id: 'topic.create', defaultMessage: 'Attempting to reset topic, forwarding to status page.' },
 };
 
 
@@ -221,17 +222,25 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           if (results.topics_id) {
             // let them know it worked
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.updateFeedback) }));
-            // if the dates changed tell them it needs a new snapshot
-            if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
-              dispatch(setTopicNeedsNewSnapshot(true));
+
+          // reset if we are saving a previously errored topic
+            if (infoToSave.state === 'error') { // } && results.message.indexOf('cannot reduce') > -1) {
+              dispatch(resetTopic(results.topics_id));
+              dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
+              const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
+              dispatch(push(topicSummaryUrl));
+            } else {
+              // if the dates changed tell them it needs a new snapshot
+              if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
+                dispatch(setTopicNeedsNewSnapshot(true));
+              }
+              const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
+              return dispatch(push(topicSummaryUrl));
+              // update topic info and redirect back to topic summary
             }
-            const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`);
-            return dispatch(push(topicSummaryUrl));
-            // update topic info and redirect back to topic summary
           }
           return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
-        }
-      );
+        });
     }
     return null; // won't save
   },

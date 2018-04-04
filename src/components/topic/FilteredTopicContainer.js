@@ -53,7 +53,8 @@ class FilteredTopicContainer extends React.Component {
       !this.hasUsableSnapshot()) {
       // how to distinguish between fetch-ongoing and a generating snapshot?
       if (topicInfo && topicInfo.message) {
-        if (topicInfo.message.includes('exceeds')) {
+        if (topicInfo.message.includes('exceeds') ||
+          topicInfo.message.includes('solr_seed_query returned more than')) {
           subContent = (
             <ResetTopicContainer />
           );

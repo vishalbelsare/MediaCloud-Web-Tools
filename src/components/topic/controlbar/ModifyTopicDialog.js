@@ -110,7 +110,10 @@ class ModifyTopicDialog extends React.Component {
           <DescriptiveButton
             label={formatMessage(localMessages.changeSettings)}
             description={formatMessage(localMessages.changeSettingsDetails)}
-            onClick={() => onUrlChange(`/topics/${topicId}/edit`)}
+            onClick={() => {
+              onUrlChange(`/topics/${topicId}/edit`);
+              this.handleRemoveDialogClose();
+            }}
             id="modify-topic-settings"
           />
         </Dialog>

@@ -12,7 +12,7 @@ import { PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { TOPIC_PUBLIC } from '../../../lib/topicFilterUtil';
 import messages from '../../../resources/messages';
 import { TOPIC_SNAPSHOT_STATE_COMPLETED } from '../../../reducers/topics/selected/snapshots';
-import { ErrorNotice } from '../../common/Notice';
+import { WarningNotice, ErrorNotice } from '../../common/Notice';
 
 const localMessages = {
   total: { id: 'topitopic.list.totalStories', defaultMessage: 'Total Stories' },
@@ -21,10 +21,11 @@ const localMessages = {
   range: { id: 'topitopic.list.range', defaultMessage: '{start} - {end}' },
   createdBy: { id: 'topitopic.list.createdBy', defaultMessage: 'Created by: ' },
   errorInTopic: { id: 'topitopic.list.error', defaultMessage: 'Error In Topic...' },
+  incompleteTopic: { id: 'topitopic.list.error', defaultMessage: 'Topic incomplete' },
 };
 
 const TopicPreviewList = (props) => {
-  const { topics, linkGenerator, onSetFavorited, currentFilter } = props;
+  const { topics, linkGenerator, errorTopicHandler, onSetFavorited, currentFilter } = props;
   let content = null;
   let subContent = null;
   if (topics && topics.length > 0) {
@@ -64,9 +65,21 @@ const TopicPreviewList = (props) => {
         if (currentFilter === TOPIC_PUBLIC && topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
           return '';
         }
-        let errorNotice = null;
-        if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
-          errorNotice = <ErrorNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
+        let statusAndLinks = <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>;
+        if (topic.state.includes('error')) {
+          statusAndLinks = (
+            <div>
+              <h2><Link to={errorTopicHandler(topic)}>{topic.name}</Link></h2>
+              <ErrorNotice><Link to={errorTopicHandler(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
+            </div>
+          );
+        } else if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
+          statusAndLinks = (
+            <div>
+              <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
+              <WarningNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.incompleteTopic} /></Link></WarningNotice>;
+            </div>
+          );
         }
         return (
           <Col key={topic.topics_id} lg={4} xs={12}>
@@ -79,8 +92,7 @@ const TopicPreviewList = (props) => {
                       onSetFavorited={isFav => onSetFavorited(topic.topics_id, isFav)}
                     />
                   </Permissioned>
-                  <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
-                  {errorNotice}
+                  {statusAndLinks}
                   <FormattedMessage
                     {...localMessages.range}
                     values={{
@@ -111,6 +123,7 @@ const TopicPreviewList = (props) => {
 TopicPreviewList.propTypes = {
   // from parent
   linkGenerator: PropTypes.func,
+  errorTopicHandler: PropTypes.func,
   topics: PropTypes.array.isRequired,
   onSetFavorited: PropTypes.func,
   currentFilter: PropTypes.string,

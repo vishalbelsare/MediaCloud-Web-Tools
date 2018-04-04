@@ -16,6 +16,7 @@ import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import ModifyTopicDialog from './controlbar/ModifyTopicDialog';
 import TopicUnderConstruction from './TopicUnderConstruction';
+import TopicReconstruction from './TopicReconstruction';
 import TopicHeaderContainer from './TopicHeaderContainer';
 import Permissioned from '../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../lib/auth';
@@ -78,6 +79,18 @@ class TopicContainer extends React.Component {
       contentToShow = (
         <div>
           {children}
+          <div className="controlbar controlbar-topic">
+            <div className="main">
+              <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+                <ModifyTopicDialog
+                  topicId={topicId}
+                  onUrlChange={goToUrl}
+                  needsNewSnapshot={needsNewSnapshot}
+                  onSpiderRequest={handleSpiderRequest}
+                />
+              </Permissioned>
+            </div>
+          </div>
           <TopicUnderConstruction />
         </div>
       );
@@ -115,6 +128,12 @@ class TopicContainer extends React.Component {
             </div>
           </div>
           <TopicUnderConstruction />
+        </div>
+      );
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* and some way to determine if it has been reset */) {
+      contentToShow = (
+        <div>
+          <TopicReconstruction />
         </div>
       );
     }
@@ -310,10 +329,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
       });
   },
-  handleSpiderRequest: (topicId) => {
-    dispatch(topicStartSpider(topicId))
-      .then(() => window.location.reload());
-  },
+  handleSpiderRequest: topicId => dispatch(topicStartSpider(topicId))
+    .then((results) => {
+      if (results) {
+        return dispatch(push());
+        // window.location.reload();
+      }
+      return null;
+    }),
 });
 
 export default
