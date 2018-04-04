@@ -65,10 +65,9 @@ class BubbleRowChart extends React.Component {
     } else {
       radius = d3.scaleSqrt().domain([0, maxValue]).range([0, options.maxBubbleRadius]);
     }
-
+    let xOffset = 0;
     if (asPercentage) {
       circles = data.map((d, idx) => {
-        let xOffset = 0;
         xOffset = options.maxBubbleRadius + (((options.maxBubbleRadius * 2) + 10) * idx);
         return {
           ...d,
@@ -79,7 +78,6 @@ class BubbleRowChart extends React.Component {
       });
     } else {
       circles = data.map((d, idx, list) => {
-        let xOffset = 0;
         if (idx > 0) {
           const preceeding = list.slice(0, idx);
           const diameters = preceeding.map(d2 => (radius(d2.value) * 2) + 10);
@@ -110,7 +108,7 @@ class BubbleRowChart extends React.Component {
       const rollover = d3.select('#bubble-chart-tooltip')
         .style('opacity', 0);
 
-      const horizontalTranslaton = options.padding ? options.padding : 0;
+      const horizontalTranslaton = options.padding ? options.padding : xOffset;
       // draw background circles
       if (asPercentage) {
         const totalBubbles = svg.append('g')
