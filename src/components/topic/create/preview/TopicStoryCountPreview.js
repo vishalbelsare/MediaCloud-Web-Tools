@@ -73,7 +73,7 @@ class TopicStoryCountPreview extends React.Component {
       }
       content = (<BubbleRowChart
         data={data}
-        padding={30}
+        padding={60}
         domId={BUBBLE_CHART_DOM_ID}
         width={700}
       />);
