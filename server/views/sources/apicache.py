@@ -4,7 +4,6 @@ import codecs
 from server import mc
 from server.cache import cache, key_generator
 from server.views.sources import FEATURED_COLLECTION_LIST
-from server.views.sources.words import word_count
 import server.util.tags as tags
 
 
