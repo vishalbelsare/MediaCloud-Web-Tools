@@ -5,9 +5,9 @@ const messages = {
 
   blogToolName: { id: 'app.blog.name', defaultMessage: 'Blog' },
   blogToolDescription: { id: 'app.blog.description', defaultMessage: 'Read updates on our research, projects, and ideas from us and our partners' },
-  sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Sources' },
+  sourcesToolName: { id: 'app.sources.name', defaultMessage: 'Source Manager' },
   sourcesToolDescription: { id: 'app.sources.description', defaultMessage: 'Browse the media sources and collections in our database, and suggest more to add' },
-  topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topics' },
+  topicsToolName: { id: 'app.topics.name', defaultMessage: 'Topic Mapper' },
   topicsToolDescription: { id: 'app.topics.description', defaultMessage: 'Investigate a specific media topic in-depth, seeing the most influential sources, stories, and how language is used' },
   toolsAppName: { id: 'app.tools.name', defaultMessage: 'Tools' },
   toolsAppDescription: { id: 'app.tools.description', defaultMessage: 'Support for MediaCloud, including FAQs, tools and how to use them' },
