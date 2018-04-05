@@ -13,7 +13,7 @@ import { getDateRange, solrFormat, PAST_MONTH } from '../../../lib/dateUtil';
 import { getUserRoles, hasPermissions, PERMISSION_LOGGED_IN } from '../../../lib/auth';
 import { DEFAULT_COLLECTION_OBJECT_ARRAY, generateQueryParamString, autoMagicQueryLabel } from '../../../lib/explorerUtil';
 import { emptyString } from '../../../lib/formValidators';
-import MarketingFeatureList from './MarketingFeatureList';
+import ExplorerMarketingFeatureList from './ExplorerMarketingFeatureList';
 import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 import messages from '../../../resources/messages';
 import Masthead from '../../common/header/Masthead';
@@ -66,7 +66,7 @@ const Homepage = (props) => {
       </div>
       <SampleSearchContainer />
       {sideBarContent}
-      <MarketingFeatureList />
+      <ExplorerMarketingFeatureList />
       <Grid>
         <SystemStatsContainer />
       </Grid>

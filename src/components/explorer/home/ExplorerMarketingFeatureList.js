@@ -1,5 +1,5 @@
 import React from 'react';
-import MarketingFeatureItem from './MarketingFeatureItem';
+import MarketingFeatureItem from '../../common/MarketingFeatureItem';
 
 const localMessages = {
 
@@ -20,7 +20,7 @@ const localMessages = {
 
 };
 
-const MarketingFeatureList = () => (
+const ExplorerMarketingFeatureList = () => (
   <div className="marketing-feature-list">
     <MarketingFeatureItem
       titleMsg={localMessages.globalCollectionsTitle}
@@ -55,4 +55,4 @@ const MarketingFeatureList = () => (
 );
 
 export default
-  MarketingFeatureList;
+  ExplorerMarketingFeatureList;
