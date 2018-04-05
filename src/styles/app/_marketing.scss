@@ -1,6 +1,8 @@
 @import '../constants';
 
 .marketing-feature-list {
+  margin-top: 30px;
+  margin-bottom: 30px;
 
   .marketing-feature-item {
     padding-top: 30px;
@@ -11,6 +13,8 @@
     }
 
     p {
+      font-size: 20px;
+      line-height: 30px;
     }
 
     img {
@@ -19,14 +23,12 @@
     }
 
     &.image-on-left {
-    }
-
-    &.image-on-right {
       background-color: $material-grey100;      
     }
 
-  }
+    &.image-on-right {
+    }
 
-  margin-top: 30px;
+  }
 
 }
