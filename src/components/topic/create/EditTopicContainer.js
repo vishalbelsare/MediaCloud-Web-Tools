@@ -201,12 +201,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
           dispatch(push(topicSummaryUrl));
           // update topic info and redirect back to topic summary
         } else if (results.status === 500 && results.message.indexOf('cannot reduce') > -1) {
-          dispatch(resetTopic(ownProps.params.topicId))
-            .then(() => {
-              const topicEditUpdateUrl = filteredLinkTo(`/topics/${results.topics_id}/editUpdate`, filters);
-              dispatch(push(topicEditUpdateUrl));
-            });
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
+          dispatch(resetTopic(ownProps.params.topicId));
+          const topicSummaryUrl = filteredLinkTo(`/topics/${results.topics_id}/summary`, filters);
+          dispatch(push(topicSummaryUrl));
         } else {
           dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         }

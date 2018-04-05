@@ -10,7 +10,7 @@ import composeAsyncContainer from '../common/AsyncContainer';
 import AppButton from '../common/AppButton';
 import { selectTopic, filterBySnapshot, filterByTimespan, filterByFocus, fetchTopicSummary, filterByQuery,
   topicStartSpider } from '../../actions/topicActions';
-import { addNotice } from '../../actions/appActions';
+import { updateFeedback, addNotice } from '../../actions/appActions';
 import { snapshotIsUsable, TOPIC_SNAPSHOT_STATE_COMPLETED, TOPIC_SNAPSHOT_STATE_QUEUED, TOPIC_SNAPSHOT_STATE_RUNNING,
   TOPIC_SNAPSHOT_STATE_ERROR, TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED } from '../../reducers/topics/selected/snapshots';
 import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
@@ -35,6 +35,8 @@ const localMessages = {
   notUsingLatestSnapshot: { id: 'topic.notUsingLatestSnapshot', defaultMessage: 'You are not using the latest snapshot!  If you are not doing this on purpose, <a href="{url}">switch to the latest snapshot</a> to get the best data.' },
   otherError: { id: 'topic.state.otherError', defaultMessage: 'Sorry, this topic has an error.  It says it is "{state}".' },
   trySpidering: { id: 'topic.state.trySpidering', defaultMessage: 'Manually run this topic' },
+  startedSpider: { id: 'topic.state.trySpidering', defaultMessage: 'You\'ve requested to start spidering this topic. Check back later to see the progress.' },
+  startedSpiderFailed: { id: 'topic.state.spider.failed', defaultMessage: 'Sorry, failed to start spidering.' },
 };
 
 class TopicContainer extends React.Component {
@@ -69,28 +71,31 @@ class TopicContainer extends React.Component {
     return ((topicId !== null) && (filters.snapshotId !== null) && (filters.timespanId !== null));
   }
   render() {
-    const { children, goToUrl, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters, needsNewSnapshot } = this.props;
+    const { children, submitting, goToUrl, topicInfo, topicId, snapshotCount, handleSpiderRequest, filters, needsNewSnapshot } = this.props;
     const { formatMessage } = this.props.intl;
     const titleHandler = parentTitle => `${topicInfo.name} | ${parentTitle}`;
     // show a big error if there is one to show
+    const allowEditingOfTopic = (
+      <div className="controlbar controlbar-topic">
+        <div className="main">
+          <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
+            <ModifyTopicDialog
+              topicId={topicId}
+              onUrlChange={goToUrl}
+              needsNewSnapshot={needsNewSnapshot}
+              onSpiderRequest={handleSpiderRequest}
+            />
+          </Permissioned>
+        </div>
+      </div>
+    );
     let contentToShow = children;
     if ((topicInfo.state === TOPIC_SNAPSHOT_STATE_RUNNING) && (snapshotCount === 0)) {
       // if the topic is running the initial spider and then show under construction message
       contentToShow = (
         <div>
           {children}
-          <div className="controlbar controlbar-topic">
-            <div className="main">
-              <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                <ModifyTopicDialog
-                  topicId={topicId}
-                  onUrlChange={goToUrl}
-                  needsNewSnapshot={needsNewSnapshot}
-                  onSpiderRequest={handleSpiderRequest}
-                />
-              </Permissioned>
-            </div>
-          </div>
+          {!topicInfo.message.includes('spidering') ? allowEditingOfTopic : null}
           <TopicUnderConstruction />
         </div>
       );
@@ -103,32 +108,15 @@ class TopicContainer extends React.Component {
                 <h1><FormattedMessage {...localMessages.hasAnError} /></h1>
                 <AppButton
                   label={formatMessage(localMessages.trySpidering)}
-                  onTouchTap={() => handleSpiderRequest(topicInfo.topics_id)}
+                  onClick={() => handleSpiderRequest(topicInfo.topics_id)}
                   type="submit"
                   primary
+                  disabled={submitting}
                 />
               </div>
             </Col>
           </Row>
         </Grid>
-      );
-    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_QUEUED) {
-      contentToShow = (
-        <div>
-          <div className="controlbar controlbar-topic">
-            <div className="main">
-              <Permissioned onlyTopic={PERMISSION_TOPIC_WRITE}>
-                <ModifyTopicDialog
-                  topicId={topicId}
-                  onUrlChange={goToUrl}
-                  needsNewSnapshot={needsNewSnapshot}
-                  onSpiderRequest={handleSpiderRequest}
-                />
-              </Permissioned>
-            </div>
-          </div>
-          <TopicUnderConstruction />
-        </div>
       );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* and some way to determine if it has been reset */ &&
       topicInfo.message === '') {
@@ -138,6 +126,7 @@ class TopicContainer extends React.Component {
         </div>
       );
     }
+    /* if queued or completed, allow viewing */
     return (
       <div className="topic-container">
         <div>
@@ -162,6 +151,7 @@ TopicContainer.propTypes = {
   handleSpiderRequest: PropTypes.func.isRequired,
   // from state
   filters: PropTypes.object.isRequired,
+  submitting: PropTypes.bool,
   fetchStatus: PropTypes.string.isRequired,
   topicInfo: PropTypes.object,
   needsNewSnapshot: PropTypes.bool.isRequired,
@@ -203,7 +193,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch(filterByQuery(query.q));
     }
     // now that filters are set, fetch the topic summary info
-    dispatch(fetchTopicSummary(ownProps.params.topicId))
+    return dispatch(fetchTopicSummary(ownProps.params.topicId))
       .then((response) => {
         // show the subheader info
         // show any warnings based on the topic state
@@ -330,14 +320,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
       });
   },
-  handleSpiderRequest: topicId => dispatch(topicStartSpider(topicId))
-    .then((results) => {
-      if (results) {
-        // return dispatch(push(window.location.href));
-        window.location.reload();
-      }
-      return null;
-    }),
+  handleSpiderRequest: (topicId) => {
+    dispatch(topicStartSpider(topicId))
+      .then((results) => {
+        if (results) {
+          return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.startedSpider) }));
+        }
+        return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.startedSpiderFailed) }));
+      });
+  },
 });
 
 export default

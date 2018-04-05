@@ -218,25 +218,24 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
       return dispatch(updateTopic(infoToSave.topics_id, infoToSave))
         .then((results) => {
-          if (results.topics_id) {
+          if (infoToSave.topics_id) {
             // let them know it worked
             dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.updateFeedback) }));
 
-          // reset if we are saving a previously errored topic
-            if (infoToSave.state === 'error') { // } && results.message.indexOf('cannot reduce') > -1) {
+            // reset if we are saving a previously errored topic AND if it failed to update...as in constraints violated
+            if (infoToSave.state === 'error' && (results.message.includes('cannot reduce')
+              || results.message.includes('exceeded'))) {
               dispatch(resetTopic(results.topics_id));
               dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.resetting) }));
               const topicSummaryUrl = `/topics/${results.topics_id}/summary`;
-              dispatch(push(topicSummaryUrl));
-            } else {
-              // if the dates changed tell them it needs a new snapshot
-              if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
-                dispatch(setTopicNeedsNewSnapshot(true));
-              }
-              const topicSummaryUrl = `/topics/${results.topics_id}/summary`;
               return dispatch(push(topicSummaryUrl));
-              // update topic info and redirect back to topic summary
             }
+            if ((infoToSave.start_date !== results.start_date) || (results.end_date !== results.end_date)) {
+              dispatch(setTopicNeedsNewSnapshot(true));
+            }
+            const topicSummaryUrl = `/topics/${results.topics_id}/summary`;
+            return dispatch(push(topicSummaryUrl));
+            // update topic info and redirect back to topic summary
           }
           return dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.failed) }));
         });
