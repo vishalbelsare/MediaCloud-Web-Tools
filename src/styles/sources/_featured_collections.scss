@@ -1,17 +1,25 @@
-@import '../constants';
 
-.featured-collection {
-	h2 {
-		margin-bottom: 0px;
-	}
-	.app-icon {
-		height: 30px;
-	}
-	.ordered-word-cloud {
-		svg {
-			text {
-				fill: $material-grey600;
-			}
-		}
-	}
+.featured-collections-wrapper {
+  
+  .featured-collections-list {
+
+    .featured-collections-item {
+      padding-bottom: 50px;
+
+      .content {
+        min-height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .app-icon.app-icon-large {
+        height: 30px;
+      }
+
+    }
+
+  }
+
 }

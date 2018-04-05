@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
-import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -82,7 +81,7 @@ const Homepage = (props) => {
         </Row>
         <Row>
           <Col lg={7} xs={12}>
-            <FeaturedCollectionsContainer />
+            TBD
           </Col>
           <Col lg={5} xs={12}>
             {sideBarContent}
@@ -90,7 +89,7 @@ const Homepage = (props) => {
         </Row>
         <Row>
           <Col lg={12} xs={12}>
-            <PopularCollectionsContainer />
+            <FeaturedCollectionsContainer />
           </Col>
         </Row>
       </Grid>

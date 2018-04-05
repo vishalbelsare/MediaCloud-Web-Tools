@@ -9,11 +9,21 @@ COLLECTIONS_TEMPLATE_PROPS_EDIT = ['media_id', 'url','name', 'pub_country', 'pub
 
 COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_country', 'primary_language', 'media_type',]
 
-# hand-made whitelist of collections to show up as "featured" on source mgr homepage
-FEATURED_COLLECTION_LIST = [9139487, 9139458, 2453107, 8878332, 9201395]
-
-# hand-made whitelist of collections to show up as "popular" on source mgr homepage
-POPULAR_COLLECTION_LIST = [9272347, 9201395, 8877968, 9315147, 9353688, 9173065, 9325106, 9139487, 9139458, 8878332, 9319462, 9353689, 9353685, 9139458, 9273433, 9297151, 9351677, 9213928, 9228386, 9349925]
+# hand-made whitelist of collections to show up as "featured" on source mgr homepage and in the media picker
+FEATURED_COLLECTION_LIST = [
+    9139487,  # US top 50 PEW
+    9139458,  # US digital native PEW
+    38379429,  # US state and local
+    34412118,  # India national
+    34412232,  # Russia national
+    34412476,  # UK National
+    34412202,  # Ghana National
+    9360520,    # US Partisan sets
+    9360521,
+    9360522,
+    9360523,
+    9360524
+]
 
 
 def download_sources_csv(all_media, file_prefix):
