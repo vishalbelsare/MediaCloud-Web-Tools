@@ -13,7 +13,7 @@ import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../li
 
 
 const localMessages = {
-  menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topics' },
+  menuTitle: { id: 'topics.menu.title', defaultMessage: 'Topic Mapper' },
   home: { id: 'topics.menu.items.home', defaultMessage: 'Home' },
   listTopics: { id: 'topics.menu.items.listTopics', defaultMessage: 'Admin: Topic Status Dashboard' },
 };
