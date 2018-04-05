@@ -14,7 +14,7 @@ const localMessages = {
   errorInTopicNonAdmin: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Topic is in error. Ask an admin to reset it for you.' },
   errorTooBig: { id: 'topic.error.tooBig', defaultMessage: 'Your topic is too big' },
   errorInTopic: { id: 'topic.create.cannotCreateTopic', defaultMessage: 'Sorry, but you\'ve exceed the size limit for topics you can create. That limit is {maxStories} stories total (seed stories in out database already + stories we discover while spidering). You need to make your topic smaller by editing the dates, query, or collections and sources.' },
-  reset: { id: 'topic.reset', defaultMessage: 'Reset and Edit this Topic' },
+  reset: { id: 'topic.reset', defaultMessage: 'Reset this topic' },
   resettingInitiated: { id: 'topic.resetInitiated', defaultMessage: 'Initiated Reset...' },
   errorResetting: { id: 'topic.errorResetting', defaultMessage: 'Sorry, resetting failed.' },
 };
@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   resetErrorTopic: (topicId, filters) => {
     dispatch(resetTopic(topicId))
-      .then((r) => {
+      .then((r) => { /* TODO we need to send them to the waiting page until the topic is properly set */
         if (r.topics_id) {
           const topicEditUpdateUrl = filteredLinkTo(`/topics/${r.topics_id}/editUpdate`, filters);
           return dispatch(push(topicEditUpdateUrl));

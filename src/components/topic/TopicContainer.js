@@ -17,6 +17,7 @@ import { LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR } from '../common/Notice';
 import ModifyTopicDialog from './controlbar/ModifyTopicDialog';
 import TopicUnderConstruction from './TopicUnderConstruction';
 import TopicReconstruction from './TopicReconstruction';
+import ResetTopicContainer from './create/ResetTopicContainer';
 import TopicHeaderContainer from './TopicHeaderContainer';
 import Permissioned from '../common/Permissioned';
 import { PERMISSION_TOPIC_WRITE } from '../../lib/auth';
@@ -25,6 +26,7 @@ const localMessages = {
   needsSnapshotWarning: { id: 'needSnapshot.warning', defaultMessage: 'You\'ve made changes to your Topic that require a new snapshot to be generated!' },
   snapshotBuilderLink: { id: 'needSnapshot.snapshotBuilderLink', defaultMessage: 'Visit the Snapshot Builder for details.' },
   hasAnError: { id: 'topic.hasError', defaultMessage: 'Sorry, this topic has an error!' },
+  createdNotQueued: { id: 'topic.hasError', defaultMessage: 'This topic is not yet queued for spidering.' },
   spiderQueued: { id: 'topic.spiderQueued', defaultMessage: 'This topic is in the queue for spidering stories.  Please reload after a bit to see if it has started spidering.' },
   queueAge: { id: 'topic.spiderQueuedAge', defaultMessage: 'In the {queueName} queue since {lastUpdated}' },
   snapshotQueued: { id: 'snapshotGenerating.warning.queued', defaultMessage: 'We will start creating the new snapshot soon. Please reload this page in a minute to automatically see the freshest data.' },
@@ -100,6 +102,7 @@ class TopicContainer extends React.Component {
         </div>
       );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) {
+       /* TODO also not accurate assemsment - if we have reset but not updated the offending query*/
       contentToShow = (
         <Grid>
           <Row>
@@ -118,7 +121,15 @@ class TopicContainer extends React.Component {
           </Row>
         </Grid>
       );
-    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* and some way to determine if it has been reset */ &&
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR /* not yet reset but needs to be */ &&
+      topicInfo.message.includes('exceeds')) {
+      contentToShow = (
+        <div>
+          <ResetTopicContainer />
+        </div>
+      );
+    } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR &&
+      /* topic is being reset - TODO not accurate assemsment - need a 'resetting' state */
       topicInfo.message === '') {
       contentToShow = (
         <div>
@@ -198,6 +209,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         // show the subheader info
         // show any warnings based on the topic state
         switch (response.state) {
+          case TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED:
+            dispatch(addNotice({
+              level: LEVEL_INFO,
+              message: ownProps.intl.formatMessage(localMessages.createdNotQueued),
+            }));
+            break;
           case TOPIC_SNAPSHOT_STATE_QUEUED:
             dispatch(addNotice({
               level: LEVEL_INFO,
