@@ -91,7 +91,7 @@ class TopicSummaryContainer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
+            <Col lg={8}>
               <TopicWordSpaceContainer topicId={topicId} />
             </Col>
           </Row>

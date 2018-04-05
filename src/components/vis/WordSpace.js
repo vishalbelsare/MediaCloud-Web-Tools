@@ -9,7 +9,7 @@ const localMessages = {
   noData: { id: 'wordspace.noData', defaultMessage: 'Not enough data to show.' },
 };
 
-const DEFAULT_LENGTH = 800;  // svg must have square dimensions
+const DEFAULT_LENGTH = 750;  // svg must have square dimensions
 const DEFAULT_MARGIN = 80;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 30;
