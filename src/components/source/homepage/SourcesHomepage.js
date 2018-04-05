@@ -33,7 +33,7 @@ const localMessages = {
   addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
-const Homepage = (props) => {
+const SourcesHomepage = (props) => {
   const { user } = props;
   let sideBarContent;
   if (user.isLoggedIn) {
@@ -101,7 +101,7 @@ const Homepage = (props) => {
   );
 };
 
-Homepage.propTypes = {
+SourcesHomepage.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
   location: PropTypes.object.isRequired,
@@ -125,6 +125,6 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      Homepage
+      SourcesHomepage
     )
   );
