@@ -12,10 +12,10 @@ COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_coun
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage and in the media picker
 FEATURED_COLLECTION_LIST = [
     9139487,   # US top 50 PEW
-    9139458,   # US digital native PEW
-    38379429,  # US state and local
+    57078150,  # US digital native 2016 PEW
     34412118,  # India national
     34412232,  # Russia national
+    38379799,  # France - State & Local
     34412476,  # UK National
     34412202,  # Ghana National
     38381372,  # US Massachusetts State/Local
