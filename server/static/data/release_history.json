@@ -1,6 +1,22 @@
 {
   "releases": [
     {
+      "date": "2018-04-06",
+      "version": "v2.7.6",
+      "notes": [
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "New Source Manager homepage to explain what it does better."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Feature",
+          "note": "New Topic Mapper homepage to explain what it does better."
+        }
+      ]
+    },
+    {
       "date": "2018-04-04",
       "version": "v2.7.5",
       "notes": [

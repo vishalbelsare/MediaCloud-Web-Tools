@@ -60,9 +60,13 @@ const TopicsHomepage = (props) => {
             </Grid>
           </div>
         </div>
+
         <Grid>
           <TopicListContainer />
         </Grid>
+
+        <TopicsMarketingFeatureList />
+
       </div>
     );
   } else {
