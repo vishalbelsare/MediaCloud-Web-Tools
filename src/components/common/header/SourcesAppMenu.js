@@ -67,6 +67,12 @@ const SourcesAppMenu = (props) => {
         <MenuItem onClick={() => { props.handleItemClick('home', true); }}>
           <FormattedMessage {...messages.home} />
         </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/country-and-state', true); }}>
+          <FormattedMessage {...localMessages.geographicCollections} />
+        </MenuItem>
+        <MenuItem onClick={() => { props.handleItemClick('collections/media-cloud', true); }}>
+          <FormattedMessage {...localMessages.otherCollections} />
+        </MenuItem>
         <MenuItem onClick={() => { props.handleItemClick('search', true); }}>
           <FormattedMessage {...messages.search} />
         </MenuItem>
