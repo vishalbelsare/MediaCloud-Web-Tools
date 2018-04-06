@@ -102,7 +102,9 @@ class TopicContainer extends React.Component {
         </div>
       );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_CREATED_NOT_QUEUED) {
-       /* TODO also not accurate assemsment - if we have reset but not updated the offending query*/
+       /* TODO also not accurate assemsment -
+       if we have reset
+      we need to send them to the editUpdate, not the spider page*/
       contentToShow = (
         <Grid>
           <Row>
@@ -129,8 +131,9 @@ class TopicContainer extends React.Component {
         </div>
       );
     } else if (topicInfo.state === TOPIC_SNAPSHOT_STATE_ERROR &&
-      /* topic is being reset - TODO not accurate assemsment - need a 'resetting' state */
-      topicInfo.message === '') {
+      /* topic is being reset - TODO
+      not accurate assemsment - need a 'resetting' state */
+      (topicInfo.message === '' || topicInfo.message === null)) {
       contentToShow = (
         <div>
           <TopicReconstruction />
