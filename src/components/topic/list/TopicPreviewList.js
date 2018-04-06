@@ -4,7 +4,6 @@ import { injectIntl, FormattedMessage, FormattedDate } from 'react-intl';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-flexbox-grid/lib';
 import { GridList, GridTile } from 'material-ui/GridList';
-import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
 import FavoriteToggler from '../../common/FavoriteToggler';
 import Permissioned from '../../common/Permissioned';
@@ -65,19 +64,19 @@ const TopicPreviewList = (props) => {
         if (currentFilter === TOPIC_PUBLIC && topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
           return '';
         }
-        let statusAndLinks = <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>;
+        let statusAndLinks = <h2><a role="button" tabIndex="0" onClick={() => linkGenerator(topic)}>{topic.name}</a></h2>;
         if (topic.state.includes('error')) {
           statusAndLinks = (
             <div>
-              <h2><Link to={errorTopicHandler(topic)}>{topic.name}</Link></h2>
-              <ErrorNotice><Link to={errorTopicHandler(topic)}><FormattedMessage {...localMessages.errorInTopic} /></Link></ErrorNotice>;
+              <h2><a role="button" tabIndex="0" onClick={() => errorTopicHandler(topic)}>{topic.name}</a></h2>
+              <ErrorNotice><a role="button" tabIndex="0" onClick={() => errorTopicHandler(topic)}><FormattedMessage {...localMessages.errorInTopic} /></a></ErrorNotice>;
             </div>
           );
         } else if (topic.state !== TOPIC_SNAPSHOT_STATE_COMPLETED) {
           statusAndLinks = (
             <div>
-              <h2><Link to={linkGenerator(topic)}>{topic.name}</Link></h2>
-              <WarningNotice><Link to={linkGenerator(topic)}><FormattedMessage {...localMessages.incompleteTopic} /></Link></WarningNotice>;
+              <h2><a role="button" tabIndex="0" onClick={() => linkGenerator(topic)}>{topic.name}</a></h2>
+              <WarningNotice><a role="button" tabIndex="0" onClick={() => linkGenerator(topic)}><FormattedMessage {...localMessages.incompleteTopic} /></a></WarningNotice>;
             </div>
           );
         }

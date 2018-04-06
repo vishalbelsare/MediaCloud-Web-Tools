@@ -47,7 +47,7 @@ class TopicListContainer extends React.Component {
   }
 
   render() {
-    const { topics, currentFilter, nextButton, previousButton, handleSetFavorited } = this.props;
+    const { topics, dispatchToTopicPage, currentFilter, nextButton, previousButton, handleSetFavorited } = this.props;
     const { formatMessage } = this.props.intl;
     let whichTopics = topics.public;
     let titleContent = null;
@@ -115,8 +115,8 @@ class TopicListContainer extends React.Component {
         <TopicPreviewList
           topics={whichTopics}
           currentFilter={currentFilter}
-          linkGenerator={t => `topics/${t.topics_id}/summary`}
-          errorTopicHandler={t => `topics/${t.topics_id}/editUpdate`}
+          linkGenerator={t => dispatchToTopicPage(`topics/${t.topics_id}/summary`)}
+          errorTopicHandler={t => dispatchToTopicPage(`topics/${t.topics_id}/editUpdate`)}
           onSetFavorited={handleSetFavorited}
         />
 
@@ -138,6 +138,7 @@ TopicListContainer.propTypes = {
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
   handleSetFavorited: PropTypes.func.isRequired,
+  dispatchToTopicPage: PropTypes.func.isRequired,
   // from PagedContainer wrapper
   nextButton: PropTypes.node,
   previousButton: PropTypes.node,
@@ -156,6 +157,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+  dispatchToTopicPage: (page) => {
+    dispatch(push(page));
+  },
   asyncFetch: () => {
     dispatch(fetchTopicsList());
   },
