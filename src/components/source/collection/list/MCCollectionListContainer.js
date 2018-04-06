@@ -4,17 +4,18 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import CollectionTable from './CollectionTable';
+import TitledCollectionTable from './TitledCollectionTable';
 import { TAG_SET_MC_ID } from '../../../../lib/tagUtil';
 
 const MCCollectionListContainer = (props) => {
-  const { name, description, collections } = props;
+  const { name, description, collections, user } = props;
   return (
     <div className="mc-collections-table">
-      <CollectionTable
+      <TitledCollectionTable
         collections={collections}
         title={name}
         description={description}
+        user={user}
       />
     </div>
   );
@@ -25,6 +26,7 @@ MCCollectionListContainer.propTypes = {
   collections: PropTypes.array.isRequired,
   name: PropTypes.string,
   description: PropTypes.string,
+  user: PropTypes.object.isRequired,
   fetchStatus: PropTypes.string.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
@@ -37,6 +39,7 @@ const mapStateToProps = state => ({
   name: state.sources.collections.all.name,
   description: state.sources.collections.all.description,
   collections: state.sources.collections.all.collections,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({
