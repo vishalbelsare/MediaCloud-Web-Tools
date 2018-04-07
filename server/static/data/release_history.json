@@ -18,12 +18,7 @@
         {
           "apps": ["sources"],
           "type": "Feature",
-          "note": "New Source Manager menu item to see all of our geographic collections."
-        },
-        {
-          "apps": ["topics"],
-          "type": "Fix",
-          "note": "The topic story count preview when creating a new topic renders correctly."
+          "note": "Now Source Manager menu item to see all of our geographic collections."
         },
         {
           "apps": ["explorer"],
