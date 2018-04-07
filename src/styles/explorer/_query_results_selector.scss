@@ -1,67 +1,34 @@
 @import '../_constants';
 
-.query-results-selector {
-  position: relative;
+ul.query-results-selector {
 
-  .prev {
-    position: absolute;
-    left: -30px;
-    top: 16px;
-  }
+  margin: 0px;
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid $material-grey300;
 
-  .next {
-    position: absolute;
-    left: 610px;
-    top: 16px;
-  }
+  li {
+    font-weight: normal;    
+    display: inline-block;
+    border-top: 1px solid $material-grey300;
+    border-right: 1px solid $material-grey300;
+    font-size: 1.1em;
+    padding: 10px 15px;
 
-  .query-results-selector-content {
-    position: relative;
-    overflow: hidden;
-    height: 49px;
+    &:first-child {
+      border-left: 1px solid $material-grey300;
+    }
 
-    .query-results-selector-scroll-wrapper {
+    &.selected {
+      font-weight: bold;
+      opacity: 1;
+      background-color: $material-grey300;
+    }
 
-      max-width: 600px;
-      overflow: hidden;
-
-      ul.query-results-selector-items {
-
-        position: absolute;
-        width: 1000px;
-        margin: 0px;
-        padding: 0px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid $material-grey300;
-
-        li {
-          font-weight: normal;    
-          display: inline-block;
-          border-top: 1px solid $material-grey300;
-          border-right: 1px solid $material-grey300;
-          font-size: 1.1em;
-          padding: 10px 15px;
-
-          &:first-child {
-            border-left: 1px solid $material-grey300;
-          }
-
-          &.selected {
-            font-weight: bold;
-            opacity: 1;
-            background-color: $material-grey300;
-          }
-
-          &:hover {
-            opacity: 1;
-            cursor: pointer;
-          }
-
-        }
-
-      }
-
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
     }
 
   }
