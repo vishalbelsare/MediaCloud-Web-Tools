@@ -17,7 +17,6 @@ const adminList = createAsyncReducer({
         }
         const mostRecentJobStatus = t.snapshots.jobStatus[0];
         updatedTopic.inErrorSince = mostRecentJobStatus && mostRecentJobStatus.last_updated ? mostRecentJobStatus.last_updated : t.state;
-        console.log(`jobs for this topic ${t.topics_id}  ${mostRecentJobStatus}`);
       }
       return updatedTopic;
     }),
