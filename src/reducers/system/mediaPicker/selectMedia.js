@@ -10,34 +10,35 @@ const INITIAL_STATE = {
 function selectMedia(state = INITIAL_STATE, action) {
   let updatedSelectedList = [];
   switch (action.type) {
-    case MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA:
-      updatedSelectedList = [...state.list];
-      /* if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // don't add duplicates
-        const selectedObj = action.payload;
-        selectedObj.selected = true; // set this now, one as a time? this is the init master list
-        updatedSelectedList.push(selectedObj);
-      } */
-      updatedSelectedList = action.payload;
-      updatedSelectedList = updatedSelectedList.map(c => ({ ...c, selected: true }));
 
-      // what about if it isn't found? how is it removed? from init to selected
+    // recieving a whole new list of media to show
+    case MEDIA_PICKER_INITIALIZE_ALREADY_SELECTED_MEDIA:
+      updatedSelectedList = [...action.payload];
+      updatedSelectedList = updatedSelectedList.map(c => ({ ...c, selected: true }));
       return { list: updatedSelectedList };
+
+    // toggle a particular item on the list
     case MEDIA_PICKER_SELECT_MEDIA:
       updatedSelectedList = [...state.list];
-      if (!updatedSelectedList.some(s => s.id === action.payload.id)) { // if not there, add
+      // if it is a new item to add to the list
+      if (!updatedSelectedList.some(s => s.id === action.payload.id)) {
         const selectedObj = action.payload;
         selectedObj.selected = selectedObj.selected === undefined ? true : !selectedObj.selected;
         updatedSelectedList.push(selectedObj);
-      } else { // if there, treat as a removal/toggle
+      // if there already, treat as a removal/toggle
+      } else {
         const mediaIndex = updatedSelectedList.findIndex(s => s.id === action.payload.id);
         // mediaObj.selected = !(mediaObj.selected);
         updatedSelectedList.splice(mediaIndex, 1); // in display check matches
       }
       return { list: updatedSelectedList };
+
+    // empty the whole thing out
     case MEDIA_PICKER_CLEAR_SELECTED_MEDIA: // maybe we want this...
       // removed from selected list
       updatedSelectedList = [];
       return { list: updatedSelectedList };
+
     default:
       return state;
   }

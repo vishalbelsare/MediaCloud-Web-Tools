@@ -73,15 +73,23 @@ class EditTopicContainer extends React.Component {
     return false;
   };
   render() {
-    const { topicInfo, topicId, handleMediaChange, handleMediaDelete } = this.props;
+      // so we have to get them from the formData
+    const { topicInfo, formData, topicId, handleMediaChange } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
     let dialogContent = null;
     if (topicInfo) {
-      // load sources and collections in a backwards compatible way
-      const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
-      const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
-      const sourcesAndCollections = sources.concat(collections);
+      // note, any updates to media via form or MediaPicker are not pushed
+      // into the store until saving,
+      // so we have to get them from the formData
+      let sourcesAndCollections = [];
+      if (!formData) {
+        const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
+        const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
+        sourcesAndCollections = sources.concat(collections);
+      } else {
+        sourcesAndCollections = formData.values.sourcesAndCollections;
+      }
       initialValues = {
         buttonLabel: formatMessage(messages.save),
         ...topicInfo,
@@ -134,10 +142,9 @@ class EditTopicContainer extends React.Component {
               title={formatMessage(localMessages.editTopicCollectionsTitle)}
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
               mode={TOPIC_FORM_MODE_EDIT}
-              enabledReinitialize
-              keepDirtyOnReinitialize
+              enableReinitialize
               onMediaChange={handleMediaChange}
-              onMediaDelete={handleMediaDelete}
+              // onMediaDelete={handleMediaDelete}
               destroyOnUnmount
             />
           </Permissioned>
@@ -162,7 +169,7 @@ EditTopicContainer.propTypes = {
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
   handleMediaChange: PropTypes.func.isRequired,
-  handleMediaDelete: PropTypes.func.isRequired,
+  handleMediaDelete: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -211,21 +218,23 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
     );
   },
-  handleMediaDelete: (toBeDeletedObj) => {
-    // the user has removed media from the form
-    const updatedSources = toBeDeletedObj.filter(m => m.type === 'source' || m.media_id);
-    const updatedCollections = toBeDeletedObj.filter(m => m.type === 'collection' || m.tags_id);
-    const selectedMedia = updatedCollections.concat(updatedSources);
-
-    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
-  },
-  handleMediaChange: (sourceAndCollections) => {
+  /* the following two functions are used to maintain sources and
+  collections changes between the MediaPicker and the SourceCollectionsMediaForm
+  */
+  handleMediaChange: (values) => {
     // take selections from mediaPicker and push them back into topicForm
-    const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
-    const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
+    // note, these are not saved into topicInfo, so we can't use that in the render statement above
+
+    // may be wrapper from form, or array from MediaPicker
+    const fromMediaPicker = values && !values.sourcesAndCollections;
+    const v = fromMediaPicker ? values : values.sourcesAndCollections;
+    const updatedSources = v.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = v.filter(m => m.type === 'collection' || m.tags_id);
     const selectedMedia = updatedCollections.concat(updatedSources);
 
-    ownProps.change('sourcesAndCollections', selectedMedia); // redux-form change action
+    if (fromMediaPicker) { // from MP, not form update
+      ownProps.change('sourcesAndCollections', selectedMedia); // tell the topicForm to update itself (if from mediaPicker)
+    }
   },
 });
 
