@@ -81,12 +81,12 @@ class EditTopicContainer extends React.Component {
     if (topicInfo) {
       /* very important inclusion of formData media because we need to pass any MP changes into TopicForm ->SourceCollectionsMediaForm */
       let sourcesAndCollections = [];
-      if (!formData) { // init
+      if (!formData || (formData && !formData.values)) { // init
         const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
         const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
         sourcesAndCollections = sources.concat(collections);
       } else {
-        sourcesAndCollections = formData.values.sourcesAndCollections;
+        sourcesAndCollections = formData.values ? formData.values.sourcesAndCollections : [];
       }
       initialValues = {
         buttonLabel: formatMessage(messages.save),
@@ -215,7 +215,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     );
   },
   /* maintain sources and collections changes from the MediaPicker to the SourceCollectionsMediaForm */
-  handleMediaChange: (arrayFromMediaPicker) => {
+  handleMediaChangeFromMediaPicker: (arrayFromMediaPicker) => {
     const updatedSources = arrayFromMediaPicker.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = arrayFromMediaPicker.filter(m => m.type === 'collection' || m.tags_id);
     const selectedMedia = updatedCollections.concat(updatedSources);

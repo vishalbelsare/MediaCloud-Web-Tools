@@ -33,7 +33,8 @@ const localMessages = {
 class TopicForm extends React.Component {
   shouldComponentUpdate = (nextProps) => {
     const { initialValues } = this.props;
-    return (initialValues.sourcesAndCollections !== nextProps.initialValues.sourcesAndCollections);
+    return (initialValues.sourcesAndCollections !== nextProps.initialValues.sourcesAndCollections ||
+      initialValues !== nextProps.initialValues);
   }
   render() {
     const { initialValues, topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, title, intro, mode, onMediaChange } = this.props;
