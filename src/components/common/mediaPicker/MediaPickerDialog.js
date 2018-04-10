@@ -29,17 +29,14 @@ class MediaPickerDialog extends React.Component {
   componentWillMount() { // only called on intial parent load -eg not when dialog pops up
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (initMedia && initMedia.length > 0) { // expects an array of media from caller
-      handleInitialSelectionOfMedia(initMedia); // go fill th store's selectedMedia list
+      handleInitialSelectionOfMedia(initMedia); // go fill the store's selectedMedia list
     }
   }
   componentWillReceiveProps(nextProps) {
     // select the media so we fill the reducer with the previously selected media
     const { initMedia, handleInitialSelectionOfMedia } = this.props;
     if (JSON.stringify(initMedia) !== JSON.stringify(nextProps.initMedia)) {
-      // (nextProps.initMedia != null && JSON.stringify(nextProps.initMedia) !== JSON.stringify(nextProps.selectedMedia))) {
       if (nextProps.initMedia) { // expects an array of media from caller
-        // why don't we just update the entire list all at once?
-        // nextProps.initMedia.map(v => handleInitialSelectionOfMedia(v));
         handleInitialSelectionOfMedia(nextProps.initMedia);
       }
     }
@@ -55,7 +52,7 @@ class MediaPickerDialog extends React.Component {
     }
     this.setState({ open: true });
     document.body.style.overflow = 'hidden';
-    if (setQueryFormChildDialogOpen) {
+    if (setQueryFormChildDialogOpen) { // way to tell parent that a dialog is open - focus issue stuff
       setQueryFormChildDialogOpen(true);
     }
     // need to set body to overflow: hidden somehow...
@@ -68,7 +65,9 @@ class MediaPickerDialog extends React.Component {
     if (confirm) {
       onConfirmSelection(selectedMedia); // passed in from containing element
     }
-    setQueryFormChildDialogOpen(false);
+    if (setQueryFormChildDialogOpen) {
+      setQueryFormChildDialogOpen(false);
+    }
   };
 
   render() {
@@ -129,7 +128,7 @@ MediaPickerDialog.propTypes = {
   handleInitialSelectionOfMedia: PropTypes.func.isRequired,
   onConfirmSelection: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
-  setQueryFormChildDialogOpen: PropTypes.func.isRequired,
+  setQueryFormChildDialogOpen: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
