@@ -36,7 +36,7 @@ class TopicForm extends React.Component {
     return (initialValues.sourcesAndCollections !== nextProps.initialValues.sourcesAndCollections);
   }
   render() {
-    const { initialValues, topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, title, intro, mode, onMediaChange, onMediaDelete } = this.props;
+    const { initialValues, topicId, onSubmit, handleSubmit, pristine, submitting, asyncValidating, title, intro, mode, onMediaChange } = this.props;
     const { formatMessage } = this.props.intl;
     const selectedMedia = initialValues.sourcesAndCollections ? initialValues.sourcesAndCollections : [];
     let mediaPicker = null;
@@ -80,8 +80,6 @@ class TopicForm extends React.Component {
               form="topicForm"
               destroyOnUnmount={false}
               name="sourcesAndCollections"
-              onChange={onMediaChange}
-              onDelete={onMediaDelete}
               initialValues={initialValues.sourcesAndCollections} // to and from MediaPicker
               allowRemoval
             />
@@ -125,9 +123,8 @@ TopicForm.propTypes = {
   intro: PropTypes.string.isRequired,
   validate: PropTypes.func.isRequired,
   topicNameSearch: PropTypes.object,
-  mode: PropTypes.string.isRequired,  // one of the TOPIC_FORM_MODE_ constants - needed to show warnings while editing
+  mode: PropTypes.string.isRequired,
   onMediaChange: PropTypes.func.isRequired,
-  onMediaDelete: PropTypes.func,
 };
 
 function validate(values, props) {

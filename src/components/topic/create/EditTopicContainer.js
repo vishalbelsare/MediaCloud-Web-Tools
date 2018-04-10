@@ -74,16 +74,14 @@ class EditTopicContainer extends React.Component {
   };
   render() {
       // so we have to get them from the formData
-    const { topicInfo, formData, topicId, handleMediaChange } = this.props;
+    const { topicInfo, formData, topicId, handleMediaChangeFromMediaPicker } = this.props;
     const { formatMessage } = this.props.intl;
     let initialValues = {};
     let dialogContent = null;
     if (topicInfo) {
-      // note, any updates to media via form or MediaPicker are not pushed
-      // into the store until saving,
-      // so we have to get them from the formData
+      /* very important inclusion of formData media because we need to pass any MP changes into TopicForm ->SourceCollectionsMediaForm */
       let sourcesAndCollections = [];
-      if (!formData) {
+      if (!formData) { // init
         const sources = topicInfo.media ? topicInfo.media.map(t => ({ ...t })) : [];
         const collections = topicInfo.media_tags ? topicInfo.media_tags.map(t => ({ ...t, name: t.label })) : [];
         sourcesAndCollections = sources.concat(collections);
@@ -143,8 +141,7 @@ class EditTopicContainer extends React.Component {
               intro={formatMessage(localMessages.editTopicCollectionsIntro)}
               mode={TOPIC_FORM_MODE_EDIT}
               enableReinitialize
-              onMediaChange={handleMediaChange}
-              // onMediaDelete={handleMediaDelete}
+              onMediaChange={handleMediaChangeFromMediaPicker}
               destroyOnUnmount
             />
           </Permissioned>
@@ -168,8 +165,7 @@ EditTopicContainer.propTypes = {
   // from dispatch/merge
   handleSave: PropTypes.func.isRequired,
   reallyHandleSave: PropTypes.func.isRequired,
-  handleMediaChange: PropTypes.func.isRequired,
-  handleMediaDelete: PropTypes.func,
+  handleMediaChangeFromMediaPicker: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -218,23 +214,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       }
     );
   },
-  /* the following two functions are used to maintain sources and
-  collections changes between the MediaPicker and the SourceCollectionsMediaForm
-  */
-  handleMediaChange: (values) => {
-    // take selections from mediaPicker and push them back into topicForm
-    // note, these are not saved into topicInfo, so we can't use that in the render statement above
-
-    // may be wrapper from form, or array from MediaPicker
-    const fromMediaPicker = values && !values.sourcesAndCollections;
-    const v = fromMediaPicker ? values : values.sourcesAndCollections;
-    const updatedSources = v.filter(m => m.type === 'source' || m.media_id);
-    const updatedCollections = v.filter(m => m.type === 'collection' || m.tags_id);
+  /* maintain sources and collections changes from the MediaPicker to the SourceCollectionsMediaForm */
+  handleMediaChange: (arrayFromMediaPicker) => {
+    const updatedSources = arrayFromMediaPicker.filter(m => m.type === 'source' || m.media_id);
+    const updatedCollections = arrayFromMediaPicker.filter(m => m.type === 'collection' || m.tags_id);
     const selectedMedia = updatedCollections.concat(updatedSources);
 
-    if (fromMediaPicker) { // from MP, not form update
-      ownProps.change('sourcesAndCollections', selectedMedia); // tell the topicForm to update itself (if from mediaPicker)
-    }
+    ownProps.change('sourcesAndCollections', selectedMedia); // tell the topicForm to update itself (if from mediaPicker)
   },
 });
 
