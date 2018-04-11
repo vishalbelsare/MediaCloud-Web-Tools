@@ -9,7 +9,7 @@ from server.util import csv
 from server.util.tags import is_metadata_tag_set, format_metadata_fields
 from server.views.topics import validated_sort, TOPICS_TEMPLATE_PROPS
 from server.views.topics.sentences import stream_sentence_count_csv
-from server.views.topics.stories import stream_story_list_csv
+from server.views.topics.stories import _stream_story_list_csv
 from server.views.topics.apicache import topic_media_list, topic_word_counts, topic_sentence_counts, \
     topic_story_list, add_to_user_query, WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts
 from server.util.request import filters_from_args, api_error_handler

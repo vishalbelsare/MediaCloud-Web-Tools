@@ -90,9 +90,9 @@ def topic_story_list(user_mc_key, topics_id, **kwargs):
         'limit': request.args.get('limit'),
         'link_id': request.args.get('linkId'),
     }
+
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     return _cached_topic_story_list(user_mc_key, topics_id, **merged_args)
-
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
@@ -100,23 +100,31 @@ def _cached_topic_story_list(user_mc_key, topics_id, **kwargs):
     Internal helper - don't call this; call topic_story_list instead. This needs user_mc_key in the
     function signature to make sure the caching is keyed correctly.
     '''
-    if user_mc_key == TOOL_API_KEY:
-        local_mc = mc
-    else:
-        local_mc = user_admin_mediacloud_client()
+    local_mc = _mc_client(user_mc_key)
     return local_mc.topicStoryList(topics_id, **kwargs)
 
 
-def story_list(user_mc_key, q, rows):
-    return _cached_story_list(user_mc_key, q, rows)
+def topic_story_list_by_page(user_mc_key, topics_id, link_id, **kwargs):
+    return _cached_topic_story_list_page(user_mc_key, topics_id, link_id, **kwargs)
 
 
-def _cached_story_list(user_mc_key, q, rows):
-    if user_mc_key == TOOL_API_KEY:
-        local_mc = mc
-    else:
-        local_mc = user_admin_mediacloud_client()
-    return local_mc.storyList(q, rows=rows)
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_topic_story_list_page(user_mc_key, topics_id, link_id, **kwargs):
+    # be user-specific in this cache to be careful about permissions on stories
+    # api_key passed in just to make this a user-level cache
+    local_mc = _mc_client(user_mc_key)
+    return local_mc.topicStoryList(topics_id, link_id=link_id, **kwargs)
+
+
+def get_media(user_mc_key, media_id):
+    return _cached_media(user_mc_key, media_id)
+
+
+@cache.cache_on_arguments(function_key_generator=key_generator)
+def _cached_media(user_mc_key, media_id):
+    # api_key passed in just to make this a user-level cache
+    mc_client = _mc_client(user_mc_key)
+    return mc_client.media(media_id)
 
 
 def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q):
@@ -346,3 +354,16 @@ def add_to_user_query(query_to_add):
     if (q_from_request is None) or (len(q_from_request) == 0):
         return query_to_add
     return "({}) AND ({})".format(q_from_request, query_to_add)
+
+def _api_key():
+    api_key = user_mediacloud_key() \
+        if is_user_logged_in() else TOOL_API_KEY
+    return api_key
+
+def _mc_client(user_mc_key):
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_admin_mediacloud_client()
+    return local_mc
+
