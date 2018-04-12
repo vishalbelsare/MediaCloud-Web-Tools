@@ -3,8 +3,7 @@ import codecs
 
 from server import mc
 from server.cache import cache, key_generator
-from server.views.sources import FEATURED_COLLECTION_LIST, POPULAR_COLLECTION_LIST
-from server.views.sources.words import word_count
+from server.views.sources import FEATURED_COLLECTION_LIST
 import server.util.tags as tags
 
 
@@ -29,30 +28,9 @@ def tag_set_with_public_collections(mc_api_key, tag_sets_id):
 
 
 def featured_collections():
-    return cached_featured_collections()
+    return _cached_featured_collection_list()
 
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_featured_collections():
-    collections = []
-    for tags_id in FEATURED_COLLECTION_LIST:
-        info = mc.tag(tags_id)
-        info['id'] = tags_id
-        # use None here to use app-level mc object
-        info['wordcount'] = word_count(None, 'tags_id_media:' + str(tags_id))
-        collections += [info]
-    return collections
-
-
-def popular_collections():
-    return cached_popular_collections()
-
-
-@cache.cache_on_arguments(function_key_generator=key_generator)
-def cached_popular_collections():
-    collections = []
-    for tags_id in POPULAR_COLLECTION_LIST:
-        info = mc.tag(tags_id)
-        info['id'] = tags_id
-        collections += [info]
-    return collections
+def _cached_featured_collection_list():
+    return [mc.tag(tags_id) for tags_id in FEATURED_COLLECTION_LIST]

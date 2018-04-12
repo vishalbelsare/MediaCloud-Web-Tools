@@ -102,8 +102,11 @@ class QueryPicker extends React.Component {
 
   handleMediaChange = (sourceAndCollections) => {
     // the user has picked new sources and/or collections so we need to save in order to update the list onscreen
-    const { selected, updateCurrentQueryThenReselect } = this.props;
-    const updatedQuery = { ...selected };
+    const { selected, formQuery, updateCurrentQueryThenReselect } = this.props;
+    const updatedQuery = {
+      ...selected,
+      ...formQuery,
+    };
     const updatedSources = sourceAndCollections.filter(m => m.type === 'source' || m.media_id);
     const updatedCollections = sourceAndCollections.filter(m => m.type === 'collection' || m.tags_id);
     updatedQuery.collections = updatedCollections;

@@ -19,7 +19,7 @@ import SourceFeedContainer from '../components/source/mediaSource/SourceFeedCont
 import CreateSourceFeedContainer from '../components/source/mediaSource/CreateSourceFeedContainer';
 import EditSourceFeedContainer from '../components/source/mediaSource/EditSourceFeedContainer';
 import SelectSourceContainer from '../components/source/mediaSource/SelectSourceContainer';
-import Homepage from '../components/source/homepage/Homepage';
+import SourcesHomepage from '../components/source/homepage/SourcesHomepage';
 import MCCollectionListContainer from '../components/source/collection/list/MCCollectionListContainer';
 import CountryCollectionListContainer from '../components/source/collection/list/CountryCollectionListContainer';
 import PageWrapper from '../components/source/PageWrapper';
@@ -35,7 +35,7 @@ const sourceRoutes = (
 
     <IndexRedirect to="/home" />
 
-    <Route path="/home" component={Homepage} />
+    <Route path="/home" component={SourcesHomepage} />
 
     <Route component={PageWrapper}>
       <Route path="/about" component={About} />

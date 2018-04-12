@@ -46,7 +46,7 @@ const TopicStatusTable = props => (
         {props.topics.map((t, idx) =>
           (<tr key={t.topics_id} className={`${(idx % 2 === 0) ? 'even' : 'odd'} ${classNameForState(t.state)}`}>
             <td><b><Link to={`/topics/${t.topics_id}/summary`}>{t.name}</Link></b></td>
-            <td className="topic-state">{t.state}</td>
+            <td className="topic-state">{t.state.indexOf('error') > -1 ? t.inErrorSince : t.state}</td>
             <td><FormattedDate value={t.start_date} /> - <FormattedDate value={t.end_date} /></td>
             <td>{t.job_queue}</td>
             <td className="numeric">{t.max_stories}</td>

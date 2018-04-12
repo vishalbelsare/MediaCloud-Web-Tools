@@ -3,25 +3,28 @@ import React from 'react';
 import Title from 'react-title-component';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import TopicSearchContainer from './search/TopicSearchContainer';
-import TopicListContainer from './list/TopicListContainer';
-import LoginForm from '../user/LoginForm';
-import TopicIcon from '../common/icons/TopicIcon';
-import PublicTopicListContainer from './list/PublicTopicListContainer';
-import DataCard from '../common/DataCard';
-import { AddButton } from '../common/IconButton';
-import messages from '../../resources/messages';
-import Masthead from '../common/header/Masthead';
+import TopicSearchContainer from '../search/TopicSearchContainer';
+import TopicListContainer from '../list/TopicListContainer';
+import LoginForm from '../../user/LoginForm';
+import TopicIcon from '../../common/icons/TopicIcon';
+import PublicTopicListContainer from '../list/PublicTopicListContainer';
+import DataCard from '../../common/DataCard';
+import { AddButton } from '../../common/IconButton';
+import messages from '../../../resources/messages';
+import Masthead from '../../common/header/Masthead';
+import TopicsMarketingFeatureList from './TopicsMarketingFeatureList';
 
 const localMessages = {
   homeTitle: { id: 'home.title', defaultMessage: 'Home' },
+  title: { id: 'home.intro', defaultMessage: 'Create a Topic to Dive In Deep' },
+  about: { id: 'home.intro', defaultMessage: '<p>Use Topic Mapper to dive in deeper on an issue you are investigating.  Once you\'ve used <a href="https://explorer.mediacloud.org">the Explorer</a> to narrow in on a query, media sources, and time period you want to investigate, then you can create a Topic to collect more stories, analyze influence, and slice and dice the content.  This lets you research the media conversation about your topic with more rigor.</p>' },
   publicHomeTitle: { id: 'home.title', defaultMessage: 'Explore Public Topics' },
   loginTitle: { id: 'sources.intro.login.title', defaultMessage: 'Have an Account? Login Now' },
 };
 
-const TopicsHomeContainer = (props) => {
+const TopicsHomepage = (props) => {
   const { user } = props;
   const { formatMessage } = props.intl;
   const title = formatMessage(localMessages.homeTitle);
@@ -57,26 +60,30 @@ const TopicsHomeContainer = (props) => {
             </Grid>
           </div>
         </div>
+
         <Grid>
           <TopicListContainer />
         </Grid>
+
+        <TopicsMarketingFeatureList />
+
       </div>
     );
   } else {
     content = (
       <div>
+
         <Title render={titleHandler} />
+
         <Grid>
           <Row>
-            <Col lg={8} xs={12}>
-              <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.publicHomeTitle} /></h1>
+            <Col lg={1} xs={0} />
+            <Col lg={5} xs={12}>
+              <h1><TopicIcon height={32} /><FormattedMessage {...localMessages.title} /></h1>
+              <p><FormattedHTMLMessage {...localMessages.about} /></p>
             </Col>
-          </Row>
-          <Row>
-            <Col lg={8} xs={12}>
-              <PublicTopicListContainer />
-            </Col>
-            <Col lg={4} xs={12}>
+            <Col lg={1} xs={0} />
+            <Col lg={5} xs={12}>
               <DataCard>
                 <h2><FormattedMessage {...localMessages.loginTitle} /></h2>
                 <LoginForm redirect="/home" />
@@ -84,18 +91,30 @@ const TopicsHomeContainer = (props) => {
             </Col>
           </Row>
         </Grid>
+
+        <TopicsMarketingFeatureList />
+
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <h1><FormattedMessage {...localMessages.publicHomeTitle} /></h1>
+              <PublicTopicListContainer />
+            </Col>
+          </Row>
+        </Grid>
+
       </div>
     );
   }
   return (
-    <div>
+    <div className="homepage">
       {mastHead}
       {content}
     </div>
   );
 };
 
-TopicsHomeContainer.propTypes = {
+TopicsHomepage.propTypes = {
   // from context
   intl: PropTypes.object.isRequired,
   // from state
@@ -110,6 +129,6 @@ const mapStateToProps = state => ({
 export default
   injectIntl(
     connect(mapStateToProps)(
-      TopicsHomeContainer
+      TopicsHomepage
     )
   );

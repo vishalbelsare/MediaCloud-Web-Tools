@@ -2,7 +2,7 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 import Redirect from 'react-router/lib/Redirect';
 import IndexRedirect from 'react-router/lib/IndexRedirect';
-import TopicsHomeContainer from '../components/topic/TopicsHomeContainer';
+import TopicsHomepage from '../components/topic/homepage/TopicsHomepage';
 import TopicContainer from '../components/topic/TopicContainer';
 import FilteredTopicContainer from '../components/topic/FilteredTopicContainer';
 import TopicSummaryContainer from '../components/topic/summary/TopicSummaryContainer';
@@ -41,7 +41,7 @@ const topicRoutes = (
     <Route path="/about" component={About} />
 
     <Redirect from="/topics/public/home" to="/home" />
-    <Route path="/home" component={TopicsHomeContainer} />
+    <Route path="/home" component={TopicsHomepage} />
 
     <Route path="/topics/create" component={CreateTopicContainer} onEnter={requireAuth} />
 

@@ -29,6 +29,7 @@ const CollectionTable = (props) => {
       </div>
     );
   }
+
   return (
     <div className="collection-table">
       <Grid>

@@ -99,6 +99,7 @@ def _media_source_details(media_id):
     info['id'] = media_id
     return info
 
+
 def _safely_get_health_start_date(health):
     """
     The health might be empty, so call this to default to 1 year ago if it is

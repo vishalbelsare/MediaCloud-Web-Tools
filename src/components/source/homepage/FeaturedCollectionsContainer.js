@@ -1,52 +1,55 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import { connect } from 'react-redux';
-import Slider from 'react-slick';
-import DataCard from '../../common/DataCard';
-import FeaturedItem from './FeaturedItem';
+import Link from 'react-router/lib/Link';
 import { fetchFeaturedCollectionList } from '../../../actions/sourceActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
+import DataCard from '../../common/DataCard';
+import { ExploreButton } from '../../common/IconButton';
 
 const localMessages = {
-  mainTitle: { id: 'collection.featured.mainTitle', defaultMessage: 'Featured Collections' },
-  intro: { id: 'collection.featured.intro', defaultMessage: 'We are featuring these collections' },
+  mainTitle: { id: 'collection.popular.mainTitle', defaultMessage: 'Featured Collections' },
 };
 
 const FeaturedCollectionsContainer = (props) => {
   const { collections } = props;
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 750,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: 1,
-    autoplaySpeed: 4000,
-  };
-  let content = null;
-
-  if (collections && collections.length > 0) {
-    content = (
-      <Slider {...settings} style={{ width: 80, height: 100, margin: 10, padding: 20 }}>
-        {collections.map(collection =>
-          <div key={collection.tags_id}><FeaturedItem collection={collection} /></div>
-        )}
-      </Slider>
-    );
-  }
-
   return (
-    <div className="featured-collections">
-      <DataCard>
-        <h2>
-          <FormattedMessage {...localMessages.mainTitle} />
-        </h2>
-        <div>
-          {content}
+    <Grid>
+      <div className="featured-collections-wrapper">
+        <Row>
+          <Col lg={12}>
+            <h1>
+              <FormattedMessage {...localMessages.mainTitle} />
+            </h1>
+          </Col>
+        </Row>
+        <div className="featured-collections-list">
+          <Row>
+            {collections.map((c) => {
+              const link = `collections/${c.tags_id}`;
+              return (
+                <Col key={c.tags_id} lg={4} xs={12}>
+                  <DataCard className="featured-collections-item">
+                    <div className="content">
+                      <div>
+                        <h2><Link to={link}>{c.label}</Link></h2>
+                        <p><i>{c.tag_set_label}</i></p>
+                        <p>{c.description}</p>
+                      </div>
+                    </div>
+                    <div className="actions">
+                      <ExploreButton linkTo={link} />
+                    </div>
+                  </DataCard>
+                </Col>
+              );
+            })}
+          </Row>
         </div>
-      </DataCard>
-    </div>
+      </div>
+    </Grid>
   );
 };
 
@@ -78,4 +81,3 @@ export default
       )
     )
   );
-
