@@ -6,7 +6,11 @@ import { fetchCollectionSourceList } from '../../../actions/sourceActions';
 import SourceList from '../../common/SourceList';
 
 const CollectionSourceListContainer = props => (
-  <SourceList collectionId={props.collectionId} sources={props.sources} />
+  <SourceList
+    collectionId={props.collectionId}
+    sources={props.sources}
+    downloadUrl={`/api/collections/${props.collectionId}/sources.csv`}
+  />
 );
 
 CollectionSourceListContainer.propTypes = {

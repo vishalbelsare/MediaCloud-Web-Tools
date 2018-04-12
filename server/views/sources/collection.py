@@ -160,14 +160,16 @@ def api_download_sources_template():
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources_csv(collection_id):
+    user_mc = user_mediacloud_client()
+    collection = user_mc.tag(collection_id)    # not cached because props can change often
     all_media = media_with_tag(user_mediacloud_key(), collection_id)
     for src in all_media:
         for tag in src['media_source_tags']:
             if is_metadata_tag_set(tag['tag_sets_id']):
                 format_metadata_fields(src, tag)
-    file_prefix = "Collection_Sourcelist_Template_for_" + collection_id + "_"
-    what_type_download = COLLECTIONS_TEMPLATE_PROPS_EDIT
-    return csv.download_media_csv(all_media, file_prefix, what_type_download)
+    file_prefix = "Collection {} ({}) - sources ".format(collection_id, collection['tag'])
+    properties_to_include = COLLECTIONS_TEMPLATE_PROPS_EDIT
+    return csv.download_media_csv(all_media, file_prefix, properties_to_include)
 
 
 @app.route('/api/collections/<collection_id>/sources/sentences/historical-counts')
