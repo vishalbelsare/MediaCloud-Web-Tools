@@ -32,6 +32,7 @@ class CollectionTopWordsContainer extends React.Component {
     const explorerUrl = urlToExplorerQuery(collectionId, searchStr, collectionId, '', startDate, endDate);
     window.open(explorerUrl, '_blank');
   }
+
   render() {
     const { collectionId, timePeriod, words, helpButton } = this.props;
     const { formatMessage } = this.props.intl;

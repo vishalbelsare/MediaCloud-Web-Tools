@@ -107,15 +107,6 @@ def api_featured_collections():
     return jsonify({'results': featured_collections})
 
 
-@app.route('/api/collections/popular', methods=['GET'])
-@api_error_handler
-def api_popular_collections():
-    popular_collections = apicache.popular_collections()
-    sorted_popular_collections = sorted(popular_collections,
-                                        key=lambda t: t['label'].lower() if t['label'] is not None else None)
-    return jsonify({'results': sorted_popular_collections})
-
-
 @app.route('/api/collections/<collection_id>/favorite', methods=['PUT'])
 @flask_login.login_required
 @form_fields_required('favorite')

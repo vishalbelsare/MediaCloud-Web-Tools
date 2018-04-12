@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import FeaturedCollectionsContainer from './FeaturedCollectionsContainer';
-import PopularCollectionsContainer from './PopularCollectionsContainer';
 import FavoriteSourcesAndCollectionsContainer from './FavoriteSourcesAndCollectionsContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
@@ -16,10 +15,13 @@ import DataCard from '../../common/DataCard';
 import LoginForm from '../../user/LoginForm';
 import messages from '../../../resources/messages';
 import Masthead from '../../common/header/Masthead';
+import SourcesMarketingFeatureList from './SourcesMarketingFeatureList';
+import SystemStatsContainer from '../../common/statbar/SystemStatsContainer';
 
 const localMessages = {
   title: { id: 'sources.intro.title', defaultMessage: 'Explore our Sources and Collections' },
-  about: { id: 'sources.intro.about', defaultMessage: 'We add sources and create collections from media ecosystems around the world. In order to identify the right sources, we use a combination of automated search and discovery, identified lists of influential sources, and expert input from journalists and media practitioners. You can also ' },
+  intro: { id: 'explorer.intro.title', defaultMessage: 'Investigate Global News with Media Cloud' },
+  about: { id: 'explorer.intro.subtitle', defaultMessage: 'We add sources and create collections from media ecosystems around the world. In order to identify the right sources, we use a combination of automated search and discovery, identified lists of influential sources, and expert input from journalists and media practitioners. You can also ' },
   suggestLink: { id: 'sources.intro.suggestLink', defaultMessage: 'suggest a source.' },
   browseCountry: { id: 'sources.into.browse.mediacloud', defaultMessage: 'Browse Country Collections' },
   browseCountryAbout: { id: 'sources.into.browse.mediacloud.about', defaultMessage: 'See all the global country and state-level collections we\'ve imported from <a href="http://www.abyznewslinks.com/">ABYZ</a>.' },
@@ -31,7 +33,7 @@ const localMessages = {
   addSource: { id: 'source.controlbar.addSource', defaultMessage: 'Add a Source' },
 };
 
-const Homepage = (props) => {
+const SourcesHomepage = (props) => {
   const { user } = props;
   let sideBarContent;
   if (user.isLoggedIn) {
@@ -45,7 +47,7 @@ const Homepage = (props) => {
     );
   }
   return (
-    <div>
+    <div className="homepage">
       <Masthead
         nameMsg={messages.sourcesToolName}
         descriptionMsg={messages.sourcesToolDescription}
@@ -70,35 +72,36 @@ const Homepage = (props) => {
       </Permissioned>
       <Grid>
         <Row>
-          <Col lg={12}>
-            <h1>
-              <FormattedMessage {...localMessages.title} />
-            </h1>
+          <Col lg={1} xs={0} />
+          <Col lg={5} xs={12}>
+            <h1><FormattedMessage {...localMessages.intro} /></h1>
             <p>
               <FormattedHTMLMessage {...localMessages.about} />
               <Link to={'/sources/suggest'}><FormattedMessage {...localMessages.suggestLink} /></Link>
             </p>
           </Col>
-        </Row>
-        <Row>
-          <Col lg={7} xs={12}>
-            <FeaturedCollectionsContainer />
-          </Col>
+          <Col lg={1} xs={0} />
           <Col lg={5} xs={12}>
             {sideBarContent}
           </Col>
         </Row>
-        <Row>
-          <Col lg={12} xs={12}>
-            <PopularCollectionsContainer />
-          </Col>
-        </Row>
       </Grid>
+
+      <Permissioned onlyRole={PERMISSION_LOGGED_IN}>
+        <FeaturedCollectionsContainer />
+      </Permissioned>
+
+      <SourcesMarketingFeatureList />
+
+      <Grid>
+        <SystemStatsContainer />
+      </Grid>
+
     </div>
   );
 };
 
-Homepage.propTypes = {
+SourcesHomepage.propTypes = {
   intl: PropTypes.object.isRequired,
   // from context
   location: PropTypes.object.isRequired,
@@ -122,6 +125,6 @@ const mapDispatchToProps = dispatch => ({
 export default
   injectIntl(
     connect(mapStateToProps, mapDispatchToProps)(
-      Homepage
+      SourcesHomepage
     )
   );

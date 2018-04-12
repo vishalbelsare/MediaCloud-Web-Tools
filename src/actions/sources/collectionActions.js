@@ -3,7 +3,6 @@ import { createAsyncAction } from '../../lib/reduxHelpers';
 import * as api from '../../lib/serverApi/sources';
 
 export const FETCH_FEATURED_COLLECTIONS_LIST = 'FETCH_FEATURED_COLLECTIONS_LIST';
-export const FETCH_POPULAR_COLLECTIONS_LIST = 'FETCH_POPULAR_COLLECTIONS_LIST';
 export const FETCH_COLLECTION_TOP_WORDS = 'FETCH_COLLECTION_TOP_WORDS';
 export const FETCH_COLLECTION_SENTENCE_COUNT = 'FETCH_COLLECTION_SENTENCE_COUNT';
 export const FETCH_COLLECTION_GEO = 'FETCH_COLLECTION_GEO';
@@ -59,8 +58,6 @@ export const updateCollection = createAsyncAction(UPDATE_COLLECTION, api.updateC
 export const fetchSimilarCollections = createAsyncAction(FETCH_SIMILAR_COLLECTIONS, api.similarCollections, id => id);
 
 export const fetchFeaturedCollectionList = createAsyncAction(FETCH_FEATURED_COLLECTIONS_LIST, api.featuredCollectionList);
-
-export const fetchPopularCollectionList = createAsyncAction(FETCH_POPULAR_COLLECTIONS_LIST, api.popularCollectionList);
 
 export const uploadSourceListFromTemplate = createAsyncAction(UPLOAD_SOURCE_LIST_FROM_TEMPLATE, api.collectionUploadSourceListFromTemplate, props => props);
 

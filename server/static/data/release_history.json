@@ -1,6 +1,44 @@
 {
   "releases": [
     {
+      "date": "2018-04-06",
+      "version": "v2.7.6",
+      "notes": [
+        {
+          "apps": ["sources", "topics"],
+          "type": "Feature",
+          "note": "New Source Manager & Topic Mapper homepage sections try to explain what they do better."
+        },
+        {
+          "apps": ["sources", "explorer"],
+          "type": "Feature",
+          "note": "Better list of featured collections.",
+          "details": "The list of featured collections that see on the Source Manager homepage, and when picking media, was getting a bit stale.  We've updated that list to include more recent collections, and to help you get a sense of what is available for you to use in Media Cloud."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "Now Source Manager menu item to see all of our geographic collections."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Trying to add media to an Explorer query no longer resets the keywords."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Demo Explorer searches default to the past month now (instead of the past two weeks)."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "The source page in Source Manager now shows story counts over the last year.",
+          "details": "This is a better way to understand if a source is current or not."
+        }
+      ]
+    },
+    {
       "date": "2018-04-04",
       "version": "v2.7.5",
       "notes": [

@@ -9,9 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
-    response = {}
-    response['sentencecounts'] = cached_recent_sentence_counts(user_mc_key, [which + ":" +str(item_id)])
-    clean_results = [{'date': date, 'numFound': count} for date, count in response['sentencecounts'].iteritems() if date not in ['gap', 'start', 'end']]
+    response = {
+        'sentencecounts': cached_recent_sentence_counts(user_mc_key, [which + ":" + str(item_id)])
+    }
+    clean_results = [{'date': date, 'numFound': count} for date, count in response['sentencecounts'].iteritems()
+                     if date not in ['gap', 'start', 'end']]
     clean_results = sorted(clean_results, key=itemgetter('date'))
     props = ['date', 'numFound']
     return csv.stream_response(clean_results, props, filename)
@@ -19,9 +21,7 @@ def stream_sentence_count_csv(user_mc_key, filename, item_id, which):
 
 @cache.cache_on_arguments(function_key_generator=key_generator)
 def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date_str=None):
-    '''
-    Helper to fetch sentences counts over the last year for an arbitrary query
-    '''
+    # Helper to fetch sentences counts over the last year for an arbitrary query
     user_mc = user_admin_mediacloud_client()
     if start_date_str is None:
         last_n_days = 365
@@ -33,7 +33,7 @@ def cached_recent_sentence_counts(user_mc_key, fq, start_date_str=None, end_date
     else:
         end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
     fq.append(user_mc.publish_date_query(start_date, end_date))
-    sentences_over_time = user_mc.sentenceCount('*', solr_filter=fq, split=True,
-        split_start_date=datetime.datetime.strftime(start_date, '%Y-%m-%d'),
-        split_end_date=datetime.datetime.strftime(end_date, '%Y-%m-%d'))['split']
-    return sentences_over_time
+    results = user_mc.sentenceCount('*', solr_filter=fq, split=True,
+                                    split_start_date=datetime.datetime.strftime(start_date, '%Y-%m-%d'),
+                                    split_end_date=datetime.datetime.strftime(end_date, '%Y-%m-%d'))['split']
+    return results

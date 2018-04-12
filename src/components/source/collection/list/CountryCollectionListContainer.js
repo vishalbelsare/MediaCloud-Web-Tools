@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import CollectionTable from './CollectionTable';
+import TitledCollectionTable from './TitledCollectionTable';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS } from '../../../../lib/tagUtil';
 
 const CountryCollectionListContainer = (props) => {
-  const { name, description, collections } = props;
+  const { name, description, collections, user } = props;
   // collection parsing here - maybe move into reducer or back end
   const nationalCollections = collections.filter(c => c.label.endsWith('National'));
   return (
@@ -30,9 +30,10 @@ const CountryCollectionListContainer = (props) => {
         const countryName = nationalCollection.label.substring(0, nationalCollection.label.length - 11);
         return (
           <div key={nationalCollection.tags_id}>
-            <CollectionTable
+            <TitledCollectionTable
               collections={collections.filter(c => c.label.includes(countryName))}
               title={countryName}
+              user={user}
             />
           </div>
         );
@@ -47,6 +48,7 @@ CountryCollectionListContainer.propTypes = {
   name: PropTypes.string,
   description: PropTypes.string,
   fetchStatus: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
   // from context
   intl: PropTypes.object.isRequired,
   // from dispatch
@@ -55,6 +57,7 @@ CountryCollectionListContainer.propTypes = {
 
 const mapStateToProps = state => ({
   fetchStatus: state.sources.collections.all.fetchStatus,
+  user: state.user,
   name: state.sources.collections.all.name,
   description: state.sources.collections.all.description,
   collections: state.sources.collections.all.collections,

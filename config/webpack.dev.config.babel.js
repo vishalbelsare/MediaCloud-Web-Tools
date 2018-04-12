@@ -9,6 +9,7 @@ export default new Config().extend('config/webpack.base.config.babel.js').merge(
 
   entry: {
     app_js: [
+      'babel-polyfill',
       'webpack/hot/dev-server',
     ],
   },

@@ -334,5 +334,14 @@ def topic_admin_list():
     user_mc = user_admin_mediacloud_client()
     # if a non-admin user calls this, using user_mc grantees this won't be a security hole
     # but for admins this will return ALL topics
-    topics = user_mc.topicList(limit=500)
+    topics = user_mc.topicList(limit=500)['topics']
+    # we also want snapshot info
+    for t in topics:
+        topics_id = t['topics_id']
+        if t['state'] == 'error':
+            t['snapshots'] = {
+                'list': user_mc.topicSnapshotList(topics_id),
+                'jobStatus': mc.topicSnapshotGenerateStatus(topics_id)['job_states']    # need to know if one is running
+            }
+
     return jsonify(topics)

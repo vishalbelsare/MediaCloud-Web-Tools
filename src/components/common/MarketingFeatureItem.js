@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
-import { assetUrl } from '../../../lib/assetUtil';
+import { assetUrl } from '../../lib/assetUtil';
 
 const MarketingFeatureItem = (props) => {
   const { titleMsg, contentMsg, imageOnLeft, imageName } = props;
