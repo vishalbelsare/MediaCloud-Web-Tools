@@ -71,8 +71,8 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
 
 def download_media_csv(all_media, file_prefix, properties):
     modified_properties = properties + ['stories_per_day', 'first_story',
-                                        'media_pub_country', 'media_pub_state', 'media_language',
-                                        'media_about_country', 'media_media_type']
+                                        'pub_country', 'pub_state', 'language',
+                                        'about_country', 'media_type']
 
     for src in all_media:
         if 'editor_notes' in properties and 'editor_notes' not in src:
@@ -95,6 +95,6 @@ def download_media_csv(all_media, file_prefix, properties):
         src['stories_per_day'] = src['num_stories_90']
         src['first_story'] = src['start_date']
         for k, v in src['metadata'].iteritems():
-            src[u'media_{}'.format(k)] = v['label'] if v is not None else None
+            src[k] = v['label'] if v is not None else None
 
     return stream_response(all_media, modified_properties, file_prefix, modified_properties)
