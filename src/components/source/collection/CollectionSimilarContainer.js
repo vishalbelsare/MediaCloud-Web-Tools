@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchSimilarCollections } from '../../../actions/sourceActions';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
-import CollectionTable from './CollectionTable';
-import DataCard from '../../common/DataCard';
+import CollectionList from '../../common/CollectionList';
 
 const localMessages = {
   similarCollectionsTitle: { id: 'collections.similar.title', defaultMessage: 'Similar Collections' },
@@ -15,12 +14,17 @@ const localMessages = {
 };
 
 const CollectionSimilarContainer = (props) => {
-  const { similarCollections, helpButton, user } = props;
+  const { similarCollections, user, helpButton } = props;
+  const { formatMessage } = props.intl;
   return (
-    <DataCard className="collection-list">
-      <h2><FormattedMessage {...localMessages.similarCollectionsTitle} />{helpButton}</h2>
-      <CollectionTable collections={similarCollections} user={user} />
-    </DataCard>
+    <div className="similar-collections">
+      <CollectionList
+        title={formatMessage(localMessages.similarCollectionsTitle)}
+        collections={similarCollections}
+        user={user}
+        helpButton={helpButton}
+      />
+    </div>
   );
 };
 

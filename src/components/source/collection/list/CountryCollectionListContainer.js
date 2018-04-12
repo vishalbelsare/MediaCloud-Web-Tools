@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import composeAsyncContainer from '../../../common/AsyncContainer';
 import CollectionIcon from '../../../common/icons/CollectionIcon';
 import { fetchCollectionList } from '../../../../actions/sourceActions';
-import TitledCollectionTable from './TitledCollectionTable';
+import CollectionList from '../../../common/CollectionList';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS } from '../../../../lib/tagUtil';
 
 const CountryCollectionListContainer = (props) => {
@@ -25,19 +25,24 @@ const CountryCollectionListContainer = (props) => {
             <p>{description}</p>
           </Col>
         </Row>
+        {nationalCollections.map((nationalCollection) => {
+          const countryName = nationalCollection.label.substring(0, nationalCollection.label.length - 11);
+          return (
+            <Row key={nationalCollection.tags_id}>
+              <Col lg={10}>
+                <div>
+                  <CollectionList
+                    collections={collections.filter(c => c.label.includes(countryName))}
+                    title={countryName}
+                    user={user}
+                    dataCard={false}
+                  />
+                </div>
+              </Col>
+            </Row>
+          );
+        })}
       </Grid>
-      {nationalCollections.map((nationalCollection) => {
-        const countryName = nationalCollection.label.substring(0, nationalCollection.label.length - 11);
-        return (
-          <div key={nationalCollection.tags_id}>
-            <TitledCollectionTable
-              collections={collections.filter(c => c.label.includes(countryName))}
-              title={countryName}
-              user={user}
-            />
-          </div>
-        );
-      })}
     </div>
   );
 };
