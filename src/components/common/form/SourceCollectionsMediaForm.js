@@ -5,14 +5,14 @@ import { reduxForm, FieldArray, Field, propTypes } from 'redux-form';
 import composeIntlForm from '../../common/IntlForm';
 import SourceOrCollectionWidget from '../../common/SourceOrCollectionWidget';
 
-const renderCollectionSelector = ({ allowRemoval, fields, onDelete }) => (
+const renderCollectionSelector = ({ allowRemoval, fields }) => (
   <div>
     {fields.map((name, index) => (
       <Field
         key={name}
         name={name}
         component={(info) => {
-          const handleDelete = (allowRemoval || info.meta.dirty) && fields.length > 1 ? () => { fields.remove(index); onDelete(info.input.value); } : undefined;
+          const handleDelete = (allowRemoval || info.meta.dirty) && fields.length > 1 ? () => { fields.remove(index); } : undefined;
           const val = info.input.value;
           let tempObj = {};
           if (val && typeof val === 'number') {
