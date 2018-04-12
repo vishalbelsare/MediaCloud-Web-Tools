@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import { injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedNumber, FormattedDate } from 'react-intl';
 import React from 'react';
 import { AddButton, DeleteButton } from '../../IconButton';
 import { urlToSource } from '../../../../lib/urlUtil';
+import { parseSolrShortDate } from '../../../../lib/dateUtil';
 import messages from '../../../../resources/messages';
 
 const localMessages = {
@@ -22,6 +23,7 @@ const SourceResultsTable = (props) => {
             <th><FormattedMessage {...localMessages.name} /></th>
             <th><FormattedMessage {...localMessages.url} /></th>
             <th className="numeric"><FormattedMessage {...messages.storiesPerDay} /></th>
+            <th className="numeric"><FormattedMessage {...messages.sourceStartDate} /></th>
             <th />
           </tr>
           {sources.map((s, idx) => {
@@ -32,6 +34,7 @@ const SourceResultsTable = (props) => {
                 <td><a href={urlToSource(s.media_id)} target="new">{s.name}</a></td>
                 <td>{s.url}</td>
                 <td className="numeric"><FormattedNumber value={Math.round(s.num_stories_90)} /></td>
+                <td className="numeric"><FormattedDate value={parseSolrShortDate(s.start_date)} /></td>
                 <td>{actionContent}</td>
               </tr>
             );

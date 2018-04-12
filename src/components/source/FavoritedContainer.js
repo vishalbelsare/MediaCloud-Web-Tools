@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
@@ -9,6 +9,7 @@ import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
 
 const localMessages = {
+  title: { id: 'sources.menu.items.favoritedItems', defaultMessage: 'My Starred Sources And Collections' },
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'My Starred Collections' },
   favoritedCollectionsIntro: { id: 'favorited.collections.intro', defaultMessage: 'These are collections you have starred by clicking the star next to their name.  This is useful to bookmark collections you use frequently.' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'My Starred Sources' },
@@ -21,12 +22,16 @@ const FavoritedContainer = (props) => {
   return (
     <Grid>
       <Row>
+        <Col lg={12}>
+          <h1><FormattedMessage {...localMessages.title} /></h1>
+        </Col>
+      </Row>
+      <Row>
         <Col lg={6}>
           <SourceList
             title={formatMessage(localMessages.favoritedSourcesTitle)}
             intro={formatMessage(localMessages.favoritedSourcesIntro)}
             sources={favoritedSources}
-            downloadUrl="/api/favorites/sources.csv"
           />
         </Col>
         <Col lg={6}>

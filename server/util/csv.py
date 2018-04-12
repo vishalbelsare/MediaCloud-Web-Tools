@@ -69,15 +69,17 @@ def stream_response(data, dict_keys, filename, column_names=None, as_attachment=
                               mimetype='text/csv; charset=utf-8', headers=headers)
 
 
-def download_media_csv(all_media, file_prefix, what_type_download):
+def download_media_csv(all_media, file_prefix, properties):
+    modified_properties = properties + ['stories_per_day', 'first_story',
+                                        'pub_country', 'pub_state', 'language',
+                                        'about_country', 'media_type']
 
-    # info = user_mc.tag(int(collection_id))
     for src in all_media:
-        if 'editor_notes' in what_type_download and 'editor_notes' not in src:
+        if 'editor_notes' in properties and 'editor_notes' not in src:
             src['editor_notes'] = ''
-        if 'is_monitored' in what_type_download and 'is_monitored' not in src:
+        if 'is_monitored' in properties and 'is_monitored' not in src:
             src['is_monitored'] = ''
-        if 'public_notes' in what_type_download and 'public_notes' not in src:
+        if 'public_notes' in properties and 'public_notes' not in src:
             src['public_notes'] = ''
         # handle nulls
         if 'pub_country' not in src:
@@ -90,6 +92,9 @@ def download_media_csv(all_media, file_prefix, what_type_download):
             src['subject_country'] = ''
         if 'media_type' not in src:
             src['media_type'] = ''
+        src['stories_per_day'] = src['num_stories_90']
+        src['first_story'] = src['start_date']
+        for k, v in src['metadata'].iteritems():
+            src[k] = v['label'] if v is not None else None
 
-    return stream_response(all_media, what_type_download, file_prefix, what_type_download)
-
+    return stream_response(all_media, modified_properties, file_prefix, modified_properties)
