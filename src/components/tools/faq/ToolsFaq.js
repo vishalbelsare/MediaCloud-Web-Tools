@@ -5,8 +5,8 @@ import FaqItem from '../../common/FaqItem';
 
 const localMessages = {
   title: { id: 'faq.title', defaultMessage: 'FAQ' },
-  q1: { id: 'faq.q1', defaultMessage: 'What is MediaCloud?' },
-  a1: { id: 'faq.a1', defaultMessage: 'Media Cloud is an open source and open data platform for storing, retrieving, visualizing, and analyzing online news.' },
+  q1: { id: 'faq.q1', defaultMessage: 'What is Media Cloud?' },
+  a1: { id: 'faq.a1', defaultMessage: 'Media Cloud is a totally free, open source, and open data platform for storing, retrieving, visualizing, and analyzing online news.' },
   q2: { id: 'faq.q2', defaultMessage: 'What type of data does Media Cloud collect?' },
   a2: { id: 'faq.a2', defaultMessage: 'The bulk of our data is news stories from media sites around the web. In order to allow for insightful analyses of media ecosystems we also optionally collect data such as hyperlinks, Facebook shares, and Twitter shares.' },
   q3: { id: 'faq.q3', defaultMessage: 'How does Media Cloud get the data?' },
