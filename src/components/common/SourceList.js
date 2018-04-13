@@ -14,7 +14,7 @@ const localMessages = {
 };
 
 const SourceList = (props) => {
-  const { sources, title, intro, downloadUrl } = props;
+  const { sources, title, intro, downloadUrl, extraHeaderColumns, extraColumns } = props;
   const { formatMessage } = props.intl;
 
   let titleRefactor = null;
@@ -48,7 +48,7 @@ const SourceList = (props) => {
       <p>
         {introRefactor}
       </p>
-      <SourceTable sources={sources} />
+      <SourceTable sources={sources} extraHeaderColumns={extraHeaderColumns} extraColumns={extraColumns} />
     </DataCard>
   );
 };
@@ -61,6 +61,8 @@ SourceList.propTypes = {
   intro: PropTypes.string,
   sources: PropTypes.array.isRequired,
   downloadUrl: PropTypes.string,
+  extraHeaderColumns: PropTypes.func,
+  extraColumns: PropTypes.func,
 };
 
 export default

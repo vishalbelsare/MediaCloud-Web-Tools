@@ -25,7 +25,7 @@ def api_source_feed(media_id):
 def feed_details(media_id, feed_id):
     user_mc = user_admin_mediacloud_client()
     feed = user_mc.feed(feed_id)
-    return jsonify({'feed': feed })
+    return jsonify({'feed': feed})
 
 
 @app.route('/api/sources/<media_id>/feeds/feeds.csv', methods=['GET'])
@@ -38,7 +38,6 @@ def source_feed_csv(media_id):
 @app.route('/api/sources/<media_id>/feeds/create', methods=['POST'])
 @flask_login.login_required
 @api_error_handler
-# name=None, url=None, feed_type='syndicated', feed_status='active'
 def feed_create(media_id):
     user_mc = user_admin_mediacloud_client()
     name = request.form['name']
@@ -83,7 +82,6 @@ def source_feed_list_page(media_id, max_feed_id):
 
 
 def stream_feed_csv(filename, media_id):
-    response = {}
     response = cached_feed(media_id)
     props = ['name', 'feed_type', 'url']
     return csv.stream_response(response, props, filename)

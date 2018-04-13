@@ -10,6 +10,7 @@ import CreateCollectionContainer from '../components/source/collection/CreateCol
 import AdvancedSearchContainer from '../components/source/search/AdvancedSearchContainer';
 import SelectCollectionContainer from '../components/source/collection/SelectCollectionContainer';
 import EditCollectionContainer from '../components/source/collection/EditCollectionContainer';
+import ManageSourcesContainer from '../components/source/collection/ManageSourcesContainer';
 import CreateSourceContainer from '../components/source/mediaSource/CreateSourceContainer';
 import SuggestSourceContainer from '../components/source/mediaSource/suggest/SuggestSourceContainer';
 import AllSuggestionsContainer from '../components/source/mediaSource/suggest/AllSuggestionsContainer';
@@ -71,6 +72,7 @@ const sourceRoutes = (
         <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
         <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
+        <Route path="manage-source-list" component={ManageSourcesContainer} onEnter={requireAuth} />
       </Route>
     </Route>
 

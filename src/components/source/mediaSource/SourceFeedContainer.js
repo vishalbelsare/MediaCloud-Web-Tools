@@ -20,9 +20,6 @@ import { SOURCE_SCRAPE_STATE_QUEUED, SOURCE_SCRAPE_STATE_RUNNING } from '../../.
 
 const localMessages = {
   sourceFeedsTitle: { id: 'source.details.feeds.title', defaultMessage: '{name}: Feeds' },
-  scrapeFeeds: { id: 'source.details.feeds.scrape', defaultMessage: 'Scrape for New Feeds' },
-  scraping: { id: 'source.deatils.feeds.scraping', defaultMessage: 'We\'ve started to scrape this source' },
-  scrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
   add: { id: 'source.deatils.feeds.add', defaultMessage: 'Add A Feed' },
 };
 
@@ -67,7 +64,7 @@ class SourceFeedContainer extends React.Component {
             <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
               <AppButton
                 className="source-scrape-feeds-button"
-                label={formatMessage(localMessages.scrapeFeeds)}
+                label={formatMessage(messages.scrapeForFeeds)}
                 primary
                 onClick={scrapeFeeds}
               />
@@ -133,12 +130,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       .then((results) => {
         if ((results.job_state.state === SOURCE_SCRAPE_STATE_QUEUED) ||
           (results.job_state.state === SOURCE_SCRAPE_STATE_RUNNING)) {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.scraping) }));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.sourceScraping) }));
           // update the source so the user sees the new scrape status
           dispatch(fetchSourceDetails(ownProps.params.sourceId))
             .then(() => dispatch(push(`/sources/${ownProps.params.sourceId}`)));
         } else {
-          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(localMessages.scrapeFailed) }));
+          dispatch(updateFeedback({ open: true, message: ownProps.intl.formatMessage(messages.sourceScrapeFailed) }));
         }
       });
   },

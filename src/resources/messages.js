@@ -54,6 +54,10 @@ const messages = {
   sourceDescription: { id: 'source.description.default', defaultMessage: 'Description' },
   sourceLink: { id: 'source.link.default', defaultMessage: 'Media Source Link' },
   sourceIcon: { id: 'source.icon.default', defaultMessage: 'Logo' },
+  scrapeForFeeds: { id: 'source.details.feeds.scrape', defaultMessage: 'Scrape for New Feeds' },
+  sourceScraping: { id: 'source.deatils.feeds.scraping', defaultMessage: 'We\'ve started to scrape this source' },
+  sourceScrapeFailed: { id: 'source.deatils.feeds.failed', defaultMessage: 'Sorry, for some reason we couldn\'t start the scraping job' },
+  sourceScrapeStatus: { id: 'source.deatils.feeds.scrapeStatus', defaultMessage: 'Feed Scrape Status' },
 
   favoritedCollectionsTitle: { id: 'favorited.collections.title', defaultMessage: 'Starred Collections' },
   favoritedSourcesTitle: { id: 'favorited.souces.title', defaultMessage: 'Starred Sources' },

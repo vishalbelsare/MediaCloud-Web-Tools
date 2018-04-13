@@ -171,7 +171,7 @@ def media_with_tag(user_mc_key, tags_id, cached=False):
         all_media = all_media + media
         if len(media) > 0:
             max_media_id = media[len(media) - 1]['media_id']
-        more_media = len(media) != 0
+        more_media = len(media) == 100
     return sorted(all_media, key=lambda t: t['name'].lower())
 
 
