@@ -12,7 +12,7 @@ import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
 from server.views.topics.apicache import topic_story_count, topic_word_counts, add_to_user_query, \
-    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts, topic_story_list_by_page, get_media, topic_story_list
+    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts, topic_story_list_by_page, get_media, topic_story_list, story_list
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -275,18 +275,36 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
 
 # generator you can use to do something for each page of story results
 def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
-    story_page = topic_story_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)['stories']
+    story_page = topic_story_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)
 
-    for s in story_page:
+    story_ids = [str(s['stories_id']) for s in story_page['stories']]
+    for s in story_page['stories']:
+
         # add in media metadata to the story (from lazy cache)
         media_id = s['media_id']
         media = get_media(user_key, media_id)
 
+        #add in foci/subtopic names
+
         for k, v in media['metadata'].iteritems():
             s[u'media_{}'.format(k)] = v['label'] if v is not None else None
         # and add in the story metadata too
-        # for k, v in s['metadata'].iteritems(): # this doesn't exist...
-        #    s[u'story_{}'.format(k)] = v['tag'] if v is not None else None
-    yield s
 
 
+        stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
+    #build lookup for id => story for all stories in stories with tags (non topic results)
+
+        for st in stories_with_tags:
+
+            if s['stories_id'] == st['stories_id']:
+                s.update(st)
+
+                foci_names = [f['name'] for f in s['foci']]
+                s['subtopics'] = ",".join(foci_names)
+
+                s['themes'] = ''
+                story_tag_ids = [t['tags_id'] for t in s['story_tags']]
+                if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
+                    story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
+                    s['themes'] = story_tag_ids
+                yield story_page

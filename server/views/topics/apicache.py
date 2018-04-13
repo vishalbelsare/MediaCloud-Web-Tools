@@ -76,6 +76,17 @@ def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
     return local_mc.topicStoryCount(topics_id, **kwargs)
 
 
+def story_list(user_mc_key, q, rows):
+    return _cached_story_list(user_mc_key, q, rows)
+     
+def _cached_story_list(user_mc_key, q, rows):
+    if user_mc_key == TOOL_API_KEY:
+        local_mc = mc
+    else:
+        local_mc = user_admin_mediacloud_client()
+    return local_mc.storyList(q, rows=rows)
+
+
 def topic_story_list(user_mc_key, topics_id, **kwargs):
     '''
     Return sorted story list based on filters.
