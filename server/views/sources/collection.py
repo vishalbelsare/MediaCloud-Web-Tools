@@ -26,6 +26,7 @@ from server.views.sources.words import word_count, stream_wordcount_csv
 logger = logging.getLogger(__name__)
 
 HISTORICAL_COUNT_POOL_SIZE = 10  # number of parallel processes to use while fetching historical sentence counts for each media source
+FEED_SCRAPE_JOB_POOL_SIZE = 10
 
 
 def allowed_file(filename):
@@ -133,15 +134,44 @@ def api_collection_details(collection_id):
     return jsonify({'results': info})
 
 
+def _media_list_edit_worker(media_id):
+    user_mc = user_admin_mediacloud_client()
+    # latest scrape job
+    scrape_jobs = user_mc.feedsScrapeStatus(media_id)
+    latest_scrape_job = None
+    if len(scrape_jobs['job_states']) > 0:
+        latest_scrape_job = scrape_jobs['job_states'][0]
+    # active feed count
+    feeds = user_mc.feedList(media_id)
+    active_syndicated_feeds = [f for f in feeds if f['feed_status'] == 'active' and f['feed_type'] == 'syndicated']
+    active_feed_count = len(active_syndicated_feeds)
+    return {
+        'media_id': media_id,
+        'latest_scrape_job': latest_scrape_job,
+        'active_feed_count': active_feed_count,
+    }
+
+
 @app.route('/api/collections/<collection_id>/sources')
 @flask_login.login_required
 @api_error_handler
 def api_collection_sources(collection_id):
-    results = {}
-    results['tags_id'] = collection_id
-    media_in_colleciton = media_with_tag(user_mediacloud_key(), collection_id)
-    add_user_favorite_flag_to_sources(media_in_colleciton)
-    results['sources'] = media_in_colleciton
+    pool = Pool(processes=FEED_SCRAPE_JOB_POOL_SIZE)
+    results = {
+        'tags_id': collection_id
+    }
+    media_in_collection = media_with_tag(user_mediacloud_key(), collection_id)
+    add_user_favorite_flag_to_sources(media_in_collection)
+    if user_has_auth_role(ROLE_MEDIA_EDIT):
+        # for editing users, add in last scrape and active feed count
+        jobs = [m['media_id'] for m in media_in_collection]
+        job_results = pool.map(_media_list_edit_worker, jobs)  # blocks until they are all done
+        job_by_media_id = {j['media_id']: j for j in job_results}
+        for m in media_in_collection:
+            m['latest_scrape_job'] = job_by_media_id[m['media_id']]['latest_scrape_job']
+            m['active_feed_count'] = job_by_media_id[m['media_id']]['active_feed_count']
+    results['sources'] = media_in_collection
+    pool.terminate()
     return jsonify(results)
 
 

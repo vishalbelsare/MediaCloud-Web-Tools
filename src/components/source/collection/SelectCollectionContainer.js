@@ -10,11 +10,13 @@ import composeAsyncContainer from '../../common/AsyncContainer';
 import SourceControlBar from '../controlbar/SourceControlBar';
 import Permissioned from '../../common/Permissioned';
 import { PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
-import { EditButton } from '../../common/IconButton';
+import { EditButton, ExploreButton } from '../../common/IconButton';
 import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 
 const localMessages = {
   editCollection: { id: 'collection.edit', defaultMessage: 'Modify this Collection' },
+  contentHistory: { id: 'collection.contentHistory', defaultMessage: 'Content History' },
+  manageSources: { id: 'collection.manageSources', defaultMessage: 'Manage Sources' },
 };
 
 class SelectCollectionContainer extends React.Component {
@@ -46,6 +48,14 @@ class SelectCollectionContainer extends React.Component {
                 <FormattedMessage {...localMessages.editCollection} />
               </Link>
             </span>
+            <Link to={`/collections/${collection.tags_id}/manage-source-list`} >
+              <ExploreButton />
+              <FormattedMessage {...localMessages.manageSources} />
+            </Link>
+            <Link to={`/collections/${collection.tags_id}/content-history`} >
+              <ExploreButton />
+              <FormattedMessage {...localMessages.contentHistory} />
+            </Link>
           </SourceControlBar>
         </Permissioned>
         <Grid className="details collection-details">
