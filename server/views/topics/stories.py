@@ -224,7 +224,7 @@ def _stream_story_list_csv(user_key, filename, topics_id, **kwargs):
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
 
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version',
+             'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version','story_date_guess_method',
              'media_id', 'media_name', 'media_url',
              'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
              'media_media_type']
@@ -268,16 +268,19 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
             cleaned_row = csv.dict2row(props, story)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
-        if 'next' in page['links']:
-            link_id = page['links']['next']
-        else:
-            return
+        #if 'next' in story_page['links']:
+        #    link_id = story_page['links']['next']
+        #else:
+        #    return
+        link_id += 1
 
 # generator you can use to do something for each page of story results
 def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
     story_page = topic_story_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)
 
     story_ids = [str(s['stories_id']) for s in story_page['stories']]
+    stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
+    #update story info for each story in the page, put it into the [stories] field, send updated page with stories back
     for s in story_page['stories']:
 
         # add in media metadata to the story (from lazy cache)
@@ -287,24 +290,26 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
         #add in foci/subtopic names
 
         for k, v in media['metadata'].iteritems():
-            s[u'media_{}'.format(k)] = v['label'] if v is not None else None
-        # and add in the story metadata too
+             s[u'media_{}'.format(k)] = v['label'] if v is not None else None
 
-
-        stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
-    #build lookup for id => story for all stories in stories with tags (non topic results)
-
+        #build lookup for id => story for all stories in stories with tags (non topic results)
         for st in stories_with_tags:
-
+    
             if s['stories_id'] == st['stories_id']:
                 s.update(st)
-
+    
                 foci_names = [f['name'] for f in s['foci']]
                 s['subtopics'] = ",".join(foci_names)
-
+    
                 s['themes'] = ''
                 story_tag_ids = [t['tags_id'] for t in s['story_tags']]
                 if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
                     story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
                     s['themes'] = story_tag_ids
-                yield story_page
+                # s is updated
+                # how do I add s back into story_page?
+            #do I yield each story at a time or wait til all stories are ready
+
+
+    yield story_page # need links too
+
