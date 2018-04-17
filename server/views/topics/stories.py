@@ -224,7 +224,7 @@ def _stream_story_list_csv(user_key, filename, topics_id, **kwargs):
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
 
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version','story_date_guess_method',
+             'themes','subtopics',
              'media_id', 'media_name', 'media_url',
              'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
              'media_media_type']
@@ -305,7 +305,7 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
                 story_tag_ids = [t['tags_id'] for t in s['story_tags']]
                 if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
                     story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
-                    s['themes'] = story_tag_ids
+                    s['themes'] = ",".join(story_tag_ids)
                 # s is updated
                 # how do I add s back into story_page?
             #do I yield each story at a time or wait til all stories are ready
