@@ -14,7 +14,7 @@ import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
 
 const localMessages = {
-  title: { id: 'explorer.stories.title', defaultMessage: 'Sample Stories' },
+  title: { id: 'explorer.stories.title', defaultMessage: 'Random Stories' },
   helpIntro: { id: 'explorer.stories.help.title', defaultMessage: '<p>This is a small sample of the stories matching your queries.  These are stories where are least one sentence matches your query.  Click on story title to read it.  Click the menu on the top right to download a CSV of stories with their urls.</p>' },
   helpDetails: { id: 'explorer.stories.help.text',
     defaultMessage: '<p>We can provide basic informatin about stories like it\'s source, date of publication, and URL.  However, due to copyright restrictions we cannot provide you with the original full text of the stories.</p>',

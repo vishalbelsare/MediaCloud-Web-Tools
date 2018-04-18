@@ -11,7 +11,7 @@ const localMessages = {
   language: { id: 'explorer.results.language.title', defaultMessage: 'Language' },
   people: { id: 'explorer.results.people.title', defaultMessage: 'People & Places' },
   details: { id: 'explorer.attention.drillDown.details', defaultMessage: 'Details about {date}' },
-  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Sample Stories from {date}' },
+  sampleStories: { id: 'explorer.attention.drillDown.sampleStories', defaultMessage: 'Random Stories from {date}' },
   topWords: { id: 'explorer.attention.drillDown.topWords', defaultMessage: 'Top Words for {date}' },
 };
 
