@@ -61,18 +61,12 @@ class AttentionOverTimeChart extends React.Component {
         },
       },
       tooltip: {
-        pointFormatter: function afmtxn(evt) {
+        pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
           const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
           const seriesName = this.series.name ? formatMessage(localMessages.tooltipSeriesName, { name: this.series.name }) : '';
           const val = formatMessage(localMessages.tooltipText, { count: rounded });
-          const thisDate = new Date(this.category).toDateString();
-          const nextDate = new Date(this.category + this.series.pointInterval).toDateString();
-          const intervalDays = this.series.pointInterval / SECS_PER_DAY;
-          if (intervalDays > 1) {
-            this.series.tooltipOptions.xDateFormat = `Date Range: ${thisDate} to ${nextDate}`;
-          }
-          return (`${seriesName}<br/>${val}${evt}`);
+          return (`${seriesName}<br/>${val}`);
         },
       },
       yAxis: {
