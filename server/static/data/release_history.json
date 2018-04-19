@@ -28,11 +28,6 @@
           "apps": ["topics"],
           "type": "Fix",
           "note": "Picking media sources and collections while creating a topic works better."
-        },
-                {
-          "apps": ["explorer"],
-          "type": "Fix",
-          "note": "Better indication of date range on Explorer attention chart."
         }
       ]
     },
