@@ -160,7 +160,7 @@ def story_inlinks(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/inlinks.csv', methods=['GET'])
 @flask_login.login_required
 def story_inlinks_csv(topics_id, stories_id):
-    return _stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-inlinks', topics_id,
+    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-inlinks', topics_id,
                                  link_to_stories_id=stories_id)
 
 
@@ -175,7 +175,7 @@ def story_outlinks(topics_id, stories_id):
 @app.route('/api/topics/<topics_id>/stories/<stories_id>/outlinks.csv', methods=['GET'])
 @flask_login.login_required
 def story_outlinks_csv(topics_id, stories_id):
-    return _stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id,
+    return stream_story_list_csv(user_mediacloud_key(), 'story-'+stories_id+'-outlinks', topics_id,
                                  link_from_stories_id=stories_id)
 
 
@@ -196,9 +196,9 @@ def topic_stories(topics_id):
 def topic_stories_csv(topics_id):
     user_mc = user_admin_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return _stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
 
-def _stream_story_list_csv(user_key, filename, topics_id, **kwargs):
+def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
 
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
@@ -299,13 +299,13 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
                 s.update(st)
     
                 foci_names = [f['name'] for f in s['foci']]
-                s['subtopics'] = ",".join(foci_names)
+                s['subtopics'] = ", ".join(foci_names)
     
                 s['themes'] = ''
                 story_tag_ids = [t['tags_id'] for t in s['story_tags']]
                 if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
                     story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
-                    s['themes'] = ",".join(story_tag_ids)
+                    s['themes'] = ", ".join(story_tag_ids)
                 # s is updated
                 # how do I add s back into story_page?
             #do I yield each story at a time or wait til all stories are ready
