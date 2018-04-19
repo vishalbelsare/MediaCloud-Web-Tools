@@ -98,7 +98,7 @@ def story_counts(topics_id):
         local_key = user_mediacloud_key()
     else:
         return jsonify({'status': 'Error', 'message': 'Invalid attempt'})
-    total = topic_story_list(local_key, topics_id, timespans_id=None, q=None)
+    total = topic_story_count(local_key, topics_id, timespans_id=None, q=None)
     filtered = topic_story_count(local_key, topics_id)  # force a count with just the query
     return jsonify({'counts': {'count': filtered['count'], 'total': total['count']}})
 
