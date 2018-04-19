@@ -6,6 +6,8 @@ const SOLR_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const SHORT_SOLR_DATE_FORMAT = 'YYYY-MM-DD';
 
+const SHORT_VIS_FORMAT = 'MM/DD';
+
 const GAP_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
 const DB_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -29,6 +31,10 @@ export const PAST_ALL = 'all-time';
 export function getCurrentDate() {
   const testdate = moment().format(TOPIC_DATE_FORMAT);
   return testdate;
+}
+
+export function getVisDate(dateString) {
+  return moment(dateString).format(SHORT_VIS_FORMAT);
 }
 
 export function getShortDate(dateString) {

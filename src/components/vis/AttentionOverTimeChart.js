@@ -4,6 +4,7 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
 import ReactHighcharts from 'react-highcharts';
 import initHighcharts from './initHighcharts';
 import { getBrandDarkColor } from '../../styles/colors';
+import { getVisDate } from '../../lib/dateUtil';
 
 initHighcharts();
 
@@ -61,18 +62,18 @@ class AttentionOverTimeChart extends React.Component {
         },
       },
       tooltip: {
-        pointFormatter: function afmtxn(evt) {
+        pointFormatter: function afmtxn() {
           // important to name this, rather than use arrow function, so `this` is preserved to be what highcharts gives us
           const rounded = formatNumber(this.y, { style: 'decimal', maximumFractionDigits: 2 });
           const seriesName = this.series.name ? formatMessage(localMessages.tooltipSeriesName, { name: this.series.name }) : '';
           const val = formatMessage(localMessages.tooltipText, { count: rounded });
-          const thisDate = new Date(this.category).toDateString();
-          const nextDate = new Date(this.category + this.series.pointInterval).toDateString();
+          const thisDate = getVisDate(new Date(this.category));
+          const nextDate = getVisDate(new Date(this.category + this.series.pointInterval));
           const intervalDays = this.series.pointInterval / SECS_PER_DAY;
           if (intervalDays > 1) {
             this.series.tooltipOptions.xDateFormat = `Date Range: ${thisDate} to ${nextDate}`;
           }
-          return (`${seriesName}<br/>${val}${evt}`);
+          return (`${seriesName}<br/>${val}`);
         },
       },
       yAxis: {
