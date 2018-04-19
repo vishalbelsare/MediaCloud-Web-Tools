@@ -17,7 +17,7 @@ import { googleFavIconUrl } from '../../../lib/urlUtil';
 import { parseSolrShortDate, jobStatusDateToMoment } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.manageSources.title', defaultMessage: 'Manage Sources' },
+  title: { id: 'collection.manageSources.title', defaultMessage: 'Review Sources' },
   scrapeAll: { id: 'collection.manageSources.scrapeAll', defaultMessage: 'Scrape all For New Feeds' },
   inLast90Days: { id: 'collection.manageSources.column.last90', defaultMessage: '90 Day Story Count' },
   startedScrapingAll: { id: 'collection.manageSources.startedScrapingAll', defaultMessage: 'Started scraping all sources for RSS feeds' },
