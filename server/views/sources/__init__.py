@@ -11,7 +11,7 @@ COLLECTIONS_TEMPLATE_METADATA_PROPS = ['pub_country', 'pub_state', 'subject_coun
 
 # hand-made whitelist of collections to show up as "featured" on source mgr homepage and in the media picker
 FEATURED_COLLECTION_LIST = [
-    9139487,   # US top 50 PEW
+    58722749,  # US top 50 PEW 2017
     57078150,  # US digital native 2016 PEW
     34412118,  # India national
     34412232,  # Russia national
