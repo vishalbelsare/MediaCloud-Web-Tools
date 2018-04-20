@@ -4,7 +4,7 @@ import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Row, Col } from 'react-flexbox-grid/lib';
 
 const localMessage = {
-  showDetails: { id: 'describedDataCard.description.show', defaultMessage: '...learn more' },
+  showDetails: { id: 'describedDataCard.description.show', defaultMessage: 'learn more' },
   hideDescription: { id: 'describedDataCard.description.hide', defaultMessage: 'hide details' },
 };
 
