@@ -16,6 +16,7 @@ FEATURED_COLLECTION_LIST = [
     34412118,  # India national
     34412232,  # Russia national
     38379799,  # France - State & Local
+    9272347,   # ABYZ Global English
     34412476,  # UK National
     34412202,  # Ghana National
     38381372,  # US Massachusetts State/Local
