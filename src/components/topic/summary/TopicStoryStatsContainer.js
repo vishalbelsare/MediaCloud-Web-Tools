@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import composeAsyncContainer from '../../common/AsyncContainer';
-import { fetchTopicEnglishStoryCounts } from '../../../actions/topicActions';
 import StatBar from '../../common/statbar/StatBar';
 import messages from '../../../resources/messages';
 
@@ -18,81 +15,47 @@ const localMessages = {
   mediumLinkCountHelp: { id: 'topic.summary.timespanInfo.mediumLinkCount.help', defaultMessage: 'The number of links between media sources with stories within this timespan that match the filters you have in place. A media link is when one media source links any number of times to another media source. For example, if there was only one Chicago Tribune story linked to and it was linked to by 3 New York times stories and 2 Boston Globe stories, then the story links count would be 2 (because only two unqiue media sources linked to the Chicago Tribune story). If you are filtering by a search query we can\'t easily compute this number.' },
 };
 
-class TopicStoryStatsContainer extends React.Component {
-
-  componentWillReceiveProps(nextProps) {
-    const { filters, fetchData } = this.props;
-    if ((nextProps.filters !== filters)) {
-      fetchData(nextProps.filters);
-    }
+const TopicStoryStatsContainer = (props) => {
+  const { timespan, filters } = props;
+  const { formatNumber, formatMessage } = props.intl;
+  if ((timespan === null) || (timespan === undefined)) {
+    return null;
   }
-
-  render() {
-    const { timespan, storyCount, filters } = this.props;
-    const { formatNumber, formatMessage } = this.props.intl;
-    if ((timespan === null) || (timespan === undefined)) {
-      return null;
-    }
-    let stats;
-    if (filters.q) {
-      // if there is a query filter in place, then we can't get many of these stats easily :-(
-      stats = [
-        { message: localMessages.storyCount, data: formatNumber(storyCount) },
-        { message: localMessages.mediumCount, data: formatMessage(messages.unknown) },
-        { message: localMessages.storyLinkCount, data: formatMessage(messages.unknown) },
-        { message: localMessages.mediumLinkCount, data: formatMessage(messages.unknown) },
-      ];
-    } else {
-      stats = [
-        { message: localMessages.storyCount, data: formatNumber(storyCount), helpTitleMsg: localMessages.storyCount, helpContentMsg: localMessages.storyCountHelp },
-        { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count), helpTitleMsg: localMessages.mediumCount, helpContentMsg: localMessages.mediumCountHelp },
-        { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count), helpTitleMsg: localMessages.storyLinkCount, helpContentMsg: localMessages.storyLinkCountHelp },
-        { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count), helpTitleMsg: localMessages.mediumLinkCount, helpContentMsg: localMessages.mediumLinkCountHelp },
-      ];
-    }
-    return (
-      <StatBar
-        columnWidth={3}
-        stats={stats}
-      />
-    );
+  let stats;
+  if (filters.q) {
+    // if there is a query filter in place, then we can't get many of these stats easily :-(
+    stats = [
+      { message: localMessages.storyCount, data: formatNumber(timespan.story_count) },
+      { message: localMessages.mediumCount, data: formatMessage(messages.unknown) },
+      { message: localMessages.storyLinkCount, data: formatMessage(messages.unknown) },
+      { message: localMessages.mediumLinkCount, data: formatMessage(messages.unknown) },
+    ];
+  } else {
+    stats = [
+      { message: localMessages.storyCount, data: formatNumber(timespan.story_count), helpTitleMsg: localMessages.storyCount, helpContentMsg: localMessages.storyCountHelp },
+      { message: localMessages.mediumCount, data: formatNumber(timespan.medium_count), helpTitleMsg: localMessages.mediumCount, helpContentMsg: localMessages.mediumCountHelp },
+      { message: localMessages.storyLinkCount, data: formatNumber(timespan.story_link_count), helpTitleMsg: localMessages.storyLinkCount, helpContentMsg: localMessages.storyLinkCountHelp },
+      { message: localMessages.mediumLinkCount, data: formatNumber(timespan.medium_link_count), helpTitleMsg: localMessages.mediumLinkCount, helpContentMsg: localMessages.mediumLinkCountHelp },
+    ];
   }
-
-}
+  return (
+    <StatBar
+      columnWidth={3}
+      stats={stats}
+    />
+  );
+};
 
 TopicStoryStatsContainer.propTypes = {
   // from parent
   timespan: PropTypes.object,
   topicId: PropTypes.number.isRequired,
   filters: PropTypes.object.isRequired,
-  // form state
-  fetchData: PropTypes.func.isRequired,
-  storyCount: PropTypes.number,
   // from composition chain
   intl: PropTypes.object.isRequired,
 };
 
-
-const mapStateToProps = state => ({
-  fetchStatus: state.topics.selected.summary.englishStoryTotals.fetchStatus,
-  storyCount: state.topics.selected.summary.englishStoryTotals.counts.total,
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  // can't use timespan.storyCount because there might be a query filter in place
-  fetchData: (filters) => {
-    dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, filters));
-  },
-  asyncFetch: () => {
-    dispatch(fetchTopicEnglishStoryCounts(ownProps.topicId, ownProps.filters));
-  },
-});
-
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
-      composeAsyncContainer(
-        TopicStoryStatsContainer
-      )
-    )
+    TopicStoryStatsContainer
   );
