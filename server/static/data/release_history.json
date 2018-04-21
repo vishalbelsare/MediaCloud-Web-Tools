@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "date": "2018-04-21",
+      "version": "v2.8.1",
+      "notes": [
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better explanatory text next to visualizations in Explorer."
+        },
+        {
+          "apps": ["sources, explorer, topics"],
+          "type": "Fix",
+          "note": "Updated our featured collections to be more current."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Picking media sources and collections while creating a topic works better."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Downloading topic story lists works better, and includes more data."
+        }
+      ]
+    },
+    {
       "date": "2018-04-19",
       "version": "v2.8.0",
       "notes": [
@@ -23,11 +49,6 @@
           "apps": ["explorer"],
           "type": "Feature",
           "note": "Story list download CSV now includes the themes detected."
-        },
-        {
-          "apps": ["topics"],
-          "type": "Fix",
-          "note": "Picking media sources and collections while creating a topic works better."
         }
       ]
     },
