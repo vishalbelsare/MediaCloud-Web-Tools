@@ -1,8 +1,9 @@
 import logging
 import json
-from flask import jsonify, request
+from flask import jsonify, request, Response
 import flask_login
 
+from mediacloud.api import MediaCloud
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
@@ -10,8 +11,8 @@ import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
 from server.auth import user_mediacloud_key, user_admin_mediacloud_client, user_mediacloud_client
-from server.views.topics.apicache import topic_story_count, topic_story_list, topic_word_counts, add_to_user_query, \
-    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts, story_list
+from server.views.topics.apicache import topic_story_count, topic_word_counts, add_to_user_query, \
+    WORD_COUNT_DOWNLOAD_COLUMNS, topic_ngram_counts, topic_story_list_by_page, get_media, topic_story_list, story_list
 from server.views.topics import access_public_topic
 
 logger = logging.getLogger(__name__)
@@ -190,30 +191,30 @@ def topic_stories(topics_id):
 
     return jsonify(stories)
 
-
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def topic_stories_csv(topics_id):
-    as_attachment = True
-    fb_data = False
-    if 'attach' in request.args:
-        as_attachment = request.args['attach'] == 1
-    if 'fbData' in request.args:
-        fb_data = int(request.args['fbData']) == 1
     user_mc = user_admin_mediacloud_client()
     topic = user_mc.topic(topics_id)
-    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id,
-                                 as_attachment=as_attachment, fb_data=fb_data)
+    return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
 
+def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
 
-def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
-    # Helper method to stream a list of stories back to the client as a csv.  Any args you pass in will be
-    # simply be passed on to a call to topicStoryList.
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
     all_stories = []
     more_stories = True
-    params = kwargs
+    params=kwargs.copy()
+
+    merged_args = {
+        'snapshots_id': request.args['snapshotId'],
+        'timespans_id': request.args['timespanId'],
+        'foci_id': request.args['focusId'],
+        'q': request.args['q'],
+        'sort': request.args['sort'],
+    }
+    params.update(merged_args)
+    #
     if 'as_attachment' in params:
         del params['as_attachment']
     if 'fb_data' in params:
@@ -221,63 +222,94 @@ def stream_story_list_csv(user_mc_key, filename, topics_id, **kwargs):
     if 'q' in params:
         params['q'] = params['q'] if 'q' not in [None, '', 'null', 'undefined'] else None
     params['limit'] = 1000  # an arbitrary value to let us page through with big pages
-    props = ['stories_id', 'publish_date', 'date_is_reliable',
-             'title', 'url', 'media_id', 'media_name',
-             'media_inlink_count', 'inlink_count', 'outlink_count',
-             'facebook_share_count', 'simple_tweet_count', 'language', 'subtopics', 'themes']
-    try:
-        while more_stories:
-            page = topic_story_list(user_mc_key, topics_id, **params)
-            # need to make another call to fetch the tags :-(
-            story_ids = [str(s['stories_id']) for s in page['stories']]
-            stories_with_tags = story_list(user_mc_key, 'stories_id:('+" ".join(story_ids)+")", kwargs['limit'])
-            story_ids_to_tags = {int(s['stories_id']): s['story_tags'] for s in stories_with_tags}
-            for s in page['stories']:
-                s['themes'] = '?'  # means we haven't processed it for themes yet
-                s['subtopics'] = '?'  # fill it in for safety
-                stories_id = s['stories_id']
-                if stories_id in story_ids_to_tags:
-                    story_tags = story_ids_to_tags[stories_id]
-                    story_tag_ids = [t['tags_id'] for t in story_tags]
-                    # add in the names of any themes
-                    if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
-                        s['themes'] = ",".join([t['tag'] for t in story_tags
-                                                if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID])
-                    # not doing geonames places here because it would take too long to fetch the name with `_cached_geonames`
-                # add in the names of any subtopics
-                foci_names = [f['name'] for f in s['foci']]
-                s['subtopics'] = ",".join(foci_names)
-            all_stories = all_stories + page['stories']
-            if 'next' in page['link_ids']:
-                params['link_id'] = page['link_ids']['next']
-                more_stories = True
+
+    props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
+             'themes','subtopics',
+             'media_id', 'media_name', 'media_url',
+             'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
+             'media_media_type']
+
+    if fb_data:
+        all_fb_count = []
+        more_fb_count = True
+        link_id = 0
+        local_mc = user_admin_mediacloud_client()
+        while more_fb_count:
+            fb_page = local_mc.topicStoryListFacebookData(topics_id, limit=100, link_id=link_id)
+
+            all_fb_count = all_fb_count + fb_page['counts']
+            if 'next' in fb_page['link_ids']:
+                link_id = fb_page['link_ids']['next']
+                more_fb_count = True
             else:
-                more_stories = False
+                more_fb_count = False
 
-        if fb_data:
-            all_fb_count = []
-            more_fb_count = True
-            link_id = 0
-            local_mc = user_admin_mediacloud_client()
-            while more_fb_count:
-                fb_page = local_mc.topicStoryListFacebookData(topics_id, limit=100, link_id=link_id)
+        # now iterate through each list and set up the fb collection date
+        for s in all_stories:
+            for fb_item in all_fb_count:
+                if int(fb_item['stories_id']) == int(s['stories_id']):
+                    s['facebook_collection_date'] = fb_item['facebook_api_collect_date']
+        props.append('facebook_collection_date')
 
-                all_fb_count = all_fb_count + fb_page['counts']
-                if 'next' in fb_page['link_ids']:
-                    link_id = fb_page['link_ids']['next']
-                    more_fb_count = True
-                else:
-                    more_fb_count = False
-   
-            # now iterate through each list and set up the fb collection date
-            for s in all_stories:
-                for fb_item in all_fb_count:
-                    if int(fb_item['stories_id']) == int(s['stories_id']):
-                        s['facebook_collection_date'] = fb_item['facebook_api_collect_date']
-            props.append('facebook_collection_date')
+    timestamped_filename = csv.safe_filename(filename)
+    headers = {
+        "Content-Disposition": "attachment;filename=" + timestamped_filename
+    }
+    return Response(_topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **params),
+                    mimetype='text/csv; charset=utf-8', headers=headers)
 
-        return csv.stream_response(all_stories, props, filename, as_attachment=as_attachment)
 
-    except Exception as e:
-        logger.exception(e)
-        return json.dumps({'error': str(e)}, separators=(',', ':')), 400
+# generator you can use to handle a long list of stories row by row (one row per story)
+def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
+    yield u','.join(props) + u'\n'  # first send the column names
+    link_id = 0
+    for page in _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
+        for story in page['stories']:
+            cleaned_row = csv.dict2row(props, story)
+            row_string = u','.join(cleaned_row) + u'\n'
+            yield row_string
+        #if 'next' in story_page['links']:
+        #    link_id = story_page['links']['next']
+        #else:
+        #    return
+        link_id += 1
+
+# generator you can use to do something for each page of story results
+def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
+    story_page = topic_story_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)
+
+    story_ids = [str(s['stories_id']) for s in story_page['stories']]
+    stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
+    #update story info for each story in the page, put it into the [stories] field, send updated page with stories back
+    for s in story_page['stories']:
+
+        # add in media metadata to the story (from lazy cache)
+        media_id = s['media_id']
+        media = get_media(user_key, media_id)
+
+        #add in foci/subtopic names
+
+        for k, v in media['metadata'].iteritems():
+             s[u'media_{}'.format(k)] = v['label'] if v is not None else None
+
+        #build lookup for id => story for all stories in stories with tags (non topic results)
+        for st in stories_with_tags:
+    
+            if s['stories_id'] == st['stories_id']:
+                s.update(st)
+    
+                foci_names = [f['name'] for f in s['foci']]
+                s['subtopics'] = ", ".join(foci_names)
+    
+                s['themes'] = ''
+                story_tag_ids = [t['tags_id'] for t in s['story_tags']]
+                if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
+                    story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
+                    s['themes'] = ", ".join(story_tag_ids)
+                # s is updated
+                # how do I add s back into story_page?
+            #do I yield each story at a time or wait til all stories are ready
+
+
+    yield story_page # need links too
+
