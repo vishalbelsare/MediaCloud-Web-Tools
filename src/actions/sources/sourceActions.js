@@ -15,6 +15,7 @@ export const UPDATE_SOURCE = 'UPDATE_SOURCE';
 export const SET_FAVORITE_SOURCE = 'SET_FAVORITE_SOURCE';
 export const SCRAPE_SOURCE_FEEDS = 'SCRAPE_SOURCE_FEEDS';
 export const FETCH_SOURCE_STATS = 'FETCH_SOURCE_STATS';
+export const FETCH_SOURCE_WITH_NAME_EXISTS = 'FETCH_SOURCE_WITH_NAME_EXISTS';
 
 export const favoriteSource = createAsyncAction(SET_FAVORITE_SOURCE, api.favoriteSource);
 
@@ -41,3 +42,5 @@ export const updateSource = createAsyncAction(UPDATE_SOURCE, api.updateSource, p
 export const scrapeSourceFeeds = createAsyncAction(SCRAPE_SOURCE_FEEDS, api.scrapeSourceFeeds, id => id);
 
 export const fetchSourceStats = createAsyncAction(FETCH_SOURCE_STATS, api.fetchSourceStats, id => id);
+
+export const fetchSourceWithNameExists = createAsyncAction(FETCH_SOURCE_WITH_NAME_EXISTS, api.fetchSourceWithNameExists, searchStr => searchStr);

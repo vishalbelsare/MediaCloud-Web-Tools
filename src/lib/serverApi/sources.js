@@ -20,6 +20,10 @@ export function sourceSearch(searchStr) {
   return createApiPromise(`/api/sources/search/${searchStr}`);
 }
 
+export function fetchSourceWithNameExists(searchStr, id) {
+  return createApiPromise('/api/sources/name-exists', { searchStr, id });
+}
+
 export function sourceAdvancedSearch(params) {
   const acceptedParams = acceptParams(params, ['searchString', 'tags']);
   const paramStr = generateParamStr({ 'tags[]': acceptedParams.tags });
