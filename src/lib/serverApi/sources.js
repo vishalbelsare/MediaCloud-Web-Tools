@@ -21,7 +21,7 @@ export function sourceSearch(searchStr) {
 }
 
 export function fetchSourceWithNameExists(searchStr, id) {
-  return createApiPromise('/api/sources/name-exists', { searchStr, id });
+  return createApiPromise('/api/sources/search/name-exists', { searchStr, id });
 }
 
 export function sourceAdvancedSearch(params) {

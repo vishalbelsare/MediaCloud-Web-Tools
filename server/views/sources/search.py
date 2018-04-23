@@ -43,7 +43,7 @@ def api_collection_search(search_str):
     add_user_favorite_flag_to_collections(trimmed)
     return jsonify({'list': trimmed})
 
-@app.route('/api/sources/name-exists', methods=['GET'])
+@app.route('/api/sources/search/name-exists', methods=['GET'])
 @flask_login.login_required
 @arguments_required('searchStr')
 @api_error_handler
