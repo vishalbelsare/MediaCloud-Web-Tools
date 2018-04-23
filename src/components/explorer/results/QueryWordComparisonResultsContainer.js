@@ -59,10 +59,11 @@ class QueryWordComparisonResultsContainer extends React.Component {
   }
 
   selectAndFetchComparedQueries = (queryObj, target) => {
-    const { selectComparativeWords } = this.props;
-    if (target === LEFT) {
+    const { selectComparativeWords, leftQuery, rightQuery } = this.props;
+    // don't let user set the dropdowns to the same value
+    if (target === LEFT && queryObj !== rightQuery) {
       selectComparativeWords(queryObj, LEFT);
-    } else {
+    } else if (target === RIGHT && queryObj !== leftQuery) {
       selectComparativeWords(queryObj, RIGHT);
     }
   }
