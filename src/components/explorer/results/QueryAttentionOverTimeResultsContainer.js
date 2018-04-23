@@ -49,19 +49,18 @@ class QueryAttentionOverTimeResultsContainer extends React.Component {
     return queryChangedEnoughToUpdate(queries, nextProps.queries, results, nextProps.results);
   }
   handleDataPointClick = (date0, date1, evt, origin) => {
-    const { selectDataPoint, queries } = this.props;
+    const { selectDataPoint, queries, results } = this.props;
     const name = origin.series.name;
     const currentQueryOfInterest = queries.filter(qry => qry.label === name)[0];
-    const dayGap = false; // origin.series.options.dateRangeSpread;
+    const dayGap = results[currentQueryOfInterest.index].dateRangeSpread;
     // date calculations for span/range
     const clickedQuery = {
       q: currentQueryOfInterest.q,
       start_date: solrFormat(date1),
       color: origin.series.color,
+      dayGap,
     };
-    if (!dayGap) {
-      clickedQuery.end_date = solrFormat(oneWeekLater(date1), true);
-    }
+    clickedQuery.end_date = solrFormat(oneWeekLater(date1), true);
     this.setState({ clickedQuery });
     selectDataPoint(clickedQuery);
   }
