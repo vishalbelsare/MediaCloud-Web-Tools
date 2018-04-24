@@ -18,12 +18,15 @@ const localMessages = {
   collectionStatic: { id: 'collection.unfavorited', defaultMessage: 'Static (won\'t change)' },
 };
 
+const SOURCE_HEADER_CHARACTER_LIMIT = 80;
+
 const SourceMgrHeaderContainer = (props) => {
   const { sourceId, sourceInfo, collectionId, collectionInfo, location, handleSetFavorited } = props;
   const { formatMessage } = props.intl;
   let content = null;
 
   if (!nullOrUndefined(sourceId) || location.pathname.includes('sources')) { // for multiple pathways
+    const sourceNameTrunc = sourceInfo.name.length >= SOURCE_HEADER_CHARACTER_LIMIT - 1 ? sourceInfo.name.slice(0, SOURCE_HEADER_CHARACTER_LIMIT).concat('...') : sourceInfo.name;
     let details = '';
     details += `${formatMessage(messages.sourceName)} #${sourceInfo.id}`;
     details += ` • ${formatMessage(messages.public)} `; // for now, every media source is public
@@ -31,7 +34,7 @@ const SourceMgrHeaderContainer = (props) => {
     content = (
       <div className="source-header">
         <AppHeader
-          title={sourceInfo.name}
+          title={sourceNameTrunc}
           subTitle={details}
           isFavorite={sourceInfo.isFavorite}
           onSetFavorited={isFav => handleSetFavorited('source', sourceInfo.id, isFav)}
