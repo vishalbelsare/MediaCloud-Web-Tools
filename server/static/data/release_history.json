@@ -1,9 +1,14 @@
 {
   "releases": [
     {
-      "date": "2018-04-21",
+      "date": "2018-04-25",
       "version": "v2.8.1",
       "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Downloading topic story lists works again, and includes more data."
+        },
         {
           "apps": ["explorer"],
           "type": "Fix",
@@ -18,11 +23,6 @@
           "apps": ["topics"],
           "type": "Fix",
           "note": "Picking media sources and collections while creating a topic works better."
-        },
-        {
-          "apps": ["topics"],
-          "type": "Fix",
-          "note": "Downloading topic story lists works better, and includes more data."
         }
       ]
     },
