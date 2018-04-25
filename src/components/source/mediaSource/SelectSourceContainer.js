@@ -51,7 +51,7 @@ class SelectSourceContainer extends React.Component {
                   </Link>
                 </span>
                 <span className="source-edit-feeds-link">
-                  <Link to={`/sources/${source.media_id}/feeds`} >
+                  <Link to={`${slugifyLocalSourcePath(source)}/feeds`} >
                     <EditButton />
                     <FormattedMessage {...localMessages.editFeeds} />
                   </Link>
