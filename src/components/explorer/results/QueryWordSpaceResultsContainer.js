@@ -9,7 +9,7 @@ import { DownloadButton } from '../../common/IconButton';
 import { queryChangedEnoughToUpdate, postToDownloadUrl, downloadExplorerSvg } from '../../../lib/explorerUtil';
 import messages from '../../../resources/messages';
 import QueryResultsSelector from './QueryResultsSelector';
-import Word2VecChart from '../../vis/Word2VecChart';
+import WordSpace from '../../vis/WordSpace';
 import composeAsyncContainer from '../../common/AsyncContainer';
 
 const localMessages = {
@@ -40,13 +40,13 @@ class QueryWordSpaceResultsContainer extends React.Component {
           options={queries.map(q => ({ label: q.label, index: q.index, color: q.color }))}
           onQuerySelected={index => this.setState({ selectedQueryIndex: index })}
         />
-        <Word2VecChart
-          words={results[this.state.selectedQueryIndex].list.slice(0, 100)} // can't draw too many as it gets unreadable
+        <WordSpace
+          words={results[this.state.selectedQueryIndex].list.slice(0, 50)}
           domId={WORD_SPACE_DOM_ID}
-          width={585}
           xProperty="google_w2v_x"
           yProperty="google_w2v_y"
           noDataMsg={localMessages.noGoogleW2VData}
+          length={660}
         />
         <div className="actions">
           <ActionMenu actionTextMsg={messages.downloadOptions}>

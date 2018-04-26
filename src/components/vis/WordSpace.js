@@ -13,16 +13,18 @@ const DEFAULT_LENGTH = 750;  // svg must have square dimensions
 const DEFAULT_MARGIN = 80;
 const DEFAULT_MIN_FONT_SIZE = 10;
 const DEFAULT_MAX_FONT_SIZE = 30;
-const DEFAULT_MIN_COLOR = '#9ecae1';
-const DEFAULT_MAX_COLOR = '#08306b';
-const DEFAULT_HIGHLIGHT_MIN_COLOR = '#fdae6b';
-const DEFAULT_HIGHLIGHT_MAX_COLOR = '#7f2704';
+const DEFAULT_MIN_COLOR = '#CCCCCC';
+const DEFAULT_MAX_COLOR = '#000000';
+const DEFAULT_HIGHLIGHT_MIN_COLOR = '#9ecae1';
+const DEFAULT_HIGHLIGHT_MAX_COLOR = '#08306b';
 const DEFAULT_HIGHLIGHT_FONT_SIZE_SCALE = 1.5;
 const DEFAULT_COS_SIM_THRESHOLD = 0.95;
 const DEFAULT_MOUSEOVER_TRANSITION_TIME = 400;
 
-const ARC_FILL = '#f2f2ff';
-const ARC_LINE = '#efefef';
+const ARC_FILL = '#000000';
+const ARC_FILL_OPACITY = '0.1';
+const ARC_LINE = '#000000';
+const ARC_LINE_OPACITY = '0.05';
 const RADIUS_RATIOS = [1, 0.75, 0.5, 0.25];
 const MAX_ZOOM_SCALE = 3.5;
 
@@ -233,6 +235,7 @@ function drawViz(props) {
     .attr('d', arc)
     .attr('id', 'arc')
     .attr('fill', ARC_FILL)
+    .attr('fill-opacity', ARC_FILL_OPACITY)
     .attr('transform', `translate(${xScale(0)}, ${yScale(0)})`)
     .style('opacity', 0);
 
@@ -245,6 +248,7 @@ function drawViz(props) {
       .attr('cy', yScale(0))
       .attr('r', scaledRadius * RADIUS_RATIOS[i])
       .attr('stroke', ARC_LINE)
+      .attr('stroke-opacity', ARC_LINE_OPACITY)
       .style('fill', 'none');
   }
 
@@ -265,7 +269,8 @@ function drawViz(props) {
       .attr('y1', yScale(0))
       .attr('x2', id === 'neg-x-axis' ? xScale(-x2) : xScale(x2))
       .attr('y2', id === 'neg-y-axis' ? yScale(-y2) : yScale(y2))
-      .style('stroke', ARC_LINE);
+      .style('stroke', ARC_LINE)
+      .attr('stroke-opacity', ARC_LINE_OPACITY);
   });
 
   // 45-degree lines
@@ -282,7 +287,8 @@ function drawViz(props) {
       .attr('y1', yScale(y1))
       .attr('x2', id === 'quad-3-axis' || id === 'quad-4-axis' ? xScale(-x2) : xScale(x2))
       .attr('y2', id === 'quad-2-axis' || id === 'quad-3-axis' ? yScale(-y2) : yScale(y2))
-      .style('stroke', ARC_LINE);
+      .style('stroke', ARC_LINE)
+      .attr('stroke-opacity', ARC_LINE_OPACITY);
   });
 
   // Add circle at origin
@@ -408,8 +414,8 @@ class WordSpace extends React.Component {
 
   render() {
     // bail if the properties aren't there
-    const { words, noDataMsg, domId } = this.props;
-    const wordsWithXYCount = words.filter(w => (w.w2v_x !== undefined) && (w.w2v_y !== undefined)).length;
+    const { words, noDataMsg, domId, xProperty, yProperty } = this.props;
+    const wordsWithXYCount = words.filter(w => (w[xProperty] !== undefined) && (w[yProperty] !== undefined)).length;
     const missingDataMsg = noDataMsg || localMessages.noData;
     if (wordsWithXYCount === 0) {
       return (
