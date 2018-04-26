@@ -1,6 +1,58 @@
 {
   "releases": [
     {
+      "date": "2018-04-25",
+      "version": "v2.8.1",
+      "notes": [
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Downloading topic story lists works again, and includes more data."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Better explanatory text next to visualizations in Explorer."
+        },
+        {
+          "apps": ["sources, explorer, topics"],
+          "type": "Fix",
+          "note": "Updated our featured collections to be more current."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Picking media sources and collections while creating a topic works better."
+        }
+      ]
+    },
+    {
+      "date": "2018-04-19",
+      "version": "v2.8.0",
+      "notes": [
+        {
+          "apps": ["sources", "explorer"],
+          "type": "Feature",
+          "note": "Sources now show the number of stories per day, and the date of the first story."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Feature",
+          "note": "New screen to help admins review sources within a collection."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Changed 'Sample Stories' to 'Random Stories' to clarify what is on the list."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Feature",
+          "note": "Story list download CSV now includes the themes detected."
+        }
+      ]
+    },
+    {
       "date": "2018-04-06",
       "version": "v2.7.6",
       "notes": [

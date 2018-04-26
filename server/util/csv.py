@@ -17,7 +17,7 @@ def dict2row(keys_to_include, dict_row):
     attributes = []
     try:
         for k in keys_to_include:
-            value = dict_row[k]
+            value = dict_row[k] if k in dict_row else ''    # allow download even if col missing for this row
             if isinstance(value, (int, long, float)):
                 cleaned_value = str(dict_row[k])
             elif value in ['', None]:

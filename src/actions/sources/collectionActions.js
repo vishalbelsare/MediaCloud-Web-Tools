@@ -47,7 +47,7 @@ export const fetchCollectionSourceSentenceCounts = createAsyncAction(FETCH_COLLE
 
 export const fetchCollectionSourceSentenceHistoricalCounts = createAsyncAction(FETCH_COLLECTION_SOURCE_SENTENCE_HISTORICAL_COUNTS, api.collectionSourceSentenceHistoricalCounts, id => id);
 
-export const fetchCollectionSourceList = createAsyncAction(FETCH_COLLECTION_SOURCE_LIST, api.collectionSourceList);
+export const fetchCollectionSourceList = createAsyncAction(FETCH_COLLECTION_SOURCE_LIST, api.collectionSourceList, details => details);
 
 export const setCollectionSourceHistoryTimePeriod = createAction(SET_COLLECTION_SOURCE_HISTORY_TIME_PERIOD, timePeriod => timePeriod);
 

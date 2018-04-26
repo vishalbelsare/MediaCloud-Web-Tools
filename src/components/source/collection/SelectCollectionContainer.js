@@ -16,7 +16,7 @@ import SourceMgrHeaderContainer from '../SourceMgrHeaderContainer';
 const localMessages = {
   editCollection: { id: 'collection.edit', defaultMessage: 'Modify this Collection' },
   contentHistory: { id: 'collection.contentHistory', defaultMessage: 'Content History' },
-  manageSources: { id: 'collection.manageSources', defaultMessage: 'Manage Sources' },
+  manageSources: { id: 'collection.manageSources', defaultMessage: 'Review Sources' },
 };
 
 class SelectCollectionContainer extends React.Component {

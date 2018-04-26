@@ -116,10 +116,13 @@ def user_mediacloud_key():
     return current_user.profile['api_key']
 
 
-def user_admin_mediacloud_client():
-    # Return a mediacloud client for the logged in user
-    user_mc_key = user_mediacloud_key()
-    user_mc = mediacloud.api.AdminMediaCloud(user_mc_key)
+def user_admin_mediacloud_client(user_mc_key=None):
+    # Return a mediacloud client for the logged in user.  Passing in a key lets you ovveride reading it out
+    # of the request object (which you might not have access to)
+    mc_key_to_use = user_mc_key
+    if mc_key_to_use is None:
+        mc_key_to_use = user_mediacloud_key()
+    user_mc = mediacloud.api.AdminMediaCloud(mc_key_to_use)
     return user_mc
 
 

@@ -1,9 +1,8 @@
 import logging
-import json
 from flask import jsonify, request, Response
 import flask_login
+from multiprocessing import Pool
 
-from mediacloud.api import MediaCloud
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
@@ -18,6 +17,8 @@ from server.views.topics import access_public_topic
 logger = logging.getLogger(__name__)
 
 PRIMARY_ENTITY_TYPES = ['PERSON', 'LOCATION', 'ORGANIZATION']
+
+MEDIA_INFO_POOL_SIZE = 15
 
 
 @app.route('/api/topics/<topics_id>/stories/<stories_id>', methods=['GET'])
@@ -191,6 +192,7 @@ def topic_stories(topics_id):
 
     return jsonify(stories)
 
+
 @app.route('/api/topics/<topics_id>/stories.csv', methods=['GET'])
 @flask_login.login_required
 def topic_stories_csv(topics_id):
@@ -198,12 +200,12 @@ def topic_stories_csv(topics_id):
     topic = user_mc.topic(topics_id)
     return stream_story_list_csv(user_mediacloud_key(), topic['name']+'-stories', topics_id)
 
+
 def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
 
     as_attachment = kwargs['as_attachment'] if 'as_attachment' in kwargs else True
     fb_data = kwargs['fb_data'] if 'fb_data' in kwargs else False
     all_stories = []
-    more_stories = True
     params=kwargs.copy()
 
     merged_args = {
@@ -268,11 +270,12 @@ def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
             cleaned_row = csv.dict2row(props, story)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
-        #if 'next' in story_page['links']:
-        #    link_id = story_page['links']['next']
-        #else:
-        #    return
         link_id += 1
+
+
+def _media_info_worker(info):
+    return get_media(info['user_key'], info['media_id'])
+
 
 # generator you can use to do something for each page of story results
 def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
@@ -280,19 +283,25 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
 
     story_ids = [str(s['stories_id']) for s in story_page['stories']]
     stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
-    #update story info for each story in the page, put it into the [stories] field, send updated page with stories back
+
+    # build a media lookup table in parallel so it is faster
+    pool = Pool(processes=MEDIA_INFO_POOL_SIZE)
+    jobs = [{'user_key': user_key, 'media_id': s['media_id']} for s in story_page['stories']]
+    job_results = pool.map(_media_info_worker, jobs)  # blocks until they are all done
+    media_lookup = {j['media_id']: j for j in job_results}
+    pool.terminate()
+
+    # update story info for each story in the page, put it into the [stories] field, send updated page with stories back
     for s in story_page['stories']:
 
-        # add in media metadata to the story (from lazy cache)
-        media_id = s['media_id']
-        media = get_media(user_key, media_id)
+        # add in media metadata to the story (from page-level cache built earlier)
+        media = media_lookup[s['media_id']]
 
-        #add in foci/subtopic names
-
+        # add in foci/subtopic names
         for k, v in media['metadata'].iteritems():
              s[u'media_{}'.format(k)] = v['label'] if v is not None else None
 
-        #build lookup for id => story for all stories in stories with tags (non topic results)
+        # build lookup for id => story for all stories in stories with tags (non topic results)
         for st in stories_with_tags:
     
             if s['stories_id'] == st['stories_id']:
@@ -308,7 +317,6 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
                     s['themes'] = ", ".join(story_tag_ids)
                 # s is updated
                 # how do I add s back into story_page?
-            #do I yield each story at a time or wait til all stories are ready
 
 
     yield story_page # need links too

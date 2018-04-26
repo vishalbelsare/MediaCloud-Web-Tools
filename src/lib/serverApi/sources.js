@@ -69,8 +69,9 @@ export function collectionSentenceCount(id) {
   return createApiPromise(`api/collections/${id}/sentences/count`);
 }
 
-export function collectionSourceList(id) {
-  return createApiPromise(`api/collections/${id}/sources`);
+export function collectionSourceList(id, params) {
+  const acceptedParams = acceptParams(params, ['details']);
+  return createApiPromise(`api/collections/${id}/sources`, acceptedParams);
 }
 
 export function sourceGeography(id) {

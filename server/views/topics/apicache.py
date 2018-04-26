@@ -78,12 +78,13 @@ def _cached_topic_story_count(user_mc_key, topics_id, **kwargs):
 
 def story_list(user_mc_key, q, rows):
     return _cached_story_list(user_mc_key, q, rows)
-     
+
+
 def _cached_story_list(user_mc_key, q, rows):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_admin_mediacloud_client()
+        local_mc = user_admin_mediacloud_client(user_mc_key)
     return local_mc.storyList(q, rows=rows)
 
 
@@ -366,15 +367,17 @@ def add_to_user_query(query_to_add):
         return query_to_add
     return "({}) AND ({})".format(q_from_request, query_to_add)
 
+
 def _api_key():
     api_key = user_mediacloud_key() \
         if is_user_logged_in() else TOOL_API_KEY
     return api_key
 
+
 def _mc_client(user_mc_key):
     if user_mc_key == TOOL_API_KEY:
         local_mc = mc
     else:
-        local_mc = user_admin_mediacloud_client()
+        local_mc = user_admin_mediacloud_client(user_mc_key)
     return local_mc
 

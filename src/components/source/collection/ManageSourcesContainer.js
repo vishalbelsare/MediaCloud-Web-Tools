@@ -17,14 +17,14 @@ import { googleFavIconUrl } from '../../../lib/urlUtil';
 import { parseSolrShortDate, jobStatusDateToMoment } from '../../../lib/dateUtil';
 
 const localMessages = {
-  title: { id: 'collection.manageSources.title', defaultMessage: 'Manage Sources' },
+  title: { id: 'collection.manageSources.title', defaultMessage: 'Review Sources' },
   scrapeAll: { id: 'collection.manageSources.scrapeAll', defaultMessage: 'Scrape all For New Feeds' },
   inLast90Days: { id: 'collection.manageSources.column.last90', defaultMessage: '90 Day Story Count' },
   startedScrapingAll: { id: 'collection.manageSources.startedScrapingAll', defaultMessage: 'Started scraping all sources for RSS feeds' },
-  lastScrapeQueuedSince: { id: 'source.basicInfo.feed.lastScrapeQueuedSince', defaultMessage: 'Queued since {date}' },
-  lastScrapeRunningSince: { id: 'source.basicInfo.feed.lastScrapeRunningSince', defaultMessage: 'Running since {date}' },
-  lastScrapeWorkedOn: { id: 'source.basicInfo.feed.lastScrapeWorkedOn', defaultMessage: 'Worked on {date}' },
-  lastScrapeFailedOn: { id: 'source.basicInfo.feed.lastScrapeFailedOn', defaultMessage: 'Failed on {date}) ' },
+  lastScrapeQueuedSince: { id: 'source.basicInfo.feed.lastScrapeQueuedSince', defaultMessage: 'Scrape queued since {date}' },
+  lastScrapeRunningSince: { id: 'source.basicInfo.feed.lastScrapeRunningSince', defaultMessage: 'Scrape running since {date}' },
+  lastScrapeWorkedOn: { id: 'source.basicInfo.feed.lastScrapeWorkedOn', defaultMessage: 'Last scrape worked on {date}' },
+  lastScrapeFailedOn: { id: 'source.basicInfo.feed.lastScrapeFailedOn', defaultMessage: 'Last scrape failed on {date}) ' },
   activeFeedCount: { id: 'collection.manageSources.column.activeFeedCount', defaultMessage: 'Active Feeds' },
 };
 
@@ -109,14 +109,16 @@ class ManageSourcesContainer extends React.Component {
                     } else if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_COMPLETED) {
                       scrapeContent = (
                         <span>
-                          {scrapeButton} &nbsp;
+                          {scrapeButton}
+                          <br />
                           <FormattedMessage {...localMessages.lastScrapeWorkedOn} values={{ date: lastScrapeUpdatedDate }} />
                         </span>
                       );
                     } else if (source.latest_scrape_job.state === SOURCE_SCRAPE_STATE_ERROR) {
                       scrapeContent = (
                         <span>
-                          {scrapeButton} &nbsp;
+                          {scrapeButton}
+                          <br />
                           <FormattedMessage {...localMessages.lastScrapeFailedOn} values={{ date: lastScrapeUpdatedDate }} />
                         </span>
                       );
@@ -133,8 +135,12 @@ class ManageSourcesContainer extends React.Component {
                         <td><a href={source.url} rel="noopener noreferrer" target="_blank">{source.url}</a></td>
                         <td className="numeric"><FormattedNumber value={Math.round(source.num_stories_90)} /></td>
                         <td className="numeric"><FormattedDate value={parseSolrShortDate(source.start_date)} /></td>
-                        <td className="numeric"><FormattedNumber value={Math.round(source.num_stories_90 * 90)} /></td>
-                        <td className="numeric"><FormattedNumber value={source.active_feed_count} /></td>
+                        <td className={`numeric ${Math.round(source.num_stories_90 * 90) === 0 ? 'error' : ''}`}>
+                          <FormattedNumber value={Math.round(source.num_stories_90 * 90)} />
+                        </td>
+                        <td className={`numeric ${source.active_feed_count === 0 ? 'error' : ''}`}>
+                          <FormattedNumber value={source.active_feed_count} />
+                        </td>
                         <td>
                           <Permissioned onlyRole={PERMISSION_MEDIA_EDIT}>
                             {scrapeContent}
@@ -176,7 +182,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchData: (collectionId) => {
-    dispatch(fetchCollectionSourceList(collectionId));
+    dispatch(fetchCollectionSourceList(collectionId, { details: true }));
   },
   scrapeFeeds: (sourceId) => {
     dispatch(scrapeSourceFeeds(sourceId))
