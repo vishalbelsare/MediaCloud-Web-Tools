@@ -59,6 +59,13 @@ const sourceRoutes = (
         <Route path="feeds/create" component={CreateSourceFeedContainer} onEnter={requireAuth} />
         <Route path="feeds/:feedId/edit" component={EditSourceFeedContainer} onEnter={requireAuth} />
       </Route>
+      <Route path="/sources/:sourceId" component={SelectSourceContainer} >
+        <IndexRoute component={SourceDetailsContainer} onEnter={requireAuth} />
+        <Route path="edit" component={EditSourceContainer} onEnter={requireAuth} />
+        <Route path="feeds" component={SourceFeedContainer} onEnter={requireAuth} />
+        <Route path="feeds/create" component={CreateSourceFeedContainer} onEnter={requireAuth} />
+        <Route path="feeds/:feedId/edit" component={EditSourceFeedContainer} onEnter={requireAuth} />
+      </Route>
     </Route>
 
     <Route path="/collections" >
@@ -69,6 +76,12 @@ const sourceRoutes = (
       <Route path="create" component={CreateCollectionContainer} onEnter={requireAuth} />
       <Redirect from="details" to=":collectionId/:collectionName" />
       <Route path=":collectionId/:collectionName" component={SelectCollectionContainer} >
+        <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
+        <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
+        <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
+        <Route path="manage-source-list" component={ManageSourcesContainer} onEnter={requireAuth} />
+      </Route>
+      <Route path=":collectionId" component={SelectCollectionContainer} >
         <IndexRoute component={CollectionDetailsContainer} onEnter={requireAuth} />
         <Route path="edit" component={EditCollectionContainer} onEnter={requireAuth} />
         <Route path="content-history" component={CollectionContentHistory} onEnter={requireAuth} />
