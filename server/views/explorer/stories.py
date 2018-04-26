@@ -61,8 +61,7 @@ def explorer_stories_csv():
 def _stream_story_list_csv(filename, query, stories_per_page=500, sort=MediaCloud.SORT_PROCESSED_STORIES_ID,
                            page_limit=None):
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
-             'story_date_guess_method', 'story_extractor_version', 'story_geocoder_version', 'story_nyt_themes_version','themes',
-             'media_id', 'media_name', 'media_url',
+             'themes', 'media_id', 'media_name', 'media_url',
              'media_pub_country', 'media_pub_state', 'media_language', 'media_about_country',
              'media_media_type']
     timestamped_filename = csv.safe_filename(filename)
