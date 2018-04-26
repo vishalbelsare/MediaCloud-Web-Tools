@@ -184,7 +184,7 @@ const TopicDetailForm = (props) => {
                     fullWidth
                     floatingLabelText={localMessages.maxIterations}
                   >
-                    {iterations.map(t => <MenuItem key={t} value={t} primaryText={t} />)}
+                    {iterations.map(t => <MenuItem key={t} value={t} primaryText={t === 0 ? `${t} - no spidering` : t} />)}
                   </Field>
                   <small><FormattedMessage {...localMessages.maxIterationsHelp} /></small>
                 </Col>
