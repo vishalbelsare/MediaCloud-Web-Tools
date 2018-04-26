@@ -39,13 +39,11 @@ export function slugifyLocalCollectionPath(param) {
 }
 
 export function urlToCollection(param) {
-  let collLabel = param.label || param.tag;
-  collLabel = slugify(collLabel);
-  return urlToSourceManager(`collections/${param.id || param.tags_id}/${collLabel}`);
+  return urlToSourceManager(slugifyLocalCollectionPath(param));
 }
 
 export function urlToSource(param) {
-  return urlToSourceManager(`sources/${param.id || param.media_id}/`);
+  return urlToSourceManager(slugifyLocalSourcePath(param));
 }
 
 export function urlToTopicMapper(param) {
