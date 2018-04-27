@@ -26,6 +26,7 @@ def topic_2d(topics_id, snapshots_id, words):
         response = requests.post("{}/api/v2/topics/{}/snapshots/{}/2d".format(_server_url(), topics_id, snapshots_id),
                                  data={'words[]': words,
                                        'model': TOPIC_MODEL_NAME_FORMAT.format(topics_id)})
-        return response.json()['results']
+        response_json = response.json()
+        return response_json['results']
     except Exception:
         return []
