@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import DataCard from '../../common/DataCard';
 import WordSpace from '../../vis/WordSpace';
-import { fetchTopicTopWords } from '../../../actions/topicActions';
+// import { fetchTopicTopWords } from '../../../actions/topicActions';
 
 const localMessages = {
+  title: { id: 'topic.summary.words.space.title', defaultMessage: 'Topic Word Space' },
   descriptionIntro: { id: 'topic.summary.words.help.into',
     defaultMessage: 'Look at the top words to see how this topic was talked about. This can suggest what the dominant narrative was, and looking at different timespans can suggest how it evolved over time.',
   },
@@ -27,8 +28,9 @@ class TopicWordSpaceContainer extends React.Component {
     const { words } = this.props;
     return (
       <DataCard>
+        <h2><FormattedMessage {...localMessages.title} /></h2>
         <WordSpace
-          words={words}
+          words={words.slice(0, 50)}
           domId={WORD_SPACE_DOM_ID}
           xProperty="w2v_x"
           yProperty="w2v_y"
@@ -59,12 +61,11 @@ const mapStateToProps = state => ({
   filters: state.topics.selected.filters,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchData: (props) => {
-    dispatch(fetchTopicTopWords(props.topicId, props.filters));
+const mapDispatchToProps = dispatch => ({
+  // don't need to do anything, because the WordsSummaryContainer is making the request for the same data already
+  fetchData: () => {
   },
   asyncFetch: () => {
-    dispatch(fetchTopicTopWords(ownProps.topicId, ownProps.filters));
   },
   pushToUrl: url => dispatch(push(url)),
 });

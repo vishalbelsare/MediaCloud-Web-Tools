@@ -11,7 +11,7 @@ import StoriesSummaryContainer from './StoriesSummaryContainer';
 import MediaSummaryContainer from './MediaSummaryContainer';
 import WordsSummaryContainer from './WordsSummaryContainer';
 import SentenceCountSummaryContainer from './SentenceCountSummaryContainer';
-import TopicStoryStatsContainer from './TopicStoryStatsContainer';
+// import TopicStoryStatsContainer from './TopicStoryStatsContainer';
 import StoryTotalsSummaryContainer from './StoryTotalsSummaryContainer';
 import DownloadMapContainer from './DownloadMapContainer';
 import NytLabelSummaryContainer from './NytLabelSummaryContainer';
@@ -60,7 +60,9 @@ class TopicSummaryContainer extends React.Component {
           </Row>
           <Row>
             <Col lg={12}>
-              <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+              {
+              // <TopicStoryStatsContainer topicId={topicId} filters={filters} timespan={selectedTimespan} />
+              }
             </Col>
           </Row>
           <Row>
