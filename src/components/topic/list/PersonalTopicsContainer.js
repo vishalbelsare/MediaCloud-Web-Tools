@@ -6,24 +6,33 @@ import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchPersonalTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
+import composePagedContainer from '../../common/PagedContainer';
 
 const localMessages = {
   empty: { id: 'topics.personal.none', defaultMessage: 'You haven\'t created any topics yet. Explore the public topics, or click the "Create a New Topic" button above to make your own.' },
 };
 
 const PersonalTopicsContainer = (props) => {
-  const { topics, onSetFavorited, asyncFetch } = props;
+  const { topics, onSetFavorited, asyncFetch, prevButton, nextButton } = props;
   return (
-    <Row>
-      <Col lg={12}>
-        <TopicPreviewList
-          topics={topics}
-          linkGenerator={t => `/topics/${t.topics_id}/summary`}
-          onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
-          emptyMsg={localMessages.empty}
-        />
-      </Col>
-    </Row>
+    <div className="personal-topics-list">
+      <Row>
+        <Col lg={12}>
+          <TopicPreviewList
+            topics={topics}
+            linkGenerator={t => `/topics/${t.topics_id}/summary`}
+            onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
+            emptyMsg={localMessages.empty}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={12}>
+          {prevButton}
+          {nextButton}
+        </Col>
+      </Row>
+    </div>
   );
 };
 
@@ -32,8 +41,10 @@ PersonalTopicsContainer.propTypes = {
   onSetFavorited: PropTypes.func,
   // from state
   topics: PropTypes.array,
-  // from context
+  // from compositional chain
   intl: PropTypes.object.isRequired,
+  prevButton: PropTypes.node,
+  nextButton: PropTypes.node,
   // from dispatch
   asyncFetch: PropTypes.func.isRequired,
 };
@@ -41,19 +52,36 @@ PersonalTopicsContainer.propTypes = {
 const mapStateToProps = state => ({
   fetchStatus: state.topics.personalList.fetchStatus,
   topics: state.topics.personalList.topics,
+  links: state.topics.personalList.link_ids,
 });
 
 const mapDispatchToProps = dispatch => ({
   asyncFetch: () => {
     dispatch(fetchPersonalTopicsList());
   },
+  fetchPagedData: (props, linkId) => {
+    dispatch(fetchPersonalTopicsList(linkId));
+  },
 });
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+  return Object.assign({}, stateProps, dispatchProps, ownProps, {
+    nextPage: () => {
+      dispatchProps.fetchPagedData(stateProps, stateProps.links.next);
+    },
+    previousPage: () => {
+      dispatchProps.fetchPagedData(stateProps, stateProps.links.previous);
+    },
+  });
+}
 
 export default
   injectIntl(
-    connect(mapStateToProps, mapDispatchToProps)(
+    connect(mapStateToProps, mapDispatchToProps, mergeProps)(
       composeAsyncContainer(
-        PersonalTopicsContainer
+        composePagedContainer(
+          PersonalTopicsContainer
+        )
       )
     )
   );

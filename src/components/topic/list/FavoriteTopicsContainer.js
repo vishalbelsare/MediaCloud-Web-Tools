@@ -14,16 +14,18 @@ const localMessages = {
 const FavoriteTopicsContainer = (props) => {
   const { topics, onSetFavorited, asyncFetch } = props;
   return (
-    <Row>
-      <Col lg={12}>
-        <TopicPreviewList
-          topics={topics}
-          linkGenerator={t => `/topics/${t.topics_id}/summary`}
-          onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
-          emptyMsg={localMessages.empty}
-        />
-      </Col>
-    </Row>
+    <div className="favorite-topics-list">
+      <Row>
+        <Col lg={12}>
+          <TopicPreviewList
+            topics={topics}
+            linkGenerator={t => `/topics/${t.topics_id}/summary`}
+            onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
+            emptyMsg={localMessages.empty}
+          />
+        </Col>
+      </Row>
+    </div>
   );
 };
 

@@ -68,7 +68,7 @@ def public_topics_list():
 def topic_personal():
     user_mc = user_admin_mediacloud_client()
     link_id = request.args.get('linkId')
-    results = user_mc.topicList(link_id=link_id, limit=50)
+    results = user_mc.topicList(link_id=link_id, limit=51)
     results['topcs'] = _add_user_favorite_flag_to_topics(results['topics'])
     return jsonify(results)
 
@@ -79,7 +79,7 @@ def sorted_public_topic_list():
         local_mc = user_mediacloud_client()
     else:
         local_mc = mc
-    public_topics_list = local_mc.topicList(public=True, limit=50)['topics']
+    public_topics_list = local_mc.topicList(public=True, limit=51)['topics']
     return sorted(public_topics_list, key=lambda t: t['name'].lower())
 
 
