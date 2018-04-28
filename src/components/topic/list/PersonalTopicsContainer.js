@@ -16,16 +16,12 @@ const PersonalTopicsContainer = (props) => {
   const { topics, onSetFavorited, asyncFetch, prevButton, nextButton } = props;
   return (
     <div className="personal-topics-list">
-      <Row>
-        <Col lg={12}>
-          <TopicPreviewList
-            topics={topics}
-            linkGenerator={t => `/topics/${t.topics_id}/summary`}
-            onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
-            emptyMsg={localMessages.empty}
-          />
-        </Col>
-      </Row>
+      <TopicPreviewList
+        topics={topics}
+        linkGenerator={t => `/topics/${t.topics_id}/summary`}
+        onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
+        emptyMsg={localMessages.empty}
+      />
       <Row>
         <Col lg={12}>
           {prevButton}

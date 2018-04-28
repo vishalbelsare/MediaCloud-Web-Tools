@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { fetchFavoriteTopicsList } from '../../../actions/topicActions';
 import TopicPreviewList from './TopicPreviewList';
@@ -15,16 +14,12 @@ const FavoriteTopicsContainer = (props) => {
   const { topics, onSetFavorited, asyncFetch } = props;
   return (
     <div className="favorite-topics-list">
-      <Row>
-        <Col lg={12}>
-          <TopicPreviewList
-            topics={topics}
-            linkGenerator={t => `/topics/${t.topics_id}/summary`}
-            onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
-            emptyMsg={localMessages.empty}
-          />
-        </Col>
-      </Row>
+      <TopicPreviewList
+        topics={topics}
+        linkGenerator={t => `/topics/${t.topics_id}/summary`}
+        onSetFavorited={(id, isFav) => { onSetFavorited(id, isFav); asyncFetch(); }}
+        emptyMsg={localMessages.empty}
+      />
     </div>
   );
 };
