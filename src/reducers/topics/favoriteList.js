@@ -1,4 +1,4 @@
-import { FETCH_PUBLIC_TOPICS_LIST, SET_TOPIC_FAVORITE } from '../../actions/topicActions';
+import { FETCH_FAVORITE_TOPICS_LIST, SET_TOPIC_FAVORITE } from '../../actions/topicActions';
 import { createAsyncReducer } from '../../lib/reduxHelpers';
 
 function updateFavorite(topicId, isFav, topicList) {
@@ -10,15 +10,15 @@ function updateFavorite(topicId, isFav, topicList) {
   return topicList;
 }
 
-const publicTopics = createAsyncReducer({
+const favoriteList = createAsyncReducer({
   initialState: {
     topics: [],
     link_ids: {},
   },
-  action: FETCH_PUBLIC_TOPICS_LIST,
+  action: FETCH_FAVORITE_TOPICS_LIST,
   [SET_TOPIC_FAVORITE]: (payload, state) => ({
     topics: updateFavorite(payload.args[0], payload.args[1], state.topics),
   }),
 });
 
-export default publicTopics;
+export default favoriteList;
