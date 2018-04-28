@@ -1,6 +1,47 @@
 {
   "releases": [
     {
+      "date": "2018-04-27",
+      "version": "v2.9.0",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Link to list of <a href=\"https://mediacloud.org/support/theme-list\">the 600 themes</a> we code for."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "Clarify attention chart on collection page."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Feature",
+          "note": "Update default collection to new Pew US Mainstream list for 2017."
+        },
+        {
+          "apps": ["topics", "explorer"],
+          "type": "Fix",
+          "note": "Remove some confusing internal data from story list CSV download."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Layout and text improvements on word comparison chart."
+        },
+        {
+          "apps": ["explorer"],
+          "type": "Fix",
+          "note": "Speedup on showing languaeg results in Explorer."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Re-organized topic homepage to load faster."
+        }        
+      ]
+    },
+    {
       "date": "2018-04-25",
       "version": "v2.8.1",
       "notes": [
@@ -15,7 +56,7 @@
           "note": "Better explanatory text next to visualizations in Explorer."
         },
         {
-          "apps": ["sources, explorer, topics"],
+          "apps": ["sources", "explorer", "topics"],
           "type": "Fix",
           "note": "Updated our featured collections to be more current."
         },
