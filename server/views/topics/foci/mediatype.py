@@ -1,7 +1,9 @@
 import logging
 from flask import jsonify, request
 import flask_login
+
 from server import app, TOOL_API_KEY
+from server.views import TAG_COUNT_SAMPLE_SIZE
 from server.util.request import api_error_handler, json_error_response, form_fields_required
 from server.views.topics.apicache import topic_story_count
 from server.auth import user_mediacloud_key, user_mediacloud_client
@@ -9,8 +11,6 @@ from server.views.topics.foci import FOCAL_TECHNIQUE_BOOLEAN_QUERY
 from server.util.tags import tags_in_tag_set, TAG_SETS_ID_MEDIA_TYPE
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_SAMPLE_SIZE = 5000
 
 
 @app.route('/api/topics/<topics_id>/focal-sets/media-type/preview/story-counts', methods=['GET'])

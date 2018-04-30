@@ -1,4 +1,5 @@
 from server import mc, TOOL_API_KEY
+from server.views import TAG_COUNT_UI_LENGTH, TAG_COUNT_SAMPLE_SIZE
 from server.cache import cache, key_generator
 from server.auth import user_mediacloud_client, user_mediacloud_key, is_user_logged_in
 from server.util.tags import processed_by_cliff_query_clause
@@ -26,8 +27,8 @@ def _cached_sentence_list(q, rows):
     return mc.sentenceList(solr_query=q, rows=rows)
 
 
-def top_tags_with_coverage(q, tag_sets_id, limit, sample_size):
-    tag_counts = most_used_tags(q, tag_sets_id, limit, sample_size)
+def top_tags_with_coverage(q, tag_sets_id, limit=TAG_COUNT_UI_LENGTH, sample_size=TAG_COUNT_SAMPLE_SIZE):
+    tag_counts = _most_used_tags(q, tag_sets_id, limit, sample_size)
     coverage = cliff_coverage(q)
     for t in tag_counts:  # add in pct of what's been run through CLIFF to total results
         t['pct'] = float(t['count']) / sample_size
@@ -35,7 +36,7 @@ def top_tags_with_coverage(q, tag_sets_id, limit, sample_size):
     return coverage
 
 
-def most_used_tags(q, tag_sets_id, limit, sample_size):
+def _most_used_tags(q, tag_sets_id, limit=TAG_COUNT_UI_LENGTH, sample_size=TAG_COUNT_SAMPLE_SIZE):
     # top tags used in stories matching query (pass in None for no limit)
     api_key = _api_key()
     sentence_count_results = _cached_most_used_tags(api_key, q, tag_sets_id, sample_size)
