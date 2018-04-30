@@ -1,15 +1,13 @@
 import logging
 
 from server import mc
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_UI_LENGTH
 import server.util.csv as csv
 from server.util.wordembeddings import google_news_2d
 from server.cache import cache, key_generator
 from server.auth import user_admin_mediacloud_client
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_NUM_WORDS = 100
-DEFAULT_SAMPLE_SIZE = 5000
 
 
 def stream_wordcount_csv(user_mc_key, filename, query):
@@ -18,7 +16,7 @@ def stream_wordcount_csv(user_mc_key, filename, query):
     return csv.stream_response(response, props, filename)
 
 
-def word_count(user_mc_key, query, num_words=DEFAULT_NUM_WORDS, sample_size=DEFAULT_SAMPLE_SIZE):
+def word_count(user_mc_key, query, num_words=WORD_COUNT_UI_LENGTH, sample_size=WORD_COUNT_SAMPLE_SIZE):
     return _cached_word_count(user_mc_key, query, num_words, sample_size)
 
 
