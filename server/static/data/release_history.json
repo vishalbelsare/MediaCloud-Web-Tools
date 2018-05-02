@@ -7,7 +7,7 @@
         {
           "apps": ["explorer", "topics"],
           "type": "Feature",
-          "note": "Warn people that <a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\">we are switching to story-based searches</a>."
+          "note": "Warn people that <a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\" target=\"_new\">we are switching to story-based searches</a>."
         },
         {
           "apps": ["topics"],
