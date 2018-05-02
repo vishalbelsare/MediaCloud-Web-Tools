@@ -54,7 +54,7 @@ class SourceSelectionRendererRaw extends React.Component {
   }
 
   copyCollection = (collection) => {
-    this.addSources(collection.media);
+    this.addSources(collection.sources);
     this.setState({ collectionId: null });
   }
 
