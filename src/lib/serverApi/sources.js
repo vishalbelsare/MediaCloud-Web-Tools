@@ -59,7 +59,6 @@ export function sourceDetails(id) {
 
 export function collectionDetails(id, params) {
   const acceptedParams = acceptParams(params, ['getSources']);
-  acceptedParams.add_in_sources = params.getSources;
   return createApiPromise(`/api/collections/${id}/details`, acceptedParams);
 }
 

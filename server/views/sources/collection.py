@@ -127,7 +127,7 @@ def collection_set_favorited(collection_id):
 @api_error_handler
 def api_collection_details(collection_id):
     add_in_sources = False
-    if ('add_in_sources' in request.args) and (request.args['add_in_sources'] == 'true'):
+    if ('getSources' in request.args) and (request.args['getSources'] == 'true'):
         add_in_sources = True
 
     user_mc = user_mediacloud_client()
