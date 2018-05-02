@@ -126,11 +126,18 @@ def collection_set_favorited(collection_id):
 @flask_login.login_required
 @api_error_handler
 def api_collection_details(collection_id):
+    add_in_sources = False
+    if ('add_in_sources' in request.args) and (request.args['add_in_sources'] == 'true'):
+        add_in_sources = True
+
     user_mc = user_mediacloud_client()
     info = user_mc.tag(collection_id)
     add_user_favorite_flag_to_collections([info])
     info['id'] = collection_id
     info['tag_set'] = _tag_set_info(user_mediacloud_key(), info['tag_sets_id'])
+    if add_in_sources:
+        media_in_collection = media_with_tag(user_mediacloud_key(), collection_id)
+        info['sources'] = media_in_collection
     return jsonify({'results': info})
 
 
