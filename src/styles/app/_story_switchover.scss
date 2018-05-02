@@ -2,14 +2,21 @@
 
 div.story-switchover {
   
+  margin-bottom: 35px;
+
+  .warning-notice {
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+  }
+
   span.material-icons {
     float: left !important;
-    padding-top: 25px;
+    padding-top: 20px;
   }
 
   p {
     font-size: 14px !important;
-    padding: 0px 25px;
+    padding: 0px 34px;
     text-align: left;
     line-height: 16px !important;
   }

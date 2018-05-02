@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Row } from 'react-flexbox-grid/lib';
 import { setTopicFavorite } from '../../../actions/topicActions';
 import TabSelector from '../../common/TabSelector';
-import StorySwitchoverNotice from '../../common/StorySwitchoverNotice';
 import { updateFeedback } from '../../../actions/appActions';
 import messages from '../../../resources/messages';
 import FavoriteTopicsContainer from './FavoriteTopicsContainer';
@@ -51,7 +50,6 @@ class TopicListContainer extends React.Component {
 
     return (
       <div className="topic-list-container">
-        <StorySwitchoverNotice />
         <Row>
           <TabSelector
             tabLabels={[
