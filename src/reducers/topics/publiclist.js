@@ -10,7 +10,7 @@ function updateFavorite(topicId, isFav, topicList) {
   return topicList;
 }
 
-const publicTopics = createAsyncReducer({
+const publicList = createAsyncReducer({
   initialState: {
     topics: [],
     link_ids: {},
@@ -21,4 +21,4 @@ const publicTopics = createAsyncReducer({
   }),
 });
 
-export default publicTopics;
+export default publicList;

@@ -50,7 +50,6 @@ class TopicListContainer extends React.Component {
 
     return (
       <div className="topic-list-container">
-
         <Row>
           <TabSelector
             tabLabels={[
