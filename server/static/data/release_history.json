@@ -1,6 +1,27 @@
 {
   "releases": [
     {
+      "date": "2018-05-02",
+      "version": "v2.9.1",
+      "notes": [
+        {
+          "apps": ["explorer", "topics"],
+          "type": "Feature",
+          "note": "Warn people that <a href=\"https://mediacloud.org/news/2018/4/12/switching-to-story-based-searching-on-may-12th\">we are switching to story-based searches</a>."
+        },
+        {
+          "apps": ["topics"],
+          "type": "Fix",
+          "note": "Fix shortcut that lets you seach a Topic in Explorer."
+        },
+        {
+          "apps": ["sources", "explorer", "topics"],
+          "type": "Fix",
+          "note": "Use the same word-count, and tag-count, sample sizes everywhere."
+        }
+      ]
+    },
+    {
       "date": "2018-04-27",
       "version": "v2.9.0",
       "notes": [
