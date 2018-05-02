@@ -18,6 +18,11 @@
           "apps": ["sources", "explorer", "topics"],
           "type": "Fix",
           "note": "Use the same word-count, and tag-count, sample sizes everywhere."
+        },
+        {
+          "apps": ["sources"],
+          "type": "Fix",
+          "note": "You can import sources from one collection into another again."
         }
       ]
     },
