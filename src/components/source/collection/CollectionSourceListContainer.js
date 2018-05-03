@@ -9,6 +9,7 @@ import { addNotice } from '../../../actions/appActions';
 import { LEVEL_INFO } from '../../common/Notice';
 import SourceList from '../../common/SourceList';
 import { getUserRoles, hasPermissions, PERMISSION_MEDIA_EDIT } from '../../../lib/auth';
+import { HELP_SOURCES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const CollectionSourceListContainer = props => (
   <SourceList
@@ -56,7 +57,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     },
     addAppNotice: () => {
       let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-      htmlMessage = `${htmlMessage} <a href="https://mediacloud.org/support/story-list-download">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+      htmlMessage = `${htmlMessage} <a href="${HELP_SOURCES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
       dispatchProps.showNotice({ level: LEVEL_INFO, htmlMessage });
     },
   });
