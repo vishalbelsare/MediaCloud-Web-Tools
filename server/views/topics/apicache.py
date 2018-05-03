@@ -2,6 +2,7 @@ import logging
 from flask import request
 
 from server import mc, TOOL_API_KEY
+from server.views import WORD_COUNT_SAMPLE_SIZE, WORD_COUNT_DOWNLOAD_LENGTH, WORD_COUNT_UI_LENGTH
 from server.cache import cache, key_generator
 from server.util.tags import STORY_UNDATEABLE_TAG
 import server.util.wordembeddings as wordembeddings
@@ -11,7 +12,6 @@ from server.views.topics import validated_sort, access_public_topic
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_WORD_COUNT_SAMPLE_SIZE = 2000
 WORD_COUNT_DOWNLOAD_COLUMNS = ['term', 'stem', 'count', 'sample_size', 'ratio']
 
 
@@ -139,14 +139,14 @@ def _cached_media(user_mc_key, media_id):
     return mc_client.media(media_id)
 
 
-def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q):
-    sample_size = DEFAULT_WORD_COUNT_SAMPLE_SIZE
+def topic_ngram_counts(user_mc_key, topics_id, ngram_size, q, num_words=WORD_COUNT_UI_LENGTH):
+    sample_size = WORD_COUNT_SAMPLE_SIZE
     word_counts = topic_word_counts(user_mediacloud_key(), topics_id,
-                                    q=q, ngram_size=ngram_size)
+                                    q=q, ngram_size=ngram_size, num_words=num_words)
     # add in normalization
     for w in word_counts:
         w['sample_size'] = sample_size
-        w['ratio'] = float(w['count']) / float(DEFAULT_WORD_COUNT_SAMPLE_SIZE)
+        w['ratio'] = float(w['count']) / float(WORD_COUNT_SAMPLE_SIZE)
     return word_counts
 
 
@@ -160,8 +160,8 @@ def topic_word_counts(user_mc_key, topics_id, **kwargs):
         'timespans_id': timespans_id,
         'foci_id': foci_id,
         'q': q,
-        'sample_size': DEFAULT_WORD_COUNT_SAMPLE_SIZE,
-        'num_words': 500
+        'sample_size': WORD_COUNT_SAMPLE_SIZE,
+        'num_words': WORD_COUNT_UI_LENGTH
     }
     merged_args.update(kwargs)    # passed in args override anything pulled form the request.args
     word_data = _cached_topic_word_counts(user_mc_key, topics_id, **merged_args)
@@ -290,6 +290,7 @@ def topic_tag_counts(user_mc_key, topics_id, tag_sets_id, sample_size):
      This supports just timespan_id and q from the request, because it has to use sentenceFieldCount,
      not a topicSentenceFieldCount method that takes filters (which doesn't exit)
     '''
+    # return [] # SUPER HACK!
     snapshots_id, timespans_id, foci_id, q = filters_from_args(request.args)
     timespan_query = "timespans_id:{}".format(timespans_id)
     if (q is None) or (len(q) == 0):

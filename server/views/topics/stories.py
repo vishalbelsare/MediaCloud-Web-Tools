@@ -6,6 +6,7 @@ from multiprocessing import Pool
 from server import app, cliff, TOOL_API_KEY
 from server.auth import is_user_logged_in
 from server.cache import cache, key_generator
+from server.views import WORD_COUNT_DOWNLOAD_LENGTH
 import server.util.csv as csv
 import server.util.tags as tag_util
 from server.util.request import api_error_handler
@@ -145,7 +146,8 @@ def story_words(topics_id, stories_id):
 def story_words_csv(topics_id, stories_id):
     query = add_to_user_query('stories_id:'+stories_id)
     ngram_size = request.args['ngram_size'] if 'ngram_size' in request.args else 1  # default to word count
-    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size, q=query)
+    word_counts = topic_ngram_counts(user_mediacloud_key(), topics_id, ngram_size, q=query,
+                                     num_words=WORD_COUNT_DOWNLOAD_LENGTH)
     return csv.stream_response(word_counts, WORD_COUNT_DOWNLOAD_COLUMNS,
                                'topic-{}-story-{}-sampled-ngrams-{}-word'.format(topics_id, stories_id, ngram_size))
 
@@ -223,7 +225,7 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
         del params['fb_data']
     if 'q' in params:
         params['q'] = params['q'] if 'q' not in [None, '', 'null', 'undefined'] else None
-    params['limit'] = 1000  # an arbitrary value to let us page through with big pages
+    params['limit'] = 1000  # an arbitrary value to let us page through with big topics
 
     props = ['stories_id', 'publish_date', 'title', 'url', 'language', 'ap_syndicated',
              'themes','subtopics',
@@ -265,12 +267,17 @@ def stream_story_list_csv(user_key, filename, topics_id, **kwargs):
 def _topic_story_list_by_page_as_csv_row(user_key, topics_id, props, **kwargs):
     yield u','.join(props) + u'\n'  # first send the column names
     link_id = 0
-    for page in _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
-        for story in page['stories']:
-            cleaned_row = csv.dict2row(props, story)
+    more_pages = True
+    while more_pages:
+        page = _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs)
+        if 'next' in page['link_ids']:
+            link_id = page['link_ids']['next']
+        else:
+            more_pages = False
+        for s in page['stories']:
+            cleaned_row = csv.dict2row(props, s)
             row_string = u','.join(cleaned_row) + u'\n'
             yield row_string
-        link_id += 1
 
 
 def _media_info_worker(info):
@@ -279,27 +286,31 @@ def _media_info_worker(info):
 
 # generator you can use to do something for each page of story results
 def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
+    add_media_fields = False  # switch for including all the media metadata in each row (ie. story)
+
     story_page = topic_story_list_by_page(user_key, topics_id, link_id=link_id, **kwargs)
 
     story_ids = [str(s['stories_id']) for s in story_page['stories']]
     stories_with_tags = story_list(user_key, 'stories_id:(' + " ".join(story_ids) + ")", kwargs['limit'])
 
     # build a media lookup table in parallel so it is faster
-    pool = Pool(processes=MEDIA_INFO_POOL_SIZE)
-    jobs = [{'user_key': user_key, 'media_id': s['media_id']} for s in story_page['stories']]
-    job_results = pool.map(_media_info_worker, jobs)  # blocks until they are all done
-    media_lookup = {j['media_id']: j for j in job_results}
-    pool.terminate()
+    if add_media_fields:
+        pool = Pool(processes=MEDIA_INFO_POOL_SIZE)
+        jobs = [{'user_key': user_key, 'media_id': s['media_id']} for s in story_page['stories']]
+        job_results = pool.map(_media_info_worker, jobs)  # blocks until they are all done
+        media_lookup = {j['media_id']: j for j in job_results}
+        pool.terminate()
 
     # update story info for each story in the page, put it into the [stories] field, send updated page with stories back
     for s in story_page['stories']:
 
         # add in media metadata to the story (from page-level cache built earlier)
-        media = media_lookup[s['media_id']]
+        if add_media_fields:
+            media = media_lookup[s['media_id']]
 
-        # add in foci/subtopic names
-        for k, v in media['metadata'].iteritems():
-             s[u'media_{}'.format(k)] = v['label'] if v is not None else None
+            # add in foci/subtopic names
+            for k, v in media['metadata'].iteritems():
+                s[u'media_{}'.format(k)] = v['label'] if v is not None else None
 
         # build lookup for id => story for all stories in stories with tags (non topic results)
         for st in stories_with_tags:
@@ -315,9 +326,5 @@ def _topic_story_page_with_media(user_key, topics_id, link_id, **kwargs):
                 if tag_util.NYT_LABELER_1_0_0_TAG_ID in story_tag_ids:
                     story_tag_ids = [t['tag'] for t in s['story_tags'] if t['tag_sets_id'] == tag_util.NYT_LABELS_TAG_SET_ID]
                     s['themes'] = ", ".join(story_tag_ids)
-                # s is updated
-                # how do I add s back into story_page?
 
-
-    yield story_page # need links too
-
+    return story_page  # need links too

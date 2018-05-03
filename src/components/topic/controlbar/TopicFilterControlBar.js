@@ -54,7 +54,7 @@ class TopicFilterControlBar extends React.Component {
     let jumpsExplorer;
     if (selectedTimespan) {
       const queryName = `${topic.name}`;
-      let queryKeywords = `{timespans_id:${filters.timespanId} }`;
+      let queryKeywords = `timespans_id:${filters.timespanId} `;
       if (filters.q && filters.q.length > 0) {
         queryKeywords += ` AND ${filters.q}`;
       }

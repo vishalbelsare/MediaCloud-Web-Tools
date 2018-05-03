@@ -2,9 +2,9 @@ import { createAction } from 'redux-actions';
 import { createAsyncAction } from '../../lib/reduxHelpers';
 import * as api from '../../lib/serverApi/topics';
 
-export const FETCH_TOPIC_LIST = 'FETCH_TOPIC_LIST';
-export const SET_TOPIC_LIST_FILTER = 'SET_TOPIC_LIST_FILTER';
+export const FETCH_PERSONAL_TOPIC_LIST = 'FETCH_PERSONAL_TOPIC_LIST';
 export const FETCH_PUBLIC_TOPICS_LIST = 'FETCH_PUBLIC_TOPICS_LIST';
+export const FETCH_FAVORITE_TOPICS_LIST = 'FETCH_FAVORITE_TOPICS_LIST';
 export const TOPIC_FILTER_BY_SNAPSHOT = 'TOPIC_FILTER_BY_SNAPSHOT';
 export const TOPIC_FILTER_BY_TIMESPAN = 'TOPIC_FILTER_BY_TIMESPAN';
 export const TOPIC_FILTER_BY_QUERY = 'TOPIC_FILTER_BY_QUERY';
@@ -17,7 +17,6 @@ export const TOGGLE_FILTER_CONTROLS = 'TOGGLE_FILTER_CONTROLS';
 export const SET_TIMESPAN_VISIBLE_PERIOD = 'SET_TIMESPAN_VISIBLE_PERIOD';
 export const SELECT_TOPIC = 'SELECT_TOPIC';
 export const SET_TOPIC_FAVORITE = 'SET_TOPIC_FAVORITE';
-export const FETCH_FAVORITE_TOPICS = 'FETCH_FAVORITE_TOPICS';
 export const UPDATE_TOPIC = 'UPDATE_TOPIC';
 export const TOPIC_START_SPIDER = 'TOPIC_START_SPIDER';
 export const SET_TOPIC_NEEDS_NEW_SNAPSHOT = 'SET_TOPIC_NEEDS_NEW_SNAPSHOT';
@@ -29,11 +28,11 @@ export const FETCH_TOPIC_WORD2VEC = 'FETCH_TOPIC_WORD2VEC';
 export const FETCH_TOPIC_WORD2VEC_TIMESPANS = 'FETCH_TOPIC_WORD2VEC_TIMESPANS';
 export const FETCH_ADMIN_TOPIC_LIST = 'FETCH_ADMIN_TOPIC_LIST';
 
-export const fetchTopicsList = createAsyncAction(FETCH_TOPIC_LIST, api.topicsList);
-
-export const setTopicListFilter = createAction(SET_TOPIC_LIST_FILTER, filter => filter);
+export const fetchPersonalTopicsList = createAsyncAction(FETCH_PERSONAL_TOPIC_LIST, api.topicsPersonalList, linkId => linkId);
 
 export const fetchPublicTopicsList = createAsyncAction(FETCH_PUBLIC_TOPICS_LIST, api.topicsPublicList);
+
+export const fetchFavoriteTopicsList = createAsyncAction(FETCH_FAVORITE_TOPICS_LIST, api.topicsFavoriteList);
 
 export const fetchAdminTopicList = createAsyncAction(FETCH_ADMIN_TOPIC_LIST, api.topicsAdminList);
 
@@ -69,8 +68,6 @@ export const toggleFilterControls = createAction(TOGGLE_FILTER_CONTROLS, isVisib
 
 // pass in topicId and favorite bool
 export const setTopicFavorite = createAsyncAction(SET_TOPIC_FAVORITE, api.topicSetFavorite);
-
-export const fetchFavoriteTopics = createAsyncAction(FETCH_FAVORITE_TOPICS, api.favoriteTopics);
 
 export const updateTopic = createAsyncAction(UPDATE_TOPIC, api.updateTopic);
 
