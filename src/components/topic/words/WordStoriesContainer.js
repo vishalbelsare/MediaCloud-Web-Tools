@@ -6,10 +6,13 @@ import { fetchWordStories, sortWordStories } from '../../../actions/topicActions
 import composeAsyncContainer from '../../common/AsyncContainer';
 import composeHelpfulContainer from '../../common/HelpfulContainer';
 import messages from '../../../resources/messages';
+import { LEVEL_INFO } from '../../common/Notice';
 import TopicStoryTable from '../TopicStoryTable';
 import DataCard from '../../common/DataCard';
+import { addNotice } from '../../../actions/appActions';
 import { DownloadButton } from '../../common/IconButton';
 import { filtersAsUrlParams } from '../../util/location';
+import { HELP_STORIES_CSV_COLUMNS } from '../../../lib/helpConstants';
 
 const STORIES_TO_SHOW = 10;
 
@@ -33,9 +36,10 @@ class WordStoriesContainer extends React.Component {
     sortData(newSort);
   }
   downloadCsv = () => {
-    const { term, topicId, filters } = this.props;
+    const { term, topicId, filters, addAppNotice } = this.props;
     const url = `/api/topics/${topicId}/words/${term}*/stories.csv?${filtersAsUrlParams(filters)}`;
     window.location = url;
+    addAppNotice();
   }
   render() {
     const { inlinkedStories, topicId, helpButton, showTweetCounts } = this.props;
@@ -74,6 +78,7 @@ WordStoriesContainer.propTypes = {
   fetchStatus: PropTypes.string.isRequired,
   inlinkedStories: PropTypes.array.isRequired,
   showTweetCounts: PropTypes.bool,
+  addAppNotice: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -95,6 +100,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sortData: (sort) => {
     dispatch(sortWordStories(sort));
+  },
+  addAppNotice: () => {
+    let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
+    htmlMessage = `${htmlMessage} <a href="${HELP_STORIES_CSV_COLUMNS}">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+    dispatch(addNotice({ level: LEVEL_INFO, htmlMessage }));
   },
 });
 
