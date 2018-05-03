@@ -55,8 +55,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       dispatchProps.fetchData(ownProps.collectionId, props);
     },
     addAppNotice: () => {
-      const message = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
-      dispatchProps.showNotice({ level: LEVEL_INFO, message });
+      let htmlMessage = ownProps.intl.formatMessage(messages.currentlyDownloadingCsv);
+      htmlMessage = `${htmlMessage} <a href="https://mediacloud.org/support/story-list-download">${ownProps.intl.formatHTMLMessage(messages.learnMoreAboutColumnsCsv)}</a>`;
+      dispatchProps.showNotice({ level: LEVEL_INFO, htmlMessage });
     },
   });
 }
