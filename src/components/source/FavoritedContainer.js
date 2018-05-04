@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib';
 import composeAsyncContainer from '../common/AsyncContainer';
-import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/sourceActions';
+import { fetchFavoriteSources, fetchFavoriteCollections } from '../../actions/systemActions';
 import SourceList from '../common/SourceList';
 import CollectionList from '../common/CollectionList';
 

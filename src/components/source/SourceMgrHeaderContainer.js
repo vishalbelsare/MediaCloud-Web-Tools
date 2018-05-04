@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import messages from '../../resources/messages';
 import AppHeader from '../common/header/AppHeader';
-import { favoriteSource, favoriteCollection } from '../../actions/sourceActions';
+import { favoriteSource, favoriteCollection } from '../../actions/systemActions';
 import { updateFeedback } from '../../actions/appActions';
 import { nullOrUndefined } from '../../lib/formValidators';
 

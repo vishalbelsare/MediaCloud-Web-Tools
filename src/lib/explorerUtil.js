@@ -13,7 +13,8 @@ export const DEFAULT_COLLECTION_OBJECT_ARRAY = [{ id: DEFAULT_COLLECTION, tags_i
 export const PICK_COLLECTION = 0;
 export const PICK_SOURCE = 1;
 export const PICK_COUNTRY = 2;
-export const PICK_ADVANCED = 3;
+// export const PICK_ADVANCED = 3;
+export const PICK_STARRED = 3;
 
 
 export const QUERY_LABEL_CHARACTER_LIMIT = 30;

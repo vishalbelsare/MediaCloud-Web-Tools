@@ -4,7 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import Link from 'react-router/lib/Link';
 import DataCard from '../../common/DataCard';
-import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/sourceActions';
+import { fetchFavoriteCollections, fetchFavoriteSources } from '../../../actions/systemActions';
 import composeAsyncContainer from '../../common/AsyncContainer';
 import { ExploreButton } from '../../common/IconButton';
 

@@ -5,6 +5,8 @@ import countryCollectionQueryResults from './countryCollectionQueryResults';
 import sourceQueryResults from './sourceQueryResults';
 import featured from './featured';
 import selectMedia from './selectMedia';
+import favoritedCollections from './favoritedCollections';
+import favoritedSources from './favoritedSources';
 
 const media = combineReducers({
   selectMediaQuery,
@@ -13,6 +15,8 @@ const media = combineReducers({
   sourceQueryResults,
   featured,
   selectMedia,
+  favoritedCollections,
+  favoritedSources,
 });
 
 export default media;

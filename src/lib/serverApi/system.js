@@ -1,4 +1,4 @@
-import { createApiPromise, acceptParams } from '../apiUtil';
+import { createApiPromise, createPostingApiPromise, acceptParams } from '../apiUtil';
 
 export function systemStats() {
   return createApiPromise('/api/system-stats');
@@ -35,4 +35,12 @@ export function fetchMediaPickerSourcesByMetadata(params) {
 
 export function fetchRecentNews() {
   return createApiPromise('/api/release-notes');
+}
+
+export function favoriteSource(mediaId, favorite) {
+  return createPostingApiPromise(`/api/sources/${mediaId}/favorite`, { favorite: (favorite) ? 1 : 0 });
+}
+
+export function favoriteCollection(id, favorite) {
+  return createPostingApiPromise(`/api/collections/${id}/favorite`, { favorite: (favorite) ? 1 : 0 }, 'put');
 }

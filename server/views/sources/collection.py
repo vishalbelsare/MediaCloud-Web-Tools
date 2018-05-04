@@ -18,7 +18,7 @@ from server.util.tags import TAG_SETS_ID_COLLECTIONS, is_metadata_tag_set, forma
     format_metadata_fields, media_with_tag
 from server.views.sources import SOURCES_TEMPLATE_PROPS_EDIT, \
     COLLECTIONS_TEMPLATE_PROPS_EDIT, _cached_source_story_count
-from server.views.sources.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
+from server.views.favorites import add_user_favorite_flag_to_collections, add_user_favorite_flag_to_sources
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
 from server.views.sources.words import word_count, stream_wordcount_csv

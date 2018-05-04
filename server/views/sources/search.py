@@ -7,7 +7,7 @@ from server import app
 from server.util.request import api_error_handler, arguments_required
 from server.util.tags import VALID_COLLECTION_TAG_SETS_IDS
 from server.auth import user_has_auth_role, ROLE_MEDIA_EDIT, user_mediacloud_client
-from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
+from server.views.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 logger = logging.getLogger(__name__)
 

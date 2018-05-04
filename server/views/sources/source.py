@@ -17,7 +17,7 @@ from server.views.sources import _cached_source_story_count
 from server.views.sources.words import word_count, stream_wordcount_csv
 from server.views.sources.geocount import stream_geo_csv, cached_geotag_count
 from server.views.sources.sentences import cached_recent_sentence_counts, stream_sentence_count_csv
-from server.views.sources.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
+from server.views.favorites import add_user_favorite_flag_to_sources, add_user_favorite_flag_to_collections
 
 
 logger = logging.getLogger(__name__)
