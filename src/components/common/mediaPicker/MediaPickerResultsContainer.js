@@ -3,11 +3,12 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { selectMedia, toggleMedia, selectMediaPickerQueryArgs, resetMediaPickerQueryArgs, resetMediaPickerSources, resetMediaPickerCollections } from '../../../actions/systemActions';
-import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY } from '../../../lib/explorerUtil';
+import { PICK_COLLECTION, PICK_SOURCE, PICK_COUNTRY, PICK_STARRED } from '../../../lib/explorerUtil';
 import * as fetchConstants from '../../../lib/fetchConstants';
 import CountryCollectionSearchResultsContainer from './results/CountryCollectionSearchResultsContainer';
 import AllCollectionSearchResultsContainer from './results/AllCollectionSearchResultsContainer';
 import SourceSearchResultsContainer from './results/SourceSearchResultsContainer';
+import StarredSearchResultsContainer from './results/StarredSearchResultsContainer';
 import { TAG_SET_ABYZ_GEO_COLLECTIONS, VALID_COLLECTION_IDS } from '../../../lib/tagUtil';
 
 class MediaPickerResultsContainer extends React.Component {
@@ -48,6 +49,9 @@ class MediaPickerResultsContainer extends React.Component {
         break;
       case PICK_SOURCE:
         whichList = whichProps.sourceResults;
+        break;
+      case PICK_STARRED:
+        whichList = whichProps.favoritedCollectionResults;
         break;
       default:
         break;
@@ -105,6 +109,9 @@ class MediaPickerResultsContainer extends React.Component {
       case PICK_SOURCE:
         content = <SourceSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
         break;
+      case PICK_STARRED:
+        content = <StarredSearchResultsContainer handleMediaConcurrency={toggleConcurrency} handleToggleAndSelectMedia={handleToggleAndSelectMedia} />;
+        break;
       default:
         break;
     }
@@ -137,6 +144,8 @@ const mapStateToProps = state => ({
   collectionResults: state.system.mediaPicker.collectionQueryResults,
   featured: state.system.mediaPicker.featured ? state.system.mediaPicker.featured : null,
   sourceResults: state.system.mediaPicker.sourceQueryResults,
+  favoritedCollections: state.system.mediaPicker.favoritedCollections ? state.system.mediaPicker.favoritedCollections.results : null,
+  favoritedSources: state.system.mediaPicker.favoritedSources ? state.system.mediaPicker.favoritedSources.results : null,
 });
 
 const mapDispatchToProps = dispatch => ({

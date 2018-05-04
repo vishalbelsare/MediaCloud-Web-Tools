@@ -189,13 +189,9 @@ export function collectionUploadSourceListFromTemplate(params) {
   return createPostingApiPromise('/api/collections/upload-sources', acceptedParams);
 }
 
-
-
 export function fetchFavoriteSources() {
   return createApiPromise('/api/favorites/sources');
 }
-
-
 
 export function fetchFavoriteCollections() {
   return createApiPromise('/api/favorites/collections');
